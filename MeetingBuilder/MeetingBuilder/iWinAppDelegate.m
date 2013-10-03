@@ -7,7 +7,7 @@
 //
 
 #import "iWinAppDelegate.h"
-#import "iWinLoginViewController.h"
+#import "iWinMainViewController.h"
 
 @implementation iWinAppDelegate
 
@@ -20,8 +20,8 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor whiteColor];
-    iWinLoginViewController *loginViewController = [[iWinLoginViewController alloc] initWithNibName:@"iWinLoginViewController" bundle:nil];
-    self.window.rootViewController = loginViewController;
+    iWinMainViewController *mainViewController = [[iWinMainViewController alloc] initWithNibName:@"iWinMainViewController" bundle:nil];
+    self.window.rootViewController = mainViewController;
     [self.window makeKeyAndVisible];
     return YES;
 }

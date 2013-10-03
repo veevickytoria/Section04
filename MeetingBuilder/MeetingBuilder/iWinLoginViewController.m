@@ -7,6 +7,7 @@
 //
 
 #import "iWinLoginViewController.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface iWinLoginViewController ()
 
@@ -27,6 +28,9 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    self.loginButton.layer.cornerRadius = 7;
+    self.loginButton.layer.borderColor = [[UIColor purpleColor] CGColor];
+    self.loginButton.layer.borderWidth = 1.0f;
 }
 
 - (void)didReceiveMemoryWarning
@@ -35,9 +39,13 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (IBAction)onClickLogin:(id)sender {
+- (IBAction)onClickLogin:(id)sender
+{
+    [self.loginDelegate login];
 }
 
-- (IBAction)onClickJoinUs:(id)sender {
+- (IBAction)onClickJoinUs:(id)sender
+{
+    [self.loginDelegate joinUs];
 }
 @end

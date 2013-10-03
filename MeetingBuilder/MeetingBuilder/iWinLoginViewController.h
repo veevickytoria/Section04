@@ -8,10 +8,18 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol iWinLoginDelegate <NSObject>
+
+-(void)login;
+-(void)joinUs;
+
+@end
+
 @interface iWinLoginViewController : UIViewController
 @property (weak, nonatomic) IBOutlet UITextField *userNameField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordField;
 @property (weak, nonatomic) IBOutlet UIButton *loginButton;
+@property (weak, nonatomic) id<iWinLoginDelegate>loginDelegate;
 - (IBAction)onClickLogin:(id)sender;
 - (IBAction)onClickJoinUs:(id)sender;
 

@@ -35,4 +35,13 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (IBAction)onClickRegister:(id)sender
+{
+    [self.registerDelegate onRegister];
+}
+
+- (IBAction)onClickCancel:(id)sender
+{
+    [self.registerDelegate onCancel];
+}
 @end

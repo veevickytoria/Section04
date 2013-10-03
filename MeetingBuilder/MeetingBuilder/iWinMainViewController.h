@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "iWinLoginViewController.h"
+#import "iWinRegisterViewController.h"
+#import "iWinProjectViewController.h"
 
-@interface iWinMainViewController : UIViewController
+@interface iWinMainViewController : UIViewController <iWinLoginDelegate, iWinRegisterVCDelegate>
 
 @end
