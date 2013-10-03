@@ -26,8 +26,50 @@
 		0A7E516617FBEBA200A4B8B7 /* iWinRegisterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A7E516417FBEBA200A4B8B7 /* iWinRegisterViewController.xib */; };
 		0ACE339A17FCF5F8003B9C0A /* iWinProjectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ACE339817FCF5F8003B9C0A /* iWinProjectViewController.m */; };
 		0ACE339B17FCF5F8003B9C0A /* iWinProjectViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0ACE339917FCF5F8003B9C0A /* iWinProjectViewController.xib */; };
-		ED487F5C3B9C4F34B447DE06 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 73CB9D928C6D483CAEB8FAAA /* libPods.a */; };
+		0ACE33AD17FD2438003B9C0A /* libRestKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ACE33A417FD2360003B9C0A /* libRestKit.a */; };
+		0ACE33AF17FD244B003B9C0A /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ACE33AE17FD244B003B9C0A /* CFNetwork.framework */; };
+		0ACE33B117FD245B003B9C0A /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ACE33B017FD245B003B9C0A /* MobileCoreServices.framework */; };
+		0ACE33B317FD2461003B9C0A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ACE33B217FD2461003B9C0A /* Security.framework */; };
+		0ACE33B517FD246F003B9C0A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ACE33B417FD246F003B9C0A /* SystemConfiguration.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		0ACE33A317FD2360003B9C0A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0ACE339C17FD235F003B9C0A /* RestKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 25160D1614564E810060A5C5;
+			remoteInfo = RestKit;
+		};
+		0ACE33A517FD2360003B9C0A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0ACE339C17FD235F003B9C0A /* RestKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 25160D2614564E820060A5C5;
+			remoteInfo = RestKitTests;
+		};
+		0ACE33A717FD2360003B9C0A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0ACE339C17FD235F003B9C0A /* RestKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 25160E62145651060060A5C5;
+			remoteInfo = RestKitFramework;
+		};
+		0ACE33A917FD2360003B9C0A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0ACE339C17FD235F003B9C0A /* RestKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 25160E78145651060060A5C5;
+			remoteInfo = RestKitFrameworkTests;
+		};
+		0ACE33AB17FD241C003B9C0A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0ACE339C17FD235F003B9C0A /* RestKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 25160D1514564E810060A5C5;
+			remoteInfo = RestKit;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		0A04455617F3825C000FF2A0 /* MeetingBuilder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MeetingBuilder.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -57,7 +99,11 @@
 		0ACE339717FCF5F8003B9C0A /* iWinProjectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinProjectViewController.h; sourceTree = "<group>"; };
 		0ACE339817FCF5F8003B9C0A /* iWinProjectViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinProjectViewController.m; sourceTree = "<group>"; };
 		0ACE339917FCF5F8003B9C0A /* iWinProjectViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iWinProjectViewController.xib; sourceTree = "<group>"; };
-		0F781935BB9B4D649781B96C /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
+		0ACE339C17FD235F003B9C0A /* RestKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RestKit.xcodeproj; path = ../RestKit/RestKit.xcodeproj; sourceTree = "<group>"; };
+		0ACE33AE17FD244B003B9C0A /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		0ACE33B017FD245B003B9C0A /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		0ACE33B217FD2461003B9C0A /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		0ACE33B417FD246F003B9C0A /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		73CB9D928C6D483CAEB8FAAA /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -66,11 +112,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0ACE33B517FD246F003B9C0A /* SystemConfiguration.framework in Frameworks */,
+				0ACE33B317FD2461003B9C0A /* Security.framework in Frameworks */,
+				0ACE33B117FD245B003B9C0A /* MobileCoreServices.framework in Frameworks */,
+				0ACE33AF17FD244B003B9C0A /* CFNetwork.framework in Frameworks */,
+				0ACE33AD17FD2438003B9C0A /* libRestKit.a in Frameworks */,
 				0A04455A17F3825D000FF2A0 /* UIKit.framework in Frameworks */,
 				0A04455C17F3825D000FF2A0 /* Foundation.framework in Frameworks */,
 				0A04455E17F3825D000FF2A0 /* CoreGraphics.framework in Frameworks */,
 				0A04456017F3825D000FF2A0 /* CoreData.framework in Frameworks */,
-				ED487F5C3B9C4F34B447DE06 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -80,10 +130,10 @@
 		0A04454D17F3825C000FF2A0 = {
 			isa = PBXGroup;
 			children = (
+				0ACE339C17FD235F003B9C0A /* RestKit.xcodeproj */,
 				0A04456117F3825D000FF2A0 /* MeetingBuilder */,
 				0A04455817F3825C000FF2A0 /* Frameworks */,
 				0A04455717F3825C000FF2A0 /* Products */,
-				0F781935BB9B4D649781B96C /* Pods.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -98,6 +148,10 @@
 		0A04455817F3825C000FF2A0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0ACE33B417FD246F003B9C0A /* SystemConfiguration.framework */,
+				0ACE33B217FD2461003B9C0A /* Security.framework */,
+				0ACE33B017FD245B003B9C0A /* MobileCoreServices.framework */,
+				0ACE33AE17FD244B003B9C0A /* CFNetwork.framework */,
 				0A04455917F3825D000FF2A0 /* UIKit.framework */,
 				0A04455B17F3825D000FF2A0 /* Foundation.framework */,
 				0A04455D17F3825D000FF2A0 /* CoreGraphics.framework */,
@@ -144,6 +198,17 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		0ACE339D17FD235F003B9C0A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0ACE33A417FD2360003B9C0A /* libRestKit.a */,
+				0ACE33A617FD2360003B9C0A /* RestKitTests.octest */,
+				0ACE33A817FD2360003B9C0A /* RestKit.framework */,
+				0ACE33AA17FD2360003B9C0A /* RestKitFrameworkTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -151,15 +216,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0A04457817F3825D000FF2A0 /* Build configuration list for PBXNativeTarget "MeetingBuilder" */;
 			buildPhases = (
-				88D238B862E0464BA53D376E /* Check Pods Manifest.lock */,
 				0A04455217F3825C000FF2A0 /* Sources */,
 				0A04455317F3825C000FF2A0 /* Frameworks */,
 				0A04455417F3825C000FF2A0 /* Resources */,
-				4399CDE6F50E4028ABDF7496 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				0ACE33AC17FD241C003B9C0A /* PBXTargetDependency */,
 			);
 			name = MeetingBuilder;
 			productName = MeetingBuilder;
@@ -191,12 +255,49 @@
 			mainGroup = 0A04454D17F3825C000FF2A0;
 			productRefGroup = 0A04455717F3825C000FF2A0 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 0ACE339D17FD235F003B9C0A /* Products */;
+					ProjectRef = 0ACE339C17FD235F003B9C0A /* RestKit.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				0A04455517F3825C000FF2A0 /* MeetingBuilder */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		0ACE33A417FD2360003B9C0A /* libRestKit.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRestKit.a;
+			remoteRef = 0ACE33A317FD2360003B9C0A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0ACE33A617FD2360003B9C0A /* RestKitTests.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = RestKitTests.octest;
+			remoteRef = 0ACE33A517FD2360003B9C0A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0ACE33A817FD2360003B9C0A /* RestKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = RestKit.framework;
+			remoteRef = 0ACE33A717FD2360003B9C0A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0ACE33AA17FD2360003B9C0A /* RestKitFrameworkTests.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = RestKitFrameworkTests.octest;
+			remoteRef = 0ACE33A917FD2360003B9C0A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		0A04455417F3825C000FF2A0 /* Resources */ = {
@@ -216,39 +317,6 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		4399CDE6F50E4028ABDF7496 /* Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		88D238B862E0464BA53D376E /* Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		0A04455217F3825C000FF2A0 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -265,6 +333,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		0ACE33AC17FD241C003B9C0A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = RestKit;
+			targetProxy = 0ACE33AB17FD241C003B9C0A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		0A04456417F3825D000FF2A0 /* InfoPlist.strings */ = {
@@ -338,7 +414,6 @@
 		};
 		0A04457917F3825D000FF2A0 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0F781935BB9B4D649781B96C /* Pods.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -348,13 +423,13 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				USER_HEADER_SEARCH_PATHS = "\"$(BUILT_PRODUCTS_DIR)/../../Headers\"";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
 		};
 		0A04457A17F3825D000FF2A0 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0F781935BB9B4D649781B96C /* Pods.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -364,6 +439,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				USER_HEADER_SEARCH_PATHS = "\"$(BUILT_PRODUCTS_DIR)/../../Headers\"";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
