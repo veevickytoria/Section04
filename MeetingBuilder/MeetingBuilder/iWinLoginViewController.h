@@ -10,12 +10,13 @@
 
 @protocol iWinLoginDelegate <NSObject>
 
--(void)login;
+-(void)login:(NSString *)email;
 -(void)joinUs;
 
 @end
 
-@interface iWinLoginViewController : UIViewController
+@interface iWinLoginViewController : UIViewController <NSURLConnectionDelegate>
+@property (strong, nonatomic) NSMutableData *responseData;
 @property (weak, nonatomic) IBOutlet UITextField *userNameField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordField;
 @property (weak, nonatomic) IBOutlet UIButton *loginButton;

@@ -11,15 +11,16 @@
 
 @interface iWinProjectViewController ()
 @property (strong, nonatomic) NSMutableArray *projectList;
+@property (strong, nonatomic) NSString* email;
 @end
 
 @implementation iWinProjectViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withEmail:(NSString *)email
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        self.email = email;
     }
     return self;
 }
@@ -28,8 +29,30 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    self.projectList = [[NSMutableArray alloc] init];
-
+    //self.projectList = [[NSMutableArray alloc] init];
+    
+    //load projects
+    NSString *url = [NSString stringWithFormat:@"http://localhost:8888/db_api.php?action=read&table=Project&email=%@", self.email];
+    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    NSData *dataURL = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
+    NSString *strResult = [[NSString alloc] initWithData:dataURL encoding:NSUTF8StringEncoding];
+    
+    self.projectList = [[NSMutableArray alloc] initWithArray:[strResult componentsSeparatedByString:@"___"]];
+    
+    /*NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+    NSURLResponse * response = nil;
+    NSError * error = nil;
+    NSData * data = [NSURLConnection sendSynchronousRequest:urlRequest
+                                          returningResponse:&response
+                                                      error:&error];
+    //self.projectList = [NSKeyedUnarchiver unarchiveObjectWithData:self.responseData];
+    NSPropertyListFormat format;
+    NSArray *array = [NSPropertyListSerialization propertyListFromData:data
+                                                      mutabilityOption:NSPropertyListMutableContainers
+                                                                format:&format
+                                                      errorDescription:NULL];
+    self.projectList =  [[NSMutableArray alloc] initWithArray:array];*/
 }
 
 - (void)didReceiveMemoryWarning
@@ -53,8 +76,23 @@
         projectName = [projectName stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
         if (projectName.length > 0)
         {
-            [self.projectList addObject:projectName];
+            //add project to db.
+            NSString *url = [NSString stringWithFormat:@"http://localhost:8888/db_api.php?action=write&table=Project&email=%@&name=%@", self.email, projectName];
+            url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+            NSURLResponse * response = nil;
+            NSError * error = nil;
+            NSData * data = [NSURLConnection sendSynchronousRequest:urlRequest
+                                                  returningResponse:&response
+                                                              error:&error];
         }
+        NSString *url = [NSString stringWithFormat:@"http://localhost:8888/db_api.php?action=read&table=Project&email=%@", self.email];
+        url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSData *dataURL = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
+        NSString *strResult = [[NSString alloc] initWithData:dataURL encoding:NSUTF8StringEncoding];
+        
+        self.projectList = [[NSMutableArray alloc] initWithArray:[strResult componentsSeparatedByString:@"___"]];
+        //self.projectList = [NSKeyedUnarchiver unarchiveObjectWithData:self.responseData];
         [self.projectTable reloadData];
     }
 }

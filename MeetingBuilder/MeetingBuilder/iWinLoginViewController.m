@@ -10,7 +10,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 @interface iWinLoginViewController ()
-
+@property (strong, nonatomic) NSString *loggedIn;
 @end
 
 @implementation iWinLoginViewController
@@ -31,6 +31,8 @@
     self.loginButton.layer.cornerRadius = 7;
     self.loginButton.layer.borderColor = [[UIColor purpleColor] CGColor];
     self.loginButton.layer.borderWidth = 1.0f;
+    
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -41,11 +43,43 @@
 
 - (IBAction)onClickLogin:(id)sender
 {
-    [self.loginDelegate login];
+    NSString *email = [[self.userNameField text] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    NSString *password = [self.passwordField text];
+    if (password.length > 0 && email.length>0)
+    {
+        NSString *url = [NSString stringWithFormat:@"http://localhost:8888/db_api.php?action=read&table=User&email=%@&password=%@", email, password];
+        url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSURLRequest *urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+        NSURLResponse * response = nil;
+        NSError * error = nil;
+        NSData * data = [NSURLConnection sendSynchronousRequest:urlRequest
+                                              returningResponse:&response
+                                                          error:&error];
+        self.loggedIn = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        //check login
+        if ([self.loggedIn isEqualToString:@"true"])
+        {
+            [self.loginDelegate login:email];
+        }
+        else
+        {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Username/Password not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+            [alert show];
+        }
+    }
+    else
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Enter valid values" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alert show];
+    }
+    
 }
 
 - (IBAction)onClickJoinUs:(id)sender
 {
     [self.loginDelegate joinUs];
 }
+
+
+
 @end

@@ -10,17 +10,18 @@
 
 @protocol iWinRegisterVCDelegate <NSObject>
 
--(void)onRegister;
+-(void)onRegister:(NSString *)email;
 -(void)onCancel;
 
 @end
 
-@interface iWinRegisterViewController : UIViewController
+@interface iWinRegisterViewController : UIViewController <UIScrollViewDelegate, NSURLConnectionDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *nameField;
 @property (weak, nonatomic) IBOutlet UITextField *emailField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordField;
 @property (weak, nonatomic) IBOutlet UITextField *confirmPasswordField;
 @property (weak, nonatomic) id<iWinRegisterVCDelegate> registerDelegate;
+@property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 - (IBAction)onClickRegister:(id)sender;
 - (IBAction)onClickCancel:(id)sender;
 

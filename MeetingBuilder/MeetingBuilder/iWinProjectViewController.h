@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface iWinProjectViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate>
+@interface iWinProjectViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate, NSURLConnectionDelegate>
+@property (strong, nonatomic) NSMutableData *responseData;
 @property (weak, nonatomic) IBOutlet UITableView *projectTable;
 - (IBAction)onAddNewProject:(id)sender;
-
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withEmail:(NSString *)email;
 @end

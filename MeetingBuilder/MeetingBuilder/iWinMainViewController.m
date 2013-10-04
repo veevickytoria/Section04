@@ -31,7 +31,7 @@
     // Do any additional setup after loading the view from its nib.
     self.loginViewController = [[iWinLoginViewController alloc] initWithNibName:@"iWinLoginViewController" bundle:nil];
     self.registerViewController = [[iWinRegisterViewController alloc] initWithNibName:@"iWinRegisterViewController" bundle:nil];
-    self.projectViewController = [[iWinProjectViewController alloc] initWithNibName:@"iWinProjectViewController" bundle:nil];
+    
     self.registerViewController.registerDelegate = self;
     self.loginViewController.loginDelegate = self;
     [self.view  addSubview:self.loginViewController.view];
@@ -44,9 +44,10 @@
     // Dispose of any resources that can be recreated.
 }
 
--(void) login
+-(void) login:(NSString *)email
 {
     [self removeSubViews];
+    self.projectViewController = [[iWinProjectViewController alloc] initWithNibName:@"iWinProjectViewController" bundle:nil withEmail:email];
     [self.view  addSubview:self.projectViewController.view];
     [self.projectViewController.view setBounds:self.view.bounds];
 }
@@ -58,9 +59,10 @@
     [self.registerViewController.view setBounds:self.view.bounds];
 }
 
--(void) onRegister
+-(void) onRegister:(NSString *)email
 {
     [self removeSubViews];
+    self.projectViewController = [[iWinProjectViewController alloc] initWithNibName:@"iWinProjectViewController" bundle:nil withEmail:email];
     [self.view  addSubview:self.projectViewController.view];
     [self.projectViewController.view setBounds:self.view.bounds];
 }
