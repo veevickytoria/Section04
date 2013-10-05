@@ -1,0 +1,21 @@
+<% provide(:title, 'Login') %>
+<% provide(:loginText, '') %>
+
+<div class="center hero-unit">
+	<h1>Login</h1>
+	<br />
+	<div class="input-group">
+	  <span class="input-group-addon">UserName</span>
+	  <input type="text" class="form-control" placeholder="Username">
+	  <br />
+	  <span class="input-group-addon">Password</span>
+	  <input type="text" class="form-control" placeholder="Password">
+	  <br />
+	  <%= link_to "Login", main_path, :class => "btn btn-primary" %>
+	</div>
+	<br />
+		<%= link_to "Sign Up", signup_path, :class => "link" %>
+		<%= link_to "Forgot Password", resetPassword_path, :class => "link" %>
+</div>
+
+<%= link_to image_tag("rails.png", alt: "Rails", size: "50x59"), 'http://rubyonrails.org/' %>

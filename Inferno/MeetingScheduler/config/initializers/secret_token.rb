@@ -9,4 +9,19 @@
 
 # Make sure your secret_key_base is kept private
 # if you're sharing your code publicly.
-MeetingScheduler::Application.config.secret_key_base = '5e9767ed44fd7f6ffac90890b698db308ca5256afef4545c1e6e20c25d055abebfd189f8581e70f05d735cf5ff92087aba5aa5ed3691081d50652778850c46a9'
+require 'securerandom'
+
+def secure_token
+  token_file = Rails.root.join('.secret')
+  if File.exist?(token_file)
+    # Use the existing token.
+    File.read(token_file).chomp
+  else
+    # Generate a new token and store it in token_file.
+    token = SecureRandom.hex(64)
+    File.write(token_file, token)
+    token
+  end
+end
+
+MeetingScheduler::Application.config.secret_key_base = secure_token

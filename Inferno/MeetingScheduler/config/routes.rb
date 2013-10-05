@@ -1,4 +1,26 @@
 MeetingScheduler::Application.routes.draw do
+  get "dash/main"
+  get "dash/newMeeting"
+  get "login/login"
+  get "login/resetPassword"
+  get "login/about"
+  get "login/signup"
+  resources :requests
+
+  resources :user_tasks
+
+  resources :user_projects
+
+  resources :user_meetings
+
+  root 'login#login'
+  match '/main', to: 'dash#main', via: 'get'
+  match '/newMeeting', to: 'dash#newMeeting', via: 'get'
+  match '/login', to: 'login#login', via: 'get'
+  match '/resetPassword', to: 'login#resetPassword', via: 'get'
+  match '/about', to: 'login#about', via: 'get'
+  match '/signup', to: 'login#signup', via: 'get'
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
