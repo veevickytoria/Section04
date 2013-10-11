@@ -7,6 +7,7 @@
 //
 
 #import "RHViewController.h"
+#import "RHSecondViewController.h"
 
 @interface RHViewController ()
 
@@ -80,7 +81,9 @@
         {
             if (sqlite3_step(statement) == SQLITE_ROW)
             {
-                _status.text = @"Successfully Logged in.";
+                RHSecondViewController *secondView = [[RHSecondViewController alloc] initWithNibName:nil bundle:nil];
+                [self presentViewController:secondView animated:YES completion:nil];
+                //_status.text = @"Successfully Logged in.";
             } else {
                 _status.text = @"Username/Password is incorrect";
             }

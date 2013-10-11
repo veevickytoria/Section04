@@ -23,6 +23,8 @@
 		79210BA717FE8C68000AA22D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 79210BA517FE8C68000AA22D /* InfoPlist.strings */; };
 		79210BA917FE8C68000AA22D /* LoginPrototypeSQLiteTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 79210BA817FE8C68000AA22D /* LoginPrototypeSQLiteTests.m */; };
 		79210BB317FE8C93000AA22D /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 79210BB217FE8C93000AA22D /* libsqlite3.dylib */; };
+		79C203B71807ECE000D1EEFB /* RHSecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79C203B51807ECE000D1EEFB /* RHSecondViewController.m */; };
+		79C203B81807ECE000D1EEFB /* RHSecondViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79C203B61807ECE000D1EEFB /* RHSecondViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +59,9 @@
 		79210BA617FE8C68000AA22D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		79210BA817FE8C68000AA22D /* LoginPrototypeSQLiteTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LoginPrototypeSQLiteTests.m; sourceTree = "<group>"; };
 		79210BB217FE8C93000AA22D /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		79C203B41807ECDF00D1EEFB /* RHSecondViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RHSecondViewController.h; sourceTree = "<group>"; };
+		79C203B51807ECE000D1EEFB /* RHSecondViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RHSecondViewController.m; sourceTree = "<group>"; };
+		79C203B61807ECE000D1EEFB /* RHSecondViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RHSecondViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,6 +131,9 @@
 				79210B9317FE8C67000AA22D /* RHViewController.m */,
 				79210B9517FE8C67000AA22D /* Images.xcassets */,
 				79210B8117FE8C67000AA22D /* Supporting Files */,
+				79C203B41807ECDF00D1EEFB /* RHSecondViewController.h */,
+				79C203B51807ECE000D1EEFB /* RHSecondViewController.m */,
+				79C203B61807ECE000D1EEFB /* RHSecondViewController.xib */,
 			);
 			path = LoginPrototypeSQLite;
 			sourceTree = "<group>";
@@ -237,6 +245,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				79210B9117FE8C67000AA22D /* Main_iPad.storyboard in Resources */,
+				79C203B81807ECE000D1EEFB /* RHSecondViewController.xib in Resources */,
 				79210B9617FE8C67000AA22D /* Images.xcassets in Resources */,
 				79210B8E17FE8C67000AA22D /* Main_iPhone.storyboard in Resources */,
 				79210B8517FE8C67000AA22D /* InfoPlist.strings in Resources */,
@@ -258,6 +267,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				79C203B71807ECE000D1EEFB /* RHSecondViewController.m in Sources */,
 				79210B8B17FE8C67000AA22D /* RHAppDelegate.m in Sources */,
 				79210B8717FE8C67000AA22D /* main.m in Sources */,
 				79210B9417FE8C67000AA22D /* RHViewController.m in Sources */,
@@ -479,6 +489,7 @@
 				79210BAE17FE8C68000AA22D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		79210BAF17FE8C68000AA22D /* Build configuration list for PBXNativeTarget "LoginPrototypeSQLiteTests" */ = {
 			isa = XCConfigurationList;
@@ -487,6 +498,7 @@
 				79210BB117FE8C68000AA22D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
