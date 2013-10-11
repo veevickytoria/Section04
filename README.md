@@ -12,3 +12,4 @@ Jordan Moore has access!
 John McCormack has access!
 Lindsey Watterson has access!
 Grant Smith has access!
+Seth Ruji has access!
