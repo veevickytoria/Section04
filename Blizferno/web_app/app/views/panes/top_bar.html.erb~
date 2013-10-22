@@ -1,0 +1,32 @@
+<style>
+  .navbar-fixed-top .container {
+    height: 60px; /* height here needs to be offset with the same number in application -> style -> body -> padding-top */
+  }
+
+  .navbar-inner {
+    padding: 0px;
+  }
+
+</style>
+
+<div class="navbar navbar-fixed-top" style="float: none; position: absolute; top: 0px;">
+  <div class="navbar-inner">
+    <div class="container">
+
+      <dt class="pageHeader">
+        <%=
+          if(request.fullpath == '/dxf')
+            'RHV WaterJet - DXF File Format'
+          elsif(request.fullpath == '/usage')
+            'RHV WaterJet - Tips & Tricks'
+          elsif(request.fullpath == '/safety')
+            'RHV WaterJet - Safety'
+          elsif(request.fullpath == '/appointments')
+            'RHV WaterJet - Request a Time'
+          else
+            'RHV WaterJet'
+          end %>
+      </dt>
+    </div>
+  </div>
+</div>
