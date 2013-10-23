@@ -1,6 +1,8 @@
-package com.example.droidrage;
+package com.droidrage.meetingninja;
 
 import java.util.Locale;
+
+import com.droidrage.meetingninja.R;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;

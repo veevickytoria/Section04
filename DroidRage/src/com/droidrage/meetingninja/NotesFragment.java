@@ -1,7 +1,10 @@
-package com.example.droidrage;
+package com.droidrage.meetingninja;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.droidrage.meetingninja.R;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

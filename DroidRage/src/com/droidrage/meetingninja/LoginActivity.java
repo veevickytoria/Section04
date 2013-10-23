@@ -1,4 +1,6 @@
-package com.example.droidrage;
+package com.droidrage.meetingninja;
+
+import com.droidrage.meetingninja.R;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

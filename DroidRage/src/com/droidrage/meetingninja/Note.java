@@ -1,4 +1,4 @@
-package com.example.droidrage;
+package com.droidrage.meetingninja;
 
 /**
  * A basic Note class containing a note name and textual content.
