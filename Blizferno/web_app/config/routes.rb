@@ -58,12 +58,22 @@ WebApp::Application.routes.draw do
 
   get "home_page/index"
   get "login/index"
+<<<<<<< HEAD
 
   get "groups/index"
   get "groups/new"
   get "profile/index"
   get "tasks/index"
   get "tasks/new"
+=======
+  get "preferences/home"
+
+  get "groups/index"
+  get "groups/new"
+	get "profile/index"
+  get "create_task/index"
+  get "view_task/index"
+>>>>>>> master
 
   root :to => 'home_page#index'
 
