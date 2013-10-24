@@ -1,0 +1,169 @@
+<style>
+	dt.pageHeader {
+		font-size: 35px;
+		color: white;
+		margin-bottom: 15px;
+		padding-top: 10px;
+		position: absolute;
+		left: 20px;
+	}
+
+	body {
+		padding-top: 60px;
+		padding-bottom: 60px;
+		background-color: black;
+	}
+	@media (max-width: 979px) {
+		body {
+			padding-top: 60px;
+			padding-bottom: 0px;
+			padding-left: 0px;
+			padding-right: 0px;
+		}
+
+		.navbar-inner {
+			padding: 0px !important;
+		}
+	}
+</style>
+
+<style type="text/css">
+	.sexyButton {
+		-moz-box-shadow: inset 0px 1px 0px 0px #ffffff;
+		-webkit-box-shadow: inset 0px 1px 0px 0px #ffffff;
+		box-shadow: inset 0px 1px 0px 0px #ffffff;
+		background: -webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
+		background: -moz-linear-gradient( center top, #ededed 5%, #dfdfdf 100% );
+		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
+		background-color: #ededed;
+		-webkit-border-top-left-radius: 6px;
+		-moz-border-radius-topleft: 6px;
+		border-top-left-radius: 6px;
+		-webkit-border-top-right-radius: 6px;
+		-moz-border-radius-topright: 6px;
+		border-top-right-radius: 6px;
+		-webkit-border-bottom-right-radius: 6px;
+		-moz-border-radius-bottomright: 6px;
+		border-bottom-right-radius: 6px;
+		-webkit-border-bottom-left-radius: 6px;
+		-moz-border-radius-bottomleft: 6px;
+		border-bottom-left-radius: 6px;
+		text-indent: 0;
+		border: 1px solid #dcdcdc;
+		display: inline-block;
+		color: #777777;
+		font-family: arial;
+		font-size: 15px;
+		font-weight: bold;
+		font-style: normal;
+		height: 50px;
+		line-height: 50px;
+		width: 100px;
+		text-decoration: none;
+		text-align: center;
+		text-shadow: 1px 1px 0px #ffffff;
+	}
+	.sexyButton:hover {
+		background: -webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
+		background: -moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
+		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
+		background-color: #dfdfdf;
+	}
+	.sexyButton:active {
+		position: relative;
+		top: 1px;
+	}
+</style>
+
+<!-- Start Nav-Bar -->
+<%= render "panes/top_bar" %>
+<!-- End Nav-Bar -->
+
+<br>
+<br>
+<div class="row-fluid">
+	<div id="leftbar" class="span2" style="position: fixed; left:0px; text-align: center; top:40px; bottom:40px;">
+		<%= render "panes/meeting_bar" %>
+	</div>
+	<div class="span8 offset2">
+
+		<h1>View Project Group</h1>
+		<br />
+		<br />
+
+		<div>
+			Related Information involving users will appear when viewing this groups page:
+			<br />
+			<br />
+			Meetings
+			<br />
+			Agendas
+			<br />
+			Minutes
+			<br />
+			Files
+			<br />
+			Users
+			<br />
+			<br />
+			All in clicable format, in order to provide an aggregate of information for proects as a whole
+		</div>
+		<br />
+		<br />
+		When creating a meeting and adding minutes/agendas/etc, those files will then be linked to this project group, if the Project Name is specified during the creating of the meeting.
+		"General" is an appropriate response for a non project related meeting.
+
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+
+		<button type="button" class="sexyButton">
+			Create Group
+		</button>
+
+	</div>
+	<div id="rightbar" class="span2" style="position: fixed; right:0px; text-align: center; top:40px; bottom:40px;">
+		<%= render "panes/task_bar" %>
+	</div>
+</div>
+
+<%= render "panes/bottom_bar" %>
+
+<script>
+	$(document).ready(function() {
+		var left_width = $('#leftbar').width() - 10;
+		$('#leftbar').stop().animate({
+			left : -left_width
+		}, 500);
+
+		var right_width = $('#rightbar').width() - 10;
+		$('#rightbar').stop().animate({
+			right : -right_width
+		}, 500);
+	});
+
+	$('#leftbar').hover(function() {
+		$(this).stop().animate({
+			left : "0px"
+		}, 500);
+	}, function() {
+		var width = $(this).width() - 10;
+		$(this).stop().animate({
+			left : -width
+		}, 500);
+	});
+
+	$('#rightbar').hover(function() {
+		$(this).stop().animate({
+			right : "0px"
+		}, 500);
+	}, function() {
+		var width = $(this).width() - 10;
+		$(this).stop().animate({
+			right : -width
+		}, 500);
+	}); 
+</script>
