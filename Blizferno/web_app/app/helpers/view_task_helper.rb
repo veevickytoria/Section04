@@ -1,0 +1,2 @@
+module ViewTaskHelper
+end

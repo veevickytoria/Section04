@@ -1,0 +1,2 @@
+class ViewTaskController < ApplicationController
+end
