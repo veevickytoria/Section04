@@ -46,7 +46,7 @@ WebApp::Application.routes.draw do
   #     post 'toggle'
   #   end
   #   resources :posts, concerns:#gem 'sass-rails', '~> 4.0.0'
- :toggleable
+  #:toggleable
   #   resources :photos, concerns: :toggleable
 
   # Example resource route within a namespace:
