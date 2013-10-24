@@ -35,6 +35,9 @@
 			<a id="stick-right" href="/tasks/index"> Tasks </a>
 		  </li>
 		  <li>
+			<a id="stick-right" href="/groups/index"> Groups </a>
+		  </li>
+		  <li>
 			<a id="stick-right" href="/profile/index"> Profile </a>
 		  </li>
 		  <li>
