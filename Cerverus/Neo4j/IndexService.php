@@ -53,11 +53,6 @@ class IndexService {
 		foreach($response as $nodeData) {
 			$nodes[] = Node::inflateFromResponse( $this->_neo_db, $nodeData );
 		}
-		// try{
-			// if (empty($nodes)) throw new NotFoundException();
-		// }catch (NotFoundExcepion $ex){
-			// $nodes= "couldn't find";
-		// }
 		return $nodes;
 		
 	}
