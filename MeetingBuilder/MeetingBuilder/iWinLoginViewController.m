@@ -29,10 +29,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     self.loginButton.layer.cornerRadius = 7;
-    self.loginButton.layer.borderColor = [[UIColor purpleColor] CGColor];
+    self.loginButton.layer.borderColor = [[UIColor darkGrayColor] CGColor];
     self.loginButton.layer.borderWidth = 1.0f;
-    
-    
 }
 
 - (void)didReceiveMemoryWarning
@@ -47,9 +45,10 @@
     NSString *password = [self.passwordField text];
     if (password.length > 0 && email.length>0)
     {
-        NSString *url = [NSString stringWithFormat:@"http://localhost:8888/db_api.php?action=read&table=User&email=%@&password=%@", email, password];
+        NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/index.php?method=login&user=%@", email];
         url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        NSURLRequest *urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+        NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:30];
+        [urlRequest setHTTPMethod:@"GET"];
         NSURLResponse * response = nil;
         NSError * error = nil;
         NSData * data = [NSURLConnection sendSynchronousRequest:urlRequest
@@ -57,7 +56,7 @@
                                                           error:&error];
         self.loggedIn = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         //check login
-        if ([self.loggedIn isEqualToString:@"true"])
+        if (([self.loggedIn rangeOfString:@"TRUE"].location != NSNotFound) || ([self.loggedIn rangeOfString:@"true"].location != NSNotFound))
         {
             [self.loginDelegate login:email];
         }

@@ -12,5 +12,11 @@
 #import "iWinProjectViewController.h"
 
 @interface iWinMainViewController : UIViewController <iWinLoginDelegate, iWinRegisterVCDelegate>
+@property (weak, nonatomic) IBOutlet UIView *mainView;
+@property (weak, nonatomic) IBOutlet UIView *slideView;
+@property (weak, nonatomic) IBOutlet UIView *menuView;
+- (IBAction)onClickMenu;
+- (IBAction)onClickLogOut;
+@property (weak, nonatomic) IBOutlet UIButton *menuButton;
 
 @end

@@ -12,6 +12,7 @@
 @interface iWinProjectViewController ()
 @property (strong, nonatomic) NSMutableArray *projectList;
 @property (strong, nonatomic) NSString* email;
+@property BOOL movedView;
 @end
 
 @implementation iWinProjectViewController
@@ -24,6 +25,33 @@
     }
     return self;
 }
+
+//- (IBAction)onMenuClick:(id)sender
+//{
+//    [UIView beginAnimations:nil context:NULL];
+//    [UIView setAnimationDuration:0.4];
+//    
+//    CGRect oldFrame = self.menuView.frame;
+//    CGRect oldFrameMain = self.mainView.frame;
+//    
+//    if (!self.movedView)
+//    {
+//        self.menuView.frame = CGRectMake(0, oldFrame.origin.y, oldFrame.size.width, oldFrame.size.height);
+//        self.mainView.frame = CGRectMake(oldFrameMain.origin.x+200,oldFrameMain.origin.y,oldFrameMain.size.width,oldFrameMain.size.height);
+//    }
+//    else
+//    {
+//        self.menuView.frame = CGRectMake(-200, oldFrame.origin.y, oldFrame.size.width, oldFrame.size.height);
+//        self.mainView.frame = CGRectMake(0,oldFrameMain.origin.y,oldFrameMain.size.width,oldFrameMain.size.height);
+//    }
+//    self.movedView = !self.movedView;
+//    [UIView commitAnimations];
+//}
+
+//- (IBAction)onLogOut:(id)sender
+//{
+//    [self.projectDelegate logOutProject];
+//}
 
 - (void)viewDidLoad
 {

@@ -27,6 +27,7 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -45,14 +46,43 @@
     if ([password isEqualToString:confirmPassword] && name.length > 0 && email.length > 0 && password.length>0 && confirmPassword.length>0)
     {
         //register
-        NSString *url = [NSString stringWithFormat:@"http://localhost:8888/db_api.php?action=write&table=User&name=%@&password=%@&email=%@", name, password, email];
-        url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        NSURLRequest * urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+        NSArray *keys = [NSArray arrayWithObjects:@"user", @"pass", nil];
+        NSArray *objects = [NSArray arrayWithObjects:email, password,nil];
+        
+        NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+        NSData *jsonData;
+        NSString *jsonString;
+        
+        if ([NSJSONSerialization isValidJSONObject:jsonDictionary])
+        {
+            jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:nil];
+            jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        }
+        NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/index.php?method=register"];
+        
+        NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+        [urlRequest setHTTPMethod:@"POST"];
+        [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+        [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+        [urlRequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-length"];
+        [urlRequest setHTTPBody:jsonData];
         NSURLResponse * response = nil;
         NSError * error = nil;
         NSData * data = [NSURLConnection sendSynchronousRequest:urlRequest
                                               returningResponse:&response
                                                           error:&error];
+        
+        NSLog(@"request : %@", urlRequest);
+        NSLog(@"request headers : %@", [urlRequest allHTTPHeaderFields]);
+        NSLog(@"request body : %@", [[NSString alloc] initWithData:[urlRequest HTTPBody] encoding:NSUTF8StringEncoding]);
+//        if (error) {
+//            // Handle error.
+//        }
+//        else
+//        {
+//            NSError *jsonParsingError = nil;
+//            NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
+//        }
         [self.registerDelegate onRegister:email];
     }
     else
@@ -67,6 +97,33 @@
 {
     [self.registerDelegate onCancel];
 }
+
+//- (IBAction)onClickMenu:(id)sender
+//{
+//    [UIView beginAnimations:nil context:NULL];
+//    [UIView setAnimationDuration:0.4];
+//    
+//    CGRect oldFrame = self.menuView.frame;
+//    CGRect oldFrameMain = self.scrollView.frame;
+//    
+//    if (!self.movedView)
+//    {
+//        self.menuView.frame = CGRectMake(0, oldFrame.origin.y, oldFrame.size.width, oldFrame.size.height);
+//        self.scrollView.frame = CGRectMake(oldFrameMain.origin.x+200,oldFrameMain.origin.y,oldFrameMain.size.width,oldFrameMain.size.height);
+//    }
+//    else
+//    {
+//        self.menuView.frame = CGRectMake(-200, oldFrame.origin.y, oldFrame.size.width, oldFrame.size.height);
+//        self.scrollView.frame = CGRectMake(0,oldFrameMain.origin.y,oldFrameMain.size.width,oldFrameMain.size.height);
+//    }
+//    self.movedView = !self.movedView;
+//    [UIView commitAnimations];
+//}
+
+//- (IBAction)onLogOut:(id)sender
+//{
+//    [self.registerDelegate logOut];
+//}
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
