@@ -28,9 +28,10 @@ You don't have javascript enabled.
                 <p>
                     Welcome to our Web App! Please enter credentials below
                 </p>
-                <form action="validate.php" method="post">
-                    <input type="text" name="username[0]" placeholder="Username" />
-                    <input type="password" name="password[0]" placeholder="Password" />
+                <form action="http://csse371-04.csse.rose-hulman.edu/index.php" method="get">
+		    <input type="hidden" name="method" value="login" />
+                    <input type="text" name="user" placeholder="Username" />
+                   
                     <input type="submit" value="Login" class="button" style="font-size:14px;cursor:pointer;visibility:none;"/>
                     <br /><p id="invalidLogin" style="text-align:center;color:#60D77A;font-size:18px;display:none;font-weight:bold;padding-top:10px;">Invalid Username or Password</p>
                     <center><a href="." style="color:white;text-decoration:none;line-height:62px;">Forgot?</a></center>
@@ -43,8 +44,9 @@ You don't have javascript enabled.
                 <p>
                     Enter your details below:
                 </p>
-                <form action="register.php" method="post">
+                <form action="http://csse371-04.csse.rose-hulman.edu/index.php?method=register" method="post">
                     <ul>
+<!--
                         <li>
                             <table style="width:100%">
                             <tr>
@@ -55,15 +57,20 @@ You don't have javascript enabled.
                             </table>
                             
                         </li>
+-->
+<input type="hidden" name="method" value="register" />
+
                         <li>
-                            <input type="text" name="username[1]" placeholder="Username" />
+                            <input type="text" name="user" placeholder="Username" />
                         </li>
                         <li>
-                            <input type="password" name="password[1]" placeholder="Password" />
+                            <input type="password" name="pass" placeholder="Password" />
                         </li>
+<!--
                         <li>
                             <input type="password" name="passConfirm" placeholder="Confirm password" />
                         </li>
+-->
                         <li>
                             <input type="submit" value="Sign Up" class="button" />
                         </li>
