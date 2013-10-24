@@ -1,4 +1,12 @@
-<h1> Account </h1>
+<style>
+#register_device_input
+{
+width:5 !important;
+}
+
+
+</style>
+
 
 <br>
 <br>
@@ -14,6 +22,6 @@
 
 
 <form>
-	<input type="text" maxlength="4" size="6">
-	<input type="submit" value="Submit">
+	<input type="text" id="register_device_input" maxlength="4" width="5" placeholder="####">
+	<input type="submit" value="Register Device">
 </form>

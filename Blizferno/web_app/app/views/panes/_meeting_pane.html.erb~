@@ -34,11 +34,11 @@
 <br>
 <form>
 	<select>
-		<option value="meetings_today">Meetings Today</option>
-		<option value="meetings_weekly">Meetings this Week</option>
-		<option value="meetings_month">Meetings this Month</option>
+		<option value="tasks_today">Tasks Today</option>
+		<option value="tasks_weekly">Tasks this Week</option>
+		<option value="tasks_yearly">Tasks this Year</option>
 	</select>
 
-	<input type="submit" value="Create a Meeting">
+	<input type="submit" value="Create a Task">
 </form>
 

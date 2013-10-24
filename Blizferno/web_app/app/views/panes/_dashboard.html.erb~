@@ -7,16 +7,20 @@
 
 <div id="NW" style="text-align:center">
 <br><br><br>
-	<font size=20>Account</font>
-	<%= render "account_pane" %>
+	<a href="profile/index" style="text-decoration:none; color:white"><font size=20>Account</font> </a>
+	<%= render "panes/account_pane" %>
 </div>
 <div id="NE" style="text-align:center">
 <br><br><br>
 	<font size=20>Meetings</font>
+	<%= render "panes/meeting_pane" %>
 </div>
-<div id="SW" style="text-align:center">
+<div id="SW">
 <br><br>
-	<font size=20>Tasks</font>
+	<div  style="text-align:center">
+		<font size=20>Tasks</font>
+	</div>
+  <%= render "panes/task_pane" %>
 </div>​
 <div id="SE" style="text-align:center">
 <br><br>

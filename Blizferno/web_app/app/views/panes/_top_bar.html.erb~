@@ -32,10 +32,10 @@
             <a id="stick-right" href="#"> Meetings </a>
           </li>
 		  <li>
-			<a id="stick-right" href="#"> Tasks </a>
+			<a id="stick-right" href="/tasks/index"> Tasks </a>
 		  </li>
 		  <li>
-			<a id="stick-right" href="#"> Profile </a>
+			<a id="stick-right" href="/profile/index"> Profile </a>
 		  </li>
 		  <li>
 			<a id="stick-right" href="#"> Notifications </a>
@@ -44,7 +44,7 @@
 			<a id="stick-right" href="#"> Settings </a>
 		  </li>
 		  <li>
-			<a id="stick-right" href="#"> Log Out </a>
+			<a id="stick-right" href="/login/index"> Log Out </a>
 		  </li>
         </ul>
 

@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ViewTaskControllerTest < ActionController::TestCase
+class TasksControllerTest < ActionController::TestCase
   # test "the truth" do
   #   assert true
   # end

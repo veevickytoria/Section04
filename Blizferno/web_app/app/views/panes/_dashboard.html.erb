@@ -7,19 +7,23 @@
 
 <div id="NW" style="text-align:center">
 <br><br><br>
-	<font size=20>Account</font>
+	<a href="profile/index" style="text-decoration:none; color:white"><font size=20>Account</font> </a>
 	<%= render "panes/account_pane" %>
 </div>
 <div id="NE" style="text-align:center">
 <br><br><br>
-	<font size=20>Meetings</font>
+	<a href="#" style="text-decoration:none; color:white"><font size=20>Meetings</font></a>
+	<%= render "panes/meeting_pane" %>
 </div>
-<div id="SW" style="text-align:center">
+<div id="SW">
 <br><br>
-	<font size=20>Tasks</font>
+	<div  style="text-align:center">
+		<a href="tasks/index" style="text-decoration:none; color:white"><font size=20>Tasks</font></a>
+	</div>
+  <%= render "panes/task_pane" %>
 </div>​
 <div id="SE" style="text-align:center">
 <br><br>
-	<font size=20>Groups</font>
+	<a href="groups/index" style="text-decoration:none; color:white"><font size=20>Groups</font></a>
 </div>
 
