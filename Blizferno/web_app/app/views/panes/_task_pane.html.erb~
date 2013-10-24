@@ -42,15 +42,14 @@
 		Status 1 - 2 - 3 - 4 - 5 - 6
 	</div>
 </div>
-
+<br>
+<br>
 <div style="text-align:center">
-<form>
 	<select>
 		<option value="tasks_today">Tasks Today</option>
 		<option value="tasks_weekly">Tasks this Week</option>
 		<option value="tasks_monthly">Tasks this Month</option>
 	</select>
 
-	<input type="submit" value="Create a Task">
-</form>
+	<button onclick="/tasks/new"> Create a Task</button>
 </div>
