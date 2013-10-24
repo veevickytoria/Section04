@@ -64,6 +64,7 @@ WebApp::Application.routes.draw do
 =======
 	get "profile/index"
   get "create_task/index"
+  get "view_task/index"
 
 >>>>>>> 5e28493a1a86256ed9c2d418f11d670e25f017fc
 
