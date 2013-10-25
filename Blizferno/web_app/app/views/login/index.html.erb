@@ -11,6 +11,41 @@ You don't have javascript enabled.
         }else{
             elem.style.display = "none";
         };
+
+
+
+var form;
+
+form.onsubmit = function (e) {
+  // stop the regular form submission
+  e.preventDefault();
+
+  // collect the form data while iterating over the inputs
+  var data = {};
+  for (var i = 0, ii = form.length; i < ii; ++i) {
+    var input = form[i];
+    if (input.name) {
+      data[input.name] = input.value;
+    }
+  }
+
+  // construct an HTTP request
+  var xhr = new XMLHttpRequest();
+  xhr.open(form.method, form.action, true);
+  xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+
+  // send the collected data as JSON
+  xhr.send(JSON.stringify(data));
+
+  xhr.onloadend = function () {
+    // done
+  };
+};
+
+
+
+
+
     </script>
     <div class="container">
         <div class="flat-form">
@@ -43,7 +78,7 @@ You don't have javascript enabled.
                 <p>
                     Enter your details below:
                 </p>
-                <form action="http://csse371-04.csse.rose-hulman.edu/index.php?method=register" method="post" >
+                <form  id="myform" method="post" action="http://csse371-04.csse.rose-hulman.edu/index.php?method=register">
                     <ul>
 <!--
                         <li>
@@ -57,7 +92,6 @@ You don't have javascript enabled.
                             
                         </li>
 -->
-<input type="hidden" name="method" value="register" />
 
                         <li>
                             <input type="text" name="user" placeholder="Username" />

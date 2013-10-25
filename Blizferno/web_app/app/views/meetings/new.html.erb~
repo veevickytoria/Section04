@@ -1,0 +1,147 @@
+<html>
+<head>
+<title>Create Meeting</title>
+<style type="text/css">
+	.AbsCenter{
+		margin: 1% auto;
+		position: relative;
+	}
+
+	body{
+		background-color: white;
+		color: black;
+		font-family: Arial;
+	}
+
+	form{
+		margin: 10% auto;
+		width: 50%;
+	}
+
+	::-webkit-input-placeholder { font-size: 12px; }
+	::-moz-placeholder { font-size: 12px; } /* firefox 19+ */
+	input:-moz-placeholder { font-size: 12px; }
+	form input[type='text'],
+	form input[type='url'],
+	form input[type='textarea']{
+		height: 16px;
+		width: 15%;
+	}
+	select{
+		height: 20px;
+	}
+	h1{
+		font-size: 26px;
+		font-style: bold;
+		font-family: Arial;
+		margin-top: 2%;
+		text-align: center;
+	}
+
+	.checkboxes label
+	{
+	    display: block;
+	    float: left;
+	    padding-right: 10px;
+	    white-space: nowrap;
+	}
+
+	.checkboxes input
+	{
+	    vertical-align: middle;
+	}
+
+	.checkboxes label span
+	{
+	    vertical-align: middle;
+	}
+	pre{
+		background-color: white;
+	}
+</style>
+</head>
+<body>
+	
+	<form>
+		<h1 style='padding-bottom: 8px'>Create A Meeting</h1>
+		<p>Topic</p>
+		<input type='text' placeholder="Topic" />
+		<br />
+		<p>Description</p>
+		<textarea placeholder='Description'></textarea>
+		<br />
+		<p>Attendees</p>
+		<table>
+			<tr>
+				<td>
+					<select id='mylist'>
+						<option>Recently Invited</option>
+						<option>-----------</option>
+						<option>Jerry</option>
+						<option>George</option>
+						<option>Elaine</option>
+					</select>
+				</td>
+				<td style='padding-left: 5px;'><input type='button' value='Search Users' /></td>
+			</tr>
+		</table>
+		
+		<pre style='font-size:12px'>	show attendees after they've been selected</pre>
+		<br />
+		<p>Location</p>
+		<table>
+			<tr>
+				<td>
+					<input type='text' style='width: 55%' placeholder='Location' />
+				</td>
+				<td style='padding-left: 5px;'><input type='button' value='Search Locations' /></td>
+			</tr>
+		</table>
+		<br />
+		<p>Project</p>
+		<table>
+			<tr>
+				<td>
+					<input type='text' style='width: 55%;' placeholder='Project' />
+				</td>
+				<td style='padding-left: 5px;'><input type='button' value='Search Projects' /></td>
+			</tr>
+		</table>
+		
+		<br />
+		<p>Agenda</p>
+		<table style='width: 100%;'>
+			<tr>
+				<td style='width: 55%'><input type='url' style='width: 75%' placeholder='Paste Link' /></td>
+				<td style='width: 45%'><input type='button' value='Attach Google Doc' /></td>
+			</tr>
+		</table>
+		<br />
+		<p style='padding-bottom: 5px'>Approval By:</p>
+		<pre style='background-color: white;'>
+			<input type='checkbox' /> Chandan
+			<input type='checkbox' /> Barack Obama
+			<input type='checkbox' /> Warren Buffett
+		</pre>
+		<br />
+		<br />
+		Tasks:<br /><br />
+		<input type='text' placeholder='Task' />
+		<select>
+			<option>Assigned User</option>
+			<option>------------</option>
+			<option>other users here</option>
+		</select>
+		<br />
+		<p style='font-size:12px;'>More tasks...</p>
+		<br /><br />
+		<div class='checkboxes'>
+		<label><input type='radio' name='schedule' /><span> Accept Suggested Time</span></label>
+		<label><input type='radio' name='schedule' /><span> Go to Scheduling Assistant</span></label>
+		</div>
+		<br /><br />
+		<input type='submit' style='font-size: 16px;padding-top: 2px;' name='createMeeting' value='Create Meeting' />
+	</form>
+	
+</body>
+</html>

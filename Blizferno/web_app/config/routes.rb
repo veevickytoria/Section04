@@ -58,8 +58,8 @@ WebApp::Application.routes.draw do
 
   get "home_page/index"
   get "login/index"
-  get "create_meeting/index"
-  get "view_meetings/index"
+  get "meetings/new"
+  get "meetings/index"
 
   get "groups/index"
   get "groups/new"
@@ -68,10 +68,6 @@ WebApp::Application.routes.draw do
   get "tasks/new"
 
   get "preferences/home"
-
-  get "groups/index"
-  get "groups/new" 
-  get "profile/index"
 
   root :to => 'home_page#index'
 
