@@ -30,6 +30,7 @@
     // Do any additional setup after loading the view from its nib.
     self.headerLabel.text = @"Schedule a Meeting";
     [self.addAgendaButton setTitle:@"Add Agenda" forState:UIControlStateNormal];
+    self.saveAndAddMoreButton.hidden = NO;
     if (self.isEditing)
     {
         self.headerLabel.text = @"View Meeting";
@@ -39,6 +40,7 @@
         self.durationField.text = @"1 hr";
         self.placeField.text = @"O259";
         [self.addAgendaButton setTitle:@"Agenda 101" forState:UIControlStateNormal];
+        self.saveAndAddMoreButton.hidden = YES;
     }
 }
 

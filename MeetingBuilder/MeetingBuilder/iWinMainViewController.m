@@ -15,6 +15,8 @@
 @property (strong, nonatomic) iWinMeetingViewController *meetingListViewController;
 @property (strong, nonatomic) iWinHomeScreenViewController *homeScreenViewController;
 @property (strong, nonatomic) iWinScheduleViewMeetingViewController *scheduleMeetingViewController;
+@property (strong, nonatomic) iWinAddAndViewTaskViewController *addViewTaskViewController;
+@property (strong, nonatomic) iWinTaskListViewController *taskListViewController;
 @property (strong, nonatomic) iWinViewAndAddViewController *agendaController;
 @property BOOL movedView;
 @property (nonatomic) UISwipeGestureRecognizer * swiperight;
@@ -222,6 +224,11 @@
     self.tasksButton.backgroundColor = [UIColor whiteColor];
     self.lastClicked.backgroundColor = [UIColor clearColor];
     self.lastClicked = self.tasksButton;
+    
+    self.taskListViewController = [[iWinTaskListViewController alloc] initWithNibName:@"iWinTaskListViewController" bundle:nil];
+    [self.mainView  addSubview:self.taskListViewController.view];
+    [self.taskListViewController.view setBounds:self.mainView.bounds];
+    self.taskListViewController.taskListDelegate = self;
 }
 
 - (IBAction)onClickSettings
@@ -314,6 +321,23 @@
 -(void)viewScheduleClicked
 {
     
+}
+
+-(void) createNewTaskClicked:(BOOL)isEditing
+{
+    [self removeSubViews];
+    [self enableSliding];
+    [self animateSlidingMenu:NO];
+    
+    self.addViewTaskViewController = [[iWinAddAndViewTaskViewController alloc] initWithNibName:@"iWinAddAndViewTaskViewController" bundle:nil inEditMode:isEditing];
+    [self.mainView  addSubview:self.addViewTaskViewController.view];
+    [self.addViewTaskViewController.view setBounds:self.mainView.bounds];
+    self.addViewTaskViewController.taskDelegate = self;
+}
+
+-(void) goToTaskList
+{
+    [self onClickTasks];
 }
 
 @end

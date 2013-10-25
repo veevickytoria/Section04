@@ -14,7 +14,6 @@
 @property (strong, nonatomic) NSMutableArray *meetingList;
 @property (strong, nonatomic) NSMutableArray *meetingDetail;
 @property (strong, nonatomic) NSString* email;
-@property BOOL movedView;
 @end
 
 @implementation iWinMeetingViewController

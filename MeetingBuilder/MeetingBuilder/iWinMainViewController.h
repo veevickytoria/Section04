@@ -12,8 +12,10 @@
 #import "iWinMeetingViewController.h"
 #import "iWinScheduleViewMeetingViewController.h"
 #import "iWinViewAndAddViewController.h"
+#import "iWinTaskListViewController.h"
+#import "iWinAddAndViewTaskViewController.h"
 
-@interface iWinMainViewController : UIViewController <iWinLoginDelegate, iWinRegisterVCDelegate, ScheduleViewMeetingDelegate, MeetingListDelegate, AgendaDelegate>
+@interface iWinMainViewController : UIViewController <iWinLoginDelegate, iWinRegisterVCDelegate, ScheduleViewMeetingDelegate, MeetingListDelegate, AgendaDelegate, TaskListDelegate, TaskDelegate>
 @property (weak, nonatomic) IBOutlet UIView *mainView;
 @property (weak, nonatomic) IBOutlet UIView *slideView;
 @property (weak, nonatomic) IBOutlet UIView *menuView;

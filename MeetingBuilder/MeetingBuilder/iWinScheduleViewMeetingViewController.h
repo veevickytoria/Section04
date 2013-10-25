@@ -26,6 +26,7 @@
 - (IBAction)onClickCancel;
 @property (nonatomic) id<ScheduleViewMeetingDelegate> scheduleDelegate;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil inEditMode:(BOOL)isEditing;
+@property (weak, nonatomic) IBOutlet UIButton *saveAndAddMoreButton;
 @property (weak, nonatomic) IBOutlet UITextField *titleField;
 @property (weak, nonatomic) IBOutlet UITextField *startTimeField;
 @property (weak, nonatomic) IBOutlet UITextField *endTimeField;

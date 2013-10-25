@@ -26,6 +26,10 @@
 		0A1A72911819FE48009A49E5 /* iWinViewAndAddViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A1A728F1819FE48009A49E5 /* iWinViewAndAddViewController.xib */; };
 		0A1A7296181A1802009A49E5 /* iWinAgendaItemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A1A7294181A1802009A49E5 /* iWinAgendaItemViewController.m */; };
 		0A1A7297181A1802009A49E5 /* iWinAgendaItemViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A1A7295181A1802009A49E5 /* iWinAgendaItemViewController.xib */; };
+		0A1A729E181A22AB009A49E5 /* iWinTaskListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A1A729C181A22AB009A49E5 /* iWinTaskListViewController.m */; };
+		0A1A729F181A22AB009A49E5 /* iWinTaskListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A1A729D181A22AB009A49E5 /* iWinTaskListViewController.xib */; };
+		0A1A72A3181A2663009A49E5 /* iWinAddAndViewTaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A1A72A1181A2663009A49E5 /* iWinAddAndViewTaskViewController.m */; };
+		0A1A72A4181A2663009A49E5 /* iWinAddAndViewTaskViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A1A72A2181A2663009A49E5 /* iWinAddAndViewTaskViewController.xib */; };
 		0A7E515B17FBEA9700A4B8B7 /* iWinMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7E515917FBEA9700A4B8B7 /* iWinMainViewController.m */; };
 		0A7E515C17FBEA9700A4B8B7 /* iWinMainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A7E515A17FBEA9700A4B8B7 /* iWinMainViewController.xib */; };
 		0A7E516017FBEB9200A4B8B7 /* iWinLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7E515E17FBEB9200A4B8B7 /* iWinLoginViewController.m */; };
@@ -107,6 +111,12 @@
 		0A1A7293181A1802009A49E5 /* iWinAgendaItemViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinAgendaItemViewController.h; sourceTree = "<group>"; };
 		0A1A7294181A1802009A49E5 /* iWinAgendaItemViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinAgendaItemViewController.m; sourceTree = "<group>"; };
 		0A1A7295181A1802009A49E5 /* iWinAgendaItemViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iWinAgendaItemViewController.xib; sourceTree = "<group>"; };
+		0A1A729B181A22AB009A49E5 /* iWinTaskListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinTaskListViewController.h; sourceTree = "<group>"; };
+		0A1A729C181A22AB009A49E5 /* iWinTaskListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinTaskListViewController.m; sourceTree = "<group>"; };
+		0A1A729D181A22AB009A49E5 /* iWinTaskListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iWinTaskListViewController.xib; sourceTree = "<group>"; };
+		0A1A72A0181A2663009A49E5 /* iWinAddAndViewTaskViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinAddAndViewTaskViewController.h; sourceTree = "<group>"; };
+		0A1A72A1181A2663009A49E5 /* iWinAddAndViewTaskViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinAddAndViewTaskViewController.m; sourceTree = "<group>"; };
+		0A1A72A2181A2663009A49E5 /* iWinAddAndViewTaskViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iWinAddAndViewTaskViewController.xib; sourceTree = "<group>"; };
 		0A7E515817FBEA9700A4B8B7 /* iWinMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinMainViewController.h; sourceTree = "<group>"; };
 		0A7E515917FBEA9700A4B8B7 /* iWinMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinMainViewController.m; sourceTree = "<group>"; };
 		0A7E515A17FBEA9700A4B8B7 /* iWinMainViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iWinMainViewController.xib; sourceTree = "<group>"; };
@@ -184,6 +194,7 @@
 		0A04456117F3825D000FF2A0 /* MeetingBuilder */ = {
 			isa = PBXGroup;
 			children = (
+				0A1A729A181A2297009A49E5 /* AddAttendees */,
 				0A1A7299181A2210009A49E5 /* AddAndViewTask */,
 				0A1A7298181A2202009A49E5 /* TaskList */,
 				0A1A7292181A17EC009A49E5 /* AgendaItem */,
@@ -307,6 +318,9 @@
 		0A1A7298181A2202009A49E5 /* TaskList */ = {
 			isa = PBXGroup;
 			children = (
+				0A1A729B181A22AB009A49E5 /* iWinTaskListViewController.h */,
+				0A1A729C181A22AB009A49E5 /* iWinTaskListViewController.m */,
+				0A1A729D181A22AB009A49E5 /* iWinTaskListViewController.xib */,
 			);
 			name = TaskList;
 			sourceTree = "<group>";
@@ -314,8 +328,18 @@
 		0A1A7299181A2210009A49E5 /* AddAndViewTask */ = {
 			isa = PBXGroup;
 			children = (
+				0A1A72A0181A2663009A49E5 /* iWinAddAndViewTaskViewController.h */,
+				0A1A72A1181A2663009A49E5 /* iWinAddAndViewTaskViewController.m */,
+				0A1A72A2181A2663009A49E5 /* iWinAddAndViewTaskViewController.xib */,
 			);
 			name = AddAndViewTask;
+			sourceTree = "<group>";
+		};
+		0A1A729A181A2297009A49E5 /* AddAttendees */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = AddAttendees;
 			sourceTree = "<group>";
 		};
 		0ACE339D17FD235F003B9C0A /* Products */ = {
@@ -427,6 +451,7 @@
 				0A04456617F3825D000FF2A0 /* InfoPlist.strings in Resources */,
 				0A7E516117FBEB9200A4B8B7 /* iWinLoginViewController.xib in Resources */,
 				0A04456E17F3825D000FF2A0 /* Default.png in Resources */,
+				0A1A729F181A22AB009A49E5 /* iWinTaskListViewController.xib in Resources */,
 				0ACE339B17FCF5F8003B9C0A /* iWinMeetingViewController.xib in Resources */,
 				0A1A7297181A1802009A49E5 /* iWinAgendaItemViewController.xib in Resources */,
 				0A1A72911819FE48009A49E5 /* iWinViewAndAddViewController.xib in Resources */,
@@ -434,6 +459,7 @@
 				0A7E515C17FBEA9700A4B8B7 /* iWinMainViewController.xib in Resources */,
 				0A1A727E1819E1F5009A49E5 /* iWinHomeScreenViewController.xib in Resources */,
 				0A1A728B1819F590009A49E5 /* iWinScheduleViewMeetingViewController.xib in Resources */,
+				0A1A72A4181A2663009A49E5 /* iWinAddAndViewTaskViewController.xib in Resources */,
 				0A04457017F3825D000FF2A0 /* Default@2x.png in Resources */,
 				0A04457217F3825D000FF2A0 /* Default-568h@2x.png in Resources */,
 			);
@@ -447,9 +473,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A1A727D1819E1F5009A49E5 /* iWinHomeScreenViewController.m in Sources */,
+				0A1A72A3181A2663009A49E5 /* iWinAddAndViewTaskViewController.m in Sources */,
 				0ACE339A17FCF5F8003B9C0A /* iWinMeetingViewController.m in Sources */,
 				0A1A7296181A1802009A49E5 /* iWinAgendaItemViewController.m in Sources */,
 				0A7E516017FBEB9200A4B8B7 /* iWinLoginViewController.m in Sources */,
+				0A1A729E181A22AB009A49E5 /* iWinTaskListViewController.m in Sources */,
 				0A04456817F3825D000FF2A0 /* main.m in Sources */,
 				0A1A72901819FE48009A49E5 /* iWinViewAndAddViewController.m in Sources */,
 				0A7E516517FBEBA200A4B8B7 /* iWinRegisterViewController.m in Sources */,

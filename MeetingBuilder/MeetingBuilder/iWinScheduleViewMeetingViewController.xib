@@ -11,6 +11,7 @@
                 <outlet property="endTimeField" destination="x1C-22-7bS" id="5ug-uD-Pqf"/>
                 <outlet property="headerLabel" destination="gXi-nj-zNj" id="7n9-Ss-mTe"/>
                 <outlet property="placeField" destination="M0h-G5-uU5" id="yoe-II-NQ7"/>
+                <outlet property="saveAndAddMoreButton" destination="vR6-4i-fFF" id="Q9g-IV-Apd"/>
                 <outlet property="startTimeField" destination="Wef-Xq-450" id="dq6-g8-jqC"/>
                 <outlet property="titleField" destination="a4g-lb-eDA" id="ntZ-bJ-cdN"/>
                 <outlet property="view" destination="2" id="3"/>
@@ -142,7 +143,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lkE-ef-dnG">
-                    <rect key="frame" x="463" y="43" width="49" height="33"/>
+                    <rect key="frame" x="625" y="43" width="49" height="33"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <state key="normal" title="Save">
@@ -154,7 +155,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vR6-4i-fFF">
-                    <rect key="frame" x="520" y="43" width="154" height="33"/>
+                    <rect key="frame" x="447" y="43" width="154" height="33"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <state key="normal" title="Save And Add More">
