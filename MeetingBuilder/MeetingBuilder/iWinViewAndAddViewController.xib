@@ -7,6 +7,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="iWinViewAndAddViewController">
             <connections>
                 <outlet property="headerLabel" destination="npF-Qr-M7u" id="TtW-Zr-bzW"/>
+                <outlet property="itemTableView" destination="gqS-5J-CFa" id="N89-sG-HPj"/>
                 <outlet property="titleTextField" destination="0YU-3m-7Et" id="WmW-7T-Fm4"/>
                 <outlet property="view" destination="2" id="3"/>
             </connections>

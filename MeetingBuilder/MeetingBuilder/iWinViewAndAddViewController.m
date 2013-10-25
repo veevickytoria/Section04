@@ -11,6 +11,7 @@
 @interface iWinViewAndAddViewController ()
 @property (nonatomic) NSMutableArray *itemList;
 @property (nonatomic) BOOL isEditing;
+@property (nonatomic) iWinAgendaItemViewController *agendaItemViewController;
 @end
 
 @implementation iWinViewAndAddViewController
@@ -84,11 +85,30 @@
 
 - (IBAction)onClickAddItem
 {
+    self.agendaItemViewController = [[iWinAgendaItemViewController alloc] initWithNibName:@"iWinAgendaItemViewController" bundle:nil inEditMode:NO];
+    self.agendaItemViewController.itemDelegate = self;
+    [self.agendaItemViewController setModalPresentationStyle:UIModalPresentationFormSheet];
+    [self.agendaItemViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+    
+    [self presentViewController:self.agendaItemViewController animated:YES completion:nil];
+    self.agendaItemViewController.view.superview.bounds = CGRectMake(0,0,556,283);
     
 }
 
 - (IBAction)onClickAddAttendees
 {
     
+}
+
+-(void)saveItem:(NSString *)name
+{
+    [self.itemList addObject:name];
+    [self.itemTableView reloadData];
+    [self dismissViewControllerAnimated:YES completion:Nil];
+}
+
+-(void) cancel
+{
+    [self dismissViewControllerAnimated:YES completion:Nil];
 }
 @end

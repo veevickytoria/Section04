@@ -68,7 +68,16 @@
     [self.scheduleDelegate saveClicked];
 }
 
-- (IBAction)onClickSaveAndAddMore {
+- (IBAction)onClickSaveAndAddMore
+{
+    //save it
+    self.headerLabel.text = @"Schedule a Meeting";
+    self.titleField.text = @"";
+    self.startTimeField.text = @"";
+    self.endTimeField.text = @"";
+    self.durationField.text = @"";
+    self.placeField.text = @"";
+    [self.addAgendaButton setTitle:@"Add Agenda" forState:UIControlStateNormal];
 }
 
 - (IBAction)onClickCancel
