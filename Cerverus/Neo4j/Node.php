@@ -87,6 +87,18 @@ class Node extends PropertyContainer
 		return $this->_id;
 	}
 	
+	public function getProperties()
+	{
+		$data = count($this->_data) > 0 ? $this->_data : NULL;
+		list($response, $http_code) = $this->jsonClient->jsonGetRequest($this->getUri().'/properties');	
+		return json_encode($response);
+	}
+	/*
+	Exmaple Code with calling a node
+	$postContent = json_decode($node->getProperties());
+	echo $postContent->username;
+	*/
+	
 	public function isSaved()
 	{
 		return !$this->_is_new;
