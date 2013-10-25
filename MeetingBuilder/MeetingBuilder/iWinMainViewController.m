@@ -15,6 +15,7 @@
 @property (strong, nonatomic) iWinMeetingViewController *meetingListViewController;
 @property (strong, nonatomic) iWinHomeScreenViewController *homeScreenViewController;
 @property (strong, nonatomic) iWinScheduleViewMeetingViewController *scheduleMeetingViewController;
+@property (strong, nonatomic) iWinViewAndAddViewController *agendaController;
 @property BOOL movedView;
 @property (nonatomic) UISwipeGestureRecognizer * swiperight;
 @property (nonatomic) UISwipeGestureRecognizer * swipeleft;
@@ -278,6 +279,11 @@
     self.scheduleMeetingViewController.scheduleDelegate = self;
 }
 
+-(void) goToViewMeeting
+{
+    [self meetingSelected];
+}
+
 -(void) saveClicked
 {
     [self onClickMeetings];
@@ -288,9 +294,16 @@
     [self onClickMeetings];
 }
 
--(void)addAgendaClicked
+-(void)addAgendaClicked:(BOOL)isEditing
 {
+    [self removeSubViews];
+    [self enableSliding];
+    [self animateSlidingMenu:NO];
     
+    self.agendaController = [[iWinViewAndAddViewController alloc] initWithNibName:@"iWinViewAndAddViewController" bundle:nil inEditMode:isEditing];
+    [self.mainView  addSubview:self.agendaController.view];
+    [self.agendaController.view setBounds:self.mainView.bounds];
+    self.agendaController.agendaDelegate = self;
 }
 
 -(void)addAttenddesClicked

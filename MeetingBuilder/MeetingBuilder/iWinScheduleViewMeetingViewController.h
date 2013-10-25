@@ -12,7 +12,7 @@
 
 -(void)saveClicked;
 -(void)cancelClicked;
--(void)addAgendaClicked;
+-(void)addAgendaClicked:(BOOL)isEditing;
 -(void)addAttenddesClicked;
 -(void)viewScheduleClicked;
 @end
@@ -31,4 +31,6 @@
 @property (weak, nonatomic) IBOutlet UITextField *endTimeField;
 @property (weak, nonatomic) IBOutlet UITextField *durationField;
 @property (weak, nonatomic) IBOutlet UITextField *placeField;
+@property (weak, nonatomic) IBOutlet UILabel *headerLabel;
+@property (weak, nonatomic) IBOutlet UIButton *addAgendaButton;
 @end
