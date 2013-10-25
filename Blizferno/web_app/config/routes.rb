@@ -56,6 +56,8 @@ WebApp::Application.routes.draw do
 
   get "home_page/index"
   get "login/index"
+  get "create_meeting/index"
+  get "view_meetings/index"
 
   root :to => 'home_page#index'
 
