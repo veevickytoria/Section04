@@ -58,7 +58,9 @@
         [self.scheduleDelegate addAgendaClicked:YES];
 }
 
-- (IBAction)onAddAttendees {
+- (IBAction)onAddAttendees
+{
+    [self.scheduleDelegate addAttenddesClicked:self.isEditing];
 }
 
 - (IBAction)onViewMySchedule {

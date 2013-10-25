@@ -97,7 +97,7 @@
 
 - (IBAction)onClickAddAttendees
 {
-    
+    [self.agendaDelegate addAttendeesForAgenda:self.isEditing];
 }
 
 -(void)saveItem:(NSString *)name

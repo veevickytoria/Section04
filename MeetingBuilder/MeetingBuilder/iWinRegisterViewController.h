@@ -24,5 +24,9 @@
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 - (IBAction)onClickRegister:(id)sender;
 - (IBAction)onClickCancel:(id)sender;
+@property (weak, nonatomic) IBOutlet UITextField *locationField;
+@property (weak, nonatomic) IBOutlet UITextField *companyField;
+@property (weak, nonatomic) IBOutlet UITextField *phoneNumberField;
+@property (weak, nonatomic) IBOutlet UITextField *titleField;
 
 @end

@@ -10,8 +10,7 @@
 
 @protocol MeetingListDelegate <NSObject>
 
--(void)scheduleMeetingClicked;
--(void)meetingSelected;
+-(void)scheduleMeetingClicked :(BOOL)isEditing;
 
 @end
 

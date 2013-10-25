@@ -18,6 +18,7 @@
 @property (strong, nonatomic) iWinAddAndViewTaskViewController *addViewTaskViewController;
 @property (strong, nonatomic) iWinTaskListViewController *taskListViewController;
 @property (strong, nonatomic) iWinViewAndAddViewController *agendaController;
+@property (strong, nonatomic) iWinAddUsersViewController *userViewController;
 @property BOOL movedView;
 @property (nonatomic) UISwipeGestureRecognizer * swiperight;
 @property (nonatomic) UISwipeGestureRecognizer * swipeleft;
@@ -262,25 +263,13 @@
     [UIView commitAnimations];
 }
 
--(void) scheduleMeetingClicked
+-(void) scheduleMeetingClicked:(BOOL)isEditing
 {
     [self removeSubViews];
     [self enableSliding];
     [self animateSlidingMenu:NO];
     
-    self.scheduleMeetingViewController = [[iWinScheduleViewMeetingViewController alloc] initWithNibName:@"iWinScheduleViewMeetingViewController" bundle:nil inEditMode:NO];
-    [self.mainView  addSubview:self.scheduleMeetingViewController.view];
-    [self.scheduleMeetingViewController.view setBounds:self.mainView.bounds];
-    self.scheduleMeetingViewController.scheduleDelegate = self;
-}
-
--(void) meetingSelected
-{
-    [self removeSubViews];
-    [self enableSliding];
-    [self animateSlidingMenu:NO];
-    
-    self.scheduleMeetingViewController = [[iWinScheduleViewMeetingViewController alloc] initWithNibName:@"iWinScheduleViewMeetingViewController" bundle:nil inEditMode:YES];
+    self.scheduleMeetingViewController = [[iWinScheduleViewMeetingViewController alloc] initWithNibName:@"iWinScheduleViewMeetingViewController" bundle:nil inEditMode:isEditing];
     [self.mainView  addSubview:self.scheduleMeetingViewController.view];
     [self.scheduleMeetingViewController.view setBounds:self.mainView.bounds];
     self.scheduleMeetingViewController.scheduleDelegate = self;
@@ -288,7 +277,7 @@
 
 -(void) goToViewMeeting
 {
-    [self meetingSelected];
+    [self scheduleMeetingClicked:YES];
 }
 
 -(void) saveClicked
@@ -313,9 +302,47 @@
     self.agendaController.agendaDelegate = self;
 }
 
--(void)addAttenddesClicked
+-(void)addAttenddesClicked:(BOOL)isEditing
 {
-    
+    //meeting
+    self.userViewController = [[iWinAddUsersViewController alloc] initWithNibName:@"iWinAddUsersViewController" bundle:nil withPageName:@"Meeting" inEditMode:isEditing];
+    [self.mainView  addSubview:self.userViewController.view];
+    [self.userViewController.view setBounds:self.mainView.bounds];
+    self.userViewController.userDelegate = self;
+}
+
+-(void) addAttendeesForAgenda:(BOOL)isEditing
+{
+    //agenda
+    self.userViewController = [[iWinAddUsersViewController alloc] initWithNibName:@"iWinAddUsersViewController" bundle:nil withPageName:@"Agenda" inEditMode:isEditing];
+    [self.mainView  addSubview:self.userViewController.view];
+    [self.userViewController.view setBounds:self.mainView.bounds];
+    self.userViewController.userDelegate = self;
+}
+
+-(void) addAssigneesForTask:(BOOL)isEditing
+{
+    //task
+    self.userViewController = [[iWinAddUsersViewController alloc] initWithNibName:@"iWinAddUsersViewController" bundle:nil withPageName:@"Task" inEditMode:isEditing];
+    [self.mainView  addSubview:self.userViewController.view];
+    [self.userViewController.view setBounds:self.mainView.bounds];
+    self.userViewController.userDelegate = self;
+}
+
+-(void) returnToPreviousView:(NSString *)pageName inEditMode:(BOOL)isEditing
+{
+    if ([pageName isEqualToString:@"Meeting"])
+    {
+        [self scheduleMeetingClicked:isEditing];
+    }
+    else if ([pageName isEqualToString:@"Agenda"])
+    {
+        [self addAgendaClicked:isEditing];
+    }
+    else
+    {
+        [self createNewTaskClicked:isEditing];
+    }
 }
 
 -(void)viewScheduleClicked

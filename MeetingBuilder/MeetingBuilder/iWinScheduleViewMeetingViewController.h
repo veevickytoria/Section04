@@ -13,7 +13,7 @@
 -(void)saveClicked;
 -(void)cancelClicked;
 -(void)addAgendaClicked:(BOOL)isEditing;
--(void)addAttenddesClicked;
+-(void)addAttenddesClicked:(BOOL)isEditing;
 -(void)viewScheduleClicked;
 @end
 

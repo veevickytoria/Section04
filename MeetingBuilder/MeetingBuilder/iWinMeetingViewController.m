@@ -67,7 +67,7 @@
 
 -(IBAction) onScheduleNewMeeting
 {
-    [self.meetingListDelegate scheduleMeetingClicked];
+    [self.meetingListDelegate scheduleMeetingClicked:NO];
 }
 
 //- (IBAction)onAddNewProject:(id)sender
@@ -126,7 +126,7 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self.meetingListDelegate meetingSelected];
+    [self.meetingListDelegate scheduleMeetingClicked:YES];
 }
 
 @end

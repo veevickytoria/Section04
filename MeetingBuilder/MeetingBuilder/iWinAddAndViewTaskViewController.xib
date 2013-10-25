@@ -138,6 +138,9 @@
                     <state key="normal" title="Add Assignees">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
+                    <connections>
+                        <action selector="onClickAddAssignees" destination="-1" eventType="touchUpInside" id="Oa4-Ct-8OL"/>
+                    </connections>
                 </button>
                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jzm-S0-SVo">
                     <rect key="frame" x="227" y="405" width="326" height="199"/>

@@ -24,6 +24,11 @@
     return self;
 }
 
+- (IBAction)onClickAddAssignees
+{
+    [self.taskDelegate addAssigneesForTask:self.isEditing];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];

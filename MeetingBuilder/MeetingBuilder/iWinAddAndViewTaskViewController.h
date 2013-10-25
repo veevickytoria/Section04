@@ -10,6 +10,7 @@
 
 @protocol TaskDelegate <NSObject>
 -(void)goToTaskList;
+-(void)addAssigneesForTask:(BOOL)isEditing;
 @end
 
 @interface iWinAddAndViewTaskViewController : UIViewController
@@ -24,5 +25,6 @@
 @property (weak, nonatomic) IBOutlet UITextField *createdByField;
 @property (nonatomic) id<TaskDelegate> taskDelegate;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil inEditMode:(BOOL)isEditing;
+- (IBAction)onClickAddAssignees;
 
 @end

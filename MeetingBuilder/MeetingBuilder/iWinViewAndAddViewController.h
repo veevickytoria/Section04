@@ -12,6 +12,7 @@
 @protocol AgendaDelegate <NSObject>
 
 -(void)goToViewMeeting;
+-(void)addAttendeesForAgenda:(BOOL)isEditing;
 
 @end
 
