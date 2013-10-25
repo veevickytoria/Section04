@@ -58,6 +58,8 @@ WebApp::Application.routes.draw do
 
   get "home_page/index"
   get "login/index"
+  get "meetings/new"
+  get "meetings/index"
   get "groups/index"
   get "groups/new"
   get "profile/index"

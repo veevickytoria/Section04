@@ -32,13 +32,11 @@
 </div>
 <br>
 <br>
-<form>
-	<select>
-		<option value="meetings_today">Meetings Today</option>
-		<option value="meetings_weekly">Meetings this Week</option>
-		<option value="meetings_month">Meetings this Month</option>
-	</select>
+<select>
+	<option value="meetings_today">Meetings Today</option>
+	<option value="meetings_weekly">Meetings this Week</option>
+	<option value="meetings_month">Meetings this Month</option>
+</select>
 
-	<input type="submit" value="Create a Meeting">
-</form>
+<button type="button" onclick="window.location.href='/'"> Create a Meeting</button>
 
