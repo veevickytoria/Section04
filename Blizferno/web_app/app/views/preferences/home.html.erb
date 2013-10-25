@@ -1,0 +1,227 @@
+<style>
+  dt.pageHeader {
+    font-size: 35px;
+    color: white;
+    margin-bottom: 15px;
+    padding-top: 10px;
+    position: absolute;
+    left: 20px;
+  }
+
+body {
+  padding-top: 60px;
+  padding-bottom: 60px;
+  background-color: black;
+}
+@media (max-width: 979px) {
+  body {
+    padding-top: 60px;
+    padding-bottom: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+
+  .navbar-inner{
+	padding:0px !important;
+ }
+}
+</style>
+
+<!-- Start Nav-Bar -->
+ <%= render "panes/top_bar" %>
+<!-- End Nav-Bar -->
+
+<br>
+<br>
+<div class="row-fluid">
+  <div id="leftbar" class="span2" style="position: fixed; left:0px; text-align: center; top:40px; bottom:40px;">
+    <%= render "panes/meeting_bar" %>
+  </div>
+  <div class="span8 offset2">
+    <div style="background-color: white;color:black;">
+	    <br />
+	    <span style="font-size:20px;margin:5px;">Home Page Options:</span>
+	    <br />
+	    <table style="font-size:12px;width:100%;margin:5px;">
+	    	<tr>
+	    		<td style="width:24%;">
+	    			<span>Show Meetings Within:</span> 
+	    		</td>
+	    		<td style="width:24%;">
+	    			<input type="radio" name="group1" value="Day"> Day<br />
+	    			<input type="radio" name="group1" value="Next Day Included">Next Day Included <br/>
+	    			<input type="radio" name="group1" value="Week">Week <br />
+	    			<input type="radio" name="group1" value="Bi-weekly">Bi-weekly <br />
+	    			<input type="radio" name="group1" value="Month">Month <br />
+	    			<input type="radio" name="group1" value="Bi-monthly">Bi-monthly <br />
+	    			<input type="radio" name="group1" value="All">All of the things <br />
+	    		</td>
+	    		<td style="width:4%;">
+	    		</td>
+	    		<td style="width:24%;">
+	    			<span>Show Tasks Within:</span> 
+	    		</td>
+	    		<td style="width:24%;">
+	    			<input type="radio" name="group2" value="Day"> Day<br />
+	    			<input type="radio" name="group2" value="Next Day Included">Next Day Included <br/>
+	    			<input type="radio" name="group2" value="Week">Week <br />
+	    			<input type="radio" name="group2" value="Bi-weekly">Bi-weekly <br />
+	    			<input type="radio" name="group2" value="Month">Month <br />
+	    			<input type="radio" name="group2" value="Bi-monthly">Bi-monthly <br />
+	    			<input type="radio" name="group2" value="All">All of the things <br />
+	    		</td>
+	    	</tr>
+	    </table>
+	    <br />
+	    <br />
+	    <span style="font-size:20px;margin:5px;">Notifications:</span>
+	    <br />
+	    <table style="font-size:12px;width:100%;margin:5px;">
+	    	<tr>
+	    		<td style="width:52%" colspan="3">
+	    			<span style="font-size:14px;">Mobile:</span>
+	    		</td>
+	    		<td style="width:48%" colspan="2">
+	    			<span style="font-size:14px;">Web:</span>
+	    		</td>
+	    	</tr>
+	    	<tr>
+	    		<td style="width:24%;">
+	    			<span>Push Notifications:</span> 
+	    		</td>
+	    		<td style="width:24%;">
+	    			<input type="radio" name="group3" value="Enabled">Enabled<br />
+	    			<input type="radio" name="group3" value="Disabled">Diabled<br/>
+	    		</td>
+	    		<td style="width:4%;">
+	    		</td>
+	    		<td style="width:24%;">
+	    			<span>Ticker-Tape: </span> 
+	    		</td>
+	    		<td style="width:24%;">
+	    			<input type="radio" name="group4" value="Enabled">Enabled<br />
+	    			<input type="radio" name="group4" value="Disabled">Diabled<br/>
+	    		</td>
+	    	</tr>
+	    	<tr>
+	    		<td colspan="5">
+	    			<br />
+	    		</td>
+	    	</tr>
+	    	<tr>
+	    		<td style="width:24%;">
+	    			<span>Notify For:</span> 
+	    		</td>
+	    		<td style="width:24%;">
+	    			<input type="checkbox" name="group5" value="Meetings">Meetings<br />
+	    			<input type="checkbox" name="group5" value="Tasks">Tasks<br/>
+	    			<input type="checkbox" name="group5" value="Meeting Invites">Meeting Invites<br/>
+	    			<input type="checkbox" name="group5" value="Task Assignments">Task Assignments<br/>
+	    			<input type="checkbox" name="group5" value="Seeking Agenda Approval">Seeking Agenda Approval<br/>
+	    			<input type="checkbox" name="group5" value="Meeting Data Updated">Meeting Data Updated<br/>
+	    			<input type="checkbox" name="group5" value="Group Invites">Group Invites<br/>
+	    		</td>
+	    		<td style="width:4%;">
+	    		</td>
+	    		<td style="width:24%;">
+	    			<span>Notify For: </span> 
+	    		</td>
+	    		<td style="width:24%;">
+	    			<input type="checkbox" name="group6" value="Meetings">Meetings<br />
+	    			<input type="checkbox" name="group6" value="Tasks">Tasks<br/>
+	    			<input type="checkbox" name="group6" value="Meeting Invites">Meeting Invites<br/>
+	    			<input type="checkbox" name="group6" value="Task Assignments">Task Assignments<br/>
+	    			<input type="checkbox" name="group6" value="Seeking Agenda Approval">Seeking Agenda Approval<br/>
+	    			<input type="checkbox" name="group6" value="Meeting Data Updated">Meeting Data Updated<br/>
+	    			<input type="checkbox" name="group6" value="Group Invites">Group Invites<br/>
+	    		</td>
+	    	</tr>
+	    </table>
+	    <br />
+	    <br />
+	    <span style="font-size:20px;margin:5px;">Sidebar Options:</span>
+	    <br />
+	    <table style="font-size:12px;width:100%;margin:5px;">
+	    	<tr>
+	    		<td style="width:24%;">
+	    			<span>Collapsable:</span> 
+	    		</td>
+	    		<td style="width:24%;">
+	    			<input type="radio" name="group7" value="Enabled">Enabled<br />
+	    			<input type="radio" name="group7" value="Disabled">Diabled<br/>
+	    		</td>
+	    		<td colspan="3">
+	    		</td>
+	    	</tr>
+	    	<tr>
+	    		<td colspan="5">
+	    			<br />
+	    		</td>
+	    	</tr>
+	    	<tr>
+	    		<td style="width:24%;">
+	    			<span>Show Meetings Within:</span> 
+	    		</td>
+	    		<td style="width:24%;">
+	    			<input type="radio" name="group8" value="Day"> Day<br />
+	    			<input type="radio" name="group8" value="Next Day Included">Next Day Included <br/>
+	    			<input type="radio" name="group8" value="Week">Week <br />
+	    			<input type="radio" name="group8" value="Bi-weekly">Bi-weekly <br />
+	    			<input type="radio" name="group8" value="Month">Month <br />
+	    			<input type="radio" name="group8" value="Bi-monthly">Bi-monthly <br />
+	    			<input type="radio" name="group8" value="All">All of the things <br />
+	    		</td>
+	    		<td style="width:4%;">
+	    		</td>
+	    		<td style="width:24%;">
+	    			<span>Show Tasks Witin: </span> 
+	    		</td>
+	    		<td style="width:24%;">
+	    			<input type="radio" name="group9" value="Day"> Day<br />
+	    			<input type="radio" name="group9" value="Next Day Included">Next Day Included <br/>
+	    			<input type="radio" name="group9" value="Week">Week <br />
+	    			<input type="radio" name="group9" value="Bi-weekly">Bi-weekly <br />
+	    			<input type="radio" name="group9" value="Month">Month <br />
+	    			<input type="radio" name="group9" value="Bi-monthly">Bi-monthly <br />
+	    			<input type="radio" name="group9" value="All">All of the things <br />
+	    		</td>
+	    	</tr>
+	    </table>
+	    <br/>
+	    <button type="button" disabled style="margin-left:10px;margin-bottom:10px;">Submit</button>
+	    <br />
+    </div>
+  </div>
+  <div id="rightbar" class="span2" style="position: fixed; right:0px; text-align: center; top:40px; bottom:40px;">
+    <%= render "panes/task_bar" %>
+  </div>
+</div>
+
+<%= render "panes/bottom_bar" %>
+
+
+<script>
+
+$(document).ready(function () {
+       var left_width = $('#leftbar').width() -10;
+       $('#leftbar').stop().animate({left: - left_width  },500); 
+
+       var right_width = $('#rightbar').width() -10;
+       $('#rightbar').stop().animate({right: - right_width  },500);     
+});    
+
+
+$('#leftbar').hover(function () {
+     $(this).stop().animate({left:"0px"},500);     
+   },function () {
+       var width = $(this).width() -10;
+       $(this).stop().animate({left: - width  },500);     
+});
+
+$('#rightbar').hover(function () {
+     $(this).stop().animate({right:"0px"},500);     
+   },function () {
+       var width = $(this).width() -10;
+       $(this).stop().animate({right: - width  },500);     
+});
+</script>
