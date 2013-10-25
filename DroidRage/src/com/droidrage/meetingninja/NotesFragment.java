@@ -44,9 +44,10 @@ public class NotesFragment extends Fragment {
 		ListView lv = (ListView) v.findViewById(R.id.notesList);
 		// lv.bringToFront();
 		noteAdpt = new NoteItemAdapter(getActivity(), R.layout.note_item, notes);
-
+		
 		// setup listview
 		lv.setAdapter(noteAdpt);
+		lv.setEmptyView(v.findViewById(R.id.notes_empty));
 		// make list long-pressable
 		registerForContextMenu(lv);
 
