@@ -6,10 +6,16 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="iWinMainViewController">
             <connections>
+                <outlet property="homeButton" destination="Ho1-6h-niW" id="lrU-SI-J9c"/>
+                <outlet property="logOutButton" destination="L1U-1Y-Etp" id="mib-cj-Aml"/>
                 <outlet property="mainView" destination="f5u-jS-1Ry" id="NXZ-sa-kPA"/>
+                <outlet property="meetingsButton" destination="LoC-l5-Uwv" id="56w-u7-P6k"/>
                 <outlet property="menuButton" destination="Zce-7x-x4u" id="2g0-0I-hHg"/>
                 <outlet property="menuView" destination="WaV-H7-LyS" id="r7R-ze-QaG"/>
+                <outlet property="notesButton" destination="2xd-Pb-JAD" id="dxH-Ni-RPw"/>
+                <outlet property="settingsButton" destination="IgH-Cm-XhZ" id="Pca-bS-Xrj"/>
                 <outlet property="slideView" destination="m5R-sX-3Nh" id="ZHD-W4-pcK"/>
+                <outlet property="tasksButton" destination="2WB-b2-TFd" id="PKp-TF-ar7"/>
                 <outlet property="view" destination="2" id="3"/>
             </connections>
         </placeholder>
@@ -19,7 +25,7 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="m5R-sX-3Nh">
-                    <rect key="frame" x="0.0" y="0.0" width="768" height="971"/>
+                    <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <subviews>
                         <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="f5u-jS-1Ry">
@@ -57,6 +63,9 @@
                             <state key="normal" title="   Home Page">
                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                             </state>
+                            <connections>
+                                <action selector="onClickHome" destination="-1" eventType="touchUpInside" id="9du-10-V5R"/>
+                            </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LoC-l5-Uwv">
                             <rect key="frame" x="0.0" y="96" width="200" height="30"/>
@@ -64,6 +73,9 @@
                             <state key="normal" title="   Meetings">
                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                             </state>
+                            <connections>
+                                <action selector="onClickMeetings" destination="-1" eventType="touchUpInside" id="owc-WU-GuI"/>
+                            </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2xd-Pb-JAD">
                             <rect key="frame" x="0.0" y="134" width="200" height="30"/>
@@ -71,6 +83,9 @@
                             <state key="normal" title="   Notes">
                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                             </state>
+                            <connections>
+                                <action selector="onClickNotes" destination="-1" eventType="touchUpInside" id="3AG-Fz-J2t"/>
+                            </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2WB-b2-TFd">
                             <rect key="frame" x="0.0" y="172" width="200" height="30"/>
@@ -78,6 +93,9 @@
                             <state key="normal" title="   Tasks">
                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                             </state>
+                            <connections>
+                                <action selector="onClickTasks" destination="-1" eventType="touchUpInside" id="taV-AW-IvO"/>
+                            </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IgH-Cm-XhZ">
                             <rect key="frame" x="0.0" y="210" width="200" height="30"/>
@@ -85,6 +103,9 @@
                             <state key="normal" title="   Settings">
                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                             </state>
+                            <connections>
+                                <action selector="onClickSettings" destination="-1" eventType="touchUpInside" id="nRp-po-KYk"/>
+                            </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="L1U-1Y-Etp">
                             <rect key="frame" x="0.0" y="248" width="200" height="30"/>

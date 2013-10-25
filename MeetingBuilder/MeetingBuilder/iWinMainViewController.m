@@ -7,14 +7,18 @@
 //
 
 #import "iWinMainViewController.h"
+#import "iWinHomeScreenViewController.h"
 
 @interface iWinMainViewController ()
 @property (strong, nonatomic) iWinLoginViewController *loginViewController;
 @property (strong, nonatomic) iWinRegisterViewController *registerViewController;
-@property (strong, nonatomic) iWinProjectViewController *projectViewController;
+@property (strong, nonatomic) iWinMeetingViewController *meetingListViewController;
+@property (strong, nonatomic) iWinHomeScreenViewController *homeScreenViewController;
+@property (strong, nonatomic) iWinScheduleViewMeetingViewController *scheduleMeetingViewController;
 @property BOOL movedView;
 @property (nonatomic) UISwipeGestureRecognizer * swiperight;
 @property (nonatomic) UISwipeGestureRecognizer * swipeleft;
+@property (nonatomic) UIButton *lastClicked;
 @end
 
 @implementation iWinMainViewController
@@ -76,9 +80,16 @@
     
     [self enableSliding];
      
-    self.projectViewController = [[iWinProjectViewController alloc] initWithNibName:@"iWinProjectViewController" bundle:nil withEmail:email];
-    [self.mainView  addSubview:self.projectViewController.view];
-    [self.projectViewController.view setBounds:self.mainView.bounds];
+//    self.projectViewController = [[iWinMeetingViewController alloc] initWithNibName:@"iWinProjectViewController" bundle:nil withEmail:email];
+//    [self.mainView  addSubview:self.projectViewController.view];
+//    [self.projectViewController.view setBounds:self.mainView.bounds];
+    
+    self.homeScreenViewController = [[iWinHomeScreenViewController alloc] initWithNibName:@"iWinHomeScreenViewController" bundle:nil];
+    [self.mainView  addSubview:self.homeScreenViewController.view];
+    [self.homeScreenViewController.view setBounds:self.mainView.bounds];
+    
+    self.homeButton.backgroundColor = [UIColor whiteColor];
+    self.lastClicked = self.homeButton;
 }
 
 -(void)swipeleft:(UISwipeGestureRecognizer*)gestureRecognizer
@@ -112,9 +123,9 @@
 -(void) onRegister:(NSString *)email
 {
     [self removeSubViews];
-    self.projectViewController = [[iWinProjectViewController alloc] initWithNibName:@"iWinProjectViewController" bundle:nil withEmail:email];
-    [self.mainView  addSubview:self.projectViewController.view];
-    [self.projectViewController.view setBounds:self.mainView.bounds];
+    self.homeScreenViewController = [[iWinHomeScreenViewController alloc] initWithNibName:@"iWinHomeScreenViewController" bundle:nil];
+    [self.mainView  addSubview:self.homeScreenViewController.view];
+    [self.homeScreenViewController.view setBounds:self.mainView.bounds];
     
 }
 
@@ -154,6 +165,19 @@
     self.movedView = !self.movedView;
 }
 
+- (IBAction)onClickHome
+{
+    [self removeSubViews];
+    [self enableSliding];
+    self.homeScreenViewController = [[iWinHomeScreenViewController alloc] initWithNibName:@"iWinHomeScreenViewController" bundle:nil];
+    [self.mainView  addSubview:self.homeScreenViewController.view];
+    [self.homeScreenViewController.view setBounds:self.mainView.bounds];
+    [self animateSlidingMenu:NO];
+    self.homeButton.backgroundColor = [UIColor whiteColor];
+    self.lastClicked.backgroundColor = [UIColor clearColor];
+    self.lastClicked = self.homeButton;
+}
+
 - (IBAction)onClickLogOut
 {
     [self animateSlidingMenu:NO];
@@ -162,6 +186,51 @@
     [self.loginViewController.view setBounds:self.mainView.bounds];
     
     [self disableSliding];
+}
+
+- (IBAction)onClickMeetings
+{
+    [self removeSubViews];
+    [self enableSliding];
+    self.meetingListViewController = [[iWinMeetingViewController alloc] initWithNibName:@"iWinMeetingViewController" bundle:nil];
+    [self.mainView  addSubview:self.meetingListViewController.view];
+    [self.meetingListViewController.view setBounds:self.mainView.bounds];
+    self.meetingListViewController.meetingListDelegate = self;
+    [self animateSlidingMenu:NO];
+    
+    self.meetingsButton.backgroundColor = [UIColor whiteColor];
+    self.lastClicked.backgroundColor = [UIColor clearColor];
+    self.lastClicked = self.meetingsButton;
+}
+
+- (IBAction)onClickNotes
+{
+    [self removeSubViews];
+    [self enableSliding];
+    [self animateSlidingMenu:NO];
+    self.notesButton.backgroundColor = [UIColor whiteColor];
+    self.lastClicked.backgroundColor = [UIColor clearColor];
+    self.lastClicked = self.notesButton;
+}
+
+- (IBAction)onClickTasks
+{
+    [self removeSubViews];
+    [self enableSliding];
+    [self animateSlidingMenu:NO];
+    self.tasksButton.backgroundColor = [UIColor whiteColor];
+    self.lastClicked.backgroundColor = [UIColor clearColor];
+    self.lastClicked = self.tasksButton;
+}
+
+- (IBAction)onClickSettings
+{
+    [self removeSubViews];
+    [self enableSliding];
+    [self animateSlidingMenu:NO];
+    self.settingsButton.backgroundColor = [UIColor whiteColor];
+    self.lastClicked.backgroundColor = [UIColor clearColor];
+    self.lastClicked = self.settingsButton;
 }
 
 -(void)animateSlidingMenu:(BOOL)moveRight
@@ -183,6 +252,55 @@
         self.slideView.frame = CGRectMake(0,oldFrameMain.origin.y,oldFrameMain.size.width,oldFrameMain.size.height);
     }
     [UIView commitAnimations];
+}
+
+-(void) scheduleMeetingClicked
+{
+    [self removeSubViews];
+    [self enableSliding];
+    [self animateSlidingMenu:NO];
+    
+    self.scheduleMeetingViewController = [[iWinScheduleViewMeetingViewController alloc] initWithNibName:@"iWinScheduleViewMeetingViewController" bundle:nil inEditMode:NO];
+    [self.mainView  addSubview:self.scheduleMeetingViewController.view];
+    [self.scheduleMeetingViewController.view setBounds:self.mainView.bounds];
+    self.scheduleMeetingViewController.scheduleDelegate = self;
+}
+
+-(void) meetingSelected
+{
+    [self removeSubViews];
+    [self enableSliding];
+    [self animateSlidingMenu:NO];
+    
+    self.scheduleMeetingViewController = [[iWinScheduleViewMeetingViewController alloc] initWithNibName:@"iWinScheduleViewMeetingViewController" bundle:nil inEditMode:YES];
+    [self.mainView  addSubview:self.scheduleMeetingViewController.view];
+    [self.scheduleMeetingViewController.view setBounds:self.mainView.bounds];
+    self.scheduleMeetingViewController.scheduleDelegate = self;
+}
+
+-(void) saveClicked
+{
+    [self onClickMeetings];
+}
+
+-(void) cancelClicked
+{
+    [self onClickMeetings];
+}
+
+-(void)addAgendaClicked
+{
+    
+}
+
+-(void)addAttenddesClicked
+{
+    
+}
+
+-(void)viewScheduleClicked
+{
+    
 }
 
 @end
