@@ -6,6 +6,7 @@ import com.droidrage.meetingninja.R;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -43,6 +44,8 @@ public class MainActivity extends FragmentActivity implements
 	 */
 	ViewPager mViewPager;
 
+	public static String username;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -76,9 +79,6 @@ public class MainActivity extends FragmentActivity implements
 		// Setup the tabs here
 		Locale l = Locale.getDefault();
 		String[] tabNames = new String[] { "Meetings", "Notes" };
-		for (int j = 0; j < tabNames.length; j++) {
-			tabNames[j] = tabNames[j].toUpperCase(l);
-		}
 
 		// For each of the sections in the app, add a tab to the action bar.
 		for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
@@ -87,9 +87,14 @@ public class MainActivity extends FragmentActivity implements
 			// the TabListener interface, as the callback (listener) for when
 			// this tab is selected.
 			ActionBar.Tab tab = actionBar.newTab();
-			tab.setText(tabNames[i]);
+			tab.setText(tabNames[i].toUpperCase(l));
 			actionBar.addTab(tab.setTabListener(this));
 		}
+
+		// Get the extras from the calling intent
+		Intent intent = getIntent();
+		username = intent.getStringExtra(LoginActivity.EXTRA_USERNAME);
+
 	}
 
 	@Override
@@ -130,21 +135,27 @@ public class MainActivity extends FragmentActivity implements
 		@Override
 		public Fragment getItem(int position) {
 			// getItem is called to instantiate the fragment for the given page.
-			// Return a DummySectionFragment (defined as a static inner class
-			// below) with the page number as its lone argument.
+			// Return a Fragment depending on the tab position
 
-			Fragment fragment = new DummySectionFragment();
-			// TODO: Create a meeting page fragment and add it here
-			if (position == 0) {
-				Bundle args = new Bundle();
-				args.putInt(DummySectionFragment.ARG_SECTION_NUMBER,
-						position + 1);
-				fragment.setArguments(args);
-				return fragment;
-			} else if (position == 1)
-				return new NotesFragment();
-			else
-				return fragment;
+			Fragment frag = null;
+			Bundle args = new Bundle();
+			switch (position) {
+			case (0):
+				frag = new MeetingsFragment();
+				args.putString(MeetingsFragment.ARG_USERNAME, username);
+				frag.setArguments(args);
+				return frag;
+			case (1):
+				frag = new NotesFragment();
+				args.putString(NotesFragment.ARG_USERNAME, username);
+				frag.setArguments(args);
+				return frag;
+			default:
+				frag = new DummySectionFragment();
+				args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position);
+				frag.setArguments(args);
+				return frag;
+			}
 		}
 
 		@Override

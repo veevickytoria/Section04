@@ -11,6 +11,9 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
+import objects.Meeting;
+import objects.Note;
+
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -26,17 +29,13 @@ public class DatabaseAdapter {
 	private final static String ACCEPT_TYPE = "application/json";
 	private final static JsonFactory JFACTORY = new JsonFactory();
 
-	public DatabaseAdapter() {
-
-	}
-
 	/**
 	 * Uses URL parsing to get login information from the database
 	 * 
 	 * @param username
 	 * @return
 	 */
-	public boolean urlLogin(String username) throws Exception {
+	public static boolean urlLogin(String username) throws Exception {
 		// Server URL setup
 		String filename = "index.php";
 		String server_method = "login";
@@ -69,7 +68,8 @@ public class DatabaseAdapter {
 	 * @return true if username exists in database
 	 * @deprecated Use urlLogin until backend fixed
 	 */
-	public boolean jsonLogin(String username) throws Exception {
+	@Deprecated
+	public static boolean jsonLogin(String username) throws Exception {
 		// Server URL setup
 		String filename = "index.php";
 		String server_method = "login";
@@ -93,7 +93,7 @@ public class DatabaseAdapter {
 		return val;
 	}
 
-	public void register(String username, String password) throws Exception {
+	public static void register(String username, String password) throws Exception {
 		// Server URL setup
 		String filename = "index.php";
 		String server_method = "register";
@@ -133,7 +133,7 @@ public class DatabaseAdapter {
 
 	}
 
-	public List<Meeting> getMeetings(String username) throws Exception {
+	public static List<Meeting> getMeetings(String username) throws Exception {
 		// Server URL setup
 		String filename = "Meeting.php";
 		String server_method = "getMeetings";
@@ -152,11 +152,11 @@ public class DatabaseAdapter {
 		// Use TypeReference to get a Generic Type, else use Type.class
 		meetings = mapper.readValue(url, new TypeReference<List<Meeting>>() {
 		});
-
+		
 		return meetings;
 	}
 
-	public void createMeeting(String user, Meeting m) throws Exception {
+	public static void createMeeting(String user, Meeting m) throws Exception {
 		// Server URL setup
 		String filename = "Meeting.php";
 		String server_method = "createMeeting";
@@ -195,7 +195,17 @@ public class DatabaseAdapter {
 		conn.disconnect();
 	}
 
-	private void addRequestHeader(URLConnection connection, boolean isPost) {
+	public static List<Note> getNotes(String user) throws Exception {
+		// TODO Implement this method
+		throw new Exception("getNotes: Unimplemented");
+	}
+	
+	public static void createNote(String user, Note n) throws Exception {
+		// TODO Implement this method
+		throw new Exception("createNote: Unimplemented");
+	}
+
+	private static void addRequestHeader(URLConnection connection, boolean isPost) {
 		connection.setRequestProperty("User-Agent", USER_AGENT);
 		connection.setRequestProperty("Accept", ACCEPT_TYPE);
 		if (isPost) {
@@ -204,7 +214,7 @@ public class DatabaseAdapter {
 		}
 	}
 
-	private int sendPostPayload(URLConnection connection, String payload)
+	private static int sendPostPayload(URLConnection connection, String payload)
 			throws Exception {
 		DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
 		wr.writeBytes(payload);
@@ -213,7 +223,7 @@ public class DatabaseAdapter {
 		return ((HttpURLConnection) connection).getResponseCode();
 	}
 
-	private String getServerResponse(URLConnection connection) throws Exception {
+	private static String getServerResponse(URLConnection connection) throws Exception {
 		// Read server response
 		BufferedReader in = new BufferedReader(new InputStreamReader(
 				connection.getInputStream()));

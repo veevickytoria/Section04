@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
@@ -24,17 +25,11 @@ import android.R.anim;
  * well.
  */
 public class LoginActivity extends Activity {
-	/**
-	 * A dummy authentication store containing known user names and passwords.
-	 * TODO: remove after connecting to a real authentication system.
-	 */
-	private static final String[] DUMMY_CREDENTIALS = new String[] {
-			"foo@example.com:hello", "bar@example.com:world" };
 
 	/**
 	 * The default email to populate the email field with.
 	 */
-	public static final String EXTRA_EMAIL = "com.example.droidrage.authenticatordemo.extra.EMAIL";
+	public static final String EXTRA_USERNAME = "com.example.droidrage.meetingninja.extra.USERNAME";
 
 	/**
 	 * Keep track of the login task to ensure we can cancel it if requested.
@@ -42,7 +37,7 @@ public class LoginActivity extends Activity {
 	private UserLoginTask mAuthTask = null;
 
 	// Values for email and password at the time of the login attempt.
-	private String mEmail;
+	private String mUsername;
 	private String mPassword;
 
 	// UI references.
@@ -59,9 +54,9 @@ public class LoginActivity extends Activity {
 		setContentView(R.layout.activity_login);
 
 		// Set up the login form.
-		mEmail = getIntent().getStringExtra(EXTRA_EMAIL);
+		mUsername = getIntent().getStringExtra(EXTRA_USERNAME);
 		mEmailView = (EditText) findViewById(R.id.email);
-		mEmailView.setText(mEmail);
+		mEmailView.setText(mUsername);
 
 		mPasswordView = (EditText) findViewById(R.id.password);
 		mPasswordView
@@ -88,6 +83,19 @@ public class LoginActivity extends Activity {
 						attemptLogin();
 					}
 				});
+		findViewById(R.id.register_button).setOnClickListener(
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						Intent register = new Intent(LoginActivity.this,
+								RegisterActivity.class);
+//						if (!TextUtils.isEmpty(mUsername)) {
+//							register.putExtra(RegisterActivity.ARG_USERNAME,
+//									mUsername);
+//						}
+							startActivity(register);
+					}
+				});
 	}
 
 	@Override
@@ -112,7 +120,7 @@ public class LoginActivity extends Activity {
 		mPasswordView.setError(null);
 
 		// Store values at the time of the login attempt.
-		mEmail = mEmailView.getText().toString();
+		mUsername = mEmailView.getText().toString();
 		mPassword = mPasswordView.getText().toString();
 
 		boolean cancel = false;
@@ -129,16 +137,17 @@ public class LoginActivity extends Activity {
 			cancel = true;
 		}
 
-		// Check for a valid email address.
-		if (TextUtils.isEmpty(mEmail)) {
+		// Check for a valid username
+		if (TextUtils.isEmpty(mUsername)) {
 			mEmailView.setError(getString(R.string.error_field_required));
 			focusView = mEmailView;
 			cancel = true;
-		} else if (!mEmail.contains("@")) {
-			mEmailView.setError(getString(R.string.error_invalid_email));
-			focusView = mEmailView;
-			cancel = true;
 		}
+		// else if (!mEmail.contains("@")) {
+		// mEmailView.setError(getString(R.string.error_invalid_email));
+		// focusView = mEmailView;
+		// cancel = true;
+		// }
 
 		if (cancel) {
 			// There was an error; don't attempt login and focus the first
@@ -204,24 +213,21 @@ public class LoginActivity extends Activity {
 		@Override
 		protected Boolean doInBackground(Void... params) {
 			// TODO: attempt authentication against a network service.
+			// TODO: register a new account
+
+			boolean login_success = false;
 
 			try {
-				// Simulate network access.
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
+				login_success = DatabaseAdapter.urlLogin(mUsername);
+				if (!login_success)
+					Log.e("LOGIN", mUsername + " does not exist");
+				// Thread.sleep(2000);
+			} catch (Exception e) {
+				Log.e("LOGIN", "Login failed");
 				return false;
 			}
 
-			for (String credential : DUMMY_CREDENTIALS) {
-				String[] pieces = credential.split(":");
-				if (pieces[0].equals(mEmail)) {
-					// Account exists, return true if the password matches.
-					return pieces[1].equals(mPassword);
-				}
-			}
-
-			// TODO: register the new account here.
-			return false;
+			return login_success;
 		}
 
 		@Override
@@ -231,9 +237,10 @@ public class LoginActivity extends Activity {
 
 			// if successful login, start main activity
 			if (success) {
-				// finish();
 				Intent main = new Intent(mLoginFormView.getContext(),
 						MainActivity.class);
+				main.putExtra(EXTRA_USERNAME, mUsername);
+
 				startActivityForResult(main, 0);
 				overridePendingTransition(anim.fade_in, anim.fade_out);
 			} else {
