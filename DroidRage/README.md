@@ -22,4 +22,4 @@ This is the Android version for the Rose-Hulman CSSE371-04 Junior Project for th
 
 ## Resources ##
 
-* Check the [Helpful Android Dev Links text file](HelpfulAndroidDevLinks.txt)
+* Check out [Helpful Android Dev Links](HelpfulAndroidDevLinks.md)
