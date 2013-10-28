@@ -173,6 +173,38 @@ if( strcasecmp($_GET['method'],'login') == 0){
 	 $index->index("name", "Userss");
 	 
 	 $index->addNode($userNode, "Userss","name", $postContent->user);
+}else if(strcasecmp($_GET['method'], 'updateUser') ==0){
+	$postContent = json_decode(@file_get_contents('php://input'));
+	$response['code'] = 1;
+    $response['status'] = $api_response_code[ $response['code'] ]['HTTP Response'];
+  	$response['data'] = 'updateUser'; 
+	
+	$index= new IndexService($graphDb);
+
+	$nodes= $index->getNodes("Userss", "name", $_GET['user'] );
+	if(sizeof($nodes) >0){
+		$node = $nodes[0];
+		if(strcasecmp($postContent->field, 'pass') ==0){
+			$node->pass = "". $postContent->value;
+			$node->save();
+			echo $node->getProperties();
+			$postContent = json_decode($node->getProperties());
+			echo $postContent->username;
+			//continue this if/else statement for all other fields in the statement
+			/*
+			localhost?method=updateUser&user=paul
+			{"field":"pass", "value":"######"}
+			//the field will be any field available for a user, 
+			//like username, password, title, only 1 at a time
+			*/
+		}else{
+			echo "no node updated";
+		}
+		
+
+	}else{
+		echo "FALSE node not found";
+	}
 }
  
 // --- Step 4: Deliver Response
