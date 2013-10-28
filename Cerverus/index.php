@@ -185,22 +185,32 @@ if( strcasecmp($_GET['method'],'login') == 0){
 	if(sizeof($nodes) >0){
 		$node = $nodes[0];
 		//get single node
-		if(strcasecmp($postContent->field, 'pass') ==0){
-			//field comparison
-			$node->pass = "". $postContent->value;
-			//assign value, the ->pass cannot be given a string to work, must be preassigned
+		if(strcasecmp($postContent->field, 'password') ==0){
+			$node->password = "". $postContent->value;
 			$node->save();
-			//saves all updates, will change anything changed to the node
 			echo $node->getProperties();
-			//Decode code ----    $postContent = json_decode($node->getProperties());
-			
+			$postContent = json_decode($node->getProperties());
 			//continue this if/else statement for all other fields in the statement
-			//the field will be any field available for a user, 
-			//like username, password, title, only 1 at a time
 			/*
 			localhost?method=updateUser&user=paul
-			{"field":"pass", "value":"######"}
+			{"field":"password", "value":"######"}
 			*/
+		}else if(strcasecmp($postContent->field, 'name')){
+			$node->name = "". $postContent->value;
+			$node->save();
+			echo $node->getProperties();
+		}else if(strcasecmp($postContent->field, 'company')){
+			$node->name = "". $postContent->value;
+			$node->save();
+			echo $node->getProperties();
+		}else if(strcasecmp($postContent->field, 'phone')){
+			$node->phone = "". $postContent->value;
+			$node->save();
+			echo $node->getProperties();
+		}else if(strcasecmp($postContent->field, 'username')){
+			$node->username = "". $postContent->value;
+			$node->save();
+			echo $node->getProperties();
 		}else{
 			echo "no node updated";
 		}
