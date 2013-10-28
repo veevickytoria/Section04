@@ -200,7 +200,7 @@ if( strcasecmp($_GET['method'],'login') == 0){
 			$node->save();
 			echo $node->getProperties();
 		}else if(strcasecmp($postContent->field, 'company')){
-			$node->name = "". $postContent->value;
+			$node->company = "". $postContent->value;
 			$node->save();
 			echo $node->getProperties();
 		}else if(strcasecmp($postContent->field, 'phone')){
