@@ -195,19 +195,19 @@ if( strcasecmp($_GET['method'],'login') == 0){
 			localhost?method=updateUser&user=paul
 			{"field":"password", "value":"######"}
 			*/
-		}else if(strcasecmp($postContent->field, 'name')){
+		}else if(strcasecmp($postContent->field, 'name') ==0){
 			$node->name = "". $postContent->value;
 			$node->save();
 			echo $node->getProperties();
-		}else if(strcasecmp($postContent->field, 'company')){
+		}else if(strcasecmp($postContent->field, 'company') ==0){
 			$node->company = "". $postContent->value;
 			$node->save();
 			echo $node->getProperties();
-		}else if(strcasecmp($postContent->field, 'phone')){
+		}else if(strcasecmp($postContent->field, 'phone') ==0){
 			$node->phone = "". $postContent->value;
 			$node->save();
 			echo $node->getProperties();
-		}else if(strcasecmp($postContent->field, 'username')){
+		}else if(strcasecmp($postContent->field, 'username') ==0){
 			$node->username = "". $postContent->value;
 			$node->save();
 			echo $node->getProperties();
