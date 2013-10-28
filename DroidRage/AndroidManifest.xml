@@ -8,6 +8,8 @@
         android:minSdkVersion="17"
         android:targetSdkVersion="18" />
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -36,6 +38,14 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.droidrage.meetingninja.LoginActivity" />
+        </activity>
+        <activity
+            android:name="com.droidrage.meetingninja.MeetingsActivity"
+            android:label="@string/title_activity_meetings"
+            android:parentActivityName="com.droidrage.meetingninja.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.droidrage.meetingninja.MainActivity" />
         </activity>
     </application>
 

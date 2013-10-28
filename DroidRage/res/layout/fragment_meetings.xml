@@ -1,6 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/MeetingsLinearLayout"
+    android:id="@+id/meetings_list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -9,13 +9,8 @@
     <ListView
         android:id="@+id/meetingsList"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
-    </ListView>
-
-    <TextView
-        android:id="@+id/meetings:empty"
-        android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:text="No meetings to display." />
-
+        android:layout_weight="1" >
+    </ListView>
+  
 </LinearLayout>

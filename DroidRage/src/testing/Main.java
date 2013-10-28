@@ -61,7 +61,7 @@ public class Main {
 	
 	public static void main(String[] args) throws JsonGenerationException, JsonMappingException, IOException {
 		String[] users = new String[] { "cricket", "moorejm", "android", "joe",
-				"cricket2"};
+				"cricket2", "Android"};
 		String user = users[users.length - 1];
 
 		boolean success = urlLogin(user);
@@ -76,7 +76,7 @@ public class Main {
 		}
 		
 		Meeting m = new Meeting(1, "Java POST", "Location", new Date().toString());
-//		 createMeeting(user, m);
+		 createMeeting(user, m);
 	}
 
 }

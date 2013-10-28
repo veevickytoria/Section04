@@ -11,6 +11,8 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnCreateContextMenuListener;
@@ -36,10 +38,9 @@ public class MeetingsFragment extends Fragment implements
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		View v = inflater.inflate(R.layout.fragment_meetings, container, false);
-
+		setHasOptionsMenu(true);
+		
 		// TODO: Check for internet connection before receiving meetings from DB
-		// TODO: Display a something saying "no meetings" if there are no
-		// meetings instead of having no meetings appear
 		getMeetings();
 
 		ListView lv = (ListView) v.findViewById(R.id.meetingsList);
@@ -47,7 +48,11 @@ public class MeetingsFragment extends Fragment implements
 				meetings);
 		// setup listview
 		lv.setAdapter(meetingAdpt);
-		lv.setEmptyView(v.findViewById(R.id.meetings_empty));
+		
+		//setup empty view
+		View empty_view = v.findViewById(R.id.notes_empty);
+		lv.setEmptyView(empty_view);
+		
 		// make list long-pressable
 		registerForContextMenu(lv);
 
@@ -89,14 +94,19 @@ public class MeetingsFragment extends Fragment implements
 
 		return v;
 	}
+	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.meetings, menu);
+	}
 
 	/**
 	 * Initializes the list of meetings. TODO: Get the meetings from the database
 	 */
 	private void getMeetings() {
-		meetings.add(new Meeting(1, "Hard Code", "O259", "Today"));
+//		meetings.add(new Meeting(1, "Hard Code", "O259", "Today"));
 		fetcher = new MeetingFetcherTask(this);
-		fetcher.execute(getArguments().getString(ARG_USERNAME));
+		fetcher.execute(getArguments().getString(getString(R.string.prompt_username)));
 	}
 	
 	@Override

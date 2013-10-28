@@ -32,8 +32,12 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
     </LinearLayout>
+    
+    
+    <!-- Login form -->
 
     <LinearLayout
+        android:id="@+id/login_form_full"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical" >
@@ -111,6 +115,5 @@
 
     </LinearLayout>
 
-    <!-- Login form -->
 
 </merge>
