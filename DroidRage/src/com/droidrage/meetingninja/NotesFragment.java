@@ -3,11 +3,12 @@ package com.droidrage.meetingninja;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.droidrage.meetingninja.R;
-
+import objects.Note;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,8 +22,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class NotesFragment extends Fragment {
+public class NotesFragment extends Fragment implements AsyncResponse<List<Note>> {
 
+	public static final String ARG_USERNAME = "username";
 	private List<Note> notes = new ArrayList<Note>();
 	private NoteItemAdapter noteAdpt;
 
@@ -30,7 +32,7 @@ public class NotesFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-		View v = inflater.inflate(R.layout.activity_notes, container, false);
+		View v = inflater.inflate(R.layout.fragment_notes, container, false);
 
 		// TODO: Check for internet connection before receiving notes from DB
 		// TODO: Display a something saying "no notes" if there are no notes
@@ -89,8 +91,6 @@ public class NotesFragment extends Fragment {
 			}
 		});
 
-		// } // end else
-
 		return v;
 	}
 
@@ -111,11 +111,21 @@ public class NotesFragment extends Fragment {
 		journal.addContent("This is private!");
 		notes.add(journal);
 
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 8; i++) {
 			notes.add(new Note());
 		}
 
 		notes.get(6).addContent("The ID is working correctly!");
+	}
+
+	@Override
+	public void processFinish(List<Note> list) {
+		Toast.makeText(getActivity(),
+				String.format("Received %d notes", list.size()),
+				Toast.LENGTH_SHORT).show();
+		notes.addAll(list);
+		noteAdpt.notifyDataSetChanged();
+		
 	}
 
 }
@@ -172,6 +182,44 @@ class NoteItemAdapter extends ArrayAdapter<Note> {
 		}
 
 		return v;
+	}
+
+	/**
+	 * Represents an asynchronous task to receive meetings from the database
+	 */
+	private class NoteFetcherTask extends
+			AsyncTask<String, Void, List<Note>> {
+		private AsyncResponse<List<Note>> delegate;
+
+		public NoteFetcherTask(AsyncResponse<List<Note>> delegate) {
+			this.delegate = delegate;
+		}
+
+		@Override
+		protected List<Note> doInBackground(String... params) {
+			List<Note> dbNotes = new ArrayList<Note>();
+
+			try {
+				dbNotes = DatabaseAdapter.getNotes(params[0]);
+			} catch (Exception e) {
+				Log.e("MeetingFetch", "error getting meetings");
+				e.printStackTrace();
+			}
+
+			return dbNotes;
+		}
+
+		@Override
+		protected void onPostExecute(List<Note> list) {
+			super.onPostExecute(list);
+			delegate.processFinish(list);
+		}
+
+		@Override
+		protected void onCancelled() {
+			// TODO Auto-generated method stub
+			super.onCancelled();
+		}
 	}
 
 }
