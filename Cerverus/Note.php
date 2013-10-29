@@ -67,59 +67,19 @@ $response['data'] = NULL;
 // --- Step 3: Process Request
  
 // Method A: Say Hello to the API
-if( strcasecmp($_GET['method'],'getMeetings') == 0){
+if( strcasecmp($_GET['method'],'getNoteInfo') == 0){
     $response['code'] = 1;
     $response['status'] = $api_response_code[ $response['code'] ]['HTTP Response'];
     $response['data'] = 'Logged in'; 
 	
 	$index= new IndexService($graphDb);
 
-	$meetings= $index->getNodes("Meetings", "name", $_GET['user'] );
-	$meetings_json= array();	
-	foreach($meetings as &$meeting){
-		array_push($meetings_json, $meeting->_data);
+	$noteNodes= $index->getNodes("Notes", "name", $_GET['user'] );
+	$noteNodeInfo = array();
+	foreach($noteNodes as &$node){
+		$noteNodeInfo = $node->_data;
 	}
-	echo json_encode($meetings_json);
-}else if( strcasecmp($_GET['method'],'getMeetingInfo') == 0){
-	$response['code'] = 1;
-	$response['status'] = $api_response_code[ $response['code'] ]['HTTP Response'];
-	$response['data'] = 'Logged in'; 
-
-	$index= new IndexService($graphDb);
-
-	$meetingNodes= $index->getNodes("Meetings", "name", $_GET['user'] );
-	$meetingNodeInfo = array();
-	foreach($meetingNodes as &$node){
-		$meetingNodeInfo = $node->_data;
-	}
-	echo json_encode($meetingNodeInfo);
-}else if(strcasecmp($_GET['method'], 'createMeeting') ==0){
-	//this is what gets the post content
-	$postContent = json_decode(@file_get_contents('php://input'));
-	$debugStr= "  postContent: " . "user-".$postContent->user . "    pass-". $postContent->pass; //gets the username from json content
-	
-	$response['code'] = 1;
-    $response['status'] = $api_response_code[ $response['code'] ]['HTTP Response'];
-    $response['data'] = 'registering-------  ' . $debugStr; 
-	
-	//echo "user----".$postContent->user;
-	//$indexService= new IndexService($graphDb);
-	
-	 $meetingNode = $graphDb->createNode();
-	 $meetingNode->save();
-	 
-	 $meetingNode->setProperty("location", $postContent->Location);
-	 $meetingNode->setProperty("id", $postContent->ID);
-	 $meetingNode->setProperty("datetime", $postContent->DateTime);
-	 $meetingNode->setProperty("title", $postContent->Title);
-	 
-	 
-	 
-	 $index= new IndexService($graphDb);
-	 $index->index("name", "Meetings");
-	 
-	 $index->addNode($meetingNode, "Meetings","name", $_GET['user']);
-	 
+	echo json_encode($noteNodeInfo);
 }
 // Return Response to browser
 deliver_response($response);

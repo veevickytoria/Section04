@@ -67,34 +67,33 @@ $response['data'] = NULL;
 // --- Step 3: Process Request
  
 // Method A: Say Hello to the API
-if( strcasecmp($_GET['method'],'getMeetings') == 0){
+if( strcasecmp($_GET['method'],'login') == 0){
     $response['code'] = 1;
     $response['status'] = $api_response_code[ $response['code'] ]['HTTP Response'];
     $response['data'] = 'Logged in'; 
 	
 	$index= new IndexService($graphDb);
 
-	$meetings= $index->getNodes("Meetings", "name", $_GET['user'] );
-	$meetings_json= array();	
-	foreach($meetings as &$meeting){
-		array_push($meetings_json, $meeting->_data);
-	}
-	echo json_encode($meetings_json);
-}else if( strcasecmp($_GET['method'],'getMeetingInfo') == 0){
+	$nodes= $index->getNodes("Userss", "name", $_GET['user'] );
+	if(sizeof($nodes) >0){
+		echo "TRUE";
+	}else{
+		echo "FALSE invalid login";
+		}
+}else if( strcasecmp($_GET['method'],'getUserInfo') == 0){
 	$response['code'] = 1;
 	$response['status'] = $api_response_code[ $response['code'] ]['HTTP Response'];
 	$response['data'] = 'Logged in'; 
 
 	$index= new IndexService($graphDb);
 
-	$meetingNodes= $index->getNodes("Meetings", "name", $_GET['user'] );
-	$meetingNodeInfo = array();
-	foreach($meetingNodes as &$node){
-		$meetingNodeInfo = $node->_data;
+	$userNodes= $index->getNodes("Userss", "name", $_GET['user'] );
+	$userNodeInfo = array();
+	foreach($userNodes as &$node){
+		$userNodeInfo = $node->_data;
 	}
-	echo json_encode($meetingNodeInfo);
-}else if(strcasecmp($_GET['method'], 'createMeeting') ==0){
-	//this is what gets the post content
+	echo json_encode($userNodeInfo);
+}else if(strcasecmp($_GET['method'], 'register') ==0){
 	$postContent = json_decode(@file_get_contents('php://input'));
 	$debugStr= "  postContent: " . "user-".$postContent->user . "    pass-". $postContent->pass; //gets the username from json content
 	
@@ -102,24 +101,62 @@ if( strcasecmp($_GET['method'],'getMeetings') == 0){
     $response['status'] = $api_response_code[ $response['code'] ]['HTTP Response'];
     $response['data'] = 'registering-------  ' . $debugStr; 
 	
-	//echo "user----".$postContent->user;
-	//$indexService= new IndexService($graphDb);
 	
-	 $meetingNode = $graphDb->createNode();
-	 $meetingNode->save();
-	 
-	 $meetingNode->setProperty("location", $postContent->Location);
-	 $meetingNode->setProperty("id", $postContent->ID);
-	 $meetingNode->setProperty("datetime", $postContent->DateTime);
-	 $meetingNode->setProperty("title", $postContent->Title);
-	 
-	 
-	 
+	 $userNode = $graphDb->createNode();
+	 $userNode->username = "". $postContent->user;
+	 $userNode->save();
+
 	 $index= new IndexService($graphDb);
-	 $index->index("name", "Meetings");
+	 $index->index("name", "Userss");
 	 
-	 $index->addNode($meetingNode, "Meetings","name", $_GET['user']);
-	 
+	 $index->addNode($userNode, "Userss","name", $postContent->user);
+}else if(strcasecmp($_GET['method'], 'updateUser') ==0){
+	$postContent = json_decode(@file_get_contents('php://input'));
+	$response['code'] = 1;
+    $response['status'] = $api_response_code[ $response['code'] ]['HTTP Response'];
+  	$response['data'] = 'updateUser'; 
+	
+	$index= new IndexService($graphDb);
+
+	$nodes= $index->getNodes("Userss", "name", $_GET['user'] );
+	if(sizeof($nodes) >0){
+		$node = $nodes[0];
+		//get single node
+		if(strcasecmp($postContent->field, 'password') ==0){
+			$node->password = "". $postContent->value;
+			$node->save();
+			echo $node->getProperties();
+			$postContent = json_decode($node->getProperties());
+			//continue this if/else statement for all other fields in the statement
+			/*
+			localhost?method=updateUser&user=paul
+			{"field":"password", "value":"######"}
+			*/
+		}else if(strcasecmp($postContent->field, 'name') ==0){
+			$node->name = "". $postContent->value;
+			$node->save();
+			echo $node->getProperties();
+		}else if(strcasecmp($postContent->field, 'company') ==0){
+			$node->company = "". $postContent->value;
+			$node->save();
+			echo $node->getProperties();
+		}else if(strcasecmp($postContent->field, 'phone') ==0){
+			$node->phone = "". $postContent->value;
+			$node->save();
+			echo $node->getProperties();
+		}else if(strcasecmp($postContent->field, 'username') ==0){
+			$node->username = "". $postContent->value;
+			$node->save();
+			echo $node->getProperties();
+		}else{
+			echo "no node updated";
+		}
+		
+
+	}else{
+		echo "FALSE node not found";
+	}
+	
 }
 // Return Response to browser
 deliver_response($response);
