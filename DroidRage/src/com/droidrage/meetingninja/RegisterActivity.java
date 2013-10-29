@@ -129,10 +129,10 @@ public class RegisterActivity extends Activity implements AsyncResponse<Void> {
 			cancel = true;
 		} else if (!confPass.equals(pass)) {
 			Log.e("PASS_MISMATCH", "error");
-
 			confirmPasswordText
 					.setError(getString(R.string.error_mismatch_password));
-
+			focusView = confirmPasswordText;
+			cancel = true;
 		}
 
 		if (cancel) {
