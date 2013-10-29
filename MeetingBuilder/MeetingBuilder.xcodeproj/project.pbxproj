@@ -47,6 +47,8 @@
 		0ACE33B517FD246F003B9C0A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ACE33B417FD246F003B9C0A /* SystemConfiguration.framework */; };
 		79D513CA181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79D513C8181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.m */; };
 		79D513CB181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79D513C9181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.xib */; };
+		79D513D0181F9F9E00C79B71 /* iWinNoteListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79D513CE181F9F9E00C79B71 /* iWinNoteListViewController.m */; };
+		79D513D1181F9F9E00C79B71 /* iWinNoteListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79D513CF181F9F9E00C79B71 /* iWinNoteListViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -145,6 +147,9 @@
 		79D513C7181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinViewAndAddNotesViewController.h; sourceTree = "<group>"; };
 		79D513C8181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinViewAndAddNotesViewController.m; sourceTree = "<group>"; };
 		79D513C9181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iWinViewAndAddNotesViewController.xib; sourceTree = "<group>"; };
+		79D513CD181F9F9E00C79B71 /* iWinNoteListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinNoteListViewController.h; sourceTree = "<group>"; };
+		79D513CE181F9F9E00C79B71 /* iWinNoteListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinNoteListViewController.m; sourceTree = "<group>"; };
+		79D513CF181F9F9E00C79B71 /* iWinNoteListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iWinNoteListViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -381,6 +386,9 @@
 		79D513CC181F9F8700C79B71 /* NoteList */ = {
 			isa = PBXGroup;
 			children = (
+				79D513CD181F9F9E00C79B71 /* iWinNoteListViewController.h */,
+				79D513CE181F9F9E00C79B71 /* iWinNoteListViewController.m */,
+				79D513CF181F9F9E00C79B71 /* iWinNoteListViewController.xib */,
 			);
 			name = NoteList;
 			sourceTree = "<group>";
@@ -489,6 +497,7 @@
 				0A1A72A9181A2C5E009A49E5 /* iWinAddUsersViewController.xib in Resources */,
 				0A1A72911819FE48009A49E5 /* iWinViewAndAddViewController.xib in Resources */,
 				0A7E516617FBEBA200A4B8B7 /* iWinRegisterViewController.xib in Resources */,
+				79D513D1181F9F9E00C79B71 /* iWinNoteListViewController.xib in Resources */,
 				0A7E515C17FBEA9700A4B8B7 /* iWinMainViewController.xib in Resources */,
 				0A1A727E1819E1F5009A49E5 /* iWinHomeScreenViewController.xib in Resources */,
 				0A1A728B1819F590009A49E5 /* iWinScheduleViewMeetingViewController.xib in Resources */,
@@ -521,6 +530,7 @@
 				0A04456C17F3825D000FF2A0 /* iWinAppDelegate.m in Sources */,
 				0A7E515B17FBEA9700A4B8B7 /* iWinMainViewController.m in Sources */,
 				0A04457517F3825D000FF2A0 /* MeetingBuilder.xcdatamodeld in Sources */,
+				79D513D0181F9F9E00C79B71 /* iWinNoteListViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
