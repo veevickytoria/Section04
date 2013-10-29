@@ -2,7 +2,7 @@
 // They will automatically be included in application.css.
 // You can use Less here: http://lesscss.org/
 
-
+<style type="text/css">
 	.sexyButton {
 		-moz-box-shadow: inset 0px 1px 0px 0px #ffffff;
 		-webkit-box-shadow: inset 0px 1px 0px 0px #ffffff;
@@ -48,4 +48,4 @@
 		position: relative;
 		top: 1px;
 	}
-
+</style>

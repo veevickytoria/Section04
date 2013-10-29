@@ -1,8 +1,37 @@
-<html>
-<head>
-<title>View Meetings</title>
-<style type="text/css">
-	.AbsCenter{
+
+
+<style>
+  dt.pageHeader {
+    font-size: 35px;
+    color: white;
+    margin-bottom: 15px;
+    padding-top: 10px;
+    position: absolute;
+    left: 20px;
+  }
+
+body {
+  padding-top: 60px;
+  padding-bottom: 60px;
+  background-color: black;
+}
+@media (max-width: 979px) {
+  body {
+    padding-top: 60px;
+    padding-bottom: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+
+  .navbar-inner{
+	padding:0px !important;
+ }
+}
+
+
+
+
+.AbsCenter{
 		margin: 1% auto;
 		position: relative;
 	}
@@ -78,9 +107,20 @@
 		background-color: white;
 	}
 </style>
-</head>
-<body>
-	
+
+<!-- Start Nav-Bar -->
+ <%= render "panes/top_bar" %>
+<!-- End Nav-Bar -->
+
+<br>
+<br>
+<div class="row-fluid">
+  <div id="leftbar" class="span2" style="position: fixed; left:0px; text-align: center; top:40px; bottom:40px;">
+    <%= render "panes/meeting_bar" %>
+  </div>
+  <div class="span8 offset2">
+
+
 <h1>Meetings</h1>
 
 <table>
@@ -117,6 +157,40 @@
 		<td><a href="link">Agenda Link</a></td>
 	</tr>
 </table>
-	
-</body>
-</html>
+
+  </div>
+  <div id="rightbar" class="span2" style="position: fixed; right:0px; text-align: center; top:40px; bottom:40px;">
+    <%= render "panes/task_bar" %>
+  </div>
+</div>
+
+<%= render "panes/bottom_bar" %>
+
+
+<script>
+
+$(document).ready(function () {
+       var left_width = $('#leftbar').width() -10;
+       $('#leftbar').stop().animate({left: - left_width  },500); 
+
+       var right_width = $('#rightbar').width() -10;
+       $('#rightbar').stop().animate({right: - right_width  },500);     
+});    
+
+
+$('#leftbar').hover(function () {
+     $(this).stop().animate({left:"0px"},500);     
+   },function () {
+       var width = $(this).width() -10;
+       $(this).stop().animate({left: - width  },500);     
+});
+
+$('#rightbar').hover(function () {
+     $(this).stop().animate({right:"0px"},500);     
+   },function () {
+       var width = $(this).width() -10;
+       $(this).stop().animate({right: - width  },500);     
+});
+</script>
+
+
