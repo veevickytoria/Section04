@@ -19,6 +19,8 @@
 @property (strong, nonatomic) iWinTaskListViewController *taskListViewController;
 @property (strong, nonatomic) iWinViewAndAddViewController *agendaController;
 @property (strong, nonatomic) iWinAddUsersViewController *userViewController;
+@property (strong, nonatomic) iWinNoteListViewController *noteViewController;
+
 @property BOOL movedView;
 @property (nonatomic) UISwipeGestureRecognizer * swiperight;
 @property (nonatomic) UISwipeGestureRecognizer * swipeleft;
@@ -211,6 +213,10 @@
 {
     [self removeSubViews];
     [self enableSliding];
+    self.noteViewController = [[iWinNoteListViewController alloc] initWithNibName:@"iWinNoteListViewController" bundle:nil];
+    [self.mainView addSubview:self.noteViewController.view];
+    [self.noteViewController.view setBounds:self.mainView.bounds];
+    self.noteViewController.noteListDelegate = self;
     [self animateSlidingMenu:NO];
     self.notesButton.backgroundColor = [UIColor whiteColor];
     self.lastClicked.backgroundColor = [UIColor clearColor];

@@ -45,6 +45,8 @@
 		0ACE33B117FD245B003B9C0A /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ACE33B017FD245B003B9C0A /* MobileCoreServices.framework */; };
 		0ACE33B317FD2461003B9C0A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ACE33B217FD2461003B9C0A /* Security.framework */; };
 		0ACE33B517FD246F003B9C0A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ACE33B417FD246F003B9C0A /* SystemConfiguration.framework */; };
+		79D513CA181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79D513C8181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.m */; };
+		79D513CB181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79D513C9181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -140,6 +142,9 @@
 		0ACE33B217FD2461003B9C0A /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		0ACE33B417FD246F003B9C0A /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		73CB9D928C6D483CAEB8FAAA /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		79D513C7181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinViewAndAddNotesViewController.h; sourceTree = "<group>"; };
+		79D513C8181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinViewAndAddNotesViewController.m; sourceTree = "<group>"; };
+		79D513C9181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iWinViewAndAddNotesViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -199,6 +204,8 @@
 		0A04456117F3825D000FF2A0 /* MeetingBuilder */ = {
 			isa = PBXGroup;
 			children = (
+				79D513CC181F9F8700C79B71 /* NoteList */,
+				79D513C1181F9CC800C79B71 /* ViewAndAddNotes */,
 				0A1A729A181A2297009A49E5 /* AddAttendees */,
 				0A1A7299181A2210009A49E5 /* AddAndViewTask */,
 				0A1A7298181A2202009A49E5 /* TaskList */,
@@ -361,6 +368,23 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		79D513C1181F9CC800C79B71 /* ViewAndAddNotes */ = {
+			isa = PBXGroup;
+			children = (
+				79D513C7181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.h */,
+				79D513C8181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.m */,
+				79D513C9181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.xib */,
+			);
+			name = ViewAndAddNotes;
+			sourceTree = "<group>";
+		};
+		79D513CC181F9F8700C79B71 /* NoteList */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = NoteList;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -468,6 +492,7 @@
 				0A7E515C17FBEA9700A4B8B7 /* iWinMainViewController.xib in Resources */,
 				0A1A727E1819E1F5009A49E5 /* iWinHomeScreenViewController.xib in Resources */,
 				0A1A728B1819F590009A49E5 /* iWinScheduleViewMeetingViewController.xib in Resources */,
+				79D513CB181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.xib in Resources */,
 				0A1A72A4181A2663009A49E5 /* iWinAddAndViewTaskViewController.xib in Resources */,
 				0A04457017F3825D000FF2A0 /* Default@2x.png in Resources */,
 				0A04457217F3825D000FF2A0 /* Default-568h@2x.png in Resources */,
@@ -486,6 +511,7 @@
 				0ACE339A17FCF5F8003B9C0A /* iWinMeetingViewController.m in Sources */,
 				0A1A7296181A1802009A49E5 /* iWinAgendaItemViewController.m in Sources */,
 				0A1A72A8181A2C5E009A49E5 /* iWinAddUsersViewController.m in Sources */,
+				79D513CA181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.m in Sources */,
 				0A7E516017FBEB9200A4B8B7 /* iWinLoginViewController.m in Sources */,
 				0A1A729E181A22AB009A49E5 /* iWinTaskListViewController.m in Sources */,
 				0A04456817F3825D000FF2A0 /* main.m in Sources */,
