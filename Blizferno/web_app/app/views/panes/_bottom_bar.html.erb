@@ -35,8 +35,9 @@
 
 
 <script>
+
 	$("#mypost").click(function(){
-	 $.post( "http://csse-04.csse.rose-hulman.edu/index?method=register", '{ "user": "test123", "pass": "123" }');
+	 $.post( "http://csse-04.csse.rose-hulman.edu/index.php?method=register", JSON.stringify({user: "somethingeasy", pass: "123"}));
 		});
 </script>
 
@@ -44,12 +45,22 @@
 
 <script>
 	$("#mybutton").click(function(){
+		//alert(JSON.stringify({user: "test123", pass: "123"}));
 		$.ajax({
 			type: 'POST',
 			url: 'http://csse371-04.csse.rose-hulman.edu/index.php?method=register',
-			data: '{ "user": "test123", "pass": "123"}',
+			data: '{"user": "test634", "pass": "123"}',
 			contentType: 'application/json; charset=utf-8',
-			dataType: 'json'
+			dataType: 'json',
+			crossDomain: true,
+			success: function(){
+				alert("it worked");
+			},
+			error: function(data, textStatus, jqXHR){
+				alert(JSON.stringify(data));
+				alert(textStatus);
+				alert("you're horrible");
+			}
 		});
 	});
 
