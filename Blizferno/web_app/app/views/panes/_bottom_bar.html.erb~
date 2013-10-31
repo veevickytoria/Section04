@@ -52,7 +52,6 @@
 			data: '{"user": "test634", "pass": "123"}',
 			contentType: 'application/json; charset=utf-8',
 			dataType: 'json',
-			crossDomain: true,
 			success: function(){
 				alert("it worked");
 			},
