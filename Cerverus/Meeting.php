@@ -49,4 +49,6 @@ if( strcasecmp($_GET['method'],'login') == 0){
 	foreach ($meetingNode->getProperties() as $key => $value) {
     echo "$key: $value\n";
 }
+}
+
 ?>

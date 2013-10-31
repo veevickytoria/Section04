@@ -49,4 +49,5 @@ if( strcasecmp($_GET['method'],'login') == 0){
 	foreach ($noteNode->getProperties() as $key => $value) {
     echo "$key: $value\n";
 }
+}
 ?>
