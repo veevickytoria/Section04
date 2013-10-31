@@ -1,6 +1,0 @@
-
-    <%= render "panes/dashboard" %>
-
-
-
-

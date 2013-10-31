@@ -1,5 +1,0 @@
-class ProfileController < ApplicationController
-	def index 
-	def editmyprofile
-	end
-end
