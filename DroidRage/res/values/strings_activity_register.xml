@@ -1,0 +1,10 @@
+<resources>
+
+    <string name="title_activity_register">Register</string>
+
+    <!-- Strings related to register -->
+    <string name="prompt_password_confirm">Confirm Password</string>
+    <string name="error_taken_username">This username already exists</string>
+    <string name="error_mismatch_password">Passwords do not match</string>
+
+</resources>
