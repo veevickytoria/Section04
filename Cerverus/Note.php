@@ -3,6 +3,7 @@
  * Include the API PHP file for neo4j
  */
 require_once 'Neo4j.php';
+
 /**
  *	Create a graphDb connection 
  */
@@ -66,10 +67,20 @@ $response['data'] = NULL;
 // --- Step 3: Process Request
  
 // Method A: Say Hello to the API
+if( strcasecmp($_GET['method'],'getNoteInfo') == 0){
+    $response['code'] = 1;
+    $response['status'] = $api_response_code[ $response['code'] ]['HTTP Response'];
+    $response['data'] = 'Logged in'; 
+	
+	$index= new IndexService($graphDb);
 
- 
-// --- Step 4: Deliver Response
- 
+	$noteNodes= $index->getNodes("Notes", "name", $_GET['user'] );
+	$noteNodeInfo = array();
+	foreach($noteNodes as &$node){
+		$noteNodeInfo = $node->_data;
+	}
+	echo json_encode($noteNodeInfo);
+}
 // Return Response to browser
 deliver_response($response);
  
