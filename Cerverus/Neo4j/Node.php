@@ -15,6 +15,8 @@ class Node extends PropertyContainer
 	public $_neo_db;
 	public $_id;
 	public $_is_new;
+	public $_properties;
+	
 	
 	/**
 	 * JSON HTTP client
@@ -35,6 +37,16 @@ class Node extends PropertyContainer
 		}
 	}
 	
+	public function setProperty($name, $value){
+		list($response, $http_code) = $this->jsonClient->jsonPutRequest( $this->_neo_db->getBaseUri() ."db/data/node/". $this->getId() . "/properties/". $name, $value);
+		if(sizeof($_properties) == 0){
+			$_properties= array($name);
+		}else{
+			$_properties[$name]= $value; 
+		}
+		
+		echo "response= " .  $response . "|status code= " . $http_code;
+	}
 	public function delete()
 	{
 		if (!$this->_is_new) 
@@ -48,6 +60,7 @@ class Node extends PropertyContainer
 			$this->_id = NULL;
 			$this->_id_new = TRUE;
 		}
+	
 	}
 	
 	public function save()
@@ -73,6 +86,18 @@ class Node extends PropertyContainer
 	{
 		return $this->_id;
 	}
+	
+	public function getProperties()
+	{
+		$data = count($this->_data) > 0 ? $this->_data : NULL;
+		list($response, $http_code) = $this->jsonClient->jsonGetRequest($this->getUri().'/properties');	
+		return json_encode($response);
+	}
+	/*
+	Exmaple Code with calling a node
+	$postContent = json_decode($node->getProperties());
+	echo $postContent->username;
+	*/
 	
 	public function isSaved()
 	{

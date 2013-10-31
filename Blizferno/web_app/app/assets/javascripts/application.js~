@@ -1,0 +1,43 @@
+// This is a manifest file that'll be compiled into application.js, which will include all the files
+// listed below.
+//
+// Any JavaScript/Coffee file within this directory, lib/assets/javascripts, vendor/assets/javascripts,
+// or vendor/assets/javascripts of plugins, if any, can be referenced here using a relative path.
+//
+// It's not advisable to add code directly here, but if you do, it'll appear at the bottom of the
+// compiled file.
+//
+// Read Sprockets README (https://github.com/sstephenson/sprockets#sprockets-directives) for details
+// about supported directives.
+//
+//= require jquery
+//= require jquery_ujs
+//= require turbolinks
+//= require_tree .
+
+<script>
+
+$(document).ready(function () {
+       var left_width = $('#leftbar').width() -10;
+       $('#leftbar').stop().animate({left: - left_width  },500); 
+
+       var right_width = $('#rightbar').width() -10;
+       $('#rightbar').stop().animate({right: - right_width  },500);     
+});    
+
+
+$('#leftbar').hover(function () {
+     $(this).stop().animate({left:"0px"},500);     
+   },function () {
+       var width = $(this).width() -10;
+       $(this).stop().animate({left: - width  },500);     
+});
+
+$('#rightbar').hover(function () {
+     $(this).stop().animate({right:"0px"},500);     
+   },function () {
+       var width = $(this).width() -10;
+       $(this).stop().animate({right: - width  },500);     
+});
+
+</script>

@@ -1,13 +1,74 @@
 <style>
-#NW { position:fixed; width:35%; height:50%; top:0;   left:15%; background:sandybrown; border:2px solid black }
-#NE { position:fixed; width:35%; height:50%; top:0;   left:50%; background:lightblue;   border:2px solid black }
-#SW { position:fixed; width:35%; height:50%; top:50%; left:15%; background:lightgreen;  border:2px solid black }
-#SE { position:fixed; width:35%; height:50%; top:50%; left:50%; background:lightcoral;    border:2px solid black } 
+@import url('lastninja.ttf');
+@font-face{
+	font-family: 'LastNinja';
+	src: url('lastninja.ttf');
+}
+
+a{
+	font-family: 'LastNinja';
+}
+
+#NW {
+	position:fixed;
+	width:35%; 
+	height:50%; 
+	top:0;   
+	left:15%; 
+	background:#000000;
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(.025, #000000), color-stop(1, #f0b713));
+	background: -moz-linear-gradient(center top, #000000 5%, #f0b713 100%);
+	border:2px solid black;
+	-moz-border-radius: 20px;
+	-webkit-border-radius: 20px;
+	border-radius: 20px;
+}
+#NE { 
+	position:fixed; 
+	width:35%; 
+	height:50%; 
+	top:0;   
+	left:50%; 
+	background:#000000;
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(.025, #000000), color-stop(1, #6cd41d));
+	background: -moz-linear-gradient(center top, #000000 5%, #6cd41d 100%);
+	border:2px solid black;
+	-moz-border-radius: 20px;
+	-webkit-border-radius: 20px;
+	border-radius: 20px;
+}
+#SW { 
+	position:fixed; 
+	width:35%; 
+	height:50%; 
+	top:50%; 
+	left:15%; 
+	background:#d63431;
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(.025, #d63431), color-stop(1, #000000));
+	background: -moz-linear-gradient(center top, #d63431 5%, #000000 100%);
+	-moz-border-radius: 20px;
+	-webkit-border-radius: 20px;
+	border-radius: 20px;
+	border:2px solid black 
+}
+#SE { position:fixed; 
+	width:35%; 
+	height:50%; 
+	top:50%; 
+	left:50%; 
+	background:#21a6c9;
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(.025, #21a6c9), color-stop(1, #000000));
+	background: -moz-linear-gradient(center top, #21a6c9 5%, #000000 100%);    
+	border:2px solid black;
+	-moz-border-radius: 20px;
+	-webkit-border-radius: 20px;
+	border-radius: 20px;
+} 
 </style>
 
 <div id="NW" style="text-align:center">
 <br><br><br>
-	<a href="profile/index" style="text-decoration:none; color:white"><font size=20>Account</font> </a>
+	<a href="profile/index" style="text-decoration:none; color:white; font-family: LastNinja;"><font size=20>Account</font> </a>
 	<%= render "panes/account_pane" %>
 </div>
 <div id="NE" style="text-align:center">
@@ -22,7 +83,7 @@
 	</div>
   <%= render "panes/task_pane" %>
 </div>​
-<div id="SE" style="text-align:center">
+<div id="SE" class='ninFont' style="text-align:center">
 <br><br>
 	<a href="groups/index" style="text-decoration:none; color:white"><font size=20>Groups</font></a>
 </div>

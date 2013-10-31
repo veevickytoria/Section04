@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="?android:attr/listPreferredItemHeight" 
+    android:padding="6dip">
+    
+    <!--  Title of Meeting -->
+
+    <TextView
+        android:id="@+id/meetingTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="26dip"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:text="Title"
+        android:textStyle="bold" />
+
+    <!--  Meeting Description -->
+
+     <TextView
+         android:id="@+id/meetingDesc"
+         android:layout_width="fill_parent"
+         android:layout_height="wrap_content"
+         android:layout_alignParentBottom="true"
+         android:layout_alignParentRight="true"
+         android:layout_below="@id/meetingTitle"
+         android:singleLine="false"
+         android:text="Location : Time" />
+
+</RelativeLayout>
