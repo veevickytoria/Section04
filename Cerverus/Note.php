@@ -44,5 +44,9 @@ if( strcasecmp($_GET['method'],'login') == 0){
 	
 	$response= $noteIndex->add($noteNode, 'user', $noteProps['user']);
 	echo $response;
+}else if( strcasecmp($_GET['method'],'getNoteInfo') == 0){
+	$noteNode=$client->getNode($_GET['id']);
+	foreach ($noteNode->getProperties() as $key => $value) {
+    echo "$key: $value\n";
 }
 ?>

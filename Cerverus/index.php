@@ -41,6 +41,11 @@ if( strcasecmp($_GET['method'],'login') == 0){
 	
 	$response= $userIndex->add($userNode, 'user', $userProps['name']);
 	echo $response;
+}else if( strcasecmp($_GET['method'],'getUserInfo') == 0){
+	$userNode=$client->getNode($_GET['id']);
+	foreach ($userNode->getProperties() as $key => $value) {
+    echo "$key: $value\n";
+	}
 }else if(strcasecmp($_GET['method'], 'updateUser') ==0){
 	//get the json string post content
 	$postContent = json_decode(@file_get_contents('php://input'));

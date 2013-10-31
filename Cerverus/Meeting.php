@@ -44,5 +44,9 @@ if( strcasecmp($_GET['method'],'login') == 0){
 	
 	$response= $meetingIndex->add($meetingNode, 'Meetings', $meetingProps['user']);
 	echo $response;
+}else if( strcasecmp($_GET['method'],'getMeetingInfo') == 0){
+	$meetingNode=$client->getNode($_GET['id']);
+	foreach ($meetingNode->getProperties() as $key => $value) {
+    echo "$key: $value\n";
 }
 ?>
