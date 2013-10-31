@@ -2,6 +2,86 @@
 You don't have javascript enabled.
 </noscript>    
 
+<!-- Javascript -->
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        var oatmealRaisin = getCookie("badLogin");
+        var elem = document.getElementById("invalidLogin");
+        if(oatmealRaisin != null && oatmealRaisin != ""){
+            elem.style.display = "block";
+        }else{
+            elem.style.display = "none";
+        };
+
+
+
+function ConvertFormToJSON(form){
+	var array = jQuery(form).serializeArray();
+	var json = {};
+
+	jQuery.each(array, function() {
+		json[this.name] = this.value || '';
+	});
+
+	return json;
+}
+
+
+/*
+jQuery(document).on('ready', function() {
+    jQuery('#myform').bind('submit', function(event){
+        event.preventDefault();
+        
+        var form = this;
+        var json = ConvertFormToJSON(form);
+
+        $.ajax({
+            type: "POST",
+            url: "http://csse371-04.csse.rose-hulman.edu/index.php?method=register",
+	    contentType: "application/json",
+	    accepts: "application/json",
+            data: {"user":"testing123", "pass":"1234"}
+        });
+
+        return true;
+    });
+});
+*/
+
+jQuery(document).on('ready', function() {
+    // Add the iframe with a unique name
+  var iframe = document.createElement("iframe");
+  var uniqueString = "CHANGE_THIS_TO_SOME_UNIQUE_STRING";
+  document.body.appendChild(iframe);
+  iframe.style.display = "none";
+  iframe.contentWindow.name = uniqueString;
+
+  // construct a form with hidden inputs, targeting the iframe
+  var form = document.createElement("form");
+  form.target = uniqueString;
+  form.action = "http://csse371-04.csse.rose-hulman.edu/index.php?method=register";
+  form.method = "POST";
+
+  // repeat for each parameter
+  var input = document.createElement("input");
+  input.type = "hidden";
+  input.name = "user";
+  input.value = "test123";
+  form.appendChild(input);
+
+  var input = document.createElement("input");
+  input.type = "hidden";
+  input.name = "pass";
+  input.value = "123";
+  form.appendChild(input);
+
+  document.body.appendChild(form);
+  form.submit();
+});
+
+    </script>
     <div class="container">
         <div class="flat-form">
             <ul class="tabs">
@@ -33,7 +113,7 @@ You don't have javascript enabled.
                 <p>
                     Enter your details below:
                 </p>
-                <form  id="myform" method="post" action="http://csse371-04.csse.rose-hulman.edu/index.php?method=register">
+                <form id="myform" action="http://csse371-04.csse.rose-hulman.edu/index.php?method=register" method="post">
                     <ul>
 <!--
                         <li>
@@ -49,10 +129,10 @@ You don't have javascript enabled.
 -->
 
                         <li>
-                            <input type="text" name="user" placeholder="Username" />
+                            <input id="user" type="text" name="user" placeholder="Username" />
                         </li>
                         <li>
-                            <input type="password" name="pass" placeholder="Password" />
+                            <input id="pass" type="text" name="pass" placeholder="Password" />
                         </li>
 <!--
                         <li>
@@ -60,7 +140,7 @@ You don't have javascript enabled.
                         </li>
 -->
                         <li>
-                            <input type="submit" value="Sign Up" class="button" />
+                            <input id="input" type="submit" value="Sign Up" class="button" />
                         </li>
                     </ul>
                 </form>
@@ -90,4 +170,31 @@ You don't have javascript enabled.
         </div>
     </div>
     <script class="cssdeck" src="jquery.min.js"></script>
+    <script type="text/javascript">
+        (function ($) {
+            // constants
+            var SHOW_CLASS = 'show',
+                HIDE_CLASS = 'hide',
+                ACTIVE_CLASS = 'active';
 
+            $('.tabs').on('click', 'li a', function (e) {
+                e.preventDefault();
+                var $tab = $(this),
+                     href = $tab.attr('href');
+
+                $('.active').removeClass(ACTIVE_CLASS);
+                $tab.addClass(ACTIVE_CLASS);
+
+                $('.show')
+                   .removeClass(SHOW_CLASS)
+                   .addClass(HIDE_CLASS)
+                   .hide();
+
+                $(href)
+                  .removeClass(HIDE_CLASS)
+                  .addClass(SHOW_CLASS)
+                  .hide()
+                  .fadeIn(550);
+            });
+        })(jQuery);
+    </script>

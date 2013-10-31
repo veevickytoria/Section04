@@ -3,6 +3,9 @@ You don't have javascript enabled.
 </noscript>    
 
 <!-- Javascript -->
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+
     <script type="text/javascript">
         var oatmealRaisin = getCookie("badLogin");
         var elem = document.getElementById("invalidLogin");
@@ -14,34 +17,37 @@ You don't have javascript enabled.
 
 
 
-var form;
+function ConvertFormToJSON(form){
+	var array = jQuery(form).serializeArray();
+	var json = {};
 
-form.onsubmit = function (e) {
-  // stop the regular form submission
-  e.preventDefault();
+	jQuery.each(array, function() {
+		json[this.name] = this.value || '';
+	});
 
-  // collect the form data while iterating over the inputs
-  var data = {};
-  for (var i = 0, ii = form.length; i < ii; ++i) {
-    var input = form[i];
-    if (input.name) {
-      data[input.name] = input.value;
-    }
-  }
+	return json;
+}
 
-  // construct an HTTP request
-  var xhr = new XMLHttpRequest();
-  xhr.open(form.method, form.action, true);
-  xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 
-  // send the collected data as JSON
-  xhr.send(JSON.stringify(data));
 
-  xhr.onloadend = function () {
-    // done
-  };
-};
+jQuery(document).on('ready', function() {
+    jQuery('#myform').bind('submit', function(event){
+        event.preventDefault();
+        
+        var form = this;
+        var json = ConvertFormToJSON(form);
 
+        $.ajax({
+            type: "POST",
+            url: "http://csse371-04.csse.rose-hulman.edu/index.php?method=register",
+	    contentType: "application/json",
+	    accepts: "application/json",
+            data: {"user":"testing123", "pass":"1234"}
+        });
+
+        return true;
+    });
+});
 
 
 
@@ -78,7 +84,7 @@ form.onsubmit = function (e) {
                 <p>
                     Enter your details below:
                 </p>
-                <form  id="myform" method="post" action="http://csse371-04.csse.rose-hulman.edu/index.php?method=register">
+                <form id="myform" action="http://csse371-04.csse.rose-hulman.edu/index.php?method=register" method="post">
                     <ul>
 <!--
                         <li>
@@ -94,10 +100,10 @@ form.onsubmit = function (e) {
 -->
 
                         <li>
-                            <input type="text" name="user" placeholder="Username" />
+                            <input id="user" type="text" name="user" placeholder="Username" />
                         </li>
                         <li>
-                            <input type="password" name="pass" placeholder="Password" />
+                            <input id="pass" type="text" name="pass" placeholder="Password" />
                         </li>
 <!--
                         <li>
@@ -105,7 +111,7 @@ form.onsubmit = function (e) {
                         </li>
 -->
                         <li>
-                            <input type="submit" value="Sign Up" class="button" />
+                            <input id="input" type="submit" value="Sign Up" class="button" />
                         </li>
                     </ul>
                 </form>
