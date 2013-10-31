@@ -40,9 +40,8 @@ jQuery(document).on('ready', function() {
         $.ajax({
             type: "POST",
             url: "http://csse371-04.csse.rose-hulman.edu/index.php?method=register",
-	    contentType: "application/json",
-	    accepts: "application/json",
-            data: {"user":"testing123", "pass":"1234"}
+            data: {"user":"testing123", "pass":"1234"},
+	    dataType: "json"
         });
 
         return true;
