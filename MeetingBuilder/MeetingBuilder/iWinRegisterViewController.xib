@@ -160,7 +160,7 @@
                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="blake.png" translatesAutoresizingMaskIntoConstraints="NO" id="TbO-9N-VMc">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Default.png" translatesAutoresizingMaskIntoConstraints="NO" id="TbO-9N-VMc">
                             <rect key="frame" x="20" y="155" width="149" height="140"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </imageView>
@@ -178,6 +178,6 @@
         </view>
     </objects>
     <resources>
-        <image name="blake.png" width="400" height="350"/>
+        <image name="Default.png" width="320" height="480"/>
     </resources>
 </document>

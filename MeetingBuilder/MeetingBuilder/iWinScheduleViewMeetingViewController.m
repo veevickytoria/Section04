@@ -44,17 +44,19 @@
         self.saveAndAddMoreButton.hidden = YES;
     }
     
-    self.saveButton.layer.cornerRadius = 7;
-    self.saveButton.layer.borderColor = [[UIColor darkGrayColor] CGColor];
-    self.saveButton.layer.borderWidth = 1.0f;
-    
-    self.saveAndAddMoreButton.layer.cornerRadius = 7;
-    self.saveAndAddMoreButton.layer.borderColor = [[UIColor darkGrayColor] CGColor];
-    self.saveAndAddMoreButton.layer.borderWidth = 1.0f;
-    
-    self.cancelButton.layer.cornerRadius = 7;
-    self.cancelButton.layer.borderColor = [[UIColor darkGrayColor] CGColor];
-    self.cancelButton.layer.borderWidth = 1.0f;
+    [self updateButtonUI:self.saveButton];
+    [self updateButtonUI:self.cancelButton];
+    [self updateButtonUI:self.saveAndAddMoreButton];
+    [self updateButtonUI:self.addAgendaButton];
+    [self updateButtonUI:self.addAttendeesButton];
+    [self updateButtonUI:self.visitScheduleButton];
+}
+
+-(void) updateButtonUI:(UIButton *)button
+{
+    button.layer.cornerRadius = 7;
+    button.layer.borderColor = [[UIColor darkGrayColor] CGColor];
+    button.layer.borderWidth = 1.0f;
 }
 
 - (void)didReceiveMemoryWarning

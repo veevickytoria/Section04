@@ -68,13 +68,9 @@
         [urlRequest setHTTPBody:jsonData];
         NSURLResponse * response = nil;
         NSError * error = nil;
-        NSData * data = [NSURLConnection sendSynchronousRequest:urlRequest
+        [NSURLConnection sendSynchronousRequest:urlRequest
                                               returningResponse:&response
                                                           error:&error];
-        
-        NSLog(@"request : %@", urlRequest);
-        NSLog(@"request headers : %@", [urlRequest allHTTPHeaderFields]);
-        NSLog(@"request body : %@", [[NSString alloc] initWithData:[urlRequest HTTPBody] encoding:NSUTF8StringEncoding]);
 //        if (error) {
 //            // Handle error.
 //        }
@@ -96,38 +92,6 @@
 - (IBAction)onClickCancel:(id)sender
 {
     [self.registerDelegate onCancel];
-}
-
-//- (IBAction)onClickMenu:(id)sender
-//{
-//    [UIView beginAnimations:nil context:NULL];
-//    [UIView setAnimationDuration:0.4];
-//    
-//    CGRect oldFrame = self.menuView.frame;
-//    CGRect oldFrameMain = self.scrollView.frame;
-//    
-//    if (!self.movedView)
-//    {
-//        self.menuView.frame = CGRectMake(0, oldFrame.origin.y, oldFrame.size.width, oldFrame.size.height);
-//        self.scrollView.frame = CGRectMake(oldFrameMain.origin.x+200,oldFrameMain.origin.y,oldFrameMain.size.width,oldFrameMain.size.height);
-//    }
-//    else
-//    {
-//        self.menuView.frame = CGRectMake(-200, oldFrame.origin.y, oldFrame.size.width, oldFrame.size.height);
-//        self.scrollView.frame = CGRectMake(0,oldFrameMain.origin.y,oldFrameMain.size.width,oldFrameMain.size.height);
-//    }
-//    self.movedView = !self.movedView;
-//    [UIView commitAnimations];
-//}
-
-//- (IBAction)onLogOut:(id)sender
-//{
-//    [self.registerDelegate logOut];
-//}
-
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
-{
-    NSLog(@"%@", data);
 }
 
 @end

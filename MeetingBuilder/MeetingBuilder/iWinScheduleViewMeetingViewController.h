@@ -35,5 +35,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *headerLabel;
 @property (weak, nonatomic) IBOutlet UIButton *saveButton;
 @property (weak, nonatomic) IBOutlet UIButton *cancelButton;
+@property (weak, nonatomic) IBOutlet UIButton *addAttendeesButton;
+@property (weak, nonatomic) IBOutlet UIButton *visitScheduleButton;
 @property (weak, nonatomic) IBOutlet UIButton *addAgendaButton;
 @end

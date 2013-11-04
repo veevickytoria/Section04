@@ -7,6 +7,7 @@
 //
 
 #import "iWinViewAndAddViewController.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface iWinViewAndAddViewController ()
 @property (nonatomic) NSMutableArray *itemList;
@@ -42,6 +43,18 @@
         [self.itemList addObject:@"Item 3"];
         self.headerLabel.text = @"View Agenda";
     }
+    
+    [self updateButtonUI:self.saveButton];
+    [self updateButtonUI:self.cancelButton];
+    [self updateButtonUI:self.addItemButton];
+    [self updateButtonUI:self.addAttendeesButton];
+}
+
+-(void) updateButtonUI:(UIButton *)button
+{
+    button.layer.cornerRadius = 7;
+    button.layer.borderColor = [[UIColor darkGrayColor] CGColor];
+    button.layer.borderWidth = 1.0f;
 }
 
 - (void)didReceiveMemoryWarning
