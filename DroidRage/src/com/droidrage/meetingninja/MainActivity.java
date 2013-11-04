@@ -168,11 +168,8 @@ public class MainActivity extends FragmentActivity implements
 			String user = getString(R.string.prompt_username);
 			switch (position) {
 			case (0):
-				frag = new MeetingsFragment();
-				args.putString(user, username);
-				frag.setArguments(args);
-				meetingsFrag = (MeetingsFragment) frag;
-				return frag;
+				meetingsFrag = new MeetingsFragment();
+				return meetingsFrag;
 			case (1):
 				frag = new NotesFragment();
 				args.putString(user, username);

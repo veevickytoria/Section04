@@ -23,8 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class NotesFragment extends Fragment implements AsyncResponse<List<Note>> {
-
-	public static final String ARG_USERNAME = "username";
 	private List<Note> notes = new ArrayList<Note>();
 	private NoteItemAdapter noteAdpt;
 
@@ -37,14 +35,9 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 		// TODO: Check for internet connection before receiving notes from DB
 		// TODO: Display a something saying "no notes" if there are no notes
 		// instead of having no notes appear
-		initList();
+		refreshNotes();
 
-		// if (notes.isEmpty()) {
-		// v.findViewById(R.id.notes_empty).setVisibility(0);
-		// v.findViewById(R.id.notes_empty).bringToFront();
-		// } else {
 		ListView lv = (ListView) v.findViewById(R.id.notesList);
-		// lv.bringToFront();
 		noteAdpt = new NoteItemAdapter(getActivity(), R.layout.note_item, notes);
 		
 		// setup listview
@@ -60,10 +53,6 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 			@Override
 			public void onItemClick(AdapterView<?> parentAdapter, View v,
 					int position, long id) {
-				// we know we are clicking a text view
-				// RelativeLayout clicked = (RelativeLayout) v;
-				// TextView name = (TextView) clicked.getChildAt(0);
-				// TextView desc = (TextView) clicked.getChildAt(1);
 				Note n = noteAdpt.getItem(position);
 				CharSequence descStr = n.getContent().isEmpty() ? "No content"
 						: n.getContent();
@@ -97,8 +86,9 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 	/**
 	 * Initializes the list of notes. TODO: Get the notes from the database
 	 */
-	private void initList() {
+	private void refreshNotes() {
 		notes.add(new Note("Oct 7 PM Meeting"));
+		
 		Note meeting = new Note("Oct 9 Team Meeting");
 		meeting.addContent("Max and Jordan worked on use cases.");
 		meeting.addContent("Chris and Ruji worked on the frontend and backend.");
@@ -123,8 +113,8 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 		Toast.makeText(getActivity(),
 				String.format("Received %d notes", list.size()),
 				Toast.LENGTH_SHORT).show();
-		notes.addAll(list);
-		noteAdpt.notifyDataSetChanged();
+		noteAdpt.clear();
+		noteAdpt.addAll(list);
 		
 	}
 
@@ -174,8 +164,9 @@ class NoteItemAdapter extends ArrayAdapter<Note> {
 			}
 			if (noteContent != null) {
 				String content = note.getContent();
-				if (content.length() > 200)
-					noteContent.setText(content.substring(0, 200) + "...");
+				int max_length = 200;
+				if (content.length() > max_length)
+					noteContent.setText(content.substring(0, max_length) + "...");
 				else
 					noteContent.setText(content);
 			}
@@ -217,7 +208,6 @@ class NoteItemAdapter extends ArrayAdapter<Note> {
 
 		@Override
 		protected void onCancelled() {
-			// TODO Auto-generated method stub
 			super.onCancelled();
 		}
 	}

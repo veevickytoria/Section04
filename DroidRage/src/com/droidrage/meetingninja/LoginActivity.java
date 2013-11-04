@@ -1,6 +1,5 @@
 package com.droidrage.meetingninja;
 
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -88,11 +87,11 @@ public class LoginActivity extends Activity {
 					public void onClick(View view) {
 						Intent register = new Intent(LoginActivity.this,
 								RegisterActivity.class);
-//						if (!TextUtils.isEmpty(mUsername)) {
-//							register.putExtra(RegisterActivity.ARG_USERNAME,
-//									mUsername);
-//						}
-							startActivity(register);
+						// if (!TextUtils.isEmpty(mUsername)) {
+						// register.putExtra(RegisterActivity.ARG_USERNAME,
+						// mUsername);
+						// }
+						startActivity(register);
 					}
 				});
 	}
@@ -236,7 +235,8 @@ public class LoginActivity extends Activity {
 
 			// if successful login, start main activity
 			if (success) {
-				SessionManager session = new SessionManager(getApplicationContext());
+				SessionManager session = new SessionManager(
+						getApplicationContext());
 				session.createLoginSession(mUsername);
 				Intent main = new Intent(mLoginFormView.getContext(),
 						MainActivity.class);
@@ -246,7 +246,7 @@ public class LoginActivity extends Activity {
 				overridePendingTransition(anim.fade_in, anim.fade_out);
 			} else {
 				mPasswordView
-						.setError(getString(R.string.error_incorrect_password));
+						.setError(getString(R.string.error_invalid_username_password));
 				mPasswordView.requestFocus();
 			}
 		}

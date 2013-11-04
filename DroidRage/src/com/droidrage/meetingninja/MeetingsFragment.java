@@ -27,13 +27,12 @@ import android.widget.Toast;
 public class MeetingsFragment extends Fragment implements
 		AsyncResponse<List<Meeting>> {
 
-	public static final String ARG_USERNAME = "user";
 	private List<Meeting> meetings = new ArrayList<Meeting>();
 	private MeetingItemAdapter meetingAdpt;
 
 	private MeetingFetcherTask fetcher = null;
 	
-	SessionManager session;
+	private SessionManager session;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,9 +41,10 @@ public class MeetingsFragment extends Fragment implements
 		View v = inflater.inflate(R.layout.fragment_meetings, container, false);
 		setHasOptionsMenu(true);
 		
-		// TODO: Check for internet connection before receiving meetings from DB
 		session = new SessionManager(this.getActivity().getApplicationContext());
-		getMeetings();
+		
+		// TODO: Check for internet connection before receiving meetings from DB
+		refreshMeetings();
 
 		ListView lv = (ListView) v.findViewById(R.id.meetingsList);
 		meetingAdpt = new MeetingItemAdapter(getActivity(), R.layout.meeting_item,
@@ -66,12 +66,8 @@ public class MeetingsFragment extends Fragment implements
 			@Override
 			public void onItemClick(AdapterView<?> parentAdapter, View v,
 					int position, long id) {
-				// we know we are clicking a text view
-				// RelativeLayout clicked = (RelativeLayout) v;
-				// TextView name = (TextView) clicked.getChildAt(0);
-				// TextView desc = (TextView) clicked.getChildAt(1);
-				Meeting n = meetingAdpt.getItem(position);
-				String msg = n.getTitle();
+				Meeting m = meetingAdpt.getItem(position);
+				String msg = m.getTitle();
 				Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
 
 			}
@@ -104,15 +100,8 @@ public class MeetingsFragment extends Fragment implements
 	}
 
 	/**
-	 * Initializes the list of meetings. TODO: Get the meetings from the database
+	 * Initializes the list of meetings. 
 	 */
-	private void getMeetings() {
-//		meetings.add(new Meeting(1, "Hard Code", "O259", "Today"));
-		fetcher = new MeetingFetcherTask(this);
-	//	fetcher.execute(getArguments().getString(getString(R.string.prompt_username)));
-		fetcher.execute(session.getUserDetails().get(SessionManager.USER));
-	}
-	
 	public void refreshMeetings(){
 		
 		fetcher = new MeetingFetcherTask(this);
@@ -124,10 +113,8 @@ public class MeetingsFragment extends Fragment implements
 		Toast.makeText(getActivity(),
 				String.format("Received %d meetings", output.size()),
 				Toast.LENGTH_SHORT).show();
-		//meetings.addAll(output);
 		meetingAdpt.clear();
 		meetingAdpt.addAll(output);
-		//notifyDataSetChanged();
 	}
 
 	/**
@@ -219,7 +206,6 @@ public class MeetingsFragment extends Fragment implements
 
 		@Override
 		protected void onCancelled() {
-			// TODO Auto-generated method stub
 			super.onCancelled();
 		}
 	}

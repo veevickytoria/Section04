@@ -175,6 +175,7 @@ public class RegisterActivity extends Activity implements AsyncResponse<Void> {
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
+			delegate.processFinish(result);
 		}
 	}
 
