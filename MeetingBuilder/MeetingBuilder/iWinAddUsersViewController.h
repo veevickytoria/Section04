@@ -21,5 +21,8 @@
 - (IBAction)onClickSave;
 - (IBAction)onClickCancel;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withPageName:(NSString *)pageName inEditMode:(BOOL)isEditing;
+@property (weak, nonatomic) IBOutlet UIButton *cancelButton;
+@property (weak, nonatomic) IBOutlet UIButton *saveButton;
+@property (weak, nonatomic) IBOutlet UIButton *sendInviteButton;
 @property (nonatomic) id<UserDelegate> userDelegate;
 @end

@@ -7,6 +7,7 @@
 //
 
 #import "iWinAddUsersViewController.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface iWinAddUsersViewController ()
 @property (nonatomic) NSString *pageName;
@@ -30,6 +31,9 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    [self updateButtonUI:self.saveButton];
+    [self updateButtonUI:self.cancelButton];
+    [self updateButtonUI:self.sendInviteButton];
 }
 
 - (void)didReceiveMemoryWarning
@@ -52,4 +56,12 @@
 {
     [self.userDelegate returnToPreviousView:self.pageName inEditMode:self.isEditing];
 }
+
+-(void) updateButtonUI:(UIButton *)button
+{
+    button.layer.cornerRadius = 7;
+    button.layer.borderColor = [[UIColor darkGrayColor] CGColor];
+    button.layer.borderWidth = 1.0f;
+}
+
 @end

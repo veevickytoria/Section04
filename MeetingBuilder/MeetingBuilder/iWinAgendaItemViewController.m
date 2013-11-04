@@ -7,6 +7,7 @@
 //
 
 #import "iWinAgendaItemViewController.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface iWinAgendaItemViewController ()
 @property (nonatomic) BOOL isEditing;
@@ -35,6 +36,8 @@
         self.durationTextField.text = @"1 hr";
         self.descriptionField.text = @"Enter description here.";
     }
+    [self updateButtonUI:self.saveButton];
+    [self updateButtonUI:self.cancelButton];
 }
 
 - (void)didReceiveMemoryWarning
@@ -52,4 +55,12 @@
 {
     [self.itemDelegate cancel];
 }
+
+-(void) updateButtonUI:(UIButton *)button
+{
+    button.layer.cornerRadius = 7;
+    button.layer.borderColor = [[UIColor darkGrayColor] CGColor];
+    button.layer.borderWidth = 1.0f;
+}
+
 @end
