@@ -199,7 +199,6 @@ public class MeetingsActivity extends Activity implements AsyncResponse<Boolean>
 
 	}
 
-alrigh
 	@Override
 	public void processFinish(Boolean result) {
 		// TODO Auto-generated method stub
