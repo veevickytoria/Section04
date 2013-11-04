@@ -40,7 +40,7 @@
     [self.itemDetail addObject:@"Due: 10/25/13 11:10 pm"];
     
     
-    self.createTaskButton.layer.cornerRadius = 0;
+    self.createTaskButton.layer.cornerRadius = 7;
     self.createTaskButton.layer.borderColor = [[UIColor darkGrayColor] CGColor];
     self.createTaskButton.layer.borderWidth = 1.0f;
 }

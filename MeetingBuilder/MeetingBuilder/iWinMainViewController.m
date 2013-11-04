@@ -8,6 +8,7 @@
 
 #import "iWinMainViewController.h"
 #import "iWinHomeScreenViewController.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface iWinMainViewController ()
 @property (strong, nonatomic) iWinLoginViewController *loginViewController;
@@ -78,12 +79,28 @@
     self.swipeleft.direction=UISwipeGestureRecognizerDirectionLeft;
     
     self.menuButton.hidden = YES;
+    self.menuButton.layer.cornerRadius = 7;
+    self.menuButton.layer.borderColor = [[UIColor darkGrayColor] CGColor];
+    self.menuButton.layer.borderWidth = 1.0f;
+    
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void) updateSelectedMenu:(UIButton*)newButton
+{
+    if (self.lastClicked)
+    {
+        self.lastClicked.backgroundColor = [UIColor clearColor];
+        [self.lastClicked setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+    }
+    newButton.backgroundColor = [UIColor whiteColor];
+    [newButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    self.lastClicked = newButton;
 }
 
 -(void) login:(NSString *)email
@@ -96,8 +113,7 @@
     [self.mainView  addSubview:self.homeScreenViewController.view];
     [self.homeScreenViewController.view setBounds:self.mainView.bounds];
     
-    self.homeButton.backgroundColor = [UIColor whiteColor];
-    self.lastClicked = self.homeButton;
+    [self updateSelectedMenu:self.homeButton];
 }
 
 -(void)swipeleft:(UISwipeGestureRecognizer*)gestureRecognizer
@@ -180,9 +196,7 @@
     [self.mainView  addSubview:self.homeScreenViewController.view];
     [self.homeScreenViewController.view setBounds:self.mainView.bounds];
     [self animateSlidingMenu:NO];
-    self.homeButton.backgroundColor = [UIColor whiteColor];
-    self.lastClicked.backgroundColor = [UIColor clearColor];
-    self.lastClicked = self.homeButton;
+    [self updateSelectedMenu:self.homeButton];
     [self resetSliding];
 }
 
@@ -208,9 +222,7 @@
     self.meetingListViewController.meetingListDelegate = self;
     [self animateSlidingMenu:NO];
     
-    self.meetingsButton.backgroundColor = [UIColor whiteColor];
-    self.lastClicked.backgroundColor = [UIColor clearColor];
-    self.lastClicked = self.meetingsButton;
+    [self updateSelectedMenu:self.meetingsButton];
     [self resetSliding];
 }
 
@@ -223,9 +235,7 @@
     [self.noteViewController.view setBounds:self.mainView.bounds];
     self.noteViewController.noteListDelegate = self;
     [self animateSlidingMenu:NO];
-    self.notesButton.backgroundColor = [UIColor whiteColor];
-    self.lastClicked.backgroundColor = [UIColor clearColor];
-    self.lastClicked = self.notesButton;
+    [self updateSelectedMenu:self.notesButton];
 }
 
 - (IBAction)onClickTasks
@@ -233,9 +243,7 @@
     [self removeSubViews];
     [self enableSliding];
     [self animateSlidingMenu:NO];
-    self.tasksButton.backgroundColor = [UIColor whiteColor];
-    self.lastClicked.backgroundColor = [UIColor clearColor];
-    self.lastClicked = self.tasksButton;
+    [self updateSelectedMenu:self.tasksButton];
     
     self.taskListViewController = [[iWinTaskListViewController alloc] initWithNibName:@"iWinTaskListViewController" bundle:nil];
     [self.mainView  addSubview:self.taskListViewController.view];
@@ -249,9 +257,7 @@
     [self removeSubViews];
     [self enableSliding];
     [self animateSlidingMenu:NO];
-    self.settingsButton.backgroundColor = [UIColor whiteColor];
-    self.lastClicked.backgroundColor = [UIColor clearColor];
-    self.lastClicked = self.settingsButton;
+    [self updateSelectedMenu:self.settingsButton];
     [self resetSliding];
 }
 

@@ -7,6 +7,7 @@
 //
 
 #import "iWinAddAndViewTaskViewController.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface iWinAddAndViewTaskViewController ()
 @property (nonatomic) BOOL isEditing;
@@ -44,6 +45,18 @@
         self.descriptionField.text = @"Description about the task";
         self.createdByField.text = @"Jim";
     }
+    
+    [self updateButtonUI:self.saveButton];
+    [self updateButtonUI:self.saveAndAddMoreButton];
+    [self updateButtonUI:self.cancelButton];
+    [self updateButtonUI:self.addAssigneeButton];
+}
+
+-(void) updateButtonUI:(UIButton *)button
+{
+    button.layer.cornerRadius = 7;
+    button.layer.borderColor = [[UIColor darkGrayColor] CGColor];
+    button.layer.borderWidth = 1.0f;
 }
 
 - (void)didReceiveMemoryWarning

@@ -18,6 +18,9 @@
 - (IBAction)onClickSave;
 - (IBAction)onClickSaveAndAddMore;
 @property (weak, nonatomic) IBOutlet UIButton *saveAndAddMoreButton;
+@property (weak, nonatomic) IBOutlet UIButton *saveButton;
+@property (weak, nonatomic) IBOutlet UIButton *addAssigneeButton;
+@property (weak, nonatomic) IBOutlet UIButton *cancelButton;
 @property (weak, nonatomic) IBOutlet UILabel *headerLabel;
 @property (weak, nonatomic) IBOutlet UITextField *titleField;
 @property (weak, nonatomic) IBOutlet UITextField *dueField;
