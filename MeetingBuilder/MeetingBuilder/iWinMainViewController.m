@@ -53,6 +53,11 @@
     self.menuButton.hidden = YES;
 }
 
+-(void) resetSliding
+{
+    self.movedView = NO;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -86,10 +91,6 @@
     [self removeSubViews];
     
     [self enableSliding];
-     
-//    self.projectViewController = [[iWinMeetingViewController alloc] initWithNibName:@"iWinProjectViewController" bundle:nil withEmail:email];
-//    [self.mainView  addSubview:self.projectViewController.view];
-//    [self.projectViewController.view setBounds:self.mainView.bounds];
     
     self.homeScreenViewController = [[iWinHomeScreenViewController alloc] initWithNibName:@"iWinHomeScreenViewController" bundle:nil];
     [self.mainView  addSubview:self.homeScreenViewController.view];
@@ -123,7 +124,6 @@
     [self removeSubViews];
     [self.mainView  addSubview:self.registerViewController.view];
     [self.registerViewController.view setBounds:self.mainView.bounds];
-    
     [self enableSliding];
 }
 
@@ -183,6 +183,7 @@
     self.homeButton.backgroundColor = [UIColor whiteColor];
     self.lastClicked.backgroundColor = [UIColor clearColor];
     self.lastClicked = self.homeButton;
+    [self resetSliding];
 }
 
 - (IBAction)onClickLogOut
@@ -194,6 +195,7 @@
     [self.mainView  addSubview:self.loginViewController.view];
     [self.loginViewController.view setBounds:self.mainView.bounds];
     self.loginViewController.loginDelegate = self;
+    [self resetSliding];
 }
 
 - (IBAction)onClickMeetings
@@ -209,6 +211,7 @@
     self.meetingsButton.backgroundColor = [UIColor whiteColor];
     self.lastClicked.backgroundColor = [UIColor clearColor];
     self.lastClicked = self.meetingsButton;
+    [self resetSliding];
 }
 
 - (IBAction)onClickNotes
@@ -238,6 +241,7 @@
     [self.mainView  addSubview:self.taskListViewController.view];
     [self.taskListViewController.view setBounds:self.mainView.bounds];
     self.taskListViewController.taskListDelegate = self;
+    [self resetSliding];
 }
 
 - (IBAction)onClickSettings
@@ -248,6 +252,7 @@
     self.settingsButton.backgroundColor = [UIColor whiteColor];
     self.lastClicked.backgroundColor = [UIColor clearColor];
     self.lastClicked = self.settingsButton;
+    [self resetSliding];
 }
 
 -(void)animateSlidingMenu:(BOOL)moveRight
@@ -276,7 +281,7 @@
     [self removeSubViews];
     [self enableSliding];
     [self animateSlidingMenu:NO];
-    
+    [self resetSliding];
     self.scheduleMeetingViewController = [[iWinScheduleViewMeetingViewController alloc] initWithNibName:@"iWinScheduleViewMeetingViewController" bundle:nil inEditMode:isEditing];
     [self.mainView  addSubview:self.scheduleMeetingViewController.view];
     [self.scheduleMeetingViewController.view setBounds:self.mainView.bounds];
@@ -288,7 +293,7 @@
     [self removeSubViews];
     [self enableSliding];
     [self animateSlidingMenu:NO];
-    
+    [self resetSliding];
     self.viewAddNoteViewController = [[iWinViewAndAddNotesViewController alloc] initWithNibName:@"iWinViewAndAddNotesViewController" bundle:nil inEditMode:isEditing];
     [self.mainView  addSubview:self.viewAddNoteViewController.view];
     [self.viewAddNoteViewController.view setBounds:self.mainView.bounds];
@@ -326,7 +331,7 @@
     [self removeSubViews];
     [self enableSliding];
     [self animateSlidingMenu:NO];
-    
+    [self resetSliding];
     self.agendaController = [[iWinViewAndAddViewController alloc] initWithNibName:@"iWinViewAndAddViewController" bundle:nil inEditMode:isEditing];
     [self.mainView  addSubview:self.agendaController.view];
     [self.agendaController.view setBounds:self.mainView.bounds];
@@ -340,6 +345,7 @@
     [self.mainView  addSubview:self.userViewController.view];
     [self.userViewController.view setBounds:self.mainView.bounds];
     self.userViewController.userDelegate = self;
+    [self resetSliding];
 }
 
 -(void) addAttendeesForAgenda:(BOOL)isEditing
@@ -349,6 +355,7 @@
     [self.mainView  addSubview:self.userViewController.view];
     [self.userViewController.view setBounds:self.mainView.bounds];
     self.userViewController.userDelegate = self;
+    [self resetSliding];
 }
 
 -(void) addAssigneesForTask:(BOOL)isEditing
@@ -358,6 +365,7 @@
     [self.mainView  addSubview:self.userViewController.view];
     [self.userViewController.view setBounds:self.mainView.bounds];
     self.userViewController.userDelegate = self;
+    [self resetSliding];
 }
 
 -(void) returnToPreviousView:(NSString *)pageName inEditMode:(BOOL)isEditing
@@ -386,7 +394,7 @@
     [self removeSubViews];
     [self enableSliding];
     [self animateSlidingMenu:NO];
-    
+    [self resetSliding];
     self.addViewTaskViewController = [[iWinAddAndViewTaskViewController alloc] initWithNibName:@"iWinAddAndViewTaskViewController" bundle:nil inEditMode:isEditing];
     [self.mainView  addSubview:self.addViewTaskViewController.view];
     [self.addViewTaskViewController.view setBounds:self.mainView.bounds];
