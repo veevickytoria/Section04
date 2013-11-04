@@ -7,7 +7,6 @@
 //
 
 #import "iWinMeetingViewController.h"
-#import "RestKit/RestKit.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface iWinMeetingViewController ()

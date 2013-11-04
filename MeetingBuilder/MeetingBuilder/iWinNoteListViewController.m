@@ -7,7 +7,6 @@
 //
 
 #import "iWinNoteListViewController.h"
-#import "RestKit/RestKit.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface iWinNoteListViewController ()
@@ -57,7 +56,7 @@
 
 -(IBAction) onCreateNewNote
 {
-    //[self.noteListDelegate createNoteClicked:NO];
+    [self.noteListDelegate addViewNoteClicked:NO];
 }
 
 

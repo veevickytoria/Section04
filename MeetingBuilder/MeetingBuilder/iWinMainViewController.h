@@ -16,8 +16,9 @@
 #import "iWinAddAndViewTaskViewController.h"
 #import "iWinAddUsersViewController.h"
 #import "iWinNoteListViewController.h"
+#import "iWinViewAndAddNotesViewController.h"
 
-@interface iWinMainViewController : UIViewController <iWinLoginDelegate, iWinRegisterVCDelegate, ScheduleViewMeetingDelegate, MeetingListDelegate, AgendaDelegate, TaskListDelegate, TaskDelegate, UserDelegate, NoteListDelegate>
+@interface iWinMainViewController : UIViewController <iWinLoginDelegate, iWinRegisterVCDelegate, ScheduleViewMeetingDelegate, MeetingListDelegate, AgendaDelegate, TaskListDelegate, TaskDelegate, UserDelegate, NoteListDelegate, ViewAddNoteDelegate>
 @property (weak, nonatomic) IBOutlet UIView *mainView;
 @property (weak, nonatomic) IBOutlet UIView *slideView;
 @property (weak, nonatomic) IBOutlet UIView *menuView;

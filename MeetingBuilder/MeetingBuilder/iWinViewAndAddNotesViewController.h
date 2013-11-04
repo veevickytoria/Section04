@@ -7,7 +7,21 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "iWinMergeNoteViewController.h"
 
-@interface iWinViewAndAddNotesViewController : UIViewController
+@protocol ViewAddNoteDelegate <NSObject>
+
+-(void)saveNoteClicked;
+-(void)cancelNoteClicked;
+-(void)mergeNoteClicked;
+@end
+
+
+@interface iWinViewAndAddNotesViewController : UIViewController <MergeNoteDelegate>
+@property (nonatomic) id<ViewAddNoteDelegate> addNoteDelegate;
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil inEditMode:(BOOL)isEditing;
+- (IBAction)saveButton:(id)sender;
+- (IBAction)cancelButton:(id)sender;
+- (IBAction)mergeNotesButton:(id)sender;
 
 @end
