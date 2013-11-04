@@ -10,7 +10,7 @@
 
 @protocol NoteListDelegate <NSObject>
 
--(void)createNoteClicked :(BOOL)isEditing;
+-(void)addViewNoteClicked :(BOOL)isEditing;
 @end
 
 @interface iWinNoteListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate, NSURLConnectionDelegate>

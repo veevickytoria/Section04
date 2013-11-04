@@ -20,6 +20,7 @@
 @property (strong, nonatomic) iWinViewAndAddViewController *agendaController;
 @property (strong, nonatomic) iWinAddUsersViewController *userViewController;
 @property (strong, nonatomic) iWinNoteListViewController *noteViewController;
+@property (strong, nonatomic) iWinViewAndAddNotesViewController *viewAddNoteViewController;
 
 @property BOOL movedView;
 @property (nonatomic) UISwipeGestureRecognizer * swiperight;
@@ -282,6 +283,19 @@
     self.scheduleMeetingViewController.scheduleDelegate = self;
 }
 
+-(void) addViewNoteClicked:(BOOL)isEditing
+{
+    [self removeSubViews];
+    [self enableSliding];
+    [self animateSlidingMenu:NO];
+    
+    self.viewAddNoteViewController = [[iWinViewAndAddNotesViewController alloc] initWithNibName:@"iWinViewAndAddNotesViewController" bundle:nil inEditMode:isEditing];
+    [self.mainView  addSubview:self.viewAddNoteViewController.view];
+    [self.viewAddNoteViewController.view setBounds:self.mainView.bounds];
+    self.viewAddNoteViewController.addNoteDelegate = self;
+}
+
+
 -(void) goToViewMeeting
 {
     [self scheduleMeetingClicked:YES];
@@ -295,6 +309,16 @@
 -(void) cancelClicked
 {
     [self onClickMeetings];
+}
+
+-(void)saveNoteClicked{
+    [self onClickNotes];
+}
+-(void)cancelNoteClicked{
+    [self onClickNotes];
+}
+-(void)mergeNoteClicked{
+    [self onClickNotes];
 }
 
 -(void)addAgendaClicked:(BOOL)isEditing
