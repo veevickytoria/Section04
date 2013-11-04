@@ -187,11 +187,12 @@
 - (IBAction)onClickLogOut
 {
     [self animateSlidingMenu:NO];
+    [self removeSubViews];
+    [self disableSliding];
     self.loginViewController = [[iWinLoginViewController alloc] initWithNibName:@"iWinLoginViewController" bundle:nil];
     [self.mainView  addSubview:self.loginViewController.view];
     [self.loginViewController.view setBounds:self.mainView.bounds];
-    
-    [self disableSliding];
+    self.loginViewController.loginDelegate = self;
 }
 
 - (IBAction)onClickMeetings
