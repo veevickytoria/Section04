@@ -32,6 +32,8 @@ public class MeetingsFragment extends Fragment implements
 	private MeetingItemAdapter meetingAdpt;
 
 	private MeetingFetcherTask fetcher = null;
+	
+	SessionManager session;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,6 +43,7 @@ public class MeetingsFragment extends Fragment implements
 		setHasOptionsMenu(true);
 		
 		// TODO: Check for internet connection before receiving meetings from DB
+		session = new SessionManager(this.getActivity().getApplicationContext());
 		getMeetings();
 
 		ListView lv = (ListView) v.findViewById(R.id.meetingsList);
@@ -106,7 +109,14 @@ public class MeetingsFragment extends Fragment implements
 	private void getMeetings() {
 //		meetings.add(new Meeting(1, "Hard Code", "O259", "Today"));
 		fetcher = new MeetingFetcherTask(this);
-		fetcher.execute(getArguments().getString(getString(R.string.prompt_username)));
+	//	fetcher.execute(getArguments().getString(getString(R.string.prompt_username)));
+		fetcher.execute(session.getUserDetails().get(SessionManager.USER));
+	}
+	
+	public void refreshMeetings(){
+		
+		fetcher = new MeetingFetcherTask(this);
+		fetcher.execute(session.getUserDetails().get(SessionManager.USER));
 	}
 	
 	@Override
@@ -114,8 +124,10 @@ public class MeetingsFragment extends Fragment implements
 		Toast.makeText(getActivity(),
 				String.format("Received %d meetings", output.size()),
 				Toast.LENGTH_SHORT).show();
-		meetings.addAll(output);
-		meetingAdpt.notifyDataSetChanged();
+		//meetings.addAll(output);
+		meetingAdpt.clear();
+		meetingAdpt.addAll(output);
+		//notifyDataSetChanged();
 	}
 
 	/**

@@ -47,7 +47,9 @@ public class MainActivity extends FragmentActivity implements
 	ViewPager mViewPager;
 
 	public static String username;
-
+	private static MeetingsFragment meetingsFrag = null;
+	
+	SessionManager session;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -94,7 +96,9 @@ public class MainActivity extends FragmentActivity implements
 		}
 
 		// Get the extras from the calling intent
-		username = getIntent().getStringExtra(LoginActivity.EXTRA_USERNAME);
+		
+		session = new SessionManager(getApplicationContext());
+		username = session.getUserDetails().get(SessionManager.USER);
 
 	}
 
@@ -111,6 +115,7 @@ public class MainActivity extends FragmentActivity implements
 	    switch (item.getItemId()) {
 	        case R.id.action_refresh:
 	        	Toast.makeText(this, "Refreshing", Toast.LENGTH_SHORT).show();
+	        	meetingsFrag.refreshMeetings();
 	            return true;
 	        case R.id.action_new_meeting:
 //	            Toast.makeText(this, "Create a meeting", Toast.LENGTH_SHORT).show();
@@ -166,6 +171,7 @@ public class MainActivity extends FragmentActivity implements
 				frag = new MeetingsFragment();
 				args.putString(user, username);
 				frag.setArguments(args);
+				meetingsFrag = (MeetingsFragment) frag;
 				return frag;
 			case (1):
 				frag = new NotesFragment();

@@ -1,31 +1,43 @@
 package com.droidrage.meetingninja;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 
+import com.droidrage.meetingninja.MeetingsFragment.MeetingFetcherTask;
+
+import objects.Meeting;
+
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
+import android.content.Intent;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import android.support.v4.app.NavUtils;
 
-public class MeetingsActivity extends Activity {
-
+public class MeetingsActivity extends Activity implements AsyncResponse<Boolean>{
+	
 	private Button mFromDate, mToDate, mFromTime, mToTime;
+	private EditText mLocation, mTitle;
 	private Calendar cal;
+	private MeetingSaveTask creater = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +56,10 @@ public class MeetingsActivity extends Activity {
 		mFromTime.setOnClickListener(new TimeClickListener(mFromTime));
 		mToTime = (Button) findViewById(R.id.meeting_to_time);
 		mToTime.setOnClickListener(new TimeClickListener(mToTime));
+		
+		mLocation = (EditText) findViewById(R.id.meeting_location);
+		mTitle = (EditText) findViewById(R.id.meeting_title);
+		
 	}
 
 	/**
@@ -75,6 +91,10 @@ public class MeetingsActivity extends Activity {
 			//
 			NavUtils.navigateUpFromSameTask(this);
 			return true;
+		case R.id.action_save:
+			Meeting m = new Meeting(1, mTitle.getText().toString(), mLocation.getText().toString(), mFromDate.getText().toString() + "@" + mFromTime.getText().toString());
+			creater = new MeetingSaveTask(this);
+			creater.execute(m);
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -119,7 +139,7 @@ public class MeetingsActivity extends Activity {
 			String _24 = android.provider.Settings.System.getString(
 					getContentResolver(),
 					android.provider.Settings.System.TIME_12_24);
-			is24 = _24.equals("24");
+			is24 = (!(_24 == null));
 		}
 
 		@Override
@@ -143,6 +163,54 @@ public class MeetingsActivity extends Activity {
 
 		}
 
+	}
+	
+	
+	public class MeetingSaveTask extends
+			AsyncTask<Meeting, Void, Boolean> {
+		private AsyncResponse<Boolean> delegate;
+
+		public MeetingSaveTask(AsyncResponse<Boolean> delegate) {
+			this.delegate = delegate;
+		}
+
+		@Override
+		protected Boolean doInBackground(Meeting... params) {
+			Meeting m = params[0];
+			try {
+				SessionManager session = new SessionManager(getApplicationContext());
+				String user = session.getUserDetails().get(SessionManager.USER);
+				DatabaseAdapter.createMeeting(user, m);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return false;
+			}
+			return true;
+		}
+		
+		@Override
+		protected void onPostExecute(Boolean result) {
+			// TODO Auto-generated method stub
+			delegate.processFinish(result);
+			super.onPostExecute(result);
+		}
+
+
+	}
+
+alrigh
+	@Override
+	public void processFinish(Boolean result) {
+		// TODO Auto-generated method stub
+		if(result){
+			//Intent main = new Intent(this, MainActivity.class);
+			//startActivity(main);
+			finish();
+		}else{
+			Toast.makeText(this, "Failed to save meeting", Toast.LENGTH_SHORT).show();
+		}
+		
 	}
 
 }

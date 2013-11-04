@@ -1,6 +1,5 @@
 package com.droidrage.meetingninja;
 
-import com.droidrage.meetingninja.R;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -237,6 +236,8 @@ public class LoginActivity extends Activity {
 
 			// if successful login, start main activity
 			if (success) {
+				SessionManager session = new SessionManager(getApplicationContext());
+				session.createLoginSession(mUsername);
 				Intent main = new Intent(mLoginFormView.getContext(),
 						MainActivity.class);
 				main.putExtra(EXTRA_USERNAME, mUsername);
