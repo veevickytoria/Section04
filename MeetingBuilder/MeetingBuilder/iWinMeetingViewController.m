@@ -54,9 +54,10 @@
     [self.meetingList addObject:@"Meeting 3"];
     [self.meetingDetail addObject:@"10/26/13 7:00 pm"];
     
-    self.scheduleMeetingButton.layer.cornerRadius = 0;
+    self.scheduleMeetingButton.layer.cornerRadius = 7;
     self.scheduleMeetingButton.layer.borderColor = [[UIColor darkGrayColor] CGColor];
-    self.scheduleMeetingButton.layer.borderWidth = 1.0f;
+    self.scheduleMeetingButton.layer.borderWidth = 2.0f;
+
 }
 
 - (void)didReceiveMemoryWarning

@@ -33,5 +33,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *durationField;
 @property (weak, nonatomic) IBOutlet UITextField *placeField;
 @property (weak, nonatomic) IBOutlet UILabel *headerLabel;
+@property (weak, nonatomic) IBOutlet UIButton *saveButton;
+@property (weak, nonatomic) IBOutlet UIButton *cancelButton;
 @property (weak, nonatomic) IBOutlet UIButton *addAgendaButton;
 @end

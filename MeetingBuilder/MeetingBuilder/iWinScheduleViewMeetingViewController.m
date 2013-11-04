@@ -7,6 +7,7 @@
 //
 
 #import "iWinScheduleViewMeetingViewController.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface iWinScheduleViewMeetingViewController ()
 @property (nonatomic) BOOL isEditing;
@@ -42,6 +43,18 @@
         [self.addAgendaButton setTitle:@"Agenda 101" forState:UIControlStateNormal];
         self.saveAndAddMoreButton.hidden = YES;
     }
+    
+    self.saveButton.layer.cornerRadius = 7;
+    self.saveButton.layer.borderColor = [[UIColor darkGrayColor] CGColor];
+    self.saveButton.layer.borderWidth = 1.0f;
+    
+    self.saveAndAddMoreButton.layer.cornerRadius = 7;
+    self.saveAndAddMoreButton.layer.borderColor = [[UIColor darkGrayColor] CGColor];
+    self.saveAndAddMoreButton.layer.borderWidth = 1.0f;
+    
+    self.cancelButton.layer.cornerRadius = 7;
+    self.cancelButton.layer.borderColor = [[UIColor darkGrayColor] CGColor];
+    self.cancelButton.layer.borderWidth = 1.0f;
 }
 
 - (void)didReceiveMemoryWarning
