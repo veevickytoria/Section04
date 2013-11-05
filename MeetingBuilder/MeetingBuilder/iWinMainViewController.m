@@ -22,6 +22,7 @@
 @property (strong, nonatomic) iWinAddUsersViewController *userViewController;
 @property (strong, nonatomic) iWinNoteListViewController *noteViewController;
 @property (strong, nonatomic) iWinViewAndAddNotesViewController *viewAddNoteViewController;
+@property (strong, nonatomic) iWinViewAndChangeSettingsViewController *settingsViewController;
 
 @property BOOL movedView;
 @property (nonatomic) UISwipeGestureRecognizer * swiperight;
@@ -256,8 +257,13 @@
 {
     [self removeSubViews];
     [self enableSliding];
+    self.settingsViewController = [[iWinViewAndChangeSettingsViewController alloc] initWithNibName:@"iWinViewAndChangeSettingsViewController" bundle:nil];
+    [self.mainView  addSubview:self.settingsViewController.view];
+    [self.settingsViewController.view setBounds:self.mainView.bounds];
+    self.settingsViewController.settingsDelegate = self;
     [self animateSlidingMenu:NO];
-    [self updateSelectedMenu:self.settingsButton];
+    
+    [self updateSelectedMenu:self.meetingsButton];
     [self resetSliding];
 }
 
@@ -410,6 +416,13 @@
 -(void) goToTaskList
 {
     [self onClickTasks];
+}
+
+-(void) onClickSaveSettings{
+    
+}
+-(void) onclickCancelSettings{
+    
 }
 
 @end

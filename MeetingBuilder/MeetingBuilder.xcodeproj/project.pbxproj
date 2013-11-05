@@ -46,6 +46,8 @@
 		0ACE33B517FD246F003B9C0A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ACE33B417FD246F003B9C0A /* SystemConfiguration.framework */; };
 		7941FDC218278B4A00AAA92E /* iWinMergeNoteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7941FDC018278B4A00AAA92E /* iWinMergeNoteViewController.m */; };
 		7941FDC318278B4A00AAA92E /* iWinMergeNoteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7941FDC118278B4A00AAA92E /* iWinMergeNoteViewController.xib */; };
+		7941FDC81828843500AAA92E /* iWinViewAndChangeSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7941FDC61828843500AAA92E /* iWinViewAndChangeSettingsViewController.m */; };
+		7941FDC91828843500AAA92E /* iWinViewAndChangeSettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7941FDC71828843500AAA92E /* iWinViewAndChangeSettingsViewController.xib */; };
 		79D513CA181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79D513C8181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.m */; };
 		79D513CB181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79D513C9181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.xib */; };
 		79D513D0181F9F9E00C79B71 /* iWinNoteListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79D513CE181F9F9E00C79B71 /* iWinNoteListViewController.m */; };
@@ -109,6 +111,9 @@
 		7941FDBF18278B4A00AAA92E /* iWinMergeNoteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinMergeNoteViewController.h; sourceTree = "<group>"; };
 		7941FDC018278B4A00AAA92E /* iWinMergeNoteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinMergeNoteViewController.m; sourceTree = "<group>"; };
 		7941FDC118278B4A00AAA92E /* iWinMergeNoteViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iWinMergeNoteViewController.xib; sourceTree = "<group>"; };
+		7941FDC51828843500AAA92E /* iWinViewAndChangeSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinViewAndChangeSettingsViewController.h; sourceTree = "<group>"; };
+		7941FDC61828843500AAA92E /* iWinViewAndChangeSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinViewAndChangeSettingsViewController.m; sourceTree = "<group>"; };
+		7941FDC71828843500AAA92E /* iWinViewAndChangeSettingsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iWinViewAndChangeSettingsViewController.xib; sourceTree = "<group>"; };
 		79D513C7181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinViewAndAddNotesViewController.h; sourceTree = "<group>"; };
 		79D513C8181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinViewAndAddNotesViewController.m; sourceTree = "<group>"; };
 		79D513C9181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iWinViewAndAddNotesViewController.xib; sourceTree = "<group>"; };
@@ -172,6 +177,7 @@
 		0A04456117F3825D000FF2A0 /* MeetingBuilder */ = {
 			isa = PBXGroup;
 			children = (
+				7941FDC41828834A00AAA92E /* ViewAndChangeSettings */,
 				7941FDB618278A7800AAA92E /* MergeNote */,
 				79D513CC181F9F8700C79B71 /* NoteList */,
 				79D513C1181F9CC800C79B71 /* ViewAndAddNotes */,
@@ -336,6 +342,16 @@
 			name = MergeNote;
 			sourceTree = "<group>";
 		};
+		7941FDC41828834A00AAA92E /* ViewAndChangeSettings */ = {
+			isa = PBXGroup;
+			children = (
+				7941FDC51828843500AAA92E /* iWinViewAndChangeSettingsViewController.h */,
+				7941FDC61828843500AAA92E /* iWinViewAndChangeSettingsViewController.m */,
+				7941FDC71828843500AAA92E /* iWinViewAndChangeSettingsViewController.xib */,
+			);
+			name = ViewAndChangeSettings;
+			sourceTree = "<group>";
+		};
 		79D513C1181F9CC800C79B71 /* ViewAndAddNotes */ = {
 			isa = PBXGroup;
 			children = (
@@ -417,6 +433,7 @@
 				0A7E516117FBEB9200A4B8B7 /* iWinLoginViewController.xib in Resources */,
 				0A04456E17F3825D000FF2A0 /* Default.png in Resources */,
 				0A1A729F181A22AB009A49E5 /* iWinTaskListViewController.xib in Resources */,
+				7941FDC91828843500AAA92E /* iWinViewAndChangeSettingsViewController.xib in Resources */,
 				0ACE339B17FCF5F8003B9C0A /* iWinMeetingViewController.xib in Resources */,
 				0A1A7297181A1802009A49E5 /* iWinAgendaItemViewController.xib in Resources */,
 				0A1A72A9181A2C5E009A49E5 /* iWinAddUsersViewController.xib in Resources */,
@@ -450,6 +467,7 @@
 				79D513CA181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.m in Sources */,
 				0A7E516017FBEB9200A4B8B7 /* iWinLoginViewController.m in Sources */,
 				0A1A729E181A22AB009A49E5 /* iWinTaskListViewController.m in Sources */,
+				7941FDC81828843500AAA92E /* iWinViewAndChangeSettingsViewController.m in Sources */,
 				0A04456817F3825D000FF2A0 /* main.m in Sources */,
 				0A1A72901819FE48009A49E5 /* iWinViewAndAddViewController.m in Sources */,
 				0A7E516517FBEBA200A4B8B7 /* iWinRegisterViewController.m in Sources */,
