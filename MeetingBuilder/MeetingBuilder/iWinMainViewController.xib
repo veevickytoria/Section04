@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="4514" systemVersion="13A603" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="4514" systemVersion="12F45" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3746"/>
     </dependencies>
@@ -13,6 +13,7 @@
                 <outlet property="menuButton" destination="Zce-7x-x4u" id="2g0-0I-hHg"/>
                 <outlet property="menuView" destination="WaV-H7-LyS" id="r7R-ze-QaG"/>
                 <outlet property="notesButton" destination="2xd-Pb-JAD" id="dxH-Ni-RPw"/>
+                <outlet property="profileButton" destination="MsK-IG-1Dz" id="8WM-cN-iqV"/>
                 <outlet property="settingsButton" destination="IgH-Cm-XhZ" id="Pca-bS-Xrj"/>
                 <outlet property="slideView" destination="m5R-sX-3Nh" id="ZHD-W4-pcK"/>
                 <outlet property="tasksButton" destination="2WB-b2-TFd" id="PKp-TF-ar7"/>
@@ -71,8 +72,20 @@
                                 <action selector="onClickHome" destination="-1" eventType="touchUpInside" id="9du-10-V5R"/>
                             </connections>
                         </button>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MsK-IG-1Dz" userLabel="Button -    Profile">
+                            <rect key="frame" x="20" y="159" width="200" height="43"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="21"/>
+                            <state key="normal" title="Profile">
+                                <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="onClickProfile" destination="-1" eventType="touchUpInside" id="2vk-9b-blN"/>
+                            </connections>
+                        </button>
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LoC-l5-Uwv">
-                            <rect key="frame" x="0.0" y="111" width="200" height="43"/>
+                            <rect key="frame" x="0.0" y="108" width="200" height="43"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="21"/>
                             <state key="normal" title="   Meetings">
@@ -84,7 +97,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2xd-Pb-JAD">
-                            <rect key="frame" x="0.0" y="162" width="200" height="41"/>
+                            <rect key="frame" x="0.0" y="257" width="200" height="41"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="21"/>
                             <state key="normal" title="   Notes">
@@ -96,7 +109,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2WB-b2-TFd">
-                            <rect key="frame" x="0.0" y="213" width="200" height="39"/>
+                            <rect key="frame" x="0.0" y="210" width="200" height="39"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="21"/>
                             <state key="normal" title="   Tasks">
@@ -108,7 +121,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IgH-Cm-XhZ">
-                            <rect key="frame" x="0.0" y="260" width="200" height="41"/>
+                            <rect key="frame" x="0.0" y="306" width="200" height="41"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="21"/>
                             <state key="normal" title="   Settings">
@@ -120,7 +133,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="L1U-1Y-Etp">
-                            <rect key="frame" x="0.0" y="310" width="200" height="41"/>
+                            <rect key="frame" x="0.0" y="355" width="200" height="41"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="21"/>
                             <state key="normal" title="   Log Out">

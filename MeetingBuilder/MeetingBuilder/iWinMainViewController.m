@@ -23,6 +23,8 @@
 @property (strong, nonatomic) iWinNoteListViewController *noteViewController;
 @property (strong, nonatomic) iWinViewAndAddNotesViewController *viewAddNoteViewController;
 @property (strong, nonatomic) iWinViewAndChangeSettingsViewController *settingsViewController;
+@property (strong, nonatomic) iWinViewProfileViewController *profileViewController;
+
 
 @property BOOL movedView;
 @property (nonatomic) UISwipeGestureRecognizer * swiperight;
@@ -264,6 +266,19 @@
     [self animateSlidingMenu:NO];
     
     [self updateSelectedMenu:self.meetingsButton];
+    [self resetSliding];
+}
+
+- (IBAction)onClickProfile{
+    [self removeSubViews];
+    [self enableSliding];
+    self.profileViewController = [[iWinViewProfileViewController alloc] initWithNibName:@"iWinViewProfileViewController" bundle:nil];
+    [self.mainView  addSubview:self.profileViewController.view];
+    [self.profileViewController.view setBounds:self.mainView.bounds];
+    self.profileViewController.profileDelegate = self;
+    [self animateSlidingMenu:NO];
+    
+    [self updateSelectedMenu:self.profileButton];
     [self resetSliding];
 }
 

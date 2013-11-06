@@ -18,9 +18,10 @@
 #import "iWinNoteListViewController.h"
 #import "iWinViewAndAddNotesViewController.h"
 #import "iWinViewAndChangeSettingsViewController.h"
+#import "iWinViewProfileViewController.h"
 
 @interface iWinMainViewController : UIViewController <iWinLoginDelegate, iWinRegisterVCDelegate, ScheduleViewMeetingDelegate, MeetingListDelegate, AgendaDelegate, TaskListDelegate, TaskDelegate, UserDelegate, NoteListDelegate, ViewAddNoteDelegate,
-    SettingsDelegate>
+    SettingsDelegate, ProfileDelegate>
 @property (weak, nonatomic) IBOutlet UIView *mainView;
 @property (weak, nonatomic) IBOutlet UIView *slideView;
 @property (weak, nonatomic) IBOutlet UIView *menuView;
@@ -32,6 +33,7 @@
 - (IBAction)onClickNotes;
 - (IBAction)onClickTasks;
 - (IBAction)onClickSettings;
+- (IBAction)onClickProfile;
 
 @property (weak, nonatomic) IBOutlet UIButton *menuButton;
 @property (weak, nonatomic) IBOutlet UIButton *homeButton;
@@ -40,5 +42,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *tasksButton;
 @property (weak, nonatomic) IBOutlet UIButton *settingsButton;
 @property (weak, nonatomic) IBOutlet UIButton *logOutButton;
+@property (weak, nonatomic) IBOutlet UIButton *profileButton;
 
 @end
