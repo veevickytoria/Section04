@@ -8,11 +8,16 @@
 
 #import "iWinMeetingViewController.h"
 #import <QuartzCore/QuartzCore.h>
+#import "iWinScheduleViewMeetingViewController.h"
 
 @interface iWinMeetingViewController ()
 @property (strong, nonatomic) NSMutableArray *meetingList;
 @property (strong, nonatomic) NSMutableArray *meetingDetail;
 @property (strong, nonatomic) NSString* email;
+@property (strong, nonatomic) iWinScheduleViewMeetingViewController *scheduleMeetingViewController;
+@property (strong, nonatomic) NSMutableArray *meetingID;
+@property (strong, nonatomic) NSMutableArray *meetingLocations;
+
 @end
 
 @implementation iWinMeetingViewController
@@ -29,30 +34,42 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
-    //self.projectList = [[NSMutableArray alloc] init];
-    
-    //load projects
-//    NSString *url = [NSString stringWithFormat:@"http://localhost:8888/db_api.php?action=read&table=Project&email=%@", self.email];
-//    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-//    
-//    NSData *dataURL = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
-//    NSString *strResult = [[NSString alloc] initWithData:dataURL encoding:NSUTF8StringEncoding];
-//    
-//    self.meetingList = [[NSMutableArray alloc] initWithArray:[strResult componentsSeparatedByString:@"___"]];
-    
     self.meetingList = [[NSMutableArray alloc] init];
     self.meetingDetail = [[NSMutableArray alloc] init];
-    
-    [self.meetingList addObject:@"Meeting 1"];
-    [self.meetingDetail addObject:@"10/24/13 9:00 pm"];
-    
-    [self.meetingList addObject:@"Meeting 2"];
-    [self.meetingDetail addObject:@"10/25/13 9:10 pm"];
-    
-    [self.meetingList addObject:@"Meeting 3"];
-    [self.meetingDetail addObject:@"10/26/13 7:00 pm"];
-    
+    self.meetingID = [[NSMutableArray alloc] init];
+    self.meetingLocations = [[NSMutableArray alloc] init];
+    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Meeting.php?method=getMeetings&user=%@", self.email];
+    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:30];
+    [urlRequest setHTTPMethod:@"GET"];
+    NSURLResponse * response = nil;
+    NSError * error = nil;
+    NSData * data = [NSURLConnection sendSynchronousRequest:urlRequest
+                                          returningResponse:&response
+                                                      error:&error];
+    //check login
+    NSArray *jsonArray;
+    if (error)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Meetings not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alert show];
+    }
+    else
+    {
+        NSError *jsonParsingError = nil;
+        jsonArray = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
+    }
+    if (jsonArray.count > 0)
+    {
+        for (NSDictionary* meetings in jsonArray)
+        {
+            [self.meetingList addObject:[meetings objectForKey:@"title"]];
+            [self.meetingDetail addObject:[meetings objectForKey:@"datetime"]];
+            [self.meetingID addObject:[meetings objectForKey:@"id"]];
+            [self.meetingLocations addObject:[meetings objectForKey:@"location"]];
+        }
+        
+    }
     self.scheduleMeetingButton.layer.cornerRadius = 7;
     self.scheduleMeetingButton.layer.borderColor = [[UIColor darkGrayColor] CGColor];
     self.scheduleMeetingButton.layer.borderWidth = 2.0f;
@@ -126,7 +143,16 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self.meetingListDelegate scheduleMeetingClicked:YES];
+    [self.meetingListDelegate scheduleMeetingClicked:YES withID:self.meetingID[indexPath.row] withDateTime:self.meetingDetail[indexPath.row] withTitle:self.meetingList[indexPath.row] withLocation:self.meetingLocations[indexPath.row]];
+    
+//    self.scheduleMeetingViewController = [[iWinScheduleViewMeetingViewController alloc] initWithNibName:@"iWinScheduleViewMeetingViewController" bundle:nil inEditMode:YES];
+//    
+//    [self.scheduleMeetingViewController setModalPresentationStyle:UIModalPresentationPageSheet];
+//    [self.scheduleMeetingViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+//    
+//    [self presentViewController:self.scheduleMeetingViewController animated:YES completion:nil];
+//    self.scheduleMeetingViewController.view.superview.bounds = CGRectMake(0,0,768,937);
+    
 }
 
 @end

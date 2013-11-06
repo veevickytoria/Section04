@@ -11,16 +11,25 @@
 
 @interface iWinScheduleViewMeetingViewController ()
 @property (nonatomic) BOOL isEditing;
+@property (strong, nonatomic) NSString *meetingID;
+@property (strong, nonatomic) NSString *dateTime;
+@property (strong, nonatomic) NSString *title;
+@property (strong, nonatomic) NSString *location;
+
 @end
 
 @implementation iWinScheduleViewMeetingViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil inEditMode:(BOOL)isEditing
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil inEditMode:(BOOL)isEditing withID:(NSString*) meetingID withDateTime:(NSString*) dateTime withTitle:(NSString*) title withLocation:(NSString*) location
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
         self.isEditing = isEditing;
+        self.meetingID = meetingID;
+        self.dateTime = dateTime;
+        self.location = location;
+        self.title = title;
     }
     return self;
 }
@@ -35,11 +44,11 @@
     if (self.isEditing)
     {
         self.headerLabel.text = @"View Meeting";
-        self.titleField.text = @"Meeting 1";
-        self.startTimeField.text = @"10/24/13 4:00 PM";
-        self.endTimeField.text = @"10/24/13 5:00 PM";
+        self.titleField.text = self.title;
+        self.startTimeField.text = self.dateTime;
+        self.endTimeField.text = self.dateTime;
         self.durationField.text = @"1 hr";
-        self.placeField.text = @"O259";
+        self.placeField.text = self.location;
         [self.addAgendaButton setTitle:@"Agenda 101" forState:UIControlStateNormal];
         self.saveAndAddMoreButton.hidden = YES;
     }
@@ -84,6 +93,31 @@
 - (IBAction)onClickSave
 {
     //save the meeting
+    NSArray *keys = [NSArray arrayWithObjects:@"Title", @"ID", @"DateTime", @"Location", nil];
+    NSArray *objects = [NSArray arrayWithObjects:self.titleField.text, @"ID",self.startTimeField.text,self.placeField.text,nil];
+    
+    NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+    NSData *jsonData;
+    NSString *jsonString;
+    
+    if ([NSJSONSerialization isValidJSONObject:jsonDictionary])
+    {
+        jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:nil];
+        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    }
+    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Meeting.php?method=createMeeting&user=%@", @"a"];
+    
+    NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+    [urlRequest setHTTPMethod:@"POST"];
+    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [urlRequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-length"];
+    [urlRequest setHTTPBody:jsonData];
+    NSURLResponse * response = nil;
+    NSError * error = nil;
+    [NSURLConnection sendSynchronousRequest:urlRequest
+                          returningResponse:&response
+                                      error:&error];
     [self.scheduleDelegate saveClicked];
 }
 

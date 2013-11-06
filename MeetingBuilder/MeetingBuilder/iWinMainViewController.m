@@ -24,7 +24,7 @@
 @property (strong, nonatomic) iWinViewAndAddNotesViewController *viewAddNoteViewController;
 @property (strong, nonatomic) iWinViewAndChangeSettingsViewController *settingsViewController;
 @property (strong, nonatomic) iWinViewProfileViewController *profileViewController;
-
+@property (strong, nonatomic) NSString *user;
 
 @property BOOL movedView;
 @property (nonatomic) UISwipeGestureRecognizer * swiperight;
@@ -112,6 +112,7 @@
     
     [self enableSliding];
     
+    self.user = email;
     self.homeScreenViewController = [[iWinHomeScreenViewController alloc] initWithNibName:@"iWinHomeScreenViewController" bundle:nil];
     [self.mainView  addSubview:self.homeScreenViewController.view];
     [self.homeScreenViewController.view setBounds:self.mainView.bounds];
@@ -219,7 +220,7 @@
 {
     [self removeSubViews];
     [self enableSliding];
-    self.meetingListViewController = [[iWinMeetingViewController alloc] initWithNibName:@"iWinMeetingViewController" bundle:nil];
+    self.meetingListViewController = [[iWinMeetingViewController alloc] initWithNibName:@"iWinMeetingViewController" bundle:nil withEmail:self.user];
     [self.mainView  addSubview:self.meetingListViewController.view];
     [self.meetingListViewController.view setBounds:self.mainView.bounds];
     self.meetingListViewController.meetingListDelegate = self;
@@ -265,7 +266,7 @@
     self.settingsViewController.settingsDelegate = self;
     [self animateSlidingMenu:NO];
     
-    [self updateSelectedMenu:self.meetingsButton];
+    [self updateSelectedMenu:self.settingsButton];
     [self resetSliding];
 }
 
@@ -303,17 +304,23 @@
     [UIView commitAnimations];
 }
 
--(void) scheduleMeetingClicked:(BOOL)isEditing
+-(void)scheduleMeetingClicked :(BOOL)isEditing withID:(NSString*) meetingID withDateTime:(NSString*) dateTime withTitle:(NSString*) title withLocation:(NSString*) location;
 {
     [self removeSubViews];
     [self enableSliding];
     [self animateSlidingMenu:NO];
     [self resetSliding];
-    self.scheduleMeetingViewController = [[iWinScheduleViewMeetingViewController alloc] initWithNibName:@"iWinScheduleViewMeetingViewController" bundle:nil inEditMode:isEditing];
+    self.scheduleMeetingViewController = [[iWinScheduleViewMeetingViewController alloc] initWithNibName:@"iWinScheduleViewMeetingViewController" bundle:nil inEditMode:isEditing withID: meetingID withDateTime: dateTime withTitle: title withLocation: location];
     [self.mainView  addSubview:self.scheduleMeetingViewController.view];
     [self.scheduleMeetingViewController.view setBounds:self.mainView.bounds];
     self.scheduleMeetingViewController.scheduleDelegate = self;
 }
+
+-(void)scheduleMeetingClicked :(BOOL)isEditing
+{
+    [self scheduleMeetingClicked:isEditing withID:nil withDateTime:nil withTitle:nil withLocation:nil];
+}
+
 
 -(void) addViewNoteClicked:(BOOL)isEditing
 {

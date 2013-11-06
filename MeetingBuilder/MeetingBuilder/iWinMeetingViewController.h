@@ -10,8 +10,8 @@
 
 @protocol MeetingListDelegate <NSObject>
 
+-(void)scheduleMeetingClicked :(BOOL)isEditing withID:(NSString*) meetingID withDateTime:(NSString*) dateTime withTitle:(NSString*) title withLocation:(NSString*) location;
 -(void)scheduleMeetingClicked :(BOOL)isEditing;
-
 @end
 
 @interface iWinMeetingViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate, NSURLConnectionDelegate>
