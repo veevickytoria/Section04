@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="?android:attr/listPreferredItemHeight" 
-    android:padding="6dip">
+    android:layout_height="match_parent"
+    android:padding="6dip" >
     
     <!--  Title of Meeting -->
 
@@ -20,13 +20,58 @@
     <!--  Meeting Description -->
 
      <TextView
-         android:id="@+id/meetingDesc"
+         android:id="@+id/meetingLoc"
          android:layout_width="fill_parent"
          android:layout_height="wrap_content"
          android:layout_alignParentBottom="true"
          android:layout_alignParentRight="true"
          android:layout_below="@id/meetingTitle"
          android:singleLine="false"
-         android:text="Location : Time" />
+         android:text="Location " />
+
+     <TextView
+         android:id="@+id/startTime"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignLeft="@+id/meetingLoc"
+         android:layout_alignTop="@+id/meetingLoc"
+         android:layout_marginTop="44dp"
+         android:text="Start Time:" />
+
+     <TextView
+         android:id="@+id/endTime"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignBaseline="@+id/startTime"
+         android:layout_alignBottom="@+id/startTime"
+         android:layout_alignRight="@+id/meetingLoc"
+         android:layout_marginRight="89dp"
+         android:text="End Time:" />
+
+     <TextView
+         android:id="@+id/date"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignParentLeft="true"
+         android:layout_below="@+id/startTime"
+         android:layout_marginTop="36dp"
+         android:text="Date" />
+
+     <TextView
+         android:id="@+id/meetingdesc"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignParentLeft="true"
+         android:layout_centerVertical="true"
+         android:text="Description" />
+
+     <TextView
+         android:id="@+id/guests"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignBottom="@+id/meetingLoc"
+         android:layout_alignParentLeft="true"
+         android:layout_marginBottom="94dp"
+         android:text="Guests" />
 
 </RelativeLayout>

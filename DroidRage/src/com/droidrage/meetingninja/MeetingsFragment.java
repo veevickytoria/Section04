@@ -157,7 +157,7 @@ public class MeetingsFragment extends Fragment implements
 				TextView meetingTitle = (TextView) v
 						.findViewById(R.id.meetingTitle);
 				TextView meetingDesc = (TextView) v
-						.findViewById(R.id.meetingDesc);
+						.findViewById(R.id.meetingLoc);
 
 				if (meetingTitle != null) {
 					meetingTitle.setText(meeting.getTitle());
