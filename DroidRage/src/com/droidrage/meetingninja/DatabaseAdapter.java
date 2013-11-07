@@ -3,9 +3,11 @@ package com.droidrage.meetingninja;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -17,8 +19,10 @@ import objects.Note;
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class DatabaseAdapter {
@@ -34,14 +38,15 @@ public class DatabaseAdapter {
 	 * 
 	 * @param username
 	 * @return
+	 * @throws IOException
 	 */
-	public static boolean urlLogin(String username) throws Exception {
+	public static boolean urlLogin(String username) throws IOException {
 		// Server URL setup
 		String filename = "index.php";
 		String server_method = "login";
 		String _url = String.format("%s%s?method=%s&user=%s", SERVER_NAME,
 				filename, server_method, username);
-		boolean val = false;
+		boolean success = false;
 
 		// Establish connection
 		URL url = new URL(_url);
@@ -54,10 +59,10 @@ public class DatabaseAdapter {
 		// Get server response
 		int responseCode = conn.getResponseCode();
 		String s = getServerResponse(conn);
-		val = Boolean.parseBoolean(s);
+		success = Boolean.parseBoolean(s);
 
 		conn.disconnect();
-		return val;
+		return success;
 	}
 
 	/**
@@ -69,7 +74,7 @@ public class DatabaseAdapter {
 	 * @deprecated Use urlLogin until backend fixed
 	 */
 	@Deprecated
-	public static boolean jsonLogin(String username) throws Exception {
+	public static boolean jsonLogin(String username) throws IOException {
 		// Server URL setup
 		String filename = "index.php";
 		String server_method = "login";
@@ -93,7 +98,8 @@ public class DatabaseAdapter {
 		return val;
 	}
 
-	public static void register(String username, String password) throws Exception {
+	public static void register(String username, String password) throws IOException
+		 {
 		// Server URL setup
 		String filename = "index.php";
 		String server_method = "register";
@@ -133,7 +139,7 @@ public class DatabaseAdapter {
 
 	}
 
-	public static List<Meeting> getMeetings(String username) throws Exception {
+	public static List<Meeting> getMeetings(String username) throws JsonParseException, JsonMappingException, IOException  {
 		// Server URL setup
 		String filename = "Meeting.php";
 		String server_method = "getMeetings";
@@ -152,11 +158,12 @@ public class DatabaseAdapter {
 		// Use TypeReference to get a Generic Type, else use Type.class
 		meetings = mapper.readValue(url, new TypeReference<List<Meeting>>() {
 		});
-		
+
 		return meetings;
 	}
 
-	public static void createMeeting(String user, Meeting m) throws Exception {
+	public static void createMeeting(String user, Meeting m)
+			throws IOException, MalformedURLException {
 		// Server URL setup
 		String filename = "Meeting.php";
 		String server_method = "createMeeting";
@@ -191,7 +198,7 @@ public class DatabaseAdapter {
 
 		// send payload
 		int response = sendPostPayload(conn, payload);
-		
+
 		conn.disconnect();
 	}
 
@@ -199,23 +206,24 @@ public class DatabaseAdapter {
 		// TODO Implement this method
 		throw new Exception("getNotes: Unimplemented");
 	}
-	
+
 	public static void createNote(String user, Note n) throws Exception {
 		// TODO Implement this method
 		throw new Exception("createNote: Unimplemented");
 	}
 
-	private static void addRequestHeader(URLConnection connection, boolean isPost) {
+	private static void addRequestHeader(URLConnection connection,
+			boolean isPost) {
 		connection.setRequestProperty("User-Agent", USER_AGENT);
 		connection.setRequestProperty("Accept", ACCEPT_TYPE);
+		connection.setDoOutput(isPost);
 		if (isPost) {
 			connection.setRequestProperty("Content-Type", CONTENT_TYPE);
-			connection.setDoOutput(true);
 		}
 	}
 
 	private static int sendPostPayload(URLConnection connection, String payload)
-			throws Exception {
+			throws IOException {
 		DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
 		wr.writeBytes(payload);
 		wr.flush();
@@ -223,7 +231,8 @@ public class DatabaseAdapter {
 		return ((HttpURLConnection) connection).getResponseCode();
 	}
 
-	private static String getServerResponse(URLConnection connection) throws Exception {
+	private static String getServerResponse(URLConnection connection)
+			throws IOException {
 		// Read server response
 		BufferedReader in = new BufferedReader(new InputStreamReader(
 				connection.getInputStream()));

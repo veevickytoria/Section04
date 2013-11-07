@@ -66,13 +66,17 @@ public class SessionManager {
 			login.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			// Add flag to start new activity
 			login.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			// User cannot go back to this activity
+			login.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+			// Show no animation when launching login page
+			login.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 			// Show login page
 			_context.startActivity(login);
 		}
 
 	}
 
-	private void clear() {
+	public void clear() {
 		editor.clear();
 		editor.commit();
 	}
@@ -81,6 +85,7 @@ public class SessionManager {
 		clear();
 		// Will always go to login page after clearing preferences
 		checkLogin();
+		
 	}
 
 	public boolean isLoggedIn() {

@@ -1,10 +1,15 @@
 package com.droidrage.meetingninja;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.caverock.androidsvg.SVGImageView;
+
 import objects.Meeting;
+import android.app.ListFragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,18 +25,25 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class MeetingsFragment extends Fragment implements
 		AsyncResponse<List<Meeting>> {
 
+	private ListView meetingList;
 	private List<Meeting> meetings = new ArrayList<Meeting>();
 	private MeetingItemAdapter meetingAdpt;
+	private ImageButton meetingImageButton;
 
 	private MeetingFetcherTask fetcher = null;
-	
+
 	private SessionManager session;
 
 	@Override
@@ -40,81 +52,105 @@ public class MeetingsFragment extends Fragment implements
 		super.onCreateView(inflater, container, savedInstanceState);
 		View v = inflater.inflate(R.layout.fragment_meetings, container, false);
 		setHasOptionsMenu(true);
-		
+
 		session = new SessionManager(this.getActivity().getApplicationContext());
-		
+		meetingImageButton = (ImageButton) v.findViewById(R.id.imageButton);
+		meetingImageButton.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				createMeeting();
+
+			}
+		});
+
+		// setup listview
+		meetingList = (ListView) v.findViewById(R.id.meetingsList);
+		meetingAdpt = new MeetingItemAdapter(getActivity(),
+				R.layout.meeting_item, meetings);
+		meetingList.setAdapter(meetingAdpt);
+
 		// TODO: Check for internet connection before receiving meetings from DB
 		refreshMeetings();
 
-		ListView lv = (ListView) v.findViewById(R.id.meetingsList);
-		meetingAdpt = new MeetingItemAdapter(getActivity(), R.layout.meeting_item,
-				meetings);
-		// setup listview
-		lv.setAdapter(meetingAdpt);
-		
-		//setup empty view
-		View empty_view = v.findViewById(R.id.notes_empty);
-		lv.setEmptyView(empty_view);
-		
+		// setup empty view
+		// View empty = inflater.inflate(R.layout.meetings_list_empty,
+		// container, false);
+		// getActivity().addContentView(empty, new
+		// LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		// lv.setEmptyView(empty);
+
 		// make list long-pressable
-		registerForContextMenu(lv);
+		registerForContextMenu(meetingList);
 
 		// Item click event
 		// TODO: Open a window to edit the meeting here
-		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		meetingList
+				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-			@Override
-			public void onItemClick(AdapterView<?> parentAdapter, View v,
-					int position, long id) {
-				Meeting m = meetingAdpt.getItem(position);
-				String msg = m.getTitle();
-				Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+					@Override
+					public void onItemClick(AdapterView<?> parentAdapter,
+							View v, int position, long id) {
+						Meeting m = meetingAdpt.getItem(position);
+						String msg = m.getTitle();
+						Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT)
+								.show();
 
-			}
-		});
+					}
+				});
 
 		// Item long-click event
 		// TODO: Add additional options and click-events to these options
-		lv.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
+		meetingList
+				.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
 
-			@Override
-			public void onCreateContextMenu(ContextMenu menu, View v,
-					ContextMenuInfo menuInfo) {
-				AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) menuInfo;
+					@Override
+					public void onCreateContextMenu(ContextMenu menu, View v,
+							ContextMenuInfo menuInfo) {
+						AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) menuInfo;
 
-				Meeting n = meetingAdpt.getItem(aInfo.position);
+						Meeting n = meetingAdpt.getItem(aInfo.position);
 
-				menu.setHeaderTitle("Options for " + n.getTitle());
-				menu.add(1, 1, 1, "Edit");
-				menu.add(1, 2, 2, "Delete");
+						menu.setHeaderTitle("Options for " + n.getTitle());
+						menu.add(1, 1, 1, "Edit");
+						menu.add(1, 2, 2, "Delete");
 
-			}
-		});
+					}
+				});
 
 		return v;
 	}
-	
+
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.meetings, menu);
 	}
 
 	/**
-	 * Initializes the list of meetings. 
+	 * Initializes the list of meetings.
 	 */
-	public void refreshMeetings(){
-		
+	public void refreshMeetings() {
 		fetcher = new MeetingFetcherTask(this);
 		fetcher.execute(session.getUserDetails().get(SessionManager.USER));
 	}
-	
+
+	public void createMeeting() {
+		Intent createMeeting = new Intent(getActivity(), MeetingsActivity.class);
+		startActivity(createMeeting);
+	}
+
 	@Override
 	public void processFinish(List<Meeting> output) {
-		Toast.makeText(getActivity(),
-				String.format("Received %d meetings", output.size()),
-				Toast.LENGTH_SHORT).show();
 		meetingAdpt.clear();
 		meetingAdpt.addAll(output);
+
+		if (meetingAdpt.isEmpty()) {
+			meetingList.setVisibility(View.INVISIBLE);
+			meetingImageButton.setVisibility(View.VISIBLE);
+		} else {
+			meetingList.setVisibility(View.VISIBLE);
+			meetingImageButton.setVisibility(View.GONE);
+		}
 	}
 
 	/**
@@ -190,9 +226,9 @@ public class MeetingsFragment extends Fragment implements
 
 			try {
 				dbMeetings = DatabaseAdapter.getMeetings(params[0]);
-			} catch (Exception e) {
-				Log.e("MeetingFetch", "error getting meetings");
-				e.printStackTrace();
+			} catch (IOException e) {
+				Log.e("MeetingFetch", "Error: Unable to get meetings");
+				Log.e("MEETINGS_ERR", e.getLocalizedMessage());
 			}
 
 			return dbMeetings;

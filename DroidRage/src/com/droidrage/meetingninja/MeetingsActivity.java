@@ -177,7 +177,7 @@ public class MeetingsActivity extends Activity implements
 				DatabaseAdapter.createMeeting(user, m);
 			} catch (Exception e) {
 				Log.e("MeetingSave", "Error: Failed to save meeting");
-				e.printStackTrace();
+				Log.e("MEETING_ERR", e.toString());
 				return false;
 			}
 			return true;

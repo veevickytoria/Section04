@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class NotesFragment extends Fragment implements AsyncResponse<List<Note>> {
+	private SessionManager session;
 	private List<Note> notes = new ArrayList<Note>();
 	private NoteItemAdapter noteAdpt;
 
@@ -31,6 +32,7 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		View v = inflater.inflate(R.layout.fragment_notes, container, false);
+		session = new SessionManager(getActivity().getApplicationContext());
 
 		// TODO: Check for internet connection before receiving notes from DB
 		// TODO: Display a something saying "no notes" if there are no notes
@@ -98,7 +100,7 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 		notes.add(meeting);
 
 		Note journal = new Note("Personal Journal");
-		journal.addContent("This is private!");
+		journal.addContent("This is private to " + session.getUserDetails().get(SessionManager.USER) + "!");
 		notes.add(journal);
 
 		for (int i = 0; i < 8; i++) {
@@ -193,8 +195,8 @@ class NoteItemAdapter extends ArrayAdapter<Note> {
 			try {
 				dbNotes = DatabaseAdapter.getNotes(params[0]);
 			} catch (Exception e) {
-				Log.e("MeetingFetch", "error getting meetings");
-				e.printStackTrace();
+				Log.e("NotesFetch", "Error getting notes");
+				Log.e("NOTES_ERR", e.toString());
 			}
 
 			return dbNotes;
