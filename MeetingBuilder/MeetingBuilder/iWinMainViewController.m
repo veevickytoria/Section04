@@ -25,7 +25,7 @@
 @property (strong, nonatomic) iWinViewAndChangeSettingsViewController *settingsViewController;
 @property (strong, nonatomic) iWinViewProfileViewController *profileViewController;
 @property (strong, nonatomic) NSString *user;
-
+@property BOOL movedRightView;
 @property BOOL movedView;
 @property (nonatomic) UISwipeGestureRecognizer * swiperight;
 @property (nonatomic) UISwipeGestureRecognizer * swipeleft;
@@ -48,6 +48,7 @@
     [self.slideView addGestureRecognizer:self.swipeleft];
     [self.slideView addGestureRecognizer:self.swiperight];
     self.menuButton.hidden = NO;
+    self.scheduleButton.hidden = NO;
 }
 
 -(void) disableSliding
@@ -55,11 +56,13 @@
     [self.slideView removeGestureRecognizer:self.swipeleft];
     [self.slideView removeGestureRecognizer:self.swiperight];
     self.menuButton.hidden = YES;
+    self.scheduleButton.hidden = YES;
 }
 
 -(void) resetSliding
 {
     self.movedView = NO;
+    self.movedRightView = NO;
 }
 
 - (void)viewDidLoad
@@ -68,7 +71,8 @@
     // Do any additional setup after loading the view from its nib.
     self.loginViewController = [[iWinLoginViewController alloc] initWithNibName:@"iWinLoginViewController" bundle:nil];
     self.registerViewController = [[iWinRegisterViewController alloc] initWithNibName:@"iWinRegisterViewController" bundle:nil];
-    self.movedView = false;
+    self.movedView = NO;
+    self.movedRightView = NO;
     self.registerViewController.registerDelegate = self;
     self.loginViewController.loginDelegate = self;
     [self.mainView  addSubview:self.loginViewController.view];
@@ -85,6 +89,11 @@
     self.menuButton.layer.cornerRadius = 7;
     self.menuButton.layer.borderColor = [[UIColor darkGrayColor] CGColor];
     self.menuButton.layer.borderWidth = 1.0f;
+    
+    self.scheduleButton.hidden = YES;
+    self.scheduleButton.layer.cornerRadius = 7;
+    self.scheduleButton.layer.borderColor = [[UIColor darkGrayColor] CGColor];
+    self.scheduleButton.layer.borderWidth = 1.0f;
     
 }
 
@@ -127,14 +136,25 @@
         [self animateSlidingMenu:NO];
         self.movedView = !self.movedView;
     }
+    else if (!self.movedRightView && !self.movedView)
+    {
+        [self animateRightSlidingMenu:YES];
+        self.movedRightView = !self.movedRightView;
+    }
+    
 }
 
 -(void)swiperight:(UISwipeGestureRecognizer*)gestureRecognizer
 {
-    if (!self.movedView)
+    if (!self.movedView && !self.movedRightView)
     {
         [self animateSlidingMenu:YES];
         self.movedView = !self.movedView;
+    }
+    else if (self.movedRightView)
+    {
+        [self animateRightSlidingMenu:NO];
+        self.movedRightView = !self.movedRightView;
     }
 }
 
@@ -190,6 +210,19 @@
         [self animateSlidingMenu:NO];
     }
     self.movedView = !self.movedView;
+}
+
+- (IBAction)onClickSchedule
+{
+    if (!self.movedRightView)
+    {
+        [self animateRightSlidingMenu:YES];
+    }
+    else
+    {
+        [self animateRightSlidingMenu:NO];
+    }
+    self.movedRightView = !self.movedRightView;
 }
 
 - (IBAction)onClickHome
@@ -300,6 +333,27 @@
     {
         self.menuView.frame = CGRectMake(-200, oldFrame.origin.y, oldFrame.size.width, oldFrame.size.height);
         self.slideView.frame = CGRectMake(0,oldFrameMain.origin.y,oldFrameMain.size.width,oldFrameMain.size.height);
+    }
+    [UIView commitAnimations];
+}
+
+-(void)animateRightSlidingMenu:(BOOL)moveLeft
+{
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:0.4];
+    
+    CGRect oldFrame = self.rightSlideView.frame;
+    CGRect oldFrameMain = self.slideView.frame;
+    
+    if (moveLeft)
+    {
+        self.rightSlideView.frame = CGRectMake(oldFrame.origin.x - 200, oldFrame.origin.y, oldFrame.size.width, oldFrame.size.height);
+        self.slideView.frame = CGRectMake(oldFrameMain.origin.x-200,oldFrameMain.origin.y,oldFrameMain.size.width,oldFrameMain.size.height);
+    }
+    else
+    {
+        self.rightSlideView.frame = CGRectMake(oldFrame.origin.x + 200, oldFrame.origin.y, oldFrame.size.width, oldFrame.size.height);
+        self.slideView.frame = CGRectMake(oldFrameMain.origin.x + 200,oldFrameMain.origin.y,oldFrameMain.size.width,oldFrameMain.size.height);
     }
     [UIView commitAnimations];
 }

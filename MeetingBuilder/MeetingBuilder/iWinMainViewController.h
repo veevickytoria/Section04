@@ -34,7 +34,10 @@
 - (IBAction)onClickTasks;
 - (IBAction)onClickSettings;
 - (IBAction)onClickProfile;
+- (IBAction)onClickSchedule;
 
+@property (weak, nonatomic) IBOutlet UIButton *scheduleButton;
+@property (weak, nonatomic) IBOutlet UIView *rightSlideView;
 @property (weak, nonatomic) IBOutlet UIButton *menuButton;
 @property (weak, nonatomic) IBOutlet UIButton *homeButton;
 @property (weak, nonatomic) IBOutlet UIButton *meetingsButton;
