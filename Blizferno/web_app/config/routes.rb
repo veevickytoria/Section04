@@ -65,6 +65,7 @@ WebApp::Application.routes.draw do
   get "profile/index"
   get "tasks/index"
   get "tasks/new"
+  get "tasks/list"
   get "preferences/home"
 
   root :to => 'home_page#index'
