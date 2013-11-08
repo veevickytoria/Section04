@@ -51,35 +51,55 @@ if( strcasecmp($_GET['method'],'login') == 0){
 	$postContent = json_decode(@file_get_contents('php://input'));
 	
 //	$index= new IndexService($graphDb);
+	$user=$userIndex->findOne('email',$postContent->email);
+	//$nodes= $index->getNodes("Users", "email", $_GET['email'] );
 
-	$nodes= $userIndex->getNodes("Users", "email", $_GET['email'] );
-	if(sizeof($nodes) >0){
-		$node = $nodes[0];
+	if(sizeof($user) >0){
 		if(strcasecmp($postContent->field, 'password') ==0){
-			$node->password = "". $postContent->value;
-			$node->save();
-			echo $node->getProperties();
+			$user->setProperty('password', $postContent->value);
+			$user->save();
+			foreach ($user->getProperties() as $key => $value) {
+				echo "$key: $value\n";
+			}
 			//continue this if/else statement for all other fields in the statement
 			/*
 			localhost?method=updateUser&user=paul
 			{"field":"password", "value":"######"}
 			*/
 		}else if(strcasecmp($postContent->field, 'name') ==0){
-			$node->name = "". $postContent->value;
-			$node->save();
-			echo $node->getProperties();
+			$user->setProperty('name', $postContent->value);
+			$user->save();
+			echo $user->getProperties();
 		}else if(strcasecmp($postContent->field, 'company') ==0){
-			$node->company = "". $postContent->value;
-			$node->save();
-			echo $node->getProperties();
+			$user->setProperty('company', $postContent->value);
+			$user->save();
+			foreach ($user->getProperties() as $key => $value) {
+				echo "$key: $value\n";
+			}
 		}else if(strcasecmp($postContent->field, 'phone') ==0){
-			$node->phone = "". $postContent->value;
-			$node->save();
-			echo $node->getProperties();
-		}else if(strcasecmp($postContent->field, 'username') ==0){
-			$node->username = "". $postContent->value;
-			$node->save();
-			echo $node->getProperties();
+			$user->setProperty('phone', $postContent->value);
+			$user->save();
+			foreach ($user->getProperties() as $key => $value) {
+				echo "$key: $value\n";
+			}
+		}else if(strcasecmp($postContent->field, 'title') ==0){
+			$user->setProperty('title', $postContent->value);
+			$user->save();
+			foreach ($user->getProperties() as $key => $value) {
+				echo "$key: $value\n";
+			}
+		}else if(strcasecmp($postContent->field, 'location') ==0){
+			$user->setProperty('location', $postContent->value);
+			$user->save();
+			foreach ($user->getProperties() as $key => $value) {
+				echo "$key: $value\n";
+			}
+		}else if(strcasecmp($postContent->field, 'email') ==0){
+			$user->setProperty('email', $postContent->value);
+			$user->save();
+			foreach ($user->getProperties() as $key => $value) {
+				echo "$key: $value\n";
+			}
 		}else{
 			echo "no node updated";
 		}
