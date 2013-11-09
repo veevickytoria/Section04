@@ -1,7 +1,9 @@
 package com.droidrage.meetingninja;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
@@ -29,10 +31,14 @@ import android.support.v4.app.NavUtils;
 public class MeetingsActivity extends Activity implements
 		AsyncResponse<Boolean> {
 
+	private boolean is24;
 	private Button mFromDate, mToDate, mFromTime, mToTime;
 	private EditText mLocation, mTitle;
-	private Calendar cal;
+	private Calendar cal,start,end;
 	private MeetingSaveTask creater = null;
+	private SimpleDateFormat timeFormat;
+	private final DateFormat dateFormat = new SimpleDateFormat("EEE, MMM dd, yyyy");
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,20 +47,49 @@ public class MeetingsActivity extends Activity implements
 		// Show the Up button in the action bar.
 		setupActionBar();
 		cal = GregorianCalendar.getInstance();
+		
 
+		String _24 = android.provider.Settings.System.getString(
+				getContentResolver(),
+				android.provider.Settings.System.TIME_12_24);
+		is24 = _24 .equals("24");
+		
+		Locale en_us = Locale.US;
+		timeFormat = is24 ? new SimpleDateFormat("HH:mm", en_us)
+							: new SimpleDateFormat("hh:mma", en_us);
+		//get current date time with Calendar()
+		start= Calendar.getInstance();
+		end= Calendar.getInstance();
+		
+		start.add(Calendar.HOUR_OF_DAY, 1);
+		start.set(Calendar.MINUTE, 0);
+		
+		end.add(Calendar.HOUR_OF_DAY, 2);
+		end.set(Calendar.MINUTE, 0);
+		
 		mFromDate = (Button) findViewById(R.id.meeting_from_date);
-		mFromDate.setOnClickListener(new DateClickListener(mFromDate));
+		mFromDate.setOnClickListener(new DateClickListener(mFromDate,start));
 		mToDate = (Button) findViewById(R.id.meeting_to_date);
-		mToDate.setOnClickListener(new DateClickListener(mToDate));
-
+		mToDate.setOnClickListener(new DateClickListener(mToDate,end));
 		mFromTime = (Button) findViewById(R.id.meeting_from_time);
-		mFromTime.setOnClickListener(new TimeClickListener(mFromTime));
+		
+				
+		
+		mFromDate.setText(dateFormat.format(start.getTime()));
+		mFromTime.setText(timeFormat.format(start.getTime()));
+		
+		
+		mFromTime.setOnClickListener(new TimeClickListener(mFromTime,start));
+		
 		mToTime = (Button) findViewById(R.id.meeting_to_time);
-		mToTime.setOnClickListener(new TimeClickListener(mToTime));
+		mToTime.setOnClickListener(new TimeClickListener(mToTime,end));
 
 		mLocation = (EditText) findViewById(R.id.meeting_location);
 		mTitle = (EditText) findViewById(R.id.meeting_title);
-
+		
+		mToDate.setText(dateFormat.format(end.getTime()));
+		mToTime.setText(timeFormat.format(end.getTime()));
+		
 	}
 
 	/**
@@ -97,28 +132,29 @@ public class MeetingsActivity extends Activity implements
 	private class DateClickListener implements OnClickListener,
 			OnDateSetListener {
 		Button button;
-
-		public DateClickListener(Button b) {
+		Calendar c;
+		
+		public DateClickListener(Button b,Calendar c) {
 			this.button = b;
+			this.c=c;
 		}
 
 		@Override
 		public void onClick(View v) {
 			new DatePickerDialog(MeetingsActivity.this, this,
-					cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
-					cal.get(Calendar.DAY_OF_MONTH)).show();
+					c.get(Calendar.YEAR), c.get(Calendar.MONTH),
+					c.get(Calendar.DAY_OF_MONTH)).show();
+			
 		}
 
 		@Override
 		public void onDateSet(DatePicker view, int year, int monthOfYear,
 				int dayOfMonth) {
-			SimpleDateFormat fmt = new SimpleDateFormat("EEE, MMM dd, yyyy",
-					Locale.US);
-			Calendar tmp = GregorianCalendar.getInstance();
-			tmp.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-			tmp.set(Calendar.MONTH, monthOfYear);
-			tmp.set(Calendar.YEAR, year);
-			button.setText(fmt.format(tmp.getTime()));
+			
+			c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+			c.set(Calendar.MONTH, monthOfYear);
+			c.set(Calendar.YEAR, year);
+			button.setText(dateFormat.format(c.getTime()));
 
 		}
 
@@ -127,35 +163,32 @@ public class MeetingsActivity extends Activity implements
 	private class TimeClickListener implements OnClickListener,
 			OnTimeSetListener {
 		Button button;
-		boolean is24;
-
-		public TimeClickListener(Button b) {
+		Calendar c;
+		
+		public TimeClickListener(Button b,Calendar c) {
 			this.button = b;
 			String _24 = android.provider.Settings.System.getString(
 					getContentResolver(),
 					android.provider.Settings.System.TIME_12_24);
-			is24 = _24 != null;
+			is24 = _24 .equals("24");
+
+			this.c=c;
 		}
 
 		@Override
 		public void onClick(View v) {
 			new TimePickerDialog(MeetingsActivity.this, this,
-					cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE),
-					is24).show();
+					c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE),
+					is24).show();					
 		}
 
 		@Override
 		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-			SimpleDateFormat fmt;
 			Locale en_us = Locale.US;
-			fmt = is24 ? new SimpleDateFormat("hh:mm", en_us)
-					: new SimpleDateFormat("hh:mma", en_us);
 
-			Calendar tmp = GregorianCalendar.getInstance();
-			tmp.set(Calendar.HOUR_OF_DAY, hourOfDay);
-			tmp.set(Calendar.MINUTE, minute);
-			button.setText(fmt.format(tmp.getTime()));
-
+			c.set(Calendar.HOUR_OF_DAY, hourOfDay);
+			c.set(Calendar.MINUTE, minute);
+			button.setText(timeFormat.format(c.getTime()));
 		}
 
 	}
