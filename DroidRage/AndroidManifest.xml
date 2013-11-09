@@ -23,7 +23,7 @@
         </activity>
         <activity
             android:name="com.droidrage.meetingninja.MainActivity"
-            android:label="@string/app_name" 
+            android:label="@string/app_name"
             android:windowSoftInputMode="adjustPan|adjustResize" >
             <intent-filter android:label="@string/app_name" >
                 <action android:name="android.intent.action.MAIN" />
@@ -49,6 +49,10 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.droidrage.meetingninja.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.droidrage.meetingninja.TasksFragment"
+            android:label="@string/title_activity_tasks_fragment" >
         </activity>
     </application>
 

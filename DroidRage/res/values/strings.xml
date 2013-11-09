@@ -11,5 +11,6 @@
     <string name="action_refresh">Refresh</string>
     <string name="title_activity_meetings">New Meeting</string>
     <string name="action_save">Save</string>
+    <string name="title_activity_tasks_fragment">TasksFragment</string>
 
 </resources>

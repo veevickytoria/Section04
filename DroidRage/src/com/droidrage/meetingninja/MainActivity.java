@@ -49,6 +49,7 @@ public class MainActivity extends FragmentActivity implements
 	public static String username;
 	private static MeetingsFragment meetingsFrag = null;
 	private static NotesFragment notesFrag = null;
+	private static TasksFragment tasksFrag = null;
 	private SessionManager session;
 
 	@Override
@@ -75,7 +76,7 @@ public class MainActivity extends FragmentActivity implements
 		// primary sections of the app.
 		mSectionsPagerAdapter = new SectionsPagerAdapter(
 				getSupportFragmentManager());
-
+		
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
@@ -93,7 +94,7 @@ public class MainActivity extends FragmentActivity implements
 
 		// Setup the tabs here
 		Locale l = Locale.getDefault();
-		String[] tabNames = new String[] { "Meetings", "Notes" };
+		String[] tabNames = new String[] { "Meetings", "Notes", "Tasks" };
 
 		// For each of the sections in the app, add a tab to the action bar.
 		for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
@@ -188,6 +189,9 @@ public class MainActivity extends FragmentActivity implements
 			case (1):
 				notesFrag = new NotesFragment();
 				return notesFrag;
+			case (2):
+				tasksFrag = new TasksFragment();
+				return tasksFrag;
 			default:
 				frag = new DummySectionFragment();
 				args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position);
@@ -199,7 +203,7 @@ public class MainActivity extends FragmentActivity implements
 		@Override
 		public int getCount() {
 			// Show 2 total pages.
-			return 2;
+			return 3;
 		}
 
 		@Override
