@@ -34,7 +34,7 @@ public class MeetingsActivity extends Activity implements
 	private boolean is24;
 	private Button mFromDate, mToDate, mFromTime, mToTime;
 	private EditText mLocation, mTitle;
-	private Calendar cal,start,end;
+	private Calendar start,end;
 	private MeetingSaveTask creater = null;
 	private SimpleDateFormat timeFormat;
 	private final DateFormat dateFormat = new SimpleDateFormat("EEE, MMM dd, yyyy");
@@ -46,8 +46,6 @@ public class MeetingsActivity extends Activity implements
 		setContentView(R.layout.activity_meetings);
 		// Show the Up button in the action bar.
 		setupActionBar();
-		cal = GregorianCalendar.getInstance();
-		
 
 		String _24 = android.provider.Settings.System.getString(
 				getContentResolver(),
@@ -69,27 +67,23 @@ public class MeetingsActivity extends Activity implements
 		
 		mFromDate = (Button) findViewById(R.id.meeting_from_date);
 		mFromDate.setOnClickListener(new DateClickListener(mFromDate,start));
+		mFromDate.setText(dateFormat.format(start.getTime()));
+		
 		mToDate = (Button) findViewById(R.id.meeting_to_date);
 		mToDate.setOnClickListener(new DateClickListener(mToDate,end));
+		mToDate.setText(dateFormat.format(end.getTime()));
+		
+		
 		mFromTime = (Button) findViewById(R.id.meeting_from_time);
-		
-				
-		
-		mFromDate.setText(dateFormat.format(start.getTime()));
 		mFromTime.setText(timeFormat.format(start.getTime()));
-		
-		
 		mFromTime.setOnClickListener(new TimeClickListener(mFromTime,start));
 		
 		mToTime = (Button) findViewById(R.id.meeting_to_time);
 		mToTime.setOnClickListener(new TimeClickListener(mToTime,end));
-
-		mLocation = (EditText) findViewById(R.id.meeting_location);
-		mTitle = (EditText) findViewById(R.id.meeting_title);
-		
-		mToDate.setText(dateFormat.format(end.getTime()));
 		mToTime.setText(timeFormat.format(end.getTime()));
 		
+		mLocation = (EditText) findViewById(R.id.meeting_location);
+		mTitle = (EditText) findViewById(R.id.meeting_title);
 	}
 
 	/**
@@ -150,10 +144,22 @@ public class MeetingsActivity extends Activity implements
 		@Override
 		public void onDateSet(DatePicker view, int year, int monthOfYear,
 				int dayOfMonth) {
+			int yr,month,day;
+			yr=c.get(Calendar.YEAR);
+			month=c.get(Calendar.MONTH);
+			day=c.get(Calendar.DAY_OF_MONTH);
 			
 			c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 			c.set(Calendar.MONTH, monthOfYear);
 			c.set(Calendar.YEAR, year);
+			if(c.before(start)||c.after(end)){
+				c.set(Calendar.YEAR, yr);
+				c.set(Calendar.MONTH, month);
+				c.set(Calendar.DAY_OF_MONTH,day);
+				//error message
+				return;
+			}
+			
 			button.setText(dateFormat.format(c.getTime()));
 
 		}
@@ -184,10 +190,21 @@ public class MeetingsActivity extends Activity implements
 
 		@Override
 		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-			Locale en_us = Locale.US;
-
+			
+			//should it recheck 24 or 12 hour mode?			
+			int hour,min;
+			hour=c.get(Calendar.HOUR_OF_DAY);
+			min=c.get(Calendar.MINUTE);
 			c.set(Calendar.HOUR_OF_DAY, hourOfDay);
 			c.set(Calendar.MINUTE, minute);
+			
+			if(c.before(start)||c.after(end)){
+				c.set(Calendar.HOUR_OF_DAY, hour);
+				c.set(Calendar.MINUTE, min);
+				return;
+				//error message
+			}
+
 			button.setText(timeFormat.format(c.getTime()));
 		}
 
