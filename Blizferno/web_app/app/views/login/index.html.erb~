@@ -1,5 +1,5 @@
 <noscript>
-You don't have javascript enabled.
+You don't have javascript enabled. Please enable javascript in order to view our website!
 </noscript>    
 
 <!-- Javascript -->
@@ -41,7 +41,7 @@ jQuery(document).on('ready', function() {
             type: "POST",
             url: "http://csse371-04.csse.rose-hulman.edu/index.php?method=register",
             data: {"user":"testing123", "pass":"1234"},
-	    dataType : "json"
+	    dataType: "json"
         });
 
         return true;

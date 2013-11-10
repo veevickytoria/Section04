@@ -17,6 +17,7 @@ You don't have javascript enabled. Please enable javascript in order to view our
 
 
 
+/*
 function ConvertFormToJSON(form){
 	var array = jQuery(form).serializeArray();
 	var json = {};
@@ -47,7 +48,7 @@ jQuery(document).on('ready', function() {
         return true;
     });
 });
-
+*/
 
 
 
@@ -67,7 +68,7 @@ jQuery(document).on('ready', function() {
                 <p>
                     Welcome to our Web App! Please enter credentials below
                 </p>
-                <form action="http://csse371-04.csse.rose-hulman.edu/index.php" method="get">
+                <form action="http://csse371-04.csse.rose-hulman.edu/user.php" method="get">
 		    <input type="hidden" name="method" value="login" />
                     <input type="text" name="user" placeholder="Username" />
                    
@@ -83,7 +84,7 @@ jQuery(document).on('ready', function() {
                 <p>
                     Enter your details below:
                 </p>
-                <form id="myform" action="http://csse371-04.csse.rose-hulman.edu/index.php?method=register" method="post">
+                <form id="myform" action="http://csse371-04.csse.rose-hulman.edu/user.php?method=register" method="post">
                     <ul>
 <!--
                         <li>
