@@ -89,10 +89,10 @@ class TaskItemAdapter extends ArrayAdapter<Task> {
 		if (v == null) {
 			LayoutInflater vi = (LayoutInflater) getContext().getSystemService(
 					Context.LAYOUT_INFLATER_SERVICE);
-			v = vi.inflate(R.layout.note_item, null);
+			v = vi.inflate(R.layout.task_item, null);
 		}
 
-		// Setup from the note_item XML file
+		// Setup from the task_item XML file
 		Task task = tasks.get(position);
 		if (task != null) {
 			TextView taskName = (TextView) v.findViewById(R.id.taskName);

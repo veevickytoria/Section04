@@ -11,6 +11,7 @@ import objects.Meeting;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
@@ -47,10 +48,7 @@ public class MeetingsActivity extends Activity implements
 		// Show the Up button in the action bar.
 		setupActionBar();
 
-		String _24 = android.provider.Settings.System.getString(
-				getContentResolver(),
-				android.provider.Settings.System.TIME_12_24);
-		is24 = _24 .equals("24");
+		is24 = android.text.format.DateFormat.is24HourFormat(getApplicationContext());
 		
 		Locale en_us = Locale.US;
 		timeFormat = is24 ? new SimpleDateFormat("HH:mm", en_us)
@@ -173,10 +171,7 @@ public class MeetingsActivity extends Activity implements
 		
 		public TimeClickListener(Button b,Calendar c) {
 			this.button = b;
-			String _24 = android.provider.Settings.System.getString(
-					getContentResolver(),
-					android.provider.Settings.System.TIME_12_24);
-			is24 = _24 .equals("24");
+			is24 = android.text.format.DateFormat.is24HourFormat(getApplicationContext());
 
 			this.c=c;
 		}
