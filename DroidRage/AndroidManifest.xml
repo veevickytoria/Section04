@@ -54,6 +54,10 @@
             android:name="com.droidrage.meetingninja.TasksFragment"
             android:label="@string/title_activity_tasks_fragment" >
         </activity>
+        <activity
+            android:name="com.droidrage.meetingninja.FullMeeting"
+            android:label="@string/title_activity_full_meeting" >
+        </activity>
     </application>
 
 </manifest>
