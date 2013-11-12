@@ -1,6 +1,7 @@
 package com.droidrage.meetingninja;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import objects.Note;
@@ -15,14 +16,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class TasksFragment extends Fragment implements AsyncResponse<List<Note>> {
 	private SessionManager session;
-	private List<Task> tasks = new ArrayList<Task>();
-	private TaskItemAdapter taskAdpt;
+	private List<String> meetingNames = new ArrayList<String>();
+	private HashMap<String, List<Task>> taskLists = new HashMap<String, List<Task>>();
+	private TaskListAdapter taskAdpt;
 	//make tasks adapter
 	
 	@Override
@@ -33,36 +38,49 @@ public class TasksFragment extends Fragment implements AsyncResponse<List<Note>>
 		session = new SessionManager(getActivity().getApplicationContext());
 		
 		refreshTasks();
+		getActivity();
 		
+		ExpandableListView lv = (ExpandableListView) v.findViewById(R.id.tasksList);
 		
-		ListView lv = (ListView) v.findViewById(R.id.tasksList);
-		taskAdpt = new TaskItemAdapter(getActivity(), R.layout.task_item, tasks);
+		taskAdpt = new TaskListAdapter(getActivity(), meetingNames, taskLists);
+		
 		
 		lv.setAdapter(taskAdpt);
 	//	lv.setEmptyView(v.findViewById(R.id.ta))
 		registerForContextMenu(lv);
 		
-		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		lv.setOnChildClickListener(new OnChildClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parentAdapter, View v,
-					int position, long id) {
-				Task n = taskAdpt.getItem(position);
-				CharSequence descStr = n.getContent().isEmpty() ? "No content"
-						: n.getContent();
-				String msg = String.format("%s: %s", n.getName(), descStr);
-				Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-
-			}
-		});
+            public boolean onChildClick(ExpandableListView parent, View v,
+                    int groupPosition, int childPosition, long id) {
+                Toast.makeText(getActivity(),
+                        meetingNames.get(groupPosition)
+                                + " : "
+                                + taskLists.get(
+                                        meetingNames.get(groupPosition)).get(
+                                        childPosition).getName(), Toast.LENGTH_SHORT)
+                        .show();
+                return false;
+            }
+        });
 		
 		return v;
 	}
 	
 	private void refreshTasks(){
-		for(int i = 0; i<8; i++){
-			tasks.add(new Task("task numba " + i));
-		}
+		ArrayList<Task> l1 = new ArrayList<Task>(), l2  = new ArrayList<Task>(), l3  = new ArrayList<Task>();
+		l1.add(new Task("testing first"));
+		l1.add(new Task("task 1"));
+		l1.add(new Task("and again and again"));
+		taskLists.put("meeting 1", l1);
+		l2.add(new Task("task 2"));
+		taskLists.put("meeting 2", l2);
+		l3.add(new Task("task 3"));
+		taskLists.put("meeting 3", l3);
+		meetingNames.add("meeting 1");
+		meetingNames.add("meeting 2");
+		meetingNames.add("meeting 3");
 	}
 
 	@Override
@@ -75,42 +93,87 @@ public class TasksFragment extends Fragment implements AsyncResponse<List<Note>>
 }
 
 
-class TaskItemAdapter extends ArrayAdapter<Task> {
-	private List<Task> tasks;
+class TaskListAdapter extends BaseExpandableListAdapter{
+	private Context context;
+	private List<String> meetingNames;
+	private HashMap<String, List<Task>> tasksLists;
 	
-	public TaskItemAdapter(Context context, int textViewResourceId,
-			List<Task> tasks) {
-		super(context, textViewResourceId, tasks);
-		this.tasks = tasks;
+	public TaskListAdapter(Context context, List<String> meetingNames, HashMap<String, List<Task>> tasksLists){
+		this.context = context;
+		this.meetingNames = meetingNames;
+		this.tasksLists = tasksLists;
 	}
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		View v = convertView;
-		if (v == null) {
-			LayoutInflater vi = (LayoutInflater) getContext().getSystemService(
-					Context.LAYOUT_INFLATER_SERVICE);
-			v = vi.inflate(R.layout.task_item, null);
-		}
-
-		// Setup from the task_item XML file
-		Task task = tasks.get(position);
-		if (task != null) {
-			TextView taskName = (TextView) v.findViewById(R.id.taskName);
-			TextView taskContent = (TextView) v.findViewById(R.id.taskContent);
-
-			if (taskName != null) {
-				taskName.setText(task.getName());
-			}
-			if (taskContent != null) {
-				String content = task.getContent();
-				int max_length = 200;
-				if (content.length() > max_length)
-					taskContent.setText(content.substring(0, max_length) + "...");
-				else
-					taskContent.setText(content);
-			}
-		}
-
-		return v;
+	public Object getChild(int groupPos, int childPos) {
+		return this.tasksLists.get(this.meetingNames.get(groupPos)).get(childPos);
 	}
+
+	@Override
+	public long getChildId(int groupPosition, int childPosition) {
+		return childPosition;
+	}
+
+	@Override
+	public View getChildView(int groupPosition, int childPosition,
+			boolean isLastChild, View convertView, ViewGroup parent) {
+		if(convertView == null){
+			LayoutInflater infalInflater = (LayoutInflater) this.context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = infalInflater.inflate(R.layout.task_item, null);
+		}
+		TextView taskName = (TextView) convertView.findViewById(R.id.taskName);
+		TextView taskDiscription = (TextView) convertView.findViewById(R.id.taskDiscription);
+		final String Name = ((Task) getChild(groupPosition, childPosition)).getName();
+		final String Disc = ((Task) getChild(groupPosition, childPosition)).getContent();
+		taskName.setText(Name);
+		taskDiscription.setText(Disc);
+		return convertView;
+	}
+
+	@Override
+	public int getChildrenCount(int groupPosition) {
+		return this.tasksLists.get(this.meetingNames.get(groupPosition)).size();
+	}
+
+	@Override
+	public Object getGroup(int groupPosition) {
+		return this.meetingNames.get(groupPosition);
+	}
+
+	@Override
+	public int getGroupCount() {
+		return this.meetingNames.size();
+	}
+
+	@Override
+	public long getGroupId(int groupPosition) {
+		return groupPosition;
+	}
+
+	@Override
+	public View getGroupView(int groupPosition, boolean isExpanded,
+			View convertView, ViewGroup parent) {
+		if(convertView == null){
+			LayoutInflater infalInflater = (LayoutInflater) this.context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = infalInflater.inflate(R.layout.task_sublist, null);
+		}
+		String name = (String) getGroup(groupPosition);
+		TextView meetingName = (TextView) convertView.findViewById(R.id.task_group);
+		meetingName.setText(name);
+		
+		return convertView;
+	}
+
+	@Override
+	public boolean hasStableIds() {
+		return false;
+	}
+
+	@Override
+	public boolean isChildSelectable(int groupPosition, int childPosition) {
+		return true;
+	}
+	
 }
+

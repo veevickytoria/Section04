@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="?android:attr/listPreferredItemHeight" 
-    android:padding="6dip">
+    android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft">
     
     <!--  Name of Task -->
 
@@ -20,13 +20,13 @@
     <!--  Note Content -->
 
      <TextView
-         android:id="@+id/taskContent"
+         android:id="@+id/taskDiscription"
          android:layout_width="fill_parent"
          android:layout_height="wrap_content"
          android:layout_alignParentBottom="true"
          android:layout_alignParentRight="true"
          android:layout_below="@id/taskName"
          android:singleLine="false"
-         android:text="Content" />
+         android:text="Discription" />
 
 </RelativeLayout>
