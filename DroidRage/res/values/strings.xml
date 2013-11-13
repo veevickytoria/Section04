@@ -16,5 +16,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_version_control">VersionControlActivity</string>
     <string name="title_activity_view_profile">ViewProfileActivity</string>
+    <string name="title_activity_view_meeting">ViewMeetingActivity</string>
 
 </resources>

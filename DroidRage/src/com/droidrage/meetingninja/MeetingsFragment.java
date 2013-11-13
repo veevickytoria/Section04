@@ -82,6 +82,8 @@ public class MeetingsFragment extends Fragment implements
 						String msg = m.getTitle();
 						Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT)
 								.show();
+						Intent viewMeeting = new Intent(getActivity(), ViewMeetingActivity.class);
+						startActivity(viewMeeting);
 
 					}
 				});

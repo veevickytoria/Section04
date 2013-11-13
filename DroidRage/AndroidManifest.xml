@@ -65,6 +65,8 @@
         <activity
             android:name="com.droidrage.meetingninja.ViewProfileActivity"
             android:label="@string/title_activity_view_profile" >
+            android:name="com.droidrage.meetingninja.ViewMeetingActivity"
+            android:label="@string/title_activity_view_meeting" >
         </activity>
     </application>
 
