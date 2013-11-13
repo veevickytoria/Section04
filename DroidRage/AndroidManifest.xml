@@ -62,6 +62,10 @@
             android:name="com.droidrage.meetingninja.VersionControlActivity"
             android:label="@string/title_activity_version_control" >
         </activity>
+        <activity
+            android:name="com.droidrage.meetingninja.ViewMeetingActivity"
+            android:label="@string/title_activity_view_meeting" >
+        </activity>
     </application>
 
 </manifest>
