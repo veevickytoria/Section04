@@ -3,15 +3,12 @@ package com.droidrage.meetingninja;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import objects.Meeting;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
@@ -35,11 +32,11 @@ public class MeetingsActivity extends Activity implements
 	private boolean is24;
 	private Button mFromDate, mToDate, mFromTime, mToTime;
 	private EditText mLocation, mTitle;
-	private Calendar start,end;
+	private Calendar start, end;
 	private MeetingSaveTask creater = null;
 	private SimpleDateFormat timeFormat;
-	private final DateFormat dateFormat = new SimpleDateFormat("EEE, MMM dd, yyyy");
-	
+	private final DateFormat dateFormat = new SimpleDateFormat(
+			"EEE, MMM dd, yyyy");
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,38 +45,38 @@ public class MeetingsActivity extends Activity implements
 		// Show the Up button in the action bar.
 		setupActionBar();
 
-		is24 = android.text.format.DateFormat.is24HourFormat(getApplicationContext());
-		
+		is24 = android.text.format.DateFormat
+				.is24HourFormat(getApplicationContext());
+
 		Locale en_us = Locale.US;
 		timeFormat = is24 ? new SimpleDateFormat("HH:mm", en_us)
-							: new SimpleDateFormat("hh:mma", en_us);
-		//get current date time with Calendar()
-		start= Calendar.getInstance();
-		end= Calendar.getInstance();
-		
+				: new SimpleDateFormat("hh:mma", en_us);
+		// get current date time with Calendar()
+		start = Calendar.getInstance();
+		end = Calendar.getInstance();
+
 		start.add(Calendar.HOUR_OF_DAY, 1);
 		start.set(Calendar.MINUTE, 0);
-		
+
 		end.add(Calendar.HOUR_OF_DAY, 2);
 		end.set(Calendar.MINUTE, 0);
-		
+
 		mFromDate = (Button) findViewById(R.id.meeting_from_date);
-		mFromDate.setOnClickListener(new DateClickListener(mFromDate,start));
+		mFromDate.setOnClickListener(new DateClickListener(mFromDate, start));
 		mFromDate.setText(dateFormat.format(start.getTime()));
-		
+
 		mToDate = (Button) findViewById(R.id.meeting_to_date);
-		mToDate.setOnClickListener(new DateClickListener(mToDate,end));
+		mToDate.setOnClickListener(new DateClickListener(mToDate, end));
 		mToDate.setText(dateFormat.format(end.getTime()));
-		
-		
+
 		mFromTime = (Button) findViewById(R.id.meeting_from_time);
 		mFromTime.setText(timeFormat.format(start.getTime()));
-		mFromTime.setOnClickListener(new TimeClickListener(mFromTime,start));
-		
+		mFromTime.setOnClickListener(new TimeClickListener(mFromTime, start));
+
 		mToTime = (Button) findViewById(R.id.meeting_to_time);
-		mToTime.setOnClickListener(new TimeClickListener(mToTime,end));
+		mToTime.setOnClickListener(new TimeClickListener(mToTime, end));
 		mToTime.setText(timeFormat.format(end.getTime()));
-		
+
 		mLocation = (EditText) findViewById(R.id.meeting_location);
 		mTitle = (EditText) findViewById(R.id.meeting_title);
 	}
@@ -125,10 +122,10 @@ public class MeetingsActivity extends Activity implements
 			OnDateSetListener {
 		Button button;
 		Calendar c;
-		
-		public DateClickListener(Button b,Calendar c) {
+
+		public DateClickListener(Button b, Calendar c) {
 			this.button = b;
-			this.c=c;
+			this.c = c;
 		}
 
 		@Override
@@ -136,28 +133,28 @@ public class MeetingsActivity extends Activity implements
 			new DatePickerDialog(MeetingsActivity.this, this,
 					c.get(Calendar.YEAR), c.get(Calendar.MONTH),
 					c.get(Calendar.DAY_OF_MONTH)).show();
-			
+
 		}
 
 		@Override
 		public void onDateSet(DatePicker view, int year, int monthOfYear,
 				int dayOfMonth) {
-			int yr,month,day;
-			yr=c.get(Calendar.YEAR);
-			month=c.get(Calendar.MONTH);
-			day=c.get(Calendar.DAY_OF_MONTH);
-			
+			int yr, month, day;
+			yr = c.get(Calendar.YEAR);
+			month = c.get(Calendar.MONTH);
+			day = c.get(Calendar.DAY_OF_MONTH);
+
 			c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 			c.set(Calendar.MONTH, monthOfYear);
 			c.set(Calendar.YEAR, year);
-			if(c.before(start)||c.after(end)){
+			if (c.before(start) || c.after(end)) {
 				c.set(Calendar.YEAR, yr);
 				c.set(Calendar.MONTH, month);
-				c.set(Calendar.DAY_OF_MONTH,day);
-				//error message
+				c.set(Calendar.DAY_OF_MONTH, day);
+				// error message
 				return;
 			}
-			
+
 			button.setText(dateFormat.format(c.getTime()));
 
 		}
@@ -168,36 +165,37 @@ public class MeetingsActivity extends Activity implements
 			OnTimeSetListener {
 		Button button;
 		Calendar c;
-		
-		public TimeClickListener(Button b,Calendar c) {
-			this.button = b;
-			is24 = android.text.format.DateFormat.is24HourFormat(getApplicationContext());
 
-			this.c=c;
+		public TimeClickListener(Button b, Calendar c) {
+			this.button = b;
+			is24 = android.text.format.DateFormat
+					.is24HourFormat(getApplicationContext());
+
+			this.c = c;
 		}
 
 		@Override
 		public void onClick(View v) {
 			new TimePickerDialog(MeetingsActivity.this, this,
-					c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE),
-					is24).show();					
+					c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), is24)
+					.show();
 		}
 
 		@Override
 		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-			
-			//should it recheck 24 or 12 hour mode?			
-			int hour,min;
-			hour=c.get(Calendar.HOUR_OF_DAY);
-			min=c.get(Calendar.MINUTE);
+
+			// should it recheck 24 or 12 hour mode?
+			int hour, min;
+			hour = c.get(Calendar.HOUR_OF_DAY);
+			min = c.get(Calendar.MINUTE);
 			c.set(Calendar.HOUR_OF_DAY, hourOfDay);
 			c.set(Calendar.MINUTE, minute);
-			
-			if(c.before(start)||c.after(end)){
+
+			if (c.before(start) || c.after(end)) {
 				c.set(Calendar.HOUR_OF_DAY, hour);
 				c.set(Calendar.MINUTE, min);
 				return;
-				//error message
+				// error message
 			}
 
 			button.setText(timeFormat.format(c.getTime()));

@@ -5,7 +5,7 @@ import android.app.Activity;
 import android.view.Menu;
 
 public class FullMeeting extends Activity {
-	
+
 	private String descript;
 	private String dateTime;
 	private String titl;

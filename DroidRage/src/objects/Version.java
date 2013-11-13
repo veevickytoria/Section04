@@ -5,24 +5,23 @@ public class Version {
 	private String editor;
 	private static int counterID;
 	int id;
-	
-	public Version(){
+
+	public Version() {
 		counterID++;
 		this.id = counterID;
 	}
-	
-	public Version(String date, String editor){
+
+	public Version(String date, String editor) {
 		this();
 		this.date = date;
 		this.editor = editor;
 	}
 
-	
-	public String getDate(){
+	public String getDate() {
 		return this.date;
 	}
-	
-	public String getEditor(){
+
+	public String getEditor() {
 		return this.editor;
 	}
 

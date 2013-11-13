@@ -20,25 +20,24 @@ public class VersionControlActivity extends Activity {
 	private SessionManager session;
 	private List<Version> versions;
 	private VersionItemAdapter versionAdpt;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_version_control);
 		session = new SessionManager(this.getApplicationContext());
-		
+
 		getVersions("name");
-		
+
 		ListView lv = (ListView) findViewById(R.id.versionControlList);
-		
-		versionAdpt = new VersionItemAdapter(this, R.layout.version_control_item, versions);
-		
+
+		versionAdpt = new VersionItemAdapter(this,
+				R.layout.version_control_item, versions);
+
 		lv.setAdapter(versionAdpt);
-		
+
 		registerForContextMenu(lv);
-		
-		
-		
+
 	}
 
 	@Override
@@ -47,58 +46,57 @@ public class VersionControlActivity extends Activity {
 		getMenuInflater().inflate(R.menu.version_control, menu);
 		return true;
 	}
-	
-	private void getVersions(String noteName){
-		//TODO: make this a back end call
+
+	private void getVersions(String noteName) {
+		// TODO: make this a back end call
 		versions = new ArrayList<Version>();
-		Version v1 = new Version("10/1/13   4:45", "Matthew"),
-				v2 = new Version("10/1/13   5:55", "William"),
-				v3 = new Version("10/3/13   12:10", "Cricket"),
-				v4 = new Version("10/4/13   5:00", "Kevin");
+		Version v1 = new Version("10/1/13   4:45", "Matthew"), v2 = new Version(
+				"10/1/13   5:55", "William"), v3 = new Version(
+				"10/3/13   12:10", "Cricket"), v4 = new Version(
+				"10/4/13   5:00", "Kevin");
 		versions.add(v1);
 		versions.add(v2);
 		versions.add(v3);
 		versions.add(v4);
-		
+
 	}
 
-	
 }
 
-
-
-class VersionItemAdapter extends ArrayAdapter<Version>{
+class VersionItemAdapter extends ArrayAdapter<Version> {
 	private List<Version> versions;
-	
-	public VersionItemAdapter(Context context, int textViewResourceID, List<Version> versions){
+
+	public VersionItemAdapter(Context context, int textViewResourceID,
+			List<Version> versions) {
 		super(context, textViewResourceID, versions);
 		this.versions = versions;
 	}
-	
-	public View getView(int position, View convertView, ViewGroup parent){
+
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
 		View v = convertView;
-		if(v==null){
+		if (v == null) {
 			LayoutInflater vi = (LayoutInflater) getContext().getSystemService(
 					Context.LAYOUT_INFLATER_SERVICE);
 			v = vi.inflate(R.layout.version_control_item, null);
 		}
-		
+
 		Version version = versions.get(position);
-		if(version != null){
+		if (version != null) {
 			TextView versionDate = (TextView) v.findViewById(R.id.versionDate);
-			TextView versionEditor = (TextView) v.findViewById(R.id.versionEditor);
-			
-			if(versionDate != null){
+			TextView versionEditor = (TextView) v
+					.findViewById(R.id.versionEditor);
+
+			if (versionDate != null) {
 				versionDate.setText(version.getDate());
 			}
-			if(versionEditor != null){
+			if (versionEditor != null) {
 				versionEditor.setText(version.getEditor());
 			}
 		}
-		
+
 		return v;
-		
+
 	}
-	
-	
+
 }

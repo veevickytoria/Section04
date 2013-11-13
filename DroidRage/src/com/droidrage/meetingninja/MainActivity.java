@@ -6,7 +6,6 @@ import com.droidrage.meetingninja.R;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -51,6 +50,9 @@ public class MainActivity extends FragmentActivity implements
 	private static NotesFragment notesFrag = null;
 	private static TasksFragment tasksFrag = null;
 	private SessionManager session;
+	private static ViewProfileFragment prof = null;
+	private String[] tabNames = new String[] { "Profile", "Meetings", "Notes",
+			"Tasks" };
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +78,7 @@ public class MainActivity extends FragmentActivity implements
 		// primary sections of the app.
 		mSectionsPagerAdapter = new SectionsPagerAdapter(
 				getSupportFragmentManager());
-		
+
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
@@ -94,7 +96,6 @@ public class MainActivity extends FragmentActivity implements
 
 		// Setup the tabs here
 		Locale l = Locale.getDefault();
-		String[] tabNames = new String[] { "Meetings", "Notes", "Tasks" };
 
 		// For each of the sections in the app, add a tab to the action bar.
 		for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
@@ -121,15 +122,17 @@ public class MainActivity extends FragmentActivity implements
 		switch (item.getItemId()) {
 		case R.id.action_refresh:
 			switch (mViewPager.getCurrentItem()) {
-			case (0):
+			case (1):
 				Toast.makeText(this, "Refreshing Meetings", Toast.LENGTH_SHORT)
 						.show();
 				meetingsFrag.refreshMeetings();
 				return true;
-			case (1):
+			case (2):
 				Toast.makeText(this, "Refreshing Notes", Toast.LENGTH_SHORT)
 						.show();
 				return true;
+			default:
+				return super.onOptionsItemSelected(item);
 			}
 
 		case R.id.action_new_meeting:
@@ -184,12 +187,15 @@ public class MainActivity extends FragmentActivity implements
 			Bundle args = new Bundle();
 			switch (position) {
 			case (0):
+				prof = new ViewProfileFragment();
+				return prof;
+			case (1):
 				meetingsFrag = new MeetingsFragment();
 				return meetingsFrag;
-			case (1):
+			case (2):
 				notesFrag = new NotesFragment();
 				return notesFrag;
-			case (2):
+			case (3):
 				tasksFrag = new TasksFragment();
 				return tasksFrag;
 			default:
@@ -202,18 +208,15 @@ public class MainActivity extends FragmentActivity implements
 
 		@Override
 		public int getCount() {
-			// Show 2 total pages.
-			return 3;
+			// Show 4 total pages.
+			return 4;
 		}
 
 		@Override
 		public CharSequence getPageTitle(int position) {
 			Locale l = Locale.getDefault();
-			switch (position) {
-			case 0:
-				return "Meetings".toUpperCase(l);
-			case 1:
-				return "Notes".toUpperCase(l);
+			if (position >= 0 && position < tabNames.length) {
+				return tabNames[position].toUpperCase(l);
 			}
 			return null;
 		}

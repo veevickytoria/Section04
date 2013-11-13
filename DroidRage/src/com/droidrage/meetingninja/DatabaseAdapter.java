@@ -98,8 +98,8 @@ public class DatabaseAdapter {
 		return val;
 	}
 
-	public static void register(String username, String password) throws IOException
-		 {
+	public static void register(String username, String password)
+			throws IOException {
 		// Server URL setup
 		String filename = "index.php";
 		String server_method = "register";
@@ -139,7 +139,8 @@ public class DatabaseAdapter {
 
 	}
 
-	public static List<Meeting> getMeetings(String username) throws JsonParseException, JsonMappingException, IOException  {
+	public static List<Meeting> getMeetings(String username)
+			throws JsonParseException, JsonMappingException, IOException {
 		// Server URL setup
 		String filename = "Meeting.php";
 		String server_method = "getMeetings";

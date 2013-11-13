@@ -2,7 +2,6 @@ package testing;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import objects.Meeting;

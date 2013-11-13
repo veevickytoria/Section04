@@ -1,19 +1,12 @@
 package com.droidrage.meetingninja;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.caverock.androidsvg.SVGImageView;
-
 import objects.Meeting;
-import android.app.ListFragment;
-import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,14 +17,8 @@ import android.view.View.OnCreateContextMenuListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class MeetingsFragment extends Fragment implements
@@ -153,96 +140,4 @@ public class MeetingsFragment extends Fragment implements
 		}
 	}
 
-	/**
-	 * A class to display the meetings in a specific format for the items of the
-	 * list. This class uses the meeting_item XML file.
-	 * 
-	 * @author moorejm
-	 * 
-	 */
-	private class MeetingItemAdapter extends ArrayAdapter<Meeting> {
-		// declaring our ArrayList of items
-		private List<Meeting> meetings;
-
-		/*
-		 * Override the constructor to initialize the list to display
-		 */
-		public MeetingItemAdapter(Context context, int textViewResourceId,
-				List<Meeting> meetings) {
-			super(context, textViewResourceId, meetings);
-			this.meetings = meetings;
-		}
-
-		/*
-		 * we are overriding the getView method here - this is what defines how
-		 * each list item will look.
-		 */
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			View v = convertView;
-			if (v == null) {
-				LayoutInflater vi = (LayoutInflater) getContext()
-						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				v = vi.inflate(R.layout.meeting_item, null);
-			}
-
-			// Setup from the meeting_item XML file
-			Meeting meeting = meetings.get(position);
-			if (meeting != null) {
-				TextView meetingTitle = (TextView) v
-						.findViewById(R.id.meetingTitle);
-				TextView meetingDesc = (TextView) v
-						.findViewById(R.id.meetingDesc);
-
-				if (meetingTitle != null) {
-					meetingTitle.setText(meeting.getTitle());
-				}
-				if (meetingDesc != null) {
-					String content = String.format("%s : %s",
-							meeting.getLocation(), meeting.getDatetime());
-					meetingDesc.setText(content);
-				}
-			}
-
-			return v;
-		}
-
-	}
-
-	/**
-	 * Represents an asynchronous task to receive meetings from the database
-	 */
-	public class MeetingFetcherTask extends
-			AsyncTask<String, Void, List<Meeting>> {
-		private AsyncResponse<List<Meeting>> delegate;
-
-		public MeetingFetcherTask(AsyncResponse<List<Meeting>> delegate) {
-			this.delegate = delegate;
-		}
-
-		@Override
-		protected List<Meeting> doInBackground(String... params) {
-			List<Meeting> dbMeetings = new ArrayList<Meeting>();
-
-			try {
-				dbMeetings = DatabaseAdapter.getMeetings(params[0]);
-			} catch (IOException e) {
-				Log.e("MeetingFetch", "Error: Unable to get meetings");
-				Log.e("MEETINGS_ERR", e.getLocalizedMessage());
-			}
-
-			return dbMeetings;
-		}
-
-		@Override
-		protected void onPostExecute(List<Meeting> list) {
-			super.onPostExecute(list);
-			delegate.processFinish(list);
-		}
-
-		@Override
-		protected void onCancelled() {
-			super.onCancelled();
-		}
-	}
 }

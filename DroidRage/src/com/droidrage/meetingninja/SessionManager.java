@@ -31,7 +31,7 @@ public class SessionManager {
 	// Constructor
 	public SessionManager(Context context) {
 		this._context = context;
-		pref = _context.getSharedPreferences(PREF_NAME, Activity.MODE_PRIVATE);
+		pref = _context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
 		editor = pref.edit();
 	}
 
@@ -85,7 +85,7 @@ public class SessionManager {
 		clear();
 		// Will always go to login page after clearing preferences
 		checkLogin();
-		
+
 	}
 
 	public boolean isLoggedIn() {

@@ -149,6 +149,18 @@ public class LoginActivity extends Activity {
 		// cancel = true;
 		// }
 
+		/*
+		 * SessionManager session = new SessionManager(
+		 * getApplicationContext()); session.clear();
+		 * session.createLoginSession(mUsername); Intent main = new
+		 * Intent(mLoginFormView.getContext(), MainActivity.class);
+		 * main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		 * main.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+		 * 
+		 * startActivityForResult(main, 0);
+		 * overridePendingTransition(anim.fade_in, anim.fade_out);
+		 */
+
 		if (cancel) {
 			// There was an error; don't attempt login and focus the first
 			// form field with an error.

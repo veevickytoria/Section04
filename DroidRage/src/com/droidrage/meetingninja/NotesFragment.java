@@ -24,7 +24,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class NotesFragment extends Fragment implements AsyncResponse<List<Note>> {
+public class NotesFragment extends Fragment implements
+		AsyncResponse<List<Note>> {
 	private SessionManager session;
 	private List<Note> notes = new ArrayList<Note>();
 	private NoteItemAdapter noteAdpt;
@@ -43,7 +44,7 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 
 		ListView lv = (ListView) v.findViewById(R.id.notesList);
 		noteAdpt = new NoteItemAdapter(getActivity(), R.layout.note_item, notes);
-		
+
 		// setup listview
 		lv.setAdapter(noteAdpt);
 		lv.setEmptyView(v.findViewById(R.id.notes_empty));
@@ -80,21 +81,25 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 				menu.add(1, 1, 1, "Add Content");
 				menu.add(1, 2, 2, "Delete");
 				menu.add(1, 3, 3, "Version Control");
-				
+
 			}
-			
-			public boolean onContextItemSelected(MenuItem item){
-				Toast.makeText(getActivity(),  "testing", Toast.LENGTH_LONG).show();
-				AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) item.getMenuInfo();
-				
-				switch(item.getItemId()){
+
+			public boolean onContextItemSelected(MenuItem item) {
+				Toast.makeText(getActivity(), "testing", Toast.LENGTH_LONG)
+						.show();
+				AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) item
+						.getMenuInfo();
+
+				switch (item.getItemId()) {
 				case 1:
 				case 2:
-				case 3: Intent versionControl = new Intent(getActivity(), VersionControlActivity.class);
+				case 3:
+					Intent versionControl = new Intent(getActivity(),
+							VersionControlActivity.class);
 					startActivity(versionControl);
 				default:
 				}
-				
+
 				return false;
 			}
 		});
@@ -106,7 +111,7 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 	 */
 	private void refreshNotes() {
 		notes.add(new Note("Oct 7 PM Meeting"));
-		
+
 		Note meeting = new Note("Oct 9 Team Meeting");
 		meeting.addContent("Max and Jordan worked on use cases.");
 		meeting.addContent("Chris and Ruji worked on the frontend and backend.");
@@ -116,7 +121,8 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 		notes.add(meeting);
 
 		Note journal = new Note("Personal Journal");
-		journal.addContent("This is private to " + session.getUserDetails().get(SessionManager.USER) + "!");
+		journal.addContent("This is private to "
+				+ session.getUserDetails().get(SessionManager.USER) + "!");
 		notes.add(journal);
 
 		for (int i = 0; i < 8; i++) {
@@ -133,7 +139,7 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 				Toast.LENGTH_SHORT).show();
 		noteAdpt.clear();
 		noteAdpt.addAll(list);
-		
+
 	}
 
 }
@@ -184,7 +190,8 @@ class NoteItemAdapter extends ArrayAdapter<Note> {
 				String content = note.getContent();
 				int max_length = 200;
 				if (content.length() > max_length)
-					noteContent.setText(content.substring(0, max_length) + "...");
+					noteContent.setText(content.substring(0, max_length)
+							+ "...");
 				else
 					noteContent.setText(content);
 			}
@@ -196,8 +203,7 @@ class NoteItemAdapter extends ArrayAdapter<Note> {
 	/**
 	 * Represents an asynchronous task to receive meetings from the database
 	 */
-	private class NoteFetcherTask extends
-			AsyncTask<String, Void, List<Note>> {
+	private class NoteFetcherTask extends AsyncTask<String, Void, List<Note>> {
 		private AsyncResponse<List<Note>> delegate;
 
 		public NoteFetcherTask(AsyncResponse<List<Note>> delegate) {

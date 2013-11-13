@@ -8,7 +8,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -140,7 +139,8 @@ public class RegisterActivity extends Activity implements
 			registerTask.execute(user, pass);
 			Intent goLogin = new Intent(this, LoginActivity.class);
 			goLogin.putExtra(LoginActivity.EXTRA_USERNAME, user);
-			Toast.makeText(getApplicationContext(), "Registration Successful", Toast.LENGTH_LONG).show();
+			Toast.makeText(getApplicationContext(), "Registration Successful",
+					Toast.LENGTH_LONG).show();
 			startActivity(goLogin);
 			finish();
 		}
