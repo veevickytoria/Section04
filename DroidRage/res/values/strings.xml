@@ -14,5 +14,6 @@
     <string name="title_activity_tasks_fragment">TasksFragment</string>
     <string name="title_activity_full_meeting">FullMeeting</string>
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_version_control">VersionControlActivity</string>
 
 </resources>

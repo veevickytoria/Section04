@@ -5,12 +5,14 @@ import java.util.List;
 
 import objects.Note;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnCreateContextMenuListener;
@@ -67,7 +69,6 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 		// Item long-click event
 		// TODO: Add additional options and click-events to these options
 		lv.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
-
 			@Override
 			public void onCreateContextMenu(ContextMenu menu, View v,
 					ContextMenuInfo menuInfo) {
@@ -78,10 +79,25 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 				menu.setHeaderTitle("Options for " + n.getName());
 				menu.add(1, 1, 1, "Add Content");
 				menu.add(1, 2, 2, "Delete");
-
+				menu.add(1, 3, 3, "Version Control");
+				
+			}
+			
+			public boolean onContextItemSelected(MenuItem item){
+				Toast.makeText(getActivity(),  "testing", Toast.LENGTH_LONG).show();
+				AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) item.getMenuInfo();
+				
+				switch(item.getItemId()){
+				case 1:
+				case 2:
+				case 3: Intent versionControl = new Intent(getActivity(), VersionControlActivity.class);
+					startActivity(versionControl);
+				default:
+				}
+				
+				return false;
 			}
 		});
-
 		return v;
 	}
 

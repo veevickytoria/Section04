@@ -58,6 +58,10 @@
             android:name="com.droidrage.meetingninja.FullMeeting"
             android:label="@string/title_activity_full_meeting" >
         </activity>
+        <activity
+            android:name="com.droidrage.meetingninja.VersionControlActivity"
+            android:label="@string/title_activity_version_control" >
+        </activity>
     </application>
 
 </manifest>
