@@ -35,7 +35,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/TextView04"
+            android:id="@+id/company"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -43,14 +43,14 @@
             android:textSize="15sp" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/jobtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="JobTitle"
             android:textSize="15sp" />
 
         <TextView
-            android:id="@+id/TextView05"
+            android:id="@+id/location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Country/Location"
@@ -68,7 +68,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="PHONE"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <View
             android:layout_width="fill_parent"
@@ -94,7 +95,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="EMAIL"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <View
             android:layout_width="fill_parent"
@@ -118,7 +120,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="SCHEDULE" />
+            android:text="SCHEDULE"
+            android:textSize="18sp"
+            android:textStyle="bold" />
         
         <View 
             android:layout_width="fill_parent"

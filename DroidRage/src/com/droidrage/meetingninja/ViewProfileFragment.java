@@ -11,7 +11,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView.FindListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -22,6 +21,7 @@ public class ViewProfileFragment extends Fragment implements AsyncResponse<List<
 	private SessionManager session;
 	private MeetingItemAdapter adpt;
 	private TextView profileName;
+	//private TextView company,jobTitle, location;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -32,6 +32,17 @@ public class ViewProfileFragment extends Fragment implements AsyncResponse<List<
 		
 		profileName = (TextView) v.findViewById(R.id.profile_name);
 		profileName.setText(session.getUserDetails().get(SessionManager.USER));
+		
+		/*company = (TextView) v.findViewById(R.id.company);
+		company.setText(session.getUserDetails().get(SessionManager.company));
+		
+		jobTitle = (TextView) v.findViewById(R.id.jobtitle);
+		jobTitle.setText(session.getUserDetails().get(SessionManager.jobTitle));
+
+		location = (TextView) v.findViewById(R.id.location);
+		location.setText(session.getUserDetails().get(SessionManager.location));*/
+		
+		
 		
 		meetingList = (ListView) v.findViewById(R.id.profile_meetingList);
 		adpt = new MeetingItemAdapter(getActivity(), R.layout.meeting_item, meetings);
