@@ -38,4 +38,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *addAttendeesButton;
 @property (weak, nonatomic) IBOutlet UIButton *visitScheduleButton;
 @property (weak, nonatomic) IBOutlet UIButton *addAgendaButton;
+- (IBAction)startTimeClicked;
+- (IBAction)endTimeClicked;
 @end

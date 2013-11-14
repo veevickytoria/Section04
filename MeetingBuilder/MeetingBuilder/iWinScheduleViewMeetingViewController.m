@@ -15,7 +15,7 @@
 @property (strong, nonatomic) NSString *dateTime;
 @property (strong, nonatomic) NSString *title;
 @property (strong, nonatomic) NSString *location;
-
+@property (strong, nonatomic) UIPopoverController *popOverController;
 @end
 
 @implementation iWinScheduleViewMeetingViewController
@@ -136,5 +136,47 @@
 - (IBAction)onClickCancel
 {
     [self.scheduleDelegate cancelClicked];
+}
+- (IBAction)startTimeClicked {
+    UIViewController* popoverContent = [[UIViewController alloc] init]; //ViewController
+    
+    UIView *popoverView = [[UIView alloc] init];   //view
+    
+    UIDatePicker *datePicker=[[UIDatePicker alloc]init];//Date picker
+    datePicker.frame=CGRectMake(0,44,320, 216);
+    datePicker.datePickerMode = UIDatePickerModeDateAndTime;
+    [datePicker setMinuteInterval:5];
+    [datePicker setTag:10];
+    //[datePicker addTarget:self action:@selector(Result) forControlEvents:UIControlEventValueChanged];
+    [popoverView addSubview:datePicker];
+    
+    popoverContent.view = popoverView;
+    self.popOverController = [[UIPopoverController alloc] initWithContentViewController:popoverContent];
+    //popoverController.delegate=self;
+    
+    [self.popOverController setPopoverContentSize:CGSizeMake(320, 264) animated:NO];
+    [self.popOverController presentPopoverFromRect:self.startTimeField.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];//tempButton.frame
+}
+
+- (IBAction)endTimeClicked {
+    UIViewController* popoverContent = [[UIViewController alloc] init]; //ViewController
+    
+    UIView *popoverView = [[UIView alloc] init];   //view
+    
+    UIDatePicker *datePicker=[[UIDatePicker alloc]init];//Date picker
+    datePicker.frame=CGRectMake(0,44,320, 216);
+    datePicker.datePickerMode = UIDatePickerModeDateAndTime;
+    [datePicker setMinuteInterval:5];
+    [datePicker setTag:10];
+    //[datePicker addTarget:self action:@selector(Result) forControlEvents:UIControlEventValueChanged];
+    [popoverView addSubview:datePicker];
+    
+    popoverContent.view = popoverView;
+    self.popOverController = [[UIPopoverController alloc] initWithContentViewController:popoverContent];
+    //popoverController.delegate=self;
+    
+    [self.popOverController setPopoverContentSize:CGSizeMake(320, 264) animated:NO];
+    [self.popOverController presentPopoverFromRect:self.endTimeField.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];//tempButton.frame
+
 }
 @end
