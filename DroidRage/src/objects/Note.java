@@ -65,4 +65,14 @@ public class Note {
 	public int getID() {
 		return this.id;
 	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+	
+	
 }

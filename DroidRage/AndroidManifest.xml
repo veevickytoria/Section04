@@ -47,6 +47,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.droidrage.meetingninja.MainActivity" />
         </activity>
+        <activity
+            android:name="com.droidrage.meetingninja.EditNoteActivity"
+            android:label="@string/title_activity_edit_note" >
+        </activity>
     </application>
 
 </manifest>

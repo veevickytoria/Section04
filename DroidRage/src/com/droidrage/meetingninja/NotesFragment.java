@@ -3,14 +3,17 @@ package com.droidrage.meetingninja;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import objects.Note;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnCreateContextMenuListener;
@@ -25,14 +28,22 @@ import android.widget.Toast;
 public class NotesFragment extends Fragment implements AsyncResponse<List<Note>> {
 
 	public static final String ARG_USERNAME = "username";
-	private List<Note> notes = new ArrayList<Note>();
+	private static List<Note> notes = new ArrayList<Note>();
 	private NoteItemAdapter noteAdpt;
+	//private View notesView;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		View v = inflater.inflate(R.layout.fragment_notes, container, false);
+		
+		Intent test = getActivity().getIntent();
+
+		if(test.getStringExtra("NoteID") != null)
+		Log.e("NOTES", test.getStringExtra("NoteID"));
+		
+		
 
 		// TODO: Check for internet connection before receiving notes from DB
 		// TODO: Display a something saying "no notes" if there are no notes
@@ -52,6 +63,22 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 		lv.setEmptyView(v.findViewById(R.id.notes_empty));
 		// make list long-pressable
 		registerForContextMenu(lv);
+		
+//		Intent updateNote = null;
+//	    Bundle bundle;
+//	    if(savedInstanceState != null)  
+//	    	bundle = savedInstanceState; // 1       
+//	    else if(getArguments() != null) 
+//	    	bundle = getArguments();     // 2
+//	    else 
+//	    	updateNote = this.getActivity().getIntent();
+//		
+//		if(updateNote != null && updateNote.getBooleanExtra("Update", false)){
+//			Log.e("NOTES", "UPDATE");
+//		} else
+//		{
+//			Log.e("NOTES", "NO UPDATE");
+//		}
 
 		// Item click event
 		// TODO: Open a window to edit the note here
@@ -68,7 +95,14 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 				CharSequence descStr = n.getContent().isEmpty() ? "No content"
 						: n.getContent();
 				String msg = String.format("%s: %s", n.getName(), descStr);
-				Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+				//Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+				
+				Intent editNote = new Intent(v.getContext(), EditNoteActivity.class);
+				
+				editNote.putExtra("NoteID", n.getID());
+				editNote.putExtra("NoteContent", n.getContent());
+				editNote.putExtra("NoteName", n.getName());
+				startActivity(editNote);
 
 			}
 		});
@@ -89,11 +123,17 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 				menu.add(1, 2, 2, "Delete");
 
 			}
-		});
 
+		}
+		
+		);
+		
 		return v;
+		
+		
 	}
-
+	
+  
 	/**
 	 * Initializes the list of notes. TODO: Get the notes from the database
 	 */
@@ -126,6 +166,19 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 		notes.addAll(list);
 		noteAdpt.notifyDataSetChanged();
 		
+	}
+
+	public static boolean updateNote(int noteID, String noteName, String noteContent) {
+		Log.d("NOTES", "NoteID " + noteID);
+		
+		if(noteID < 0 || noteID >= notes.size())
+			return false;
+		
+		
+		notes.get(noteID).setName(noteName);
+		notes.get(noteID).setContent(noteContent);
+		
+		return true;
 	}
 
 }
@@ -183,6 +236,7 @@ class NoteItemAdapter extends ArrayAdapter<Note> {
 
 		return v;
 	}
+	
 
 	/**
 	 * Represents an asynchronous task to receive meetings from the database

@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -47,6 +48,9 @@ public class MainActivity extends FragmentActivity implements
 	ViewPager mViewPager;
 
 	public static String username;
+	public String fragment;
+	public Intent noteIntent;
+	private ActionBar actionBar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +58,7 @@ public class MainActivity extends FragmentActivity implements
 		setContentView(R.layout.activity_main);
 
 		// Set up the action bar.
-		final ActionBar actionBar = getActionBar();
+		actionBar = getActionBar();
 //		actionBar.setTitle("Main Window");
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
@@ -95,6 +99,18 @@ public class MainActivity extends FragmentActivity implements
 
 		// Get the extras from the calling intent
 		username = getIntent().getStringExtra(LoginActivity.EXTRA_USERNAME);
+		
+		if(getIntent().hasExtra("Fragment") && getIntent().getStringExtra("Fragment").compareToIgnoreCase("notes") == 0){
+			Log.d("GET_INTENT", getIntent().getStringExtra("Fragment"));
+			noteIntent = getIntent();
+			int noteID = noteIntent.getIntExtra("NoteID", -1);
+			
+			Log.d("NOTES", "NoteID " + noteID);
+			
+			if(noteID > 0){
+				NotesFragment.updateNote(noteID, getIntent().getStringExtra("NoteName"), getIntent().getStringExtra("NoteContent"));
+			}
+		}
 
 	}
 
@@ -157,6 +173,12 @@ public class MainActivity extends FragmentActivity implements
 		public Fragment getItem(int position) {
 			// getItem is called to instantiate the fragment for the given page.
 			// Return a Fragment depending on the tab position
+			
+			if(noteIntent != null && noteIntent.getStringExtra("Fragment").compareTo("notes") == 0){
+				position = 1;
+				actionBar.setSelectedNavigationItem(position);
+				noteIntent.putExtra("Fragment", "none");
+			}
 
 			Fragment frag = null;
 			Bundle args = new Bundle();
