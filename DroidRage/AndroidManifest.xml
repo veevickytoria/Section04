@@ -5,10 +5,11 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="17"
+        android:minSdkVersion="14"
         android:targetSdkVersion="18" />
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -19,15 +20,17 @@
             android:name="com.droidrage.meetingninja.LoginActivity"
             android:label="@string/title_activity_login"
             android:windowSoftInputMode="adjustResize|stateVisible" >
+        </activity>
+        <activity
+            android:name="com.droidrage.meetingninja.MainActivity"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustPan|adjustResize" >
             <intent-filter android:label="@string/app_name" >
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name="com.droidrage.meetingninja.MainActivity"
-            android:label="@string/app_name" >
+
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.droidrage.meetingninja.LoginActivity" />
@@ -50,6 +53,26 @@
         <activity
             android:name="com.droidrage.meetingninja.EditNoteActivity"
             android:label="@string/title_activity_edit_note" >
+        </activity>
+        <activity
+            android:name="com.droidrage.meetingninja.TasksFragment"
+            android:label="@string/title_activity_tasks_fragment" >
+        </activity>
+        <activity
+            android:name="com.droidrage.meetingninja.FullMeeting"
+            android:label="@string/title_activity_full_meeting" >
+        </activity>
+        <activity
+            android:name="com.droidrage.meetingninja.VersionControlActivity"
+            android:label="@string/title_activity_version_control" >
+        </activity>
+        <activity
+            android:name="com.droidrage.meetingninja.ViewProfileActivity"
+            android:label="@string/title_activity_view_profile" >
+        </activity>
+        <activity
+            android:name="com.droidrage.meetingninja.ViewMeetingActivity"
+            android:label="@string/title_activity_view_meeting" >
         </activity>
     </application>
 

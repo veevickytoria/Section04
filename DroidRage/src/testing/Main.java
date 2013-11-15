@@ -2,7 +2,6 @@ package testing;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import objects.Meeting;
@@ -14,20 +13,23 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 public class Main {
 
 	private static void register(String user, String pass) {
+
 		try {
 			DatabaseAdapter.register(user, pass);
-		} catch (Exception e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
 	}
 
 	private static boolean urlLogin(String username) {
 		boolean result = false;
 		try {
 			result = DatabaseAdapter.urlLogin(username);
-		} catch (Exception e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
 		return result;
 	}
 
@@ -58,25 +60,27 @@ public class Main {
 		}
 		return meetings;
 	}
-	
-	public static void main(String[] args) throws JsonGenerationException, JsonMappingException, IOException {
+
+	public static void main(String[] args) throws JsonGenerationException,
+			JsonMappingException, IOException {
 		String[] users = new String[] { "cricket", "moorejm", "android", "joe",
-				"cricket2", "Android"};
+				"cricket2", "Android", "aaaa" };
 		String user = users[users.length - 1];
 
 		boolean success = urlLogin(user);
 		if (success) {
 			System.out.println("User: " + user);
 
-			System.out.println("\n" + user +"'s Meetings");
+			System.out.println("\n" + user + "'s Meetings");
 			System.out.println(getMeetings(user) + "\n");
 		} else {
 			System.err.println(user + " failed to login");
-//			register(user, "registerTest");
+			// register(user, "registerTest");
 		}
-		
-		Meeting m = new Meeting(1, "Java POST", "Location", new Date().toString());
-		 createMeeting(user, m);
+
+		// Meeting m = new Meeting(1, "New Meeting", "Location", new
+		// Date().toString());
+		// createMeeting(user, m);
 	}
 
 }

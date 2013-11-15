@@ -1,6 +1,6 @@
 package com.droidrage.meetingninja;
 
-import com.droidrage.meetingninja.R;
+import java.io.IOException;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -29,7 +29,7 @@ public class LoginActivity extends Activity {
 	/**
 	 * The default email to populate the email field with.
 	 */
-	public static final String EXTRA_USERNAME = "com.example.droidrage.meetingninja.extra.USERNAME";
+	public static final String EXTRA_USERNAME = "REGISTERED_USERNAME";
 
 	/**
 	 * Keep track of the login task to ensure we can cancel it if requested.
@@ -89,11 +89,11 @@ public class LoginActivity extends Activity {
 					public void onClick(View view) {
 						Intent register = new Intent(LoginActivity.this,
 								RegisterActivity.class);
-//						if (!TextUtils.isEmpty(mUsername)) {
-//							register.putExtra(RegisterActivity.ARG_USERNAME,
-//									mUsername);
-//						}
-							startActivity(register);
+						// if (!TextUtils.isEmpty(mUsername)) {
+						// register.putExtra(RegisterActivity.ARG_USERNAME,
+						// mUsername);
+						// }
+						startActivity(register);
 					}
 				});
 	}
@@ -148,6 +148,18 @@ public class LoginActivity extends Activity {
 		// focusView = mEmailView;
 		// cancel = true;
 		// }
+
+		/*
+		 * SessionManager session = new SessionManager(
+		 * getApplicationContext()); session.clear();
+		 * session.createLoginSession(mUsername); Intent main = new
+		 * Intent(mLoginFormView.getContext(), MainActivity.class);
+		 * main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		 * main.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+		 * 
+		 * startActivityForResult(main, 0);
+		 * overridePendingTransition(anim.fade_in, anim.fade_out);
+		 */
 
 		if (cancel) {
 			// There was an error; don't attempt login and focus the first
@@ -222,8 +234,8 @@ public class LoginActivity extends Activity {
 				if (!login_success)
 					Log.e("LOGIN", mUsername + " does not exist");
 				// Thread.sleep(2000);
-			} catch (Exception e) {
-				Log.e("LOGIN", "Login failed");
+			} catch (IOException e) {
+				Log.e("LOGIN_ERR", e.toString());
 				return false;
 			}
 
@@ -237,15 +249,20 @@ public class LoginActivity extends Activity {
 
 			// if successful login, start main activity
 			if (success) {
+				SessionManager session = new SessionManager(
+						getApplicationContext());
+				session.clear();
+				session.createLoginSession(mUsername);
 				Intent main = new Intent(mLoginFormView.getContext(),
 						MainActivity.class);
-				main.putExtra(EXTRA_USERNAME, mUsername);
+				main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				main.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
 				startActivityForResult(main, 0);
 				overridePendingTransition(anim.fade_in, anim.fade_out);
 			} else {
 				mPasswordView
-						.setError(getString(R.string.error_incorrect_password));
+						.setError(getString(R.string.error_invalid_username_password));
 				mPasswordView.requestFocus();
 			}
 		}

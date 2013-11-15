@@ -1,7 +1,5 @@
 package com.droidrage.meetingninja;
 
-
-
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -9,10 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.support.v4.app.NavUtils;
-
-
 
 public class EditNoteActivity extends Activity {
 
@@ -21,44 +16,44 @@ public class EditNoteActivity extends Activity {
 	String noteName;
 	int noteID;
 	EditText textEditor;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_note);
 		// Show the Up button in the action bar.
 		setupActionBar();
-		
+
 		getNote = getIntent();
 		noteContent = getNote.getStringExtra("NoteContent");
 		noteName = getNote.getStringExtra("NoteName");
 		noteID = getNote.getIntExtra("NoteID", 0);
-		
+
 		textEditor = (EditText) findViewById(R.id.editText);
-		
+
 		textEditor.setText(noteContent);
-		
+
 		setTitle("Edit '" + noteName + "'");
 	}
-	
-	public void save(View view){
+
+	public void save(View view) {
 		Intent goNotes = new Intent(this, MainActivity.class);
-		
+
 		goNotes.putExtra("NoteID", noteID);
 		goNotes.putExtra("NoteContent", textEditor.getText().toString());
 		goNotes.putExtra("NoteName", noteName);
 		goNotes.putExtra("Update", true);
 		goNotes.putExtra("Fragment", "notes");
-		
+
 		startActivity(goNotes);
 	}
-	
-	public void discard(View view){
+
+	public void discard(View view) {
 		Intent goNotes = new Intent(this, MainActivity.class);
-		
+
 		goNotes.putExtra("Update", false);
 		goNotes.putExtra("Fragment", "notes");
-		
+
 		startActivity(goNotes);
 	}
 

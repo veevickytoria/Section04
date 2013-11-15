@@ -28,6 +28,7 @@
                     android:ems="10"
                     android:enabled="true"
                     android:hint="Event Name" >
+
                     <requestFocus />
                 </EditText>
 
@@ -46,7 +47,7 @@
                     android:orientation="vertical" >
 
                     <TextView
-                        android:id="@+id/TextView02"
+                        android:id="@+id/header_from"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="12dp"
@@ -83,7 +84,7 @@
                     android:layout_marginLeft="@dimen/activity_horizontal_margin" >
 
                     <TextView
-                        android:id="@+id/TextView03"
+                        android:id="@+id/desc_from_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
@@ -92,10 +93,10 @@
                         android:textAppearance="?android:attr/textAppearanceSmall" />
 
                     <TextView
-                        android:id="@+id/TextView01"
+                        android:id="@+id/desc_from_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignBaseline="@+id/TextView03"
+                        android:layout_alignBaseline="@+id/desc_from_date"
                         android:layout_alignParentRight="true"
                         android:layout_alignParentTop="true"
                         android:text="from time"
@@ -109,7 +110,7 @@
                     android:orientation="vertical" >
 
                     <TextView
-                        android:id="@+id/startTime"
+                        android:id="@+id/header_to"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="12dp"
@@ -136,18 +137,17 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:minHeight="32dp" />
-
                     </LinearLayout>
                 </LinearLayout>
 
                 <RelativeLayout
-                    android:id="@+id/RelativeLayout1"
+                    android:id="@+id/RelativeLayout2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin" >
 
                     <TextView
-                        android:id="@+id/date"
+                        android:id="@+id/desc_to_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
@@ -156,10 +156,10 @@
                         android:textAppearance="?android:attr/textAppearanceSmall" />
 
                     <TextView
-                        android:id="@+id/endTime"
+                        android:id="@+id/desc_to_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignBaseline="@+id/date"
+                        android:layout_alignBaseline="@+id/desc_to_date"
                         android:layout_alignParentRight="true"
                         android:layout_alignParentTop="true"
                         android:text="to time"
@@ -172,13 +172,13 @@
                     android:orientation="horizontal" >
 
                     <CheckBox
-                        android:id="@+id/checkBox1"
+                        android:id="@+id/checkbox_all_day"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@android:color/secondary_text_dark" />
 
                     <TextView
-                        android:id="@+id/textView5"
+                        android:id="@+id/desc_all_day"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="ALL DAY" />
@@ -190,7 +190,7 @@
                     android:orientation="vertical" >
 
                     <Button
-                        android:id="@+id/meeting_timezone"
+                        android:id="@+id/btn_meeting_timezone"
                         style="?android:attr/spinnerStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -209,7 +209,7 @@
                     android:orientation="vertical" >
 
                     <TextView
-                        android:id="@+id/meetingdesc"
+                        android:id="@+id/header_guests"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="12dp"
@@ -230,7 +230,6 @@
                     android:layout_marginTop="@dimen/vertical_spacer"
                     android:hint="Description"
                     android:inputType="textAutoComplete" >
-
                 </EditText>
 
                 <LinearLayout
@@ -240,7 +239,7 @@
                     android:orientation="vertical" >
 
                     <TextView
-                        android:id="@+id/textView6"
+                        android:id="@+id/header_showme"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:hint="SHOW ME AS" />
@@ -258,7 +257,7 @@
                     android:orientation="vertical" >
 
                     <TextView
-                        android:id="@+id/textView7"
+                        android:id="@+id/header_privacy"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:hint="PRIVACY" />

@@ -1,21 +1,24 @@
 package com.droidrage.meetingninja;
 
+import java.io.IOException;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 import android.support.v4.app.NavUtils;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
 
-public class RegisterActivity extends Activity implements AsyncResponse<Void> {
+public class RegisterActivity extends Activity implements
+		AsyncResponse<Boolean> {
 
 	EditText usernameText;
 	EditText passwordText;
@@ -26,6 +29,7 @@ public class RegisterActivity extends Activity implements AsyncResponse<Void> {
 
 	AlertDialog.Builder passCheck;
 	private RegisterTask registerTask;
+	private boolean mRegisterSuccess;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +41,7 @@ public class RegisterActivity extends Activity implements AsyncResponse<Void> {
 		usernameText = ((EditText) findViewById(R.id.usernameText));
 		passwordText = ((EditText) findViewById(R.id.passwordText));
 		confirmPasswordText = ((EditText) findViewById(R.id.confirmPassword));
-		
+
 		// builder = new AlertDialog.Builder(RegisterActivity.this);
 		//
 		// builder.setMessage(
@@ -75,13 +79,6 @@ public class RegisterActivity extends Activity implements AsyncResponse<Void> {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			getActionBar().setDisplayHomeAsUpEnabled(true);
 		}
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.register, menu);
-		return true;
 	}
 
 	@Override
@@ -129,10 +126,10 @@ public class RegisterActivity extends Activity implements AsyncResponse<Void> {
 			cancel = true;
 		} else if (!confPass.equals(pass)) {
 			Log.e("PASS_MISMATCH", "error");
-
 			confirmPasswordText
 					.setError(getString(R.string.error_mismatch_password));
-
+			focusView = confirmPasswordText;
+			cancel = true;
 		}
 
 		if (cancel) {
@@ -141,40 +138,45 @@ public class RegisterActivity extends Activity implements AsyncResponse<Void> {
 			registerTask = new RegisterTask(this);
 			registerTask.execute(user, pass);
 			Intent goLogin = new Intent(this, LoginActivity.class);
-
 			goLogin.putExtra(LoginActivity.EXTRA_USERNAME, user);
+			Toast.makeText(getApplicationContext(), "Registration Successful",
+					Toast.LENGTH_LONG).show();
 			startActivity(goLogin);
+			finish();
 		}
 
 	}
 
 	@Override
-	public void processFinish(Void result) {
-		return;
+	public void processFinish(Boolean result) {
+		mRegisterSuccess = result;
 	}
 
-	private class RegisterTask extends AsyncTask<String, Void, Void> {
+	private class RegisterTask extends AsyncTask<String, Void, Boolean> {
 
-		private AsyncResponse<Void> delegate;
+		private AsyncResponse<Boolean> delegate;
 
-		public RegisterTask(AsyncResponse<Void> del) {
+		public RegisterTask(AsyncResponse<Boolean> del) {
 			this.delegate = del;
 		}
 
 		@Override
-		protected Void doInBackground(String... params) {
+		protected Boolean doInBackground(String... params) {
+			boolean success = false;
 			try {
 				DatabaseAdapter.register(params[0], params[1]);
-			} catch (Exception e) {
-				Log.e("DB Adapter", "Register failed");
-				e.printStackTrace();
+				success = true;
+			} catch (IOException e) {
+				Log.e("DB Adapter", "Error: Register failed");
+				Log.e("REGISTER_ERR", e.toString());
 			}
-			return null;
+			return success;
 		}
 
 		@Override
-		protected void onPostExecute(Void result) {
+		protected void onPostExecute(Boolean result) {
 			super.onPostExecute(result);
+			delegate.processFinish(result);
 		}
 	}
 

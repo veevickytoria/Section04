@@ -1,4 +1,5 @@
 package objects;
+
 public class Meeting {
 	private static int uniqueID;
 	private int id;

@@ -51,15 +51,33 @@ public class MainActivity extends FragmentActivity implements
 	public String fragment;
 	public Intent noteIntent;
 	private ActionBar actionBar;
+	private static MeetingsFragment meetingsFrag = null;
+	private static NotesFragment notesFrag = null;
+	private static TasksFragment tasksFrag = null;
+	private SessionManager session;
+	private static ViewProfileFragment prof = null;
+	private String[] tabNames = new String[] { "Profile", "Meetings", "Notes",
+			"Tasks" };
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		session = new SessionManager(getApplicationContext());
 
+		// Check if logged in
+		session.checkLogin();
+
+		// Else continue
+		setContentView(R.layout.activity_main);
+		setupActionBar();
+		username = session.getUserDetails().get(SessionManager.USER);
+
+	}
+
+	private void setupActionBar() {
 		// Set up the action bar.
+
 		actionBar = getActionBar();
-//		actionBar.setTitle("Main Window");
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
 		// Create the adapter that will return a fragment for each of the three
@@ -84,7 +102,6 @@ public class MainActivity extends FragmentActivity implements
 
 		// Setup the tabs here
 		Locale l = Locale.getDefault();
-		String[] tabNames = new String[] { "Meetings", "Notes" };
 
 		// For each of the sections in the app, add a tab to the action bar.
 		for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
@@ -99,19 +116,22 @@ public class MainActivity extends FragmentActivity implements
 
 		// Get the extras from the calling intent
 		username = getIntent().getStringExtra(LoginActivity.EXTRA_USERNAME);
-		
-		if(getIntent().hasExtra("Fragment") && getIntent().getStringExtra("Fragment").compareToIgnoreCase("notes") == 0){
+
+		if (getIntent().hasExtra("Fragment")
+				&& getIntent().getStringExtra("Fragment").compareToIgnoreCase(
+						"notes") == 0) {
 			Log.d("GET_INTENT", getIntent().getStringExtra("Fragment"));
 			noteIntent = getIntent();
 			int noteID = noteIntent.getIntExtra("NoteID", -1);
-			
+
 			Log.d("NOTES", "NoteID " + noteID);
-			
-			if(noteID > 0){
-				NotesFragment.updateNote(noteID, getIntent().getStringExtra("NoteName"), getIntent().getStringExtra("NoteContent"));
+
+			if (noteID > 0) {
+				NotesFragment.updateNote(noteID,
+						getIntent().getStringExtra("NoteName"), getIntent()
+								.getStringExtra("NoteContent"));
 			}
 		}
-
 	}
 
 	@Override
@@ -120,25 +140,39 @@ public class MainActivity extends FragmentActivity implements
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		 // Handle presses on the action bar items
-	    switch (item.getItemId()) {
-	        case R.id.action_refresh:
-	        	Toast.makeText(this, "Refreshing", Toast.LENGTH_SHORT).show();
-	            return true;
-	        case R.id.action_new_meeting:
-//	            Toast.makeText(this, "Create a meeting", Toast.LENGTH_SHORT).show();
-	        	Intent i = new Intent(this, MeetingsActivity.class);
-	        	startActivity(i);
-	            return true;
-	        case R.id.action_new_note:
-	        	Toast.makeText(this, "Create a note", Toast.LENGTH_SHORT).show();
-	        	return true;
-	        default:
-	            return super.onOptionsItemSelected(item);
-	    }
+		// Handle presses on the action bar items
+		switch (item.getItemId()) {
+		case R.id.action_refresh:
+			switch (mViewPager.getCurrentItem()) {
+			case (1):
+				Toast.makeText(this, "Refreshing Meetings", Toast.LENGTH_SHORT)
+						.show();
+				meetingsFrag.refreshMeetings();
+				return true;
+			case (2):
+				Toast.makeText(this, "Refreshing Notes", Toast.LENGTH_SHORT)
+						.show();
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+			}
+
+		case R.id.action_new_meeting:
+			meetingsFrag.createMeeting();
+			return true;
+		case R.id.action_new_note:
+			Toast.makeText(this, "Create a note", Toast.LENGTH_SHORT).show();
+			return true;
+		case R.id.action_logout:
+			session.logoutUser();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+
 	}
 
 	@Override
@@ -173,8 +207,9 @@ public class MainActivity extends FragmentActivity implements
 		public Fragment getItem(int position) {
 			// getItem is called to instantiate the fragment for the given page.
 			// Return a Fragment depending on the tab position
-			
-			if(noteIntent != null && noteIntent.getStringExtra("Fragment").compareTo("notes") == 0){
+
+			if (noteIntent != null
+					&& noteIntent.getStringExtra("Fragment").compareTo("notes") == 0) {
 				position = 1;
 				actionBar.setSelectedNavigationItem(position);
 				noteIntent.putExtra("Fragment", "none");
@@ -182,18 +217,19 @@ public class MainActivity extends FragmentActivity implements
 
 			Fragment frag = null;
 			Bundle args = new Bundle();
-			String user = getString(R.string.prompt_username);
 			switch (position) {
 			case (0):
-				frag = new MeetingsFragment();
-				args.putString(user, username);
-				frag.setArguments(args);
-				return frag;
+				prof = new ViewProfileFragment();
+				return prof;
 			case (1):
-				frag = new NotesFragment();
-				args.putString(user, username);
-				frag.setArguments(args);
-				return frag;
+				meetingsFrag = new MeetingsFragment();
+				return meetingsFrag;
+			case (2):
+				notesFrag = new NotesFragment();
+				return notesFrag;
+			case (3):
+				tasksFrag = new TasksFragment();
+				return tasksFrag;
 			default:
 				frag = new DummySectionFragment();
 				args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position);
@@ -204,20 +240,15 @@ public class MainActivity extends FragmentActivity implements
 
 		@Override
 		public int getCount() {
-			// Show 2 total pages.
-			return 2;
+			// Show 4 total pages.
+			return 4;
 		}
 
 		@Override
 		public CharSequence getPageTitle(int position) {
 			Locale l = Locale.getDefault();
-			switch (position) {
-			case 0:
-				return getString(R.string.title_section1).toUpperCase(l);
-			case 1:
-				return getString(R.string.title_section2).toUpperCase(l);
-			case 2:
-				return getString(R.string.title_section3).toUpperCase(l);
+			if (position >= 0 && position < tabNames.length) {
+				return tabNames[position].toUpperCase(l);
 			}
 			return null;
 		}
