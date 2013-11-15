@@ -44,6 +44,10 @@ end
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
-  gem 'twitter-bootstrap-rails'
-  gem "therubyracer"
-  gem "less-rails"
+# twitter bootstrap css & javascript toolkit
+gem 'twitter-bootswatch-rails', :git => 'git://github.com/scottvrosenthal/twitter-bootswatch-rails.git'
+
+# twitter bootstrap helpers gem, e.g., alerts etc...
+gem 'twitter-bootswatch-rails-helpers'
+gem "therubyracer"
+gem "less-rails"

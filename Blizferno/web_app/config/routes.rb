@@ -58,6 +58,7 @@ WebApp::Application.routes.draw do
 
   get "home_page/index"
   get "home_page/tabpage"
+  get "home_page/mypage"
   get "login/index"
   get "meetings/new"
   get "meetings/index"
@@ -69,7 +70,7 @@ WebApp::Application.routes.draw do
   get "tasks/list"
   get "preferences/home"
 
-  root :to => 'home_page#tabpage'
+  root :to => 'home_page#mypage'
 
 
 end
