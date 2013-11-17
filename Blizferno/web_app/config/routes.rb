@@ -70,7 +70,7 @@ WebApp::Application.routes.draw do
   get "tasks/list"
   get "preferences/home"
 
-  root :to => 'home_page#mypage'
+  root 'home_page#mypage'
 
 
 end
