@@ -7,11 +7,11 @@ class ApplicationController < ActionController::Base
   before_filter :protect
 
   def protect
-  	@ips = ['127.0.0.1'] #and so on...]
+  	@ips = [] #and so on...]
   	if not @ips.include? request.remote_ip
   		# check for your subnet stuff here, for example
   		# if not request.remote_ip.include?('127.0,0')
-  		render text: "You Are Unauthorized"
+  		render text: '<h1>The IP of <i>' + request.remote_ip + '</i> is unauthorized to access this section.</h1><br />Please contact system administrator if you believe you have reached this page in error.'
   		return
   	end
   end
