@@ -38,10 +38,10 @@ public class NotesFragment extends Fragment implements
 		super.onCreateView(inflater, container, savedInstanceState);
 		View v = inflater.inflate(R.layout.fragment_notes, container, false);
 
-		Intent test = getActivity().getIntent();
+//		Intent test = getActivity().getIntent();
 
-		if (test.getStringExtra("NoteID") != null)
-			Log.e("NOTES", test.getStringExtra("NoteID"));
+//		if (test.getStringExtra("NoteID") != null)
+//			Log.e("NOTES", test.getStringExtra("NoteID"));
 
 		session = new SessionManager(getActivity().getApplicationContext());
 

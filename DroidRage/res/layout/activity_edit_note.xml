@@ -19,7 +19,9 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:ems="10"
-        android:inputType="textMultiLine" >
+        android:gravity="top"
+        android:inputType="textMultiLine"
+        android:textSize="24sp" >
 
         <requestFocus />
     </EditText>
