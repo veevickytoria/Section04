@@ -38,6 +38,10 @@
 		0A7E516117FBEB9200A4B8B7 /* iWinLoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A7E515F17FBEB9200A4B8B7 /* iWinLoginViewController.xib */; };
 		0A7E516517FBEBA200A4B8B7 /* iWinRegisterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7E516317FBEBA200A4B8B7 /* iWinRegisterViewController.m */; };
 		0A7E516617FBEBA200A4B8B7 /* iWinRegisterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A7E516417FBEBA200A4B8B7 /* iWinRegisterViewController.xib */; };
+		0A91DC9B1835D7AB00741349 /* OCCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91DC931835D7AB00741349 /* OCCalendarView.m */; };
+		0A91DC9C1835D7AB00741349 /* OCCalendarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91DC951835D7AB00741349 /* OCCalendarViewController.m */; };
+		0A91DC9D1835D7AB00741349 /* OCDaysView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91DC971835D7AB00741349 /* OCDaysView.m */; };
+		0A91DC9E1835D7AB00741349 /* OCSelectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91DC991835D7AB00741349 /* OCSelectionView.m */; };
 		0ACE339A17FCF5F8003B9C0A /* iWinMeetingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ACE339817FCF5F8003B9C0A /* iWinMeetingViewController.m */; };
 		0ACE339B17FCF5F8003B9C0A /* iWinMeetingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0ACE339917FCF5F8003B9C0A /* iWinMeetingViewController.xib */; };
 		0ACE33AF17FD244B003B9C0A /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ACE33AE17FD244B003B9C0A /* CFNetwork.framework */; };
@@ -102,6 +106,15 @@
 		0A7E516217FBEBA200A4B8B7 /* iWinRegisterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinRegisterViewController.h; sourceTree = "<group>"; };
 		0A7E516317FBEBA200A4B8B7 /* iWinRegisterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinRegisterViewController.m; sourceTree = "<group>"; };
 		0A7E516417FBEBA200A4B8B7 /* iWinRegisterViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iWinRegisterViewController.xib; sourceTree = "<group>"; };
+		0A91DC921835D7AB00741349 /* OCCalendarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCCalendarView.h; sourceTree = "<group>"; };
+		0A91DC931835D7AB00741349 /* OCCalendarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCCalendarView.m; sourceTree = "<group>"; };
+		0A91DC941835D7AB00741349 /* OCCalendarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCCalendarViewController.h; sourceTree = "<group>"; };
+		0A91DC951835D7AB00741349 /* OCCalendarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCCalendarViewController.m; sourceTree = "<group>"; };
+		0A91DC961835D7AB00741349 /* OCDaysView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCDaysView.h; sourceTree = "<group>"; };
+		0A91DC971835D7AB00741349 /* OCDaysView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCDaysView.m; sourceTree = "<group>"; };
+		0A91DC981835D7AB00741349 /* OCSelectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCSelectionView.h; sourceTree = "<group>"; };
+		0A91DC991835D7AB00741349 /* OCSelectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCSelectionView.m; sourceTree = "<group>"; };
+		0A91DC9A1835D7AB00741349 /* OCTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCTypes.h; sourceTree = "<group>"; };
 		0ACE339717FCF5F8003B9C0A /* iWinMeetingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinMeetingViewController.h; sourceTree = "<group>"; };
 		0ACE339817FCF5F8003B9C0A /* iWinMeetingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinMeetingViewController.m; sourceTree = "<group>"; };
 		0ACE339917FCF5F8003B9C0A /* iWinMeetingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iWinMeetingViewController.xib; sourceTree = "<group>"; };
@@ -182,6 +195,7 @@
 		0A04456117F3825D000FF2A0 /* MeetingBuilder */ = {
 			isa = PBXGroup;
 			children = (
+				0A91DC911835D7AB00741349 /* OCCalendar */,
 				7941FDD0182A0D8E00AAA92E /* ViewProfile */,
 				7941FDC41828834A00AAA92E /* ViewAndChangeSettings */,
 				7941FDB618278A7800AAA92E /* MergeNote */,
@@ -338,6 +352,22 @@
 			name = AddAttendees;
 			sourceTree = "<group>";
 		};
+		0A91DC911835D7AB00741349 /* OCCalendar */ = {
+			isa = PBXGroup;
+			children = (
+				0A91DC921835D7AB00741349 /* OCCalendarView.h */,
+				0A91DC931835D7AB00741349 /* OCCalendarView.m */,
+				0A91DC941835D7AB00741349 /* OCCalendarViewController.h */,
+				0A91DC951835D7AB00741349 /* OCCalendarViewController.m */,
+				0A91DC961835D7AB00741349 /* OCDaysView.h */,
+				0A91DC971835D7AB00741349 /* OCDaysView.m */,
+				0A91DC981835D7AB00741349 /* OCSelectionView.h */,
+				0A91DC991835D7AB00741349 /* OCSelectionView.m */,
+				0A91DC9A1835D7AB00741349 /* OCTypes.h */,
+			);
+			path = OCCalendar;
+			sourceTree = "<group>";
+		};
 		7941FDB618278A7800AAA92E /* MergeNote */ = {
 			isa = PBXGroup;
 			children = (
@@ -479,16 +509,20 @@
 				0A1A72A3181A2663009A49E5 /* iWinAddAndViewTaskViewController.m in Sources */,
 				7941FDC218278B4A00AAA92E /* iWinMergeNoteViewController.m in Sources */,
 				0ACE339A17FCF5F8003B9C0A /* iWinMeetingViewController.m in Sources */,
+				0A91DC9E1835D7AB00741349 /* OCSelectionView.m in Sources */,
 				0A1A7296181A1802009A49E5 /* iWinAgendaItemViewController.m in Sources */,
 				0A1A72A8181A2C5E009A49E5 /* iWinAddUsersViewController.m in Sources */,
+				0A91DC9B1835D7AB00741349 /* OCCalendarView.m in Sources */,
 				79D513CA181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.m in Sources */,
 				0A7E516017FBEB9200A4B8B7 /* iWinLoginViewController.m in Sources */,
 				0A1A729E181A22AB009A49E5 /* iWinTaskListViewController.m in Sources */,
 				7941FDC81828843500AAA92E /* iWinViewAndChangeSettingsViewController.m in Sources */,
+				0A91DC9D1835D7AB00741349 /* OCDaysView.m in Sources */,
 				0A04456817F3825D000FF2A0 /* main.m in Sources */,
 				0A1A72901819FE48009A49E5 /* iWinViewAndAddViewController.m in Sources */,
 				7941FDD5182A0DCE00AAA92E /* iWinViewProfileViewController.m in Sources */,
 				0A7E516517FBEBA200A4B8B7 /* iWinRegisterViewController.m in Sources */,
+				0A91DC9C1835D7AB00741349 /* OCCalendarViewController.m in Sources */,
 				0A1A728A1819F590009A49E5 /* iWinScheduleViewMeetingViewController.m in Sources */,
 				0A04456C17F3825D000FF2A0 /* iWinAppDelegate.m in Sources */,
 				0A7E515B17FBEA9700A4B8B7 /* iWinMainViewController.m in Sources */,

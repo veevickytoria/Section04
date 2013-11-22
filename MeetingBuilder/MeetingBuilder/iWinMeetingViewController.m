@@ -38,38 +38,50 @@
     self.meetingDetail = [[NSMutableArray alloc] init];
     self.meetingID = [[NSMutableArray alloc] init];
     self.meetingLocations = [[NSMutableArray alloc] init];
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Meeting.php?method=getMeetings&user=%@", self.email];
-    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:30];
-    [urlRequest setHTTPMethod:@"GET"];
-    NSURLResponse * response = nil;
-    NSError * error = nil;
-    NSData * data = [NSURLConnection sendSynchronousRequest:urlRequest
-                                          returningResponse:&response
-                                                      error:&error];
-    //check login
-    NSArray *jsonArray;
-    if (error)
-    {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Meetings not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
-        [alert show];
-    }
-    else
-    {
-        NSError *jsonParsingError = nil;
-        jsonArray = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
-    }
-    if (jsonArray.count > 0)
-    {
-        for (NSDictionary* meetings in jsonArray)
-        {
-            [self.meetingList addObject:[meetings objectForKey:@"title"]];
-            [self.meetingDetail addObject:[meetings objectForKey:@"datetime"]];
-            [self.meetingID addObject:[meetings objectForKey:@"id"]];
-            [self.meetingLocations addObject:[meetings objectForKey:@"location"]];
-        }
-        
-    }
+//    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Meeting.php?method=getMeetings&user=%@", self.email];
+//    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+//    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:30];
+//    [urlRequest setHTTPMethod:@"GET"];
+//    NSURLResponse * response = nil;
+//    NSError * error = nil;
+//    NSData * data = [NSURLConnection sendSynchronousRequest:urlRequest
+//                                          returningResponse:&response
+//                                                      error:&error];
+//    //check login
+//    NSArray *jsonArray;
+//    if (error)
+//    {
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Meetings not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+//        [alert show];
+//    }
+//    else
+//    {
+//        NSError *jsonParsingError = nil;
+//        jsonArray = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
+//    }
+//    if (jsonArray.count > 0)
+//    {
+//        for (NSDictionary* meetings in jsonArray)
+//        {
+//            [self.meetingList addObject:[meetings objectForKey:@"title"]];
+//            [self.meetingDetail addObject:[meetings objectForKey:@"datetime"]];
+//            [self.meetingID addObject:[meetings objectForKey:@"id"]];
+//            [self.meetingLocations addObject:[meetings objectForKey:@"location"]];
+//        }
+//        
+//    }
+
+    
+    [self.meetingList addObject:@"Meeting 1"];
+    [self.meetingDetail addObject:@"10/24/13 9:00 pm"];
+    
+    [self.meetingList addObject:@"Meeting 2"];
+    [self.meetingDetail addObject:@"10/25/13 9:10 pm"];
+    
+    [self.meetingList addObject:@"Meeting 3"];
+    [self.meetingDetail addObject:@"10/26/13 7:00 pm"];
+    
+    
     self.scheduleMeetingButton.layer.cornerRadius = 7;
     self.scheduleMeetingButton.layer.borderColor = [[UIColor darkGrayColor] CGColor];
     self.scheduleMeetingButton.layer.borderWidth = 2.0f;

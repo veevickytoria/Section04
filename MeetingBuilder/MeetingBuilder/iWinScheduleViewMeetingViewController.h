@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OCCalendarViewController.h"
 
 @protocol ScheduleViewMeetingDelegate <NSObject>
 
@@ -17,7 +18,7 @@
 -(void)viewScheduleClicked;
 @end
 
-@interface iWinScheduleViewMeetingViewController : UIViewController
+@interface iWinScheduleViewMeetingViewController : UIViewController <OCCalendarDelegate>
 - (IBAction)onAddAgenda;
 - (IBAction)onAddAttendees;
 - (IBAction)onViewMySchedule;
@@ -28,8 +29,11 @@
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil inEditMode:(BOOL)isEditing withID:(NSString*) meetingID withDateTime:(NSString*) dateTime withTitle:(NSString*) title withLocation:(NSString*) location;
 @property (weak, nonatomic) IBOutlet UIButton *saveAndAddMoreButton;
 @property (weak, nonatomic) IBOutlet UITextField *titleField;
-@property (weak, nonatomic) IBOutlet UITextField *startTimeField;
-@property (weak, nonatomic) IBOutlet UITextField *endTimeField;
+@property (weak, nonatomic) IBOutlet UILabel *startDateLabel;
+@property (weak, nonatomic) IBOutlet UILabel *endDateLabel;
+@property (weak, nonatomic) IBOutlet UILabel *startTimeLabel;
+@property (weak, nonatomic) IBOutlet UILabel *endTimeLabel;
+
 @property (weak, nonatomic) IBOutlet UITextField *durationField;
 @property (weak, nonatomic) IBOutlet UITextField *placeField;
 @property (weak, nonatomic) IBOutlet UILabel *headerLabel;
@@ -38,6 +42,4 @@
 @property (weak, nonatomic) IBOutlet UIButton *addAttendeesButton;
 @property (weak, nonatomic) IBOutlet UIButton *visitScheduleButton;
 @property (weak, nonatomic) IBOutlet UIButton *addAgendaButton;
-- (IBAction)startTimeClicked;
-- (IBAction)endTimeClicked;
 @end
