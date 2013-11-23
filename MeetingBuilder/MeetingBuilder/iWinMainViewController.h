@@ -20,7 +20,7 @@
 #import "iWinViewAndChangeSettingsViewController.h"
 #import "iWinViewProfileViewController.h"
 
-@interface iWinMainViewController : UIViewController <iWinLoginDelegate, iWinRegisterVCDelegate, ScheduleViewMeetingDelegate, MeetingListDelegate, AgendaDelegate, TaskListDelegate, TaskDelegate, UserDelegate, NoteListDelegate, ViewAddNoteDelegate,
+@interface iWinMainViewController : UIViewController <iWinLoginDelegate, iWinRegisterVCDelegate, TaskListDelegate, TaskDelegate, UserDelegate, NoteListDelegate, ViewAddNoteDelegate,
     SettingsDelegate, ProfileDelegate>
 @property (weak, nonatomic) IBOutlet UIView *mainView;
 @property (weak, nonatomic) IBOutlet UIView *slideView;

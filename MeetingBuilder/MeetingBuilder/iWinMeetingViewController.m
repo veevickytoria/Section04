@@ -14,7 +14,7 @@
 @property (strong, nonatomic) NSMutableArray *meetingList;
 @property (strong, nonatomic) NSMutableArray *meetingDetail;
 @property (strong, nonatomic) NSString* email;
-@property (strong, nonatomic) iWinScheduleViewMeetingViewController *scheduleMeetingViewController;
+@property (strong, nonatomic) iWinScheduleViewMeetingViewController *scheduleMeetingVC;
 @property (strong, nonatomic) NSMutableArray *meetingID;
 @property (strong, nonatomic) NSMutableArray *meetingLocations;
 
@@ -74,13 +74,18 @@
     
     [self.meetingList addObject:@"Meeting 1"];
     [self.meetingDetail addObject:@"10/24/13 9:00 pm"];
+    [self.meetingID addObject:@"1"];
+    [self.meetingLocations addObject:@"O257"];
     
     [self.meetingList addObject:@"Meeting 2"];
     [self.meetingDetail addObject:@"10/25/13 9:10 pm"];
+    [self.meetingID addObject:@"2"];
+    [self.meetingLocations addObject:@"O257"];
     
     [self.meetingList addObject:@"Meeting 3"];
     [self.meetingDetail addObject:@"10/26/13 7:00 pm"];
-    
+    [self.meetingID addObject:@"3"];
+    [self.meetingLocations addObject:@"O257"];
     
     self.scheduleMeetingButton.layer.cornerRadius = 7;
     self.scheduleMeetingButton.layer.borderColor = [[UIColor darkGrayColor] CGColor];
@@ -96,7 +101,14 @@
 
 -(IBAction) onScheduleNewMeeting
 {
-    [self.meetingListDelegate scheduleMeetingClicked:NO];
+    //[self.meetingListDelegate scheduleMeetingClicked:NO];
+    self.scheduleMeetingVC = [[iWinScheduleViewMeetingViewController alloc] initWithNibName:@"iWinScheduleViewMeetingViewController" bundle:nil inEditMode:NO withID:nil withDateTime:nil withTitle:nil withLocation:nil];
+    
+    [self.scheduleMeetingVC setModalPresentationStyle:UIModalPresentationPageSheet];
+    [self.scheduleMeetingVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+    
+    [self presentViewController:self.scheduleMeetingVC animated:YES completion:nil];
+    self.scheduleMeetingVC.view.superview.bounds = CGRectMake(0,0,768,1003);
 }
 
 //- (IBAction)onAddNewProject:(id)sender
@@ -155,15 +167,15 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self.meetingListDelegate scheduleMeetingClicked:YES withID:self.meetingID[indexPath.row] withDateTime:self.meetingDetail[indexPath.row] withTitle:self.meetingList[indexPath.row] withLocation:self.meetingLocations[indexPath.row]];
+//    [self.meetingListDelegate scheduleMeetingClicked:YES withID:self.meetingID[indexPath.row] withDateTime:self.meetingDetail[indexPath.row] withTitle:self.meetingList[indexPath.row] withLocation:self.meetingLocations[indexPath.row]];
     
-//    self.scheduleMeetingViewController = [[iWinScheduleViewMeetingViewController alloc] initWithNibName:@"iWinScheduleViewMeetingViewController" bundle:nil inEditMode:YES];
-//    
-//    [self.scheduleMeetingViewController setModalPresentationStyle:UIModalPresentationPageSheet];
-//    [self.scheduleMeetingViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-//    
-//    [self presentViewController:self.scheduleMeetingViewController animated:YES completion:nil];
-//    self.scheduleMeetingViewController.view.superview.bounds = CGRectMake(0,0,768,937);
+    self.scheduleMeetingVC = [[iWinScheduleViewMeetingViewController alloc] initWithNibName:@"iWinScheduleViewMeetingViewController" bundle:nil inEditMode:YES withID:self.meetingID[indexPath.row] withDateTime:self.meetingDetail[indexPath.row] withTitle:self.meetingList[indexPath.row] withLocation:self.meetingLocations[indexPath.row]];
+    
+    [self.scheduleMeetingVC setModalPresentationStyle:UIModalPresentationPageSheet];
+    [self.scheduleMeetingVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+    
+    [self presentViewController:self.scheduleMeetingVC animated:YES completion:nil];
+    self.scheduleMeetingVC.view.superview.bounds = CGRectMake(0,0,768,1003);
     
 }
 

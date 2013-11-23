@@ -256,7 +256,6 @@
     self.meetingListViewController = [[iWinMeetingViewController alloc] initWithNibName:@"iWinMeetingViewController" bundle:nil withEmail:self.user];
     [self.mainView  addSubview:self.meetingListViewController.view];
     [self.meetingListViewController.view setBounds:self.mainView.bounds];
-    self.meetingListViewController.meetingListDelegate = self;
     [self animateSlidingMenu:NO];
     
     [self updateSelectedMenu:self.meetingsButton];
@@ -358,22 +357,6 @@
     [UIView commitAnimations];
 }
 
--(void)scheduleMeetingClicked :(BOOL)isEditing withID:(NSString*) meetingID withDateTime:(NSString*) dateTime withTitle:(NSString*) title withLocation:(NSString*) location;
-{
-    [self removeSubViews];
-    [self enableSliding];
-    [self animateSlidingMenu:NO];
-    [self resetSliding];
-    self.scheduleMeetingViewController = [[iWinScheduleViewMeetingViewController alloc] initWithNibName:@"iWinScheduleViewMeetingViewController" bundle:nil inEditMode:isEditing withID: meetingID withDateTime: dateTime withTitle: title withLocation: location];
-    [self.mainView  addSubview:self.scheduleMeetingViewController.view];
-    [self.scheduleMeetingViewController.view setBounds:self.mainView.bounds];
-    self.scheduleMeetingViewController.scheduleDelegate = self;
-}
-
--(void)scheduleMeetingClicked :(BOOL)isEditing
-{
-    [self scheduleMeetingClicked:isEditing withID:nil withDateTime:nil withTitle:nil withLocation:nil];
-}
 
 
 -(void) addViewNoteClicked:(BOOL)isEditing
@@ -388,11 +371,6 @@
     self.viewAddNoteViewController.addNoteDelegate = self;
 }
 
-
--(void) goToViewMeeting
-{
-    [self scheduleMeetingClicked:YES];
-}
 
 -(void) saveClicked
 {
@@ -414,37 +392,27 @@
     [self onClickNotes];
 }
 
--(void)addAgendaClicked:(BOOL)isEditing
-{
-    [self removeSubViews];
-    [self enableSliding];
-    [self animateSlidingMenu:NO];
-    [self resetSliding];
-    self.agendaController = [[iWinViewAndAddViewController alloc] initWithNibName:@"iWinViewAndAddViewController" bundle:nil inEditMode:isEditing];
-    [self.mainView  addSubview:self.agendaController.view];
-    [self.agendaController.view setBounds:self.mainView.bounds];
-    self.agendaController.agendaDelegate = self;
-}
 
--(void)addAttenddesClicked:(BOOL)isEditing
-{
-    //meeting
-    self.userViewController = [[iWinAddUsersViewController alloc] initWithNibName:@"iWinAddUsersViewController" bundle:nil withPageName:@"Meeting" inEditMode:isEditing];
-    [self.mainView  addSubview:self.userViewController.view];
-    [self.userViewController.view setBounds:self.mainView.bounds];
-    self.userViewController.userDelegate = self;
-    [self resetSliding];
-}
-
--(void) addAttendeesForAgenda:(BOOL)isEditing
-{
-    //agenda
-    self.userViewController = [[iWinAddUsersViewController alloc] initWithNibName:@"iWinAddUsersViewController" bundle:nil withPageName:@"Agenda" inEditMode:isEditing];
-    [self.mainView  addSubview:self.userViewController.view];
-    [self.userViewController.view setBounds:self.mainView.bounds];
-    self.userViewController.userDelegate = self;
-    [self resetSliding];
-}
+//
+//-(void)addAttenddesClicked:(BOOL)isEditing
+//{
+//    //meeting
+//    self.userViewController = [[iWinAddUsersViewController alloc] initWithNibName:@"iWinAddUsersViewController" bundle:nil withPageName:@"Meeting" inEditMode:isEditing];
+//    [self.mainView  addSubview:self.userViewController.view];
+//    [self.userViewController.view setBounds:self.mainView.bounds];
+//    self.userViewController.userDelegate = self;
+//    [self resetSliding];
+//}
+//
+//-(void) addAttendeesForAgenda:(BOOL)isEditing
+//{
+//    //agenda
+//    self.userViewController = [[iWinAddUsersViewController alloc] initWithNibName:@"iWinAddUsersViewController" bundle:nil withPageName:@"Agenda" inEditMode:isEditing];
+//    [self.mainView  addSubview:self.userViewController.view];
+//    [self.userViewController.view setBounds:self.mainView.bounds];
+//    self.userViewController.userDelegate = self;
+//    [self resetSliding];
+//}
 
 -(void) addAssigneesForTask:(BOOL)isEditing
 {
@@ -458,13 +426,9 @@
 
 -(void) returnToPreviousView:(NSString *)pageName inEditMode:(BOOL)isEditing
 {
-    if ([pageName isEqualToString:@"Meeting"])
+    if ([pageName isEqualToString:@"Agenda"])
     {
-        [self scheduleMeetingClicked:isEditing];
-    }
-    else if ([pageName isEqualToString:@"Agenda"])
-    {
-        [self addAgendaClicked:isEditing];
+        //[self addAgendaClicked:isEditing];
     }
     else
     {

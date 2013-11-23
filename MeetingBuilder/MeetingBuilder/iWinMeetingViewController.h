@@ -8,17 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@protocol MeetingListDelegate <NSObject>
-
--(void)scheduleMeetingClicked :(BOOL)isEditing withID:(NSString*) meetingID withDateTime:(NSString*) dateTime withTitle:(NSString*) title withLocation:(NSString*) location;
--(void)scheduleMeetingClicked :(BOOL)isEditing;
-@end
 
 @interface iWinMeetingViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate, NSURLConnectionDelegate>
 @property (strong, nonatomic) NSMutableData *responseData;
 @property (weak, nonatomic) IBOutlet UIButton *scheduleMeetingButton;
 @property (weak, nonatomic) IBOutlet UITableView *projectTable;
-@property (nonatomic) id<MeetingListDelegate> meetingListDelegate;
 - (IBAction)onScheduleNewMeeting;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withEmail:(NSString *)email;
 @end

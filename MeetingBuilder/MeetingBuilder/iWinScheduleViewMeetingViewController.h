@@ -9,15 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "OCCalendarViewController.h"
 
-@protocol ScheduleViewMeetingDelegate <NSObject>
-
--(void)saveClicked;
--(void)cancelClicked;
--(void)addAgendaClicked:(BOOL)isEditing;
--(void)addAttenddesClicked:(BOOL)isEditing;
--(void)viewScheduleClicked;
-@end
-
 @interface iWinScheduleViewMeetingViewController : UIViewController <OCCalendarDelegate>
 - (IBAction)onAddAgenda;
 - (IBAction)onAddAttendees;
@@ -25,7 +16,6 @@
 - (IBAction)onClickSave;
 - (IBAction)onClickSaveAndAddMore;
 - (IBAction)onClickCancel;
-@property (nonatomic) id<ScheduleViewMeetingDelegate> scheduleDelegate;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil inEditMode:(BOOL)isEditing withID:(NSString*) meetingID withDateTime:(NSString*) dateTime withTitle:(NSString*) title withLocation:(NSString*) location;
 @property (weak, nonatomic) IBOutlet UIButton *saveAndAddMoreButton;
 @property (weak, nonatomic) IBOutlet UITextField *titleField;

@@ -7,6 +7,7 @@
 //
 
 #import "iWinScheduleViewMeetingViewController.h"
+#import "iWinViewAndAddViewController.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface iWinScheduleViewMeetingViewController ()
@@ -20,6 +21,7 @@
 @property (strong, nonatomic) NSString *location;
 @property (strong, nonatomic) UIPopoverController *popOverController;
 @property (strong, nonatomic) OCCalendarViewController* ocCalVC;
+@property (strong, nonatomic) iWinViewAndAddViewController *agendaController;
 @end
 
 @implementation iWinScheduleViewMeetingViewController
@@ -124,15 +126,24 @@
 - (IBAction)onAddAgenda
 {
     if ([self.addAgendaButton.titleLabel.text isEqualToString:@"Add Agenda"])
-        [self.scheduleDelegate addAgendaClicked:NO];
+    {
+        self.agendaController = [[iWinViewAndAddViewController alloc] initWithNibName:@"iWinViewAndAddViewController" bundle:nil inEditMode:NO];
+    }
     else
-        [self.scheduleDelegate addAgendaClicked:YES];
+    {
+        self.agendaController = [[iWinViewAndAddViewController alloc] initWithNibName:@"iWinViewAndAddViewController" bundle:nil inEditMode:YES];
+    }
+    [self.agendaController setModalPresentationStyle:UIModalPresentationPageSheet];
+    [self.agendaController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+    
+    [self presentViewController:self.agendaController animated:YES completion:nil];
+    self.agendaController.view.superview.bounds = CGRectMake(0,0,768,1003);
 }
 
-- (IBAction)onAddAttendees
-{
-    [self.scheduleDelegate addAttenddesClicked:self.isEditing];
-}
+//- (IBAction)onAddAttendees
+//{
+//    [self.scheduleDelegate addAttenddesClicked:self.isEditing];
+//}
 
 - (IBAction)onViewMySchedule {
 }
@@ -140,37 +151,64 @@
 - (IBAction)onClickSave
 {
     //save the meeting
-    NSArray *keys = [NSArray arrayWithObjects:@"Title", @"ID", @"DateTime", @"Location", nil];
-    NSArray *objects = [NSArray arrayWithObjects:self.titleField.text, @"ID",self.startDateLabel.text,self.placeField.text,nil];
-    
-    NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-    NSData *jsonData;
-    NSString *jsonString;
-    
-    if ([NSJSONSerialization isValidJSONObject:jsonDictionary])
-    {
-        jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:nil];
-        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    }
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Meeting.php?method=createMeeting&user=%@", @"a"];
-    
-    NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
-    [urlRequest setHTTPMethod:@"POST"];
-    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [urlRequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-length"];
-    [urlRequest setHTTPBody:jsonData];
-    NSURLResponse * response = nil;
-    NSError * error = nil;
-    [NSURLConnection sendSynchronousRequest:urlRequest
-                          returningResponse:&response
-                                      error:&error];
-    [self.scheduleDelegate saveClicked];
+//    NSArray *keys = [NSArray arrayWithObjects:@"Title", @"ID", @"DateTime", @"Location", nil];
+//    NSArray *objects = [NSArray arrayWithObjects:self.titleField.text, @"ID",self.startDateLabel.text,self.placeField.text,nil];
+//    
+//    NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+//    NSData *jsonData;
+//    NSString *jsonString;
+//    
+//    if ([NSJSONSerialization isValidJSONObject:jsonDictionary])
+//    {
+//        jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:nil];
+//        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+//    }
+//    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Meeting.php?method=createMeeting&user=%@", @"a"];
+//    
+//    NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+//    [urlRequest setHTTPMethod:@"POST"];
+//    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+//    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+//    [urlRequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-length"];
+//    [urlRequest setHTTPBody:jsonData];
+//    NSURLResponse * response = nil;
+//    NSError * error = nil;
+//    [NSURLConnection sendSynchronousRequest:urlRequest
+//                          returningResponse:&response
+//                                      error:&error];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (IBAction)onClickSaveAndAddMore
 {
     //save it
+    
+//    NSArray *keys = [NSArray arrayWithObjects:@"Title", @"ID", @"DateTime", @"Location", nil];
+//    NSArray *objects = [NSArray arrayWithObjects:self.titleField.text, @"ID",self.startDateLabel.text,self.placeField.text,nil];
+//    
+//    NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+//    NSData *jsonData;
+//    NSString *jsonString;
+//    
+//    if ([NSJSONSerialization isValidJSONObject:jsonDictionary])
+//    {
+//        jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:nil];
+//        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+//    }
+//    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Meeting.php?method=createMeeting&user=%@", @"a"];
+//    
+//    NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+//    [urlRequest setHTTPMethod:@"POST"];
+//    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+//    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+//    [urlRequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-length"];
+//    [urlRequest setHTTPBody:jsonData];
+//    NSURLResponse * response = nil;
+//    NSError * error = nil;
+//    [NSURLConnection sendSynchronousRequest:urlRequest
+//                            returningResponse:&response
+//                                          error:&error];
+    
     self.headerLabel.text = @"Schedule a Meeting";
     self.titleField.text = @"";
     self.startDateLabel.text = @"";
@@ -182,7 +220,8 @@
 
 - (IBAction)onClickCancel
 {
-    [self.scheduleDelegate cancelClicked];
+    //[self.scheduleDelegate cancelClicked];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)startDateClicked

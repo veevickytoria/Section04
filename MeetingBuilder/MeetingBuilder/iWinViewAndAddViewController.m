@@ -7,12 +7,14 @@
 //
 
 #import "iWinViewAndAddViewController.h"
+#import "iWinAddUsersViewController.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface iWinViewAndAddViewController ()
 @property (nonatomic) NSMutableArray *itemList;
 @property (nonatomic) BOOL isEditing;
 @property (nonatomic) iWinAgendaItemViewController *agendaItemViewController;
+@property (strong, nonatomic) iWinAddUsersViewController *userViewController;
 @end
 
 @implementation iWinViewAndAddViewController
@@ -88,12 +90,12 @@
 - (IBAction)onClickSave
 {
     //save agenda
-    [self.agendaDelegate goToViewMeeting];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (IBAction)onClickCancel
 {
-    [self.agendaDelegate goToViewMeeting];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (IBAction)onClickAddItem
@@ -110,7 +112,13 @@
 
 - (IBAction)onClickAddAttendees
 {
-    [self.agendaDelegate addAttendeesForAgenda:self.isEditing];
+    
+    self.userViewController = [[iWinAddUsersViewController alloc] initWithNibName:@"iWinAddUsersViewController" bundle:nil withPageName:@"Meeting" inEditMode:self.isEditing];
+    [self.userViewController setModalPresentationStyle:UIModalPresentationPageSheet];
+    [self.userViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+    
+    [self presentViewController:self.userViewController animated:YES completion:nil];
+    self.userViewController.view.superview.bounds = CGRectMake(0,0,768,1003);
 }
 
 -(void)saveItem:(NSString *)name
