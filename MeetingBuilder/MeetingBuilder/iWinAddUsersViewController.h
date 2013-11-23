@@ -8,12 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@protocol UserDelegate <NSObject>
-
--(void) returnToPreviousView:(NSString *)pageName inEditMode:(BOOL)isEditing;
-
-@end
-
 @interface iWinAddUsersViewController : UIViewController
 @property (weak, nonatomic) IBOutlet UITableView *userListTableView;
 @property (weak, nonatomic) IBOutlet UITextField *emailField;
@@ -24,5 +18,4 @@
 @property (weak, nonatomic) IBOutlet UIButton *cancelButton;
 @property (weak, nonatomic) IBOutlet UIButton *saveButton;
 @property (weak, nonatomic) IBOutlet UIButton *sendInviteButton;
-@property (nonatomic) id<UserDelegate> userDelegate;
 @end

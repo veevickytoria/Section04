@@ -7,11 +7,13 @@
 //
 
 #import "iWinTaskListViewController.h"
+#import "iWinAddAndViewTaskViewController.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface iWinTaskListViewController ()
 @property (strong, nonatomic) NSMutableArray *itemList;
 @property (strong, nonatomic) NSMutableArray *itemDetail;
+@property (strong, nonatomic) iWinAddAndViewTaskViewController *addViewTaskViewController;
 @end
 
 @implementation iWinTaskListViewController
@@ -53,7 +55,13 @@
 
 - (IBAction)onClickCreateNewTask
 {
-    [self.taskListDelegate createNewTaskClicked:NO];
+    //[self.taskListDelegate createNewTaskClicked:NO];
+    self.addViewTaskViewController = [[iWinAddAndViewTaskViewController alloc] initWithNibName:@"iWinAddAndViewTaskViewController" bundle:nil inEditMode:NO];
+    [self.addViewTaskViewController setModalPresentationStyle:UIModalPresentationPageSheet];
+    [self.addViewTaskViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+    
+    [self presentViewController:self.addViewTaskViewController animated:YES completion:nil];
+    self.addViewTaskViewController.view.superview.bounds = CGRectMake(0,0,768,1003);
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -81,6 +89,11 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self.taskListDelegate createNewTaskClicked:YES];
+    self.addViewTaskViewController = [[iWinAddAndViewTaskViewController alloc] initWithNibName:@"iWinAddAndViewTaskViewController" bundle:nil inEditMode:YES];
+    [self.addViewTaskViewController setModalPresentationStyle:UIModalPresentationPageSheet];
+    [self.addViewTaskViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+    
+    [self presentViewController:self.addViewTaskViewController animated:YES completion:nil];
+    self.addViewTaskViewController.view.superview.bounds = CGRectMake(0,0,768,1003);
 }
 @end

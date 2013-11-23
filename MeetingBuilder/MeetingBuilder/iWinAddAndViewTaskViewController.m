@@ -7,10 +7,12 @@
 //
 
 #import "iWinAddAndViewTaskViewController.h"
+#import "iWinAddUsersViewController.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface iWinAddAndViewTaskViewController ()
 @property (nonatomic) BOOL isEditing;
+@property (strong, nonatomic) iWinAddUsersViewController *userViewController;
 @end
 
 @implementation iWinAddAndViewTaskViewController
@@ -27,7 +29,12 @@
 
 - (IBAction)onClickAddAssignees
 {
-    [self.taskDelegate addAssigneesForTask:self.isEditing];
+    self.userViewController = [[iWinAddUsersViewController alloc] initWithNibName:@"iWinAddUsersViewController" bundle:nil withPageName:@"Meeting" inEditMode:self.isEditing];
+    [self.userViewController setModalPresentationStyle:UIModalPresentationPageSheet];
+    [self.userViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+    
+    [self presentViewController:self.userViewController animated:YES completion:nil];
+    self.userViewController.view.superview.bounds = CGRectMake(0,0,768,1003);
 }
 
 - (void)viewDidLoad
@@ -59,21 +66,15 @@
     button.layer.borderWidth = 1.0f;
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 - (IBAction)onClickCancel
 {
-    [self.taskDelegate goToTaskList];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (IBAction)onClickSave
 {
     //save task
-    [self.taskDelegate goToTaskList];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (IBAction)onClickSaveAndAddMore

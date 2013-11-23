@@ -8,6 +8,7 @@
 
 #import "iWinScheduleViewMeetingViewController.h"
 #import "iWinViewAndAddViewController.h"
+#import "iWinAddUsersViewController.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface iWinScheduleViewMeetingViewController ()
@@ -22,6 +23,7 @@
 @property (strong, nonatomic) UIPopoverController *popOverController;
 @property (strong, nonatomic) OCCalendarViewController* ocCalVC;
 @property (strong, nonatomic) iWinViewAndAddViewController *agendaController;
+@property (strong, nonatomic) iWinAddUsersViewController *userViewController;
 @end
 
 @implementation iWinScheduleViewMeetingViewController
@@ -140,10 +142,15 @@
     self.agendaController.view.superview.bounds = CGRectMake(0,0,768,1003);
 }
 
-//- (IBAction)onAddAttendees
-//{
-//    [self.scheduleDelegate addAttenddesClicked:self.isEditing];
-//}
+- (IBAction)onAddAttendees
+{
+    self.userViewController = [[iWinAddUsersViewController alloc] initWithNibName:@"iWinAddUsersViewController" bundle:nil withPageName:@"Meeting" inEditMode:self.isEditing];
+    [self.userViewController setModalPresentationStyle:UIModalPresentationPageSheet];
+    [self.userViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+    
+    [self presentViewController:self.userViewController animated:YES completion:nil];
+    self.userViewController.view.superview.bounds = CGRectMake(0,0,768,1003);
+}
 
 - (IBAction)onViewMySchedule {
 }

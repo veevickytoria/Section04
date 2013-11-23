@@ -49,12 +49,14 @@
 - (IBAction)onClickSave
 {
     //save
-    [self.userDelegate returnToPreviousView:self.pageName inEditMode:self.isEditing];
+    //[self.userDelegate returnToPreviousView:self.pageName inEditMode:self.isEditing];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (IBAction)onClickCancel
 {
-    [self.userDelegate returnToPreviousView:self.pageName inEditMode:self.isEditing];
+    //[self.userDelegate returnToPreviousView:self.pageName inEditMode:self.isEditing];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(void) updateButtonUI:(UIButton *)button

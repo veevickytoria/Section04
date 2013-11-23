@@ -15,11 +15,7 @@
 @property (strong, nonatomic) iWinRegisterViewController *registerViewController;
 @property (strong, nonatomic) iWinMeetingViewController *meetingListViewController;
 @property (strong, nonatomic) iWinHomeScreenViewController *homeScreenViewController;
-@property (strong, nonatomic) iWinScheduleViewMeetingViewController *scheduleMeetingViewController;
-@property (strong, nonatomic) iWinAddAndViewTaskViewController *addViewTaskViewController;
 @property (strong, nonatomic) iWinTaskListViewController *taskListViewController;
-@property (strong, nonatomic) iWinViewAndAddViewController *agendaController;
-@property (strong, nonatomic) iWinAddUsersViewController *userViewController;
 @property (strong, nonatomic) iWinNoteListViewController *noteViewController;
 @property (strong, nonatomic) iWinViewAndAddNotesViewController *viewAddNoteViewController;
 @property (strong, nonatomic) iWinViewAndChangeSettingsViewController *settingsViewController;
@@ -284,7 +280,6 @@
     self.taskListViewController = [[iWinTaskListViewController alloc] initWithNibName:@"iWinTaskListViewController" bundle:nil];
     [self.mainView  addSubview:self.taskListViewController.view];
     [self.taskListViewController.view setBounds:self.mainView.bounds];
-    self.taskListViewController.taskListDelegate = self;
     [self resetSliding];
 }
 
@@ -393,64 +388,9 @@
 }
 
 
-//
-//-(void)addAttenddesClicked:(BOOL)isEditing
-//{
-//    //meeting
-//    self.userViewController = [[iWinAddUsersViewController alloc] initWithNibName:@"iWinAddUsersViewController" bundle:nil withPageName:@"Meeting" inEditMode:isEditing];
-//    [self.mainView  addSubview:self.userViewController.view];
-//    [self.userViewController.view setBounds:self.mainView.bounds];
-//    self.userViewController.userDelegate = self;
-//    [self resetSliding];
-//}
-//
-//-(void) addAttendeesForAgenda:(BOOL)isEditing
-//{
-//    //agenda
-//    self.userViewController = [[iWinAddUsersViewController alloc] initWithNibName:@"iWinAddUsersViewController" bundle:nil withPageName:@"Agenda" inEditMode:isEditing];
-//    [self.mainView  addSubview:self.userViewController.view];
-//    [self.userViewController.view setBounds:self.mainView.bounds];
-//    self.userViewController.userDelegate = self;
-//    [self resetSliding];
-//}
-
--(void) addAssigneesForTask:(BOOL)isEditing
-{
-    //task
-    self.userViewController = [[iWinAddUsersViewController alloc] initWithNibName:@"iWinAddUsersViewController" bundle:nil withPageName:@"Task" inEditMode:isEditing];
-    [self.mainView  addSubview:self.userViewController.view];
-    [self.userViewController.view setBounds:self.mainView.bounds];
-    self.userViewController.userDelegate = self;
-    [self resetSliding];
-}
-
--(void) returnToPreviousView:(NSString *)pageName inEditMode:(BOOL)isEditing
-{
-    if ([pageName isEqualToString:@"Agenda"])
-    {
-        //[self addAgendaClicked:isEditing];
-    }
-    else
-    {
-        [self createNewTaskClicked:isEditing];
-    }
-}
-
 -(void)viewScheduleClicked
 {
     
-}
-
--(void) createNewTaskClicked:(BOOL)isEditing
-{
-    [self removeSubViews];
-    [self enableSliding];
-    [self animateSlidingMenu:NO];
-    [self resetSliding];
-    self.addViewTaskViewController = [[iWinAddAndViewTaskViewController alloc] initWithNibName:@"iWinAddAndViewTaskViewController" bundle:nil inEditMode:isEditing];
-    [self.mainView  addSubview:self.addViewTaskViewController.view];
-    [self.addViewTaskViewController.view setBounds:self.mainView.bounds];
-    self.addViewTaskViewController.taskDelegate = self;
 }
 
 -(void) goToTaskList
