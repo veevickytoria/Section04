@@ -15,12 +15,17 @@
 #import "iWinViewAndAddNotesViewController.h"
 #import "iWinViewAndChangeSettingsViewController.h"
 #import "iWinViewProfileViewController.h"
+#import <OpenEars/LanguageModelGenerator.h>
+#import <OpenEars/PocketsphinxController.h>
+#import <OpenEars/FliteController.h>
+#import <OpenEars/OpenEarsLogging.h>
+#import <OpenEars/AcousticModel.h>
 
-@interface iWinMainViewController : UIViewController <iWinLoginDelegate, iWinRegisterVCDelegate, NoteListDelegate, ViewAddNoteDelegate,
-    SettingsDelegate, ProfileDelegate>
+@interface iWinMainViewController : UIViewController <iWinLoginDelegate, iWinRegisterVCDelegate, NoteListDelegate, ViewAddNoteDelegate, OpenEarsEventsObserverDelegate,    SettingsDelegate, ProfileDelegate>
 @property (weak, nonatomic) IBOutlet UIView *mainView;
 @property (weak, nonatomic) IBOutlet UIView *slideView;
 @property (weak, nonatomic) IBOutlet UIView *menuView;
+@property (weak, nonatomic) IBOutlet UIButton *voiceCommand;
 
 - (IBAction)onClickMenu;
 - (IBAction)onClickHome;
@@ -31,6 +36,8 @@
 - (IBAction)onClickSettings;
 - (IBAction)onClickProfile;
 - (IBAction)onClickSchedule;
+
+- (IBAction)startListening:(id)sender;
 
 @property (weak, nonatomic) IBOutlet UIButton *scheduleButton;
 @property (weak, nonatomic) IBOutlet UIView *rightSlideView;

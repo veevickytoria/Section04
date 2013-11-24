@@ -8,6 +8,7 @@
 
 #import "iWinHomeScreenViewController.h"
 
+
 @interface iWinHomeScreenViewController ()
 @property (nonatomic) NSMutableArray *headers;
 @property (nonatomic) NSMutableArray *taskFeed;
@@ -26,10 +27,12 @@
     return self;
 }
 
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    
     self.headers = [[NSMutableArray alloc] init];
     self.taskFeed = [[NSMutableArray alloc] init];
     self.notificationFeed = [[NSMutableArray alloc] init];
@@ -44,7 +47,11 @@
     [self.meetingFeed addObject:@"Steve has assigned you Research Libraries"];
     [self.meetingFeed addObject:@"Due: 12:00, 10/26/13"];
     [self.notificationFeed addObject:@"Mary shared Meeting Minutes 9/21/13"];
+    
+    
 }
+
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -54,11 +61,8 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
-//    if (cell == nil)
-//    {
+
       UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"Cell"];
-//    }
     
     
         if (indexPath.section == 0)
@@ -104,5 +108,6 @@
 {
     return [self.headers objectAtIndex:section];
 }
+
 
 @end

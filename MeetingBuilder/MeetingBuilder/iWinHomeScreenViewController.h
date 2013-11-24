@@ -8,7 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface iWinHomeScreenViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+
 @property (weak, nonatomic) IBOutlet UITableView *feedTable;
 
 @end
