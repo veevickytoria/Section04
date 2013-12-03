@@ -10,6 +10,7 @@
 #import "iWinHomeScreenViewController.h"
 #import <QuartzCore/QuartzCore.h>
 
+
 @interface iWinMainViewController ()
 @property (strong, nonatomic) iWinLoginViewController *loginViewController;
 @property (strong, nonatomic) iWinRegisterViewController *registerViewController;
@@ -20,11 +21,8 @@
 @property (strong, nonatomic) iWinViewAndAddNotesViewController *viewAddNoteViewController;
 @property (strong, nonatomic) iWinViewAndChangeSettingsViewController *settingsViewController;
 @property (strong, nonatomic) iWinViewProfileViewController *profileViewController;
-@property (nonatomic) NSString *lmPath;
-@property (nonatomic) NSString *dicPath;
-@property (nonatomic) LanguageModelGenerator *lmGenerator;
-@property (strong, nonatomic) PocketsphinxController *pocketsphinxController;
-@property (strong, nonatomic) OpenEarsEventsObserver *openEarsEventsObserver;@property (strong, nonatomic) NSString *user;
+@property (strong, nonatomic) iWinOpenEarsModel *openEars;
+@property (strong, nonatomic) NSString *user;
 @property BOOL movedRightView;
 @property BOOL movedView;
 @property (nonatomic) UISwipeGestureRecognizer * swiperight;
@@ -95,31 +93,9 @@
     self.scheduleButton.layer.borderColor = [[UIColor darkGrayColor] CGColor];
     self.scheduleButton.layer.borderWidth = 1.0f;
     
-    self.pocketsphinxController = [[PocketsphinxController alloc] init];
-    self.openEarsEventsObserver = [[OpenEarsEventsObserver alloc] init];
-    self.lmGenerator = [[LanguageModelGenerator alloc] init];
-    
-    NSArray *words = [NSArray arrayWithObjects:@"GO", @"MEETINGS", @"TASK", @"TO", nil];
-    NSString *name = @"NameIWantForMyLanguageModelFiles";
-    NSError *err = [self.lmGenerator generateLanguageModelFromArray:words withFilesNamed:name forAcousticModelAtPath:[AcousticModel pathToModel:@"AcousticModelEnglish"]];
-    
-    NSDictionary *languageGeneratorResults = nil;
-    self.lmPath = nil;
-    self.dicPath = nil;
-	
-    if([err code] == noErr) {
-        
-        languageGeneratorResults = [err userInfo];
-		
-        self.lmPath = [languageGeneratorResults objectForKey:@"LMPath"];
-        self.dicPath = [languageGeneratorResults objectForKey:@"DictionaryPath"];
-		
-    } else {
-        NSLog(@"Error: %@",[err localizedDescription]);
-    }
-    
-    [self.openEarsEventsObserver setDelegate:self];
-    
+    self.openEars = [[iWinOpenEarsModel alloc] init];
+    self.openEars.openEarsDelegate = self;
+    [self.openEars initialize];
 }
 
 - (void)didReceiveMemoryWarning
@@ -152,6 +128,7 @@
     [self.homeScreenViewController.view setBounds:self.mainView.bounds];
     
     [self updateSelectedMenu:self.homeButton];
+    self.openEars.openEarsDelegate = self;
 }
 
 -(void)swipeleft:(UISwipeGestureRecognizer*)gestureRecognizer
@@ -434,13 +411,8 @@
     
 }
 
--(void)recognizeSpeech
+-(void)speechToText:(NSString *)hypothesis
 {
-    [self.pocketsphinxController startListeningWithLanguageModelAtPath:self.lmPath dictionaryAtPath:self.dicPath acousticModelAtPath:[AcousticModel pathToModel:@"AcousticModelEnglish"] languageModelIsJSGF:NO];
-}
-- (void) pocketsphinxDidReceiveHypothesis:(NSString *)hypothesis recognitionScore:(NSString *)recognitionScore utteranceID:(NSString *)utteranceID {
-    NSLog(@"The received hypothesis is %@ with a score of %@ and an ID of %@", hypothesis, recognitionScore, utteranceID);
-    [self.pocketsphinxController stopListening];
     if (([hypothesis rangeOfString:@"GO"].location != NSNotFound) && ([hypothesis rangeOfString:@"MEETINGS"].location != NSNotFound))
     {
         [self onClickMeetings];
@@ -452,56 +424,24 @@
     [self.voiceCommand setTitle:@"Voice Command" forState:UIControlStateNormal];
 }
 
-- (void) pocketsphinxDidStartCalibration {
-	NSLog(@"Pocketsphinx calibration has started.");
-    [self.voiceCommand setTitle:@"Wait..." forState:UIControlStateNormal];
+-(void) detecting
+{
+    [self.voiceCommand setTitle:@"Detecting" forState:UIControlStateNormal];
 }
 
-- (void) pocketsphinxDidCompleteCalibration {
-	NSLog(@"Pocketsphinx calibration is complete.");
-    [self.voiceCommand setTitle:@"Wait..." forState:UIControlStateNormal];
-}
-
-- (void) pocketsphinxDidStartListening {
-	NSLog(@"Pocketsphinx is now listening.");
+-(void) speakNow
+{
     [self.voiceCommand setTitle:@"Speak Now" forState:UIControlStateNormal];
 }
 
-- (void) pocketsphinxDidDetectSpeech {
-	NSLog(@"Pocketsphinx has detected speech.");
-    [self.voiceCommand setTitle:@"Detecting..." forState:UIControlStateNormal];
+-(void) loading
+{
+    [self.voiceCommand setTitle:@"Wait..." forState:UIControlStateNormal];
 }
 
-- (void) pocketsphinxDidDetectFinishedSpeech {
-	NSLog(@"Pocketsphinx has detected a period of silence, concluding an utterance.");
-    [self.voiceCommand setTitle:@"Detecting..." forState:UIControlStateNormal];
-}
-
-- (void) pocketsphinxDidStopListening {
-	NSLog(@"Pocketsphinx has stopped listening.");
-}
-
-- (void) pocketsphinxDidSuspendRecognition {
-	NSLog(@"Pocketsphinx has suspended recognition.");
-}
-
-- (void) pocketsphinxDidResumeRecognition {
-	NSLog(@"Pocketsphinx has resumed recognition.");
-}
-
-- (void) pocketsphinxDidChangeLanguageModelToFile:(NSString *)newLanguageModelPathAsString andDictionary:(NSString *)newDictionaryPathAsString {
-	NSLog(@"Pocketsphinx is now using the following language model: \n%@ and the following dictionary: %@",newLanguageModelPathAsString,newDictionaryPathAsString);
-}
-
-- (void) pocketSphinxContinuousSetupDidFail { // This can let you know that something went wrong with the recognition loop startup. Turn on OPENEARSLOGGING to learn why.
-	NSLog(@"Setting up the continuous recognition loop has failed for some reason, please turn on OpenEarsLogging to learn more.");
-}
-- (void) testRecognitionCompleted {
-	NSLog(@"A test file that was submitted for recognition is now complete.");
-}
-
-- (IBAction)startListening:(id)sender {
-    [self recognizeSpeech];
+- (IBAction)startListening:(id)sender
+{
+    [self.openEars startListening];
 }
 
 @end

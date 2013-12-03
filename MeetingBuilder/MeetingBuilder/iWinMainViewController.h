@@ -15,13 +15,9 @@
 #import "iWinViewAndAddNotesViewController.h"
 #import "iWinViewAndChangeSettingsViewController.h"
 #import "iWinViewProfileViewController.h"
-#import <OpenEars/LanguageModelGenerator.h>
-#import <OpenEars/PocketsphinxController.h>
-#import <OpenEars/FliteController.h>
-#import <OpenEars/OpenEarsLogging.h>
-#import <OpenEars/AcousticModel.h>
+#import "iWinOpenEarsModel.h"
 
-@interface iWinMainViewController : UIViewController <iWinLoginDelegate, iWinRegisterVCDelegate, NoteListDelegate, ViewAddNoteDelegate, OpenEarsEventsObserverDelegate,    SettingsDelegate, ProfileDelegate>
+@interface iWinMainViewController : UIViewController <iWinLoginDelegate, iWinRegisterVCDelegate, NoteListDelegate, ViewAddNoteDelegate, SettingsDelegate, ProfileDelegate, OpenEarsDelegate>
 @property (weak, nonatomic) IBOutlet UIView *mainView;
 @property (weak, nonatomic) IBOutlet UIView *slideView;
 @property (weak, nonatomic) IBOutlet UIView *menuView;

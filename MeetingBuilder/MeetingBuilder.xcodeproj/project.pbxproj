@@ -48,6 +48,8 @@
 		0A97EDB218416C4E00160B5A /* AcousticModelSpanish.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A97EDAE18416C4E00160B5A /* AcousticModelSpanish.bundle */; };
 		0A97EDB318416C4E00160B5A /* OpenEars.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A97EDAF18416C4E00160B5A /* OpenEars.framework */; };
 		0A97EDB418416C4E00160B5A /* Slt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A97EDB018416C4E00160B5A /* Slt.framework */; };
+		0A98862A184D981C00AA3D1A /* Dictionary.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0A988629184D981C00AA3D1A /* Dictionary.txt */; };
+		0AAC9E951846FE6F0073260F /* iWinOpenEarsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAC9E941846FE6F0073260F /* iWinOpenEarsModel.m */; };
 		0ACE339A17FCF5F8003B9C0A /* iWinMeetingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ACE339817FCF5F8003B9C0A /* iWinMeetingViewController.m */; };
 		0ACE339B17FCF5F8003B9C0A /* iWinMeetingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0ACE339917FCF5F8003B9C0A /* iWinMeetingViewController.xib */; };
 		0ACE33AF17FD244B003B9C0A /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ACE33AE17FD244B003B9C0A /* CFNetwork.framework */; };
@@ -127,6 +129,9 @@
 		0A97EDAE18416C4E00160B5A /* AcousticModelSpanish.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AcousticModelSpanish.bundle; sourceTree = "<group>"; };
 		0A97EDAF18416C4E00160B5A /* OpenEars.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = OpenEars.framework; sourceTree = "<group>"; };
 		0A97EDB018416C4E00160B5A /* Slt.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Slt.framework; sourceTree = "<group>"; };
+		0A988629184D981C00AA3D1A /* Dictionary.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Dictionary.txt; path = MeetingBuilder/DictionaryFile/Dictionary.txt; sourceTree = "<group>"; };
+		0AAC9E931846FE6F0073260F /* iWinOpenEarsModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinOpenEarsModel.h; sourceTree = "<group>"; };
+		0AAC9E941846FE6F0073260F /* iWinOpenEarsModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinOpenEarsModel.m; sourceTree = "<group>"; };
 		0ACE339717FCF5F8003B9C0A /* iWinMeetingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinMeetingViewController.h; sourceTree = "<group>"; };
 		0ACE339817FCF5F8003B9C0A /* iWinMeetingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinMeetingViewController.m; sourceTree = "<group>"; };
 		0ACE339917FCF5F8003B9C0A /* iWinMeetingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iWinMeetingViewController.xib; sourceTree = "<group>"; };
@@ -178,6 +183,7 @@
 		0A04454D17F3825C000FF2A0 = {
 			isa = PBXGroup;
 			children = (
+				0A988629184D981C00AA3D1A /* Dictionary.txt */,
 				0A97EDAC18416C4E00160B5A /* Framework */,
 				0A04456117F3825D000FF2A0 /* MeetingBuilder */,
 				0A04455817F3825C000FF2A0 /* Frameworks */,
@@ -214,6 +220,7 @@
 		0A04456117F3825D000FF2A0 /* MeetingBuilder */ = {
 			isa = PBXGroup;
 			children = (
+				0AAC9E921846FE2B0073260F /* OpenEars */,
 				0A91DC911835D7AB00741349 /* OCCalendar */,
 				7941FDD0182A0D8E00AAA92E /* ViewProfile */,
 				7941FDC41828834A00AAA92E /* ViewAndChangeSettings */,
@@ -399,6 +406,15 @@
 			path = ../../../../Downloads/OpenEarsDistribution/Framework;
 			sourceTree = "<group>";
 		};
+		0AAC9E921846FE2B0073260F /* OpenEars */ = {
+			isa = PBXGroup;
+			children = (
+				0AAC9E931846FE6F0073260F /* iWinOpenEarsModel.h */,
+				0AAC9E941846FE6F0073260F /* iWinOpenEarsModel.m */,
+			);
+			name = OpenEars;
+			sourceTree = "<group>";
+		};
 		7941FDB618278A7800AAA92E /* MergeNote */ = {
 			isa = PBXGroup;
 			children = (
@@ -516,6 +532,7 @@
 				0ACE339B17FCF5F8003B9C0A /* iWinMeetingViewController.xib in Resources */,
 				0A1A7297181A1802009A49E5 /* iWinAgendaItemViewController.xib in Resources */,
 				0A1A72A9181A2C5E009A49E5 /* iWinAddUsersViewController.xib in Resources */,
+				0A98862A184D981C00AA3D1A /* Dictionary.txt in Resources */,
 				0A1A72911819FE48009A49E5 /* iWinViewAndAddViewController.xib in Resources */,
 				0A97EDB218416C4E00160B5A /* AcousticModelSpanish.bundle in Resources */,
 				0A7E516617FBEBA200A4B8B7 /* iWinRegisterViewController.xib in Resources */,
@@ -549,6 +566,7 @@
 				79D513CA181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.m in Sources */,
 				0A7E516017FBEB9200A4B8B7 /* iWinLoginViewController.m in Sources */,
 				0A1A729E181A22AB009A49E5 /* iWinTaskListViewController.m in Sources */,
+				0AAC9E951846FE6F0073260F /* iWinOpenEarsModel.m in Sources */,
 				7941FDC81828843500AAA92E /* iWinViewAndChangeSettingsViewController.m in Sources */,
 				0A91DC9D1835D7AB00741349 /* OCDaysView.m in Sources */,
 				0A04456817F3825D000FF2A0 /* main.m in Sources */,
