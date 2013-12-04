@@ -1,51 +1,53 @@
-<project name="neo4j.php"
-    description="Neo4j REST client for PHP." 
-    default="test" 
-    basedir=".">
-    
-    <!-- Properties are variables for this build file. -->
-    <property name="package"  value="${phing.project.name}" override="true" />
-    <property name="builddir" value="." override="true" />
-    <property name="srcdir"   value="${project.basedir}" override="true" />
-    
-    <target name="test"
-        description="Run all PHPUnit tests.">
-        <phpunit haltonfailure="true" haltonerror="true">
-            <formatter type="plain" usefile="false"/>
-            <batchtest>
-                <fileset dir="tests">
-                    <include name="*Test.php"/>
-                </fileset>
-            </batchtest>
-        </phpunit>
-    </target>
-    
-    <target name="docs" 
-        description="Generate API documentation in docs/, using phpdoc.">
-        <phpdoc 
-            title="NeoRest API documentation" 
-            destdir="docs" 
-            output="HTML:frames:earthli"
-            sourcecode="true"
-            parseprivate="true"
-            javadocdesc="false"
-            quiet="true"
-            defaultpackagename="NeoRest"
-            packageoutput="NeoRest"
-            pear="false">
-            <fileset dir="tutorials">
-              <include name="NeoRest/**" />
-            </fileset>
-            <fileset dir=".">
-                <include name="Neo4j/*.php" />
-                <include name="Neo4j.php" />
-            </fileset>
-            <projdocfileset dir=".">
-                <include name="README.md" />
-                <include name="examples/demo.php" />
-            </projdocfileset>
-        </phpdoc>
-    </target>
-    
-    
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Neo4jPHP" default="test">
+	<taskdef name="neo4jphpversion" classname="Neo4jPhpVersionTask" />
+
+	<!-- Target: test -->
+	<target name="test">
+		<phpunit bootstrap="tests/bootstrap.php">
+			<formatter type="summary" usefile="false" />
+			<batchtest>
+				<fileset dir="tests">
+					<include name="**/*Test.php" />
+				</fileset>
+			</batchtest>
+		</phpunit>
+	</target>
+
+	<!-- Target: build -->
+	<target name="build">
+		<delete dir="./build" />
+		<mkdir dir="./build" />
+		<copy todir="./build">
+			<fileset dir=".">
+				<include name="README.md" />
+				<include name="LICENSE" />
+				<include name="lib/" />
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- Target: package -->
+	<target name="package" depends="build">
+		<neo4jphpversion property="version" />
+		<delete file="./neo4jphp.phar" />
+		<pharpackage
+			destfile="./neo4jphp.phar"
+			basedir="./build"
+			compression="none"
+			stub="./stub.php"
+			signature="sha1">
+			<fileset dir="./build">
+				<include name="**/**" />
+			</fileset>
+			<metadata>
+				<element name="version" value="${version}" />
+				<element name="authors">
+					<element name="Josh Adell">
+						<element name="email" value="josh.adell@gmail.com" />
+					</element>
+				</element>
+			</metadata>
+		</pharpackage>
+	</target>
 </project>

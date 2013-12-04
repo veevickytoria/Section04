@@ -11,7 +11,8 @@ WebApp::Application.routes.draw do
   # Example of named route that can be invoked with purchase_url(id: product.id)
   #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
 
-  # Example resource route (maps HTTP verbs to controller actions automatically):
+  # Example resource route (maps#gem 'sass-rails', '~> 4.0.0'
+  # HTTP verbs to controller actions automatically):
   #   resources :products
 
   # Example resource route with options:
@@ -44,7 +45,8 @@ WebApp::Application.routes.draw do
   #   concern :toggleable do
   #     post 'toggle'
   #   end
-  #   resources :posts, concerns: :toggleable
+  #   resources :posts, concerns:#gem 'sass-rails', '~> 4.0.0'
+ :toggleable
   #   resources :photos, concerns: :toggleable
 
   # Example resource route within a namespace:
@@ -55,6 +57,14 @@ WebApp::Application.routes.draw do
   #   end
 
   get "home_page/index"
+  get "login/index"
+  get "preferences/home"
+
+  get "groups/index"
+  get "groups/new"
+	get "profile/index"
+  get "create_task/index"
+  get "view_task/index"
 
   root :to => 'home_page#index'
 

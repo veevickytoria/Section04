@@ -2,205 +2,111 @@
 /**
  * Include the API PHP file for neo4j
  */
-require_once 'Neo4j.php';
+namespace Everyman\Neo4j;
+require("phar://neo4jphp.phar");
+
 
 /**
  *	Create a graphDb connection 
  */
-$graphDb = new GraphDatabaseService('http://localhost:7474/');
+$client= new Client();
 
-/**
- * Deliver HTTP Response
- * @param string $format The desired HTTP response content type: [json, html, xml]
- * @param string $api_response The desired HTTP response data
- * @return void
- **/
-function deliver_response($api_response){
-    // Define HTTP responses
-    $http_response_code = array(
-        200 => 'OK',
-        400 => 'Bad Request',
-        401 => 'Unauthorized',
-        403 => 'Forbidden',
-        404 => 'Not Found'
-    );
- 
-    // Set HTTP Response
-    header('HTTP/1.1 '.$api_response['status'].' '.$http_response_code[ $api_response['status'] ]);
-	// Set HTTP Response Content Type
-        header('Content-Type: application/json; charset=utf-8');
- 
-        // Format data into a JSON response
-        $json_response = json_encode($api_response);
- 
-        // Deliver formatted data
-        //echo $json_response;
- /*
-    // Process different content types
-    if( strcasecmp($format,'json') == 0 ){
- 
-        // Set HTTP Response Content Type
-        header('Content-Type: application/json; charset=utf-8');
- 
-        // Format data into a JSON response
-        $json_response = json_encode($api_response);
- 
-        // Deliver formatted data
-        echo $json_response;
- 
-    }elseif( strcasecmp($format,'xml') == 0 ){
- 
-        // Set HTTP Response Content Type
-        header('Content-Type: application/xml; charset=utf-8');
- 
-        // Format data into an XML response (This is only good at handling string data, not arrays)
-        $xml_response = '<?xml version="1.0" encoding="UTF-8"?>'."\n".
-            '<response>'."\n".
-            "\t".'<code>'.$api_response['code'].'</code>'."\n".
-            "\t".'<data>'.$api_response['data'].'</data>'."\n".
-            '</response>';
- 
-        // Deliver formatted data
-        echo $xml_response;
- 
-    }else{
- 
-        // Set HTTP Response Content Type (This is only good at handling string data, not arrays)
-        header('Content-Type: text/html; charset=utf-8');
- 
-        // Deliver formatted data
-        echo $api_response['data'];
- 
-    }
- */
-    // End script process
-    exit;
- 
-}
- 
-//// Define whether an HTTPS connection is required
-// $HTTPS_required = FALSE;
- 
-//// Define whether user authentication is required
-// $authentication_required = FALSE;
- 
-// Define API response codes and their related HTTP response
-$api_response_code = array(
-    0 => array('HTTP Response' => 400, 'Message' => 'Unknown Error'),
-    1 => array('HTTP Response' => 200, 'Message' => 'Success'),
-    2 => array('HTTP Response' => 403, 'Message' => 'HTTPS Required'),
-    3 => array('HTTP Response' => 401, 'Message' => 'Authentication Required'),
-    4 => array('HTTP Response' => 401, 'Message' => 'Authentication Failed'),
-    5 => array('HTTP Response' => 404, 'Message' => 'Invalid Request'),
-    6 => array('HTTP Response' => 400, 'Message' => 'Invalid Response Format')
-);
- 
-// Set default HTTP response of 'ok'
-$response['code'] = 0;
-$response['status'] = 404;
-$response['data'] = NULL;
-// echo "</br>response: " .print_r($response) . "</br>";
-// --- Step 2: Authorization
-/* 
-// Optionally require connections to be made via HTTPS
-if( $HTTPS_required && $_SERVER['HTTPS'] != 'on' ){
-    $response['code'] = 2;
-    $response['status'] = $api_response_code[ $response['code'] ]['HTTP Response'];
-    $response['data'] = $api_response_code[ $response['code'] ]['Message'];
- 
-    // Return Response to browser. This will exit the script.
-    deliver_response($_GET['format'], $response);
-}
- 
-// Optionally require user authentication
-if( $authentication_required ){
- 
-    if( empty($_POST['username']) || empty($_POST['password']) ){
-        $response['code'] = 3;
-        $response['status'] = $api_response_code[ $response['code'] ]['HTTP Response'];
-        $response['data'] = $api_response_code[ $response['code'] ]['Message'];
-    }
- 
-    // Return an error response if user fails authentication. This is a very simplistic example
-    // that should be modified for security in a production environment
-    elseif( $_POST['username'] != 'foo' && $_POST['password'] != 'bar' ){
-        $response['code'] = 4;
-        $response['status'] = $api_response_code[ $response['code'] ]['HTTP Response'];
-        $response['data'] = $api_response_code[ $response['code'] ]['Message'];
-    }
- 
-}
-*/
-
-
-// --- Step 3: Process Request
- 
-// Method A: Say Hello to the API
+	//get the index
+	$userIndex = new Index\NodeIndex($client, 'Users');
+	$userIndex->save();
+	
 if( strcasecmp($_GET['method'],'login') == 0){
-    $response['code'] = 1;
-    $response['status'] = $api_response_code[ $response['code'] ]['HTTP Response'];
-    $response['data'] = 'Logged in'; 
-	
-	$index= new IndexService($graphDb);
-
-	$nodes= $index->getNodes("Userss", "name", $_GET['user'] );
-	if(sizeof($nodes) >0){
-		echo "TRUE";
+	$user=$userIndex->findOne('user',$_GET['user']);
+    
+	if (sizeof($user)!=0){
+		print "TRUE";
 	}else{
-		echo "FALSE invalid login";
-	}
-	// foreach($nodes as $node){
-		// echo "Node : " . $node->username; 
-	// }
-	
-
-}else if(strcasecmp($_GET['method'], 'register') ==0){
+		print "FALSE";
+	}	
+}else if( strcasecmp($_GET['method'],'register') == 0){
+	//get the json string post content
 	$postContent = json_decode(@file_get_contents('php://input'));
-	$debugStr= "  postContent: " . "user-".$postContent->user . "    pass-". $postContent->pass; //gets the username from json content
 	
-	$response['code'] = 1;
-    $response['status'] = $api_response_code[ $response['code'] ]['HTTP Response'];
-    $response['data'] = 'registering-------  ' . $debugStr; 
+	//create the node
+	$userNode= $client->makeNode();
 	
-	//echo "user----".$postContent->user;
-	//$indexService= new IndexService($graphDb);
+	//sets the property on the node
+	$userNode->setProperty('name', $postContent->user)->setProperty('email', '1234@gmail.com');
 	
-	 $userNode = $graphDb->createNode();
-	 $userNode->username = "". $postContent->user;
-	 $userNode->save();
+	//actually add the node in the db
+	$userNode->save();
+	
+	//get properties on the node
+	$userProps= $userNode->getProperties();
+	
+	$response= $userIndex->add($userNode, 'user', $userProps['name']);
+	echo $response;
+}else if( strcasecmp($_GET['method'],'getUserInfo') == 0){
+	$userNode=$client->getNode($_GET['id']);
+	foreach ($userNode->getProperties() as $key => $value) {
+    echo "$key: $value\n";
+	}
+}else if(strcasecmp($_GET['method'], 'updateUser') ==0){
+	//get the json string post content
+	$postContent = json_decode(@file_get_contents('php://input'));
+	
+//	$index= new IndexService($graphDb);
+	$user=$userIndex->findOne('email',$postContent->email);
+	//$nodes= $index->getNodes("Users", "email", $_GET['email'] );
 
-	 $index= new IndexService($graphDb);
-	 $index->index("name", "Userss");
-	 
-	 $index->addNode($userNode, "Userss","name", $postContent->user);
-}
- 
-// --- Step 4: Deliver Response
- 
-// Return Response to browser
-deliver_response($response);
- 
-
-
-/**
- *	A little utility function to display a node
- */
-function dump_node($node)
-{
-	$rels = $node->getRelationships();
-	
-	echo 'Node '.$node->getId()."\t\t\t\t\t\t\t\t".json_encode($node->getProperties())."<br />\n";
-	
-	foreach($rels as $rel)
-	{
-		$start = $rel->getStartNode();
-		$end = $rel->getEndNode();
+	if(sizeof($user) >0){
+		if(strcasecmp($postContent->field, 'password') ==0){
+			$user->setProperty('password', $postContent->value);
+			$user->save();
+			foreach ($user->getProperties() as $key => $value) {
+				echo "$key: $value\n";
+			}
+			//continue this if/else statement for all other fields in the statement
+			/*
+			localhost?method=updateUser&user=paul
+			{"field":"password", "value":"######"}
+			*/
+		}else if(strcasecmp($postContent->field, 'name') ==0){
+			$user->setProperty('name', $postContent->value);
+			$user->save();
+			echo $user->getProperties();
+		}else if(strcasecmp($postContent->field, 'company') ==0){
+			$user->setProperty('company', $postContent->value);
+			$user->save();
+			foreach ($user->getProperties() as $key => $value) {
+				echo "$key: $value\n";
+			}
+		}else if(strcasecmp($postContent->field, 'phone') ==0){
+			$user->setProperty('phone', $postContent->value);
+			$user->save();
+			foreach ($user->getProperties() as $key => $value) {
+				echo "$key: $value\n";
+			}
+		}else if(strcasecmp($postContent->field, 'title') ==0){
+			$user->setProperty('title', $postContent->value);
+			$user->save();
+			foreach ($user->getProperties() as $key => $value) {
+				echo "$key: $value\n";
+			}
+		}else if(strcasecmp($postContent->field, 'location') ==0){
+			$user->setProperty('location', $postContent->value);
+			$user->save();
+			foreach ($user->getProperties() as $key => $value) {
+				echo "$key: $value\n";
+			}
+		}else if(strcasecmp($postContent->field, 'email') ==0){
+			$user->setProperty('email', $postContent->value);
+			$user->save();
+			foreach ($user->getProperties() as $key => $value) {
+				echo "$key: $value\n";
+			}
+		}else{
+			echo "no node updated";
+		}
 		
-		echo 	"  Relationship ".$rel->getId()."  :  Node ".$start->getId()." ---".$rel->getType()."---> Node ".$end->getId(),
-				"\t\t\t\t\t\t\t\t".json_encode($rel->getProperties())."<br />\n";
+
+	}else{
+		echo "FALSE node not found";
 	}
 }
-
-
-
 ?>

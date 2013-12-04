@@ -1,0 +1,120 @@
+    <!-- Javascript -->
+    <script type="text/javascript">
+        var oatmealRaisin = getCookie("badLogin");
+        var elem = document.getElementById("invalidLogin");
+        if(oatmealRaisin != null && oatmealRaisin != ""){
+            elem.style.display = "block";
+        }else{
+            elem.style.display = "none";
+        };
+    </script>
+    <div class="container">
+        <div class="flat-form">
+            <ul class="tabs">
+                <li>
+                    <a href="#login" class="active">Login</a>
+                </li>
+                <li>
+                    <a href="#register">Register</a>
+                </li>
+            </ul>
+            <div id="login" class="form-action show">
+                <h1>Login</h1>
+                <p>
+                    Welcome to our Web App! Please enter credentials below
+                </p>
+                <form action="validate.php" method="post">
+                    <input type="text" name="username[0]" placeholder="Username" />
+                    <input type="password" name="password[0]" placeholder="Password" />
+                    <input type="submit" value="Login" class="button" style="font-size:14px;cursor:pointer;visibility:none;"/>
+                    <br /><p id="invalidLogin" style="text-align:center;color:#60D77A;font-size:18px;display:none;font-weight:bold;padding-top:10px;">Invalid Username or Password</p>
+                    <center><a href="." style="color:white;text-decoration:none;line-height:62px;">Forgot?</a></center>
+                </form>
+               
+            </div>
+            <!--/#login.form-action-->
+            <div id="register" class="form-action hide">
+                <h1>Register</h1>
+                <p>
+                    Enter your details below:
+                </p>
+                <form action="register.php" method="post">
+                    <ul>
+                        <li>
+                            <table style="width:100%">
+                            <tr>
+                                <td style="width:42%"><input type="text" name="firstName" placeholder="First Name" /></td>
+                                <td style="width:5px;background-color:#e74c3c"> </td>
+                                <td style="width:52%"><input type="text" name="lastName" placeholder="Last Name" /></td>
+                            </tr>
+                            </table>
+                            
+                        </li>
+                        <li>
+                            <input type="text" name="username[1]" placeholder="Username" />
+                        </li>
+                        <li>
+                            <input type="password" name="password[1]" placeholder="Password" />
+                        </li>
+                        <li>
+                            <input type="password" name="passConfirm" placeholder="Confirm password" />
+                        </li>
+                        <li>
+                            <input type="submit" value="Sign Up" class="button" />
+                        </li>
+                    </ul>
+                </form>
+            </div>
+            <!--/#register.form-action-->
+            <!-- <div id="reset" class="form-action hide">
+                <h1>Reset Password</h1>
+                <p>
+                    To reset your password enter your email and your birthday
+                    and we'll send you a link to reset your password.
+                </p>
+                <form>
+                    <ul>
+                        <li>
+                            <input type="text" placeholder="Email" />
+                        </li>
+                        <li>
+                            <input type="text" placeholder="Birthday" />
+                        </li>
+                        <li>
+                            <input type="submit" value="Send" class="button" />
+                        </li>
+                    </ul>
+                </form>
+            </div> -->
+            <!--/#register.form-action-->
+        </div>
+    </div>
+    <script class="cssdeck" src="jquery.min.js"></script>
+    <script type="text/javascript">
+        (function ($) {
+            // constants
+            var SHOW_CLASS = 'show',
+                HIDE_CLASS = 'hide',
+                ACTIVE_CLASS = 'active';
+
+            $('.tabs').on('click', 'li a', function (e) {
+                e.preventDefault();
+                var $tab = $(this),
+                     href = $tab.attr('href');
+
+                $('.active').removeClass(ACTIVE_CLASS);
+                $tab.addClass(ACTIVE_CLASS);
+
+                $('.show')
+                   .removeClass(SHOW_CLASS)
+                   .addClass(HIDE_CLASS)
+                   .hide();
+
+                $(href)
+                  .removeClass(HIDE_CLASS)
+                  .addClass(SHOW_CLASS)
+                  .hide()
+                  .fadeIn(550);
+            });
+        })(jQuery);
+    </script>
