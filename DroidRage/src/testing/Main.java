@@ -6,7 +6,7 @@ import java.util.List;
 
 import objects.Meeting;
 
-import com.droidrage.meetingninja.DatabaseAdapter;
+import com.droidrage.meetingninja.database.DatabaseAdapter;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 

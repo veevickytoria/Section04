@@ -1,8 +1,8 @@
 <resources>
 
+    <!-- Strings related to login -->
     <string name="title_activity_login">Sign in</string>
 
-    <!-- Strings related to login -->
     <string name="prompt_username">Username</string>
     <string name="prompt_password">Password</string>
     <string name="action_register">Register</string>
@@ -15,4 +15,11 @@
     <string name="error_field_required">This field is required</string>
     <string name="error_invalid_username_password">Invalid username or password</string>
 
+    <!-- Strings related to register -->
+    <string name="title_activity_register">Register</string>
+    
+    <string name="prompt_password_confirm">Confirm Password</string>
+    <string name="error_taken_username">This username already exists</string>
+    <string name="error_mismatch_password">Passwords do not match</string>
+    
 </resources>

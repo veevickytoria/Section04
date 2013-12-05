@@ -3,6 +3,12 @@ package com.droidrage.meetingninja;
 import java.util.Locale;
 
 import com.droidrage.meetingninja.R;
+import com.droidrage.meetingninja.meetings.MeetingsFragment;
+import com.droidrage.meetingninja.notes.NotesFragment;
+import com.droidrage.meetingninja.tasks.TasksFragment;
+import com.droidrage.meetingninja.user.LoginActivity;
+import com.droidrage.meetingninja.user.SessionManager;
+import com.droidrage.meetingninja.user.ViewProfileFragment;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;

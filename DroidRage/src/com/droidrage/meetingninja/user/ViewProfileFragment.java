@@ -1,10 +1,16 @@
-package com.droidrage.meetingninja;
+package com.droidrage.meetingninja.user;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import objects.Meeting;
+import com.droidrage.meetingninja.R;
+import com.droidrage.meetingninja.R.id;
+import com.droidrage.meetingninja.R.layout;
+import com.droidrage.meetingninja.database.AsyncResponse;
+import com.droidrage.meetingninja.meetings.MeetingFetcherTask;
+import com.droidrage.meetingninja.meetings.MeetingItemAdapter;
 
+import objects.Meeting;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -22,7 +28,7 @@ public class ViewProfileFragment extends Fragment implements
 	private MeetingItemAdapter adpt;
 	private TextView profileName;
 
-	private TextView company, jobTitle, location;
+	private TextView company, jobTitle;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -37,7 +43,6 @@ public class ViewProfileFragment extends Fragment implements
 		profileName.setText(session.getUserDetails().get(SessionManager.USER));
 		// company.setText(session.getUserDetails().get(SessionManager.company));
 		// jobTitle.setText(session.getUserDetails().get(SessionManager.jobTitle));
-		// location.setText(session.getUserDetails().get(SessionManager.location));
 
 		meetingList = (ListView) v.findViewById(R.id.profile_meetingList);
 		adpt = new MeetingItemAdapter(getActivity(), R.layout.meeting_item,
@@ -55,7 +60,6 @@ public class ViewProfileFragment extends Fragment implements
 		profileName = (TextView) v.findViewById(R.id.profile_name);
 		company = (TextView) v.findViewById(R.id.company);
 		jobTitle = (TextView) v.findViewById(R.id.jobtitle);
-		location = (TextView) v.findViewById(R.id.location);
 	}
 
 	@Override

@@ -1,6 +1,10 @@
-package com.droidrage.meetingninja;
+package com.droidrage.meetingninja.meetings;
 
 import java.util.List;
+
+import com.droidrage.meetingninja.R;
+import com.droidrage.meetingninja.R.id;
+import com.droidrage.meetingninja.R.layout;
 
 import objects.Meeting;
 import android.content.Context;

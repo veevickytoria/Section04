@@ -1,4 +1,10 @@
-package com.droidrage.meetingninja;
+package com.droidrage.meetingninja.notes;
+
+import com.droidrage.meetingninja.MainActivity;
+import com.droidrage.meetingninja.R;
+import com.droidrage.meetingninja.R.id;
+import com.droidrage.meetingninja.R.layout;
+import com.droidrage.meetingninja.R.menu;
 
 import android.os.Bundle;
 import android.app.Activity;

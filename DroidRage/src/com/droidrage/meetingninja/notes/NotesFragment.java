@@ -1,7 +1,15 @@
-package com.droidrage.meetingninja;
+package com.droidrage.meetingninja.notes;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.droidrage.meetingninja.R;
+import com.droidrage.meetingninja.VersionControlActivity;
+import com.droidrage.meetingninja.R.id;
+import com.droidrage.meetingninja.R.layout;
+import com.droidrage.meetingninja.database.AsyncResponse;
+import com.droidrage.meetingninja.database.DatabaseAdapter;
+import com.droidrage.meetingninja.user.SessionManager;
 
 import objects.Note;
 import android.content.Context;

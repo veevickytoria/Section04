@@ -1,8 +1,14 @@
-package com.droidrage.meetingninja;
+package com.droidrage.meetingninja.tasks;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import com.droidrage.meetingninja.R;
+import com.droidrage.meetingninja.R.id;
+import com.droidrage.meetingninja.R.layout;
+import com.droidrage.meetingninja.database.AsyncResponse;
+import com.droidrage.meetingninja.user.SessionManager;
 
 import objects.Note;
 import objects.Task;

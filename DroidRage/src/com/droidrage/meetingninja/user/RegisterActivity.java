@@ -1,6 +1,13 @@
-package com.droidrage.meetingninja;
+package com.droidrage.meetingninja.user;
 
 import java.io.IOException;
+
+import com.droidrage.meetingninja.R;
+import com.droidrage.meetingninja.R.id;
+import com.droidrage.meetingninja.R.layout;
+import com.droidrage.meetingninja.R.string;
+import com.droidrage.meetingninja.database.AsyncResponse;
+import com.droidrage.meetingninja.database.DatabaseAdapter;
 
 import android.os.AsyncTask;
 import android.os.Bundle;

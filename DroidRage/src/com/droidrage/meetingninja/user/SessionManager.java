@@ -1,4 +1,4 @@
-package com.droidrage.meetingninja;
+package com.droidrage.meetingninja.user;
 
 import java.util.HashMap;
 

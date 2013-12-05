@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+     <color name="pressed">#330066ff</color>
+    <color name="selection">@android:color/holo_blue_light</color>
+    <color name="edit_event_separator">#FFDDDDDD</color>
+</resources>

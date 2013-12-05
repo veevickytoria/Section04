@@ -3,6 +3,7 @@
 
     <string name="app_name">Meeting Ninja</string>
     <string name="action_settings">Settings</string>
+    <string name="loading">Loading\u2026</string>
     <string name="action_logout">Logout</string>
     <string name="action_open">Open</string>
     <string name="action_delete">Delete</string>
@@ -17,5 +18,7 @@
     <string name="title_activity_version_control">VersionControlActivity</string>
     <string name="title_activity_view_profile">ViewProfileActivity</string>
     <string name="title_activity_view_meeting">ViewMeetingActivity</string>
+    <string name="title_activity_blank">Blank</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

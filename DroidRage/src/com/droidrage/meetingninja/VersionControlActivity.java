@@ -3,8 +3,9 @@ package com.droidrage.meetingninja;
 import java.util.ArrayList;
 import java.util.List;
 
-import objects.Version;
+import com.droidrage.meetingninja.user.SessionManager;
 
+import objects.Version;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;

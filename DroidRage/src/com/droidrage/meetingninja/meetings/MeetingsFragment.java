@@ -1,7 +1,14 @@
-package com.droidrage.meetingninja;
+package com.droidrage.meetingninja.meetings;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.droidrage.meetingninja.R;
+import com.droidrage.meetingninja.R.id;
+import com.droidrage.meetingninja.R.layout;
+import com.droidrage.meetingninja.R.menu;
+import com.droidrage.meetingninja.database.AsyncResponse;
+import com.droidrage.meetingninja.user.SessionManager;
 
 import objects.Meeting;
 import android.content.Intent;
@@ -126,6 +133,7 @@ public class MeetingsFragment extends Fragment implements
 
 	public void createMeeting() {
 		Intent createMeeting = new Intent(getActivity(), MeetingsActivity.class);
+		createMeeting.putExtra("edit", true);
 		startActivity(createMeeting);
 	}
 
@@ -135,7 +143,7 @@ public class MeetingsFragment extends Fragment implements
 		meetingAdpt.addAll(output);
 
 		if (meetingAdpt.isEmpty()) {
-			meetingList.setVisibility(View.INVISIBLE);
+			meetingList.setVisibility(View.GONE);
 			meetingImageButton.setVisibility(View.VISIBLE);
 		} else {
 			meetingList.setVisibility(View.VISIBLE);

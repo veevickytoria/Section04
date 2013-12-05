@@ -1,4 +1,4 @@
-package com.droidrage.meetingninja;
+package com.droidrage.meetingninja.database;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
