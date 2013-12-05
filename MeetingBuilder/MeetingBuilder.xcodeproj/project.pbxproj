@@ -38,17 +38,16 @@
 		0A7E516117FBEB9200A4B8B7 /* iWinLoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A7E515F17FBEB9200A4B8B7 /* iWinLoginViewController.xib */; };
 		0A7E516517FBEBA200A4B8B7 /* iWinRegisterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7E516317FBEBA200A4B8B7 /* iWinRegisterViewController.m */; };
 		0A7E516617FBEBA200A4B8B7 /* iWinRegisterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A7E516417FBEBA200A4B8B7 /* iWinRegisterViewController.xib */; };
+		0A7F1CBE184FE0D60017209D /* AcousticModelEnglish.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A7F1CBA184FE0D60017209D /* AcousticModelEnglish.bundle */; };
+		0A7F1CBF184FE0D60017209D /* AcousticModelSpanish.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A7F1CBB184FE0D60017209D /* AcousticModelSpanish.bundle */; };
+		0A7F1CC0184FE0D60017209D /* OpenEars.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7F1CBC184FE0D60017209D /* OpenEars.framework */; };
+		0A7F1CC1184FE0D60017209D /* Slt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7F1CBD184FE0D60017209D /* Slt.framework */; };
 		0A91DC9B1835D7AB00741349 /* OCCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91DC931835D7AB00741349 /* OCCalendarView.m */; };
 		0A91DC9C1835D7AB00741349 /* OCCalendarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91DC951835D7AB00741349 /* OCCalendarViewController.m */; };
 		0A91DC9D1835D7AB00741349 /* OCDaysView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91DC971835D7AB00741349 /* OCDaysView.m */; };
 		0A91DC9E1835D7AB00741349 /* OCSelectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91DC991835D7AB00741349 /* OCSelectionView.m */; };
 		0A97EDAA184169ED00160B5A /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A97EDA8184169ED00160B5A /* AudioToolbox.framework */; };
 		0A97EDAB184169ED00160B5A /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A97EDA9184169ED00160B5A /* AVFoundation.framework */; };
-		0A97EDB118416C4E00160B5A /* AcousticModelEnglish.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A97EDAD18416C4E00160B5A /* AcousticModelEnglish.bundle */; };
-		0A97EDB218416C4E00160B5A /* AcousticModelSpanish.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A97EDAE18416C4E00160B5A /* AcousticModelSpanish.bundle */; };
-		0A97EDB318416C4E00160B5A /* OpenEars.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A97EDAF18416C4E00160B5A /* OpenEars.framework */; };
-		0A97EDB418416C4E00160B5A /* Slt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A97EDB018416C4E00160B5A /* Slt.framework */; };
-		0A98862A184D981C00AA3D1A /* Dictionary.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0A988629184D981C00AA3D1A /* Dictionary.txt */; };
 		0AAC9E951846FE6F0073260F /* iWinOpenEarsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAC9E941846FE6F0073260F /* iWinOpenEarsModel.m */; };
 		0ACE339A17FCF5F8003B9C0A /* iWinMeetingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ACE339817FCF5F8003B9C0A /* iWinMeetingViewController.m */; };
 		0ACE339B17FCF5F8003B9C0A /* iWinMeetingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0ACE339917FCF5F8003B9C0A /* iWinMeetingViewController.xib */; };
@@ -114,6 +113,10 @@
 		0A7E516217FBEBA200A4B8B7 /* iWinRegisterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinRegisterViewController.h; sourceTree = "<group>"; };
 		0A7E516317FBEBA200A4B8B7 /* iWinRegisterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinRegisterViewController.m; sourceTree = "<group>"; };
 		0A7E516417FBEBA200A4B8B7 /* iWinRegisterViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iWinRegisterViewController.xib; sourceTree = "<group>"; };
+		0A7F1CBA184FE0D60017209D /* AcousticModelEnglish.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AcousticModelEnglish.bundle; sourceTree = "<group>"; };
+		0A7F1CBB184FE0D60017209D /* AcousticModelSpanish.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AcousticModelSpanish.bundle; sourceTree = "<group>"; };
+		0A7F1CBC184FE0D60017209D /* OpenEars.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = OpenEars.framework; sourceTree = "<group>"; };
+		0A7F1CBD184FE0D60017209D /* Slt.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Slt.framework; sourceTree = "<group>"; };
 		0A91DC921835D7AB00741349 /* OCCalendarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCCalendarView.h; sourceTree = "<group>"; };
 		0A91DC931835D7AB00741349 /* OCCalendarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCCalendarView.m; sourceTree = "<group>"; };
 		0A91DC941835D7AB00741349 /* OCCalendarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCCalendarViewController.h; sourceTree = "<group>"; };
@@ -125,11 +128,6 @@
 		0A91DC9A1835D7AB00741349 /* OCTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCTypes.h; sourceTree = "<group>"; };
 		0A97EDA8184169ED00160B5A /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		0A97EDA9184169ED00160B5A /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
-		0A97EDAD18416C4E00160B5A /* AcousticModelEnglish.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AcousticModelEnglish.bundle; sourceTree = "<group>"; };
-		0A97EDAE18416C4E00160B5A /* AcousticModelSpanish.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AcousticModelSpanish.bundle; sourceTree = "<group>"; };
-		0A97EDAF18416C4E00160B5A /* OpenEars.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = OpenEars.framework; sourceTree = "<group>"; };
-		0A97EDB018416C4E00160B5A /* Slt.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Slt.framework; sourceTree = "<group>"; };
-		0A988629184D981C00AA3D1A /* Dictionary.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Dictionary.txt; path = MeetingBuilder/DictionaryFile/Dictionary.txt; sourceTree = "<group>"; };
 		0AAC9E931846FE6F0073260F /* iWinOpenEarsModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinOpenEarsModel.h; sourceTree = "<group>"; };
 		0AAC9E941846FE6F0073260F /* iWinOpenEarsModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinOpenEarsModel.m; sourceTree = "<group>"; };
 		0ACE339717FCF5F8003B9C0A /* iWinMeetingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinMeetingViewController.h; sourceTree = "<group>"; };
@@ -162,7 +160,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A97EDB418416C4E00160B5A /* Slt.framework in Frameworks */,
+				0A7F1CC1184FE0D60017209D /* Slt.framework in Frameworks */,
 				0A97EDAA184169ED00160B5A /* AudioToolbox.framework in Frameworks */,
 				0A97EDAB184169ED00160B5A /* AVFoundation.framework in Frameworks */,
 				0ACE33B517FD246F003B9C0A /* SystemConfiguration.framework in Frameworks */,
@@ -171,7 +169,7 @@
 				0ACE33AF17FD244B003B9C0A /* CFNetwork.framework in Frameworks */,
 				0A04455A17F3825D000FF2A0 /* UIKit.framework in Frameworks */,
 				0A04455C17F3825D000FF2A0 /* Foundation.framework in Frameworks */,
-				0A97EDB318416C4E00160B5A /* OpenEars.framework in Frameworks */,
+				0A7F1CC0184FE0D60017209D /* OpenEars.framework in Frameworks */,
 				0A04455E17F3825D000FF2A0 /* CoreGraphics.framework in Frameworks */,
 				0A04456017F3825D000FF2A0 /* CoreData.framework in Frameworks */,
 			);
@@ -183,8 +181,7 @@
 		0A04454D17F3825C000FF2A0 = {
 			isa = PBXGroup;
 			children = (
-				0A988629184D981C00AA3D1A /* Dictionary.txt */,
-				0A97EDAC18416C4E00160B5A /* Framework */,
+				0A7F1CB9184FE0D60017209D /* Framework */,
 				0A04456117F3825D000FF2A0 /* MeetingBuilder */,
 				0A04455817F3825C000FF2A0 /* Frameworks */,
 				0A04455717F3825C000FF2A0 /* Products */,
@@ -378,6 +375,18 @@
 			name = AddAttendees;
 			sourceTree = "<group>";
 		};
+		0A7F1CB9184FE0D60017209D /* Framework */ = {
+			isa = PBXGroup;
+			children = (
+				0A7F1CBA184FE0D60017209D /* AcousticModelEnglish.bundle */,
+				0A7F1CBB184FE0D60017209D /* AcousticModelSpanish.bundle */,
+				0A7F1CBC184FE0D60017209D /* OpenEars.framework */,
+				0A7F1CBD184FE0D60017209D /* Slt.framework */,
+			);
+			name = Framework;
+			path = MeetingBuilder/Framework;
+			sourceTree = "<group>";
+		};
 		0A91DC911835D7AB00741349 /* OCCalendar */ = {
 			isa = PBXGroup;
 			children = (
@@ -392,18 +401,6 @@
 				0A91DC9A1835D7AB00741349 /* OCTypes.h */,
 			);
 			path = OCCalendar;
-			sourceTree = "<group>";
-		};
-		0A97EDAC18416C4E00160B5A /* Framework */ = {
-			isa = PBXGroup;
-			children = (
-				0A97EDAD18416C4E00160B5A /* AcousticModelEnglish.bundle */,
-				0A97EDAE18416C4E00160B5A /* AcousticModelSpanish.bundle */,
-				0A97EDAF18416C4E00160B5A /* OpenEars.framework */,
-				0A97EDB018416C4E00160B5A /* Slt.framework */,
-			);
-			name = Framework;
-			path = ../../../../Downloads/OpenEarsDistribution/Framework;
 			sourceTree = "<group>";
 		};
 		0AAC9E921846FE2B0073260F /* OpenEars */ = {
@@ -528,13 +525,11 @@
 				0A04456E17F3825D000FF2A0 /* Default.png in Resources */,
 				0A1A729F181A22AB009A49E5 /* iWinTaskListViewController.xib in Resources */,
 				7941FDC91828843500AAA92E /* iWinViewAndChangeSettingsViewController.xib in Resources */,
-				0A97EDB118416C4E00160B5A /* AcousticModelEnglish.bundle in Resources */,
 				0ACE339B17FCF5F8003B9C0A /* iWinMeetingViewController.xib in Resources */,
 				0A1A7297181A1802009A49E5 /* iWinAgendaItemViewController.xib in Resources */,
 				0A1A72A9181A2C5E009A49E5 /* iWinAddUsersViewController.xib in Resources */,
-				0A98862A184D981C00AA3D1A /* Dictionary.txt in Resources */,
+				0A7F1CBE184FE0D60017209D /* AcousticModelEnglish.bundle in Resources */,
 				0A1A72911819FE48009A49E5 /* iWinViewAndAddViewController.xib in Resources */,
-				0A97EDB218416C4E00160B5A /* AcousticModelSpanish.bundle in Resources */,
 				0A7E516617FBEBA200A4B8B7 /* iWinRegisterViewController.xib in Resources */,
 				79D513D1181F9F9E00C79B71 /* iWinNoteListViewController.xib in Resources */,
 				0A7E515C17FBEA9700A4B8B7 /* iWinMainViewController.xib in Resources */,
@@ -544,6 +539,7 @@
 				79D513CB181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.xib in Resources */,
 				0A1A72A4181A2663009A49E5 /* iWinAddAndViewTaskViewController.xib in Resources */,
 				0A04457017F3825D000FF2A0 /* Default@2x.png in Resources */,
+				0A7F1CBF184FE0D60017209D /* AcousticModelSpanish.bundle in Resources */,
 				0A04457217F3825D000FF2A0 /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -662,6 +658,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/csse/Downloads/OpenEarsDistribution/Framework,
+					/Users/csse/Documents/CSSE371/Section04/MeetingBuilder/MeetingBuilder/Framework,
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MeetingBuilder/MeetingBuilder-Prefix.pch";
@@ -682,6 +679,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/csse/Downloads/OpenEarsDistribution/Framework,
+					/Users/csse/Documents/CSSE371/Section04/MeetingBuilder/MeetingBuilder/Framework,
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MeetingBuilder/MeetingBuilder-Prefix.pch";
