@@ -69,11 +69,7 @@ WebApp::Application.routes.draw do
   get "tasks/list"
   get "preferences/home"
 
-<<<<<<< HEAD
-  root :to => 'home_page#tabpage'
-=======
-  root 'home_page#index'
->>>>>>> grantMaster
+  root :to => 'home_page#index'
 
 
 end
