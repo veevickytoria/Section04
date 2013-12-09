@@ -5,4 +5,5 @@ class HomePageController < ApplicationController
 	end
 	def mypage
 	end
+	layout 'slate'
 end

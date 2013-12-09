@@ -58,7 +58,10 @@ WebApp::Application.routes.draw do
 
   get "home_page/index"
   get "home_page/tabpage"
+<<<<<<< HEAD
   get "home_page/mypage"
+=======
+>>>>>>> efdd0f9c76c7ffd447c7df276d9e96dfb870ccbd
   get "login/index"
   get "meetings/new"
   get "meetings/index"
@@ -70,7 +73,15 @@ WebApp::Application.routes.draw do
   get "tasks/list"
   get "preferences/home"
 
+<<<<<<< HEAD
   root 'home_page#mypage'
+=======
+<<<<<<< HEAD
+  root :to => 'home_page#tabpage'
+=======
+  root 'home_page#index'
+>>>>>>> grantMaster
+>>>>>>> efdd0f9c76c7ffd447c7df276d9e96dfb870ccbd
 
 
 end

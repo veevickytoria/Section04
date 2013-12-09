@@ -4,4 +4,6 @@ class GroupsController < ApplicationController
 
 	def new
 	end
+
+	layout 'slate'
 end

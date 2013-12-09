@@ -4,4 +4,5 @@ class MeetingsController < ApplicationController
 	
 	def new
 	end
+	layout 'slate'
 end
