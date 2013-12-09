@@ -42,6 +42,11 @@
 		0A7F1CBF184FE0D60017209D /* AcousticModelSpanish.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A7F1CBB184FE0D60017209D /* AcousticModelSpanish.bundle */; };
 		0A7F1CC0184FE0D60017209D /* OpenEars.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7F1CBC184FE0D60017209D /* OpenEars.framework */; };
 		0A7F1CC1184FE0D60017209D /* Slt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7F1CBD184FE0D60017209D /* Slt.framework */; };
+		0A7F1CC8185637310017209D /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7F1CC7185637310017209D /* XCTest.framework */; };
+		0A7F1CC9185637310017209D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A04455B17F3825D000FF2A0 /* Foundation.framework */; };
+		0A7F1CCA185637310017209D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A04455917F3825D000FF2A0 /* UIKit.framework */; };
+		0A7F1CD0185637310017209D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0A7F1CCE185637310017209D /* InfoPlist.strings */; };
+		0A7F1CD2185637310017209D /* MeetingBuilder_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7F1CD1185637310017209D /* MeetingBuilder_Tests.m */; };
 		0A91DC9B1835D7AB00741349 /* OCCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91DC931835D7AB00741349 /* OCCalendarView.m */; };
 		0A91DC9C1835D7AB00741349 /* OCCalendarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91DC951835D7AB00741349 /* OCCalendarViewController.m */; };
 		0A91DC9D1835D7AB00741349 /* OCDaysView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91DC971835D7AB00741349 /* OCDaysView.m */; };
@@ -66,6 +71,16 @@
 		79D513D0181F9F9E00C79B71 /* iWinNoteListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79D513CE181F9F9E00C79B71 /* iWinNoteListViewController.m */; };
 		79D513D1181F9F9E00C79B71 /* iWinNoteListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79D513CF181F9F9E00C79B71 /* iWinNoteListViewController.xib */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		0A7F1CD4185637310017209D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A04454E17F3825C000FF2A0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0A04455517F3825C000FF2A0;
+			remoteInfo = MeetingBuilder;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		0A04455617F3825C000FF2A0 /* MeetingBuilder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MeetingBuilder.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -117,6 +132,12 @@
 		0A7F1CBB184FE0D60017209D /* AcousticModelSpanish.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AcousticModelSpanish.bundle; sourceTree = "<group>"; };
 		0A7F1CBC184FE0D60017209D /* OpenEars.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = OpenEars.framework; sourceTree = "<group>"; };
 		0A7F1CBD184FE0D60017209D /* Slt.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Slt.framework; sourceTree = "<group>"; };
+		0A7F1CC6185637310017209D /* MeetingBuilder Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "MeetingBuilder Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0A7F1CC7185637310017209D /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		0A7F1CCD185637310017209D /* MeetingBuilder Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MeetingBuilder Tests-Info.plist"; sourceTree = "<group>"; };
+		0A7F1CCF185637310017209D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		0A7F1CD1185637310017209D /* MeetingBuilder_Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MeetingBuilder_Tests.m; sourceTree = "<group>"; };
+		0A7F1CD3185637310017209D /* MeetingBuilder Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MeetingBuilder Tests-Prefix.pch"; sourceTree = "<group>"; };
 		0A91DC921835D7AB00741349 /* OCCalendarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCCalendarView.h; sourceTree = "<group>"; };
 		0A91DC931835D7AB00741349 /* OCCalendarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCCalendarView.m; sourceTree = "<group>"; };
 		0A91DC941835D7AB00741349 /* OCCalendarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCCalendarViewController.h; sourceTree = "<group>"; };
@@ -175,6 +196,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		0A7F1CC3185637310017209D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0A7F1CC8185637310017209D /* XCTest.framework in Frameworks */,
+				0A7F1CCA185637310017209D /* UIKit.framework in Frameworks */,
+				0A7F1CC9185637310017209D /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -183,6 +214,7 @@
 			children = (
 				0A7F1CB9184FE0D60017209D /* Framework */,
 				0A04456117F3825D000FF2A0 /* MeetingBuilder */,
+				0A7F1CCB185637310017209D /* MeetingBuilder Tests */,
 				0A04455817F3825C000FF2A0 /* Frameworks */,
 				0A04455717F3825C000FF2A0 /* Products */,
 			);
@@ -192,6 +224,7 @@
 			isa = PBXGroup;
 			children = (
 				0A04455617F3825C000FF2A0 /* MeetingBuilder.app */,
+				0A7F1CC6185637310017209D /* MeetingBuilder Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -210,6 +243,7 @@
 				0A04455D17F3825D000FF2A0 /* CoreGraphics.framework */,
 				0A04455F17F3825D000FF2A0 /* CoreData.framework */,
 				73CB9D928C6D483CAEB8FAAA /* libPods.a */,
+				0A7F1CC7185637310017209D /* XCTest.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -387,6 +421,25 @@
 			path = MeetingBuilder/Framework;
 			sourceTree = "<group>";
 		};
+		0A7F1CCB185637310017209D /* MeetingBuilder Tests */ = {
+			isa = PBXGroup;
+			children = (
+				0A7F1CD1185637310017209D /* MeetingBuilder_Tests.m */,
+				0A7F1CCC185637310017209D /* Supporting Files */,
+			);
+			path = "MeetingBuilder Tests";
+			sourceTree = "<group>";
+		};
+		0A7F1CCC185637310017209D /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				0A7F1CCD185637310017209D /* MeetingBuilder Tests-Info.plist */,
+				0A7F1CCE185637310017209D /* InfoPlist.strings */,
+				0A7F1CD3185637310017209D /* MeetingBuilder Tests-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		0A91DC911835D7AB00741349 /* OCCalendar */ = {
 			isa = PBXGroup;
 			children = (
@@ -482,6 +535,24 @@
 			productReference = 0A04455617F3825C000FF2A0 /* MeetingBuilder.app */;
 			productType = "com.apple.product-type.application";
 		};
+		0A7F1CC5185637310017209D /* MeetingBuilder Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0A7F1CD6185637310017209D /* Build configuration list for PBXNativeTarget "MeetingBuilder Tests" */;
+			buildPhases = (
+				0A7F1CC2185637310017209D /* Sources */,
+				0A7F1CC3185637310017209D /* Frameworks */,
+				0A7F1CC4185637310017209D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0A7F1CD5185637310017209D /* PBXTargetDependency */,
+			);
+			name = "MeetingBuilder Tests";
+			productName = "MeetingBuilder Tests";
+			productReference = 0A7F1CC6185637310017209D /* MeetingBuilder Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -494,6 +565,9 @@
 				TargetAttributes = {
 					0A04455517F3825C000FF2A0 = {
 						DevelopmentTeam = NW5WC35K46;
+					};
+					0A7F1CC5185637310017209D = {
+						TestTargetID = 0A04455517F3825C000FF2A0;
 					};
 				};
 			};
@@ -510,6 +584,7 @@
 			projectRoot = "";
 			targets = (
 				0A04455517F3825C000FF2A0 /* MeetingBuilder */,
+				0A7F1CC5185637310017209D /* MeetingBuilder Tests */,
 			);
 		};
 /* End PBXProject section */
@@ -541,6 +616,14 @@
 				0A04457017F3825D000FF2A0 /* Default@2x.png in Resources */,
 				0A7F1CBF184FE0D60017209D /* AcousticModelSpanish.bundle in Resources */,
 				0A04457217F3825D000FF2A0 /* Default-568h@2x.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0A7F1CC4185637310017209D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0A7F1CD0185637310017209D /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -578,13 +661,37 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		0A7F1CC2185637310017209D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0A7F1CD2185637310017209D /* MeetingBuilder_Tests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		0A7F1CD5185637310017209D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0A04455517F3825C000FF2A0 /* MeetingBuilder */;
+			targetProxy = 0A7F1CD4185637310017209D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		0A04456417F3825D000FF2A0 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
 				0A04456517F3825D000FF2A0 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		0A7F1CCE185637310017209D /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				0A7F1CCF185637310017209D /* en */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -692,6 +799,67 @@
 			};
 			name = Release;
 		};
+		0A7F1CD7185637310017209D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/MeetingBuilder.app/MeetingBuilder";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MeetingBuilder Tests/MeetingBuilder Tests-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = "MeetingBuilder Tests/MeetingBuilder Tests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		0A7F1CD8185637310017209D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/MeetingBuilder.app/MeetingBuilder";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				ENABLE_NS_ASSERTIONS = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MeetingBuilder Tests/MeetingBuilder Tests-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = "MeetingBuilder Tests/MeetingBuilder Tests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -712,6 +880,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		0A7F1CD6185637310017209D /* Build configuration list for PBXNativeTarget "MeetingBuilder Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0A7F1CD7185637310017209D /* Debug */,
+				0A7F1CD8185637310017209D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 
