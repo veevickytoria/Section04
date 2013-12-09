@@ -1,0 +1,48 @@
+<style type="text/css">
+	.table-center{
+		width: auto;
+		margin: 5% auto;
+	}
+</style>
+
+<table class='table table-center table-striped'>
+	<tr>
+		<th>Row</th>
+		<th>Bremmer</th>
+	</tr>
+	<tr class='active'>
+		<td>row 1</td>
+		<td>i want my mommy</td>
+	</tr>
+	<tr class='success'>
+		<td>row 2</td>
+		<td>wave your hands</td>
+	</tr>
+	<tr>
+		<td>row 3</td>
+		<td>i don't like this</td>
+	</tr>
+	<tr class='warning'>
+		<td>row 4</td>
+		<td>you don't like this</td>
+	</tr>
+	<tr class='danger'>
+		<td>row 5</td>
+		<td>time for margaritas</td>
+	</tr>
+</table>
+
+<div class='row'>
+	<input type='button' class='col-md-8 col-md-offset-2 btn btn-success' value='Shake Your Heads Yes' />
+</div>
+<div class='row'>
+	<input type='button' class='col-md-5 col-md-offset-1 btn btn-warning' value="That's My Secret Captain..." />
+	<input type='button' class='col-md-5 btn btn-danger' value="I'm Always Angry" />
+</div><a href="#" rel="tooltip" data-placement="bottom" title="my tooltip text">my A text</a>
+<script>
+
+    jQuery(function ($) {
+        $("a").tooltip()
+    });
+
+</script>

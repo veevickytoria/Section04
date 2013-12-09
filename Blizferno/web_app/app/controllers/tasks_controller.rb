@@ -7,4 +7,5 @@ class TasksController < ApplicationController
 
 	def new
 	end
+	layout 'slate'
 end

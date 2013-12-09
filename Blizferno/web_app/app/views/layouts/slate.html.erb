@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= content_for?(:title) ? yield(:title) : "Meeting Ninja" %></title>
+  <%= csrf_meta_tags %>
+  <%= stylesheet_link_tag "slate", :media => "all" %>
+
+  <%= yield(:page_stylesheet) if content_for?(:page_stylesheet) %>
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet" />
+</head>
+<body>
+  <!-- Sitewide navigation bar -->
+  <%= render '/panes/navbar_top' %>
+
+  <!-- Page content -->
+  <%= yield %>
+
+  <!-- Sitewide info-link bar -->
+  <%= render '/panes/navbar_bottom' %>
+
+  <!-- Javascripts -->
+  <%= javascript_include_tag "slate" %>
+  <%= yield(:page_javascript) if content_for?(:page_javascript) %>
+</body>
+</html>
