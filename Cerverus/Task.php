@@ -12,7 +12,7 @@ require("phar://neo4jphp.phar");
 $client = new Client();
 
 	//get the Task index
-	$taskIndex = new Index\taskIndex( $client , 'tasks' );
+	$taskIndex = new Index\NodeIndex( $client , 'tasks' );
 	$taskIndex->save();
 	
 	//get the User index
@@ -39,11 +39,11 @@ $client = new Client();
 	$taskNode->save();
 	
 	//sets the relationships on the node
-	$assignedTo = $userIndex->findOne( 'id', $postContent-> assignedTo);
+	$UserAssigned = $userIndex->findOne( 'email', $postContent-> assignedTo );
 	$assignedTo = $taskNode->relateTo( $UserAssigned,  "ASSIGNED_TO" )->save();
-	$assignedBy = $userIndex->findOne( 'id', $postContent-> assignedBy );
+	$Assigner = $userIndex->findOne( 'email', $postContent-> assignedBy );
 	$assignedBy = $taskNode->relateTo( $Assigner, "ASSIGNED_BY" )->save();
-	$createdBy = $userIndex->findOne( 'id', $postContent-> createdBy );
+	$Creator = $userIndex->findOne( 'email', $postContent-> createdBy );
 	$createdBy = $taskNode->relateTo( $Creator, "CREATED_BY" )->save();
 	
 	//get properties on the node
