@@ -3,4 +3,5 @@ class ProfileController < ApplicationController
 	end
 	def editmyprofile 
 	end
+	layout 'slate'
 end
