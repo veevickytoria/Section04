@@ -27,7 +27,7 @@ $client= new Client();
 	$userIndex = new Index\NodeIndex($client, 'Users');
 	$userIndex->save();
 	
-if( strcasecmp($_GET['method'],'login') == 0){
+if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'Login')==0){
 	$postContent = json_decode(@file_get_contents('php://input'));
     $email=$userIndex->findOne('email',$postContent->email);	
 	if (sizeof($email)!=0){
@@ -39,7 +39,9 @@ if( strcasecmp($_GET['method'],'login') == 0){
 	}else{
 		print "FALSE";
 	}	
-}else if( strcasecmp($_GET['method'],'register') == 0){
+}else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
+	// register method
+/
 	//get the json string post content
 	$postContent = json_decode(@file_get_contents('php://input'));
 	
@@ -47,7 +49,7 @@ if( strcasecmp($_GET['method'],'login') == 0){
 	$userNode= $client->makeNode();
 	
 	//sets the property on the node
-	$userNode->setProperty('name', $postContent->email)->setProperty('password',create_hash($postContent->password));
+	$userNode->setProperty('email', $postContent->email)->setProperty('password',create_hash($postContent->password));
 	
 	//actually add the node in the db
 	$userNode->save();
@@ -55,7 +57,7 @@ if( strcasecmp($_GET['method'],'login') == 0){
 	//get properties on the node
 	$userProps= $userNode->getProperties();
 	
-	$response= $userIndex->add($userNode, 'email', $userProps['name']);
+	$response= $userIndex->add($userNode, 'email', $userProps['email']);
 	echo $response;
 }else if( strcasecmp($_GET['method'],'getUserInfo') == 0){
 	$userNode=$client->getNode($_GET['id']);
@@ -125,6 +127,8 @@ if( strcasecmp($_GET['method'],'login') == 0){
 	}else{
 		echo "FALSE node not found";
 	}
+}else{
+	echo $_SERVER['REQUEST_METHOD'] ." request method not found";
 }
 
 
