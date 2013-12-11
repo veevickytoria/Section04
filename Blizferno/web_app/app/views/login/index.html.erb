@@ -176,6 +176,7 @@
                 c_end = c_value.length;
             }
     
+<<<<<<< HEAD
             c_value = unescape(c_value.substring(c_start,c_end));
         }
         return c_value;
@@ -194,6 +195,73 @@
             document.getElementById('p1').style.box-shadow('none;');
         }
     }
+=======
+});
+
+
+*/
+
+function postStuff(){
+
+//alert("wooo");
+
+
+	var stuff = '{"email":"testing123", "password":"1234"}';
+
+	 $.ajax({
+        type: 'POST',
+        url: 'http://csse371-04.csse.rose-hulman.edu/index/',
+        data: stuff,
+        crossDomain: true,
+        dataType: 'json',
+        success: function(data){alert(data);},
+
+  });
+
+}
+
+    </script>
+
+<div>
+<button onclick="postStuff()">Hello</button>
+</div>
+
+
+    <div class="container">
+        <div class="flat-form">
+            <ul class="tabs">
+                <li>
+                    <a href="#login" class="active">Login</a>
+                </li>
+                <li>
+                    <a href="#register">Register</a>
+                </li>
+            </ul>
+            <div id="login" class="form-action show">
+                <h1>Login</h1>
+                <p>
+                    Welcome to our Web App! Please enter credentials below
+                </p>
+                <form action="http://csse371-04.csse.rose-hulman.edu/index.php" method="get">
+		    <input type="hidden" name="method" value="login" />
+                    <input type="text" name="user" placeholder="Username" />
+                   
+                    <input type="submit" value="Login" class="button" style="font-size:14px;cursor:pointer;visibility:none;"/>
+                    <br /><p id="invalidLogin" style="text-align:center;color:#60D77A;font-size:18px;display:none;font-weight:bold;padding-top:10px;">Invalid Username or Password</p>
+                    <center><a href="." style="color:white;text-decoration:none;line-height:62px;">Forgot?</a></center>
+                </form>
+               
+            </div>
+            <!--/#login.form-action-->
+            <div id="register" class="form-action hide">
+                <h1>Register</h1>
+                <p>
+                    Enter your details below:
+                </p>
+                <form id="myform" action="http://csse371-04.csse.rose-hulman.edu/index.php?method=register" method="post">
+                    <ul>
+
+>>>>>>> b077d3af300c656bbcc8954808336c3b85fe3d51
 </script>
 
 </head>
@@ -244,9 +312,22 @@
 		</div>
 		<!--/#register.form-action-->
     </div>
+<<<<<<< HEAD
 </div>
 <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 <script type="text/javascript">
+=======
+
+
+<br>
+<br>
+
+
+
+
+    <script class="cssdeck" src="jquery.min.js"></script>
+    <script type="text/javascript">
+>>>>>>> b077d3af300c656bbcc8954808336c3b85fe3d51
     (function ($) {
         // constants
         var SHOW_CLASS = 'show',
