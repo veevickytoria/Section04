@@ -18,4 +18,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *cancelButton;
 @property (weak, nonatomic) IBOutlet UIButton *saveButton;
 @property (weak, nonatomic) IBOutlet UIButton *sendInviteButton;
+@property (strong, nonatomic) NSMutableArray *userList;
+@property (strong, nonatomic) NSMutableArray *attendeeList;
+@property (strong, nonatomic) NSMutableArray *filteredList;
+- (void)searchForUserWithString:(NSString *)searchString;
 @end

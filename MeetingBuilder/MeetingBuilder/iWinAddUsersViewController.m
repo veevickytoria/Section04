@@ -34,6 +34,9 @@
     [self updateButtonUI:self.saveButton];
     [self updateButtonUI:self.cancelButton];
     [self updateButtonUI:self.sendInviteButton];
+    self.userList = [[NSMutableArray alloc] init];
+    self.attendeeList = [[NSMutableArray alloc] init];
+    self.filteredList = [[NSMutableArray alloc] init];
 }
 
 - (void)didReceiveMemoryWarning
@@ -64,6 +67,11 @@
     button.layer.cornerRadius = 7;
     button.layer.borderColor = [[UIColor darkGrayColor] CGColor];
     button.layer.borderWidth = 1.0f;
+}
+
+-(void) searchForUserWithString:(NSString *)searchString
+{
+    
 }
 
 @end

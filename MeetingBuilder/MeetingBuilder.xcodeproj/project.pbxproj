@@ -47,6 +47,8 @@
 		0A7F1CCA185637310017209D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A04455917F3825D000FF2A0 /* UIKit.framework */; };
 		0A7F1CD0185637310017209D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0A7F1CCE185637310017209D /* InfoPlist.strings */; };
 		0A7F1CD2185637310017209D /* MeetingBuilder_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7F1CD1185637310017209D /* MeetingBuilder_Tests.m */; };
+		0A7F1CDB1858FD820017209D /* iWinAddUserTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7F1CDA1858FD820017209D /* iWinAddUserTest.m */; };
+		0A7F1CDF185908790017209D /* iWinContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7F1CDE185908790017209D /* iWinContact.m */; };
 		0A91DC9B1835D7AB00741349 /* OCCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91DC931835D7AB00741349 /* OCCalendarView.m */; };
 		0A91DC9C1835D7AB00741349 /* OCCalendarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91DC951835D7AB00741349 /* OCCalendarViewController.m */; };
 		0A91DC9D1835D7AB00741349 /* OCDaysView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91DC971835D7AB00741349 /* OCDaysView.m */; };
@@ -138,6 +140,9 @@
 		0A7F1CCF185637310017209D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		0A7F1CD1185637310017209D /* MeetingBuilder_Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MeetingBuilder_Tests.m; sourceTree = "<group>"; };
 		0A7F1CD3185637310017209D /* MeetingBuilder Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MeetingBuilder Tests-Prefix.pch"; sourceTree = "<group>"; };
+		0A7F1CDA1858FD820017209D /* iWinAddUserTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinAddUserTest.m; sourceTree = "<group>"; };
+		0A7F1CDD185908790017209D /* iWinContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinContact.h; sourceTree = "<group>"; };
+		0A7F1CDE185908790017209D /* iWinContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinContact.m; sourceTree = "<group>"; };
 		0A91DC921835D7AB00741349 /* OCCalendarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCCalendarView.h; sourceTree = "<group>"; };
 		0A91DC931835D7AB00741349 /* OCCalendarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCCalendarView.m; sourceTree = "<group>"; };
 		0A91DC941835D7AB00741349 /* OCCalendarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCCalendarViewController.h; sourceTree = "<group>"; };
@@ -251,6 +256,7 @@
 		0A04456117F3825D000FF2A0 /* MeetingBuilder */ = {
 			isa = PBXGroup;
 			children = (
+				0A7F1CDC185908550017209D /* Data Model */,
 				0AAC9E921846FE2B0073260F /* OpenEars */,
 				0A91DC911835D7AB00741349 /* OCCalendar */,
 				7941FDD0182A0D8E00AAA92E /* ViewProfile */,
@@ -424,6 +430,7 @@
 		0A7F1CCB185637310017209D /* MeetingBuilder Tests */ = {
 			isa = PBXGroup;
 			children = (
+				0A7F1CD91858FCFA0017209D /* AddUsersTest */,
 				0A7F1CD1185637310017209D /* MeetingBuilder_Tests.m */,
 				0A7F1CCC185637310017209D /* Supporting Files */,
 			);
@@ -438,6 +445,23 @@
 				0A7F1CD3185637310017209D /* MeetingBuilder Tests-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		0A7F1CD91858FCFA0017209D /* AddUsersTest */ = {
+			isa = PBXGroup;
+			children = (
+				0A7F1CDA1858FD820017209D /* iWinAddUserTest.m */,
+			);
+			name = AddUsersTest;
+			sourceTree = "<group>";
+		};
+		0A7F1CDC185908550017209D /* Data Model */ = {
+			isa = PBXGroup;
+			children = (
+				0A7F1CDD185908790017209D /* iWinContact.h */,
+				0A7F1CDE185908790017209D /* iWinContact.m */,
+			);
+			name = "Data Model";
 			sourceTree = "<group>";
 		};
 		0A91DC911835D7AB00741349 /* OCCalendar */ = {
@@ -639,6 +663,7 @@
 				7941FDC218278B4A00AAA92E /* iWinMergeNoteViewController.m in Sources */,
 				0ACE339A17FCF5F8003B9C0A /* iWinMeetingViewController.m in Sources */,
 				0A91DC9E1835D7AB00741349 /* OCSelectionView.m in Sources */,
+				0A7F1CDF185908790017209D /* iWinContact.m in Sources */,
 				0A1A7296181A1802009A49E5 /* iWinAgendaItemViewController.m in Sources */,
 				0A1A72A8181A2C5E009A49E5 /* iWinAddUsersViewController.m in Sources */,
 				0A91DC9B1835D7AB00741349 /* OCCalendarView.m in Sources */,
@@ -666,6 +691,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A7F1CD2185637310017209D /* MeetingBuilder_Tests.m in Sources */,
+				0A7F1CDB1858FD820017209D /* iWinAddUserTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
