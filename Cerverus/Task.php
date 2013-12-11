@@ -53,8 +53,8 @@ $client = new Client();
 	echo $response;
 }else if( strcasecmp($_GET['method'],'getTaskInfo') == 0){
 	$taskNode=$client->getNode($_GET['id']);
-	foreach ($taskNode->getProperties() as $key => $value) {
-    echo "$key: $value\n";
+	$array = $taskNode->getProperties();
+	echo json_encode($array);
 }
 }
 ?>
