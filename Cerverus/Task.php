@@ -56,5 +56,4 @@ $client = new Client();
 	$array = $taskNode->getProperties();
 	echo json_encode($array);
 }
-}
 ?>
