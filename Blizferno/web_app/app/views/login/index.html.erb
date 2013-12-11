@@ -184,6 +184,7 @@ form input[type=password] {
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 
+
     <script type="text/javascript">
         var oatmealRaisin = getCookie("badLogin");
         var elem = document.getElementById("invalidLogin");
@@ -193,7 +194,7 @@ form input[type=password] {
             elem.style.display = "none";
         };
 
-
+/*
 
 function ConvertFormToJSON(form){
 	var array = jQuery(form).serializeArray();
@@ -226,8 +227,26 @@ jQuery(document).on('ready', function() {
     });
 });
 
+*/
+
+function postStuff(){
+
+//alert("wooo");
 
 
+	var stuff = '{"email":"testing123", "password":"1234"}';
+
+	 $.ajax({
+        type: 'POST',
+        url: 'http://csse371-04.csse.rose-hulman.edu/index/',
+        data: stuff,
+        crossDomain: true,
+        dataType: 'json',
+        success: function(data){alert(data);},
+
+  });
+
+}
 
     </script>
     <div class="container">
@@ -317,6 +336,16 @@ jQuery(document).on('ready', function() {
             <!--/#register.form-action-->
         </div>
     </div>
+
+
+<br>
+<br>
+<div>
+<button onclick="postStuff()">Hello</button>
+</div>
+
+
+
     <script class="cssdeck" src="jquery.min.js"></script>
     <script type="text/javascript">
         (function ($) {
