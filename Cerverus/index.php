@@ -28,9 +28,10 @@ $client= new Client();
 	$userIndex->save();
 	
 if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'Login')==0){
+	//login method
 	$postContent = json_decode(@file_get_contents('php://input'));
-    $email=$userIndex->findOne('email',$postContent->email);	
-	if (sizeof($email)!=0){
+	$email=$userIndex->findOne('email',$postContent->email);	
+	if (sizeof($email)!=0){ //check if there is a node with the given email.
 		if(validate_password($postContent->password,$email->getProperty('password'))==1){
 			print $email->getId();
 		}else{
@@ -41,86 +42,94 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 	}	
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
 	// register method
-/
+
 	//get the json string post content
 	$postContent = json_decode(@file_get_contents('php://input'));
+	
+	$email=$userIndex->findOne('email',$postContent->email);	
+	if(sizeof($email)==0){ //make sure no nodes already exist with the given email
 	
 	//create the node
 	$userNode= $client->makeNode();
 	
 	//sets the property on the node
 	$userNode->setProperty('email', $postContent->email)->setProperty('password',create_hash($postContent->password));
+	$userNode->setProperty('email', $postContent->email);
+	$userNode->setProperty('password',create_hash($postContent->password));
+	$userNode->setProperty('phone',$postContent->phone);
+	$userNode->setProperty('company',$postContent->company);
+	$userNode->setProperty('title',$postContent->title);
+	$userNode->setProperty('location',$postContent->location);
+	$userNode->setProperty('name',$postContent->name);
 	
 	//actually add the node in the db
 	$userNode->save();
 	
-	//get properties on the node
-	$userProps= $userNode->getProperties();
+	//return the id of the node
+	echo $userNode->getId();
 	
-	$response= $userIndex->add($userNode, 'email', $userProps['email']);
-	echo $response;
 }else if( strcasecmp($_GET['method'],'getUserInfo') == 0){
 	$userNode=$client->getNode($_GET['id']);
-	foreach ($userNode->getProperties() as $key => $value) {
-    echo "$key: $value\n";
-	}
+	$array = $userNode->getProperties();
+	
+	//hide the password
+	$array['password']="********";
+	
+	//return the json string
+	echo json_encode($array);
+	
 }else if(strcasecmp($_GET['method'], 'updateUser') ==0){
 	//get the json string post content
 	$postContent = json_decode(@file_get_contents('php://input'));
 	
-//	$index= new IndexService($graphDb);
-	$user=$userIndex->findOne('email',$postContent->email);
-	//$nodes= $index->getNodes("Users", "email", $_GET['email'] );
+	$user=$client->getNode($postContent->userID);
 
 	if(sizeof($user) >0){
 		if(strcasecmp($postContent->field, 'password') ==0){
 			$hashword = $postContent->value;
 			$user->setProperty('password', create_hash(hashword));
 			$user->save();
-			foreach ($user->getProperties() as $key => $value) {
-				echo "$key: $value\n";
-			}
-			//continue this if/else statement for all other fields in the statement
-			/*
-			localhost?method=updateUser&user=paul
-			{"field":"password", "value":"######"}
-			*/
+			$array = $user->getProperties();
+			$array['password']="********";
+			echo json_encode($array);
 		}else if(strcasecmp($postContent->field, 'name') ==0){
 			$user->setProperty('name', $postContent->value);
 			$user->save();
-			echo $user->getProperties();
+			$array = $user->getProperties();
+			$array['password']="********";
+			echo json_encode($array);
 		}else if(strcasecmp($postContent->field, 'company') ==0){
 			$user->setProperty('company', $postContent->value);
 			$user->save();
-			foreach ($user->getProperties() as $key => $value) {
-				echo "$key: $value\n";
-			}
+			$array = $user->getProperties();
+			$array['password']="********";
+			echo json_encode($array);
 		}else if(strcasecmp($postContent->field, 'phone') ==0){
 			$user->setProperty('phone', $postContent->value);
 			$user->save();
-			foreach ($user->getProperties() as $key => $value) {
-				echo "$key: $value\n";
-			}
+			$array = $user->getProperties();
+			$array['password']="********";
+			echo json_encode($array);
 		}else if(strcasecmp($postContent->field, 'title') ==0){
 			$user->setProperty('title', $postContent->value);
 			$user->save();
-			foreach ($user->getProperties() as $key => $value) {
-				echo "$key: $value\n";
-			}
+			$array = $user->getProperties();
+			$array['password']="********";
+			echo json_encode($array);
 		}else if(strcasecmp($postContent->field, 'location') ==0){
 			$user->setProperty('location', $postContent->value);
 			$user->save();
-			foreach ($user->getProperties() as $key => $value) {
-				echo "$key: $value\n";
-			}
+			$array = $user->getProperties();
+			$array['password']="********";
+			echo json_encode($array);
 		}else if(strcasecmp($postContent->field, 'email') ==0){
 			$user->setProperty('email', $postContent->value);
 			$user->save();
-			foreach ($user->getProperties() as $key => $value) {
-				echo "$key: $value\n";
-			}
+			$array = $user->getProperties();
+			$array['password']="********";
+			echo json_encode($array);
 		}else{
-			echo "no node updated";
+			echo "No node updated.";
 		}
 		
 
