@@ -39,11 +39,11 @@ $client = new Client();
 	$taskNode->save();
 	
 	//sets the relationships on the node
-	$UserAssigned = $userIndex->findOne( 'email', $postContent-> assignedTo );
+	$UserAssigned = $client->getNode($postContent-> assignedTo );
 	$assignedTo = $taskNode->relateTo( $UserAssigned,  "ASSIGNED_TO" )->save();
-	$Assigner = $userIndex->findOne( 'email', $postContent-> assignedBy );
+	$Assigner = $client->getNode($postContent-> assignedBy );
 	$assignedBy = $taskNode->relateTo( $Assigner, "ASSIGNED_BY" )->save();
-	$Creator = $userIndex->findOne( 'email', $postContent-> createdBy );
+	$Creator = $client->getNode($postContent-> createdBy );
 	$createdBy = $taskNode->relateTo( $Creator, "CREATED_BY" )->save();
 	
 	//get properties on the node
