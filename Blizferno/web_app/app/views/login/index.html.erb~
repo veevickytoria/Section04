@@ -195,11 +195,9 @@ form input[type=password] {
     };
 
 
-<<<<<<< HEAD
-/*
-=======
 
->>>>>>> 3dbf4f3cd31ae07a1b8033f56ddfe1b92c900696
+/*
+
 
 function ConvertFormToJSON(form){
 	var array = jQuery(form).serializeArray();
@@ -234,7 +232,7 @@ jQuery(document).on('ready', function() {
 
     
 });
-<<<<<<< HEAD
+
 
 */
 
@@ -291,34 +289,9 @@ function postStuff(){
                 </p>
                 <form id="myform" action="http://csse371-04.csse.rose-hulman.edu/index.php?method=register" method="post">
                     <ul>
-=======
-$("#mybutton").click(function(){
-        alert('here');
-                //alert(JSON.stringify({user: "test123", pass: "123"}));
-                $.ajax({
-                        type: 'POST',
-                        url: 'http://csse371-04.csse.rose-hulman.edu/index/',
-                        data: '{"email": "test634", "password": "123"}',
-                        /*dataType: 'json',
-                        crossDomain: true,*/
-                        success: function(){
-                                alert("it worked");
-                        },
-                });
-
-
-        });
-
-function myfun(){
-    $.ajax({
-            type: "POST",
-            url: "http://csse371-04.csse.rose-hulman.edu/index/",
-            data: "{\"email\":\"testing123\", \"password\":\"1234\"}'
-        });
-}
 
 </script>
-<button type="button" id="mybutton" onclick='myfun()'> Click </button>
+
 <div class="container">
     <div class="flat-form">
         <ul class="tabs">
@@ -354,7 +327,7 @@ function myfun(){
             </p>
             <form id="myform" action="http://csse371-04.csse.rose-hulman.edu/index/" method="post">
                 <ul>
->>>>>>> 3dbf4f3cd31ae07a1b8033f56ddfe1b92c900696
+
 <!--
                         <li>
                             <table style="width:100%">
