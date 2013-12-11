@@ -1,5 +1,5 @@
 <noscript>
-You don't have javascript enabled. Please enable javascript in order to view our website!
+    You don't have javascript enabled. Please enable javascript in order to view our website!
 </noscript>    
 
 <style type="text/css">// Place all the styles related to the Login controller here.
@@ -10,7 +10,7 @@ You don't have javascript enabled. Please enable javascript in order to view our
 @import url(http://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.css);
 
 body {
-    background: #1a1a1a;
+    background-color: green;
     color: white;
     font-family: 'Roboto';
 }
@@ -99,7 +99,7 @@ form input[type=submit] {
 
 form input[type=text],
 form input[type=password] {
-  
+
     height: 40px;
     margin-bottom: 10px;
     padding-left: 15px;
@@ -178,23 +178,28 @@ form input[type=password] {
 
 :-ms-input-placeholder {
     color: #e74c3c;
-}</style>
+    }</style>
 
-<!-- Javascript -->
+    <!-- Javascript -->
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 
 
     <script type="text/javascript">
-        var oatmealRaisin = getCookie("badLogin");
-        var elem = document.getElementById("invalidLogin");
-        if(oatmealRaisin != null && oatmealRaisin != ""){
-            elem.style.display = "block";
-        }else{
-            elem.style.display = "none";
-        };
+    var oatmealRaisin = getCookie("badLogin");
+    var elem = document.getElementById("invalidLogin");
+    if(oatmealRaisin != null && oatmealRaisin != ""){
+        elem.style.display = "block";
+    }else{
+        elem.style.display = "none";
+    };
 
+
+<<<<<<< HEAD
 /*
+=======
+
+>>>>>>> 3dbf4f3cd31ae07a1b8033f56ddfe1b92c900696
 
 function ConvertFormToJSON(form){
 	var array = jQuery(form).serializeArray();
@@ -204,7 +209,8 @@ function ConvertFormToJSON(form){
 		json[this.name] = this.value || '';
 	});
 
-	return json;
+	//return json;
+    return "{'email':'hello@gmail.com', 'password':'lsakdjfaslkdfj'}";
 }
 
 
@@ -218,14 +224,17 @@ jQuery(document).on('ready', function() {
 
         $.ajax({
             type: "POST",
-            url: "http://csse371-04.csse.rose-hulman.edu/index.php?method=register",
-            data: {"user":"testing123", "pass":"1234"},
+            url: "http://csse371-04.csse.rose-hulman.edu/index/",
+            data: {"email":"testing123", "password":"1234"},
 	    dataType: "json"
         });
 
         return true;
     });
+
+    
 });
+<<<<<<< HEAD
 
 */
 
@@ -243,9 +252,7 @@ function postStuff(){
         crossDomain: true,
         dataType: 'json',
         success: function(data){alert(data);},
-        failure: function(errMsg) {
-            alert(errMsg);
-        }
+
   });
 
 }
@@ -284,6 +291,70 @@ function postStuff(){
                 </p>
                 <form id="myform" action="http://csse371-04.csse.rose-hulman.edu/index.php?method=register" method="post">
                     <ul>
+=======
+$("#mybutton").click(function(){
+        alert('here');
+                //alert(JSON.stringify({user: "test123", pass: "123"}));
+                $.ajax({
+                        type: 'POST',
+                        url: 'http://csse371-04.csse.rose-hulman.edu/index/',
+                        data: '{"email": "test634", "password": "123"}',
+                        /*dataType: 'json',
+                        crossDomain: true,*/
+                        success: function(){
+                                alert("it worked");
+                        },
+                });
+
+
+        });
+
+function myfun(){
+    $.ajax({
+            type: "POST",
+            url: "http://csse371-04.csse.rose-hulman.edu/index/",
+            data: "{\"email\":\"testing123\", \"password\":\"1234\"}'
+        });
+}
+
+</script>
+<button type="button" id="mybutton" onclick='myfun()'> Click </button>
+<div class="container">
+    <div class="flat-form">
+        <ul class="tabs">
+            <li>
+                <a href="#login" class="active">Login</a>
+            </li>
+            <li>
+                <a href="#register">Register</a>
+            </li>
+        </ul>
+        <div id="login" class="form-action show">
+            <h1>Login</h1>
+            <p>
+                Welcome to our Web App! Please enter credentials below
+            </p>
+            <form action="http://csse371-04.csse.rose-hulman.edu/index/" method="get">
+                <input type="hidden" name="method" value="login" />
+                <input type="text" name="user" placeholder="Username" />
+
+                <input type="submit" value="Login" class="button" style="font-size:14px;cursor:pointer;visibility:none;"/>
+                <br /><p id="invalidLogin" style="text-align:center;color:#60D77A;font-size:18px;display:none;font-weight:bold;padding-top:10px;">Invalid Username or Password</p>
+                <center>
+                    <a href="." style="color:white;text-decoration:none;line-height:62px;">Forgot?</a>
+                </center>
+            </form>
+
+        </div>
+        <!--/#login.form-action-->
+        <div id="register" class="form-action hide">
+            <h1>Register</h1>
+            <p>
+                Enter your details below:
+            </p>
+            <form id="myform" action="http://csse371-04.csse.rose-hulman.edu/index/" method="post">
+                <ul>
+>>>>>>> 3dbf4f3cd31ae07a1b8033f56ddfe1b92c900696
 <!--
                         <li>
                             <table style="width:100%">
@@ -295,26 +366,26 @@ function postStuff(){
                             </table>
                             
                         </li>
--->
+                    -->
 
-                        <li>
-                            <input id="user" type="text" name="user" placeholder="Username" />
-                        </li>
-                        <li>
-                            <input id="pass" type="text" name="pass" placeholder="Password" />
-                        </li>
+                    <li>
+                        <input id="user" type="text" name="email" placeholder="Username" />
+                    </li>
+                    <li>
+                        <input id="pass" type="password" name="password" placeholder="Password" />
+                    </li>
 <!--
                         <li>
                             <input type="password" name="passConfirm" placeholder="Confirm password" />
                         </li>
--->
-                        <li>
-                            <input id="input" type="submit" value="Sign Up" class="button" />
-                        </li>
-                    </ul>
-                </form>
-            </div>
-            <!--/#register.form-action-->
+                    -->
+                    <li>
+                        <input id="input" type="submit" value="Sign Up" class="button" />
+                    </li>
+                </ul>
+            </form>
+        </div>
+        <!--/#register.form-action-->
             <!-- <div id="reset" class="form-action hide">
                 <h1>Reset Password</h1>
                 <p>
@@ -350,30 +421,30 @@ function postStuff(){
 
     <script class="cssdeck" src="jquery.min.js"></script>
     <script type="text/javascript">
-        (function ($) {
+    (function ($) {
             // constants
             var SHOW_CLASS = 'show',
-                HIDE_CLASS = 'hide',
-                ACTIVE_CLASS = 'active';
+            HIDE_CLASS = 'hide',
+            ACTIVE_CLASS = 'active';
 
             $('.tabs').on('click', 'li a', function (e) {
                 e.preventDefault();
                 var $tab = $(this),
-                     href = $tab.attr('href');
+                href = $tab.attr('href');
 
                 $('.active').removeClass(ACTIVE_CLASS);
                 $tab.addClass(ACTIVE_CLASS);
 
                 $('.show')
-                   .removeClass(SHOW_CLASS)
-                   .addClass(HIDE_CLASS)
-                   .hide();
+                .removeClass(SHOW_CLASS)
+                .addClass(HIDE_CLASS)
+                .hide();
 
                 $(href)
-                  .removeClass(HIDE_CLASS)
-                  .addClass(SHOW_CLASS)
-                  .hide()
-                  .fadeIn(550);
+                .removeClass(HIDE_CLASS)
+                .addClass(SHOW_CLASS)
+                .hide()
+                .fadeIn(550);
             });
         })(jQuery);
-    </script>
+        </script>
