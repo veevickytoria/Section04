@@ -52,6 +52,11 @@ public class MainActivity extends FragmentActivity implements
 	 * The {@link ViewPager} that will host the section contents.
 	 */
 	ViewPager mViewPager;
+	
+	public static final int PROFILE_FRAGMENT = 0;
+	public static final int MEETINGS_FRAGMENT = 1;
+	public static final int NOTES_FRAGMENT = 2;
+	public static final int TASKS_FRAGMENT = 3;
 
 	public static String username;
 	public String fragment;
@@ -153,12 +158,12 @@ public class MainActivity extends FragmentActivity implements
 		switch (item.getItemId()) {
 		case R.id.action_refresh:
 			switch (mViewPager.getCurrentItem()) {
-			case (1):
+			case (MEETINGS_FRAGMENT):
 				Toast.makeText(this, "Refreshing Meetings", Toast.LENGTH_SHORT)
 						.show();
 				meetingsFrag.refreshMeetings();
 				return true;
-			case (2):
+			case (NOTES_FRAGMENT):
 				Toast.makeText(this, "Refreshing Notes", Toast.LENGTH_SHORT)
 						.show();
 				return true;
@@ -216,7 +221,7 @@ public class MainActivity extends FragmentActivity implements
 
 			if (noteIntent != null
 					&& noteIntent.getStringExtra("Fragment").compareTo("notes") == 0) {
-				position = 1;
+				position = NOTES_FRAGMENT;
 				actionBar.setSelectedNavigationItem(position);
 				noteIntent.putExtra("Fragment", "none");
 			}
@@ -224,16 +229,16 @@ public class MainActivity extends FragmentActivity implements
 			Fragment frag = null;
 			Bundle args = new Bundle();
 			switch (position) {
-			case (0):
+			case (PROFILE_FRAGMENT):
 				prof = new ViewProfileFragment();
 				return prof;
-			case (1):
+			case (MEETINGS_FRAGMENT):
 				meetingsFrag = new MeetingsFragment();
 				return meetingsFrag;
-			case (2):
+			case (NOTES_FRAGMENT):
 				notesFrag = new NotesFragment();
 				return notesFrag;
-			case (3):
+			case (TASKS_FRAGMENT):
 				tasksFrag = new TasksFragment();
 				return tasksFrag;
 			default:
