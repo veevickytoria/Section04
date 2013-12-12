@@ -56,7 +56,8 @@ public class NotesFragment extends Fragment implements
 		// TODO: Check for internet connection before receiving notes from DB
 		// TODO: Display a something saying "no notes" if there are no notes
 		// instead of having no notes appear
-		refreshNotes();
+		if(notes.size() == 0)
+			createNotes();
 
 		ListView lv = (ListView) v.findViewById(R.id.notesList);
 		noteAdpt = new NoteItemAdapter(getActivity(), R.layout.note_item, notes);
@@ -156,6 +157,10 @@ public class NotesFragment extends Fragment implements
 	 * Initializes the list of notes. TODO: Get the notes from the database
 	 */
 	private void refreshNotes() {
+
+	}
+	
+	private void createNotes(){
 		notes.add(new Note("Oct 7 PM Meeting"));
 
 		Note meeting = new Note("Oct 9 Team Meeting");
