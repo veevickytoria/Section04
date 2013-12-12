@@ -46,11 +46,8 @@ $client = new Client();
 	$Creator = $client->getNode($postContent-> createdBy );
 	$createdBy = $taskNode->relateTo( $Creator, "CREATED_BY" )->save();
 	
-	//get properties on the node
-	$taskProps= $taskNode->getProperties();
-	
-	$response= $taskIndex->add($taskNode, 'user', $taskProps['user']);
-	echo $response;
+	//get node id
+	echo $taskNode->getId(); //revise output
 }else if( strcasecmp($_GET['method'],'getTaskInfo') == 0){
 	$taskNode=$client->getNode($_GET['id']);
 	$array = $taskNode->getProperties();
