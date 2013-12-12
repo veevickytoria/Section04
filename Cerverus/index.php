@@ -136,6 +136,18 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 	}else{
 		echo "FALSE node not found";
 	}
+}else if(strcasecmp($_GET['method'], 'getUserTasks') ==0){
+	
+	//The output needs revision, just the general code of what the idea should continue as.
+	
+		$userNode=$client->getNode($_GET['id']);
+		$relationArray = $userNode->getRelationships(array());
+		foreach($relationArray as $rel){
+			$node = $rel->getStartNode();
+			echo $rel->getType()." ";
+		        echo $node->getId()."\n";
+		}
+		
 }else{
 	echo $_SERVER['REQUEST_METHOD'] ." request method not found";
 }
