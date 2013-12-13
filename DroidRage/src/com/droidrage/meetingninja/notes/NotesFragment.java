@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.droidrage.meetingninja.R;
-import com.droidrage.meetingninja.VersionControlActivity;
 import com.droidrage.meetingninja.R.id;
 import com.droidrage.meetingninja.R.layout;
 import com.droidrage.meetingninja.database.AsyncResponse;

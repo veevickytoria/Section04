@@ -71,7 +71,7 @@
             android:label="@string/title_activity_full_meeting" >
         </activity>
         <activity
-            android:name="com.droidrage.meetingninja.VersionControlActivity"
+            android:name="com.droidrage.meetingninja.notes.VersionControlActivity"
             android:label="@string/title_activity_version_control" >
         </activity>
         <activity
