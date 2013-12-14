@@ -22,10 +22,12 @@
     [super setUp];
     // Put setup code here; it will be run once, before the first test case.
     self.addUsersVC = [[iWinAddUsersViewController alloc] initWithNibName:@"iWinAddUsersViewController" bundle:nil withPageName:@"Meeting" inEditMode:NO];
-    
+    [self.addUsersVC viewDidLoad];
+    [self.addUsersVC.userList removeAllObjects];
     self.contact = [[iWinContact alloc] init];
     [self.contact initializeWithFirstName:@"Dharmin" withLastName:@"Shah" withEmail:@"shahdk@rose-hulman.edu"];
     [self.addUsersVC.userList addObject:self.contact];
+    NSLog(@"%@", self.addUsersVC.userList);
 }
 
 - (void)tearDown
@@ -36,13 +38,13 @@
 
 - (void)testInvalidSearch
 {
-    [self.addUsersVC searchForUserWithString:@"Joe"];
+    [self.addUsersVC filterContentForSearchText:@"Joe" scope:nil];
     XCTAssertTrue(self.addUsersVC.filteredList.count == 0, @"Search failed");
 }
 
 - (void)testValidFirstNameSearch
 {
-    [self.addUsersVC searchForUserWithString:@"Dhar"];
+    [self.addUsersVC filterContentForSearchText:@"Dhar" scope:nil];
     XCTAssertTrue(self.addUsersVC.filteredList.count == 1, @"Search failed");
     
     iWinContact *contact = (iWinContact *)[self.addUsersVC.filteredList objectAtIndex:0];
@@ -53,7 +55,7 @@
 
 - (void)testValidLastNameSearch
 {
-    [self.addUsersVC searchForUserWithString:@"Shah"];
+    [self.addUsersVC filterContentForSearchText:@"Shah" scope:nil];
     XCTAssertTrue(self.addUsersVC.filteredList.count == 1, @"Search failed");
     
     iWinContact *contact = (iWinContact *)[self.addUsersVC.filteredList objectAtIndex:0];
@@ -64,7 +66,7 @@
 
 - (void)testValidEmailSearch
 {
-    [self.addUsersVC searchForUserWithString:@"shahdk"];
+    [self.addUsersVC filterContentForSearchText:@"shahdk" scope:nil];
     XCTAssertTrue(self.addUsersVC.filteredList.count == 1, @"Search failed");
     
     iWinContact *contact = (iWinContact *)[self.addUsersVC.filteredList objectAtIndex:0];

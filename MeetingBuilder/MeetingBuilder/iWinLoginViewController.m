@@ -43,7 +43,7 @@
 {
     
     NSString *email = [[self.userNameField text] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    NSString *password = [self.passwordField text];
+//    NSString *password = [self.passwordField text];
     
     [self.loginDelegate login:email];
     
