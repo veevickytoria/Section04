@@ -8,6 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
-@interface iWinEditProfileViewController : UIViewController
+@protocol ProfileDelegate <NSObject>
+-(void) onClickChangePicture;
+@end
 
+@interface iWinEditProfileViewController : UIViewController
+-(IBAction) onChangePicture:(id)sender;
+-(IBAction) onSave:(id)sender;
+-(IBAction) onCancel:(id)sender;
+-(id) initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil;
+@property (weak, nonatomic) IBOutlet UIButton *changePicture;
+@property (weak, nonatomic) IBOutlet UIButton *save;
+@property (weak, nonatomic) IBOutlet UIButton *cancel;
+@property (nonatomic) id<ProfileDelegate> profileDelegate;
 @end

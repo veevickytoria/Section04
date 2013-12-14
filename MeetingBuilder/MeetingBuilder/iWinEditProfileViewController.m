@@ -7,6 +7,8 @@
 //
 
 #import "iWinEditProfileViewController.h"
+#import "iWinViewProfileViewController.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface iWinEditProfileViewController ()
 
@@ -27,12 +29,38 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    
+    [self updateButtonUI:self.save];
+    [self updateButtonUI:self.cancel];
+    [self updateButtonUI:self.changePicture];
+    
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(void) updateButtonUI: (UIButton *)button
+{
+    button.layer.cornerRadius = 7;
+    button.layer.borderColor = [[UIColor darkGrayColor] CGColor];
+    button.layer.borderWidth = 1.0f;
+}
+-(IBAction)onChangePicture:(id)sender
+{
+    
+}
+
+-(IBAction)onSave:(id)sender
+{
+    
+}
+
+-(IBAction)onCancel:(id)sender
+{
+    
 }
 
 @end
