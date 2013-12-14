@@ -70,9 +70,6 @@ WebApp::Application.routes.draw do
   get "tasks/list"
   get "preferences/home"
 
-  get "new_login/index"
-
-
   root :to => 'home_page#index'
 
 

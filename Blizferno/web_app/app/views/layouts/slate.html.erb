@@ -18,9 +18,9 @@
   <!-- Page content -->
   <%= yield %>
 
-  <!-- Sitewide info-link bar -->
-  <%= render '/panes/navbar_bottom' %>
-
+  <!-- Sitewide info-link bar 
+  %= render '/panes/navbar_bottom' %>
+  -->
   <!-- Javascripts -->
   <%= javascript_include_tag "slate" %>
   <%= yield(:page_javascript) if content_for?(:page_javascript) %>
