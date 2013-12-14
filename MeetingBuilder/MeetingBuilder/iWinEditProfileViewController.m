@@ -34,6 +34,9 @@
     [self updateButtonUI:self.cancel];
     [self updateButtonUI:self.changePicture];
     
+    [self updateLabelUI:self.startDateLabel];
+    
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -48,6 +51,14 @@
     button.layer.borderColor = [[UIColor darkGrayColor] CGColor];
     button.layer.borderWidth = 1.0f;
 }
+
+-(void) updateLabelUI:(UILabel *)label
+{
+    label.layer.cornerRadius = 7;
+    label.layer.borderColor = [[UIColor darkGrayColor] CGColor];
+    label.layer.borderWidth = 1.0f;
+}
+
 -(IBAction)onChangePicture:(id)sender
 {
     

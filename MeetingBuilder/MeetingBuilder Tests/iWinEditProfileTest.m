@@ -21,12 +21,54 @@
 {
     [super setUp];
     // Put setup code here; it will be run once, before the first test case.
+    self.editVC = [[iWinEditProfileViewController alloc] initWithNibName:@"iWinEditProfileViewController" bundle:nil];
+    self.viewVC = [[iWinViewProfileViewController alloc] initWithNibName:@"iWinViewProfileViewController" bundle:nil];
 }
 
 - (void)tearDown
 {
     // Put teardown code here; it will be run once, after the last test case.
     [super tearDown];
+}
+
+- (void)testCompanyChange
+{
+    
+}
+
+- (void)testValidEmailChange
+{
+    
+}
+
+- (void)testInvalidEmailChange
+{
+    //Does Not Contain '@' Character 
+}
+
+- (void)testPhoneChange
+{
+    
+}
+
+- (void)testPositionChange
+{
+    
+}
+
+- (void)testValidMoreAboutMeChange
+{
+    
+}
+
+- (void)testInvalidMoreAboutMeChange
+{
+    //TooLong
+}
+
+- (void)testChangedPicture
+{
+    
 }
 
 - (void)testExample

@@ -21,6 +21,8 @@
 {
     [super setUp];
     // Put setup code here; it will be run once, before the first test case.
+    self.editVC = [[iWinEditProfileViewController alloc] initWithNibName:@"iWinEditProfileViewController" bundle:nil];
+    self.viewVC = [[iWinViewProfileViewController alloc] initWithNibName:@"iWinViewProfileViewController" bundle:nil];
 }
 
 - (void)tearDown
