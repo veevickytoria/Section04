@@ -36,14 +36,9 @@
     
 }
 
-- (void)testValidEmailChange
+- (void)testEmailChange
 {
     
-}
-
-- (void)testInvalidEmailChange
-{
-    //Does Not Contain '@' Character 
 }
 
 - (void)testPhoneChange
@@ -56,15 +51,11 @@
     
 }
 
-- (void)testValidMoreAboutMeChange
+- (void)testMoreAboutMeChange
 {
     
 }
 
-- (void)testInvalidMoreAboutMeChange
-{
-    //TooLong
-}
 
 - (void)testChangedPicture
 {

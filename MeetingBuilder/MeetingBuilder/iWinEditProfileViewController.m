@@ -34,7 +34,7 @@
     [self updateButtonUI:self.cancel];
     [self updateButtonUI:self.changePicture];
     
-    [self updateLabelUI:self.startDateLabel];
+    //[self updateLabelUI:self.startDateLabel];
     
     
 }
@@ -66,12 +66,25 @@
 
 -(IBAction)onSave:(id)sender
 {
+    //Trying to have an alert message pop up saying asking user if they are sure they want to cancel
     
-}
+    //UIAlertView *alert = [[UIAlertView alloc] initWithTitle: @"Save Successful"
+    //                                                message: @"Your changes were successfully saved."
+    //                                               delegate: nil];
+    //[alert show];
+    //[alert release];}
 
 -(IBAction)onCancel:(id)sender
 {
+    //Trying to have an alert message pop up saying asking user if they are sure they want to cancel
     
+    //UIAlertView *alert = [[UIAlertView alloc] initWithTitle: @"Cancel?"
+    //                                                message: @"Are you sure you want to cancel? All changes made will be lost"
+    //                                               delegate: nil
+    //                                      cancelButtonTitle: @"No"
+    //                                      otherButtonTitles: @"Yes"];
+    //[alert show];
+    //[alert release];
 }
 
 @end

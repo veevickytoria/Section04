@@ -56,5 +56,11 @@
 -(IBAction)onEditProfile:(id)sender
 {
     self.editProfileViewController = [[iWinEditProfileViewController alloc] initWithNibName:@"iWinEditProfileViewController" bundle:nil];
+    
+    [self.editProfileViewController setModalPresentationStyle:UIModalPresentationPageSheet];
+    [self.editProfileViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+    
+    [self presentViewController:self.editProfileViewController animated:YES completion:nil];
+    self.editProfileViewController.view.superview.bounds = CGRectMake(0,0,768,1003);
 }
 @end

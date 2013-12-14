@@ -6,6 +6,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="iWinViewProfileViewController">
             <connections>
+                <outlet property="changePicture" destination="mfS-I7-s2i" id="1dp-wS-YhV"/>
+                <outlet property="editProfile" destination="Ubq-dz-p6v" id="Ppf-9f-uUr"/>
                 <outlet property="view" destination="2" id="3"/>
             </connections>
         </placeholder>
@@ -98,6 +100,9 @@
                     <state key="normal" title="Change Picture">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
+                    <connections>
+                        <action selector="onChangePicture:" destination="-1" eventType="touchUpInside" id="nI5-Xj-crT"/>
+                    </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ubq-dz-p6v">
                     <rect key="frame" x="609" y="837" width="75" height="30"/>
@@ -105,6 +110,9 @@
                     <state key="normal" title="Edit Profile">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
+                    <connections>
+                        <action selector="onEditProfile:" destination="-1" eventType="touchUpInside" id="0Ap-b8-b4m"/>
+                    </connections>
                 </button>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
