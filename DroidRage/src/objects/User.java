@@ -12,7 +12,7 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 
 public class User {
-	private long userID;
+	private String userID;
 	private String displayName;
 	private String email;
 	private String phone = "";
@@ -21,12 +21,31 @@ public class User {
 	private String location = "";
 	private List<Meeting> schedule;
 	private List<Task> tasks;
+	
+	public User(){
+		
+	}
+	
+	public User(String userID){
+		this.userID = userID;
+		this.displayName = "Joe Doe";
+		this.email = "joedoePIC@PIC.com";
+		this.phone = "5555555555";
+		this.company = "Plastic People INC";
+		this.title = "PIC";
+		this.location = "somewhere";
+		
+	}
+	
+	public void updateInfo(){
+		
+	}
 
-	public long getUserID() {
+	public String getUserID() {
 		return userID;
 	}
 
-	public void setUserID(long id) {
+	public void setUserID(String id) {
 		this.userID = id;
 	}
 
@@ -135,7 +154,7 @@ public class User {
 
 		// Build JSON Object
 		jgen.writeStartObject();
-		jgen.writeStringField("userID", Long.toString(user.getUserID()));
+		jgen.writeStringField("userID", user.getUserID());
 		jgen.writeStringField("displayName", user.getDisplayName());
 		jgen.writeStringField("email", user.getEmail());
 		jgen.writeStringField("phone", user.getPhone());

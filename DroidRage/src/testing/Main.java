@@ -122,7 +122,7 @@ public class Main {
 			String name = parser.getCurrentName();
 			if ("userID".equals(name)) {
 				parser.nextToken();
-				u.setUserID(Long.parseLong(parser.getText()));
+				u.setUserID((parser.getText()));
 			} else if ("displayName".equals(name)) {
 				parser.nextToken();
 				u.setDisplayName(parser.getText());

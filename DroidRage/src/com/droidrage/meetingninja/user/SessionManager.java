@@ -14,9 +14,12 @@ public class SessionManager {
 
 	// Sharedpref username
 	public static final String USER = "username";
-
+	
 	// Sharedpref login state
 	public static final String LOGGED_IN = "isLoggedIn";
+	
+	//Sharedpref user ID
+	public static final String USERID = "userID";
 
 	// Shared Preferences
 	private SharedPreferences pref;
@@ -41,6 +44,7 @@ public class SessionManager {
 		// Storing login value as TRUE
 		editor.putString(USER, user);
 		editor.putBoolean(LOGGED_IN, true);
+		editor.putString(USERID, "1234");
 		// commit changes
 		editor.commit();
 	}
@@ -52,6 +56,7 @@ public class SessionManager {
 		HashMap<String, String> user = new HashMap<String, String>();
 		// user name
 		user.put(USER, pref.getString(USER, null));
+		user.put(USERID, pref.getString(USERID, null));
 
 		// return user
 		return user;

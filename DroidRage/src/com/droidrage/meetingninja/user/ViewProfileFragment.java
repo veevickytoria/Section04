@@ -11,12 +11,14 @@ import com.droidrage.meetingninja.meetings.MeetingFetcherTask;
 import com.droidrage.meetingninja.meetings.MeetingItemAdapter;
 
 import objects.Meeting;
+import objects.User;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.QuickContactBadge;
 import android.widget.TextView;
 
 public class ViewProfileFragment extends Fragment implements
@@ -26,21 +28,21 @@ public class ViewProfileFragment extends Fragment implements
 	private List<Meeting> meetings = new ArrayList<Meeting>();
 	private SessionManager session;
 	private MeetingItemAdapter adpt;
-	private TextView profileName;
+	private User user;
 
-	private TextView company, jobTitle;
+	private TextView company, jobTitle, profileName, phoneNum, email;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View v = inflater.inflate(R.layout.activity_view_profile, container,
-				false);
-
-		setupViews(v);
-
 		session = new SessionManager(getActivity().getApplicationContext());
 
-		profileName.setText(session.getUserDetails().get(SessionManager.USER));
+		View v = inflater.inflate(R.layout.activity_view_profile, container,
+				false);
+		user = new User(session.getUserDetails().get(session.USERID));
+		setupViews(v);
+
+
 		// company.setText(session.getUserDetails().get(SessionManager.company));
 		// jobTitle.setText(session.getUserDetails().get(SessionManager.jobTitle));
 
@@ -60,6 +62,18 @@ public class ViewProfileFragment extends Fragment implements
 		profileName = (TextView) v.findViewById(R.id.profile_name);
 		company = (TextView) v.findViewById(R.id.company);
 		jobTitle = (TextView) v.findViewById(R.id.jobtitle);
+		phoneNum = (TextView) v.findViewById(R.id.profile_phone);
+		email = (TextView) v.findViewById(R.id.profile_email);
+		
+		profileName.setText(user.getDisplayName());
+		company.setText(user.getCompany());
+		jobTitle.setText(user.getTitle());
+		phoneNum.setText(user.getPhone());
+		email.setText(user.getEmail());
+		
+		QuickContactBadge q = (QuickContactBadge) v.findViewById(R.id.view_prof_pic); 
+		q.setImageResource(R.drawable.joedoe);
+		
 	}
 
 	@Override

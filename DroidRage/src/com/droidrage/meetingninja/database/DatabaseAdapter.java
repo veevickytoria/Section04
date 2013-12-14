@@ -15,6 +15,7 @@ import java.util.List;
 
 import objects.Meeting;
 import objects.Note;
+import objects.User;
 
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonFactory;
@@ -138,6 +139,32 @@ public class DatabaseAdapter {
 		conn.disconnect();
 
 	}
+	
+	/*commented out until it works with backend
+	public static User getUserInfo(String username)
+			throws JsonParseException, JsonMappingException, IOException {
+		//Server URL setup
+		String filename = "User.php";
+		String server_method = "getUserInfo";
+		//sets what information we want to get from the database
+		String _url = String.format("%s%s?method=%s&user=%s", SERVER_NAME,
+				filename, server_method, username);
+		//establish connection
+		URL url = new URL(_url);
+		//initialize ObjectMapper
+		ObjectMapper mapper = new ObjectMapper(JFACTORY);
+		
+		
+		//TODO: Currently gets a list of users though it will only use the 0 index because we don't know if mapper can return anthing but a list 
+		List<User> users = new ArrayList<User>();
+		//gets the information about the user requested from the database and puts it in a user list
+		users = mapper.readValue(url, new TypeReference <List <User>>(){});
+		
+		//returns just a user not a list of users because only the 0 index has a user in it
+		return users.get(0);
+		
+	
+	}*/
 
 	public static List<Meeting> getMeetings(String username)
 			throws JsonParseException, JsonMappingException, IOException {

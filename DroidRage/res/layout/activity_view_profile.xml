@@ -15,7 +15,7 @@
         android:layout_height="wrap_content" >
 
         <QuickContactBadge
-            android:id="@+id/quickContactBadge1"
+            android:id="@+id/view_prof_pic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
@@ -70,7 +70,7 @@
             android:background="@android:color/darker_gray" />
 
         <TextView
-            android:id="@+id/header_from"
+            android:id="@+id/profile_phone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="(800) 123-6789"
@@ -97,7 +97,7 @@
             android:background="@android:color/darker_gray" />
 
         <TextView
-            android:id="@+id/desc_from_date"
+            android:id="@+id/profile_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="android@example.com"

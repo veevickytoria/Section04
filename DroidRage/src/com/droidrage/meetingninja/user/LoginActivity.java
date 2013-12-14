@@ -247,7 +247,8 @@ public class LoginActivity extends Activity {
 				return false;
 			}
 
-			return login_success;
+			//return login_success;
+			return true;
 		}
 
 		@Override
