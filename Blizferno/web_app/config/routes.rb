@@ -56,6 +56,9 @@ WebApp::Application.routes.draw do
   #     resources :products
   #   end
 
+
+  post "login/index"
+
   get "home_page/index"
   get "home_page/tabpage"
 
