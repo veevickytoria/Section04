@@ -1,10 +1,6 @@
 <!-- Javascript -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
 <script type="text/javascript">
-
-$(window).load(alert("blah"));
-
-
-alert("here");
 
     function getCookie(c_name){
         var c_value = document.cookie;
@@ -51,44 +47,57 @@ function ConvertFormToJSON(form){
 	jQuery.each(array, function() {
 		json[this.name] = this.value || '';
 	});
-alert(json);
+
 	return json;
-   // return "{'email':'hello@gmail.com', 'password':'lsakdjfaslkdfj'}";
 
 }
 
-
-//jQuery(document).on('ready', function() {
-
-//$( document ).ready(function() {
-
+/*
 $(window).load(function() { 
-
-alert("stuff");
 
     jQuery('#testing').bind('submit', function(event){
         event.preventDefault();
-        
+
         var form = this;
         var json = new ConvertFormToJSON(form);
 
         $.ajax({
-            type: "POST",
-            url: "http://csse371-04.csse.rose-hulman.edu/index/",
-            data: json,
-	    dataType: "json"
+            type: 'POST',
+            url: 'http://csse371-04.csse.rose-hulman.edu/User/Login/',
+            data: JSON.stringify(json),
+	    dataType: 'json'
         });
 
-
-alert(json);
 
         return true;
     });
 
     
 });
+*/
+
+$(windows).load(function() {
+postFormAsJSON('testing', 'User/Login/');
+
+});
+function postFormAsJSON(formId, urlEnding){
+    jQuery('#'+ formId).bind('submit', function(event){
+        event.preventDefault();
+
+        var form = this;
+        var json = new ConvertFormToJSON(form);
+
+        $.ajax({
+            type: 'POST',
+            url: 'http://csse371-04.csse.rose-hulman.edu/' + urlEnding,
+            data: JSON.stringify(json),
+	    dataType: 'json'
+        });
 
 
+        return true;
+    });
+}
 
 
 </script>

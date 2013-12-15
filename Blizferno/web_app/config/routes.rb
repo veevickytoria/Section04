@@ -70,6 +70,7 @@ WebApp::Application.routes.draw do
   get "profile/index"
   get "tasks/index"
   get "tasks/new"
+  get "tasks/view"
   get "tasks/list"
   get "preferences/home"
 
