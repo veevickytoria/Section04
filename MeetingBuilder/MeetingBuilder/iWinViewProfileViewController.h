@@ -12,6 +12,18 @@
 @protocol ProfileDelegate <NSObject>
 -(void) onClickEditProfile;
 -(void) onClickChangePicture;
+//-(NSString *) getCompany;
+//-(NSString *) getEmail;
+//-(NSString *) getPhone;
+//-(NSString *) getPosition;
+//-(NSString *) getMoreAboutMe;
+//-(UIImage *) getProfilePic;
+//-(void) setCompany: (NSString *)company;
+//-(void) setEmail: (NSString *)email;
+//-(void) setPhone: (NSString *)phone;
+//-(void) setPosition: (NSString *)position;
+//-(void) setMoreAboutMe: (NSString *)moreAboutMe;
+//-(void) setProfilePic: (UIImage *)profilePic;
 
 @end
 
@@ -19,15 +31,29 @@
 - (IBAction)onChangePicture:(id)sender;
 - (IBAction)onEditProfile:(id)sender;
 -(id) initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil;
+
 @property (weak, nonatomic) IBOutlet UIButton *changePicture;
 @property (weak, nonatomic) IBOutlet UIButton *editProfile;
+
+
+@property (weak, nonatomic) IBOutlet UITextView *companyTextView;
+@property (weak, nonatomic) IBOutlet UITextView *emailTextView;
+@property (weak, nonatomic) IBOutlet UITextView *phoneTextView;
+@property (weak, nonatomic) IBOutlet UITextView *positionTextView;
+@property (weak, nonatomic) IBOutlet UITextView *moreAboutMeTextView;
+
+@property (weak, nonatomic) IBOutlet UIImageView *profilePicImageView;
+
 @property (nonatomic) id<ProfileDelegate> profileDelegate;
-@property (strong, nonatomic) NSString *name;
-@property (strong, nonatomic) NSString *Company;
-@property (strong, nonatomic) NSString *email;
-@property (strong, nonatomic) NSString *phone;
-@property (strong, nonatomic) NSString *position;
-@property (strong, nonatomic) NSString *moreAboutMe;
-@property (strong, nonatomic) UIImage *profilePic;
+
+//@property (strong, nonatomic) NSString *company;
+//@property (strong, nonatomic) NSString *email;
+//@property (strong, nonatomic) NSString *phone;
+//@property (strong, nonatomic) NSString *position;
+//@property (strong, nonatomic) NSString *moreAboutMe;
+//@property (strong, nonatomic) UIImage *profilePic;
+
+
+
 
 @end
