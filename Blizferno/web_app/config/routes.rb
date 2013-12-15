@@ -56,6 +56,9 @@ WebApp::Application.routes.draw do
   #     resources :products
   #   end
 
+
+  post "login/index"
+
   get "home_page/index"
   get "home_page/tabpage"
 
@@ -67,6 +70,7 @@ WebApp::Application.routes.draw do
   get "profile/index"
   get "tasks/index"
   get "tasks/new"
+  get "tasks/view"
   get "tasks/list"
   get "preferences/home"
 
