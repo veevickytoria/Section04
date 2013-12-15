@@ -43,7 +43,7 @@
     <strong><span style="font-size:18px;">Completion Criteria: </span></strong>
   </span>
   <br />
-  <span> <%# @TaskArray[7] %> </span>
+  <span> <%= #@TaskArray[7] %> </span>
 </p>
 <p>
   <br>
