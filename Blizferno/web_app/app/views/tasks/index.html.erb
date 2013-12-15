@@ -5,7 +5,7 @@ header > h1 { display: inline-block; }
 }
 </style>
 
-<header><h1 style='margin-left: 15%; margin-right: auto;'>Tasks</h1>   <a href='#newTaskModal' data-toggle='modal'><span style='font-size: 1.3em;' class='glyphicon glyphicon-plus'></span></a></header>
+<h1 style='margin-left: 15%; margin-right: auto;'>Tasks</h1>
 
 <!-- Modal -->
 <div class="modal fade" id="newTaskModal" tabindex="-1" role="dialog" aria-labelledby="newTaskModalLabel" aria-hidden="true">
@@ -16,7 +16,7 @@ header > h1 { display: inline-block; }
         <h4 class="modal-title" id="myModalLabel">Modal title</h4>
       </div>
       <div class="modal-body">
-  <%= render "new" %>
+        <%= render "new" %>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -35,7 +35,7 @@ header > h1 { display: inline-block; }
     </tr>
   </thead>
   <tr>
-    <td>Saturday 15 March</td>
+    <td>15 March</td>
     <td>Get Elected</td>
     <td><a href="#">Elect Morris</a></td>
   </tr>
@@ -49,4 +49,8 @@ header > h1 { display: inline-block; }
     <td>Do Everything</td>
     <td><a href="#">Just Kidding</a></td>
   </tr>
+  <tr>
+    <td colspan='3' style='cursor: pointer; text-align: center' href='#newTaskModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
+  </tr>
 </table>
+
