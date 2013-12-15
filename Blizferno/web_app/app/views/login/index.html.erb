@@ -26,7 +26,7 @@
         document.cookie= name + '=;expires=Thu, 01 Jan 2970 00:00:01 GMT;';
     }
 
-    function passCheck(){
+    /*function passCheck(){
         var pass0 = document.getElementById('p0').value();
         var pass1 = document.getElementById('p1').value();
         if(pass0 != pass1){
@@ -34,7 +34,7 @@
         }else{
             document.getElementById('p1').style.box-shadow('none;');
         }
-    }
+    }*/
 </script>
 
 </head>
@@ -65,22 +65,15 @@
             <p>Enter your details below: </p>
             <form action="register.php" method="post">
                 <table style="width: 100%">
-                    <tr>
-                        <td style="width: 42%">
-                            <input name="firstName" placeholder="First Name" type="text" />
-                        </td>
-                            <td style="width: 5px; background-color: #14A2D4">
-                        </td>
-                        <td style="width: 52%">
-                            <input name="lastName" placeholder="Last Name" type="text" />
-                        </td>
-                    </tr>
-                </table>
-                <input name="username[1]" placeholder="Username" type="text" />
-                <input name="email" placeholder="Email" type="email" />
-                <input id="p0" name="password[1]" placeholder="Password" type="password" />
-                <input id="p1" name="passConfirm" placeholder="Confirm password" type="password" onchange="passCheck();" />
-                <input class="button" type="submit" value="Sign Up" />
+                    <input name="name" placeholder="Full Name" type="text" />
+                    <input name="email" placeholder="Email" type="email" />
+                    <input id='p0' name='password' placeholder='Password' type='password' />
+                    <input name="phone" placeholder="Phone #" type="text" />
+                    <input name="company" placeholder="Company" type="text" />
+                    <input name="title" placeholder="Title" type="text" />
+                    <input name="location" placeholder="Location" type="text" />
+                <!-- <input id="p1" name="passConfirm" placeholder="Confirm password" type="password" onchange="passCheck();" /> -->
+                <input class="button" disabled='true' style='font-size: 14px; cursor: pointer' type="submit" value="Sign Up" />
             </form>
         </div>
         <!--/#register.form-action-->
@@ -114,7 +107,7 @@
             .fadeIn(550);
 
             if(href == '#register'){
-                $('.flat-form').animate({height:480},550);
+                $('.flat-form').animate({height:560},550);
             }else{
                 $('.flat-form').animate({height:410},550);
             }
