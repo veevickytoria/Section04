@@ -33,12 +33,13 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
+        self.editProfileViewController = [[iWinEditProfileViewController alloc] initWithNibName:@"iWinEditProfileViewController" bundle: nil /*iWinProfileViewController:self*/];
         // Custom initialization
-//        self.company = @"Garmin";
-//        self.email = @"hazzargm@garmin.com";
-//        self.phone = @"(555) 123-7654";
-//        self.position = @"Intern";
-//        self.moreAboutMe = @"I enjoy long walks on the beach... etc. etc. etc. And now to make this really long just to see what it does..............................................................................................................";
+        self.company = @"Garmin";
+        self.email = @"hazzargm@garmin.com";
+        self.phone = @"(555) 123-7654";
+        self.position = @"Intern";
+        self.moreAboutMe = @"I enjoy long walks on the beach... etc. etc. etc. And now to make this really long just to see what it does..............................................................................................................";
         
     }
     return self;
@@ -53,18 +54,18 @@
     [self updateButtonUI:self.editProfile];
     [self updateButtonUI:self.changePicture];
     
-//    self.profilePicImageView.image = nil;
-//    self.companyTextView.text = self.company;
-//    self.emailTextView.text = self.email;
-//    self.phoneTextView.text = self.phone;
-//    self.positionTextView.text =self.position;
-//    self.moreAboutMeTextView.text = self.moreAboutMe;
     self.profilePicImageView.image = nil;
-    self.companyTextView.text =  @"Garmin";
-    self.emailTextView.text = @"hazzargm@garmin.com";
-    self.phoneTextView.text = @"(555) 123-7654";
-    self.positionTextView.text = @"Intern";
-    self.moreAboutMeTextView.text = @"I enjoy long walks on the beach... etc. etc. etc. And now to make this really long just to see what it does..............................................................................................................";
+    self.companyTextView.text = self.company;
+    self.emailTextView.text = self.email;
+    self.phoneTextView.text = self.phone;
+    self.positionTextView.text =self.position;
+    self.moreAboutMeTextView.text = self.moreAboutMe;
+//    self.profilePicImageView.image = nil;
+//    self.companyTextView.text =  @"Garmin";
+//    self.emailTextView.text = @"hazzargm@garmin.com";
+//    self.phoneTextView.text = @"(555) 123-7654";
+//    self.positionTextView.text = @"Intern";
+//    self.moreAboutMeTextView.text = @"I enjoy long walks on the beach... etc. etc. etc. And now to make this really long just to see what it does..............................................................................................................";
 }
 
 -(void) updateButtonUI: (UIButton *)button
@@ -87,7 +88,7 @@
 
 -(IBAction)onEditProfile:(id)sender
 {
-    self.editProfileViewController = [[iWinEditProfileViewController alloc] initWithNibName:@"iWinEditProfileViewController" bundle: nil /*iWinProfileViewController:self*/];
+//    self.editProfileViewController = [[iWinEditProfileViewController alloc] initWithNibName:@"iWinEditProfileViewController" bundle: nil /*iWinProfileViewController:self*/];
     
     [self.editProfileViewController setModalPresentationStyle:UIModalPresentationPageSheet];
     [self.editProfileViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
