@@ -16,7 +16,7 @@
 -(IBAction) onChangePicture:(id)sender;
 -(IBAction) onSave:(id)sender;
 -(IBAction) onCancel:(id)sender;
--(id) initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil iWinProfileViewController:(UIViewController *) iWinProfileViewController;
+-(id) initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil company:(NSString *)company email:(NSString *)email phone:(NSString *)phone position:(NSString *)position moreAboutMe:(NSString *)moreAboutMe profilePic: (UIImage *) profilePic;
 
 @property (weak, nonatomic) IBOutlet UIButton *changePicture;
 @property (weak, nonatomic) IBOutlet UIButton *save;

@@ -33,14 +33,14 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.editProfileViewController = [[iWinEditProfileViewController alloc] initWithNibName:@"iWinEditProfileViewController" bundle: nil /*iWinProfileViewController:self*/];
+        
         // Custom initialization
         self.company = @"Garmin";
         self.email = @"hazzargm@garmin.com";
         self.phone = @"(555) 123-7654";
         self.position = @"Intern";
         self.moreAboutMe = @"I enjoy long walks on the beach... etc. etc. etc. And now to make this really long just to see what it does..............................................................................................................";
-        
+        self.editProfileViewController = [[iWinEditProfileViewController alloc] initWithNibName:@"iWinEditProfileViewController" bundle: nil company:self.company email:self.email phone:self.phone position:self.position moreAboutMe:self.moreAboutMe profilePic:self.profilePic];
     }
     return self;
 }

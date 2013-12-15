@@ -26,19 +26,25 @@
 
 @implementation iWinEditProfileViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil /*iWinViewProfileViewController: iWinViewProfileViewController*/
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil company:(NSString *)company email:(NSString *)email phone:(NSString *)phone position:(NSString *)position moreAboutMe:(NSString *)moreAboutMe profilePic: (UIImage *) profilePic
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        /*self.viewProfileVC = iWinViewProfileViewController;*/
         
-//        self.company = self.viewProfileVC.company;
-//        self.email = self.viewProfileVC.email;
-//        self.phone = self.viewProfileVC.phone;
-//        self.position = self.viewProfileVC.position;
-//        self.moreAboutMe = self.viewProfileVC.moreAboutMe;
-//        self.profilePic = self.viewProfileVC.profilePic;
+        self.company = company;
+        self.email = email;
+        self.phone = phone;
+        self.position = position;
+        self.moreAboutMe = moreAboutMe;
+        self.profilePic = profilePic;
+        
+        self.companyField.text = company;
+        self.emailField.text = email;
+        self.phoneField.text = phone;
+        self.positionField.text = position;
+        self.moreAboutMeField.text = moreAboutMe;
+        self.profilePicView.image = profilePic;
     }
     return self;
 }
@@ -52,7 +58,7 @@
     [self updateButtonUI:self.cancel];
     [self updateButtonUI:self.changePicture];
     
-    //[self updateLabelUI:self.startDateLabel];
+//    [self updateLabelUI:self.testLabel];
     
     
 }
