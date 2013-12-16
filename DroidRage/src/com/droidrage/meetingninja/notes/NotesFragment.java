@@ -9,6 +9,7 @@ import com.droidrage.meetingninja.R.layout;
 import com.droidrage.meetingninja.database.AsyncResponse;
 import com.droidrage.meetingninja.database.DatabaseAdapter;
 import com.droidrage.meetingninja.user.SessionManager;
+import com.droidrage.meetingninja.database.SQLiteAdapter;
 
 import objects.Note;
 import android.content.Context;
@@ -36,6 +37,7 @@ public class NotesFragment extends Fragment implements
 	private SessionManager session;
 	private NoteItemAdapter noteAdpt;
 	private static List<Note> notes = new ArrayList<Note>();
+	private SQLiteAdapter mySQLiteAdapter;
 
 	// private View notesView;
 
@@ -160,6 +162,22 @@ public class NotesFragment extends Fragment implements
 	}
 	
 	private void createNotes(){
+		mySQLiteAdapter = new SQLiteAdapter(this.getActivity());
+
+//		mySQLiteAdapter.openToWrite();
+//		mySQLiteAdapter.close();
+
+		
+		mySQLiteAdapter = new SQLiteAdapter(this.getActivity());
+		mySQLiteAdapter.openToRead();
+		List<Note> contentRead = mySQLiteAdapter.QuerryNotes();
+		
+		for(Note i: contentRead)
+			notes.add(i);
+		
+		mySQLiteAdapter.close();
+		
+		
 		notes.add(new Note("Oct 7 PM Meeting"));
 
 		Note meeting = new Note("Oct 9 Team Meeting");
