@@ -3,14 +3,15 @@
 Options +FollowSymLinks
 RewriteEngine On
 
-RewriteRule ^Index/Login/$ Index.php?cat=login [NC,L]
-RewriteRule ^Index/Contacts/[0-9]/$ Index.php?cat=contacts [NC,L]
-RewriteRule ^Index/Schedule/[0-9]/$ Index.php?cat=schedule [NC,L]
-RewriteRule ^Index/Groups/[0-9]/$ Index.php?cat=groups [NC,L]
-RewriteRule ^Index/Projects/[0-9]/$ Index.php?cat=projects [NC,L]
-RewriteRule ^Index/Tasks/[0-9]/$ Index.php?cat=tasks [NC,L]
-RewriteRule ^Index/[0-9]/$ Index.php?id=$1 [NC,L]
-RewriteRule ^Index/$ Index.php [NC,L]
+RewriteRule ^User/Login/$ User.php?cat=login [NC,L]
+RewriteRule ^User/Contacts/[0-9]/$ User.php?cat=contacts [NC,L]
+RewriteRule ^User/Schedule/[0-9]/$ User.php?cat=schedule [NC,L]
+RewriteRule ^User/Groups/[0-9]/$ User.php?cat=groups [NC,L]
+RewriteRule ^User/Users/$ User.php?cat=users [NC,L]
+RewriteRule ^User/Projects/[0-9]/$ User.php?cat=projects [NC,L]
+RewriteRule ^User/Tasks/[0-9]/$ User.php?cat=tasks [NC,L]
+RewriteRule ^User/[0-9]/$ User.php?id=$1 [NC,L]
+RewriteRule ^User/$ User.php [NC,L]
 
 RewriteRule ^Note/$ Note.php [NC,L]
 RewriteRule ^Note/[0-9]/$ Note.php?noteID=$1 [NC,L]
