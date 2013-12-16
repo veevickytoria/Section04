@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.droidrage.meetingninja.database.AsyncResponse;
 import com.droidrage.meetingninja.database.DatabaseAdapter;
+import com.droidrage.meetingninja.database.MeetingDatabaseAdapter;
 
 import objects.Meeting;
 import android.os.AsyncTask;
@@ -26,7 +27,7 @@ public class MeetingFetcherTask extends AsyncTask<String, Void, List<Meeting>> {
 		List<Meeting> dbMeetings = new ArrayList<Meeting>();
 
 		try {
-			dbMeetings = DatabaseAdapter.getMeetings(params[0]);
+			dbMeetings = MeetingDatabaseAdapter.getMeetings(params[0]);
 		} catch (IOException e) {
 			Log.e("MeetingFetch", "Error: Unable to get meetings");
 			Log.e("MEETINGS_ERR", e.getLocalizedMessage());

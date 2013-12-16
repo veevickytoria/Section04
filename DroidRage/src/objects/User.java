@@ -21,12 +21,12 @@ public class User {
 	private String location = "";
 	private List<Meeting> schedule;
 	private List<Task> tasks;
-	
-	public User(){
-		
+
+	public User() {
+
 	}
-	
-	public User(String userID){
+
+	public User(String userID) {
 		this.userID = userID;
 		this.displayName = "Joe Doe";
 		this.email = "joedoePIC@PIC.com";
@@ -34,11 +34,10 @@ public class User {
 		this.company = "Plastic People INC";
 		this.title = "PIC";
 		this.location = "somewhere";
-		
 	}
-	
-	public void updateInfo(){
-		
+
+	public void updateInfo() {
+
 	}
 
 	public String getUserID() {
@@ -98,7 +97,8 @@ public class User {
 	}
 
 	public List<Meeting> getSchedule() {
-		return (schedule == null || schedule.isEmpty()) ? new ArrayList<Meeting>() : schedule;
+		return (schedule == null || schedule.isEmpty()) ? new ArrayList<Meeting>()
+				: schedule;
 	}
 
 	public List<Task> getTasks() {
@@ -123,22 +123,22 @@ public class User {
 		builder.append(getDisplayName() + "\n");
 		builder.append("getEmail()\t");
 		builder.append(getEmail() + "\n");
-		if (!getPhone().isEmpty()) {
-			builder.append("getPhone()\t");
-			builder.append(getPhone() + "\n");
-		}
-		if (!getCompany().isEmpty()) {
-			builder.append("getCompany()\t");
-			builder.append(getCompany() + "\n");
-		}
-		if (!getTitle().isEmpty()) {
-			builder.append("getTitle()\t");
-			builder.append(getTitle() + "\n");
-		}
-		if (!getLocation().isEmpty()) {
-			builder.append("getLocation()\t");
-			builder.append(getLocation() + "\n");
-		}
+		// if (!getPhone().isEmpty()) {
+		builder.append("getPhone()\t");
+		builder.append(getPhone() + "\n");
+		// }
+		// if (!getCompany().isEmpty()) {
+		builder.append("getCompany()\t");
+		builder.append(getCompany() + "\n");
+		// }
+		// if (!getTitle().isEmpty()) {
+		builder.append("getTitle()\t");
+		builder.append(getTitle() + "\n");
+		// }
+		// if (!getLocation().isEmpty()) {
+		builder.append("getLocation()\t");
+		builder.append(getLocation() + "\n");
+		// }
 		builder.append("************************");
 		return builder.toString();
 	}

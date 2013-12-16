@@ -14,11 +14,11 @@ public class SessionManager {
 
 	// Sharedpref username
 	public static final String USER = "username";
-	
+
 	// Sharedpref login state
 	public static final String LOGGED_IN = "isLoggedIn";
-	
-	//Sharedpref user ID
+
+	// Sharedpref user ID
 	public static final String USERID = "userID";
 
 	// Shared Preferences

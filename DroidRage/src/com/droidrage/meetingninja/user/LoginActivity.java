@@ -9,6 +9,7 @@ import com.droidrage.meetingninja.R.layout;
 import com.droidrage.meetingninja.R.menu;
 import com.droidrage.meetingninja.R.string;
 import com.droidrage.meetingninja.database.DatabaseAdapter;
+import com.droidrage.meetingninja.database.UserDatabaseAdapter;
 import com.droidrage.meetingninja.extras.Util;
 
 import android.animation.Animator;
@@ -151,12 +152,11 @@ public class LoginActivity extends Activity {
 			mEmailView.setError(getString(R.string.error_field_required));
 			focusView = mEmailView;
 			cancel = true;
+		} else if (!Util.isValidEmailAddress(mEmail)) {
+			mEmailView.setError(getString(R.string.error_invalid_email));
+			focusView = mEmailView;
+			cancel = true;
 		}
-		 else if (!Util.isValidEmailAddress(mEmail)) {
-		 mEmailView.setError(getString(R.string.error_invalid_email));
-		 focusView = mEmailView;
-		 cancel = true;
-		 }
 
 		/*
 		 * SessionManager session = new SessionManager(
@@ -236,11 +236,11 @@ public class LoginActivity extends Activity {
 			// TODO: attempt authentication against a network service.
 			// TODO: register a new account
 
-			boolean login_success = false;
+			String login_result = "";
 
 			try {
-				login_success = DatabaseAdapter.urlLogin(mEmail);
-				if (!login_success)
+				login_result = UserDatabaseAdapter.login(mEmail, mPassword);
+				if (login_result.contains("invalid"))
 					Log.e("LOGIN", mEmail + " does not exist");
 				// Thread.sleep(2000);
 			} catch (IOException e) {
@@ -248,7 +248,7 @@ public class LoginActivity extends Activity {
 				return false;
 			}
 
-			//return login_success;
+			// return login_success;
 			return true;
 		}
 

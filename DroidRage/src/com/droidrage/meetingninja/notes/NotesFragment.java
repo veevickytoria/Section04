@@ -8,6 +8,7 @@ import com.droidrage.meetingninja.R.id;
 import com.droidrage.meetingninja.R.layout;
 import com.droidrage.meetingninja.database.AsyncResponse;
 import com.droidrage.meetingninja.database.DatabaseAdapter;
+import com.droidrage.meetingninja.database.NotesDatabaseAdapter;
 import com.droidrage.meetingninja.user.SessionManager;
 import com.droidrage.meetingninja.database.SQLiteAdapter;
 
@@ -47,17 +48,17 @@ public class NotesFragment extends Fragment implements
 		super.onCreateView(inflater, container, savedInstanceState);
 		View v = inflater.inflate(R.layout.fragment_notes, container, false);
 
-//		Intent test = getActivity().getIntent();
+		// Intent test = getActivity().getIntent();
 
-//		if (test.getStringExtra("NoteID") != null)
-//			Log.e("NOTES", test.getStringExtra("NoteID"));
+		// if (test.getStringExtra("NoteID") != null)
+		// Log.e("NOTES", test.getStringExtra("NoteID"));
 
 		session = new SessionManager(getActivity().getApplicationContext());
 
 		// TODO: Check for internet connection before receiving notes from DB
 		// TODO: Display a something saying "no notes" if there are no notes
 		// instead of having no notes appear
-		if(notes.size() == 0)
+		if (notes.size() == 0)
 			createNotes();
 
 		ListView lv = (ListView) v.findViewById(R.id.notesList);
@@ -161,7 +162,7 @@ public class NotesFragment extends Fragment implements
 
 	}
 	
-	private void createNotes(){
+	private void createNotes() {
 		mySQLiteAdapter = new SQLiteAdapter(this.getActivity());
 
 //		mySQLiteAdapter.openToWrite();
@@ -177,27 +178,12 @@ public class NotesFragment extends Fragment implements
 		
 		mySQLiteAdapter.close();
 		
-		
-		notes.add(new Note("Oct 7 PM Meeting"));
+		notes.add(new Note("A new note"));
 
-		Note meeting = new Note("Oct 9 Team Meeting");
-		meeting.addContent("Max and Jordan worked on use cases.");
-		meeting.addContent("Chris and Ruji worked on the frontend and backend.");
-		meeting.addContent("Milestone 2 is due this Friday.");
-		meeting.addContent("If this note is too lengthy, then it should be shortened to a reasonable length.");
-		meeting.addContent("The question is: \"How long is considered lengthy?\"");
-		notes.add(meeting);
-
-		Note journal = new Note("Personal Journal");
-		journal.addContent("This is private to "
-				+ session.getUserDetails().get(SessionManager.USER) + "!");
-		notes.add(journal);
-
-		for (int i = 0; i < 8; i++) {
+		for (int i = 0; i < 3; i++) {
 			notes.add(new Note());
 		}
-
-		notes.get(6).addContent("The ID is working correctly!");
+		
 	}
 
 	@Override
@@ -221,100 +207,6 @@ public class NotesFragment extends Fragment implements
 		notes.get(noteID).setContent(noteContent);
 
 		return true;
-	}
-
-}
-
-/**
- * A class to display the Notes in a specific format for the items of the list.
- * This class uses the note_item XML file.
- * 
- * @author moorejm
- * 
- */
-class NoteItemAdapter extends ArrayAdapter<Note> {
-	// declaring our ArrayList of items
-	private List<Note> notes;
-
-	/*
-	 * Override the constructor to initialize the list to display
-	 */
-	public NoteItemAdapter(Context context, int textViewResourceId,
-			List<Note> notes) {
-		super(context, textViewResourceId, notes);
-		this.notes = notes;
-	}
-
-	/*
-	 * we are overriding the getView method here - this is what defines how each
-	 * list item will look.
-	 */
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		View v = convertView;
-		if (v == null) {
-			LayoutInflater vi = (LayoutInflater) getContext().getSystemService(
-					Context.LAYOUT_INFLATER_SERVICE);
-			v = vi.inflate(R.layout.note_item, null);
-		}
-
-		// Setup from the note_item XML file
-		Note note = notes.get(position);
-		if (note != null) {
-			TextView noteName = (TextView) v.findViewById(R.id.noteName);
-			TextView noteContent = (TextView) v.findViewById(R.id.noteContent);
-
-			if (noteName != null) {
-				noteName.setText(note.getName());
-			}
-			if (noteContent != null) {
-				String content = note.getContent();
-				int max_length = 200;
-				if (content.length() > max_length)
-					noteContent.setText(content.substring(0, max_length)
-							+ "...");
-				else
-					noteContent.setText(content);
-			}
-		}
-
-		return v;
-	}
-
-	/**
-	 * Represents an asynchronous task to receive meetings from the database
-	 */
-	private class NoteFetcherTask extends AsyncTask<String, Void, List<Note>> {
-		private AsyncResponse<List<Note>> delegate;
-
-		public NoteFetcherTask(AsyncResponse<List<Note>> delegate) {
-			this.delegate = delegate;
-		}
-
-		@Override
-		protected List<Note> doInBackground(String... params) {
-			List<Note> dbNotes = new ArrayList<Note>();
-
-			try {
-				dbNotes = DatabaseAdapter.getNotes(params[0]);
-			} catch (Exception e) {
-				Log.e("NotesFetch", "Error getting notes");
-				Log.e("NOTES_ERR", e.toString());
-			}
-
-			return dbNotes;
-		}
-
-		@Override
-		protected void onPostExecute(List<Note> list) {
-			super.onPostExecute(list);
-			delegate.processFinish(list);
-		}
-
-		@Override
-		protected void onCancelled() {
-			super.onCancelled();
-		}
 	}
 
 }

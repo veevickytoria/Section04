@@ -8,6 +8,8 @@ import com.droidrage.meetingninja.R.layout;
 import com.droidrage.meetingninja.R.string;
 import com.droidrage.meetingninja.database.AsyncResponse;
 import com.droidrage.meetingninja.database.DatabaseAdapter;
+import com.droidrage.meetingninja.database.UserDatabaseAdapter;
+import com.droidrage.meetingninja.extras.Util;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -27,6 +29,7 @@ import android.os.Build;
 public class RegisterActivity extends Activity implements
 		AsyncResponse<Boolean> {
 
+	EditText nameText;
 	EditText emailText;
 	EditText passwordText;
 	EditText confirmPasswordText;
@@ -45,6 +48,7 @@ public class RegisterActivity extends Activity implements
 		// Show the Up button in the action bar.
 		setupActionBar();
 
+		nameText = ((EditText) findViewById(R.id.register_name));
 		emailText = ((EditText) findViewById(R.id.register_email));
 		passwordText = ((EditText) findViewById(R.id.register_password));
 		confirmPasswordText = ((EditText) findViewById(R.id.register_confirm));
@@ -112,15 +116,27 @@ public class RegisterActivity extends Activity implements
 		confirmPasswordText.setError(null);
 
 		// Store values
-		String user = emailText.getText().toString();
+		String name = nameText.getText().toString();
+		String email = emailText.getText().toString();
 		String pass = passwordText.getText().toString();
 		String confPass = confirmPasswordText.getText().toString();
 
-		Log.d("Registering", user + " : " + pass + " : " + confPass);
+		Log.d("Registering", name + " : " + email + " : " + pass + " : "
+				+ confPass);
 
 		boolean cancel = false;
 		View focusView = null;
 
+		if (TextUtils.isEmpty(name)) {
+			passwordText.setError(getString(R.string.error_field_required));
+			focusView = nameText;
+			cancel = true;
+		}
+		if (TextUtils.isEmpty(email)) {
+			passwordText.setError(getString(R.string.error_field_required));
+			focusView = emailText;
+			cancel = true;
+		}
 		if (TextUtils.isEmpty(pass)) {
 			passwordText.setError(getString(R.string.error_field_required));
 			focusView = passwordText;
@@ -143,9 +159,10 @@ public class RegisterActivity extends Activity implements
 			focusView.requestFocus();
 		} else {
 			registerTask = new RegisterTask(this);
-			registerTask.execute(user, pass);
+			registerTask.execute(name, email, pass);
+
 			Intent goLogin = new Intent(this, LoginActivity.class);
-			goLogin.putExtra(LoginActivity.EXTRA_USERNAME, user);
+			goLogin.putExtra(LoginActivity.EXTRA_USERNAME, email);
 			Toast.makeText(getApplicationContext(), "Registration Successful",
 					Toast.LENGTH_LONG).show();
 			startActivity(goLogin);
@@ -171,7 +188,8 @@ public class RegisterActivity extends Activity implements
 		protected Boolean doInBackground(String... params) {
 			boolean success = false;
 			try {
-				DatabaseAdapter.register(params[0], params[1]);
+				// name, email, password
+				UserDatabaseAdapter.register(params[0], params[1], params[2]);
 				success = true;
 			} catch (IOException e) {
 				Log.e("DB Adapter", "Error: Register failed");

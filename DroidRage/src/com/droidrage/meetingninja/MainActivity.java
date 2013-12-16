@@ -52,11 +52,18 @@ public class MainActivity extends FragmentActivity implements
 	 * The {@link ViewPager} that will host the section contents.
 	 */
 	ViewPager mViewPager;
-	
+
 	public static final int PROFILE_FRAGMENT = 0;
 	public static final int MEETINGS_FRAGMENT = 1;
 	public static final int NOTES_FRAGMENT = 2;
 	public static final int TASKS_FRAGMENT = 3;
+
+	private enum FRAGMENTS {
+		PROFILE, // 0
+		MEETINGS, // 1
+		NOTES, // 2
+		TASKS // 3
+	};
 
 	public static String username;
 	public String fragment;

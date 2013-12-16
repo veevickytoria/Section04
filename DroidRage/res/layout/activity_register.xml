@@ -24,8 +24,19 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical" >
+
+            <EditText
+                android:id="@+id/register_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/prompt_name"
+                android:inputType="textPersonName" >
+
+                <requestFocus />
+            </EditText>
 
             <EditText
                 android:id="@+id/register_email"
@@ -35,10 +46,7 @@
                 android:ems="10"
                 android:hint="@string/prompt_email"
                 android:imeOptions="actionNext"
-                android:inputType="textEmailAddress" >
-
-                <requestFocus />
-            </EditText>
+                android:inputType="textEmailAddress" />
 
             <EditText
                 android:id="@+id/register_password"
@@ -59,7 +67,6 @@
                 android:hint="@string/prompt_password_confirm"
                 android:imeOptions="actionDone"
                 android:inputType="textPassword" />
-
         </LinearLayout>
     </ScrollView>
 
@@ -76,7 +83,6 @@
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:onClick="register"
             android:text="@string/action_register" />
-
     </RelativeLayout>
 
 </LinearLayout>

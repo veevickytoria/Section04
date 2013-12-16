@@ -42,7 +42,6 @@ public class ViewProfileFragment extends Fragment implements
 		user = new User(session.getUserDetails().get(session.USERID));
 		setupViews(v);
 
-
 		// company.setText(session.getUserDetails().get(SessionManager.company));
 		// jobTitle.setText(session.getUserDetails().get(SessionManager.jobTitle));
 
@@ -64,16 +63,17 @@ public class ViewProfileFragment extends Fragment implements
 		jobTitle = (TextView) v.findViewById(R.id.jobtitle);
 		phoneNum = (TextView) v.findViewById(R.id.profile_phone);
 		email = (TextView) v.findViewById(R.id.profile_email);
-		
+
 		profileName.setText(user.getDisplayName());
 		company.setText(user.getCompany());
 		jobTitle.setText(user.getTitle());
 		phoneNum.setText(user.getPhone());
 		email.setText(user.getEmail());
-		
-		QuickContactBadge q = (QuickContactBadge) v.findViewById(R.id.view_prof_pic); 
+
+		QuickContactBadge q = (QuickContactBadge) v
+				.findViewById(R.id.view_prof_pic);
 		q.setImageResource(R.drawable.joedoe);
-		
+
 	}
 
 	@Override
