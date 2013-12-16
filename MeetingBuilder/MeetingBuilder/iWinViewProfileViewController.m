@@ -6,41 +6,27 @@
 //  Copyright (c) 2013 CSSE371. All rights reserved.
 //
 
-#import "iWinEditProfileViewController.h"
+//#import "iWinEditProfileViewController.h"
 #import "iWinViewProfileViewController.h"
-#import "iWinViewAndAddViewController.h" //May not need
+//#import "iWinViewAndAddViewController.h"
+#import "iWinProfile.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface iWinViewProfileViewController ()
-
-
-//@property (strong, nonatomic) NSString *name;
-@property (strong, nonatomic) NSString *company;
-@property (strong, nonatomic) NSString *email;
-@property (strong, nonatomic) NSString *phone;
-@property (strong, nonatomic) NSString *position;
-@property (strong, nonatomic) NSString *moreAboutMe;
-@property (strong, nonatomic) UIImage *profilePic;
-
-
-@property (strong, nonatomic) iWinEditProfileViewController *editProfileViewController;
-
+@property (nonatomic) NSString *pageName;
+@property (nonatomic) BOOL isEditing;
+//@property (strong, nonatomic) iWinEditProfileViewController *editProfileViewController;
 @end
 
 @implementation iWinViewProfileViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withPageName:(NSString *)pageName inEditMode:(BOOL)isEditing
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        
         // Custom initialization
-        self.company = @"Garmin";
-        self.email = @"hazzargm@garmin.com";
-        self.phone = @"(555) 123-7654";
-        self.position = @"Intern";
-        self.moreAboutMe = @"I enjoy long walks on the beach... etc. etc. etc. And now to make this really long just to see what it does..............................................................................................................";
-        self.editProfileViewController = [[iWinEditProfileViewController alloc] initWithNibName:@"iWinEditProfileViewController" bundle: nil company:self.company email:self.email phone:self.phone position:self.position moreAboutMe:self.moreAboutMe profilePic:self.profilePic];
+        self.pageName = pageName;
+        self.isEditing = isEditing;
     }
     return self;
 }
@@ -49,23 +35,17 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    
-    
     [self updateButtonUI:self.editProfile];
-    [self updateButtonUI:self.changePicture];
     
-    self.profilePicImageView.image = nil;
-    self.companyTextView.text = self.company;
-    self.emailTextView.text = self.email;
-    self.phoneTextView.text = self.phone;
-    self.positionTextView.text =self.position;
-    self.moreAboutMeTextView.text = self.moreAboutMe;
-//    self.profilePicImageView.image = nil;
-//    self.companyTextView.text =  @"Garmin";
-//    self.emailTextView.text = @"hazzargm@garmin.com";
-//    self.phoneTextView.text = @"(555) 123-7654";
-//    self.positionTextView.text = @"Intern";
-//    self.moreAboutMeTextView.text = @"I enjoy long walks on the beach... etc. etc. etc. And now to make this really long just to see what it does..............................................................................................................";
+    iWinProfile *profile = [[iWinProfile alloc] init];
+    profile.displayName = @"Gordon Hazzard";
+    profile.email = @"hazzargm@rose-hulman.edu";
+    profile.phone = @"(800)866-8866";
+    profile.company = @"iWin LLC";
+    profile.title = @"Scrum Master";
+    profile.location = @"Terre Haute, IN";
+    
+    //[self updateButtonUI:self.editProfile];
 }
 
 -(void) updateButtonUI: (UIButton *)button
@@ -81,21 +61,50 @@
     // Dispose of any resources that can be recreated.
 }
 
--(IBAction)onChangePicture:(id)sender
+//-(IBAction)onChangePicture:(id)sender
+//{
+//    
+//}
+
+-(void) saveChanges
 {
     
+    
+
 }
 
 -(IBAction)onEditProfile:(id)sender
 {
+    if (self.isEditing) {
+        [self saveChanges];
+    } else{
+        self.isEditing = YES;
+   
+        //Make cancel button visible
+        
+    }
 //    self.editProfileViewController = [[iWinEditProfileViewController alloc] initWithNibName:@"iWinEditProfileViewController" bundle: nil /*iWinProfileViewController:self*/];
     
-    [self.editProfileViewController setModalPresentationStyle:UIModalPresentationPageSheet];
-    [self.editProfileViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-    
-    [self presentViewController:self.editProfileViewController animated:YES completion:nil];
-    self.editProfileViewController.view.superview.bounds = CGRectMake(0,0,768,1003);
+//    [self.editProfileViewController setModalPresentationStyle:UIModalPresentationPageSheet];
+//    [self.editProfileViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+//    
+//    [self presentViewController:self.editProfileViewController animated:YES completion:nil];
+//    self.editProfileViewController.view.superview.bounds = CGRectMake(0,0,768,1003);
 }
+
+
+//    self.profilePicImageView.image = nil;
+//    self.companyTextView.text = self.company;
+//    self.emailTextView.text = self.email;
+//    self.phoneTextView.text = self.phone;
+//    self.positionTextView.text =self.position;
+//    self.moreAboutMeTextView.text = self.moreAboutMe;
+//    self.profilePicImageView.image = nil;
+//    self.companyTextView.text =  @"Garmin";
+//    self.emailTextView.text = @"hazzargm@garmin.com";
+//    self.phoneTextView.text = @"(555) 123-7654";
+//    self.positionTextView.text = @"Intern";
+//    self.moreAboutMeTextView.text = @"I enjoy long walks on the beach... etc. etc. etc. And now to make this really long just to see what it does..............................................................................................................";
 //
 //-(NSString *) getCompany
 //{
@@ -145,7 +154,19 @@
 //{
 //    self.profilePic = profilePic;
 //}
-
+//@property (strong, nonatomic) NSString *name;
+//@property (strong, nonatomic) NSString *company;
+//@property (strong, nonatomic) NSString *email;
+//@property (strong, nonatomic) NSString *phone;
+//@property (strong, nonatomic) NSString *position;
+//@property (strong, nonatomic) NSString *moreAboutMe;
+//@property (strong, nonatomic) UIImage *profilePic;
+//        self.company = @"Garmin";
+//        self.email = @"hazzargm@garmin.com";
+//        self.phone = @"(555) 123-7654";
+//        self.position = @"Intern";
+//        self.moreAboutMe = @"I enjoy long walks on the beach... etc. etc. etc. And now to make this really long just to see what it does..............................................................................................................";
+//        self.editProfileViewController = [[iWinEditProfileViewController alloc] initWithNibName:@"iWinEditProfileViewController" bundle: nil company:self.company email:self.email phone:self.phone position:self.position moreAboutMe:self.moreAboutMe profilePic:self.profilePic];
 
 
 @end

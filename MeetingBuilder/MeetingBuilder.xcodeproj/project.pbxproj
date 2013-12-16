@@ -57,6 +57,7 @@
 		0A96E7DD185BDD8C00EAB0DC /* iWinEditProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A96E7DB185BDD8C00EAB0DC /* iWinEditProfileViewController.xib */; };
 		0A96E7E2185BE70C00EAB0DC /* iWinEditProfileTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A96E7E1185BE70C00EAB0DC /* iWinEditProfileTest.m */; };
 		0A96E7E4185BE72700EAB0DC /* iWinViewProfileTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A96E7E3185BE72700EAB0DC /* iWinViewProfileTest.m */; };
+		0A96E7E7185FAA6200EAB0DC /* iWinProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A96E7E6185FAA6200EAB0DC /* iWinProfile.m */; };
 		0A97EDAA184169ED00160B5A /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A97EDA8184169ED00160B5A /* AudioToolbox.framework */; };
 		0A97EDAB184169ED00160B5A /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A97EDA9184169ED00160B5A /* AVFoundation.framework */; };
 		0AAC9E951846FE6F0073260F /* iWinOpenEarsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAC9E941846FE6F0073260F /* iWinOpenEarsModel.m */; };
@@ -161,6 +162,8 @@
 		0A96E7DB185BDD8C00EAB0DC /* iWinEditProfileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iWinEditProfileViewController.xib; sourceTree = "<group>"; };
 		0A96E7E1185BE70C00EAB0DC /* iWinEditProfileTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinEditProfileTest.m; sourceTree = "<group>"; };
 		0A96E7E3185BE72700EAB0DC /* iWinViewProfileTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinViewProfileTest.m; sourceTree = "<group>"; };
+		0A96E7E5185FAA6200EAB0DC /* iWinProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinProfile.h; sourceTree = "<group>"; };
+		0A96E7E6185FAA6200EAB0DC /* iWinProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinProfile.m; sourceTree = "<group>"; };
 		0A97EDA8184169ED00160B5A /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		0A97EDA9184169ED00160B5A /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		0AAC9E931846FE6F0073260F /* iWinOpenEarsModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinOpenEarsModel.h; sourceTree = "<group>"; };
@@ -472,6 +475,8 @@
 			children = (
 				0A7F1CDD185908790017209D /* iWinContact.h */,
 				0A7F1CDE185908790017209D /* iWinContact.m */,
+				0A96E7E5185FAA6200EAB0DC /* iWinProfile.h */,
+				0A96E7E6185FAA6200EAB0DC /* iWinProfile.m */,
 			);
 			name = "Data Model";
 			sourceTree = "<group>";
@@ -721,6 +726,7 @@
 				0A04456C17F3825D000FF2A0 /* iWinAppDelegate.m in Sources */,
 				0A7E515B17FBEA9700A4B8B7 /* iWinMainViewController.m in Sources */,
 				0A96E7DC185BDD8C00EAB0DC /* iWinEditProfileViewController.m in Sources */,
+				0A96E7E7185FAA6200EAB0DC /* iWinProfile.m in Sources */,
 				0A04457517F3825D000FF2A0 /* MeetingBuilder.xcdatamodeld in Sources */,
 				79D513D0181F9F9E00C79B71 /* iWinNoteListViewController.m in Sources */,
 			);

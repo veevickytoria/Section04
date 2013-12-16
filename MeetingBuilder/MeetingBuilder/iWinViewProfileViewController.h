@@ -11,7 +11,34 @@
 
 @protocol ProfileDelegate <NSObject>
 -(void) onClickEditProfile;
--(void) onClickChangePicture;
+//-(void) onClickChangePicture;
+
+
+@end
+
+@interface iWinViewProfileViewController : UIViewController
+//- (IBAction)onChangePicture:(id)sender;
+- (IBAction)onEditProfile:(id)sender;
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withPageName:(NSString *)pageName inEditMode:(BOOL)isEditing;
+
+@property (weak, nonatomic) IBOutlet UIButton *editProfile;
+
+@property (weak, nonatomic) IBOutlet UITextView *displayNameTextView;
+@property (weak, nonatomic) IBOutlet UITextView *companyTextView;
+@property (weak, nonatomic) IBOutlet UITextView *emailTextView;
+@property (weak, nonatomic) IBOutlet UITextView *phoneTextView;
+@property (weak, nonatomic) IBOutlet UITextView *titleTextView;
+@property (weak, nonatomic) IBOutlet UITextView *location;
+
+@property (nonatomic) id<ProfileDelegate> profileDelegate;
+
+//@property (strong, nonatomic) NSString *company;
+//@property (strong, nonatomic) NSString *email;
+//@property (strong, nonatomic) NSString *phone;
+//@property (strong, nonatomic) NSString *position;
+//@property (strong, nonatomic) NSString *moreAboutMe;
+//@property (strong, nonatomic) UIImage *profilePic;
+
 //-(NSString *) getCompany;
 //-(NSString *) getEmail;
 //-(NSString *) getPhone;
@@ -24,36 +51,6 @@
 //-(void) setPosition: (NSString *)position;
 //-(void) setMoreAboutMe: (NSString *)moreAboutMe;
 //-(void) setProfilePic: (UIImage *)profilePic;
-
-@end
-
-@interface iWinViewProfileViewController : UIViewController
-- (IBAction)onChangePicture:(id)sender;
-- (IBAction)onEditProfile:(id)sender;
--(id) initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil;
-
-@property (weak, nonatomic) IBOutlet UIButton *changePicture;
-@property (weak, nonatomic) IBOutlet UIButton *editProfile;
-
-
-@property (weak, nonatomic) IBOutlet UITextView *companyTextView;
-@property (weak, nonatomic) IBOutlet UITextView *emailTextView;
-@property (weak, nonatomic) IBOutlet UITextView *phoneTextView;
-@property (weak, nonatomic) IBOutlet UITextView *positionTextView;
-@property (weak, nonatomic) IBOutlet UITextView *moreAboutMeTextView;
-
-@property (weak, nonatomic) IBOutlet UIImageView *profilePicImageView;
-
-@property (nonatomic) id<ProfileDelegate> profileDelegate;
-
-//@property (strong, nonatomic) NSString *company;
-//@property (strong, nonatomic) NSString *email;
-//@property (strong, nonatomic) NSString *phone;
-//@property (strong, nonatomic) NSString *position;
-//@property (strong, nonatomic) NSString *moreAboutMe;
-//@property (strong, nonatomic) UIImage *profilePic;
-
-
 
 
 @end

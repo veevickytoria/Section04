@@ -8,11 +8,13 @@
 
 #import <XCTest/XCTest.h>
 #import "iWinViewProfileViewController.h"
-#import "iWinEditProfileViewController.h"
+#import "iWinProfile.h"
+//#import "iWinEditProfileViewController.h"
 
 @interface iWinViewProfileTest : XCTestCase
-@property (strong, nonatomic) iWinEditProfileViewController *editVC;
+//@property (strong, nonatomic) iWinEditProfileViewController *editVC;
 @property (strong, nonatomic) iWinViewProfileViewController *viewVC;
+@property (strong, nonatomic) iWinProfile *profile;
 @end
 
 @implementation iWinViewProfileTest
