@@ -6,7 +6,7 @@ class ProfileController < ApplicationController
 		res = Net::HTTP.start(url.host, url.port) {|http|
 			http.request(req)
 		}
-		@stuff = res.body
+		@stuff = JSON.parse(res.body)
 		# http = Net::HTTP.new(uri.host, uri.port)
 		# request = Net::HTTP::Get.new(uri.request_uri)
 		# response = http.request(request)
