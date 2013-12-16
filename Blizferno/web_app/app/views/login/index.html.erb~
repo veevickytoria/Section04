@@ -74,7 +74,7 @@ $(window).load(function() {
 
         jQuery('#registerForm').bind('submit', function(event){
         event.preventDefault();
-alert("sup");
+
         var form = this;
         var json = new ConvertFormToJSON(form);
 
@@ -127,18 +127,54 @@ alert("urlEnding:" + urlEnding);
 
 </script>
 
-</head>
 
+
+
+
+<div>
+<h1>Login</h1>
+            <p>Welcome to our Web App! Please enter credentials below </p>
+            <form id="loginForm" method="post">
+                <input placeholder="Email" type="text" />
+                <input placeholder="Password" type="password" />
+                <input class="button" style="font-size: 14px; cursor: pointer; visibility: none;" type="submit" value="Login" />
+                <br />
+                <p id="invalidLogin" style="text-align: center; color: #F59C17; font-size: 18px; display: none; font-weight: bold; padding-top: 10px;">
+                Invalid Username or Password</p>
+                <a style="color: white; text-decoration: none; line-height: 62px; padding-left: 46%; cursor: pointer">
+                Forgot?</a>
+            </form>
+</div>
+<div>
+            <form id="registerForm" method="post">
+                <table style="width: 100%">
+                    <input name="name" placeholder="Full Name" type="text" />
+                    <input name="email" placeholder="Email" type="email" />
+                    <input id='p0' name='password' placeholder='Password' type='password' />
+                    <input name="phone" placeholder="Phone #" type="text" />
+                    <input name="company" placeholder="Company" type="text" />
+                    <input name="title" placeholder="Title" type="text" />
+                    <input name="location" placeholder="Location" type="text" />
+                <!-- <input id="p1" name="passConfirm" placeholder="Confirm password" type="password" onchange="passCheck();" /> -->
+                <input class="button" style='font-size: 14px; cursor: pointer' type="submit" value="Sign Up" />
+		</table>
+            </form>
+</div>
+
+
+
+
+<!--
 <div class="container">
     <div class="flat-form">
         <ul class="tabs">
             <li><a class="active" href="#login">Login</a> </li>
             <li><a href="#register">Register</a> </li>
         </ul>
-        <div id="loginForm" class="form-action show">
+        <div id="login" class="form-action show">
             <h1>Login</h1>
             <p>Welcome to our Web App! Please enter credentials below </p>
-            <form action="validate.php" method="post">
+            <form id="loginForm" method="post">
                 <input placeholder="Email" type="text" />
                 <input placeholder="Password" type="password" />
                 <input class="button" style="font-size: 14px; cursor: pointer; visibility: none;" type="submit" value="Login" />
@@ -149,11 +185,11 @@ alert("urlEnding:" + urlEnding);
                 Forgot?</a>
             </form>
         </div>
-        <!-- /#login.form-action -->
+        <!-- /#login.form-action 
         <div id="register" class="form-action hide">
             <h1>Register</h1>
             <p>Enter your details below: </p>
-            <form id="registerForm" action="index" method="post">
+            <form id="registerForm" method="post">
                 <table style="width: 100%">
                     <input name="name" placeholder="Full Name" type="text" />
                     <input name="email" placeholder="Email" type="email" />
@@ -162,13 +198,15 @@ alert("urlEnding:" + urlEnding);
                     <input name="company" placeholder="Company" type="text" />
                     <input name="title" placeholder="Title" type="text" />
                     <input name="location" placeholder="Location" type="text" />
-                <!-- <input id="p1" name="passConfirm" placeholder="Confirm password" type="password" onchange="passCheck();" /> -->
+                <!-- <input id="p1" name="passConfirm" placeholder="Confirm password" type="password" onchange="passCheck();" /> 
                 <input class="button" disabled='true' style='font-size: 14px; cursor: pointer' type="submit" value="Sign Up" />
+		</table>
             </form>
         </div>
-        <!--/#register.form-action-->
+        <!--/#register.form-action
     </div>
 </div>
+
 
 
 <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
@@ -207,6 +245,5 @@ alert("urlEnding:" + urlEnding);
         });
     })(jQuery);
 </script>
+-->
 
-</body>
-</html>
