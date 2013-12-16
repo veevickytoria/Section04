@@ -8,4 +8,5 @@ class ProfileController < ApplicationController
 	def editmyprofile 
 	end
 	layout 'slate'
+	
 end
