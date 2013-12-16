@@ -15,6 +15,7 @@
 @interface iWinViewProfileViewController ()
 @property (nonatomic) NSString *pageName;
 @property (nonatomic) BOOL isEditing;
+@property (nonatomic) iWinProfile *profile;
 //@property (strong, nonatomic) iWinEditProfileViewController *editProfileViewController;
 @end
 
@@ -25,9 +26,10 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        self.pageName = pageName;
-        self.isEditing = isEditing;
+        //self.pageName = pageName;
+        //self.isEditing = isEditing;
     }
+    [self viewDidLoad];
     return self;
 }
 
@@ -37,15 +39,51 @@
     // Do any additional setup after loading the view from its nib.
     [self updateButtonUI:self.editProfile];
     
-    iWinProfile *profile = [[iWinProfile alloc] init];
-    profile.displayName = @"Gordon Hazzard";
-    profile.email = @"hazzargm@rose-hulman.edu";
-    profile.phone = @"(800)866-8866";
-    profile.company = @"iWin LLC";
-    profile.title = @"Scrum Master";
-    profile.location = @"Terre Haute, IN";
+//    iWinProfile *profile = [[iWinProfile alloc] init];
+//    self.profile.displayName = @"Gordon Hazzard";
+//    self.profile.email = @"hazzargm@rose-hulman.edu";
+//    self.profile.phone = @"(800)866-8866";
+//    self.profile.company = @"iWin LLC";
+//    self.profile.title = @"Scrum Master";
+//    self.profile.location = @"Terre Haute, IN";
+    
+//    self.displayNameTextView.text =  @"Gordon Hazzard";
+//    self.emailTextView.text =  @"hazzargm@rose-hulman.edu";
+//    self.phoneTextView.text = @"(800)866-8866";
+//    self.companyTextView.text = @"iWin LLC";
+//    self.titleTextView.text = @"Scrum Master";
+//    self.locationTextView.text = @"Terre Haute, IN";
+    self.cancel.hidden = YES;
+    [self updateTextUI];
     
     //[self updateButtonUI:self.editProfile];
+}
+-(void) updateTextUI
+{
+    
+    //Need to make fonts bigger
+    
+//    UIFont *newFont = [[UIFont alloc] fontWithSize:19.0f];
+//    self.titleTextView.font = newFont;
+//    self.emailTextView.font = newFont;
+//    self.phoneTextView.font = newFont;
+//    self.companyTextView.font = newFont;
+//    self.titleTextView.font = newFont;
+//    self.locationTextView.font = newFont;
+
+    self.displayNameTextView.text =  @"Gordon Hazzard";
+    self.emailTextView.text =  @"hazzargm@rose-hulman.edu";
+    self.phoneTextView.text = @"(800)866-8866";
+    self.companyTextView.text = @"iWin LLC";
+    self.titleTextView.text = @"Scrum Master";
+    self.locationTextView.text = @"Terre Haute, IN";
+    
+//    self.displayNameTextView.text = self.profile.displayName;
+//    self.emailTextView.text = self.profile.email;
+//    self.phoneTextView.text = self.profile.phone;
+//    self.companyTextView.text = self.profile.company;
+//    self.titleTextView.text = self.profile.title;
+//    self.locationTextView.text = self.profile.location;
 }
 
 -(void) updateButtonUI: (UIButton *)button
@@ -53,6 +91,7 @@
     button.layer.cornerRadius = 7;
     button.layer.borderColor = [[UIColor darkGrayColor] CGColor];
     button.layer.borderWidth = 1.0f;
+    [button setTintColor:[UIColor blueColor]];
 }
 
 - (void)didReceiveMemoryWarning
@@ -73,100 +112,48 @@
 
 }
 
+-(IBAction)onCancel:(id)sender
+{
+    //    self.displayNameTextView.text = self.profile.displayName;
+    //    self.emailTextView.text = self.profile.email;
+    //    self.phoneTextView.text = self.profile.phone;
+    //    self.companyTextView.text = self.profile.company;
+    //    self.titleTextView.text = self.profile.title;
+    //    self.locationTextView.text = self.profile.location;
+    self.isEditing = NO;
+    [self.editProfile setTitle:@"Edit Profile" forState:UIControlStateNormal];
+    self.cancel.hidden = YES;
+    
+}
+
 -(IBAction)onEditProfile:(id)sender
 {
     if (self.isEditing) {
         [self saveChanges];
+        [self.displayNameTextView setEditable:NO];
+        [self.titleTextView setEditable:NO];
+        [self.companyTextView setEditable:NO];
+        [self.locationTextView setEditable:NO];
+        [self.emailTextView setEditable:NO];
+        [self.phoneTextView setEditable:NO];
+        [self.editProfile setTitle:@"Edit Profile" forState:UIControlStateNormal];
+        [self.editProfile setTintColor:[UIColor blueColor]];
+        self.cancel.hidden = YES;
+        
     } else{
         self.isEditing = YES;
+        [self.displayNameTextView setEditable:YES];
+        [self.titleTextView setEditable:YES];
+        [self.companyTextView setEditable:YES];
+        [self.locationTextView setEditable:YES];
+        [self.emailTextView setEditable:YES];
+        [self.phoneTextView setEditable:YES];
+        [self.editProfile setTitle:@"Save" forState:UIControlStateNormal];
+        [self.editProfile setTintColor:[UIColor greenColor]];
+        self.cancel.hidden = NO;
    
         //Make cancel button visible
         
     }
-//    self.editProfileViewController = [[iWinEditProfileViewController alloc] initWithNibName:@"iWinEditProfileViewController" bundle: nil /*iWinProfileViewController:self*/];
-    
-//    [self.editProfileViewController setModalPresentationStyle:UIModalPresentationPageSheet];
-//    [self.editProfileViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-//    
-//    [self presentViewController:self.editProfileViewController animated:YES completion:nil];
-//    self.editProfileViewController.view.superview.bounds = CGRectMake(0,0,768,1003);
 }
-
-
-//    self.profilePicImageView.image = nil;
-//    self.companyTextView.text = self.company;
-//    self.emailTextView.text = self.email;
-//    self.phoneTextView.text = self.phone;
-//    self.positionTextView.text =self.position;
-//    self.moreAboutMeTextView.text = self.moreAboutMe;
-//    self.profilePicImageView.image = nil;
-//    self.companyTextView.text =  @"Garmin";
-//    self.emailTextView.text = @"hazzargm@garmin.com";
-//    self.phoneTextView.text = @"(555) 123-7654";
-//    self.positionTextView.text = @"Intern";
-//    self.moreAboutMeTextView.text = @"I enjoy long walks on the beach... etc. etc. etc. And now to make this really long just to see what it does..............................................................................................................";
-//
-//-(NSString *) getCompany
-//{
-//    return self.company;
-//}
-//-(NSString *) getEmail
-//{
-//    return self.email;
-//}
-//-(NSString *) getPhone
-//{
-//    return self.phone;
-//}
-//-(NSString *) getPosition
-//{
-//    return self.position;
-//}
-//-(NSString *) getMoreAboutMe
-//{
-//    return self.moreAboutMe;
-//}
-//-(UIImage *) getProfilePic
-//{
-//    return self.profilePic;
-//}
-//-(void) setCompany: (NSString *)company
-//{
-//    self.company = company;
-//}
-//-(void) setEmail: (NSString *)email
-//{
-//    self.email = email;
-//}
-//-(void) setPhone: (NSString *)phone
-//{
-//    self.phone = phone;
-//}
-//-(void) setPosition: (NSString *)position
-//{
-//    self.position = position;
-//}
-//-(void) setMoreAboutMe: (NSString *)moreAboutMe
-//{
-//    self.moreAboutMe = moreAboutMe;
-//}
-//-(void) setProfilePic: (UIImage *)profilePic
-//{
-//    self.profilePic = profilePic;
-//}
-//@property (strong, nonatomic) NSString *name;
-//@property (strong, nonatomic) NSString *company;
-//@property (strong, nonatomic) NSString *email;
-//@property (strong, nonatomic) NSString *phone;
-//@property (strong, nonatomic) NSString *position;
-//@property (strong, nonatomic) NSString *moreAboutMe;
-//@property (strong, nonatomic) UIImage *profilePic;
-//        self.company = @"Garmin";
-//        self.email = @"hazzargm@garmin.com";
-//        self.phone = @"(555) 123-7654";
-//        self.position = @"Intern";
-//        self.moreAboutMe = @"I enjoy long walks on the beach... etc. etc. etc. And now to make this really long just to see what it does..............................................................................................................";
-//        self.editProfileViewController = [[iWinEditProfileViewController alloc] initWithNibName:@"iWinEditProfileViewController" bundle: nil company:self.company email:self.email phone:self.phone position:self.position moreAboutMe:self.moreAboutMe profilePic:self.profilePic];
-
-
 @end

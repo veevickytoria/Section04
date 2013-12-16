@@ -53,8 +53,6 @@
 		0A91DC9C1835D7AB00741349 /* OCCalendarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91DC951835D7AB00741349 /* OCCalendarViewController.m */; };
 		0A91DC9D1835D7AB00741349 /* OCDaysView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91DC971835D7AB00741349 /* OCDaysView.m */; };
 		0A91DC9E1835D7AB00741349 /* OCSelectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91DC991835D7AB00741349 /* OCSelectionView.m */; };
-		0A96E7DC185BDD8C00EAB0DC /* iWinEditProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A96E7DA185BDD8C00EAB0DC /* iWinEditProfileViewController.m */; };
-		0A96E7DD185BDD8C00EAB0DC /* iWinEditProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A96E7DB185BDD8C00EAB0DC /* iWinEditProfileViewController.xib */; };
 		0A96E7E2185BE70C00EAB0DC /* iWinEditProfileTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A96E7E1185BE70C00EAB0DC /* iWinEditProfileTest.m */; };
 		0A96E7E4185BE72700EAB0DC /* iWinViewProfileTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A96E7E3185BE72700EAB0DC /* iWinViewProfileTest.m */; };
 		0A96E7E7185FAA6200EAB0DC /* iWinProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A96E7E6185FAA6200EAB0DC /* iWinProfile.m */; };
@@ -157,9 +155,6 @@
 		0A91DC981835D7AB00741349 /* OCSelectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCSelectionView.h; sourceTree = "<group>"; };
 		0A91DC991835D7AB00741349 /* OCSelectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCSelectionView.m; sourceTree = "<group>"; };
 		0A91DC9A1835D7AB00741349 /* OCTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCTypes.h; sourceTree = "<group>"; };
-		0A96E7D9185BDD8C00EAB0DC /* iWinEditProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinEditProfileViewController.h; sourceTree = "<group>"; };
-		0A96E7DA185BDD8C00EAB0DC /* iWinEditProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinEditProfileViewController.m; sourceTree = "<group>"; };
-		0A96E7DB185BDD8C00EAB0DC /* iWinEditProfileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iWinEditProfileViewController.xib; sourceTree = "<group>"; };
 		0A96E7E1185BE70C00EAB0DC /* iWinEditProfileTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinEditProfileTest.m; sourceTree = "<group>"; };
 		0A96E7E3185BE72700EAB0DC /* iWinViewProfileTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinViewProfileTest.m; sourceTree = "<group>"; };
 		0A96E7E5185FAA6200EAB0DC /* iWinProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinProfile.h; sourceTree = "<group>"; };
@@ -268,7 +263,6 @@
 		0A04456117F3825D000FF2A0 /* MeetingBuilder */ = {
 			isa = PBXGroup;
 			children = (
-				0A96E7DE185BDDA400EAB0DC /* EditProfile */,
 				0A7F1CDC185908550017209D /* Data Model */,
 				0AAC9E921846FE2B0073260F /* OpenEars */,
 				0A91DC911835D7AB00741349 /* OCCalendar */,
@@ -497,16 +491,6 @@
 			path = OCCalendar;
 			sourceTree = "<group>";
 		};
-		0A96E7DE185BDDA400EAB0DC /* EditProfile */ = {
-			isa = PBXGroup;
-			children = (
-				0A96E7D9185BDD8C00EAB0DC /* iWinEditProfileViewController.h */,
-				0A96E7DB185BDD8C00EAB0DC /* iWinEditProfileViewController.xib */,
-				0A96E7DA185BDD8C00EAB0DC /* iWinEditProfileViewController.m */,
-			);
-			name = EditProfile;
-			sourceTree = "<group>";
-		};
 		0A96E7DF185BE6A600EAB0DC /* ViewProfileTest */ = {
 			isa = PBXGroup;
 			children = (
@@ -680,7 +664,6 @@
 				0A1A728B1819F590009A49E5 /* iWinScheduleViewMeetingViewController.xib in Resources */,
 				79D513CB181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.xib in Resources */,
 				0A1A72A4181A2663009A49E5 /* iWinAddAndViewTaskViewController.xib in Resources */,
-				0A96E7DD185BDD8C00EAB0DC /* iWinEditProfileViewController.xib in Resources */,
 				0A04457017F3825D000FF2A0 /* Default@2x.png in Resources */,
 				0A7F1CBF184FE0D60017209D /* AcousticModelSpanish.bundle in Resources */,
 				0A04457217F3825D000FF2A0 /* Default-568h@2x.png in Resources */,
@@ -725,7 +708,6 @@
 				0A1A728A1819F590009A49E5 /* iWinScheduleViewMeetingViewController.m in Sources */,
 				0A04456C17F3825D000FF2A0 /* iWinAppDelegate.m in Sources */,
 				0A7E515B17FBEA9700A4B8B7 /* iWinMainViewController.m in Sources */,
-				0A96E7DC185BDD8C00EAB0DC /* iWinEditProfileViewController.m in Sources */,
 				0A96E7E7185FAA6200EAB0DC /* iWinProfile.m in Sources */,
 				0A04457517F3825D000FF2A0 /* MeetingBuilder.xcdatamodeld in Sources */,
 				79D513D0181F9F9E00C79B71 /* iWinNoteListViewController.m in Sources */,

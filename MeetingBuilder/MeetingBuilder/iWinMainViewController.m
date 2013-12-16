@@ -306,7 +306,7 @@
 - (IBAction)onClickProfile{
     [self removeSubViews];
     [self enableSliding];
-    self.profileViewController = [[iWinViewProfileViewController alloc] initWithNibName:@"iWinViewProfileViewController" bundle:nil withPageName:@"Profile" inEditMode:NO];
+    self.profileViewController = [[iWinViewProfileViewController alloc] initWithNibName:@"iWinViewProfileViewController" bundle:nil withPageName:@"Profile" inEditMode:YES];
     [self.mainView  addSubview:self.profileViewController.view];
     [self.profileViewController.view setBounds:self.mainView.bounds];
     self.profileViewController.profileDelegate = self;
