@@ -52,10 +52,10 @@ function ConvertFormToJSON(form){
 
 }
 
-/*
+
 $(window).load(function() { 
 
-    jQuery('#testing').bind('submit', function(event){
+    jQuery('#loginForm').bind('submit', function(event){
         event.preventDefault();
 
         var form = this;
@@ -74,15 +74,24 @@ $(window).load(function() {
 
     
 });
-*/
 
+
+/** this doesnt work!!
 $(windows).load(function() {
-postFormAsJSON('testing', 'User/Login');
-
+alert("blah");
+postFormAsJSON('testing', 'User/Login/');
+alert("stuff");
 });
+
+
+
 function postFormAsJSON(formId, urlEnding){
     jQuery('#'+ formId).bind('submit', function(event){
         event.preventDefault();
+
+
+alert("FormId:" + formId);
+alert("urlEnding:" + urlEnding);
 
         var form = this;
         var json = new ConvertFormToJSON(form);
@@ -98,7 +107,7 @@ function postFormAsJSON(formId, urlEnding){
         return true;
     });
 }
-
+**/
 
 </script>
 
@@ -110,7 +119,7 @@ function postFormAsJSON(formId, urlEnding){
             <li><a class="active" href="#login">Login</a> </li>
             <li><a href="#register">Register</a> </li>
         </ul>
-        <div id="login" class="form-action show">
+        <div id="loginForm" class="form-action show">
             <h1>Login</h1>
             <p>Welcome to our Web App! Please enter credentials below </p>
             <form action="validate.php" method="post">
@@ -151,16 +160,6 @@ function postFormAsJSON(formId, urlEnding){
         <!--/#register.form-action-->
     </div>
 </div>
-
-
-<div>
-<form id="testing" method="post">
-<input name="email" type="text"/>
-<input name="password" type="text"/>
-<input type="submit"/>
-</form>
-</div>
-
 
 
 <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
