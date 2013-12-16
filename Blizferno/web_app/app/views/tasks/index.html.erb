@@ -5,6 +5,17 @@ header > h1 { display: inline-block; }
 }
 </style>
 
+<script>
+  function hideViewModal()
+  {
+    $('#viewTaskModal').modal('hide');
+  }
+  function showViewModal()
+  {
+    $('#viewTaskModal').modal('show');
+  }
+</script>
+
 <h1 style='margin-left: 15%; margin-right: auto;'>Tasks</h1>
 
 <!-- Create Modal -->
@@ -13,14 +24,14 @@ header > h1 { display: inline-block; }
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+        <h4 class="modal-title" id="myModalLabel">Create Task</h4>
       </div>
       <div class="modal-body">
         <%= render "new" %>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-primary">Submit</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -45,6 +56,44 @@ header > h1 { display: inline-block; }
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<!-- View Modal -->
+<div class="modal fade" id="viewTaskModal" tabindex="-1" role="dialog" aria-labelledby="viewTaskModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">View Task</h4>
+      </div>
+      <div class="modal-body">
+        <%= render "view" %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="hideViewModal()" href="#editTaskModal" data-toggle='modal'>Edit</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editTaskModal" tabindex="-1" role="dialog" aria-labelledby="editTaskModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Edit Task</h4>
+      </div>
+      <div class="modal-body">
+        <%= render "edit" %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" onclick="showViewModal()" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="showViewModal()" >Save Changes</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 <table class='table table-hover table-striped' style='width: 70%; margin-left: 15%; margin-right: auto;'>
   <thead>
     <tr >
@@ -57,7 +106,7 @@ header > h1 { display: inline-block; }
   <tr>
     <td>15 March</td>
     <td>Get Elected</td>
-    <td><a href="#">Elect Morris</a></td>
+    <td><a href="#viewTaskModal" data-toggle='modal'>Elect Morris</a></td>
     <td colspan='1' style='cursor: pointer; text-align: center' href='#deleteTaskModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
   </tr>
   <tr>

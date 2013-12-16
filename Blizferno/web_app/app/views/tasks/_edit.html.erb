@@ -1,0 +1,40 @@
+<p>
+  <br />
+  <span style="font-size:28px;"><strong><span style="font-size:18px;">Topic: </span></strong></span>
+  <input name="title" type="text" maxlength="50" size="25" value='<%# @TaskArray[1] %>'>
+</p>
+<p>
+  <br>
+  <span style="font-size:28px;">
+    <strong><span style="font-size:18px;">Deadline: </span></strong>
+  </span>
+  <input name="deadline" type="text" placeholder="mm/dd/yyyy HH:MM" maxLength="17" size="17" value='<%# @TaskArray[4] %>'>
+</p>
+<p>
+  <br>
+  <span style="font-size:28px;">
+    <strong><span style="font-size:18px;">Assigned To: </span></strong>
+  </span>
+  <input name="assignee" type="text" maxLength="20" size="10" value='<%# @TaskArray[8] %>'>
+</p>
+<p>
+  <br>
+  <span style="font-size:28px;">
+    <strong><span style="font-size:18px;">Description: </span></strong>
+    <input name="description" type="text" maxlength="1000" size="25" value='<%# @TaskArray[3] %>' >
+  </span>
+</p>
+<p>
+  <br>
+  <span style="font-size:28px;">
+    <strong><span style="font-size:18px;">Completion Criteria: </span></strong>
+  </span>
+  <input name="completionCriteria" type="text" maxLength="500" size="25" value='<%# @TaskArray[7] %>' >
+</p>
+<p>
+  <br>
+  <span style="font-size:28px;">
+    <strong><span style="font-size:18px;">Complete: </span></strong>
+  </span>
+  <input name="isCompleted" type="checkbox" value='<%# @TaskArray[2] %>'>
+</p>
