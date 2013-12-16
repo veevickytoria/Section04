@@ -56,11 +56,26 @@ function ConvertFormToJSON(form){
 
 $(window).load(function() { 
 
+    jQuery('#loginForm').bind('submit', function(event){
+        event.preventDefault();
 
+        var form = this;
+        var json = new ConvertFormToJSON(form);
+
+        $.ajax({
+            type: 'POST',
+            url: 'http://csse371-04.csse.rose-hulman.edu/User/Login/',
+            data: JSON.stringify(json),
+	    dataType: 'json'
+        });
+
+
+       // return true;
+    });
 
         jQuery('#registerForm').bind('submit', function(event){
         event.preventDefault();
-
+alert("sup");
         var form = this;
         var json = new ConvertFormToJSON(form);
 
