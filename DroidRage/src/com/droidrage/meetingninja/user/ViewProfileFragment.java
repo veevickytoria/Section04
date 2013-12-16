@@ -37,7 +37,7 @@ public class ViewProfileFragment extends Fragment implements
 			Bundle savedInstanceState) {
 		session = new SessionManager(getActivity().getApplicationContext());
 
-		View v = inflater.inflate(R.layout.activity_view_profile, container,
+		View v = inflater.inflate(R.layout.fragment_view_profile, container,
 				false);
 		user = new User(session.getUserDetails().get(session.USERID));
 		setupViews(v);

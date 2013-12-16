@@ -9,6 +9,7 @@ import com.droidrage.meetingninja.R.layout;
 import com.droidrage.meetingninja.R.menu;
 import com.droidrage.meetingninja.R.string;
 import com.droidrage.meetingninja.database.DatabaseAdapter;
+import com.droidrage.meetingninja.extras.Util;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -45,7 +46,7 @@ public class LoginActivity extends Activity {
 	private UserLoginTask mAuthTask = null;
 
 	// Values for email and password at the time of the login attempt.
-	private String mUsername;
+	private String mEmail;
 	private String mPassword;
 
 	// UI references.
@@ -62,9 +63,9 @@ public class LoginActivity extends Activity {
 		setContentView(R.layout.activity_login);
 
 		// Set up the login form.
-		mUsername = getIntent().getStringExtra(EXTRA_USERNAME);
+		mEmail = getIntent().getStringExtra(EXTRA_USERNAME);
 		mEmailView = (EditText) findViewById(R.id.email);
-		mEmailView.setText(mUsername);
+		mEmailView.setText(mEmail);
 
 		mPasswordView = (EditText) findViewById(R.id.password);
 		mPasswordView
@@ -128,7 +129,7 @@ public class LoginActivity extends Activity {
 		mPasswordView.setError(null);
 
 		// Store values at the time of the login attempt.
-		mUsername = mEmailView.getText().toString();
+		mEmail = mEmailView.getText().toString();
 		mPassword = mPasswordView.getText().toString();
 
 		boolean cancel = false;
@@ -146,16 +147,16 @@ public class LoginActivity extends Activity {
 		}
 
 		// Check for a valid username
-		if (TextUtils.isEmpty(mUsername)) {
+		if (TextUtils.isEmpty(mEmail)) {
 			mEmailView.setError(getString(R.string.error_field_required));
 			focusView = mEmailView;
 			cancel = true;
 		}
-		// else if (!mEmail.contains("@")) {
-		// mEmailView.setError(getString(R.string.error_invalid_email));
-		// focusView = mEmailView;
-		// cancel = true;
-		// }
+		 else if (!Util.isValidEmailAddress(mEmail)) {
+		 mEmailView.setError(getString(R.string.error_invalid_email));
+		 focusView = mEmailView;
+		 cancel = true;
+		 }
 
 		/*
 		 * SessionManager session = new SessionManager(
@@ -238,9 +239,9 @@ public class LoginActivity extends Activity {
 			boolean login_success = false;
 
 			try {
-				login_success = DatabaseAdapter.urlLogin(mUsername);
+				login_success = DatabaseAdapter.urlLogin(mEmail);
 				if (!login_success)
-					Log.e("LOGIN", mUsername + " does not exist");
+					Log.e("LOGIN", mEmail + " does not exist");
 				// Thread.sleep(2000);
 			} catch (IOException e) {
 				Log.e("LOGIN_ERR", e.toString());
@@ -261,7 +262,7 @@ public class LoginActivity extends Activity {
 				SessionManager session = new SessionManager(
 						getApplicationContext());
 				session.clear();
-				session.createLoginSession(mUsername);
+				session.createLoginSession(mEmail);
 				Intent main = new Intent(mLoginFormView.getContext(),
 						MainActivity.class);
 				main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

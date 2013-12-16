@@ -116,34 +116,6 @@
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/from_row_home_tz"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="24dip"
-        android:layout_marginRight="16dip"
-        android:focusable="true"
-        android:orientation="horizontal"
-        android:paddingBottom="8dip"
-        android:visibility="gone" >
-
-        <TextView
-            android:id="@+id/start_date_home_tz"
-            style="@style/TextAppearance.EditEvent_homeTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="7"
-            android:gravity="left|center_vertical" />
-
-        <TextView
-            android:id="@+id/start_time_home_tz"
-            style="@style/TextAppearance.EditEvent_homeTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:gravity="right|center_vertical" />
-    </LinearLayout>
-
     <!-- TO - Read/write version which launches the date/time pickers -->
 
     <LinearLayout
@@ -189,34 +161,6 @@
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/to_row_home_tz"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="24dip"
-        android:layout_marginRight="16dip"
-        android:focusable="true"
-        android:orientation="horizontal"
-        android:paddingBottom="8dip"
-        android:visibility="gone" >
-
-        <TextView
-            android:id="@+id/end_date_home_tz"
-            style="@style/TextAppearance.EditEvent_homeTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="7"
-            android:gravity="left|center_vertical" />
-
-        <TextView
-            android:id="@+id/end_time_home_tz"
-            style="@style/TextAppearance.EditEvent_homeTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:gravity="right|center_vertical" />
-    </LinearLayout>
-
     <!-- ALL DAY -->
 
     <LinearLayout
@@ -252,40 +196,25 @@
 
     <!-- TIME ZONE - Read-only textview version -->
 
-    <LinearLayout
-        android:id="@+id/timezone_textview_row"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:focusable="true"
-        android:minHeight="48dip"
-        android:orientation="vertical"
-        android:visibility="gone" >
-
-        <TextView
-            android:id="@+id/timezone_textView"
-            style="@style/TextAppearance.EditEvent_Value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="24dip"
-            android:layout_marginRight="24dip" />
-    </LinearLayout>
-
     <!-- TIME ZONE - Read/write version with button to launch picker -->
 
     <LinearLayout
-        android:id="@+id/timezone_button_row"
+        android:id="@+id/agenda_button_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:minHeight="48dip"
         android:orientation="vertical" >
 
         <Button
-            android:id="@+id/timezone_button"
-            style="@style/TextAppearance.EditEvent_SpinnerButton"
-            android:layout_width="match_parent"
+            android:id="@+id/add_agenda_button"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:contentDescription="@string/accessibility_pick_time_zone"
-            android:gravity="left|center_vertical" />
+            android:gravity="center"
+            android:text="Add Agenda" />
+
     </LinearLayout>
 
     <View style="@style/EditEventSeparator" />

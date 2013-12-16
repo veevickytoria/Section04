@@ -27,7 +27,7 @@ import android.os.Build;
 public class RegisterActivity extends Activity implements
 		AsyncResponse<Boolean> {
 
-	EditText usernameText;
+	EditText emailText;
 	EditText passwordText;
 	EditText confirmPasswordText;
 	public static final String ARG_USERNAME = "user";
@@ -45,9 +45,9 @@ public class RegisterActivity extends Activity implements
 		// Show the Up button in the action bar.
 		setupActionBar();
 
-		usernameText = ((EditText) findViewById(R.id.usernameText));
-		passwordText = ((EditText) findViewById(R.id.passwordText));
-		confirmPasswordText = ((EditText) findViewById(R.id.confirmPassword));
+		emailText = ((EditText) findViewById(R.id.register_email));
+		passwordText = ((EditText) findViewById(R.id.register_password));
+		confirmPasswordText = ((EditText) findViewById(R.id.register_confirm));
 
 		// builder = new AlertDialog.Builder(RegisterActivity.this);
 		//
@@ -107,12 +107,12 @@ public class RegisterActivity extends Activity implements
 
 	private void register() {
 		// Reset errors
-		usernameText.setError(null);
+		emailText.setError(null);
 		passwordText.setError(null);
 		confirmPasswordText.setError(null);
 
 		// Store values
-		String user = usernameText.getText().toString();
+		String user = emailText.getText().toString();
 		String pass = passwordText.getText().toString();
 		String confPass = confirmPasswordText.getText().toString();
 
