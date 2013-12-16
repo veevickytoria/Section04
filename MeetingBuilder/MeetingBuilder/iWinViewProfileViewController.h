@@ -28,7 +28,7 @@
 @property (weak, nonatomic) IBOutlet UITextView *emailTextView;
 @property (weak, nonatomic) IBOutlet UITextView *phoneTextView;
 @property (weak, nonatomic) IBOutlet UITextView *titleTextView;
-@property (weak, nonatomic) IBOutlet UITextView *location;
+@property (weak, nonatomic) IBOutlet UITextView *locationTextView;
 
 @property (nonatomic) id<ProfileDelegate> profileDelegate;
 
