@@ -1,5 +1,5 @@
 <!-- Javascript -->
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
 <script type="text/javascript">
 
     function getCookie(c_name){
@@ -28,7 +28,7 @@
         document.cookie= name + '=;expires=Thu, 01 Jan 2970 00:00:01 GMT;';
     }
 
-    function passCheck(){
+    /*function passCheck(){
         var pass0 = document.getElementById('p0').value();
         var pass1 = document.getElementById('p1').value();
         if(pass0 != pass1){
@@ -36,7 +36,7 @@
         }else{
             document.getElementById('p1').style.box-shadow('none;');
         }
-    }
+    }*/
 
 
 
@@ -52,10 +52,10 @@ function ConvertFormToJSON(form){
 
 }
 
-/*
+
 $(window).load(function() { 
 
-    jQuery('#testing').bind('submit', function(event){
+    jQuery('#loginForm').bind('submit', function(event){
         event.preventDefault();
 
         var form = this;
@@ -72,17 +72,41 @@ $(window).load(function() {
         return true;
     });
 
-    
-});
-*/
+        jQuery('#registerForm').bind('submit', function(event){
+        event.preventDefault();
+alert("sup");
+        var form = this;
+        var json = new ConvertFormToJSON(form);
 
+        $.ajax({
+            type: 'POST',
+            url: 'http://csse371-04.csse.rose-hulman.edu/User/',
+            data: JSON.stringify(json),
+	    dataType: 'json'
+        });
+
+
+        return true;
+    });
+});
+
+
+/** this doesnt work!!
 $(windows).load(function() {
+alert("blah");
 postFormAsJSON('testing', 'User/Login/');
-
+alert("stuff");
 });
+
+
+
 function postFormAsJSON(formId, urlEnding){
     jQuery('#'+ formId).bind('submit', function(event){
         event.preventDefault();
+
+
+alert("FormId:" + formId);
+alert("urlEnding:" + urlEnding);
 
         var form = this;
         var json = new ConvertFormToJSON(form);
@@ -99,6 +123,7 @@ function postFormAsJSON(formId, urlEnding){
     });
 }
 
+**/
 
 </script>
 
@@ -110,12 +135,12 @@ function postFormAsJSON(formId, urlEnding){
             <li><a class="active" href="#login">Login</a> </li>
             <li><a href="#register">Register</a> </li>
         </ul>
-        <div id="login" class="form-action show">
+        <div id="loginForm" class="form-action show">
             <h1>Login</h1>
             <p>Welcome to our Web App! Please enter credentials below </p>
             <form action="validate.php" method="post">
-                <input name="username[0]" placeholder="Username" type="text" />
-                <input name="password[0]" placeholder="Password" type="password" />
+                <input placeholder="Email" type="text" />
+                <input placeholder="Password" type="password" />
                 <input class="button" style="font-size: 14px; cursor: pointer; visibility: none;" type="submit" value="Login" />
                 <br />
                 <p id="invalidLogin" style="text-align: center; color: #F59C17; font-size: 18px; display: none; font-weight: bold; padding-top: 10px;">
@@ -130,37 +155,20 @@ function postFormAsJSON(formId, urlEnding){
             <p>Enter your details below: </p>
             <form id="registerForm" action="index" method="post">
                 <table style="width: 100%">
-                    <tr>
-                        <td style="width: 42%">
-                            <input name="firstName" placeholder="First Name" type="text" />
-                        </td>
-                            <td style="width: 5px; background-color: #14A2D4">
-                        </td>
-                        <td style="width: 52%">
-                            <input name="lastName" placeholder="Last Name" type="text" />
-                        </td>
-                    </tr>
-                </table>
-                <input name="username[1]" placeholder="Username" type="text" />
-                <input name="email" placeholder="Email" type="email" />
-                <input id="p0" name="password[1]" placeholder="Password" type="password" />
-                <input id="p1" name="passConfirm" placeholder="Confirm password" type="password" onchange="passCheck();" />
-                <input class="button" type="submit" value="Sign Up" />
+                    <input name="name" placeholder="Full Name" type="text" />
+                    <input name="email" placeholder="Email" type="email" />
+                    <input id='p0' name='password' placeholder='Password' type='password' />
+                    <input name="phone" placeholder="Phone #" type="text" />
+                    <input name="company" placeholder="Company" type="text" />
+                    <input name="title" placeholder="Title" type="text" />
+                    <input name="location" placeholder="Location" type="text" />
+                <!-- <input id="p1" name="passConfirm" placeholder="Confirm password" type="password" onchange="passCheck();" /> -->
+                <input class="button" disabled='true' style='font-size: 14px; cursor: pointer' type="submit" value="Sign Up" />
             </form>
         </div>
         <!--/#register.form-action-->
     </div>
 </div>
-
-
-<div>
-<form id="testing" method="post">
-<input name="email" type="text"/>
-<input name="password" type="text"/>
-<input type="submit"/>
-</form>
-</div>
-
 
 
 <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
@@ -191,8 +199,8 @@ function postFormAsJSON(formId, urlEnding){
             .fadeIn(550);
 
             if(href == '#register'){
-                $('.flat-form').animate({height:480},550);
-            }else{‎
+                $('.flat-form').animate({height:560},550);
+            }else{
                 $('.flat-form').animate({height:410},550);
             }
             
