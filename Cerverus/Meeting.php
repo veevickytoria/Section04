@@ -49,6 +49,34 @@ if( strcasecmp($_GET['method'],'login') == 0){
 	foreach ($meetingNode->getProperties() as $key => $value) {
     echo "$key: $value\n";
 }
+}else if( strcasecmp($_GET['method'],'updateMeeting') == 0){
+	//get the json string post content
+	$postContent = json_decode(@file_get_contents('php://input'));
+	
+	$meeting=$client->getNode($postContent->meetingID);
+	if(sizeof($meeting >0){
+		if(strcasecmp($postContent->field, 'user') ==0){
+			$meeting->setProperty('user', $postContent->value);
+			$meeting->save();
+			$array = $meeting->getProperties();
+			echo json_encode($array);
+		}else if(strcasecmp($postContent->field, 'title') ==0){
+			$meeting->setProperty('title', $postContent->value);
+			$meeting->save();
+			$array = $meeting->getProperties();
+			echo json_encode($array);
+		}else if(strcasecmp($postContent->field, 'datetime') ==0){
+			$meeting->setProperty('datetime', $postContent->value);
+			$meeting->save();
+			$array = $meeting->getProperties();
+			echo json_encode($array);
+		}else if(strcasecmp($postContent->field, 'location') ==0){
+			$meeting->setProperty('location', $postContent->value);
+			$meeting->save();
+			$array = $meeting->getProperties();
+			echo json_encode($array);
+		}
+	}
 }
 
 ?>
