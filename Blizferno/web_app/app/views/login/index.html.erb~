@@ -1,5 +1,5 @@
 <!-- Javascript -->
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
 <script type="text/javascript">
 
     function getCookie(c_name){
@@ -40,7 +40,6 @@
 
 
 
-
 function ConvertFormToJSON(form){
 	var array = jQuery(form).serializeArray();
 	var json = {};
@@ -70,7 +69,7 @@ $(window).load(function() {
         });
 
 
-       // return true;
+        return true;
     });
 
         jQuery('#registerForm').bind('submit', function(event){
@@ -123,8 +122,8 @@ alert("urlEnding:" + urlEnding);
         return true;
     });
 }
-**/
 
+**/
 
 </script>
 
@@ -202,7 +201,6 @@ alert("urlEnding:" + urlEnding);
             if(href == '#register'){
                 $('.flat-form').animate({height:560},550);
             }else{
-
                 $('.flat-form').animate({height:410},550);
             }
             
