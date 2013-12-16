@@ -1,0 +1,82 @@
+<p>
+  <span style="font-size:28px;"><strong><%= @TaskArray[1] %></strong></span>
+</p>
+<p>
+  <br>
+  <span style="font-size:28px;">
+    <strong><span style="font-size:18px;">Deadline: </span></strong>
+  </span>
+  <span> <%= @TaskArray[4] %> </span>
+</p>
+<p>
+  <br>
+  <span style="font-size:28px;">
+    <strong><span style="font-size:18px;">Assigned To: </span></strong>
+  </span>
+  <span> <%= @TaskArray[8] %> </span>
+</p>
+<p>
+  <br>
+  <span style="font-size:28px;">
+    <strong><span style="font-size:18px;">Date Assigned: </span></strong>
+  </span>
+  <span> <%= @TaskArray[6] %> </span>
+</p>
+<p>
+  <br>
+  <span style="font-size:28px;">
+    <strong><span style="font-size:18px;">Assigned By: </span></strong>
+  </span>
+  <span> <%= @TaskArray[9] %> </span>
+</p>
+<p>
+  <br>
+  <span style="font-size:28px;">
+    <strong><span style="font-size:18px;">Description: </span></strong>
+    <br />
+    <span> <%= @TaskArray[3] %> </span>
+  </span>
+</p>
+<p>
+  <br>
+  <span style="font-size:28px;">
+    <strong><span style="font-size:18px;">Completion Criteria: </span></strong>
+  </span>
+  <br />
+  <span> <%= @TaskArray[7] %> </span>
+</p>
+<p>
+  <br>
+  <span style="font-size:28px;">
+    <strong><span style="font-size:18px;">Complete: </span></strong>
+  </span>
+  <span> <%= @TaskArray[2] %> </span>
+</p>
+<p>
+  <br>
+  <span style="font-size:28px;">
+    <strong><span style="font-size:18px;">Created By: </span></strong>
+  </span>
+  <span> <%= @TaskArray[10] %> </span>
+</p>
+<p>
+  <br>
+  <span style="font-size:28px;">
+    <strong><span style="font-size:18px;">Created Date: </span></strong>
+  </span>
+  <span> <%= @TaskArray[5] %> </span>
+</p>
+<p>
+  &nbsp;
+</p>
+<p>
+  &nbsp;
+</p>
+<p>
+  <br>
+  <br>
+  <br>
+  <form>
+    <input type="submit" value="Submit">
+  </form>
+</p>
