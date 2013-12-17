@@ -43,12 +43,15 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
 	//return the created meeting id
 	echo '{"meetingID":"'.$meetingNode->getID().'"}';
 	
-}else if( strcasecmp($_GET['method'],'getMeetingInfo') == 0){
+}else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') == 0){
+	//getMeetingInfo
 	$meetingNode=$client->getNode($_GET['id']);
 	foreach ($meetingNode->getProperties() as $key => $value) {
 		echo "$key: $value\n";
 	}
-}else if( strcasecmp($_GET['method'],'updateMeeting') == 0){
+}else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'PUT') == 0){
+	//updateMeeting
+	
 	//get the json string post content
 	$postContent = json_decode(@file_get_contents('php://input'));
 	
@@ -108,5 +111,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
 		//return an error if ID doesn't point to a node
 		echo '{"errorID":"5", "errorMessage":"Given node ID is not recognized in database"}';
 	}
+}else{
+	echo $_SERVER['REQUEST_METHOD'] ." request method not found in Meeting";
 }
 ?>

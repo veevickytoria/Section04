@@ -14,16 +14,9 @@ $client= new Client();
 	//get the index
 	$noteIndex = new Index\NodeIndex($client, 'notes');
 	$noteIndex->save();
-	/*
-if( strcasecmp($_GET['method'],'login') == 0){
-	$note=$noteIndex->findOne('note',$_GET['note']);
-    
-	if (sizeof($note)!=0){
-		print "TRUE";
-	}else{
-		print "FALSE";
-	}	
-}else */if( strcasecmp($_GET['method'],'createNote') == 0){
+if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0{
+	//createNote method
+	
 	//get the json string post content
 	$postContent = json_decode(@file_get_contents('php://input'));
 	
@@ -44,10 +37,11 @@ if( strcasecmp($_GET['method'],'login') == 0){
 	
 	$response= $noteIndex->add($noteNode, 'user', $noteProps['user']);
 	echo $response;
-}else if( strcasecmp($_GET['method'],'getNoteInfo') == 0){
+}else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0{
+	//getNoteInfo
 	$noteNode=$client->getNode($_GET['id']);
 	foreach ($noteNode->getProperties() as $key => $value) {
-    echo "$key: $value\n";
-}
+		echo "$key: $value\n";
+	}
 }
 ?>
