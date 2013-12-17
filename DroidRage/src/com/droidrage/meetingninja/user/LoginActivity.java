@@ -240,13 +240,22 @@ public class LoginActivity extends Activity {
 
 			try {
 				login_result = UserDatabaseAdapter.login(mEmail, mPassword);
-				if (login_result.contains("invalid"))
+				if (login_result.contains("invalid")){
 					Log.e("LOGIN", mEmail + " does not exist");
+					return false;
+				}else{
+					SessionManager session = new SessionManager(
+							getApplicationContext());
+					session.clear();
+					session.createLoginSession(login_result);
+					
+				}
 				// Thread.sleep(2000);
 			} catch (IOException e) {
 				Log.e("LOGIN_ERR", e.toString());
 				return false;
 			}
+			
 
 			// return login_success;
 			return true;
@@ -259,10 +268,10 @@ public class LoginActivity extends Activity {
 
 			// if successful login, start main activity
 			if (success) {
-				SessionManager session = new SessionManager(
-						getApplicationContext());
-				session.clear();
-				session.createLoginSession(mEmail);
+//				SessionManager session = new SessionManager(
+//						getApplicationContext());
+//				session.clear();
+//				session.createLoginSession(mEmail);
 				Intent main = new Intent(mLoginFormView.getContext(),
 						MainActivity.class);
 				main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

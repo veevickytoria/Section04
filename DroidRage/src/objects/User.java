@@ -6,10 +6,14 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.graphics.Bitmap;
+
+import com.droidrage.meetingninja.user.UserInfoFetcher;
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
+
 
 public class User {
 	private String userID;
@@ -21,19 +25,15 @@ public class User {
 	private String location = "";
 	private List<Meeting> schedule;
 	private List<Task> tasks;
+	private Bitmap profPic;
+
 
 	public User() {
-
+		
 	}
 
 	public User(String userID) {
 		this.userID = userID;
-		this.displayName = "Joe Doe";
-		this.email = "joedoePIC@PIC.com";
-		this.phone = "5555555555";
-		this.company = "Plastic People INC";
-		this.title = "PIC";
-		this.location = "somewhere";
 	}
 
 	public void updateInfo() {
@@ -111,6 +111,14 @@ public class User {
 
 	public void setSchedule(List<Meeting> meetingsList) {
 		this.schedule = meetingsList;
+	}
+	
+	public void setProfPic(Bitmap pic){
+		this.profPic = pic;
+	}
+	
+	public Bitmap getProfPic(){
+		return this.profPic;
 	}
 
 	@Override

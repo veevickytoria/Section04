@@ -40,11 +40,11 @@ public class SessionManager {
 	/**
 	 * Create login session
 	 * */
-	public void createLoginSession(String user) {
+	public void createLoginSession(String userID) {
 		// Storing login value as TRUE
-		editor.putString(USER, user);
+		editor.putString(USER, "user");
 		editor.putBoolean(LOGGED_IN, true);
-		editor.putString(USERID, "1234");
+		editor.putString(USERID, userID);
 		// commit changes
 		editor.commit();
 	}
