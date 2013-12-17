@@ -96,14 +96,14 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 	}
 	echo json_encode(array("users"=>$results));
 }else if( strcasecmp($_SERVER['REQUEST_METHOD'],'GET') == 0){
-	$userNode=$client->getNode($_GET['id']);
-	$array = $userNode->getProperties();
+	 $userNode=$client->getNode($_GET['id']);
+	 $array = $userNode->getProperties();
 	
-	//hide the password
-	$array['password']="********";
+	 //hide the password
+	 $array['password']="********";
 	
-	//return the json string
-	echo json_encode($array);
+	 //return the json string
+	 echo json_encode($array);
 	
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'PUT')==0){
 	//update user

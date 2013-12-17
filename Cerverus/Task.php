@@ -19,7 +19,7 @@ $client = new Client();
 	$userIndex = new Index\NodeIndex($client, 'Users');
 	$userIndex->save();
 	 
-	if( strcasecmp( $_GET['method'] , 'createTask' ) == 0 ){
+if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 ){
 	//get the json string post content
 	$postContent = json_decode( @file_get_contents( 'php://input' ));
 	
@@ -48,7 +48,7 @@ $client = new Client();
 	
 	//get node id
 	echo $taskNode->getId(); //revise output
-}else if( strcasecmp($_GET['method'],'getTaskInfo') == 0){
+}else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 ){
 	$taskNode=$client->getNode($_GET['id']);
 	$array = $taskNode->getProperties();
 	echo json_encode($array);
