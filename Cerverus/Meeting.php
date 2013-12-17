@@ -31,13 +31,18 @@ if( strcasecmp($_GET['method'],'login') == 0){
 	$meetingNode= $client->makeNode();
 	
 	//sets the property on the node
-	$meetingNode->setProperty('user', $postContent->user)
+	$meetingNode->setProperty('user', $postContent->user) //this also maps to a relation
 		->setProperty('title', $postContent->title)
 		->setProperty('datetime', $postContent->datetime)
 		->setProperty('location', $postContent->location);
 	
 	//actually add the node in the db
 	$meetingNode->save();
+	
+	//create a relation to the user who made the meeting
+	$user = $client->getNode($postContent->user);
+	$meetingRel = $user->realteTo($meetingNode, 'MADE_MEETING')
+		->save();
 	
 	//get properties on the node
 	$meetingProps= $meetingNode->getProperties();
@@ -77,6 +82,9 @@ if( strcasecmp($_GET['method'],'login') == 0){
 			echo json_encode($array);
 		}
 	}
+	
+	//if the relations change we need to also change them here.
+	//The problem is I don't know how to tell if the relationship changes.
 }
 
 ?>
