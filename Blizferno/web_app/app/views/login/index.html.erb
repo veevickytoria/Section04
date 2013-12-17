@@ -65,7 +65,12 @@ $(window).load(function() {
             type: 'POST',
             url: 'http://csse371-04.csse.rose-hulman.edu/User/Login/',
             data: JSON.stringify(json),
-	    dataType: 'json'
+	    	dataType: 'json',
+			success:function(data){
+				if(data.userID != null){
+				window.location.href = "/";
+				}
+			}
         });
 
         return true;
@@ -81,7 +86,12 @@ $(window).load(function() {
             type: 'POST',
             url: 'http://csse371-04.csse.rose-hulman.edu/User/',
             data: JSON.stringify(json),
-	    dataType: 'json'
+	    	dataType: 'json',
+			success:function(data){
+				if(data.userID != null){
+				window.location.href = "/";
+				}
+			}
         });
 
 
@@ -161,7 +171,8 @@ alert("urlEnding:" + urlEnding);
 </div>
 
 <h1>
-<%= response.body %>
+Here
+<%= @test %>
 </h1>
 
 
