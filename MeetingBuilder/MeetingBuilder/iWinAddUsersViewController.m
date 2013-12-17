@@ -43,7 +43,7 @@
     self.filteredList = [[NSMutableArray alloc] init];
     
     iWinContact *c1 = [[iWinContact alloc] init];
-    c1.firstName = @"Dharmin";
+    [c1 setFirstName: @"Dharmin"];
     c1.lastName = @"Shah";
     c1.email = @"shahdk@rose-hulman.edu";
     
@@ -53,13 +53,57 @@
     c2.email = @"darttrf@rose-hulman.edu";
     
     iWinContact *c3 = [[iWinContact alloc] init];
-    c3.firstName = @"Daniel";
-    c3.lastName = @"Wang";
-    c3.email = @"wangde@rose-hulman.edu";
+    c3.firstName = @"Brian";
+    c3.lastName = @"Padilla";
+    c3.email = @"padillbt@rose-hulman.edu";
     
     [self.userList addObject:c1];
     [self.userList addObject:c2];
     [self.userList addObject:c3];
+    
+//    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Users"];
+//    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+//    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:30];
+//    [urlRequest setHTTPMethod:@"GET"];
+//    NSURLResponse * response = nil;
+//    NSError * error = nil;
+//    NSData * data = [NSURLConnection sendSynchronousRequest:urlRequest
+//                                            returningResponse:&response
+//                                                        error:&error];
+//    NSArray *jsonArray;
+//    if (error)
+//    {
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Meetings not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+//        [alert show];
+//    }
+//    else
+//    {
+//        NSError *jsonParsingError = nil;
+//        jsonArray = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
+//    }
+//    if (jsonArray.count > 0)
+//    {
+//        for (NSDictionary* users in jsonArray)
+//        {
+//            iWinContact *c = [[iWinContact alloc] init];
+//            c.userID = (NSInteger)[users objectForKey:@"userID"];
+//
+//            NSString *displayName = (NSString *)[users objectForKey:@"displayName"];
+//            NSInteger nWords = 2;
+//            NSRange wordRange = NSMakeRange(0, nWords);
+//            NSArray *firstAndLastNames = [[displayName componentsSeparatedByString:@" "] subarrayWithRange:wordRange];
+//            c.firstName = (NSString *)[firstAndLastNames objectAtIndex:0];
+//            c.lastName = (NSString *)[firstAndLastNames objectAtIndex:1];
+//            
+//            c.email = (NSString *)[users objectForKey:@"email"];
+//            c.phone = (NSString *)[users objectForKey:@"phone"];
+//            c.company = (NSString *)[users objectForKey:@"companyc"];
+//            c.title = (NSString *)[users objectForKey:@"title"];
+//            c.location = (NSString *)[users objectForKey:@"location"];
+//            
+//            [self.userList addObject:c];
+//        }
+//    }
 }
 
 - (void)didReceiveMemoryWarning

@@ -25,7 +25,7 @@
     [self.addUsersVC viewDidLoad];
     [self.addUsersVC.userList removeAllObjects];
     self.contact = [[iWinContact alloc] init];
-    [self.contact initializeWithFirstName:@"Dharmin" withLastName:@"Shah" withEmail:@"shahdk@rose-hulman.edu"];
+    [self.contact initializewithID:1 withFirstName:@"Dharmin" withLastName:@"Shah" withEmail:@"shahdk@rose-hulman.edu"];
     [self.addUsersVC.userList addObject:self.contact];
     NSLog(@"%@", self.addUsersVC.userList);
 }
