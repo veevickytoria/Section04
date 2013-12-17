@@ -14,16 +14,9 @@ $client= new Client();
 	//get the index
 	$meetingIndex = new Index\NodeIndex($client, 'Meetings');
 	$meetingIndex->save();
-/*	
-if( strcasecmp($_GET['method'],'login') == 0){
-	$user=$userIndex->findOne('user',$_GET['user']);
-    
-	if (sizeof($user)!=0){
-		print "TRUE";
-	}else{
-		print "FALSE";
-	}	
-}else*/ if( strcasecmp($_GET['method'],'createMeeting') == 0){
+
+//create meeting POST
+if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
 	//get the json string post content
 	$postContent = json_decode(@file_get_contents('php://input'));
 	
@@ -31,7 +24,7 @@ if( strcasecmp($_GET['method'],'login') == 0){
 	$meetingNode= $client->makeNode();
 	
 	//sets the property on the node
-	$meetingNode->setProperty('user', $postContent->user)
+	$meetingNode->setProperty('user', $postContent->userID)
 		->setProperty('title', $postContent->title)
 		->setProperty('datetime', $postContent->datetime)
 		->setProperty('location', $postContent->location);
@@ -40,37 +33,31 @@ if( strcasecmp($_GET['method'],'login') == 0){
 	$meetingNode->save();
 	
 	//create a relation to the user who made the meeting
-	$user = $client->getNode($postContent->user);
-	$meetingRel = $user->realteTo($meetingNode, 'MADE_MEETING')
+	$user = $client->getNode($postContent->userID);
+	$meetingRel = $user->relateTo($meetingNode, 'MADE_MEETING')
 		->save();
 	
-	//get properties on the node
-	$meetingProps= $meetingNode->getProperties();
+	//add the index	
+	$response= $meetingIndex->add($meetingNode, 'ID', $meetingNode->getID());
 	
-	$response= $meetingIndex->add($meetingNode, 'Meetings', $meetingProps['user']);
-	echo $response;
+	//return the created meeting id
+	echo '{"meetingID":"'.$meetingNode->getID().'"}';
+	
 }else if( strcasecmp($_GET['method'],'getMeetingInfo') == 0){
 	$meetingNode=$client->getNode($_GET['id']);
 	foreach ($meetingNode->getProperties() as $key => $value) {
-    echo "$key: $value\n";
-}
+		echo "$key: $value\n";
+	}
 }else if( strcasecmp($_GET['method'],'updateMeeting') == 0){
 	//get the json string post content
 	$postContent = json_decode(@file_get_contents('php://input'));
 	
 	$meeting=$client->getNode($postContent->meetingID);
-	if(sizeof($meeting >0){
+	if(sizeof($meeting > 0)){
 		if(strcasecmp($postContent->field, 'user') ==0){
 			$meeting->setProperty('user', $postContent->value);
 			$meeting->save();
 			$array = $meeting->getProperties();
-			//Update the relationship to reflect the new user
-			$user = $client->getNode($postContent->user);
-			$meetingRel = $meeting->getRelationships(array('MADE_MEETING'));
-			foreach ($meetingRel as $rel){
-				$rel->setStartNode($user)
-					->save();
-			}
 			echo json_encode($array);
 		}else if(strcasecmp($postContent->field, 'title') ==0){
 			$meeting->setProperty('title', $postContent->value);
@@ -89,6 +76,37 @@ if( strcasecmp($_GET['method'],'login') == 0){
 			echo json_encode($array);
 		}
 	}
+//delete meeting DELETE
+}else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'DELETE') == 0){	
+	//get the id
+	preg_match("#(\d+)#", $_SERVER['REQUEST_URI'], $id);
+	
+	//get the node
+	$node = $client->getNode($id[0]);
+	//make sure the node exists
+	if($node != NULL){
+		//check if node has meeting index
+		$meeting = $meetingIndex->findOne('ID', ''.$id[0]);
+				
+		//only delete the node if it's a meeting
+		if($meeting != NULL){
+			//get the relationships
+			$relations = $meeting->getRelationships();
+			foreach($relations as $rel){
+				//remove all relationships
+				$rel->delete();
+			}		
+			
+			//delete node and return true
+			$meeting->delete();
+			echo '{"valid":"true"}';
+		} else {
+			//return an error otherwise
+			echo '"errorID":"4", "errorMessage":"Given node ID is not a meeting node"}';
+		}
+	} else {
+		//return an error if ID doesn't point to a node
+		echo '{"errorID":"5", "errorMessage":"Given node ID is not recognized in database"}';
+	}
 }
-
 ?>
