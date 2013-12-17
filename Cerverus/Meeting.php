@@ -31,7 +31,7 @@ if( strcasecmp($_GET['method'],'login') == 0){
 	$meetingNode= $client->makeNode();
 	
 	//sets the property on the node
-	$meetingNode->setProperty('user', $postContent->user) //this also maps to a relation
+	$meetingNode->setProperty('user', $postContent->user)
 		->setProperty('title', $postContent->title)
 		->setProperty('datetime', $postContent->datetime)
 		->setProperty('location', $postContent->location);
@@ -64,6 +64,13 @@ if( strcasecmp($_GET['method'],'login') == 0){
 			$meeting->setProperty('user', $postContent->value);
 			$meeting->save();
 			$array = $meeting->getProperties();
+			//Update the relationship to reflect the new user
+			$user = $client->getNode($postContent->user);
+			$meetingRel = $meeting->getRelationships(array('MADE_MEETING'));
+			foreach ($meetingRel as $rel){
+				$rel->setStartNode($user)
+					->save();
+			}
 			echo json_encode($array);
 		}else if(strcasecmp($postContent->field, 'title') ==0){
 			$meeting->setProperty('title', $postContent->value);
@@ -82,9 +89,6 @@ if( strcasecmp($_GET['method'],'login') == 0){
 			echo json_encode($array);
 		}
 	}
-	
-	//if the relations change we need to also change them here.
-	//The problem is I don't know how to tell if the relationship changes.
 }
 
 ?>
