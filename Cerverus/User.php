@@ -92,7 +92,9 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 	//GET all users
 	$users= $userIndex->query('email:*');
 	for($ii=0;$ii<sizeof($users);$ii++){
-		$results[$ii]= $users[$ii]->getProperties();
+		$array=$users[$ii]->getProperties();
+		$array['password']="********";
+		$results[$ii]= $array;
 	}
 	echo json_encode(array("users"=>$results));
 }else if( strcasecmp($_SERVER['REQUEST_METHOD'],'GET') == 0){
@@ -171,9 +173,10 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 		$relationArray = $userNode->getRelationships(array());
 		foreach($relationArray as $rel){
 			$node = $rel->getStartNode();
-			echo $rel->getType()." ";
-		        echo $node->getId()."\n";
-		}
+			array_push($relationArray,array('type'=>$rel->getType(), 'id'=>$node->getId()));
+ 		}
+		echo json_encode($relationArray);
+
 		
 }else{
 	echo $_SERVER['REQUEST_METHOD'] ." request method not found";
