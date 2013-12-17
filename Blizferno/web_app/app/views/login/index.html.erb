@@ -68,7 +68,6 @@ $(window).load(function() {
 	    dataType: 'json'
         });
 
-
         return true;
     });
 
@@ -135,8 +134,8 @@ alert("urlEnding:" + urlEnding);
 <h1>Login</h1>
             <p>Welcome to our Web App! Please enter credentials below </p>
             <form id="loginForm" method="post">
-                <input placeholder="Email" type="text" />
-                <input placeholder="Password" type="password" />
+                <input name="email" placeholder="Email" type="text" />
+                <input name="password" placeholder="Password" type="password" />
                 <input class="button" style="font-size: 14px; cursor: pointer; visibility: none;" type="submit" value="Login" />
                 <br />
                 <p id="invalidLogin" style="text-align: center; color: #F59C17; font-size: 18px; display: none; font-weight: bold; padding-top: 10px;">
@@ -161,7 +160,9 @@ alert("urlEnding:" + urlEnding);
             </form>
 </div>
 
-
+<h1>
+<%= response.body %>
+</h1>
 
 
 <!--
