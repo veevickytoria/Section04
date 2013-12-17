@@ -24,3 +24,18 @@ RewriteRule ^Meeting/Notes/?$ Meeting.php?cat=notes [NC,L]
 RewriteRule ^Meeting/Tasks/?$ Meeting.php?cat=tasks [NC,L]
 
 RewriteRule ^Task/?$ Task.php [NC,L]
+RewriteRule ^Task/([0-9]+)/?$ Task.php?id=$1 [NC,L]
+
+RewriteRule ^Comment/?$ Comment.php [NC,L]
+RewriteRule ^Comment/([0-9]+)/?$ Comment.php?id=$1 [NC,L]
+
+RewriteRule ^Agenda/?$ Agenda.php [NC,L]
+RewriteRule ^Agenda/([0-9]+)/?$ Agenda.php?id=$1 [NC,L]
+
+RewriteRule ^Notification/([0-9]+)/?$ Notification.php?id=$1 [NC,L]
+
+RewriteRule ^Project/?$ Project.php [NC,L]
+RewriteRule ^Project/([0-9]+)/?$ Project.php?id=$1 [NC,L]
+
+RewriteRule ^Group/?$ Group.php [NC,L]
+RewriteRule ^Group/([0-9]+)/?$ Group.php?id=$1 [NC,L]
