@@ -12,7 +12,7 @@ class TasksController < ApplicationController
 			{"taskID":"2","title":"Create a Meeting","project":"Meeting Ninja","deadline":"19-Dec-13"},
 			{"taskID":"3","title":"Create a Task","project":"Meeting Ninja","deadline":"19-Dec-13"},
 			{"taskID":"4","title":"View a Task","project":"Meeting Ninja","deadline":"19-Dec-13"}]}')
-		@TaskArray = ""
+
 	end
 
 	def list
