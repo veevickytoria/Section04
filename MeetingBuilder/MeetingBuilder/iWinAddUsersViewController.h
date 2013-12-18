@@ -8,9 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol UserDelegate <NSObject>
+
+-(void)selectedUsers:(NSMutableArray *)userList;
+
+@end
+
 @interface iWinAddUsersViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *userListTableView;
 @property (weak, nonatomic) IBOutlet UITextField *emailField;
+@property (strong, nonatomic) id<UserDelegate> userDelegate;
 - (IBAction)onClickSendInvite;
 - (IBAction)onClickSave;
 - (IBAction)onClickCancel;

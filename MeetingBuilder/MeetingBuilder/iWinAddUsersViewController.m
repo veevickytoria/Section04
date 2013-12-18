@@ -7,7 +7,7 @@
 //
 
 #import "iWinAddUsersViewController.h"
-#import "iWinContact.h"
+#import "Contact.h"
 #import <QuartzCore/QuartzCore.h>
 #import "iWinAppDelegate.h"
 
@@ -39,28 +39,8 @@
     
     self.userSearchBar.showsScopeBar = NO;
     
-// self.userList = [[NSMutableArray alloc] init];
     self.attendeeList = [[NSMutableArray alloc] init];
     self.filteredList = [[NSMutableArray alloc] init];
-    
-//    iWinContact *c1 = [[iWinContact alloc] init];
-//    [c1 setFirstName: @"Dharmin"];
-//    c1.lastName = @"Shah";
-//    c1.email = @"shahdk@rose-hulman.edu";
-//    
-//    iWinContact *c2 = [[iWinContact alloc] init];
-//    c2.firstName = @"Rain";
-//    c2.lastName = @"Dartt";
-//    c2.email = @"darttrf@rose-hulman.edu";
-//    
-//    iWinContact *c3 = [[iWinContact alloc] init];
-//    c3.firstName = @"Brian";
-//    c3.lastName = @"Padilla";
-//    c3.email = @"padillbt@rose-hulman.edu";
-//    
-//    [self.userList addObject:c1];
-//    [self.userList addObject:c2];
-//    [self.userList addObject:c3];
 
     iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     
@@ -137,7 +117,7 @@
 - (IBAction)onClickSave
 {
     //save
-    //[self.userDelegate returnToPreviousView:self.pageName inEditMode:self.isEditing];
+    [self.userDelegate selectedUsers:self.attendeeList];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -158,16 +138,19 @@
 {
     UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"UserCell"];
     
+    Contact *c = nil;
+    
     if ([tableView isEqual:self.searchDisplayController.searchResultsTableView])
     {
-        iWinContact *c = (iWinContact *)[self.filteredList objectAtIndex:indexPath.row];
-        cell.textLabel.text = [NSString stringWithFormat:@"%@ %@", c.firstName, c.lastName];
+        c = (Contact *)[self.filteredList objectAtIndex:indexPath.row];
     }
     else
     {
-        iWinContact *c = (iWinContact *)[self.attendeeList objectAtIndex:indexPath.row];
-        cell.textLabel.text = [NSString stringWithFormat:@"%@ %@", c.firstName, c.lastName];
+        c = (Contact *)[self.attendeeList objectAtIndex:indexPath.row];
     }
+    
+    cell.textLabel.text = [NSString stringWithFormat:@"%@ %@", c.firstName, c.lastName];
+    cell.detailTextLabel.text = c.email;
     return cell;
 }
 
@@ -204,7 +187,7 @@ shouldReloadTableForSearchString:(NSString *)searchString
 {
     if ([tableView isEqual:self.searchDisplayController.searchResultsTableView])
     {
-        iWinContact *c = (iWinContact *)[self.filteredList objectAtIndex:indexPath.row];
+        Contact *c = (Contact *)[self.filteredList objectAtIndex:indexPath.row];
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.email contains[c] %@", c.email];
         NSArray *checkArray = [self.attendeeList filteredArrayUsingPredicate:predicate];
         if (checkArray.count == 0)
