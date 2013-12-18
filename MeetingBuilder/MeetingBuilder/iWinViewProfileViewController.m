@@ -9,13 +9,15 @@
 //#import "iWinEditProfileViewController.h"
 #import "iWinViewProfileViewController.h"
 //#import "iWinViewAndAddViewController.h"
-#import "iWinProfile.h"
+#import "iWinAppDelegate.h"
+#import "Contact.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface iWinViewProfileViewController ()
 @property (nonatomic) NSString *pageName;
 @property (nonatomic) BOOL isEditing;
-@property (nonatomic) iWinProfile *profile;
+@property (nonatomic) Contact *contact;
+//@property (nonatomic) iWinProfile *profile;
 //@property (strong, nonatomic) iWinEditProfileViewController *editProfileViewController;
 @end
 
@@ -39,20 +41,23 @@
     // Do any additional setup after loading the view from its nib.
     [self updateButtonUI:self.editProfile];
     
-//    iWinProfile *profile = [[iWinProfile alloc] init];
-//    self.profile.displayName = @"Gordon Hazzard";
-//    self.profile.email = @"hazzargm@rose-hulman.edu";
-//    self.profile.phone = @"(800)866-8866";
-//    self.profile.company = @"iWin LLC";
-//    self.profile.title = @"Scrum Master";
-//    self.profile.location = @"Terre Haute, IN";
+    iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     
-//    self.displayNameTextView.text =  @"Gordon Hazzard";
-//    self.emailTextView.text =  @"hazzargm@rose-hulman.edu";
-//    self.phoneTextView.text = @"(800)866-8866";
-//    self.companyTextView.text = @"iWin LLC";
-//    self.titleTextView.text = @"Scrum Master";
-//    self.locationTextView.text = @"Terre Haute, IN";
+    NSManagedObjectContext *context = [appDelegate managedObjectContext];
+    
+    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Contact" inManagedObjectContext:context];
+    
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDesc];
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"lastName = 'Shah'"];
+    [request setPredicate:predicate];
+    
+    NSError *error;
+    NSArray *result = [context executeFetchRequest:request
+                                             error:&error];
+    self.contact = (Contact*)[result objectAtIndex:0];
+
     self.cancel.hidden = YES;
     [self updateTextUI];
     
@@ -62,28 +67,16 @@
 {
     
     //Need to make fonts bigger
-    
-//    UIFont *newFont = [[UIFont alloc] fontWithSize:19.0f];
-//    self.titleTextView.font = newFont;
-//    self.emailTextView.font = newFont;
-//    self.phoneTextView.font = newFont;
-//    self.companyTextView.font = newFont;
-//    self.titleTextView.font = newFont;
-//    self.locationTextView.font = newFont;
 
-    self.displayNameTextView.text =  @"Gordon Hazzard";
-    self.emailTextView.text =  @"hazzargm@rose-hulman.edu";
-    self.phoneTextView.text = @"(800)866-8866";
-    self.companyTextView.text = @"iWin LLC";
-    self.titleTextView.text = @"Scrum Master";
-    self.locationTextView.text = @"Terre Haute, IN";
+
+    self.displayNameTextView.text =  [NSString stringWithFormat:@"%@ %@", self.contact.firstName, self.contact.lastName];
+    self.emailTextView.text =  self.contact.email;
+    self.phoneTextView.text = self.contact.phone;
+    self.companyTextView.text = self.contact.company;
+    self.titleTextView.text = self.contact.title;
+    self.locationTextView.text = self.contact.location;
     
-//    self.displayNameTextView.text = self.profile.displayName;
-//    self.emailTextView.text = self.profile.email;
-//    self.phoneTextView.text = self.profile.phone;
-//    self.companyTextView.text = self.profile.company;
-//    self.titleTextView.text = self.profile.title;
-//    self.locationTextView.text = self.profile.location;
+
 }
 
 -(void) updateButtonUI: (UIButton *)button
@@ -92,6 +85,22 @@
     button.layer.borderColor = [[UIColor darkGrayColor] CGColor];
     button.layer.borderWidth = 1.0f;
     [button setTintColor:[UIColor blueColor]];
+}
+
+-(void) updateTextViewUI: (UITextView *)textView
+{
+    textView.layer.cornerRadius = 7;
+    textView.layer.borderColor = [[UIColor darkGrayColor] CGColor];
+    textView.layer.borderWidth = 1.0f;
+    //[textView setTintColor:[UIColor blueColor]];
+}
+
+-(void) unUpdateTextViewUI: (UITextView *)textView
+{
+    textView.layer.cornerRadius = 7;
+    textView.layer.borderColor = [[UIColor whiteColor] CGColor];
+    textView.layer.borderWidth = 1.0f;
+    //[textView setTintColor:[UIColor blueColor]];
 }
 
 - (void)didReceiveMemoryWarning
@@ -107,19 +116,59 @@
 
 -(void) saveChanges
 {
+    iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     
+    NSManagedObjectContext *context = [appDelegate managedObjectContext];
+    NSError *error;
     
+    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Contact" inManagedObjectContext:context];
+    
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDesc];
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userID = %@", self.contact.userID];
+    [request setPredicate:predicate];
+    
+    NSArray *result = [context executeFetchRequest:request
+                                             error:&error];
+    
+    self.contact = (Contact*)[result objectAtIndex:0];
+    
+    NSInteger nWords = 2;
+    NSRange wordRange = NSMakeRange(0, nWords);
+    NSArray *firstAndLastNames = [[self.displayNameTextView.text componentsSeparatedByString:@" "] subarrayWithRange:wordRange];
+    
+ 
+    [self.contact setValue:(NSString *)[firstAndLastNames objectAtIndex:0] forKey:@"firstName"];
+    [self.contact setValue:(NSString *)[firstAndLastNames objectAtIndex:1] forKey:@"lastName"];
+    [self.contact setValue:self.emailTextView.text forKey:@"email"];
+    [self.contact setValue:self.phoneTextView.text forKey:@"phone"];
+    [self.contact setValue:self.companyTextView.text forKey:@"company"];
+    [self.contact setValue:self.locationTextView.text forKey:@"location"];
+    [self.contact setValue:self.titleTextView.text forKey:@"title"];
+    [context save:&error];
+        
+   
 
 }
 
 -(IBAction)onCancel:(id)sender
 {
-    //    self.displayNameTextView.text = self.profile.displayName;
-    //    self.emailTextView.text = self.profile.email;
-    //    self.phoneTextView.text = self.profile.phone;
-    //    self.companyTextView.text = self.profile.company;
-    //    self.titleTextView.text = self.profile.title;
-    //    self.locationTextView.text = self.profile.location;
+    [self.displayNameTextView setEditable:NO];
+    [self.titleTextView setEditable:NO];
+    [self.companyTextView setEditable:NO];
+    [self.locationTextView setEditable:NO];
+    [self.emailTextView setEditable:NO];
+    [self.phoneTextView setEditable:NO];
+    
+    [self unUpdateTextViewUI:self.displayNameTextView];
+    [self unUpdateTextViewUI:self.companyTextView];
+    [self unUpdateTextViewUI:self.titleTextView];
+    [self unUpdateTextViewUI:self.emailTextView];
+    [self unUpdateTextViewUI:self.phoneTextView];
+    [self unUpdateTextViewUI:self.locationTextView];
+    
+    [self.editProfile setTintColor:[UIColor blueColor]];
     self.isEditing = NO;
     [self.editProfile setTitle:@"Edit Profile" forState:UIControlStateNormal];
     self.cancel.hidden = YES;
@@ -136,9 +185,20 @@
         [self.locationTextView setEditable:NO];
         [self.emailTextView setEditable:NO];
         [self.phoneTextView setEditable:NO];
+        
+        [self unUpdateTextViewUI:self.displayNameTextView];
+        [self unUpdateTextViewUI:self.companyTextView];
+        [self unUpdateTextViewUI:self.titleTextView];
+        [self unUpdateTextViewUI:self.emailTextView];
+        [self unUpdateTextViewUI:self.phoneTextView];
+        [self unUpdateTextViewUI:self.locationTextView];
+        
+        
         [self.editProfile setTitle:@"Edit Profile" forState:UIControlStateNormal];
         [self.editProfile setTintColor:[UIColor blueColor]];
+        [self saveChanges];
         self.cancel.hidden = YES;
+        self.isEditing = NO;
         
     } else{
         self.isEditing = YES;
@@ -148,8 +208,19 @@
         [self.locationTextView setEditable:YES];
         [self.emailTextView setEditable:YES];
         [self.phoneTextView setEditable:YES];
+        
+        [self updateTextViewUI:self.displayNameTextView];
+        [self updateTextViewUI:self.companyTextView];
+        [self updateTextViewUI:self.titleTextView];
+        [self updateTextViewUI:self.emailTextView];
+        [self updateTextViewUI:self.phoneTextView];
+        [self updateTextViewUI:self.locationTextView];
+
+        
+        
         [self.editProfile setTitle:@"Save" forState:UIControlStateNormal];
         [self.editProfile setTintColor:[UIColor greenColor]];
+        [self updateButtonUI:self.cancel];
         self.cancel.hidden = NO;
    
         //Make cancel button visible
