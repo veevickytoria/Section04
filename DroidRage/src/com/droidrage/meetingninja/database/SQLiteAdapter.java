@@ -78,16 +78,16 @@ public class SQLiteAdapter {
 				+ "'='" + name + "' where " + KEY_NOTES_ID + "=" + id);
 	}
 
-	public void deleteNote(int id, String content, String name) {
+	public void deleteNote(long id) {
 		sqLiteDatabase.execSQL("Delete from " + TABLE_NOTES + " where "
 				+ KEY_NOTES_ID + "=" + id);
 	}
 
-	public void insertNote(String content, String Name) {
+	public long insertNote(String content, String Name) {
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(KEY_NOTES_CONTENT, content);
 		contentValues.put(KEY_NOTES_NAME, Name);
-		sqLiteDatabase.insert(TABLE_NOTES, null, contentValues);
+		return sqLiteDatabase.insert(TABLE_NOTES, null, contentValues);
 	}
 
 	public int deleteAll() {
@@ -125,7 +125,12 @@ public class SQLiteAdapter {
 		public void onCreate(SQLiteDatabase db) {
 			// TODO Auto-generated method stub
 			db.execSQL(SCRIPT_CREATE_NOTES_TABLE);
-
+			insertNote("A lot of interesting stuff", "Another Meeting");
+			long index = insertNote("A Name of a Person", "Some Meeting");
+			deleteNote(index);
+			insertNote(
+					"Plenty of text to make sure it still over flows when it is supposed too,Plenty of text to make sure it still over flows when it is supposed too,Plenty of text to make sure it still over flows when it is supposed too,Plenty of text to make sure it still over flows when it is supposed too,",
+					"Meeting January 9th");
 		}
 
 		@Override

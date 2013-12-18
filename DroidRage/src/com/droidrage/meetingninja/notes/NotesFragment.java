@@ -41,11 +41,23 @@ public class NotesFragment extends Fragment implements
 
 	// private View notesView;
 
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		View v = inflater.inflate(R.layout.fragment_notes, container, false);
+		
+		
+//		meetingImageButton = (ImageButton) v.findViewById(R.id.imageButton);
+//		meetingImageButton.setOnClickListener(new View.OnClickListener() {
+//
+//			@Override
+//			public void onClick(View arg0) {
+//				System.out.println("Echo: Test");
+//
+//			}
+//		});
 
 //		Intent test = getActivity().getIntent();
 
@@ -54,6 +66,9 @@ public class NotesFragment extends Fragment implements
 
 		session = new SessionManager(getActivity().getApplicationContext());
 
+		
+		
+		
 		// TODO: Check for internet connection before receiving notes from DB
 		// TODO: Display a something saying "no notes" if there are no notes
 		// instead of having no notes appear
@@ -111,6 +126,8 @@ public class NotesFragment extends Fragment implements
 			}
 		});
 
+		
+		
 		// Item long-click event
 		// TODO: Add additional options and click-events to these options
 		lv.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {

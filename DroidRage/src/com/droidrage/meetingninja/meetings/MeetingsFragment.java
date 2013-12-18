@@ -54,7 +54,7 @@ public class MeetingsFragment extends Fragment implements
 			@Override
 			public void onClick(View arg0) {
 				createMeeting();
-
+				System.out.println("Echo: Test");
 			}
 		});
 
