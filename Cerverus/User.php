@@ -167,17 +167,40 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 	}
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'Tasks')==0){
 	//GET getUserTasks
-	//The output needs revision, just the general code of what the idea should continue as.
-	
-		$userNode=$client->getNode($_GET['id']);
-		$relationArray = $userNode->getRelationships(array());
-		foreach($relationArray as $rel){
-			$node = $rel->getStartNode();
-			array_push($relationArray,array('type'=>$rel->getType(), 'id'=>$node->getId()));
- 		}
-		echo json_encode($relationArray);
-
-		
+	$userNode=$client->getNode($_GET['id']);
+	$relationArray = $userNode->getRelationships(array());
+	$fullarray=array();
+	foreach($relationArray as $rel){
+		$node = $rel->getStartNode();
+		$tempArray=$node->getProperties();
+		$array=array();
+		$array['id']=$node->getId();
+		$array['title']=$tempArray['title'];
+		$array['type']=$rel->getType();
+		if(strcasecmp($rel->getType(),'ASSIGNED_TO')==0 || strcasecmp($rel->getType(),'ASSIGNED_BY')==0 ||strcasecmp($rel->getType(),'CREATED_BY')==0){
+			array_push($fullarray,$array);	
+		}
+	}
+	$lastarray=array('tasks'=>$fullarray);
+	echo json_encode($lastarray);
+}else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'Meetings')==0){
+	//GET getUserMeetings
+	$userNode=$client->getNode($_GET['id']);
+	$relationArray = $userNode->getRelationships(array());
+	$fullarray=array();
+	foreach($relationArray as $rel){
+		$node = $rel->getStartNode();
+		$tempArray=$node->getProperties();
+		$array=array();
+		$array['id']=$node->getId();
+		$array['title']=$tempArray['title'];
+		$array['type']=$rel->getType();
+		if(strcasecmp($rel->getType(),'MADE_MEETING')==0){
+			array_push($fullarray,$array);	
+		}
+	}
+	$lastarray=array('tasks'=>$fullarray);
+	echo json_encode($lastarray);
 }else{
 	echo $_SERVER['REQUEST_METHOD'] ." request method not found";
 }
