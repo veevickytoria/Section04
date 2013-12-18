@@ -49,6 +49,8 @@
 		0A7F1CD2185637310017209D /* MeetingBuilder_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7F1CD1185637310017209D /* MeetingBuilder_Tests.m */; };
 		0A7F1CDB1858FD820017209D /* iWinAddUserTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7F1CDA1858FD820017209D /* iWinAddUserTest.m */; };
 		0A7F1CDF185908790017209D /* iWinContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7F1CDE185908790017209D /* iWinContact.m */; };
+		0A7F1CE218611FB10017209D /* iWinPopulateDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7F1CE118611FB10017209D /* iWinPopulateDatabase.m */; };
+		0A7F1CE9186127D60017209D /* Contact.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7F1CE8186127D60017209D /* Contact.m */; };
 		0A91DC9B1835D7AB00741349 /* OCCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91DC931835D7AB00741349 /* OCCalendarView.m */; };
 		0A91DC9C1835D7AB00741349 /* OCCalendarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91DC951835D7AB00741349 /* OCCalendarViewController.m */; };
 		0A91DC9D1835D7AB00741349 /* OCDaysView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91DC971835D7AB00741349 /* OCDaysView.m */; };
@@ -146,6 +148,11 @@
 		0A7F1CDA1858FD820017209D /* iWinAddUserTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinAddUserTest.m; sourceTree = "<group>"; };
 		0A7F1CDD185908790017209D /* iWinContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinContact.h; sourceTree = "<group>"; };
 		0A7F1CDE185908790017209D /* iWinContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinContact.m; sourceTree = "<group>"; };
+		0A7F1CE018611FB10017209D /* iWinPopulateDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinPopulateDatabase.h; sourceTree = "<group>"; };
+		0A7F1CE118611FB10017209D /* iWinPopulateDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinPopulateDatabase.m; sourceTree = "<group>"; };
+		0A7F1CE3186124380017209D /* MeetingBuilder 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MeetingBuilder 2.xcdatamodel"; sourceTree = "<group>"; };
+		0A7F1CE7186127D60017209D /* Contact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Contact.h; sourceTree = "<group>"; };
+		0A7F1CE8186127D60017209D /* Contact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Contact.m; sourceTree = "<group>"; };
 		0A91DC921835D7AB00741349 /* OCCalendarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCCalendarView.h; sourceTree = "<group>"; };
 		0A91DC931835D7AB00741349 /* OCCalendarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCCalendarView.m; sourceTree = "<group>"; };
 		0A91DC941835D7AB00741349 /* OCCalendarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCCalendarViewController.h; sourceTree = "<group>"; };
@@ -467,10 +474,14 @@
 		0A7F1CDC185908550017209D /* Data Model */ = {
 			isa = PBXGroup;
 			children = (
+				0A7F1CE7186127D60017209D /* Contact.h */,
+				0A7F1CE8186127D60017209D /* Contact.m */,
 				0A7F1CDD185908790017209D /* iWinContact.h */,
 				0A7F1CDE185908790017209D /* iWinContact.m */,
 				0A96E7E5185FAA6200EAB0DC /* iWinProfile.h */,
 				0A96E7E6185FAA6200EAB0DC /* iWinProfile.m */,
+				0A7F1CE018611FB10017209D /* iWinPopulateDatabase.h */,
+				0A7F1CE118611FB10017209D /* iWinPopulateDatabase.m */,
 			);
 			name = "Data Model";
 			sourceTree = "<group>";
@@ -689,6 +700,7 @@
 				0A1A72A3181A2663009A49E5 /* iWinAddAndViewTaskViewController.m in Sources */,
 				7941FDC218278B4A00AAA92E /* iWinMergeNoteViewController.m in Sources */,
 				0ACE339A17FCF5F8003B9C0A /* iWinMeetingViewController.m in Sources */,
+				0A7F1CE9186127D60017209D /* Contact.m in Sources */,
 				0A91DC9E1835D7AB00741349 /* OCSelectionView.m in Sources */,
 				0A7F1CDF185908790017209D /* iWinContact.m in Sources */,
 				0A1A7296181A1802009A49E5 /* iWinAgendaItemViewController.m in Sources */,
@@ -705,6 +717,7 @@
 				7941FDD5182A0DCE00AAA92E /* iWinViewProfileViewController.m in Sources */,
 				0A7E516517FBEBA200A4B8B7 /* iWinRegisterViewController.m in Sources */,
 				0A91DC9C1835D7AB00741349 /* OCCalendarViewController.m in Sources */,
+				0A7F1CE218611FB10017209D /* iWinPopulateDatabase.m in Sources */,
 				0A1A728A1819F590009A49E5 /* iWinScheduleViewMeetingViewController.m in Sources */,
 				0A04456C17F3825D000FF2A0 /* iWinAppDelegate.m in Sources */,
 				0A7E515B17FBEA9700A4B8B7 /* iWinMainViewController.m in Sources */,
@@ -952,9 +965,10 @@
 		0A04457317F3825D000FF2A0 /* MeetingBuilder.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				0A7F1CE3186124380017209D /* MeetingBuilder 2.xcdatamodel */,
 				0A04457417F3825D000FF2A0 /* MeetingBuilder.xcdatamodel */,
 			);
-			currentVersion = 0A04457417F3825D000FF2A0 /* MeetingBuilder.xcdatamodel */;
+			currentVersion = 0A7F1CE3186124380017209D /* MeetingBuilder 2.xcdatamodel */;
 			path = MeetingBuilder.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

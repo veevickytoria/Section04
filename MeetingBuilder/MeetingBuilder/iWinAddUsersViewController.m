@@ -9,6 +9,7 @@
 #import "iWinAddUsersViewController.h"
 #import "iWinContact.h"
 #import <QuartzCore/QuartzCore.h>
+#import "iWinAppDelegate.h"
 
 @interface iWinAddUsersViewController ()
 @property (nonatomic) NSString *pageName;
@@ -38,28 +39,45 @@
     
     self.userSearchBar.showsScopeBar = NO;
     
-    self.userList = [[NSMutableArray alloc] init];
+// self.userList = [[NSMutableArray alloc] init];
     self.attendeeList = [[NSMutableArray alloc] init];
     self.filteredList = [[NSMutableArray alloc] init];
     
-    iWinContact *c1 = [[iWinContact alloc] init];
-    [c1 setFirstName: @"Dharmin"];
-    c1.lastName = @"Shah";
-    c1.email = @"shahdk@rose-hulman.edu";
+//    iWinContact *c1 = [[iWinContact alloc] init];
+//    [c1 setFirstName: @"Dharmin"];
+//    c1.lastName = @"Shah";
+//    c1.email = @"shahdk@rose-hulman.edu";
+//    
+//    iWinContact *c2 = [[iWinContact alloc] init];
+//    c2.firstName = @"Rain";
+//    c2.lastName = @"Dartt";
+//    c2.email = @"darttrf@rose-hulman.edu";
+//    
+//    iWinContact *c3 = [[iWinContact alloc] init];
+//    c3.firstName = @"Brian";
+//    c3.lastName = @"Padilla";
+//    c3.email = @"padillbt@rose-hulman.edu";
+//    
+//    [self.userList addObject:c1];
+//    [self.userList addObject:c2];
+//    [self.userList addObject:c3];
+
+    iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     
-    iWinContact *c2 = [[iWinContact alloc] init];
-    c2.firstName = @"Rain";
-    c2.lastName = @"Dartt";
-    c2.email = @"darttrf@rose-hulman.edu";
+    NSManagedObjectContext *context = [appDelegate managedObjectContext];
     
-    iWinContact *c3 = [[iWinContact alloc] init];
-    c3.firstName = @"Brian";
-    c3.lastName = @"Padilla";
-    c3.email = @"padillbt@rose-hulman.edu";
+    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Contact" inManagedObjectContext:context];
     
-    [self.userList addObject:c1];
-    [self.userList addObject:c2];
-    [self.userList addObject:c3];
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDesc];
+    
+    NSError *error;
+    NSArray *result = [context executeFetchRequest:request
+                                              error:&error];
+    
+    self.userList = [[NSMutableArray alloc] initWithArray:result];
+    
+    
     
 //    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Users"];
 //    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];

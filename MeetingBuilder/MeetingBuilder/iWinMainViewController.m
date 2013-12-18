@@ -9,6 +9,7 @@
 #import "iWinMainViewController.h"
 #import "iWinHomeScreenViewController.h"
 #import <QuartzCore/QuartzCore.h>
+#import "iWinPopulateDatabase.h"
 
 
 @interface iWinMainViewController ()
@@ -66,7 +67,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
+    
+    iWinPopulateDatabase *db = [[iWinPopulateDatabase alloc] init];
+    [db populateContacts];
+    
     self.loginViewController = [[iWinLoginViewController alloc] initWithNibName:@"iWinLoginViewController" bundle:nil];
     self.registerViewController = [[iWinRegisterViewController alloc] initWithNibName:@"iWinRegisterViewController" bundle:nil];
     self.movedView = NO;
