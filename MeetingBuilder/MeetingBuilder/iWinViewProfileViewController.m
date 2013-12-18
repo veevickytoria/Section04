@@ -48,7 +48,7 @@
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:entityDesc];
     
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userID = 0"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userID = 1"];
     [request setPredicate:predicate];
     
     NSError *error;
@@ -61,13 +61,13 @@
     
     //[self updateButtonUI:self.editProfile];
 }
--(void) updateTextUI
+-(void)updateTextUI
 {
     
     //Need to make fonts bigger
 
 
-    self.displayNameTextField.text =  [NSString stringWithFormat:@"%@ %@", self.contact.firstName, self.contact.lastName];
+    [self.displayNameTextField setText:[NSString stringWithFormat:@"%@ %@", self.contact.firstName, self.contact.lastName]];
     self.emailTextField.text =  self.contact.email;
     self.phoneTextField.text = self.contact.phone;
     self.companyTextField.text = self.contact.company;
