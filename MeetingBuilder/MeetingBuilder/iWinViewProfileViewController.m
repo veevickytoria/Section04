@@ -50,7 +50,7 @@
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:entityDesc];
     
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userID = 1"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userID = 0"];
     [request setPredicate:predicate];
     
     NSError *error;
@@ -69,12 +69,19 @@
     //Need to make fonts bigger
 
 
-    self.displayNameTextView.text =  [NSString stringWithFormat:@"%@ %@", self.contact.firstName, self.contact.lastName];
-    self.emailTextView.text =  self.contact.email;
-    self.phoneTextView.text = self.contact.phone;
-    self.companyTextView.text = self.contact.company;
-    self.titleTextView.text = self.contact.title;
-    self.locationTextView.text = self.contact.location;
+    self.displayNameTextField.text =  [NSString stringWithFormat:@"%@ %@", self.contact.firstName, self.contact.lastName];
+    self.emailTextField.text =  self.contact.email;
+    self.phoneTextField.text = self.contact.phone;
+    self.companyTextField.text = self.contact.company;
+    self.titleTextField.text = self.contact.title;
+    self.locationTextField.text = self.contact.location;
+    
+    [self unUpdateTextFieldUI:self.displayNameTextField];
+    [self unUpdateTextFieldUI:self.companyTextField];
+    [self unUpdateTextFieldUI:self.titleTextField];
+    [self unUpdateTextFieldUI:self.emailTextField];
+    [self unUpdateTextFieldUI:self.phoneTextField];
+    [self unUpdateTextFieldUI:self.locationTextField];
     
 
 }
@@ -87,19 +94,19 @@
     [button setTintColor:[UIColor blueColor]];
 }
 
--(void) updateTextViewUI: (UITextView *)textView
+-(void) updateTextFieldUI: (UITextField *)textField
 {
-    textView.layer.cornerRadius = 7;
-    textView.layer.borderColor = [[UIColor darkGrayColor] CGColor];
-    textView.layer.borderWidth = 1.0f;
+    textField.layer.cornerRadius = 7;
+    textField.layer.borderColor = [[UIColor darkGrayColor] CGColor];
+    textField.layer.borderWidth = 1.0f;
     //[textView setTintColor:[UIColor blueColor]];
 }
 
--(void) unUpdateTextViewUI: (UITextView *)textView
+-(void) unUpdateTextFieldUI: (UITextField *)textField
 {
-    textView.layer.cornerRadius = 7;
-    textView.layer.borderColor = [[UIColor whiteColor] CGColor];
-    textView.layer.borderWidth = 1.0f;
+    textField.layer.cornerRadius = 7;
+    textField.layer.borderColor = [[UIColor whiteColor] CGColor];
+    textField.layer.borderWidth = 1.0f;
     //[textView setTintColor:[UIColor blueColor]];
 }
 
@@ -136,16 +143,16 @@
     
     NSInteger nWords = 2;
     NSRange wordRange = NSMakeRange(0, nWords);
-    NSArray *firstAndLastNames = [[self.displayNameTextView.text componentsSeparatedByString:@" "] subarrayWithRange:wordRange];
+    NSArray *firstAndLastNames = [[self.displayNameTextField.text componentsSeparatedByString:@" "] subarrayWithRange:wordRange];
     
  
     [self.contact setValue:(NSString *)[firstAndLastNames objectAtIndex:0] forKey:@"firstName"];
     [self.contact setValue:(NSString *)[firstAndLastNames objectAtIndex:1] forKey:@"lastName"];
-    [self.contact setValue:self.emailTextView.text forKey:@"email"];
-    [self.contact setValue:self.phoneTextView.text forKey:@"phone"];
-    [self.contact setValue:self.companyTextView.text forKey:@"company"];
-    [self.contact setValue:self.locationTextView.text forKey:@"location"];
-    [self.contact setValue:self.titleTextView.text forKey:@"title"];
+    [self.contact setValue:self.emailTextField.text forKey:@"email"];
+    [self.contact setValue:self.phoneTextField.text forKey:@"phone"];
+    [self.contact setValue:self.companyTextField.text forKey:@"company"];
+    [self.contact setValue:self.locationTextField.text forKey:@"location"];
+    [self.contact setValue:self.titleTextField.text forKey:@"title"];
     [context save:&error];
         
    
@@ -154,26 +161,26 @@
 
 -(IBAction)onCancel:(id)sender
 {
-    [self.displayNameTextView setEditable:NO];
-    [self.titleTextView setEditable:NO];
-    [self.companyTextView setEditable:NO];
-    [self.locationTextView setEditable:NO];
-    [self.emailTextView setEditable:NO];
-    [self.phoneTextView setEditable:NO];
+    self.displayNameTextField.userInteractionEnabled = NO;
+    self.companyTextField.userInteractionEnabled = NO;
+    self.titleTextField.userInteractionEnabled = NO;
+    self.emailTextField.userInteractionEnabled = NO;
+    self.phoneTextField.userInteractionEnabled = NO;
+    self.locationTextField.userInteractionEnabled = NO;
     
-    [self unUpdateTextViewUI:self.displayNameTextView];
-    [self unUpdateTextViewUI:self.companyTextView];
-    [self unUpdateTextViewUI:self.titleTextView];
-    [self unUpdateTextViewUI:self.emailTextView];
-    [self unUpdateTextViewUI:self.phoneTextView];
-    [self unUpdateTextViewUI:self.locationTextView];
+    [self unUpdateTextFieldUI:self.displayNameTextField];
+    [self unUpdateTextFieldUI:self.companyTextField];
+    [self unUpdateTextFieldUI:self.titleTextField];
+    [self unUpdateTextFieldUI:self.emailTextField];
+    [self unUpdateTextFieldUI:self.phoneTextField];
+    [self unUpdateTextFieldUI:self.locationTextField];
     
-    self.displayNameTextView.text =  [NSString stringWithFormat:@"%@ %@", self.contact.firstName, self.contact.lastName];
-    self.emailTextView.text =  self.contact.email;
-    self.phoneTextView.text = self.contact.phone;
-    self.companyTextView.text = self.contact.company;
-    self.titleTextView.text = self.contact.title;
-    self.locationTextView.text = self.contact.location;
+    self.displayNameTextField.text =  [NSString stringWithFormat:@"%@ %@", self.contact.firstName, self.contact.lastName];
+    self.emailTextField.text =  self.contact.email;
+    self.phoneTextField.text = self.contact.phone;
+    self.companyTextField.text = self.contact.company;
+    self.titleTextField.text = self.contact.title;
+    self.locationTextField.text = self.contact.location;
     
     [self.editProfile setTintColor:[UIColor blueColor]];
     self.isEditing = NO;
@@ -186,19 +193,19 @@
 {
     if (self.isEditing) {
         [self saveChanges];
-        [self.displayNameTextView setEditable:NO];
-        [self.titleTextView setEditable:NO];
-        [self.companyTextView setEditable:NO];
-        [self.locationTextView setEditable:NO];
-        [self.emailTextView setEditable:NO];
-        [self.phoneTextView setEditable:NO];
+        self.displayNameTextField.userInteractionEnabled = NO;
+        self.companyTextField.userInteractionEnabled = NO;
+        self.titleTextField.userInteractionEnabled = NO;
+        self.emailTextField.userInteractionEnabled = NO;
+        self.phoneTextField.userInteractionEnabled = NO;
+        self.locationTextField.userInteractionEnabled = NO;
         
-        [self unUpdateTextViewUI:self.displayNameTextView];
-        [self unUpdateTextViewUI:self.companyTextView];
-        [self unUpdateTextViewUI:self.titleTextView];
-        [self unUpdateTextViewUI:self.emailTextView];
-        [self unUpdateTextViewUI:self.phoneTextView];
-        [self unUpdateTextViewUI:self.locationTextView];
+        [self unUpdateTextFieldUI:self.displayNameTextField];
+        [self unUpdateTextFieldUI:self.companyTextField];
+        [self unUpdateTextFieldUI:self.titleTextField];
+        [self unUpdateTextFieldUI:self.emailTextField];
+        [self unUpdateTextFieldUI:self.phoneTextField];
+        [self unUpdateTextFieldUI:self.locationTextField];
         
         
         [self.editProfile setTitle:@"Edit Profile" forState:UIControlStateNormal];
@@ -209,19 +216,19 @@
         
     } else{
         self.isEditing = YES;
-        [self.displayNameTextView setEditable:YES];
-        [self.titleTextView setEditable:YES];
-        [self.companyTextView setEditable:YES];
-        [self.locationTextView setEditable:YES];
-        [self.emailTextView setEditable:YES];
-        [self.phoneTextView setEditable:YES];
+        self.displayNameTextField.userInteractionEnabled = YES;
+        self.companyTextField.userInteractionEnabled = YES;
+        self.titleTextField.userInteractionEnabled = YES;
+        self.emailTextField.userInteractionEnabled = YES;
+        self.phoneTextField.userInteractionEnabled = YES;
+        self.locationTextField.userInteractionEnabled = YES;
         
-        [self updateTextViewUI:self.displayNameTextView];
-        [self updateTextViewUI:self.companyTextView];
-        [self updateTextViewUI:self.titleTextView];
-        [self updateTextViewUI:self.emailTextView];
-        [self updateTextViewUI:self.phoneTextView];
-        [self updateTextViewUI:self.locationTextView];
+        [self updateTextFieldUI:self.displayNameTextField];
+        [self updateTextFieldUI:self.companyTextField];
+        [self updateTextFieldUI:self.titleTextField];
+        [self updateTextFieldUI:self.emailTextField];
+        [self updateTextFieldUI:self.phoneTextField];
+        [self updateTextFieldUI:self.locationTextField];
 
         
         
@@ -229,8 +236,6 @@
         [self.editProfile setTintColor:[UIColor greenColor]];
         [self updateButtonUI:self.cancel];
         self.cancel.hidden = NO;
-   
-        //Make cancel button visible
         
     }
 }

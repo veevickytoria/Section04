@@ -26,12 +26,12 @@
 @property (weak, nonatomic) IBOutlet UIButton *editProfile;
 @property (weak, nonatomic) IBOutlet UIButton *cancel;
 
-@property (weak, nonatomic) IBOutlet UITextView *displayNameTextView;
-@property (weak, nonatomic) IBOutlet UITextView *companyTextView;
-@property (weak, nonatomic) IBOutlet UITextView *emailTextView;
-@property (weak, nonatomic) IBOutlet UITextView *phoneTextView;
-@property (weak, nonatomic) IBOutlet UITextView *titleTextView;
-@property (weak, nonatomic) IBOutlet UITextView *locationTextView;
+@property (weak, nonatomic) IBOutlet UITextField *displayNameTextField;
+@property (weak, nonatomic) IBOutlet UITextField *companyTextField;
+@property (weak, nonatomic) IBOutlet UITextField *emailTextField;
+@property (weak, nonatomic) IBOutlet UITextField *phoneTextField;
+@property (weak, nonatomic) IBOutlet UITextField *titleTextField;
+@property (weak, nonatomic) IBOutlet UITextField *locationTextField;
 
 @property (nonatomic) id<ProfileDelegate> profileDelegate;
 

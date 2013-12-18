@@ -37,21 +37,21 @@
         [newContact setValue:@"Prodcut Owner" forKey:@"title"];
         [newContact setValue:@"Terre Haute, IN" forKey:@"location"];
         
-        [newContact setValue:[NSNumber numberWithInt:1] forKey:@"userID"];
+        [newContact setValue:[NSNumber numberWithInt:0] forKey:@"userID"];
         [context save:&error];
         
         newContact = [NSEntityDescription insertNewObjectForEntityForName:@"Contact" inManagedObjectContext:context];
         [newContact setValue:@"Rain" forKey:@"firstName"];
         [newContact setValue:@"Dartt" forKey:@"lastName"];
         [newContact setValue:@"darttrf@rose-hulman.edu" forKey:@"email"];
-        [newContact setValue:[NSNumber numberWithInt:2] forKey:@"userID"];
+        [newContact setValue:[NSNumber numberWithInt:1] forKey:@"userID"];
         [context save:&error];
         
         newContact = [NSEntityDescription insertNewObjectForEntityForName:@"Contact" inManagedObjectContext:context];
         [newContact setValue:@"Brian" forKey:@"firstName"];
         [newContact setValue:@"Padilla" forKey:@"lastName"];
         [newContact setValue:@"padillbt@rose-hulman.edu" forKey:@"email"];
-        [newContact setValue:[NSNumber numberWithInt:3] forKey:@"userID"];
+        [newContact setValue:[NSNumber numberWithInt:2] forKey:@"userID"];
         [context save:&error];
     }
 }

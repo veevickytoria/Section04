@@ -8,13 +8,13 @@
 
 #import <XCTest/XCTest.h>
 #import "iWinViewProfileViewController.h"
-#import "iWinProfile.h"
+#import "Contact.h"
 //#import "iWinEditProfileViewController.h"
 
 @interface iWinViewProfileTest : XCTestCase
 //@property (strong, nonatomic) iWinEditProfileViewController *editVC;
 @property (strong, nonatomic) iWinViewProfileViewController *viewVC;
-@property (strong, nonatomic) iWinProfile *profile;
+@property (strong, nonatomic) Contact *contact;
 @end
 
 @implementation iWinViewProfileTest
@@ -23,7 +23,6 @@
 {
     [super setUp];
     // Put setup code here; it will be run once, before the first test case.
-    //self.editVC = [[iWinEditProfileViewController alloc] initWithNibName:@"iWinEditProfileViewController" bundle:nil];
     self.viewVC = [[iWinViewProfileViewController alloc] initWithNibName:@"iWinViewProfileViewController" bundle:nil];
     
     //[self.viewVC veiwDidLoad];
