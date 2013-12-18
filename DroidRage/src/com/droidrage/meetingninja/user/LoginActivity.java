@@ -9,6 +9,7 @@ import com.droidrage.meetingninja.R.layout;
 import com.droidrage.meetingninja.R.menu;
 import com.droidrage.meetingninja.R.string;
 import com.droidrage.meetingninja.database.DatabaseAdapter;
+import com.droidrage.meetingninja.database.UserDatabaseAdapter;
 import com.droidrage.meetingninja.extras.Util;
 
 import android.animation.Animator;
@@ -151,12 +152,11 @@ public class LoginActivity extends Activity {
 			mEmailView.setError(getString(R.string.error_field_required));
 			focusView = mEmailView;
 			cancel = true;
+		} else if (!Util.isValidEmailAddress(mEmail)) {
+			mEmailView.setError(getString(R.string.error_invalid_email));
+			focusView = mEmailView;
+			cancel = true;
 		}
-		 else if (!Util.isValidEmailAddress(mEmail)) {
-		 mEmailView.setError(getString(R.string.error_invalid_email));
-		 focusView = mEmailView;
-		 cancel = true;
-		 }
 
 		/*
 		 * SessionManager session = new SessionManager(
@@ -236,19 +236,28 @@ public class LoginActivity extends Activity {
 			// TODO: attempt authentication against a network service.
 			// TODO: register a new account
 
-			boolean login_success = false;
+			String login_result = "";
 
 			try {
-				login_success = DatabaseAdapter.urlLogin(mEmail);
-				if (!login_success)
+				login_result = UserDatabaseAdapter.login(mEmail, mPassword);
+				if (login_result.contains("invalid")){
 					Log.e("LOGIN", mEmail + " does not exist");
+					return false;
+				}else{
+					SessionManager session = new SessionManager(
+							getApplicationContext());
+					session.clear();
+					session.createLoginSession(login_result);
+					
+				}
 				// Thread.sleep(2000);
 			} catch (IOException e) {
 				Log.e("LOGIN_ERR", e.toString());
 				return false;
 			}
+			
 
-			//return login_success;
+			// return login_success;
 			return true;
 		}
 
@@ -259,10 +268,10 @@ public class LoginActivity extends Activity {
 
 			// if successful login, start main activity
 			if (success) {
-				SessionManager session = new SessionManager(
-						getApplicationContext());
-				session.clear();
-				session.createLoginSession(mEmail);
+//				SessionManager session = new SessionManager(
+//						getApplicationContext());
+//				session.clear();
+//				session.createLoginSession(mEmail);
 				Intent main = new Intent(mLoginFormView.getContext(),
 						MainActivity.class);
 				main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

@@ -6,10 +6,14 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.graphics.Bitmap;
+
+import com.droidrage.meetingninja.user.UserInfoFetcher;
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
+
 
 public class User {
 	private String userID;
@@ -21,24 +25,19 @@ public class User {
 	private String location = "";
 	private List<Meeting> schedule;
 	private List<Task> tasks;
-	
-	public User(){
+	private Bitmap profPic;
+
+
+	public User() {
 		
 	}
-	
-	public User(String userID){
+
+	public User(String userID) {
 		this.userID = userID;
-		this.displayName = "Joe Doe";
-		this.email = "joedoePIC@PIC.com";
-		this.phone = "5555555555";
-		this.company = "Plastic People INC";
-		this.title = "PIC";
-		this.location = "somewhere";
-		
 	}
-	
-	public void updateInfo(){
-		
+
+	public void updateInfo() {
+
 	}
 
 	public String getUserID() {
@@ -98,7 +97,8 @@ public class User {
 	}
 
 	public List<Meeting> getSchedule() {
-		return (schedule == null || schedule.isEmpty()) ? new ArrayList<Meeting>() : schedule;
+		return (schedule == null || schedule.isEmpty()) ? new ArrayList<Meeting>()
+				: schedule;
 	}
 
 	public List<Task> getTasks() {
@@ -112,6 +112,14 @@ public class User {
 	public void setSchedule(List<Meeting> meetingsList) {
 		this.schedule = meetingsList;
 	}
+	
+	public void setProfPic(Bitmap pic){
+		this.profPic = pic;
+	}
+	
+	public Bitmap getProfPic(){
+		return this.profPic;
+	}
 
 	@Override
 	public String toString() {
@@ -123,22 +131,22 @@ public class User {
 		builder.append(getDisplayName() + "\n");
 		builder.append("getEmail()\t");
 		builder.append(getEmail() + "\n");
-		if (!getPhone().isEmpty()) {
-			builder.append("getPhone()\t");
-			builder.append(getPhone() + "\n");
-		}
-		if (!getCompany().isEmpty()) {
-			builder.append("getCompany()\t");
-			builder.append(getCompany() + "\n");
-		}
-		if (!getTitle().isEmpty()) {
-			builder.append("getTitle()\t");
-			builder.append(getTitle() + "\n");
-		}
-		if (!getLocation().isEmpty()) {
-			builder.append("getLocation()\t");
-			builder.append(getLocation() + "\n");
-		}
+		// if (!getPhone().isEmpty()) {
+		builder.append("getPhone()\t");
+		builder.append(getPhone() + "\n");
+		// }
+		// if (!getCompany().isEmpty()) {
+		builder.append("getCompany()\t");
+		builder.append(getCompany() + "\n");
+		// }
+		// if (!getTitle().isEmpty()) {
+		builder.append("getTitle()\t");
+		builder.append(getTitle() + "\n");
+		// }
+		// if (!getLocation().isEmpty()) {
+		builder.append("getLocation()\t");
+		builder.append(getLocation() + "\n");
+		// }
 		builder.append("************************");
 		return builder.toString();
 	}

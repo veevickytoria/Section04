@@ -11,6 +11,7 @@ import com.droidrage.meetingninja.R.layout;
 import com.droidrage.meetingninja.R.menu;
 import com.droidrage.meetingninja.database.AsyncResponse;
 import com.droidrage.meetingninja.database.DatabaseAdapter;
+import com.droidrage.meetingninja.database.MeetingDatabaseAdapter;
 import com.droidrage.meetingninja.user.SessionManager;
 
 import objects.Meeting;
@@ -99,10 +100,10 @@ public class MeetingsActivity extends Activity implements
 		mToDate = (Button) findViewById(R.id.end_date);
 		mFromTime = (Button) findViewById(R.id.start_time);
 		mToTime = (Button) findViewById(R.id.end_time);
-		
+
 		// Get the bottom half of the meeting page (radiogroup - privacy)
 		View bottom = findViewById(R.id.attendees_group);
-		// Hide RadioGroup if creating meeting 
+		// Hide RadioGroup if creating meeting
 		if (edit_mode) {
 			bottom.findViewById(R.id.response_row).setVisibility(View.GONE);
 		}
@@ -248,7 +249,7 @@ public class MeetingsActivity extends Activity implements
 				SessionManager session = new SessionManager(
 						getApplicationContext());
 				String user = session.getUserDetails().get(SessionManager.USER);
-				DatabaseAdapter.createMeeting(user, m);
+				MeetingDatabaseAdapter.createMeeting(user, m);
 			} catch (Exception e) {
 				Log.e("MeetingSave", "Error: Failed to save meeting");
 				Log.e("MEETING_ERR", e.toString());

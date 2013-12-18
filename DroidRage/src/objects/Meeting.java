@@ -2,7 +2,7 @@ package objects;
 
 public class Meeting {
 	private static int uniqueID;
-	private int id;
+	private String id;
 	private String title;
 	private String location;
 	private String datetime;
@@ -15,15 +15,15 @@ public class Meeting {
 	public Meeting(int id, String title, String location, String datetime) {
 		++uniqueID;
 		if (id < 0 || id < uniqueID)
-			this.id = uniqueID;
+			this.id = "" + uniqueID;
 		else
-			this.id = id;
+			this.id = "" + id;
 		setTitle(title);
 		setLocation(location);
 		setDatetime(datetime);
 	}
 
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
@@ -61,6 +61,11 @@ public class Meeting {
 		sb.append(String.format("DateTime: %s", getDatetime()));
 		sb.append('}');
 		return sb.toString();
+	}
+
+	public void setID(String id) {
+		this.id = id;
+
 	}
 
 }

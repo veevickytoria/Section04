@@ -13,6 +13,8 @@ import objects.Meeting;
 import objects.User;
 
 import com.droidrage.meetingninja.database.DatabaseAdapter;
+import com.droidrage.meetingninja.database.MeetingDatabaseAdapter;
+import com.droidrage.meetingninja.database.UserDatabaseAdapter;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -27,40 +29,41 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class Main {
 
-	private static void register(String user, String pass) {
-
+	private static String registerTest(String name, String email, String pass) {
+		String result = new String();
 		try {
-			DatabaseAdapter.register(user, pass);
+			result = UserDatabaseAdapter.register(name, email, pass);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	private static User getUserInfoTest(String userID) {
+		User getUser = new User();
+		try {
+			getUser = UserDatabaseAdapter.getUserInfo(userID);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
+		return getUser;
 	}
 
-	private static boolean urlLogin(String username) {
-		boolean result = false;
+	private static String loginTest(String email, String pass) {
+		String result = new String();
 		try {
-			result = DatabaseAdapter.urlLogin(username);
+			result = UserDatabaseAdapter.login(email, pass);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 		return result;
-	}
 
-	private static boolean jsonLogin(String username) {
-		boolean result = false;
-		try {
-			result = DatabaseAdapter.jsonLogin(username);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return result;
 	}
 
 	private static void createMeeting(String user, Meeting m) {
 		try {
-			DatabaseAdapter.createMeeting(user, m);
+			MeetingDatabaseAdapter.createMeeting(user, m);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -69,7 +72,7 @@ public class Main {
 	private static List<Meeting> getMeetings(String user) {
 		List<Meeting> meetings = new ArrayList<Meeting>();
 		try {
-			meetings = DatabaseAdapter.getMeetings(user);
+			meetings = MeetingDatabaseAdapter.getMeetings(user);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -97,13 +100,26 @@ public class Main {
 		// Date().toString());
 		// createMeeting(user, m);
 
-		jsonStringParsing();
-		System.out.println();
-		jsonToObject();
-		System.out.println();
-		updateJsonFields();
-		System.out.println();
-		jsonToMap();
+		 String r = registerTest("Ethan","ethan@example.com", "pass");
+		 System.out.println(r);
+
+//		String loginTest = loginTest("ethangcampbell@gmail.com", "Booboo");
+//		System.out.println(loginTest);
+
+		// User registered = getUserInfoTest("701");
+		// System.out.println(registered);
+
+		Meeting m = new Meeting();
+		m.setTitle("New Meeting");
+		m.setLocation("O257");
+
+		// jsonStringParsing();
+		// System.out.println();
+		// jsonToObject();
+		// System.out.println();
+		// updateJsonFields();
+		// System.out.println();
+		// jsonToMap();
 
 	}
 
