@@ -1,9 +1,8 @@
-<%= params.inspect %>
 <p>
   <span style="font-size:28px;">
     <strong>
       <input alt="" src="http://dogvacay.com/img/default_profile.jpg" style="width: 150px; height: 150px; border-width: 5px; border-style: solid; margin: 5px 15px; float: left;" type="image" />
-      <%= @stuff['name'] %>
+      <%= @userInfo['name'] %>
     </strong>
   </span>
 </p>
@@ -11,42 +10,36 @@
 <p>
   <span style="font-size:28px;">
     <strong>
-      <span style="font-size:18px;"> Company: <%= @stuff['company'] %></span>
+      <span style="font-size:18px;"> Company: <%= @userInfo['company'] %></span>
     </strong>
   </span>
 </p>
 <p>
   <span style="font-size:28px;">
     <strong>
-      <span style="font-size:18px;"> Job Title: <%= @stuff['title'] %></span>
+      <span style="font-size:18px;"> Job Title: <%= @userInfo['title'] %></span>
     </strong>
   </span>
 </p>
 <p>
   <strong>
-      <span style="font-size:18px;"> Location: <%= @stuff['location'] %></span>
+      <span style="font-size:18px;"> Location: <%= @userInfo['location'] %></span>
   </strong>
 </p>
 <p>
   <strong>
-      <span style="font-size:14px;"> Email: <%= @stuff['email'] %></span>
+      <span style="font-size:14px;"> Email: <%= @userInfo['email'] %></span>
   </strong>
 </p>
 <p>
 <p>
   <strong>
-      <span style="font-size:14px;"> Phone: <%= @stuff['phone'] %></span>
+      <span style="font-size:14px;"> Phone: <%= @userInfo['phone'] %></span>
   </strong>
 </p>
 <br/>
 <p>
   <span style="font-size:28px;"><strong><span style="font-size:18px;">Projects: <a>Infrastructure Replatform</a>, <a>Student Scheduling System</a>, <a>371 Project</a></span></strong></span>
-</p>
-<p>
-  &nbsp;
-</p>
-<p>
-  &nbsp;
 </p>
 <p>
   <span style="font-size:28px;">
@@ -58,22 +51,22 @@
 <ul>
   <li>
     <a>
-      Get approval on replatform prototype [Due: 1/23/45]
+      <%= @userTasks['tasks'][0]['taskName'] %>
     </a>
   </li>
   <li>
     <a>
-      Update Scheduling Syste<span style="font-size:16px;">m to incl</span>ude Kerberos login [Due: 2/34/56]
+      <%= @userTasks['tasks'][1]['taskName'] %>
     </a>
   </li>
   <li>
-    <a>Task #3</a>
+    <a><%= @userTasks['tasks'][2]['taskName'] %></a>
   </li>
   <li>
-    <a>Task #4</a>
+    <a><%= @userTasks['tasks'][3]['taskName'] %></a>
   </li>
   <li>
-    <a>Task #5</a>
+    <a><%= @userTasks['tasks'][4]['taskName'] %></a>
   </li>
 </ul>
 <p>

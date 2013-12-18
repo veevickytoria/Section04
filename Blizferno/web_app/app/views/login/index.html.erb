@@ -2,6 +2,13 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
 <script type="text/javascript">
 
+    function setCookie(c_name,value,exdays){
+        var exdate=new Date();
+        exdate.setDate(exdate.getDate() + exdays);
+        var c_value=escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString());
+        document.cookie=c_name + "=" + c_value + ";path=/";
+    }
+
     function getCookie(c_name){
         var c_value = document.cookie;
         var c_start = c_value.indexOf(" " + c_name + "=");
@@ -28,33 +35,19 @@
         document.cookie= name + '=;expires=Thu, 01 Jan 2970 00:00:01 GMT;';
     }
 
-    /*function passCheck(){
-        var pass0 = document.getElementById('p0').value();
-        var pass1 = document.getElementById('p1').value();
-        if(pass0 != pass1){
-            document.getElementById('p1').style.box-shadow('0 0 5px 4px red;');
-        }else{
-            document.getElementById('p1').style.box-shadow('none;');
-        }
-    }*/
+    function ConvertFormToJSON(form){
+    	var array = jQuery(form).serializeArray();
+    	var json = {};
 
+    	jQuery.each(array, function() {
+    		json[this.name] = this.value || '';
+    	});
 
+    	return json;
 
-function ConvertFormToJSON(form){
-	var array = jQuery(form).serializeArray();
-	var json = {};
-
-	jQuery.each(array, function() {
-		json[this.name] = this.value || '';
-	});
-
-	return json;
-
-}
-
+    }
 
 $(window).load(function() { 
-
     jQuery('#loginForm').bind('submit', function(event){
         event.preventDefault();
 
@@ -68,7 +61,9 @@ $(window).load(function() {
 	    	dataType: 'json',
 			success:function(data){
 				if(data.userID != null){
-				window.location.href = "/";
+                    setCookie('userID', data.userID,'7');
+                    
+				    window.location.href = "/";
 				}
 			}
         });
@@ -98,7 +93,15 @@ $(window).load(function() {
         return true;
     });
 });
-
+/*function passCheck(){
+        var pass0 = document.getElementById('p0').value();
+        var pass1 = document.getElementById('p1').value();
+        if(pass0 != pass1){
+            document.getElementById('p1').style.box-shadow('0 0 5px 4px red;');
+        }else{
+            document.getElementById('p1').style.box-shadow('none;');
+        }
+    }*/
 
 /** this doesnt work!!
 $(windows).load(function() {
