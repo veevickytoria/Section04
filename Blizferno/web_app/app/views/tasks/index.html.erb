@@ -10,8 +10,37 @@ header > h1 { display: inline-block; }
   {
     $('#viewTaskModal').modal('hide');
   }
-  function showViewModal()
+  function showViewModal2()
   {
+    $('#viewTaskModal').modal('show');
+    $('#editTaskModal').modal('hide');
+  }
+  function showViewModal(ID)
+  {
+    //require 'net/http'
+    //url = URI.parse('http://csse371-04.csse.rose-hulman.edu/User/Tasks/' + ID)
+    //req = Net::HTTP::Get.new(url.path)
+    //res = Net::HTTP.start(url.host, url.port) {|http|
+    //  http.request(req)
+    //}
+    //@TaskArray = JSON.parse(res.body)
+    //if (ID = 1)
+    //{
+    //@TaskArray = JSON.parse('{"taskID":"1",“title”:”Delete Task”,“isCompleted”:”false”,“description”:"Allows the user to delete a task”, “deadline”:”19-Dec-13”, “dateCreated”:”16-Dec-13”, “dateAssigned”:”16-Dec-13”, “completionCriteria”:”Must remove the specified task from the database and be verified by client”, “assignedTo”:”350”, “assignedFrom”:”350”, “createdBy”:”350”}')
+    //}
+    //else if (ID = 2)
+    //{
+    //  @TaskArray = JSON.parse('{"taskID":"2",“title”:”Create a Meeting",“isCompleted”:”false”,“description”:"Allows the user to create a meeting”, “deadline”:”19-Dec-13”, “dateCreated”:”16-Dec-13”, “dateAssigned”:”16-Dec-13”, “completionCriteria”:”Must add the meeting information to the database and be verified by client”, “assignedTo”:”350”, “assignedFrom”:”350”, “createdBy”:”350”}')
+    //}
+    //else if (ID = 3)
+    //{
+    //  @TaskArray = JSON.parse('{"taskID":"3",“title”:”Create a Task”,“isCompleted”:”false”,“description”:"Allows the user to create a task”, “deadline”:”19-Dec-13”, “dateCreated”:”16-Dec-13”, “dateAssigned”:”16-Dec-13”, “completionCriteria”:”Must add the specified task to the database and be verified by client”, “assignedTo”:”350”, “assignedFrom”:”350”, “createdBy”:”350”}')
+    //}
+    //else if (ID = 4)
+    //{
+    //  @TaskArray = JSON.parse('{"taskID":"4",“title”:”View a Task”,“isCompleted”:”false”,“description”:"Allows the user to view a task”, “deadline”:”19-Dec-13”, “dateCreated”:”16-Dec-13”, “dateAssigned”:”16-Dec-13”, “completionCriteria”:”Must view the specified task and be verified by client”, “assignedTo”:”350”, “assignedFrom”:”350”, “createdBy”:”350”}')
+    //}
+
     $('#viewTaskModal').modal('show');
   }
 </script>
@@ -24,14 +53,14 @@ header > h1 { display: inline-block; }
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Create a Task</h4>
+        <h4 class="modal-title" id="myModalLabel">Create Task</h4>
       </div>
       <div class="modal-body">
         <%= render "new" %>
       </div>
       <div class="modal-footer">
-        <input type="submit" form="createTask" class="btn btn-primary">
-	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Submit</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -87,8 +116,8 @@ header > h1 { display: inline-block; }
         <%= render "edit" %>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" onclick="showViewModal()" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" onclick="showViewModal()" >Save Changes</button>
+        <button type="button" class="btn btn-default" onclick="showViewModal2()" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="showViewModal2()" >Save Changes</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -103,24 +132,14 @@ header > h1 { display: inline-block; }
       <th></th>
     </tr>
   </thead>
-  <tr>
-    <td>15 March</td>
-    <td>Get Elected</td>
-    <td><a href="#viewTaskModal" data-toggle='modal'>Elect Morris</a></td>
-    <td colspan='1' style='cursor: pointer; text-align: center' href='#deleteTaskModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
-  </tr>
-  <tr>
-    <td>30 April 1945</td>
-    <td>Liberate</td>
-    <td><a href="#">Dragoon</a></td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>1 April 2013</td>
-    <td>Do Everything</td>
-    <td><a href="#">Just Kidding</a></td>
-    <td></td>
-  </tr>
+  <% for task in @tasks['tasks'] %>
+    <tr>
+      <td><%= task['deadline'] %></td>
+      <td><a onClick="showViewModal(<%= task['taskID'] %>)" data-toggle='modal'><%= task['title'] %></a></td>
+      <td><%= task['project'] %></td>
+      <td colspan='1' style='cursor: pointer; text-align: center' href='#deleteTaskModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
+    </tr>
+  <% end %>
   <tr>
     <td colspan='4' style='cursor: pointer; text-align: center' href='#newTaskModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
   </tr>
