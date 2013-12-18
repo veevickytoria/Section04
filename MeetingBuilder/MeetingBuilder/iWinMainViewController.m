@@ -9,6 +9,8 @@
 #import "iWinMainViewController.h"
 #import "iWinHomeScreenViewController.h"
 #import <QuartzCore/QuartzCore.h>
+#import <TapkuLibrary/TKCalendarDayView.h>
+#import <TapkuLibrary/TKCalendarDayEventView.h>
 
 
 @interface iWinMainViewController ()
@@ -96,6 +98,64 @@
     self.openEars = [[iWinOpenEarsModel alloc] init];
     self.openEars.openEarsDelegate = self;
     [self.openEars initialize];
+    
+    
+    self.data = @[
+                  @[@"Meeting with five random dudes", @"Five Guys", @5, @0, @5, @30],
+                  @[@"Unlimited bread rolls got me sprung", @"Olive Garden", @7, @0, @12, @0],
+                  @[@"Appointment", @"Dennys", @15, @0, @18, @0],
+                  @[@"Hamburger Bliss", @"Wendys", @15, @0, @18, @0],
+                  @[@"Fishy Fishy Fishfelayyyyyyyy", @"McDonalds", @5, @30, @6, @0],
+                  @[@"Turkey Time...... oh wait", @"Chick-fela", @14, @0, @19, @0],
+                  @[@"Greet the king at the castle", @"Burger King", @19, @30, @30, @0]];
+    
+    self.dayView = [[TKCalendarDayView alloc] initWithFrame:self.rightSlideView.bounds];
+	self.dayView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	self.dayView.delegate = self;
+	self.dayView.dataSource = self;
+	[self.rightSlideView addSubview:self.dayView];
+}
+- (void) viewDidUnload {
+	self.dayView = nil;
+}
+
+#pragma mark TKCalendarDayViewDelegate
+- (NSArray *) calendarDayTimelineView:(TKCalendarDayView*)calendarDayTimeline eventsForDate:(NSDate *)eventDate{
+    if([eventDate compare:[NSDate dateWithTimeIntervalSinceNow:-24*60*60]] == NSOrderedAscending) return @[];
+	if([eventDate compare:[NSDate dateWithTimeIntervalSinceNow:24*60*60]] == NSOrderedDescending) return @[];
+    
+	NSDateComponents *info = [[NSDate date] dateComponentsWithTimeZone:calendarDayTimeline.timeZone];
+	info.second = 0;
+	NSMutableArray *ret = [NSMutableArray array];
+	
+	for(NSArray *ar in self.data){
+		
+		TKCalendarDayEventView *event = [calendarDayTimeline dequeueReusableEventView];
+		if(event == nil) event = [TKCalendarDayEventView eventView];
+        
+		event.identifier = nil;
+		event.titleLabel.text = ar[0];
+		event.locationLabel.text = ar[1];
+		
+		info.hour = [ar[2] intValue];
+		info.minute = [ar[3] intValue];
+		event.startDate = [NSDate dateWithDateComponents:info];
+		
+		info.hour = [ar[4] intValue];
+		info.minute = [ar[5] intValue];
+		event.endDate = [NSDate dateWithDateComponents:info];
+        
+		[ret addObject:event];
+		
+	}
+	return ret;
+}
+- (void) calendarDayTimelineView:(TKCalendarDayView*)calendarDayTimeline eventViewWasSelected:(TKCalendarDayEventView *)eventView{
+    
+}
+
+- (void) calendarDayTimelineView:(TKCalendarDayView*)calendarDayTimeline didMoveToDate:(NSDate*)eventDate{
+	
 }
 
 - (void)didReceiveMemoryWarning
@@ -347,13 +407,13 @@
     
     if (moveLeft)
     {
-        self.rightSlideView.frame = CGRectMake(oldFrame.origin.x - 200, oldFrame.origin.y, oldFrame.size.width, oldFrame.size.height);
-        self.slideView.frame = CGRectMake(oldFrameMain.origin.x-200,oldFrameMain.origin.y,oldFrameMain.size.width,oldFrameMain.size.height);
+        self.rightSlideView.frame = CGRectMake(oldFrame.origin.x - 350, oldFrame.origin.y, oldFrame.size.width, oldFrame.size.height);
+        self.slideView.frame = CGRectMake(oldFrameMain.origin.x-350,oldFrameMain.origin.y,oldFrameMain.size.width,oldFrameMain.size.height);
     }
     else
     {
-        self.rightSlideView.frame = CGRectMake(oldFrame.origin.x + 200, oldFrame.origin.y, oldFrame.size.width, oldFrame.size.height);
-        self.slideView.frame = CGRectMake(oldFrameMain.origin.x + 200,oldFrameMain.origin.y,oldFrameMain.size.width,oldFrameMain.size.height);
+        self.rightSlideView.frame = CGRectMake(oldFrame.origin.x + 350, oldFrame.origin.y, oldFrame.size.width, oldFrame.size.height);
+        self.slideView.frame = CGRectMake(oldFrameMain.origin.x + 350,oldFrameMain.origin.y,oldFrameMain.size.width,oldFrameMain.size.height);
     }
     [UIView commitAnimations];
 }
