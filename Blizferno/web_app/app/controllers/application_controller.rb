@@ -7,18 +7,21 @@ class ApplicationController < ActionController::Base
 
   protect_from_forgery with: :null_session
 
-  # before_filter :getUserInfo
+  before_filter :getUserInfo
 
-  # def getUserInfo
-  #   require 'net/http'
-  #   @userID = cookies[:userID]
-  #   url = URI.parse('http://csse371-04.csse.rose-hulman.edu/User/' + @userID)
-  #   req = Net::HTTP::Get.new(url.path)
-  #   res = Net::HTTP.start(url.host, url.port) {|http|
-  #     http.request(req)
-  #   }
-  #   @userInfo = JSON.parse(res.body)
-  # end
+  def getUserInfo
+    loginSuccess = cookies[:userID]
+    if loginSuccess
+      require 'net/http'
+      @userID = cookies[:userID]
+      url = URI.parse('http://csse371-04.csse.rose-hulman.edu/User/' + @userID)
+      req = Net::HTTP::Get.new(url.path)
+      res = Net::HTTP.start(url.host, url.port) {|http|
+        http.request(req)
+      }
+      @userInfo = JSON.parse(res.body)
+    end
+  end
 
   #before_filter :protect
 
