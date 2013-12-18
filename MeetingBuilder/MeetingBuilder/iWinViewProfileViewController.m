@@ -50,7 +50,7 @@
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:entityDesc];
     
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"lastName = 'Shah'"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userID = 1"];
     [request setPredicate:predicate];
     
     NSError *error;
@@ -167,6 +167,13 @@
     [self unUpdateTextViewUI:self.emailTextView];
     [self unUpdateTextViewUI:self.phoneTextView];
     [self unUpdateTextViewUI:self.locationTextView];
+    
+    self.displayNameTextView.text =  [NSString stringWithFormat:@"%@ %@", self.contact.firstName, self.contact.lastName];
+    self.emailTextView.text =  self.contact.email;
+    self.phoneTextView.text = self.contact.phone;
+    self.companyTextView.text = self.contact.company;
+    self.titleTextView.text = self.contact.title;
+    self.locationTextView.text = self.contact.location;
     
     [self.editProfile setTintColor:[UIColor blueColor]];
     self.isEditing = NO;
