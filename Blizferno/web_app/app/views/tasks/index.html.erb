@@ -30,15 +30,15 @@ header > h1 { display: inline-block; }
     //}
     //else if (ID = 2)
     //{
-    //  @TaskArray = JSON.parse('{"taskID":"2",“title”:”Create a Meeting",“isCompleted”:”false”,“description”:"Allows the user to create a meeting”, “deadline”:”19-Dec-13”, “dateCreated”:”16-Dec-13”, “dateAssigned”:”16-Dec-13”, “completionCriteria”:”Must add the meeting information to the database and be verified by client”, “assignedTo”:”350”, “assignedFrom”:”350”, “createdBy”:”350”}')
+    //@TaskArray = JSON.parse('{"taskID":"2",“title”:”Create a Meeting",“isCompleted”:”false”,“description”:"Allows the user to create a meeting”, “deadline”:”19-Dec-13”, “dateCreated”:”16-Dec-13”, “dateAssigned”:”16-Dec-13”, “completionCriteria”:”Must add the meeting information to the database and be verified by client”, “assignedTo”:”350”, “assignedFrom”:”350”, “createdBy”:”350”}')
     //}
     //else if (ID = 3)
     //{
-    //  @TaskArray = JSON.parse('{"taskID":"3",“title”:”Create a Task”,“isCompleted”:”false”,“description”:"Allows the user to create a task”, “deadline”:”19-Dec-13”, “dateCreated”:”16-Dec-13”, “dateAssigned”:”16-Dec-13”, “completionCriteria”:”Must add the specified task to the database and be verified by client”, “assignedTo”:”350”, “assignedFrom”:”350”, “createdBy”:”350”}')
+    //@TaskArray = JSON.parse('{"taskID":"3",“title”:”Create a Task”,“isCompleted”:”false”,“description”:"Allows the user to create a task”, “deadline”:”19-Dec-13”, “dateCreated”:”16-Dec-13”, “dateAssigned”:”16-Dec-13”, “completionCriteria”:”Must add the specified task to the database and be verified by client”, “assignedTo”:”350”, “assignedFrom”:”350”, “createdBy”:”350”}')
     //}
     //else if (ID = 4)
     //{
-    //  @TaskArray = JSON.parse('{"taskID":"4",“title”:”View a Task”,“isCompleted”:”false”,“description”:"Allows the user to view a task”, “deadline”:”19-Dec-13”, “dateCreated”:”16-Dec-13”, “dateAssigned”:”16-Dec-13”, “completionCriteria”:”Must view the specified task and be verified by client”, “assignedTo”:”350”, “assignedFrom”:”350”, “createdBy”:”350”}')
+    //@TaskArray = JSON.parse('{"taskID":"4",“title”:”View a Task”,“isCompleted”:”false”,“description”:"Allows the user to view a task”, “deadline”:”19-Dec-13”, “dateCreated”:”16-Dec-13”, “dateAssigned”:”16-Dec-13”, “completionCriteria”:”Must view the specified task and be verified by client”, “assignedTo”:”350”, “assignedFrom”:”350”, “createdBy”:”350”}')
     //}
 
     $('#viewTaskModal').modal('show');
@@ -59,8 +59,8 @@ header > h1 { display: inline-block; }
         <%= render "new" %>
       </div>
       <div class="modal-footer">
+	<input type="submit" form="createTask" class="btn btn-primary"></button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Submit</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
