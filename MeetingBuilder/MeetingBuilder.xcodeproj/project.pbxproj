@@ -173,7 +173,7 @@
 		0A7F1CDE185908790017209D /* iWinContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinContact.m; sourceTree = "<group>"; };
 		0A7F1CE018611FB10017209D /* iWinPopulateDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinPopulateDatabase.h; sourceTree = "<group>"; };
 		0A7F1CE118611FB10017209D /* iWinPopulateDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinPopulateDatabase.m; sourceTree = "<group>"; };
-		0A7F1CE3186124380017209D /* MeetingBuilder 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MeetingBuilder 2.xcdatamodel"; sourceTree = "<group>"; };
+		0A7F1CE3186124380017209D /* MeetingBuilder 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MeetingBuilder 2.xcdatamodel"; sourceTree = "<group>"; };
 		0A7F1CE7186127D60017209D /* Contact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Contact.h; sourceTree = "<group>"; };
 		0A7F1CE8186127D60017209D /* Contact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Contact.m; sourceTree = "<group>"; };
 		0A91DC921835D7AB00741349 /* OCCalendarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCCalendarView.h; sourceTree = "<group>"; };
@@ -510,15 +510,12 @@
 				0A7F1CDE185908790017209D /* iWinContact.m */,
 				0A96E7E5185FAA6200EAB0DC /* iWinProfile.h */,
 				0A96E7E6185FAA6200EAB0DC /* iWinProfile.m */,
-<<<<<<< HEAD
 				79753A791860F2B70015098B /* iWinSchedule.h */,
 				79753A7A1860F2B70015098B /* iWinSchedule.m */,
 				79753A7C1860F3B50015098B /* iWinMeeting.h */,
 				79753A7D1860F3B50015098B /* iWinMeeting.m */,
-=======
 				0A7F1CE018611FB10017209D /* iWinPopulateDatabase.h */,
 				0A7F1CE118611FB10017209D /* iWinPopulateDatabase.m */,
->>>>>>> 0a1bf43a617b286866479f0487d9cd8c35255e46
 			);
 			name = "Data Model";
 			sourceTree = "<group>";
@@ -932,7 +929,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"/Users/richard/tapkulibrary-master/src",
+					"../tapkulibrary-master/src",
 				);
 				INFOPLIST_FILE = "MeetingBuilder/MeetingBuilder-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
@@ -964,7 +961,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"/Users/richard/tapkulibrary-master/src",
+					"../tapkulibrary-master/src",
 				);
 				INFOPLIST_FILE = "MeetingBuilder/MeetingBuilder-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
