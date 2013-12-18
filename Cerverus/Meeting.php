@@ -37,6 +37,16 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
 	$meetingRel = $user->relateTo($meetingNode, 'MADE_MEETING')
 		->save();
 	
+	$attendeeArray = $postContent->attendance;
+	foreach($attendeeArray as $attendee){
+		$key = key(get_object_vars($attendee));
+		$users = $userIndex->query('name:'.$key[0]);
+		$user = $users[0];
+		$attRel = $user->relateTo($meeting, 'ATTEND_MEETING')
+			->setProperty('ATTENDANCE', $attendee->{$key}[0])
+			->save();
+	}
+	
 	//add the index	
 	$response= $meetingIndex->add($meetingNode, 'ID', $meetingNode->getID());
 	
@@ -75,6 +85,25 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
 		}else if(strcasecmp($postContent->field, 'location') ==0){
 			$meeting->setProperty('location', $postContent->value);
 			$meeting->save();
+			$array = $meeting->getProperties();
+			echo json_encode($array);
+		}else if(strcasecmp($postContent->field, 'attendance') ==0){
+			$attendeeArray = $postContent->value;
+			foreach($attendeeArray as $attendee){
+				$key = key(get_object_vars($attendee));
+				$users = $userIndex->query('name:'.$key[0]);
+				$meetingRels = $meeting->getRelationships('ATTEND_MEETING')
+				foreach($meetingRels as $rel){
+					if ($users[0]->getID() == $rel->getStartNode->getID()){
+						$rel->setProperty('ATTENDANCE', $attendee->{$key}[0])
+							->save();
+					}else{
+						$attendRel = $users[0]->relateTo($meeting)
+							->setProperty('ATTENDANCE', $attendee->{$key}[0])
+							->save();
+					}
+				}
+			}
 			$array = $meeting->getProperties();
 			echo json_encode($array);
 		}
