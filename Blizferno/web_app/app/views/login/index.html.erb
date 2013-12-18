@@ -48,6 +48,11 @@
     }
 
 $(window).load(function() { 
+    // check if user is already logged in
+    if(getCookie('userID')){
+        window.location.href = '/home_page/index';
+    }
+
     jQuery('#loginForm').bind('submit', function(event){
         event.preventDefault();
 
@@ -62,8 +67,7 @@ $(window).load(function() {
 			success:function(data){
 				if(data.userID != null){
                     setCookie('userID', data.userID,'7');
-                    
-				    window.location.href = "/";
+				    window.location.href = "/home_page/index";
 				}
 			}
         });
@@ -88,7 +92,6 @@ $(window).load(function() {
 				}
 			}
         });
-
 
         return true;
     });
@@ -142,7 +145,10 @@ alert("urlEnding:" + urlEnding);
 
 
 
-
+<h1>**** TEMP LOGIN DETAILS ****</h1>
+<h2>Email: corey@meetingninja.com</h2>
+<h2>Password: corey</h2>
+<br />
 <div>
 <h1>Login</h1>
             <p>Welcome to our Web App! Please enter credentials below </p>

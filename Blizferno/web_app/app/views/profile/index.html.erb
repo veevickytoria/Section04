@@ -39,7 +39,7 @@
 </p>
 <br/>
 <p>
-  <span style="font-size:28px;"><strong><span style="font-size:18px;">Projects: <a>Infrastructure Replatform</a>, <a>Student Scheduling System</a>, <a>371 Project</a></span></strong></span>
+  <span style="font-size:28px;"><strong><span style="font-size:18px;">Projects: <a href='#'><%= @userProjects['projects'][0]['projectTitle'] %></a>, <a href='#'><%= @userProjects['projects'][1]['projectTitle'] %></a></span></strong></span>
 </p>
 <p>
   <span style="font-size:28px;">
@@ -50,23 +50,29 @@
 </p>
 <ul>
   <li>
-    <a>
-      <%= @userTasks['tasks'][0]['taskName'] %>
+    <a href='#'>
+      <%= @userTasks['tasks'][0]['taskTitle'] %>
     </a>
   </li>
   <li>
-    <a>
-      <%= @userTasks['tasks'][1]['taskName'] %>
+    <a href='#'>
+      <%= @userTasks['tasks'][1]['taskTitle'] %>
     </a>
   </li>
   <li>
-    <a><%= @userTasks['tasks'][2]['taskName'] %></a>
+    <a href='#'>
+      <%= @userTasks['tasks'][2]['taskTitle'] %>
+    </a>
   </li>
   <li>
-    <a><%= @userTasks['tasks'][3]['taskName'] %></a>
+    <a href='#'>
+      <%= @userTasks['tasks'][3]['taskTitle'] %>
+    </a>
   </li>
   <li>
-    <a><%= @userTasks['tasks'][4]['taskName'] %></a>
+    <a href='#'>
+      <%= @userTasks['tasks'][4]['taskTitle'] %>
+    </a>
   </li>
 </ul>
 <p>
@@ -75,18 +81,18 @@
 </p>
 <ul>
   <li>
-    <span style="font-size:16px;">
-      <a>Meeting with IAIT - Host: Darrell - Agenda:</a>
-    </span>
-  </li>
-  <li>
-    <a>
-      <span style="font-size:16px;">Meeting #2</span>
+    <a href='#'>
+      <%= @userMeetings['meetings'][0]['meetingTitle'] %>
     </a>
   </li>
   <li>
-    <a>
-      <span style="font-size:16px;">Meeting #3</span>
+    <a href='#'>
+      <%= @userMeetings['meetings'][1]['meetingTitle'] %>
+    </a>
+  </li>
+  <li>
+    <a href='#'>
+      <%= @userMeetings['meetings'][2]['meetingTitle'] %>
     </a>
   </li>
 </ul>
