@@ -24,8 +24,8 @@
     [super setUp];
     // Put setup code here; it will be run once, before the first test case.
     self.viewVC = [[iWinViewProfileViewController alloc] initWithNibName:@"iWinViewProfileViewController" bundle:nil];
+    [self.viewVC viewDidLoad];
     
-    //[self.viewVC veiwDidLoad];
 }
 
 - (void)tearDown
@@ -34,9 +34,19 @@
     [super tearDown];
 }
 
-- (void)testExample
+- (void)testCheckUserInfo
 {
-    //XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
+    
+}
+
+- (void)testEditedUserInfo
+{
+    
+}
+
+- (void)testCancelEditUser
+{
+    
 }
 
 @end

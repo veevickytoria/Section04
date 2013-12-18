@@ -14,7 +14,6 @@
 #import <QuartzCore/QuartzCore.h>
 
 @interface iWinViewProfileViewController ()
-@property (nonatomic) NSString *pageName;
 @property (nonatomic) BOOL isEditing;
 @property (nonatomic) Contact *contact;
 //@property (nonatomic) iWinProfile *profile;
@@ -23,13 +22,11 @@
 
 @implementation iWinViewProfileViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withPageName:(NSString *)pageName inEditMode:(BOOL)isEditing
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        //self.pageName = pageName;
-        //self.isEditing = isEditing;
     }
     [self viewDidLoad];
     return self;
@@ -40,6 +37,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     [self updateButtonUI:self.editProfile];
+    self.isEditing = NO;
     
     iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     
