@@ -14,7 +14,7 @@
 
 @end
 
-@interface iWinAddUsersViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface iWinAddUsersViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *userListTableView;
 @property (weak, nonatomic) IBOutlet UITextField *emailField;
 @property (strong, nonatomic) id<UserDelegate> userDelegate;

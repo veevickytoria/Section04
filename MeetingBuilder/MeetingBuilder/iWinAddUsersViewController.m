@@ -14,6 +14,7 @@
 @interface iWinAddUsersViewController ()
 @property (nonatomic) NSString *pageName;
 @property (nonatomic) BOOL isEditing;
+@property (nonatomic) NSUInteger rowToDelete;
 @end
 
 @implementation iWinAddUsersViewController
@@ -185,6 +186,8 @@ shouldReloadTableForSearchString:(NSString *)searchString
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
     if ([tableView isEqual:self.searchDisplayController.searchResultsTableView])
     {
         Contact *c = (Contact *)[self.filteredList objectAtIndex:indexPath.row];
@@ -196,6 +199,25 @@ shouldReloadTableForSearchString:(NSString *)searchString
             [self.userListTableView reloadData];
         }
         [self.searchDisplayController setActive:NO];
+    }
+    else
+    {
+        self.rowToDelete = indexPath.row;
+        UIAlertView *deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this contact?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
+        [deleteAlertView show];
+    }
+}
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1)
+    {
+        [self.attendeeList removeObjectAtIndex:self.rowToDelete];
+        [self.userListTableView reloadData];
+    }
+    else
+    {
+        self.rowToDelete = -1;
     }
 }
 
