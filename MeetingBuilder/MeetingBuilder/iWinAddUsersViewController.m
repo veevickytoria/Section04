@@ -7,12 +7,14 @@
 //
 
 #import "iWinAddUsersViewController.h"
-#import "iWinContact.h"
+#import "Contact.h"
 #import <QuartzCore/QuartzCore.h>
+#import "iWinAppDelegate.h"
 
 @interface iWinAddUsersViewController ()
 @property (nonatomic) NSString *pageName;
 @property (nonatomic) BOOL isEditing;
+@property (nonatomic) NSUInteger rowToDelete;
 @end
 
 @implementation iWinAddUsersViewController
@@ -38,28 +40,69 @@
     
     self.userSearchBar.showsScopeBar = NO;
     
-    self.userList = [[NSMutableArray alloc] init];
     self.attendeeList = [[NSMutableArray alloc] init];
     self.filteredList = [[NSMutableArray alloc] init];
+
+    iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     
-    iWinContact *c1 = [[iWinContact alloc] init];
-    c1.firstName = @"Dharmin";
-    c1.lastName = @"Shah";
-    c1.email = @"shahdk@rose-hulman.edu";
+    NSManagedObjectContext *context = [appDelegate managedObjectContext];
     
-    iWinContact *c2 = [[iWinContact alloc] init];
-    c2.firstName = @"Rain";
-    c2.lastName = @"Dartt";
-    c2.email = @"darttrf@rose-hulman.edu";
+    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Contact" inManagedObjectContext:context];
     
-    iWinContact *c3 = [[iWinContact alloc] init];
-    c3.firstName = @"Daniel";
-    c3.lastName = @"Wang";
-    c3.email = @"wangde@rose-hulman.edu";
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDesc];
     
-    [self.userList addObject:c1];
-    [self.userList addObject:c2];
-    [self.userList addObject:c3];
+    NSError *error;
+    NSArray *result = [context executeFetchRequest:request
+                                              error:&error];
+    
+    self.userList = [[NSMutableArray alloc] initWithArray:result];
+    
+    
+    
+//    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Users"];
+//    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+//    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:30];
+//    [urlRequest setHTTPMethod:@"GET"];
+//    NSURLResponse * response = nil;
+//    NSError * error = nil;
+//    NSData * data = [NSURLConnection sendSynchronousRequest:urlRequest
+//                                            returningResponse:&response
+//                                                        error:&error];
+//    NSArray *jsonArray;
+//    if (error)
+//    {
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Meetings not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+//        [alert show];
+//    }
+//    else
+//    {
+//        NSError *jsonParsingError = nil;
+//        jsonArray = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
+//    }
+//    if (jsonArray.count > 0)
+//    {
+//        for (NSDictionary* users in jsonArray)
+//        {
+//            iWinContact *c = [[iWinContact alloc] init];
+//            c.userID = (NSInteger)[users objectForKey:@"userID"];
+//
+//            NSString *displayName = (NSString *)[users objectForKey:@"displayName"];
+//            NSInteger nWords = 2;
+//            NSRange wordRange = NSMakeRange(0, nWords);
+//            NSArray *firstAndLastNames = [[displayName componentsSeparatedByString:@" "] subarrayWithRange:wordRange];
+//            c.firstName = (NSString *)[firstAndLastNames objectAtIndex:0];
+//            c.lastName = (NSString *)[firstAndLastNames objectAtIndex:1];
+//            
+//            c.email = (NSString *)[users objectForKey:@"email"];
+//            c.phone = (NSString *)[users objectForKey:@"phone"];
+//            c.company = (NSString *)[users objectForKey:@"companyc"];
+//            c.title = (NSString *)[users objectForKey:@"title"];
+//            c.location = (NSString *)[users objectForKey:@"location"];
+//            
+//            [self.userList addObject:c];
+//        }
+//    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -75,7 +118,7 @@
 - (IBAction)onClickSave
 {
     //save
-    //[self.userDelegate returnToPreviousView:self.pageName inEditMode:self.isEditing];
+    [self.userDelegate selectedUsers:self.attendeeList];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -96,16 +139,19 @@
 {
     UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"UserCell"];
     
+    Contact *c = nil;
+    
     if ([tableView isEqual:self.searchDisplayController.searchResultsTableView])
     {
-        iWinContact *c = (iWinContact *)[self.filteredList objectAtIndex:indexPath.row];
-        cell.textLabel.text = [NSString stringWithFormat:@"%@ %@", c.firstName, c.lastName];
+        c = (Contact *)[self.filteredList objectAtIndex:indexPath.row];
     }
     else
     {
-        iWinContact *c = (iWinContact *)[self.attendeeList objectAtIndex:indexPath.row];
-        cell.textLabel.text = [NSString stringWithFormat:@"%@ %@", c.firstName, c.lastName];
+        c = (Contact *)[self.attendeeList objectAtIndex:indexPath.row];
     }
+    
+    cell.textLabel.text = [NSString stringWithFormat:@"%@ %@", c.firstName, c.lastName];
+    cell.detailTextLabel.text = c.email;
     return cell;
 }
 
@@ -140,9 +186,11 @@ shouldReloadTableForSearchString:(NSString *)searchString
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
     if ([tableView isEqual:self.searchDisplayController.searchResultsTableView])
     {
-        iWinContact *c = (iWinContact *)[self.filteredList objectAtIndex:indexPath.row];
+        Contact *c = (Contact *)[self.filteredList objectAtIndex:indexPath.row];
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.email contains[c] %@", c.email];
         NSArray *checkArray = [self.attendeeList filteredArrayUsingPredicate:predicate];
         if (checkArray.count == 0)
@@ -151,6 +199,25 @@ shouldReloadTableForSearchString:(NSString *)searchString
             [self.userListTableView reloadData];
         }
         [self.searchDisplayController setActive:NO];
+    }
+    else
+    {
+        self.rowToDelete = indexPath.row;
+        UIAlertView *deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this contact?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
+        [deleteAlertView show];
+    }
+}
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1)
+    {
+        [self.attendeeList removeObjectAtIndex:self.rowToDelete];
+        [self.userListTableView reloadData];
+    }
+    else
+    {
+        self.rowToDelete = -1;
     }
 }
 

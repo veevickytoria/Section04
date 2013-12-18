@@ -10,8 +10,9 @@
 
 @implementation iWinContact
 
--(void) initializeWithFirstName:(NSString *)firstName withLastName:(NSString *)lastName withEmail:(NSString *)email
+-(void) initializewithID:(NSInteger)userID withFirstName:(NSString *)firstName withLastName:(NSString *)lastName withEmail:(NSString *)email
 {
+    self.userID = userID;
     self.firstName = firstName;
     self.lastName = lastName;
     self.email = email;
