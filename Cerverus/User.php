@@ -94,11 +94,12 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 	for($ii=0;$ii<sizeof($users);$ii++){
 		$array=$users[$ii]->getProperties();
 		$array['password']="********";
-		$idarray = array('userID' => "{$users[$ii]->getID()}");
-		$results[$ii]= array_merge($idarray, $array);
+		$array['userID']=$user[ii]->getId();
+		$results[$ii]= $array;
 	}
 	echo json_encode(array("users"=>$results));
 }else if( strcasecmp($_SERVER['REQUEST_METHOD'],'GET') == 0){
+	//getUserInfo
 	 $userNode=$client->getNode($_GET['id']);
 	 $array = $userNode->getProperties();
 	
