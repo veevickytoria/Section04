@@ -15,8 +15,8 @@ $client= new Client();
         $meetingIndex = new Index\NodeIndex($client, 'Meetings');
         $meetingIndex->save();
 
-//create meeting POST
 if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
+	//create meeting POST
         //get the json string post content
         $postContent = json_decode(@file_get_contents('php://input'));
         
@@ -27,6 +27,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
         $meetingNode->setProperty('user', $postContent->userID)
                 ->setProperty('title', $postContent->title)
                 ->setProperty('datetime', $postContent->datetime)
+                ->setProperty('description',$postContent->description)
                 ->setProperty('location', $postContent->location);
         
         //actually add the node in the db
@@ -34,31 +35,28 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
         
         //create a relation to the user who made the meeting
         $user = $client->getNode($postContent->userID);
-        $meetingRel = $user->relateTo($meetingNode, 'MADE_MEETING')
+        $meetingRel = $meetingNode->relateTo($user, 'MADE_MEETING')
                 ->save();
         
         $attendeeArray = $postContent->attendance;
         foreach($attendeeArray as $attendee){
-                $key = key(get_object_vars($attendee));
-                $users = $userIndex->query('name:'.$key[0]);
-                $user = $users[0];
-                $attRel = $user->relateTo($meeting, 'ATTEND_MEETING')
-                        ->setProperty('ATTENDANCE', $attendee->{$key}[0])
-                        ->save();
+                $user = $client->getNode($attendee->userID);
+                $attRel = $meetingNode->relateTo($user, 'ATTEND_MEETING')->save();//->setProperty('ATTENDANCE', $attendee->{$key}[0])
         }
         
         //add the index        
         $response= $meetingIndex->add($meetingNode, 'ID', $meetingNode->getID());
         
         //return the created meeting id
-        echo '{"meetingID":"'.$meetingNode->getID().'"}';
+        $array=array();
+        $array['meetingID']=$meetingNode->getId();
+        echo json_encode($array);
         
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') == 0){
         //getMeetingInfo
         $meetingNode=$client->getNode($_GET['id']);
-        foreach ($meetingNode->getProperties() as $key => $value) {
-                echo "$key: $value\n";
-        }
+        $array=$meetingNode->getProperties();
+        echo json_encode($array);
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'PUT') == 0){
         //updateMeeting
         
@@ -71,28 +69,38 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
                         $meeting->setProperty('user', $postContent->value);
                         $meeting->save();
                         $array = $meeting->getProperties();
+                        $array['meetingID']=$meeting->getId();
                         echo json_encode($array);
                 }else if(strcasecmp($postContent->field, 'title') ==0){
                         $meeting->setProperty('title', $postContent->value);
                         $meeting->save();
                         $array = $meeting->getProperties();
+                        $array['meetingID']=$meeting->getId();
                         echo json_encode($array);
                 }else if(strcasecmp($postContent->field, 'datetime') ==0){
                         $meeting->setProperty('datetime', $postContent->value);
                         $meeting->save();
                         $array = $meeting->getProperties();
+                        $array['meetingID']=$meeting->getId();
                         echo json_encode($array);
                 }else if(strcasecmp($postContent->field, 'location') ==0){
                         $meeting->setProperty('location', $postContent->value);
                         $meeting->save();
                         $array = $meeting->getProperties();
+                        $array['meetingID']=$meeting->getId();
+                        echo json_encode($array);
+                }else if(strcasecmp($postContent->field, 'description') ==0){
+                        $meeting->setProperty('description', $postContent->value);
+                        $meeting->save();
+                        $array = $meeting->getProperties();
+                        $array['meetingID']=$meeting->getId();
                         echo json_encode($array);
                 }else if(strcasecmp($postContent->field, 'attendance') ==0){
                         $attendeeArray = $postContent->value;
                         foreach($attendeeArray as $attendee){
                                 $key = key(get_object_vars($attendee));
                                 $users = $userIndex->query('name:'.$key[0]);
-                                $meetingRels = $meeting->getRelationships('ATTEND_MEETING')
+                                $meetingRels = $meeting->getRelationships('ATTEND_MEETING');
                                 foreach($meetingRels as $rel){
                                         if ($users[0]->getID() == $rel->getStartNode->getID()){
                                                 $rel->setProperty('ATTENDANCE', $attendee->{$key}[0])
@@ -105,11 +113,12 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
                                 }
                         }
                         $array = $meeting->getProperties();
+                        $array['meetingID']=$meeting->getId();
                         echo json_encode($array);
                 }
         }
-//delete meeting DELETE
-}else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'DELETE') == 0){        
+}else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'DELETE') == 0){      
+	//delete meeting DELETE
         //get the id
         preg_match("#(\d+)#", $_SERVER['REQUEST_URI'], $id);
         
@@ -131,7 +140,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
                         
                         //delete node and return true
                         $meeting->delete();
-                       $array = ('valid'=>'true');
+                       $array = array('valid'=>'true');
  			echo json_encode($array);
                 } else {
                         //return an error otherwise
