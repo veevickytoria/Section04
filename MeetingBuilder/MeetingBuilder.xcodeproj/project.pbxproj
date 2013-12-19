@@ -569,6 +569,7 @@
 		0A04456117F3825D000FF2A0 /* MeetingBuilder */ = {
 			isa = PBXGroup;
 			children = (
+				DE0F51F5186266B5008BB858 /* Framework */,
 				0A7F1CDC185908550017209D /* Data Model */,
 				0AAC9E921846FE2B0073260F /* OpenEars */,
 				0A91DC911835D7AB00741349 /* OCCalendar */,
