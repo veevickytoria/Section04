@@ -74,4 +74,8 @@ public class Note {
 		this.content = content;
 	}
 
+	public void setID(int id) {
+		this.id = id;
+	}
+
 }

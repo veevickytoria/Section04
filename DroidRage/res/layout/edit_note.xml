@@ -1,0 +1,36 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoginActivity" >
+
+    <!-- Login progress -->
+
+
+    <!-- Login form -->
+
+    <EditText
+        android:id="@+id/nameText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dip"
+        android:focusable="true"
+        android:hint="@string/hint_what"
+        android:inputType="textAutoCorrect|textCapSentences"
+        android:minHeight="48dip"
+        android:singleLine="true" />
+
+
+    <Button
+        android:id="@+id/button2"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="40dp"
+        android:text="Create Note" 
+        android:onClick="createNewNote"/>
+
+</RelativeLayout>

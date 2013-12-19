@@ -21,6 +21,8 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -42,23 +44,27 @@ public class NotesFragment extends Fragment implements
 
 	// private View notesView;
 
-	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.notes, menu);
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		View v = inflater.inflate(R.layout.fragment_notes, container, false);
-		
-		
-//		meetingImageButton = (ImageButton) v.findViewById(R.id.imageButton);
-//		meetingImageButton.setOnClickListener(new View.OnClickListener() {
-//
-//			@Override
-//			public void onClick(View arg0) {
-//				System.out.println("Echo: Test");
-//
-//			}
-//		});
+		setHasOptionsMenu(true);
+
+		// meetingImageButton = (ImageButton) v.findViewById(R.id.imageButton);
+		// meetingImageButton.setOnClickListener(new View.OnClickListener() {
+		//
+		// @Override
+		// public void onClick(View arg0) {
+		// System.out.println("Echo: Test");
+		//
+		// }
+		// });
 
 		// Intent test = getActivity().getIntent();
 
@@ -67,9 +73,6 @@ public class NotesFragment extends Fragment implements
 
 		session = new SessionManager(getActivity().getApplicationContext());
 
-		
-		
-		
 		// TODO: Check for internet connection before receiving notes from DB
 		// TODO: Display a something saying "no notes" if there are no notes
 		// instead of having no notes appear
@@ -127,8 +130,6 @@ public class NotesFragment extends Fragment implements
 			}
 		});
 
-		
-		
 		// Item long-click event
 		// TODO: Add additional options and click-events to these options
 		lv.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
@@ -138,38 +139,43 @@ public class NotesFragment extends Fragment implements
 				AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) menuInfo;
 
 				Note n = noteAdpt.getItem(aInfo.position);
-
 				menu.setHeaderTitle("Options for " + n.getName());
-				menu.add(1, 1, 1, "Add Content");
-				menu.add(1, 2, 2, "Delete");
-				menu.add(1, 3, 3, "Version Control");
+				menu.add(1, n.getID(), 1, "Add Content");
+				menu.add(2, n.getID(), 2, "Delete");
+				menu.add(3, n.getID(), 3, "Version Control");
 
 			}
 
-			public boolean onContextItemSelected(MenuItem item) {
-				Toast.makeText(getActivity(), "testing", Toast.LENGTH_LONG)
-						.show();
-				AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) item
-						.getMenuInfo();
-
-				switch (item.getItemId()) {
-				case 1:
-					break;
-				case 2:
-					break;
-				case 3:
-					Intent versionControl = new Intent(getActivity(),
-							VersionControlActivity.class);
-					startActivity(versionControl);
-				default:
-				}
-
-				return false;
-			}
 		});
 
 		return v;
 
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+
+		int id = item.getItemId();
+		AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) item
+				.getMenuInfo();
+		Toast.makeText(getActivity(), String.format("%s", item.getTitle()),
+				Toast.LENGTH_SHORT).show();
+		switch (item.getGroupId()) {
+		case 1:
+			Toast.makeText(getActivity(), String.format("%s", item.getTitle()),
+					Toast.LENGTH_SHORT).show();
+			break;
+		case 2:
+			removeObjectWithID(id);
+			break;
+		case 3:
+			Intent versionControl = new Intent(getActivity(),
+					VersionControlActivity.class);
+			startActivity(versionControl);
+		default:
+		}
+
+		return false;
 	}
 
 	/**
@@ -178,29 +184,42 @@ public class NotesFragment extends Fragment implements
 	private void refreshNotes() {
 
 	}
-	
-	private void createNotes() {
+
+	private void removeObjectWithID(int id) {
 		mySQLiteAdapter = new SQLiteAdapter(this.getActivity());
 
-//		mySQLiteAdapter.openToWrite();
-//		mySQLiteAdapter.close();
+		Note s = null;
+		for (Note i : notes) {
+			if (i.getID() == id)
+				s = i;
 
-		
+		}
+		noteAdpt.remove(s);
+		mySQLiteAdapter.openToWrite();
+		mySQLiteAdapter.deleteNote(id);
+		mySQLiteAdapter.close();
+
+	}
+
+	private void createNotes() {
+
+
 		mySQLiteAdapter = new SQLiteAdapter(this.getActivity());
 		mySQLiteAdapter.openToRead();
-		List<Note> contentRead = mySQLiteAdapter.QuerryNotes();
-		
-		for(Note i: contentRead)
-			notes.add(i);
-		
-		mySQLiteAdapter.close();
-		
-		notes.add(new Note("A new note"));
 
-		for (int i = 0; i < 3; i++) {
-			notes.add(new Note());
-		}
-		
+		List<Note> contentRead = mySQLiteAdapter.QuerryNotes();
+
+		for (Note i : contentRead)
+			notes.add(i);
+
+		mySQLiteAdapter.close();
+
+		// notes.add(new Note("A new note"));
+		//
+		// for (int i = 0; i < 3; i++) {
+		// notes.add(new Note());
+		// }
+
 	}
 
 	@Override
@@ -224,6 +243,30 @@ public class NotesFragment extends Fragment implements
 		notes.get(noteID).setContent(noteContent);
 
 		return true;
+	}
+
+	public void createNewNote() {
+		mySQLiteAdapter.openToWrite();
+		long i = mySQLiteAdapter.insertNote("", "New Note");
+		Note s = new Note("New Note");
+		s.addContent("");
+		s.setID((int) i);
+		noteAdpt.add(s);
+		mySQLiteAdapter.close();
+	}
+
+	public void rebuildListView() {	
+		noteAdpt.clear();
+		mySQLiteAdapter = new SQLiteAdapter(getActivity());
+		mySQLiteAdapter.openToRead();
+
+		List<Note> contentRead = mySQLiteAdapter.QuerryNotes();
+
+		for (Note i : contentRead)
+			notes.add(i);
+
+		mySQLiteAdapter.close();
+		
 	}
 
 }

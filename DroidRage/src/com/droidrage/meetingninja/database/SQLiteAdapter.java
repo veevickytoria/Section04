@@ -44,12 +44,20 @@ public class SQLiteAdapter {
 		context = c;
 	}
 
+	/*
+	 * Initialize the database to be read
+	 */
+
 	public SQLiteAdapter openToRead() throws android.database.SQLException {
 		sqLiteHelper = new SQLiteHelper(context, MYDATABASE_NAME, null,
 				MYDATABASE_VERSION);
 		sqLiteDatabase = sqLiteHelper.getReadableDatabase();
 		return this;
 	}
+
+	/*
+	 * Initialize the database to be written too
+	 */
 
 	public SQLiteAdapter openToWrite() throws android.database.SQLException {
 		sqLiteHelper = new SQLiteHelper(context, MYDATABASE_NAME, null,
@@ -58,30 +66,55 @@ public class SQLiteAdapter {
 		return this;
 	}
 
+	/*
+	 * Close the database
+	 */
+
 	public void close() {
 		sqLiteHelper.close();
 	}
 
+	/*
+	 * Drop and re-add all tables, effectively clearing all data
+	 */
+
 	public void RebuildTable() {
 		sqLiteDatabase.execSQL(SCRIPT_DROP_TABLE);
-		sqLiteDatabase.execSQL(SCRIPT_CREATE_NOTES_TABLE);
+		createTable();
 
 	}
+
+	/*
+	 * Create the tables used by the application
+	 */
 
 	public void createTable() {
 		sqLiteDatabase.execSQL(SCRIPT_CREATE_NOTES_TABLE);
 	}
 
-	public void updateNote(int id, String content, String name) {
+	/*
+	 * Update a note to include new content based on the id of the note
+	 */
+
+	public void updateNote(long id, String content, String name) {
 		sqLiteDatabase.execSQL("update " + TABLE_NOTES + " set '"
 				+ KEY_NOTES_CONTENT + "'='" + content + "','" + KEY_NOTES_NAME
 				+ "'='" + name + "' where " + KEY_NOTES_ID + "=" + id);
 	}
 
+	/*
+	 * Delete note based off of the id provided
+	 */
+
 	public void deleteNote(long id) {
 		sqLiteDatabase.execSQL("Delete from " + TABLE_NOTES + " where "
 				+ KEY_NOTES_ID + "=" + id);
 	}
+
+	/*
+	 * Insert a new note to placed in the database, and ID value is returned as
+	 * part of the function
+	 */
 
 	public long insertNote(String content, String Name) {
 		ContentValues contentValues = new ContentValues();
@@ -94,6 +127,11 @@ public class SQLiteAdapter {
 		return sqLiteDatabase.delete(TABLE_NOTES, null, null);
 	}
 
+	/*
+	 * 
+	 * 
+	 */
+
 	public List<Note> QuerryNotes() {
 		String[] columns = new String[] { KEY_NOTES_CONTENT, KEY_NOTES_ID,
 				KEY_NOTES_NAME };
@@ -103,14 +141,29 @@ public class SQLiteAdapter {
 		List<Note> notes = new ArrayList<Note>();
 
 		int index_CONTENT = cursor.getColumnIndex(KEY_NOTES_CONTENT);
-		int noteID = cursor.getColumnIndex(KEY_NOTES_NAME);
+		int index_NAME = cursor.getColumnIndex(KEY_NOTES_NAME);
+		int INDEX_ID = cursor.getColumnIndex(KEY_NOTES_ID);
 		for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
-			Note n = new Note(cursor.getString(noteID));
+			Note n = new Note(cursor.getString(index_NAME));
 			n.addContent(cursor.getString(index_CONTENT));
+			n.setID(cursor.getInt(INDEX_ID));
 			notes.add(n);
 		}
 
 		return notes;
+	}
+	
+	public void testThings(){
+		RebuildTable();
+		insertNote("A lot of interesting stuff", "Another Meeting");
+		long index = insertNote("A Name of a Person", "Some Meeting");
+		insertNote("A Name of another persons", "Some Meeting");
+		deleteNote(index);
+		insertNote(
+				"Plenty of text to make sure it still over flows when it is supposed too,Plenty of text to make sure it still over flows when it is supposed too,Plenty of text to make sure it still over flows when it is supposed too,Plenty of text to make sure it still over flows when it is supposed too,",
+				"Meeting January 9th");
+		
+		
 	}
 
 	public class SQLiteHelper extends SQLiteOpenHelper {

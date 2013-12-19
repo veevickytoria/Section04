@@ -1,5 +1,7 @@
 package com.droidrage.meetingninja.notes;
 
+import objects.Note;
+
 import com.droidrage.meetingninja.MainActivity;
 import com.droidrage.meetingninja.R;
 import com.droidrage.meetingninja.R.id;
@@ -16,55 +18,60 @@ import android.view.View;
 import android.widget.EditText;
 import android.support.v4.app.NavUtils;
 
-public class EditNoteActivity extends Activity {
+public class CreateNoteActivity extends Activity {
 
 	private Intent getNote;
 	String noteContent;
 	String noteName;
 	int noteID;
 	EditText textEditor;
-
-	
 	private SQLiteAdapter mySQLiteAdapter;
-		
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		mySQLiteAdapter = new SQLiteAdapter(this);
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_edit_note);
+		setContentView(R.layout.edit_note);
 		// Show the Up button in the action bar.
 		setupActionBar();
 
 		getNote = getIntent();
-		noteContent = getNote.getStringExtra("NoteContent");
-		noteName = getNote.getStringExtra("NoteName");
-		noteID = getNote.getIntExtra("NoteID", 0);
 
-		textEditor = (EditText) findViewById(R.id.editText);
+		// noteContent = getNote.getStringExtra("NoteContent");
+		// noteName = getNote.getStringExtra("NoteName");
+		// noteID = getNote.getIntExtra("NoteID", 0);
+
+		textEditor = (EditText) findViewById(R.id.nameText);
 
 		textEditor.setText(noteContent);
 
 		setTitle("Edit '" + noteName + "'");
 	}
 
-	public void save(View view) {
+	public void createNewNote(View view) {
 		Intent goNotes = new Intent(this, MainActivity.class);
 
-		goNotes.putExtra("Fragment", "notes");
+		// goNotes.putExtra("NoteID", noteID);
+		// goNotes.putExtra("NoteContent", textEditor.getText().toString());
+		// goNotes.putExtra("NoteName", noteName);
+
+		
+		
+		
+		String s = textEditor.getText().toString();
+		System.out.println("Echo: "+s);
 		
 		mySQLiteAdapter.openToWrite();
-		mySQLiteAdapter.updateNote(noteID, textEditor.getText().toString(), noteName);
+		mySQLiteAdapter.insertNote("", s);
+
 		mySQLiteAdapter.close();
-		startActivity(goNotes);
-	}
-
-	public void discard(View view) {
-		Intent goNotes = new Intent(this, MainActivity.class);
-
-		goNotes.putExtra("Update", false);
+		
+		goNotes.putExtra("TypeL", "Create");
+		goNotes.putExtra("Update", true);
 		goNotes.putExtra("Fragment", "notes");
 
 		startActivity(goNotes);
+
 	}
 
 	/**

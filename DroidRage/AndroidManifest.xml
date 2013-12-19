@@ -39,9 +39,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.droidrage.meetingninja.LoginActivity" />
         </activity>
         <activity
             android:name="com.droidrage.meetingninja.user.RegisterActivity"
@@ -61,6 +58,13 @@
         <activity
             android:name="com.droidrage.meetingninja.notes.EditNoteActivity"
             android:label="@string/title_activity_edit_note" >
+        </activity>
+        <activity
+            android:name="com.droidrage.meetingninja.notes.CreateNoteActivity"
+            android:label="@string/title_activity_edit_note" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.droidrage.meetingninja.MainActivity" />
         </activity>
         <activity
             android:name="com.droidrage.meetingninja.tasks.TasksFragment"

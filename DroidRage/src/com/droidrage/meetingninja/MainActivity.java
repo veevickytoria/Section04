@@ -4,6 +4,8 @@ import java.util.Locale;
 
 import com.droidrage.meetingninja.R;
 import com.droidrage.meetingninja.meetings.MeetingsFragment;
+import com.droidrage.meetingninja.meetings.ViewMeetingActivity;
+import com.droidrage.meetingninja.notes.CreateNoteActivity;
 import com.droidrage.meetingninja.notes.NotesFragment;
 import com.droidrage.meetingninja.tasks.TasksFragment;
 import com.droidrage.meetingninja.user.LoginActivity;
@@ -140,15 +142,16 @@ public class MainActivity extends FragmentActivity implements
 						"notes") == 0) {
 			Log.d("GET_INTENT", getIntent().getStringExtra("Fragment"));
 			noteIntent = getIntent();
-			int noteID = noteIntent.getIntExtra("NoteID", -1);
 
-			Log.d("NOTES", "NoteID " + noteID);
+			if (noteIntent.getStringExtra("TypeL") != null)
+				if (noteIntent.getStringExtra("TypeL").equals("Create")) {
+					notesFrag.rebuildListView();
+					return;
+				}
 
-			if (noteID > 0) {
-				NotesFragment.updateNote(noteID,
-						getIntent().getStringExtra("NoteName"), getIntent()
-								.getStringExtra("NoteContent"));
-			}
+
+			notesFrag.rebuildListView();
+
 		}
 	}
 
@@ -183,6 +186,9 @@ public class MainActivity extends FragmentActivity implements
 			return true;
 		case R.id.action_new_note:
 			Toast.makeText(this, "Create a note", Toast.LENGTH_SHORT).show();
+			Intent createNote = new Intent(this, CreateNoteActivity.class);
+			startActivity(createNote);
+			// notesFrag.createNewNote();
 			return true;
 		case R.id.action_logout:
 			session.logoutUser();
