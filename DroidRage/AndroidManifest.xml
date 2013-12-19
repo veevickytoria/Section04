@@ -58,6 +58,9 @@
         <activity
             android:name="com.droidrage.meetingninja.notes.EditNoteActivity"
             android:label="@string/title_activity_edit_note" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.droidrage.meetingninja.MainActivity" />
         </activity>
         <activity
             android:name="com.droidrage.meetingninja.notes.CreateNoteActivity"

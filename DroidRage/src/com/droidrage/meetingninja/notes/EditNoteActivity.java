@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 import android.support.v4.app.NavUtils;
 
 public class EditNoteActivity extends Activity {
@@ -46,8 +47,7 @@ public class EditNoteActivity extends Activity {
 
 		setTitle("Edit '" + noteName + "'");
 	}
-
-	public void save(View view) {
+	public void save() {
 		Intent goNotes = new Intent(this, MainActivity.class);
 
 		goNotes.putExtra("Fragment", "notes");
@@ -56,6 +56,9 @@ public class EditNoteActivity extends Activity {
 		mySQLiteAdapter.updateNote(noteID, textEditor.getText().toString(), noteName);
 		mySQLiteAdapter.close();
 		startActivity(goNotes);
+	}
+	public void save(View view) {
+		save();
 	}
 
 	public void discard(View view) {
@@ -95,6 +98,9 @@ public class EditNoteActivity extends Activity {
 			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
 			//
 			NavUtils.navigateUpFromSameTask(this);
+			return true;
+		case R.id.edit_note_action_save:
+			save();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

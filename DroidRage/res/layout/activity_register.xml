@@ -82,7 +82,9 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:onClick="register"
-            android:text="@string/action_register" />
+            android:text="@string/action_register"
+            tools:ignore="OnClick" />
+
     </RelativeLayout>
 
 </LinearLayout>

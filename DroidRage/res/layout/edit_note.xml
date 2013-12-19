@@ -1,9 +1,9 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/RelativeLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity" >
+    android:orientation="vertical"
+    tools:context=".NotesActivity" >
 
     <!-- Login progress -->
 
@@ -12,15 +12,39 @@
 
     <EditText
         android:id="@+id/nameText"
+        style="@style/TextAppearance.EditEvent_Value"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dip"
         android:focusable="true"
-        android:hint="@string/hint_what"
+        android:hint="Name"
         android:inputType="textAutoCorrect|textCapSentences"
         android:minHeight="48dip"
         android:singleLine="true" />
 
+    <!-- WHERE -->
+
+    <LinearLayout
+        android:id="@+id/where_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dip"
+        android:focusable="true"
+        android:orientation="vertical" >
+
+        <EditText
+            android:id="@+id/CreatorTest"
+            style="@style/TextAppearance.EditEvent_Value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Creator"
+            android:imeOptions="actionDone"
+            android:inputType="textAutoCorrect|textCapSentences"
+            android:minHeight="48dip"
+            android:singleLine="false" />
+
+        <View style="@style/EditEventSeparator" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/button2"
@@ -33,4 +57,4 @@
         android:text="Create Note" 
         android:onClick="createNewNote"/>
 
-</RelativeLayout>
+</LinearLayout>
