@@ -36,7 +36,7 @@
     $('#viewMeetingModal').modal('hide');
   }
 
-  function showMeetingModal()
+  function showEditModal()
   {
     $('#editMeetingModal').modal('hide');
     $('#editMeetingModal').on('hidden.bs.modal', function() {
@@ -121,27 +121,23 @@ function showViewMeetingModal(ID)
 
 if (ID == 1)
 {
-  TaskArray = JSON.parse('{"meetingID":"1","title":"Baseball","location":"Room 42",datetime:"01/02/2003 3:00","attendance":["Jackie":"true"]}');
+  TaskArray = JSON.parse('{"meetingID":"1","title":"Baseball","location":"Room 42","datetime":"01/02/2003 3:00","attendance":"Jackie, Babe, Jose, Mark"}');
 }
 else if (ID == 2)
 {
-  TaskArray = JSON.parse('{"meetingID":"2","title":"Baseball","location":"Room 42",datetime:"01/02/2003 3:00","attendance":["Jackie":"true"]}');
+  TaskArray = JSON.parse('{"meetingID":"2","title":"Music","location":"Room 8675309","datetime":"04/05/2006 5:00","attendance":"Hawkeye, Hot Lips, Radar"}');
 }
 else if (ID == 3)
 {
-  TaskArray = JSON.parse('{"meetingID":"3","title":"Baseball","location":"Room 42",datetime:"01/02/2003 3:00","attendance":["Jackie":"true"]}');
+  TaskArray = JSON.parse('{"meetingID":"3","title":"Cars","location":"Room 409",datetime:"07/08/2009 3:00","attendance":"Jim, Dwight, Pam, Michael, Andy"');
 }
 else if (ID == 4)
 {
-  TaskArray = JSON.parse('{"meetingID":"4","title":"Baseball","location":"Room 42",datetime:"01/02/2003 3:00","attendance":["Jackie":"true"]}')
+  TaskArray = JSON.parse('{"meetingID":"4","title":"Drink Beer!","location":"Frat Houses",datetime:"10/11/2012 10:00","attendance": "Bros"}')
 }
 else if (ID == 5)
 {
-  TaskArray = JSON.parse('{"meetingID":"5","title":"Baseball","location":"Room 42",datetime:"01/02/2003 3:00","attendance":["Jackie":"true"]}');
-}
-else if (ID == 6)
-{
-  TaskArray = JSON.parse('{"meetingID":"6","title":"Baseball","location":"Room 42",datetime:"01/02/2003 3:00","attendance":["Jackie":"true"]}')
+  TaskArray = JSON.parse('{"meetingID":"5","title":"Drink More Beer!","location":"Different Frat Houses",datetime:"12/13/2014 12:00","attendance":"More Bros"}');
 }
 ;
 
@@ -203,7 +199,7 @@ $('#editMeetingModal').modal('hide');
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">View Task</h4>
+        <h4 class="modal-title" id="myModalLabel">View Meeting</h4>
       </div>
       <div class="modal-body">
         <%= render "view" %>
