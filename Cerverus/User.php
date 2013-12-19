@@ -68,7 +68,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 		$array['id']=$node->getId();
 		$array['title']=$tempArray['title'];
 		$array['type']=$rel->getType();
-		if(strcasecmp($rel->getType(),'ASSIGNED_TO')==0 || strcasecmp($rel->getType(),'ASSIGNED_BY')==0 ||strcasecmp($rel->getType(),'CREATED_BY')==0){
+		if(strcasecmp($rel->getType(),'ASSIGNED_TO')==0 || strcasecmp($rel->getType(),'ASSIGNED_FROM')==0 ||strcasecmp($rel->getType(),'CREATED_BY')==0){
 			array_push($fullarray,$array);	
 		}
 	}
