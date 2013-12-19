@@ -21,7 +21,7 @@
 - (IBAction)onEditProfile:(id)sender;
 - (IBAction)onCancel:(id)sender;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil;
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withID:(NSInteger) userID;
 
 @property (weak, nonatomic) IBOutlet UIButton *editProfile;
 @property (weak, nonatomic) IBOutlet UIButton *cancel;

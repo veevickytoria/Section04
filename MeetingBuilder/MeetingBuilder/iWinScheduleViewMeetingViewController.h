@@ -9,6 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "OCCalendarViewController.h"
 
+@protocol ViewMeetingDelegate <NSObject>
+
+-(void)refreshMeetingList;
+
+@end
+
 @interface iWinScheduleViewMeetingViewController : UIViewController <OCCalendarDelegate>
 - (IBAction)onAddAgenda;
 - (IBAction)onAddAttendees;
@@ -23,8 +29,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *endDateLabel;
 @property (weak, nonatomic) IBOutlet UILabel *startTimeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *endTimeLabel;
-
-@property (weak, nonatomic) IBOutlet UITextField *durationField;
+@property (nonatomic) id<ViewMeetingDelegate> viewMeetingDelegate;
+//@property (weak, nonatomic) IBOutlet UITextField *durationField;
 @property (weak, nonatomic) IBOutlet UITextField *placeField;
 @property (weak, nonatomic) IBOutlet UILabel *headerLabel;
 @property (weak, nonatomic) IBOutlet UIButton *saveButton;

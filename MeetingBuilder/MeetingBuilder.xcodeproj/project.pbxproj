@@ -206,6 +206,11 @@
 		79FCE0101862295E008345B3 /* UIView+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF911862295E008345B3 /* UIView+TKCategory.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		79FCE0111862295E008345B3 /* UIViewController+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF921862295E008345B3 /* UIViewController+TKCategory.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		79FCE0121862295E008345B3 /* UIViewController+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF931862295E008345B3 /* UIViewController+TKCategory.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		DE0F51FA186266B5008BB858 /* AcousticModelEnglish.bundle in Resources */ = {isa = PBXBuildFile; fileRef = DE0F51F6186266B5008BB858 /* AcousticModelEnglish.bundle */; };
+		DE0F51FB186266B5008BB858 /* AcousticModelSpanish.bundle in Resources */ = {isa = PBXBuildFile; fileRef = DE0F51F7186266B5008BB858 /* AcousticModelSpanish.bundle */; };
+		DE0F51FC186266B5008BB858 /* OpenEars.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE0F51F8186266B5008BB858 /* OpenEars.framework */; };
+		DE0F51FD186266B6008BB858 /* Slt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE0F51F9186266B5008BB858 /* Slt.framework */; };
+		DE0F520018626877008BB858 /* Meeting.m in Sources */ = {isa = PBXBuildFile; fileRef = DE0F51FF18626877008BB858 /* Meeting.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -474,6 +479,12 @@
 		79FCDF911862295E008345B3 /* UIView+TKCategory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "UIView+TKCategory.m"; path = "../tapkulibrary-master/src/TapkuLibrary/UIView+TKCategory.m"; sourceTree = "<group>"; };
 		79FCDF921862295E008345B3 /* UIViewController+TKCategory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UIViewController+TKCategory.h"; path = "../tapkulibrary-master/src/TapkuLibrary/UIViewController+TKCategory.h"; sourceTree = "<group>"; };
 		79FCDF931862295E008345B3 /* UIViewController+TKCategory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+TKCategory.m"; path = "../tapkulibrary-master/src/TapkuLibrary/UIViewController+TKCategory.m"; sourceTree = "<group>"; };
+		DE0F51F6186266B5008BB858 /* AcousticModelEnglish.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AcousticModelEnglish.bundle; sourceTree = "<group>"; };
+		DE0F51F7186266B5008BB858 /* AcousticModelSpanish.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AcousticModelSpanish.bundle; sourceTree = "<group>"; };
+		DE0F51F8186266B5008BB858 /* OpenEars.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = OpenEars.framework; sourceTree = "<group>"; };
+		DE0F51F9186266B5008BB858 /* Slt.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Slt.framework; sourceTree = "<group>"; };
+		DE0F51FE18626877008BB858 /* Meeting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Meeting.h; sourceTree = "<group>"; };
+		DE0F51FF18626877008BB858 /* Meeting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Meeting.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -749,6 +760,8 @@
 		0A7F1CDC185908550017209D /* Data Model */ = {
 			isa = PBXGroup;
 			children = (
+				DE0F51FE18626877008BB858 /* Meeting.h */,
+				DE0F51FF18626877008BB858 /* Meeting.m */,
 				0A7F1CE7186127D60017209D /* Contact.h */,
 				0A7F1CE8186127D60017209D /* Contact.m */,
 				0A7F1CDD185908790017209D /* iWinContact.h */,
@@ -1005,6 +1018,17 @@
 				79FCDF0E18622909008345B3 /* TKCalendarDayViewController.m */,
 			);
 			name = TapkuSrcFiles;
+			sourceTree = "<group>";
+		};
+		DE0F51F5186266B5008BB858 /* Framework */ = {
+			isa = PBXGroup;
+			children = (
+				DE0F51F6186266B5008BB858 /* AcousticModelEnglish.bundle */,
+				DE0F51F7186266B5008BB858 /* AcousticModelSpanish.bundle */,
+				DE0F51F8186266B5008BB858 /* OpenEars.framework */,
+				DE0F51F9186266B5008BB858 /* Slt.framework */,
+			);
+			path = Framework;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1283,6 +1307,7 @@
 				0A7F1CE9186127D60017209D /* Contact.m in Sources */,
 				0A91DC9E1835D7AB00741349 /* OCSelectionView.m in Sources */,
 				0A7F1CDF185908790017209D /* iWinContact.m in Sources */,
+				DE0F520018626877008BB858 /* Meeting.m in Sources */,
 				0A1A7296181A1802009A49E5 /* iWinAgendaItemViewController.m in Sources */,
 				79753A7E1860F3B50015098B /* iWinMeeting.m in Sources */,
 				0A1A72A8181A2C5E009A49E5 /* iWinAddUsersViewController.m in Sources */,
