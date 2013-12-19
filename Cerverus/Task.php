@@ -41,8 +41,8 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 ){
 	//sets the relationships on the node
 	$UserAssigned = $client->getNode($postContent-> assignedTo );
 	$assignedTo = $taskNode->relateTo( $UserAssigned,  "ASSIGNED_TO" )->save();
-	$Assigner = $client->getNode($postContent-> assignedBy );
-	$assignedBy = $taskNode->relateTo( $Assigner, "ASSIGNED_BY" )->save();
+	$Assigner = $client->getNode($postContent-> assignedFrom );
+	$assignedFrom = $taskNode->relateTo( $Assigner, "ASSIGNED_FROM" )->save();
 	$Creator = $client->getNode($postContent-> createdBy );
 	$createdBy = $taskNode->relateTo( $Creator, "CREATED_BY" )->save();
 	
@@ -63,9 +63,9 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 ){
 		if ($relType == 'ASSIGNED_TO') {
 			$userNode=$rel->getEndNode();
 			$array['assignedTo']=$userNode->getId();
-		} else if ($relType == 'ASSIGNED_BY') {
+		} else if ($relType == 'ASSIGNED_FROM') {
 			$userNode=$rel->getEndNode();
-			$array['assignedBy']=$userNode->getId();
+			$array['assignedFrom']=$userNode->getId();
 		} else if($relType == 'CREATED_BY') {
 			$userNode=$rel->getEndNode();
 			$array['createdBy']=$userNode->getId();
@@ -120,13 +120,13 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 ){
 			$UserAssigned = $client->getNode($postContent-> value );
 			$assignedTo = $taskNode->relateTo( $UserAssigned,  "ASSIGNED_TO" )->save();
 			$updated = 1;
-		}else if (strcasecmp($postContent->field, 'assignedBy')==0){
-			$relationArray = $taskNode->getRelationships(array('ASSIGNED_BY'), Relationship::DirectionOut);
+		}else if (strcasecmp($postContent->field, 'assignedFrom')==0){
+			$relationArray = $taskNode->getRelationships(array('ASSIGNED_FROM'), Relationship::DirectionOut);
 			foreach($relationArray as $rel) {
 				$rel->delete();
 			}
 			$Assigner = $client->getNode($postContent-> value );
-			$assignedBy = $taskNode->relateTo( $Assigner, "ASSIGNED_BY" )->save();
+			$assignedFrom = $taskNode->relateTo( $Assigner, "ASSIGNED_FROM" )->save();
 			$updated = 1;
 		}else if (strcasecmp($postContent->field, 'createdBy')==0){
 			$relationArray = $taskNode->getRelationships(array('CREATED_BY'), Relationship::DirectionOut);
@@ -147,9 +147,9 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 ){
 				if ($relType == 'ASSIGNED_TO') {
 					$userNode=$rel->getEndNode();
 					$array['assignedTo']=$userNode->getId();
-				} else if ($relType == 'ASSIGNED_BY') {
+				} else if ($relType == 'ASSIGNED_FROM') {
 					$userNode=$rel->getEndNode();
-					$array['assignedBy']=$userNode->getId();
+					$array['assignedFrom']=$userNode->getId();
 				} else if($relType == 'CREATED_BY') {
 					$userNode=$rel->getEndNode();
 					$array['createdBy']=$userNode->getId();
