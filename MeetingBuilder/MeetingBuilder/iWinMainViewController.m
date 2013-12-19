@@ -235,11 +235,11 @@
     [self.registerViewController.view setBounds:self.mainView.bounds];
 }
 
--(void) onRegister:(NSString *)email
+-(void) onRegister:(NSInteger)userID
 {
     [self removeSubViews];
     [self enableSliding];
-    self.homeScreenViewController = [[iWinHomeScreenViewController alloc] initWithNibName:@"iWinHomeScreenViewController" bundle:nil];
+    self.homeScreenViewController = [[iWinHomeScreenViewController alloc] initWithNibName:@"iWinHomeScreenViewController" bundle:nil withUserID:userID];
     [self.mainView  addSubview:self.homeScreenViewController.view];
     [self.homeScreenViewController.view setBounds:self.mainView.bounds];
     
