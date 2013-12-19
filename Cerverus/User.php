@@ -197,7 +197,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 		$array['id']=$node->getId();
 		$array['title']=$tempArray['title'];
 		$array['type']=$rel->getType();
-		if(strcasecmp($rel->getType(),'MADE_MEETING')==0){
+		if(strcasecmp($rel->getType(),'MADE_MEETING')==0||strcasecmp($rel->getType(),'ATTEND_MEETING'){//Attend meeting has a bool for true or false, fix later if a user wants to accept to deny a meeting
 			array_push($fullarray,$array);	
 		}
 	}
