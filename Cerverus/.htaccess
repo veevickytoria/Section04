@@ -11,6 +11,7 @@ RewriteRule ^User/Groups/([0-9]+)/?$ User.php?cat=groups [NC,L]
 RewriteRule ^User/Users/?$ User.php?cat=users [NC,L]
 RewriteRule ^User/Projects/([0-9]+)/?$ User.php?cat=projects [NC,L]
 RewriteRule ^User/Tasks/([0-9]+)/?$ User.php?cat=tasks&id=$1 [NC,L]
+RewriteRule ^User/Meetings/([0-9]+)/?$ User.php?cat=meetings&id=$1 [NC,L]
 RewriteRule ^User/([0-9]+)/?$ User.php?id=$1 [NC,L]
 RewriteRule ^User/?$ User.php [NC,L]
 
