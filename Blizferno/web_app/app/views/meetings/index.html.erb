@@ -6,18 +6,135 @@
 		width:100%;
 	}
 </style>
-<script>
-	// function hideViewModal(){
-	// 	$('#viewMeetingModel').modal('hide');
-	// }
-	// function showViewModal2(){
-	// 	$('#viewMeetingModal').modal('show');
- //    	$('#editMeetingModal').modal('hide');
-	// }
-	//   function showViewModal(ID){
- //    	$('#viewMeetingModal').modal('show');
- //  	}
 
+<script type="text/javascript">
+
+  var TaskArray;
+
+  function hideMeetingModal()
+  {
+    $('#viewMeetingModal').modal('hide');
+  }
+
+  function showMeetingModal()
+  {
+    $('#editMeetingModal').modal('hide');
+    $('#editMeetingModal').on('hidden.bs.modal', function() {
+      $(this).removeData('bs.modal');
+    });
+   // TODO: Put this back in when it works
+   // $.ajax({
+   //         type: 'GET',
+   //         url: 'http://csse371-04.csse.rose-hulman.edu/Tasks/' + ID,
+   //   success:function(data){
+   //     if(data.taskID != null){
+   //       TaskArray = JSON.parse(data);
+   //     }
+   //   }
+   // });
+
+document.getElementById("titleE").value = TaskArray["title"];
+document.getElementById("locationE").value = TaskArray["location"];
+document.getElementById("datetimeE").value = TaskArray["datetime"];
+document.getElementById("attendanceE").value = TaskArray["attendance"];
+
+$('#editMeetingModal').modal('show');
+$('#viewMeetingModal').modal('hide');
+}
+
+function showMeetingModalNoID()
+{
+  $('#viewMeetingModal').modal('hide');
+  $('#viewMeetingModal').on('hidden.bs.modal', function() {
+    $(this).removeData('bs.modal');
+  });
+
+   // Edit info
+   TaskArray["title"] = document.getElementById("titleE").value;
+   TaskArray["location"] = document.getElementById("locationE").value;
+   TaskArray["datetime"] = document.getElementById("datetimeE").value;
+   TaskArray["attendance"] = document.getElementById("attendanceE").value;
+   // TaskArray["completionCriteria"] = document.getElementById("completionCriteriaE").value;
+   // if(document.getElementById("assignedToE").value != TaskArray["assignedTo"]){
+   //   TaskArray["assignedTo"] = document.getElementById("assignedToE").value;
+   //   TaskArray["assignedDate"] = 
+   // }
+
+   // TODO: Put this back in when it works and change it to update info then add a pull
+   // $.ajax({
+   //         type: '',
+   //         url: 'http://csse371-04.csse.rose-hulman.edu/Tasks/' + ID,
+   //   success:function(data){
+   //     if(data.taskID != null){
+   //       TaskArray = JSON.parse(data);
+   //     }
+   //   }
+   // });
+
+   // Update view info
+   document.getElementById("titleV").innerHTML = TaskArray["title"];
+   document.getElementById("locationV").innerHTML = TaskArray["location"];
+   document.getElementById("datettimeV").innerHTML = TaskArray["datetime"];
+   document.getElementById("attendanceV").innerHTML = TaskArray["attendance"];
+
+   $('#viewMeetingModal').modal('show');
+   $('#editMeetingModal').modal('hide');
+
+}
+
+function showViewMeetingModal(ID)
+{
+  $('#viewMeetingModal').modal('hide');
+  $('#viewMeetingModal').on('hidden.bs.modal', function() {
+    $(this).removeData('bs.modal');
+  });
+   // TODO: Put this back in when it works
+   // $.ajax({
+   //         type: 'GET',
+   //         url: 'http://csse371-04.csse.rose-hulman.edu/Tasks/' + ID,
+   //   success:function(data){
+   //     if(data.taskID != null){
+   //       TaskArray = JSON.parse(data);
+   //     }
+   //   }
+   // });
+
+if (ID == 1)
+{
+  TaskArray = JSON.parse('{"meetingID":"1","title":"Baseball","location":"Room 42",datetime:"01/02/2003 3:00","attendance":["Jackie":"true"]}');
+}
+else if (ID == 2)
+{
+  TaskArray = JSON.parse('{"meetingID":"2","title":"Baseball","location":"Room 42",datetime:"01/02/2003 3:00","attendance":["Jackie":"true"]}');
+}
+else if (ID == 3)
+{
+  TaskArray = JSON.parse('{"meetingID":"3","title":"Baseball","location":"Room 42",datetime:"01/02/2003 3:00","attendance":["Jackie":"true"]}');
+}
+else if (ID == 4)
+{
+  TaskArray = JSON.parse('{"meetingID":"4","title":"Baseball","location":"Room 42",datetime:"01/02/2003 3:00","attendance":["Jackie":"true"]}')
+}
+else if (ID == 5)
+{
+  TaskArray = JSON.parse('{"meetingID":"5","title":"Baseball","location":"Room 42",datetime:"01/02/2003 3:00","attendance":["Jackie":"true"]}');
+}
+else if (ID == 6)
+{
+  TaskArray = JSON.parse('{"meetingID":"6","title":"Baseball","location":"Room 42",datetime:"01/02/2003 3:00","attendance":["Jackie":"true"]}')
+}
+;
+
+
+document.getElementById("titleV").innerHTML = TaskArray["title"];
+document.getElementById("locationV").innerHTML = TaskArray["location"];
+document.getElementById("datetimeV").innerHTML = TaskArray["datetime"];
+document.getElementById("attendanceV").innerHTML = TaskArray["attendance"];
+
+$('#viewMeetingModal').modal('show');
+$('#editMeetingModal').modal('hide');
+
+}
 </script>
 <h1 style='margin-left: 100%; margin-right: 10%;'>Meetings</h1>
 
@@ -59,6 +176,25 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<!-- View Modal -->
+<div class="modal fade" id="viewMeetingModal" tabindex="-1" role="dialog" aria-labelledby="viewMeetingModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">View Task</h4>
+      </div>
+      <div class="modal-body">
+        <%= render "view" %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="hideMeetingModal()" href="#editTaskModal" data-toggle='modal'>Edit</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 
 <table class='table table-hover table-striped' style='width: 70%; margin-left: 15%; margin-right: auto;'>
 	<thead>
@@ -75,7 +211,7 @@
 		<% for meeting in @meetings['meetings'] %>
 		<tr>
       		<td><%= meeting['datetime'] %></td>
-      		<td><%= meeting['title'] %></td>
+      		<td><a onClick="showViewMeetingModal(<%= meeting['meetingID'] %>)" href = '#viewMeetingModal' data-refresh = 'true' data-toggle='modal'><%= meeting['title'] %></a></td>
       		<td><%= meeting['location'] %></td>
       		<td colspan='1' style='cursor: pointer; text-align: center' href='#deleteMeetingModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
     	</tr>
