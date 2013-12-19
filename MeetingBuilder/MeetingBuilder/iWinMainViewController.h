@@ -16,12 +16,18 @@
 #import "iWinViewAndChangeSettingsViewController.h"
 #import "iWinViewProfileViewController.h"
 #import "iWinOpenEarsModel.h"
+//#import <TapkuLibrary/TapkuLibrary.h>
+#import "TKCalendarDayView.h"
+#import "TKCalendarDayEventView.h"
 
-@interface iWinMainViewController : UIViewController <iWinLoginDelegate, iWinRegisterVCDelegate, NoteListDelegate, ViewAddNoteDelegate, SettingsDelegate, ProfileDelegate, OpenEarsDelegate>
+@interface iWinMainViewController : UIViewController <iWinLoginDelegate, iWinRegisterVCDelegate, NoteListDelegate, ViewAddNoteDelegate, SettingsDelegate, ProfileDelegate, OpenEarsDelegate, TKCalendarDayViewDelegate, TKCalendarDayViewDataSource>
+
 @property (weak, nonatomic) IBOutlet UIView *mainView;
 @property (weak, nonatomic) IBOutlet UIView *slideView;
 @property (weak, nonatomic) IBOutlet UIView *menuView;
 @property (weak, nonatomic) IBOutlet UIButton *voiceCommand;
+@property (nonatomic, strong) TKCalendarDayView *dayView;
+@property (nonatomic,strong) NSArray *data;
 
 - (IBAction)onClickMenu;
 - (IBAction)onClickHome;

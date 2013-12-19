@@ -24,7 +24,6 @@
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:entityDesc];
     
-    
     NSArray *result = [context executeFetchRequest:request
                                              error:&error];
     
@@ -33,6 +32,11 @@
         [newContact setValue:@"Dharmin" forKey:@"firstName"];
         [newContact setValue:@"Shah" forKey:@"lastName"];
         [newContact setValue:@"shahdk@rose-hulman.edu" forKey:@"email"];
+        [newContact setValue:@"iWin LLC" forKey:@"company"];
+        [newContact setValue:@"(812)345-9876" forKey:@"phone"];
+        [newContact setValue:@"Product Owner" forKey:@"title"];
+        [newContact setValue:@"Terre Haute, IN" forKey:@"location"];
+        
         [newContact setValue:[NSNumber numberWithInt:1] forKey:@"userID"];
         [context save:&error];
         

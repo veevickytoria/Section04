@@ -9,7 +9,11 @@
 #import "iWinMainViewController.h"
 #import "iWinHomeScreenViewController.h"
 #import <QuartzCore/QuartzCore.h>
+//#import <TapkuLibrary/TKCalendarDayView.h>
+//#import <TapkuLibrary/TKCalendarDayEventView.h>
 #import "iWinPopulateDatabase.h"
+#import "NSDate+TKCategory.h"
+#import "NSDate+CalendarGrid.h"
 
 
 @interface iWinMainViewController ()
@@ -24,6 +28,7 @@
 @property (strong, nonatomic) iWinViewProfileViewController *profileViewController;
 @property (strong, nonatomic) iWinOpenEarsModel *openEars;
 @property (strong, nonatomic) NSString *user;
+@property (nonatomic) NSInteger userID;
 @property BOOL movedRightView;
 @property BOOL movedView;
 @property (nonatomic) UISwipeGestureRecognizer * swiperight;
@@ -67,7 +72,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    self.voiceCommand.hidden = YES;
     iWinPopulateDatabase *db = [[iWinPopulateDatabase alloc] init];
     [db populateContacts];
     
@@ -100,6 +105,64 @@
     self.openEars = [[iWinOpenEarsModel alloc] init];
     self.openEars.openEarsDelegate = self;
     [self.openEars initialize];
+    
+    
+    self.data = @[
+                  @[@"Meeting with five random dudes", @"Five Guys", @5, @0, @5, @30],
+                  @[@"Unlimited bread rolls got me sprung", @"Olive Garden", @7, @0, @12, @0],
+                  @[@"Appointment", @"Dennys", @15, @0, @18, @0],
+                  @[@"Hamburger Bliss", @"Wendys", @15, @0, @18, @0],
+                  @[@"Fishy Fishy Fishfelayyyyyyyy", @"McDonalds", @5, @30, @6, @0],
+                  @[@"Turkey Time...... oh wait", @"Chick-fela", @14, @0, @19, @0],
+                  @[@"Greet the king at the castle", @"Burger King", @19, @30, @30, @0]];
+    
+    self.dayView = [[TKCalendarDayView alloc] initWithFrame:self.rightSlideView.bounds];
+	self.dayView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	self.dayView.delegate = self;
+	self.dayView.dataSource = self;
+	[self.rightSlideView addSubview:self.dayView];
+}
+- (void) viewDidUnload {
+	self.dayView = nil;
+}
+
+#pragma mark TKCalendarDayViewDelegate
+- (NSArray *) calendarDayTimelineView:(TKCalendarDayView*)calendarDayTimeline eventsForDate:(NSDate *)eventDate{
+    if([eventDate compare:[NSDate dateWithTimeIntervalSinceNow:-24*60*60]] == NSOrderedAscending) return @[];
+	if([eventDate compare:[NSDate dateWithTimeIntervalSinceNow:24*60*60]] == NSOrderedDescending) return @[];
+    
+	NSDateComponents *info = [[NSDate date] dateComponentsWithTimeZone:calendarDayTimeline.timeZone];
+	info.second = 0;
+	NSMutableArray *ret = [NSMutableArray array];
+	
+	for(NSArray *ar in self.data){
+		
+		TKCalendarDayEventView *event = [calendarDayTimeline dequeueReusableEventView];
+		if(event == nil) event = [TKCalendarDayEventView eventView];
+        
+		event.identifier = nil;
+		event.titleLabel.text = ar[0];
+		event.locationLabel.text = ar[1];
+		
+		info.hour = [ar[2] intValue];
+		info.minute = [ar[3] intValue];
+		event.startDate = [NSDate dateWithDateComponents:info];
+		
+		info.hour = [ar[4] intValue];
+		info.minute = [ar[5] intValue];
+		event.endDate = [NSDate dateWithDateComponents:info];
+        
+		[ret addObject:event];
+		
+	}
+	return ret;
+}
+- (void) calendarDayTimelineView:(TKCalendarDayView*)calendarDayTimeline eventViewWasSelected:(TKCalendarDayEventView *)eventView{
+    
+}
+
+- (void) calendarDayTimelineView:(TKCalendarDayView*)calendarDayTimeline didMoveToDate:(NSDate*)eventDate{
+	
 }
 
 - (void)didReceiveMemoryWarning
@@ -170,12 +233,12 @@
     [self removeSubViews];
     [self.mainView  addSubview:self.registerViewController.view];
     [self.registerViewController.view setBounds:self.mainView.bounds];
-    [self enableSliding];
 }
 
 -(void) onRegister:(NSString *)email
 {
     [self removeSubViews];
+    [self enableSliding];
     self.homeScreenViewController = [[iWinHomeScreenViewController alloc] initWithNibName:@"iWinHomeScreenViewController" bundle:nil];
     [self.mainView  addSubview:self.homeScreenViewController.view];
     [self.homeScreenViewController.view setBounds:self.mainView.bounds];
@@ -310,7 +373,7 @@
 - (IBAction)onClickProfile{
     [self removeSubViews];
     [self enableSliding];
-    self.profileViewController = [[iWinViewProfileViewController alloc] initWithNibName:@"iWinViewProfileViewController" bundle:nil withPageName:@"Profile" inEditMode:YES];
+    self.profileViewController = [[iWinViewProfileViewController alloc] initWithNibName:@"iWinViewProfileViewController" bundle:nil withID: self.userID];
     [self.mainView  addSubview:self.profileViewController.view];
     [self.profileViewController.view setBounds:self.mainView.bounds];
     self.profileViewController.profileDelegate = self;
@@ -351,13 +414,13 @@
     
     if (moveLeft)
     {
-        self.rightSlideView.frame = CGRectMake(oldFrame.origin.x - 200, oldFrame.origin.y, oldFrame.size.width, oldFrame.size.height);
-        self.slideView.frame = CGRectMake(oldFrameMain.origin.x-200,oldFrameMain.origin.y,oldFrameMain.size.width,oldFrameMain.size.height);
+        self.rightSlideView.frame = CGRectMake(oldFrame.origin.x - 350, oldFrame.origin.y, oldFrame.size.width, oldFrame.size.height);
+        self.slideView.frame = CGRectMake(oldFrameMain.origin.x-350,oldFrameMain.origin.y,oldFrameMain.size.width,oldFrameMain.size.height);
     }
     else
     {
-        self.rightSlideView.frame = CGRectMake(oldFrame.origin.x + 200, oldFrame.origin.y, oldFrame.size.width, oldFrame.size.height);
-        self.slideView.frame = CGRectMake(oldFrameMain.origin.x + 200,oldFrameMain.origin.y,oldFrameMain.size.width,oldFrameMain.size.height);
+        self.rightSlideView.frame = CGRectMake(oldFrame.origin.x + 350, oldFrame.origin.y, oldFrame.size.width, oldFrame.size.height);
+        self.slideView.frame = CGRectMake(oldFrameMain.origin.x + 350,oldFrameMain.origin.y,oldFrameMain.size.width,oldFrameMain.size.height);
     }
     [UIView commitAnimations];
 }

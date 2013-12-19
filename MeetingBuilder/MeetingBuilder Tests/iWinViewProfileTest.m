@@ -8,13 +8,12 @@
 
 #import <XCTest/XCTest.h>
 #import "iWinViewProfileViewController.h"
-#import "iWinProfile.h"
-//#import "iWinEditProfileViewController.h"
+#import "Contact.h"
 
 @interface iWinViewProfileTest : XCTestCase
 //@property (strong, nonatomic) iWinEditProfileViewController *editVC;
 @property (strong, nonatomic) iWinViewProfileViewController *viewVC;
-@property (strong, nonatomic) iWinProfile *profile;
+@property (strong, nonatomic) Contact *contact;
 @end
 
 @implementation iWinViewProfileTest
@@ -23,10 +22,9 @@
 {
     [super setUp];
     // Put setup code here; it will be run once, before the first test case.
-    //self.editVC = [[iWinEditProfileViewController alloc] initWithNibName:@"iWinEditProfileViewController" bundle:nil];
     self.viewVC = [[iWinViewProfileViewController alloc] initWithNibName:@"iWinViewProfileViewController" bundle:nil];
-    
-    //[self.viewVC veiwDidLoad];
+    [self.viewVC viewDidLoad];
+    [self.viewVC view];    
 }
 
 - (void)tearDown
@@ -35,9 +33,68 @@
     [super tearDown];
 }
 
-- (void)testExample
+- (void)testCheckUserInfo
 {
-    //XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
+
+    XCTAssertTrue([self.viewVC.displayNameTextField.text isEqualToString:@"Dharmin Shah"], @"Check failed");
+    XCTAssertTrue([self.viewVC.companyTextField.text isEqualToString:@"iWin LLC"], @"Check failed");
+    XCTAssertTrue([self.viewVC.emailTextField.text isEqualToString:@"shahdk@rose-hulman.edu"], @"Check failed");
+    XCTAssertTrue([self.viewVC.phoneTextField.text isEqualToString:@"(812)345-9876"], @"Check failed");
+    XCTAssertTrue([self.viewVC.locationTextField.text isEqualToString:@"Terre Haute, IN"], @"Check failed");
+    XCTAssertTrue([self.viewVC.titleTextField.text isEqualToString:@"Product Owner"], @"Check failed");
+
+
+
+}
+
+- (void)testEditedUserInfo
+{
+    [self.viewVC.editProfile sendActionsForControlEvents:UIControlEventTouchUpInside];
+    self.viewVC.displayNameTextField.text = @"Shah Dharmin";
+    self.viewVC.companyTextField.text = @"A";
+    self.viewVC.emailTextField.text = @"B";
+    self.viewVC.phoneTextField.text = @"C";
+    self.viewVC.locationTextField.text = @"D";
+    self.viewVC.titleTextField.text = @"E";
+    
+    [self.viewVC.editProfile sendActionsForControlEvents:UIControlEventTouchUpInside];
+    XCTAssertTrue([self.viewVC.displayNameTextField.text isEqualToString:@"Shah Dharmin"], @"Check failed");
+    XCTAssertTrue([self.viewVC.companyTextField.text isEqualToString:@"A"], @"Check failed");
+    XCTAssertTrue([self.viewVC.emailTextField.text isEqualToString:@"B"], @"Check failed");
+    XCTAssertTrue([self.viewVC.phoneTextField.text isEqualToString:@"C"], @"Check failed");
+    XCTAssertTrue([self.viewVC.locationTextField.text isEqualToString:@"D"], @"Check failed");
+    XCTAssertTrue([self.viewVC.titleTextField.text isEqualToString:@"E"], @"Check failed");
+    
+    [self.viewVC.editProfile sendActionsForControlEvents:UIControlEventTouchUpInside];
+    self.viewVC.displayNameTextField.text = @"Dharmin Shah";
+    self.viewVC.companyTextField.text = @"iWin LLC";
+    self.viewVC.emailTextField.text = @"shahdk@rose-hulman.edu";
+    self.viewVC.phoneTextField.text = @"(812)345-9876";
+    self.viewVC.locationTextField.text = @"Terre Haute, IN";
+    self.viewVC.titleTextField.text = @"Product Owner";
+    
+    [self.viewVC.editProfile sendActionsForControlEvents:UIControlEventTouchUpInside];
+
+    
+}
+
+- (void)testCancelEditUser
+{
+    [self.viewVC.editProfile sendActionsForControlEvents:UIControlEventTouchUpInside];
+    self.viewVC.displayNameTextField.text = @"Shah Dharmin";
+    self.viewVC.companyTextField.text = @"A";
+    self.viewVC.emailTextField.text = @"B";
+    self.viewVC.phoneTextField.text = @"C";
+    self.viewVC.locationTextField.text = @"D";
+    self.viewVC.titleTextField.text = @"E";
+    
+    [self.viewVC.cancel sendActionsForControlEvents:UIControlEventTouchUpInside];
+    XCTAssertTrue([self.viewVC.displayNameTextField.text isEqualToString:@"Dharmin Shah"], @"Check failed");
+    XCTAssertTrue([self.viewVC.companyTextField.text isEqualToString:@"iWin LLC"], @"Check failed");
+    XCTAssertTrue([self.viewVC.emailTextField.text isEqualToString:@"shahdk@rose-hulman.edu"], @"Check failed");
+    XCTAssertTrue([self.viewVC.phoneTextField.text isEqualToString:@"(812)345-9876"], @"Check failed");
+    XCTAssertTrue([self.viewVC.locationTextField.text isEqualToString:@"Terre Haute, IN"], @"Check failed");
+    XCTAssertTrue([self.viewVC.titleTextField.text isEqualToString:@"Product Owner"], @"Check failed");
 }
 
 @end
