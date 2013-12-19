@@ -105,7 +105,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 	
 	 //hide the password
 	 $array['password']="********";
-	
+	 $array['userID']=$user->getId();
 	 //return the json string
 	 echo json_encode($array);
 	
@@ -122,42 +122,49 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 			$user->save();
 			$array = $user->getProperties();
 			$array['password']="********";
+			$array['userID']=$user->getId();
 			echo json_encode($array);
 		}else if(strcasecmp($postContent->field, 'name') ==0){
 			$user->setProperty('name', $postContent->value);
 			$user->save();
 			$array = $user->getProperties();
 			$array['password']="********";
+			$array['userID']=$user->getId();
 			echo json_encode($array);
 		}else if(strcasecmp($postContent->field, 'company') ==0){
 			$user->setProperty('company', $postContent->value);
 			$user->save();
 			$array = $user->getProperties();
 			$array['password']="********";
+			$array['userID']=$user->getId();
 			echo json_encode($array);
 		}else if(strcasecmp($postContent->field, 'phone') ==0){
 			$user->setProperty('phone', $postContent->value);
 			$user->save();
 			$array = $user->getProperties();
 			$array['password']="********";
+			$array['userID']=$user->getId();
 			echo json_encode($array);
 		}else if(strcasecmp($postContent->field, 'title') ==0){
 			$user->setProperty('title', $postContent->value);
 			$user->save();
 			$array = $user->getProperties();
 			$array['password']="********";
+			$array['userID']=$user->getId();
 			echo json_encode($array);
 		}else if(strcasecmp($postContent->field, 'location') ==0){
 			$user->setProperty('location', $postContent->value);
 			$user->save();
 			$array = $user->getProperties();
 			$array['password']="********";
+			$array['userID']=$user->getId();
 			echo json_encode($array);
 		}else if(strcasecmp($postContent->field, 'email') ==0){
 			$user->setProperty('email', $postContent->value);
 			$user->save();
 			$array = $user->getProperties();
 			$array['password']="********";
+			$array['userID']=$user->getId();
 			echo json_encode($array);
 		}else{
 			echo "No node updated.";
