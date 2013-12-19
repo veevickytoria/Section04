@@ -130,7 +130,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 	for($ii=0;$ii<sizeof($users);$ii++){
 		$array=$users[$ii]->getProperties();
 		$array['password']="********";
-		$array['userID']=$user[ii]->getId();
+		$array['userID']=$users[$ii]->getId();
 		$results[$ii]= $array;
 	}
 	echo json_encode(array("users"=>$results));
