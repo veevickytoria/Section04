@@ -10,7 +10,7 @@
 
 @protocol iWinLoginDelegate <NSObject>
 
--(void)login:(NSString *)email;
+-(void)login:(NSInteger)userID;
 -(void)joinUs;
 
 @end

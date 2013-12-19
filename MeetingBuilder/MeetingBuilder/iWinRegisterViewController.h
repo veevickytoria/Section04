@@ -10,7 +10,7 @@
 
 @protocol iWinRegisterVCDelegate <NSObject>
 
--(void)onRegister:(NSString *)email;
+-(void)onRegister:(NSInteger)userID;
 -(void)onCancel;
 
 @end

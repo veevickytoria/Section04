@@ -72,7 +72,7 @@
 //    NSArray *jsonArray;
 //    if (error)
 //    {
-//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Meetings not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Users not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
 //        [alert show];
 //    }
 //    else
@@ -84,8 +84,8 @@
 //    {
 //        for (NSDictionary* users in jsonArray)
 //        {
-//            iWinContact *c = [[iWinContact alloc] init];
-//            c.userID = (NSInteger)[users objectForKey:@"userID"];
+//            Contact *c = [[Contact alloc] init];
+//            c.userID = [users objectForKey:@"userID"];
 //
 //            NSString *displayName = (NSString *)[users objectForKey:@"displayName"];
 //            NSInteger nWords = 2;

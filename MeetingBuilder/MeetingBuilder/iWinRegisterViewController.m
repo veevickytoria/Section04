@@ -7,6 +7,7 @@
 //
 
 #import "iWinRegisterViewController.h"
+#include <CommonCrypto/CommonDigest.h>
 
 @interface iWinRegisterViewController ()
 
@@ -53,23 +54,43 @@
     return YES;
 }
 
-- (IBAction)onClickRegister:(id)sender
+- (NSString*)validateRegistration
 {
-    
     NSString *name = [[self.nameField text] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     NSString *email = [[self.emailField text] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     NSString *password = [self.passwordField text];
     NSString *confirmPassword = [self.confirmPasswordField text];
-    if (name.length > 0 && email.length > 0 && password.length>5 &&[password isEqualToString:confirmPassword])
+    NSString *emailSymbol = @"@";
+    
+    if (name.length == 0) {
+        return @"Please enter your name!";
+    }
+    if (password.length < 6) {
+        return @"Password must be at least 6 characters!";
+    }
+    if (![password isEqualToString:confirmPassword]) {
+        return @"Please enter matching passwords!";
+    }
+    if (![self validatePhoneNumber]) {
+        return @"Please enter a valid phone number!";
+    }
+    if (email.length == 0 || [email rangeOfString:emailSymbol].location == NSNotFound) {
+        return @"Please enter a valid a valid email address!";
+    }
+    return @"";
+}
+
+- (IBAction)onClickRegister:(id)sender
+{
+    NSString *error = [self validateRegistration];
+    if (error.length == 0)
     {
-        if (![self validatePhoneNumber]) {
-            [self failRegisterValidation];
-            return;
-        }
+        NSString *email = [[self.emailField text] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        NSString *password = [self sha256HashFor: [self.passwordField text]];
         
         //register
-        NSArray *keys = [NSArray arrayWithObjects:@"user", @"pass", nil];
-        NSArray *objects = [NSArray arrayWithObjects:email, password,nil];
+        NSArray *keys = [NSArray arrayWithObjects:@"name", @"password", @"email", @"phone", @"company", @"title", @"location", nil];
+        NSArray *objects = [NSArray arrayWithObjects:self.nameField.text, password, email, self.phoneNumberField.text, self.companyField.text, self.titleField.text, self.locationField.text,nil];
         
         NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
         NSData *jsonData;
@@ -80,7 +101,7 @@
             jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:nil];
             jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
         }
-        NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/index.php?method=register"];
+        NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/"];
         
         NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
         [urlRequest setHTTPMethod:@"POST"];
@@ -90,29 +111,48 @@
         [urlRequest setHTTPBody:jsonData];
         NSURLResponse * response = nil;
         NSError * error = nil;
-        [NSURLConnection sendSynchronousRequest:urlRequest
+        NSData * data =[NSURLConnection sendSynchronousRequest:urlRequest
                                               returningResponse:&response
-                                                          error:&error];
-//        if (error) {
-//            // Handle error.
-//        }
-//        else
-//        {
-//            NSError *jsonParsingError = nil;
-//            NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
-//        }
-        [self.registerDelegate onRegister:email];
+                                                        error:&error];
+        NSInteger userID = -1;
+        if (error) {
+            // Handle error.
+        }
+        else
+        {
+            NSError *jsonParsingError = nil;
+            NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
+            for (NSDictionary *d in jsonArray)
+            {
+                userID = (NSInteger)[d objectForKey:@"userID"];
+            }
+        }
+        [self.registerDelegate onRegister:userID];
     }
     else
     {
-        [self failRegisterValidation];
+        [self failRegisterValidation:error];
     }
 
 }
 
-- (void)failRegisterValidation
+-(NSString*)sha256HashFor:(NSString*)input
 {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Enter valid values" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+    const char* str = [input UTF8String];
+    unsigned char result[CC_SHA256_DIGEST_LENGTH];
+    CC_SHA256(str, strlen(str), result);
+    
+    NSMutableString *ret = [NSMutableString stringWithCapacity:CC_SHA256_DIGEST_LENGTH*2];
+    for(int i = 0; i<CC_SHA256_DIGEST_LENGTH; i++)
+    {
+        [ret appendFormat:@"%02x",result[i]];
+    }
+    return ret;
+}
+
+- (void)failRegisterValidation:(NSString *)error
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:error delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
     [alert show];
 }
 

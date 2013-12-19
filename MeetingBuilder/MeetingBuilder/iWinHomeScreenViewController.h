@@ -11,6 +11,7 @@
 
 @interface iWinHomeScreenViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withUserID:(NSInteger)userID;
 @property (weak, nonatomic) IBOutlet UITableView *feedTable;
 
 @end
