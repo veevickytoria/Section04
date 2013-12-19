@@ -1,7 +1,21 @@
 <!-- <div id = 'menu' style = 'width: 50%; float:left'> -->
-<form>
+<script type="text/javascript">
+	function validateForm()
+	{
+	
+	var title = document.forms["input"]["title"].value;
+	// var attendees = document.forms["input"]["attendees"].value;
+	var datetime = document.forms["input"]["datetime"].value;
+	var location = document.forms["input"]["location"].value;
+	alert("The following fields were added to the db: " + title + " " + datetime + " " + location);
+
+	return true;
+	}
+</script>
+
+<form name="input" id = "createMeeting" onsubmit="return validateForm()" action ="http://csse371-04.csse.rose-hulman.edu/Meeting/" method = 'post'>
 		<p>Topic</p>
-		<input type='text' style = "width: 100%" placeholder="Topic" />
+		<input type='text' name = "title" style = "width: 100%" placeholder="Topic" />
 		<br />
 		<p>Description*</p>
 		<textarea style = 'width: 100%' placeholder='Description'></textarea>
@@ -28,7 +42,7 @@
 		<table>
 			<tr>
 				<td>
-					<input type='text' style='width: 100%' placeholder='mm/dd/yyyy HH:MM' />
+					<input type='text' name = "datetime" style='width: 100%' placeholder='mm/dd/yyyy HH:MM' />
 				</td>
 			</tr>
 		</table>
@@ -37,7 +51,7 @@
 		<table>
 			<tr>
 				<td>
-					<input type='text' style='width: 100%' placeholder='Location' />
+					<input type='text' name ="location" style='width: 100%' placeholder='Location' />
 				</td>
 				<td style='padding-left: 5px;'><input type='button' value='Search Locations' /></td>
 			</tr>
@@ -47,7 +61,7 @@
 		<table>
 			<tr>
 				<td>
-					<input type='text' style='width: 100%;' placeholder='Project' />
+					<input type='text' name = 'project' style='width: 100%;' placeholder='Project' />
 				</td>
 				<td style='padding-left: 5px;'><input type='button' value='Search Projects' /></td>
 			</tr>
@@ -57,7 +71,7 @@
 		<p>Agenda</p>
 		<table style='width: 100%;'>
 			<tr>
-				<td style='width: 100%'><input type='url' style='width: 100%' placeholder='Paste Link' /></td>
+				<td style='width: 100%'><input type='url' name = 'agenda' style='width: 100%' placeholder='Paste Link' /></td>
 				<td style='width: 30%'><input type='button' value='Attach Google Doc' /></td>
 			</tr>
 		</table>
@@ -66,7 +80,7 @@
 <!-- <div id = 'content' style = 'width: 50%; float:right'> -->
 		<br />
 		Tasks:<br /><br />
-		<input type='text' placeholder='Task' />
+		<input type='text' name = 'task' placeholder='Task' />
 		<select>
 			<option>Assigned User</option>
 			<option>------------</option>

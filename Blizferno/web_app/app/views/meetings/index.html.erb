@@ -1,3 +1,6 @@
+<!-- The tasks in the GET POST requests need to be changed to meetings. Implement a check on edit so it doesn't fuck up the backend db (db? more like dp.)-->
+
+
 <style type="text/css">
 	header > h1 { display: inline-block; }
 	.modal-backdrop { z-index: 999;}
@@ -21,6 +24,8 @@
 
 
   var TaskArray;
+  var deleteID;
+
 
   function hideMeetingModal()
   {
@@ -51,7 +56,34 @@ document.getElementById("datetimeE").value = TaskArray["datetime"];
 
 $('#editMeetingModal').modal('show');
 $('#viewMeetingModal').modal('hide');
+
 }
+
+function showDeleteModal(ID){
+    deleteID = ID;
+    $('#deleteMeetingModal').modal('show');
+  }
+
+function hideDeleteModal(){
+    // TODO: Put this back in when it works and change it to the delete
+    // $.ajax({
+    //         type: 'GET',
+    //         url: 'http://csse371-04.csse.rose-hulman.edu/Tasks/' + deletelID,
+    //   success:function(data){
+    //     if(data.taskID != null){
+    //       TaskArray = JSON.parse(data);
+    //     }
+    //   }
+    // });
+    alert("The task matching id " + deleteID + " was deleted");
+    
+    $('#deleteMeetingModal').modal('hide');
+    // TODO: Put back in
+    //location.reload(true);
+}
+
+
+
 
 function showMeetingModalNoID()
 {
@@ -85,7 +117,7 @@ function showMeetingModalNoID()
    // Update view info
    document.getElementById("titleV").innerHTML = TaskArray["title"];
    document.getElementById("locationV").innerHTML = TaskArray["location"];
-   document.getElementById("datettimeV").innerHTML = TaskArray["datetime"];
+   document.getElementById("datetimeV").innerHTML = TaskArray["datetime"];
    // document.getElementById("attendanceV").innerHTML = TaskArray["attendance"];
 
    $('#viewMeetingModal').modal('show');
@@ -132,8 +164,8 @@ else if (ID == 4)
 else if (ID == 5)
 {
   TaskArray = JSON.parse('{"meetingID":"5","title":"Drink More Beer!","location":"Different Frat Houses",datetime:"12/13/2014 12:00"}');
-}
-;
+};
+
 
 document.getElementById("titleV").innerHTML = TaskArray["title"];
 document.getElementById("locationV").innerHTML = TaskArray["location"];
@@ -159,14 +191,14 @@ $('#editMeetingModal').modal('hide');
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="submit" class="btn btn-primary" form="createMeeting">Submit</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
 <!-- Delete Modal -->
-<div class="modal fade" id="deleteMeetingModal" tabindex="-1" role="dialog" aria-labelledby="deleteMeetingModalLabel" aria-hidden="true" >
+<div class="modal fade" id="deleteMeetingModal" tabindex="-1" role="dialog" aria-labelledby="deleteMeetingModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -178,7 +210,7 @@ $('#editMeetingModal').modal('hide');
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Delete</button>
+        <button type="button" class="btn btn-primary" onclick="hideDeleteModal()">Delete</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -239,7 +271,7 @@ $('#editMeetingModal').modal('hide');
       		<td><%= meeting['datetime'] %></td>
       		<td><a onClick="showViewMeetingModal(<%= meeting['meetingID'] %>)" href = '#viewMeetingModal' data-refresh = 'true' data-toggle='modal'><%= meeting['title'] %></a></td>
       		<td><%= meeting['location'] %></td>
-      		<td colspan='1' style='cursor: pointer; text-align: center' href='#deleteMeetingModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
+      		<td colspan='1' style='cursor: pointer; text-align: center' onclick="showDeleteModal(<%= meeting['meetingID'] %>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
     	</tr>
  	 <% end %>
 <!-- 	<tr>
