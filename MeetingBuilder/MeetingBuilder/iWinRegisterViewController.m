@@ -89,8 +89,8 @@
         NSString *password = [self sha256HashFor: [self.passwordField text]];
         
         //register
-        NSArray *keys = [NSArray arrayWithObjects:@"user", @"pass", nil];
-        NSArray *objects = [NSArray arrayWithObjects:email, password,nil];
+        NSArray *keys = [NSArray arrayWithObjects:@"name", @"password", @"email", @"phone", @"company", @"title", @"location", nil];
+        NSArray *objects = [NSArray arrayWithObjects:self.nameField.text, password, email, self.phoneNumberField.text, self.companyField.text, self.titleField.text, self.locationField.text,nil];
         
         NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
         NSData *jsonData;

@@ -183,14 +183,14 @@
     self.lastClicked = newButton;
 }
 
--(void) login:(NSString *)email
+-(void) login:(NSInteger)userID
 {
     [self removeSubViews];
     
     [self enableSliding];
     
-    self.user = email;
-    self.homeScreenViewController = [[iWinHomeScreenViewController alloc] initWithNibName:@"iWinHomeScreenViewController" bundle:nil];
+    self.userID = userID;
+    self.homeScreenViewController = [[iWinHomeScreenViewController alloc] initWithNibName:@"iWinHomeScreenViewController" bundle:nil withUserID:userID];
     [self.mainView  addSubview:self.homeScreenViewController.view];
     [self.homeScreenViewController.view setBounds:self.mainView.bounds];
     
