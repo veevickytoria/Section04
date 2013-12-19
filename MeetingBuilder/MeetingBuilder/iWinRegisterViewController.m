@@ -40,18 +40,21 @@
 - (BOOL)validatePhoneNumber
 {
     NSCharacterSet* notDigits = [[NSCharacterSet decimalDigitCharacterSet] invertedSet];
-    if (self.phoneNumberField.text.length > 12 || self.phoneNumberField.text.length < 8) {
+    if (self.phoneNumberField.text.length == 0) {
+        return YES;
+    }
+    if (self.phoneNumberField.etxt.length > 12 || self.phoneNumberField.text.length < 8) {
         return NO;
     }
     NSArray *phoneParts = [self.phoneNumberField.text componentsSeparatedByString:@"-"];
     for (NSString *stringPart in phoneParts) {
         if ([stringPart rangeOfCharacterFromSet:notDigits].location != NSNotFound)
         {
-            
-            return NO;
+                        return NO;
         }
     }
     return YES;
+
 }
 
 - (NSString*)validateRegistration
@@ -121,11 +124,8 @@
         else
         {
             NSError *jsonParsingError = nil;
-            NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
-            for (NSDictionary *d in jsonArray)
-            {
-                userID = (NSInteger)[d objectForKey:@"userID"];
-            }
+            NSDictionary *deserializedDictionary = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
+            userID = (NSInteger)[deserializedDictionary objectForKey:@"userID"];
         }
         [self.registerDelegate onRegister:userID];
     }

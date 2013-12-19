@@ -63,7 +63,7 @@
             jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:nil];
             jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
         }
-        NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/"];
+        NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Login"];
         
         NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
         [urlRequest setHTTPMethod:@"POST"];
@@ -83,23 +83,20 @@
         else
         {
             NSError *jsonParsingError = nil;
-            NSArray *jsonArray = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
-            for (NSDictionary *d in jsonArray)
+            NSDictionary *deserializedDictionary = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
+            
+
+            if ([deserializedDictionary objectForKey:@"userID"])
             {
-                if (d[@"userID"])
-                {
-                    userID = (NSInteger)[d objectForKey:@"userID"];
-                    [self.loginDelegate login:userID];
-                }
-                else
-                {
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Username/Password not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
-                    [alert show];
-                }
-                
+                userID = (NSInteger)[deserializedDictionary objectForKey:@"userID"];
+                [self.loginDelegate login:userID];
+            }
+            else
+            {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Username/Password not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+                [alert show];
             }
         }
-
        
     }
     else
