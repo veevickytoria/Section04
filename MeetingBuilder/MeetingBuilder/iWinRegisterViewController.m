@@ -114,7 +114,7 @@
         NSData * data =[NSURLConnection sendSynchronousRequest:urlRequest
                                               returningResponse:&response
                                                         error:&error];
-        NSInteger userID = 0;
+        NSInteger userID = -1;
         if (error) {
             // Handle error.
         }
