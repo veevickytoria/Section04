@@ -28,6 +28,7 @@
 @property (strong, nonatomic) iWinViewProfileViewController *profileViewController;
 @property (strong, nonatomic) iWinOpenEarsModel *openEars;
 @property (strong, nonatomic) NSString *user;
+@property (nonatomic) NSInteger userID;
 @property BOOL movedRightView;
 @property BOOL movedView;
 @property (nonatomic) UISwipeGestureRecognizer * swiperight;
@@ -372,7 +373,7 @@
 - (IBAction)onClickProfile{
     [self removeSubViews];
     [self enableSliding];
-    self.profileViewController = [[iWinViewProfileViewController alloc] initWithNibName:@"iWinViewProfileViewController" bundle:nil];
+    self.profileViewController = [[iWinViewProfileViewController alloc] initWithNibName:@"iWinViewProfileViewController" bundle:nil withID: self.userID];
     [self.mainView  addSubview:self.profileViewController.view];
     [self.profileViewController.view setBounds:self.mainView.bounds];
     self.profileViewController.profileDelegate = self;
