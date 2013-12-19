@@ -20,7 +20,7 @@ RewriteRule ^Note/([0-9]+)/?$ Note.php?noteID=$1 [NC,L]
 RewriteRule ^Note/Comments/([0-9]+)/$ User.php?cat=Comments&noteID=$1 [NC,L]
 
 RewriteRule ^Meeting/$ Meeting.php [NC,L]
-RewriteRule ^Meeting/([0-9]+)/?$ Meeting.php?meetingID=$1 [NC,L]
+RewriteRule ^Meeting/([0-9]+)/?$ Meeting.php?id=$1 [NC,L]
 RewriteRule ^Meeting/Notes/?$ Meeting.php?cat=notes [NC,L]
 RewriteRule ^Meeting/Tasks/?$ Meeting.php?cat=tasks [NC,L]
 
