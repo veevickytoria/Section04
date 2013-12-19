@@ -1,5 +1,9 @@
 class MeetingsController < ApplicationController
 	def index
+		if (cookies[:userID].blank?)
+			redirect_to '/login/index'
+			return
+		end
 		require 'net/http'
 		@UserID = '717'
 		url = URI.parse('http://csse371-04.csse.rose-hulman.edu/User/Meetings/' + @UserID)

@@ -10,8 +10,7 @@ class ApplicationController < ActionController::Base
   before_filter :getUserInfo
 
   def getUserInfo
-    loginSuccess = cookies[:userID]
-    if loginSuccess
+    if (!cookies[:userID].blank?)
       require 'net/http'
       @userID = cookies[:userID]
       url = URI.parse('http://csse371-04.csse.rose-hulman.edu/User/' + @userID)
