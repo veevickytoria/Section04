@@ -9,7 +9,9 @@
 #import "iWinScheduleViewMeetingViewController.h"
 #import "iWinViewAndAddViewController.h"
 #import "iWinAddUsersViewController.h"
+#import "iWinAppDelegate.h"
 #import <QuartzCore/QuartzCore.h>
+#import "Meeting.h"
 
 @interface iWinScheduleViewMeetingViewController ()
 @property (nonatomic) BOOL isEditing;
@@ -24,11 +26,14 @@
 @property (strong, nonatomic) OCCalendarViewController* ocCalVC;
 @property (strong, nonatomic) iWinViewAndAddViewController *agendaController;
 @property (strong, nonatomic) iWinAddUsersViewController *userViewController;
+@property (strong, nonatomic) UIDatePicker *datePicker;
+@property (strong, nonatomic) UIDatePicker *enddatePicker;
+
 @end
 
 @implementation iWinScheduleViewMeetingViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil inEditMode:(BOOL)isEditing withID:(NSString*) meetingID withDateTime:(NSString*) dateTime withTitle:(NSString*) title withLocation:(NSString*) location
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil inEditMode:(BOOL)isEditing withID:(NSString*) meetingID withDateTime:(NSString*) dateTime withTitle:(NSString*) title withLocation:(NSString*) location //withMeeting:(Meeting *)newMeeting
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
@@ -42,6 +47,16 @@
     return self;
 }
 
+- (void)formatTime:(NSDate *)date
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"hh:mm a"];
+    self.startTimeLabel.text = [formatter stringFromDate:date];
+    NSDate *currentDate = [NSDate date];
+    NSDate *datePlusFiveMinutes = [currentDate dateByAddingTimeInterval:300];
+    self.endTimeLabel.text = [formatter stringFromDate:datePlusFiveMinutes];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -50,17 +65,7 @@
     self.headerLabel.text = @"Schedule a Meeting";
     [self.addAgendaButton setTitle:@"Add Agenda" forState:UIControlStateNormal];
     self.saveAndAddMoreButton.hidden = NO;
-    if (self.isEditing)
-    {
-        self.headerLabel.text = @"View Meeting";
-        self.titleField.text = self.title;
-        self.startDateLabel.text = self.dateTime;
-        self.endDateLabel.text = self.dateTime;
-        self.durationField.text = @"1 hr";
-        self.placeField.text = self.location;
-        [self.addAgendaButton setTitle:@"Agenda 101" forState:UIControlStateNormal];
-        self.saveAndAddMoreButton.hidden = YES;
-    }
+    
     
     self.startDateLabel.userInteractionEnabled = YES;
     self.endDateLabel.userInteractionEnabled = YES;
@@ -91,18 +96,45 @@
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"MM/dd/yyyy"];
-    self.startDateLabel.text = [dateFormatter stringFromDate:[NSDate date]];
-    self.endDateLabel.text = [dateFormatter stringFromDate:[NSDate date]];
     
-    self.startDate = [NSDate date];
-    self.endDate = [NSDate date];
+    if (self.isEditing)
+    {
+        
+        self.headerLabel.text = @"View Meeting";
+        self.titleField.text = self.title;
+        self.placeField.text = self.location;
+        [self.addAgendaButton setTitle:@"Agenda 101" forState:UIControlStateNormal];
+        self.saveAndAddMoreButton.hidden = YES;
+        
+        NSInteger nWords = 6;
+        NSRange wordRange = NSMakeRange(0, nWords);
+        NSArray *dateAndTime = [[self.dateTime componentsSeparatedByString:@" "] subarrayWithRange:wordRange];
+        
+        NSString *startdate = [dateAndTime objectAtIndex:0];
+        NSString *starttime = [NSString stringWithFormat:@"%@ %@", [dateAndTime objectAtIndex:1], [dateAndTime objectAtIndex:2]];
+        
+        NSString *enddate = [dateAndTime objectAtIndex:3];
+        NSString *endtime = [NSString stringWithFormat:@"%@ %@", [dateAndTime objectAtIndex:4], [dateAndTime objectAtIndex:5]];
+        
+        self.startDateLabel.text = startdate;
+        self.endDateLabel.text = enddate;
+        
+        self.startTimeLabel.text = starttime;
+        self.endTimeLabel.text = endtime;
+        
+        self.startDate = [dateFormatter dateFromString:startdate];
+        self.endDate = [dateFormatter dateFromString:enddate];
+    }
+    else
+    {
+        self.startDateLabel.text = [dateFormatter stringFromDate:[NSDate date]];
+        self.endDateLabel.text = [dateFormatter stringFromDate:[NSDate date]];
+        
+        self.startDate = [NSDate date];
+        self.endDate = [NSDate date];
+        [self formatTime:[NSDate date]];
+    }
     
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"hh:mm a"];
-    self.startTimeLabel.text = [formatter stringFromDate:[NSDate date]];
-    NSDate *currentDate = [NSDate date];
-    NSDate *datePlusFiveMinutes = [currentDate dateByAddingTimeInterval:300];
-    self.endTimeLabel.text = [formatter stringFromDate:datePlusFiveMinutes];
 }
 
 -(void) updateButtonUI:(UIButton *)button
@@ -158,69 +190,112 @@
 - (IBAction)onClickSave
 {
     //save the meeting
-//    NSArray *keys = [NSArray arrayWithObjects:@"Title", @"ID", @"DateTime", @"Location", nil];
-//    NSArray *objects = [NSArray arrayWithObjects:self.titleField.text, @"ID",self.startDateLabel.text,self.placeField.text,nil];
-//    
-//    NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-//    NSData *jsonData;
-//    NSString *jsonString;
-//    
-//    if ([NSJSONSerialization isValidJSONObject:jsonDictionary])
-//    {
-//        jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:nil];
-//        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-//    }
-//    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Meeting.php?method=createMeeting&user=%@", @"a"];
-//    
-//    NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
-//    [urlRequest setHTTPMethod:@"POST"];
-//    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-//    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-//    [urlRequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-length"];
-//    [urlRequest setHTTPBody:jsonData];
-//    NSURLResponse * response = nil;
-//    NSError * error = nil;
-//    [NSURLConnection sendSynchronousRequest:urlRequest
-//                          returningResponse:&response
-//                                      error:&error];
-    [self dismissViewControllerAnimated:YES completion:nil];
+    //    NSArray *keys = [NSArray arrayWithObjects:@"title", @"userID", @"datetime", @"location", @"attendance", nil];
+    //    NSArray *objects = [NSArray arrayWithObjects:self.titleField.text, @"1",[NSString stringWithFormat:@"%@ %@", self.startDateLabel.text, self.startTimeLabel.text],self.placeField.text,@"", nil];
+    //
+    //    NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+    //    NSData *jsonData;
+    //    NSString *jsonString;
+    //
+    //    if ([NSJSONSerialization isValidJSONObject:jsonDictionary])
+    //    {
+    //        jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:nil];
+    //        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    //    }
+    //    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Meeting/"];
+    //
+    //    NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+    //    [urlRequest setHTTPMethod:@"POST"];
+    //    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    //    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    //    [urlRequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-length"];
+    //    [urlRequest setHTTPBody:jsonData];
+    //    NSURLResponse * response = nil;
+    //    NSError * error = nil;
+    //    [NSURLConnection sendSynchronousRequest:urlRequest
+    //                          returningResponse:&response
+    //                                      error:&error];
+    
+    //for local satabase
+    iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    
+    NSManagedObjectContext *context = [appDelegate managedObjectContext];
+    if (!self.isEditing)
+    {
+        
+        NSManagedObject *newMeeting = [NSEntityDescription insertNewObjectForEntityForName:@"Meeting" inManagedObjectContext:context];
+        NSError *error;
+        
+        
+        [newMeeting setValue:self.titleField.text forKey:@"title"];
+        [newMeeting setValue:self.placeField.text forKey:@"location"];
+        [newMeeting setValue:[NSString stringWithFormat: @"%@ %@ %@ %@", self.startDateLabel.text, self.startTimeLabel.text, self.endDateLabel.text, self.endTimeLabel.text] forKey:@"datetime"];
+        [newMeeting setValue:[NSNumber numberWithInt:0] forKey:@"userID"];
+        [newMeeting setValue:@"false" forKey:@"attendance"];
+        [context save:&error];
+        
+    }
+    else
+    {
+        NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Meeting" inManagedObjectContext:context];
+        
+        NSFetchRequest *request = [[NSFetchRequest alloc] init];
+        [request setEntity:entityDesc];
+        
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userID = %@", self.meetingID];
+        [request setPredicate:predicate];
+        
+        NSError *error;
+        NSArray *result = [context executeFetchRequest:request
+                                                 error:&error];
+        
+        Meeting *newMeeting = (Meeting*)[result objectAtIndex:0];
+        [newMeeting setValue:self.titleField.text forKey:@"title"];
+        [newMeeting setValue:self.placeField.text forKey:@"location"];
+        [newMeeting setValue:[NSString stringWithFormat: @"%@ %@ %@ %@", self.startDateLabel.text, self.startTimeLabel.text, self.endDateLabel.text, self.endTimeLabel.text] forKey:@"datetime"];
+        [newMeeting setValue:@"false" forKey:@"attendance"];
+        [context save:&error];
+        
+    }
+    [self.viewMeetingDelegate refreshMeetingList];
+    //[self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (IBAction)onClickSaveAndAddMore
 {
     //save it
     
-//    NSArray *keys = [NSArray arrayWithObjects:@"Title", @"ID", @"DateTime", @"Location", nil];
-//    NSArray *objects = [NSArray arrayWithObjects:self.titleField.text, @"ID",self.startDateLabel.text,self.placeField.text,nil];
-//    
-//    NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-//    NSData *jsonData;
-//    NSString *jsonString;
-//    
-//    if ([NSJSONSerialization isValidJSONObject:jsonDictionary])
-//    {
-//        jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:nil];
-//        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-//    }
-//    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Meeting.php?method=createMeeting&user=%@", @"a"];
-//    
-//    NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
-//    [urlRequest setHTTPMethod:@"POST"];
-//    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-//    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-//    [urlRequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-length"];
-//    [urlRequest setHTTPBody:jsonData];
-//    NSURLResponse * response = nil;
-//    NSError * error = nil;
-//    [NSURLConnection sendSynchronousRequest:urlRequest
-//                            returningResponse:&response
-//                                          error:&error];
+    //    NSArray *keys = [NSArray arrayWithObjects:@"Title", @"ID", @"DateTime", @"Location", nil];
+    //    NSArray *objects = [NSArray arrayWithObjects:self.titleField.text, @"ID",self.startDateLabel.text,self.placeField.text,nil];
+    //
+    //    NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+    //    NSData *jsonData;
+    //    NSString *jsonString;
+    //
+    //    if ([NSJSONSerialization isValidJSONObject:jsonDictionary])
+    //    {
+    //        jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:nil];
+    //        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    //    }
+    //    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Meeting.php?method=createMeeting&user=%@", @"a"];
+    //
+    //    NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+    //    [urlRequest setHTTPMethod:@"POST"];
+    //    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    //    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    //    [urlRequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-length"];
+    //    [urlRequest setHTTPBody:jsonData];
+    //    NSURLResponse * response = nil;
+    //    NSError * error = nil;
+    //    [NSURLConnection sendSynchronousRequest:urlRequest
+    //                            returningResponse:&response
+    //                                          error:&error];
     
     self.headerLabel.text = @"Schedule a Meeting";
     self.titleField.text = @"";
     self.startDateLabel.text = @"";
     self.endDateLabel.text = @"";
-    self.durationField.text = @"";
+    //self.durationField.text = @"";
     self.placeField.text = @"";
     [self.addAgendaButton setTitle:@"Add Agenda" forState:UIControlStateNormal];
 }
@@ -240,7 +315,7 @@
     self.ocCalVC.selectionMode = OCSelectionSingleDate;
     self.ocCalVC.delegate = self;
     [self.view addSubview:self.ocCalVC.view];
-
+    
 }
 
 - (void)endDateClicked
@@ -259,35 +334,60 @@
 {
     UIViewController* popoverContent = [[UIViewController alloc] init]; //ViewController
     
-    UIView *popoverView = [[UIView alloc] init];   //view
+    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(220, 10, 75, 50)];
+    [button setTitle:@"Save" forState:UIControlStateNormal];
+    [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(saveStartTime) forControlEvents:UIControlEventTouchUpInside];
     
-    UIDatePicker *datePicker=[[UIDatePicker alloc]init];//Date picker
-    datePicker.frame=CGRectMake(0,30,320, 216);
-    datePicker.datePickerMode = UIDatePickerModeTime;
-    [datePicker setMinuteInterval:5];
+    
+    UIView *popoverView = [[UIView alloc] init];   //view
+    [popoverView addSubview:button];
+    
+    //    UIDatePicker *datePicker=[[UIDatePicker alloc]init];//Date picker
+    self.datePicker=[[UIDatePicker alloc]init];//Date picker
+    self.datePicker.frame=CGRectMake(0,30,320, 216);
+    self.datePicker.datePickerMode = UIDatePickerModeTime;
+    [self.datePicker setMinuteInterval:5];
     //[datePicker addTarget:self action:@selector(Result) forControlEvents:UIControlEventValueChanged];
-    [popoverView addSubview:datePicker];
-
+    [popoverView addSubview:self.datePicker];
+    
     popoverContent.view = popoverView;
     self.popOverController = [[UIPopoverController alloc] initWithContentViewController:popoverContent];
     //popoverController.delegate=self;
     
+    
     [self.popOverController setPopoverContentSize:CGSizeMake(320, 250) animated:NO];
     [self.popOverController presentPopoverFromRect:CGRectMake(self.startTimeLabel.frame.origin.x, self.startTimeLabel.frame.origin.y+2, self.startTimeLabel.frame.size.width, self.startTimeLabel.frame.size.height)  inView:self.view permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+}
+
+-(void) saveStartTime
+{
+    NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
+    [outputFormatter setDateFormat:@"hh:mm a"];
+    
+    [self.startTimeLabel setText:[outputFormatter stringFromDate:self.datePicker.date]];
+    [self.popOverController dismissPopoverAnimated:YES];
 }
 
 -(void) endTimeClicked
 {
     UIViewController* popoverContent = [[UIViewController alloc] init]; //ViewController
     
-    UIView *popoverView = [[UIView alloc] init];   //view
+    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(220, 10, 75, 50)];
+    [button setTitle:@"Save" forState:UIControlStateNormal];
+    [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(saveEndTime) forControlEvents:UIControlEventTouchUpInside];
     
-    UIDatePicker *datePicker=[[UIDatePicker alloc]init];//Date picker
-    datePicker.frame=CGRectMake(0,30,320, 216);
-    datePicker.datePickerMode = UIDatePickerModeTime;
-    [datePicker setMinuteInterval:5];
+    UIView *popoverView = [[UIView alloc] init];   //view
+    [popoverView addSubview:button];
+    
+    //UIDatePicker *enddatePicker=[[UIDatePicker alloc]init];//Date picker
+    self.enddatePicker=[[UIDatePicker alloc]init];//Date picker
+    self.enddatePicker.frame=CGRectMake(0,30,320, 216);
+    self.enddatePicker.datePickerMode = UIDatePickerModeTime;
+    [self.enddatePicker setMinuteInterval:5];
     //[datePicker addTarget:self action:@selector(Result) forControlEvents:UIControlEventValueChanged];
-    [popoverView addSubview:datePicker];
+    [popoverView addSubview:self.enddatePicker];
     
     popoverContent.view = popoverView;
     self.popOverController = [[UIPopoverController alloc] initWithContentViewController:popoverContent];
@@ -295,6 +395,18 @@
     
     [self.popOverController setPopoverContentSize:CGSizeMake(320, 250) animated:NO];
     [self.popOverController presentPopoverFromRect:CGRectMake(self.endTimeLabel.frame.origin.x, self.endTimeLabel.frame.origin.y+2, self.endTimeLabel.frame.size.width, self.endTimeLabel.frame.size.height)  inView:self.view permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+}
+
+
+-(void) saveEndTime
+{
+    NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
+    [outputFormatter setDateFormat:@"hh:mm a"];
+    
+    [self.endTimeLabel setText:[outputFormatter stringFromDate:self.enddatePicker.date]];
+    [self.popOverController dismissPopoverAnimated:YES];
+    
+    
 }
 
 - (void)completedWithDate:(NSDate *)selectedDate

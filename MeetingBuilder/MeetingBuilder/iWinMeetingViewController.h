@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "iWinScheduleViewMeetingViewController.h"
 
-
-@interface iWinMeetingViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate, NSURLConnectionDelegate>
+@interface iWinMeetingViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate, NSURLConnectionDelegate, ViewMeetingDelegate>
 @property (strong, nonatomic) NSMutableData *responseData;
 @property (weak, nonatomic) IBOutlet UIButton *scheduleMeetingButton;
 @property (weak, nonatomic) IBOutlet UITableView *projectTable;

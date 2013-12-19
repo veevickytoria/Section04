@@ -7,8 +7,9 @@
 //
 
 #import "iWinMeetingViewController.h"
+#import "Meeting.h"
 #import <QuartzCore/QuartzCore.h>
-#import "iWinScheduleViewMeetingViewController.h"
+#import "iWinAppDelegate.h"
 
 @interface iWinMeetingViewController ()
 @property (strong, nonatomic) NSMutableArray *meetingList;
@@ -38,59 +39,108 @@
     self.meetingDetail = [[NSMutableArray alloc] init];
     self.meetingID = [[NSMutableArray alloc] init];
     self.meetingLocations = [[NSMutableArray alloc] init];
-//    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Meeting.php?method=getMeetings&user=%@", self.email];
-//    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-//    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:30];
-//    [urlRequest setHTTPMethod:@"GET"];
-//    NSURLResponse * response = nil;
-//    NSError * error = nil;
-//    NSData * data = [NSURLConnection sendSynchronousRequest:urlRequest
-//                                          returningResponse:&response
-//                                                      error:&error];
-//    //check login
-//    NSArray *jsonArray;
-//    if (error)
-//    {
-//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Meetings not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
-//        [alert show];
-//    }
-//    else
-//    {
-//        NSError *jsonParsingError = nil;
-//        jsonArray = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
-//    }
-//    if (jsonArray.count > 0)
-//    {
-//        for (NSDictionary* meetings in jsonArray)
-//        {
-//            [self.meetingList addObject:[meetings objectForKey:@"title"]];
-//            [self.meetingDetail addObject:[meetings objectForKey:@"datetime"]];
-//            [self.meetingID addObject:[meetings objectForKey:@"id"]];
-//            [self.meetingLocations addObject:[meetings objectForKey:@"location"]];
-//        }
-//        
-//    }
-
     
-    [self.meetingList addObject:@"Meeting 1"];
-    [self.meetingDetail addObject:@"10/24/13 9:00 pm"];
-    [self.meetingID addObject:@"1"];
-    [self.meetingLocations addObject:@"O257"];
+    NSArray *result = [self getDataFromDatabase];
+    for (Meeting *m in result)
+    {
+        [self.meetingList addObject:m.title];
+        [self.meetingDetail addObject:m.datetime];
+        [self.meetingID addObject:m.userID];
+        [self.meetingLocations addObject:m.location];
+    }
+    //    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Meeting/", self.email];
+    //    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    //    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:30];
+    //    [urlRequest setHTTPMethod:@"GET"];
+    //    NSURLResponse * response = nil;
+    //    NSError * error = nil;
+    //    NSData * data = [NSURLConnection sendSynchronousRequest:urlRequest
+    //                                          returningResponse:&response
+    //                                                      error:&error];
+    //    //check login
+    //    NSArray *jsonArray;
+    //    if (error)
+    //    {
+    //        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Meetings not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+    //        [alert show];
+    //    }
+    //    else
+    //    {
+    //        NSError *jsonParsingError = nil;
+    //        jsonArray = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
+    //    }
+    //    if (jsonArray.count > 0)
+    //    {
+    //        for (NSDictionary* meetings in jsonArray)
+    //        {
+    //            [self.meetingList addObject:[meetings objectForKey:@"title"]];
+    //            [self.meetingDetail addObject:[meetings objectForKey:@"datetime"]];
+    //            [self.meetingID addObject:[meetings objectForKey:@"id"]];
+    //            [self.meetingLocations addObject:[meetings objectForKey:@"location"]];
+    //        }
+    //
+    //    }
     
-    [self.meetingList addObject:@"Meeting 2"];
-    [self.meetingDetail addObject:@"10/25/13 9:10 pm"];
-    [self.meetingID addObject:@"2"];
-    [self.meetingLocations addObject:@"O257"];
     
-    [self.meetingList addObject:@"Meeting 3"];
-    [self.meetingDetail addObject:@"10/26/13 7:00 pm"];
-    [self.meetingID addObject:@"3"];
-    [self.meetingLocations addObject:@"O257"];
+    //for local database
+//    iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+//    
+//    NSManagedObjectContext *context = [appDelegate managedObjectContext];
+//    
+//    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Meeting" inManagedObjectContext:context];
+//    
+//    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+//    [request setEntity:entityDesc];
+//    
+//    NSError *error;
+//    NSArray *result = [context executeFetchRequest:request
+//                                             error:&error];
+//    for (Meeting *m in result)
+//    {
+//        [self.meetingList addObject:m.title];
+//        [self.meetingDetail addObject:m.datetime];
+//        [self.meetingID addObject:m.userID];
+//        [self.meetingLocations addObject:m.location];
+//    }
+    
+    
+    //hardcoded data
+    //    [self.meetingList addObject:@"Meeting 1"];
+    //    [self.meetingDetail addObject:@"10/24/13 9:00 pm"];
+    //    [self.meetingID addObject:@"1"];
+    //    [self.meetingLocations addObject:@"O257"];
+    //
+    //    [self.meetingList addObject:@"Meeting 2"];
+    //    [self.meetingDetail addObject:@"10/25/13 9:10 pm"];
+    //    [self.meetingID addObject:@"2"];
+    //    [self.meetingLocations addObject:@"O257"];
+    //
+    //    [self.meetingList addObject:@"Meeting 3"];
+    //    [self.meetingDetail addObject:@"10/26/13 7:00 pm"];
+    //    [self.meetingID addObject:@"3"];
+    //    [self.meetingLocations addObject:@"O257"];
     
     self.scheduleMeetingButton.layer.cornerRadius = 7;
     self.scheduleMeetingButton.layer.borderColor = [[UIColor darkGrayColor] CGColor];
     self.scheduleMeetingButton.layer.borderWidth = 2.0f;
+    
+}
 
+-(NSArray*)getDataFromDatabase
+{
+    iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    
+    NSManagedObjectContext *context = [appDelegate managedObjectContext];
+    
+    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Meeting" inManagedObjectContext:context];
+    
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDesc];
+    
+    NSError *error;
+    NSArray *result = [context executeFetchRequest:request
+                                             error:&error];
+    return result;
 }
 
 - (void)didReceiveMemoryWarning
@@ -99,11 +149,31 @@
     // Dispose of any resources that can be recreated.
 }
 
+-(void) refreshMeetingList
+{
+    [self.scheduleMeetingVC dismissViewControllerAnimated:YES completion:nil];
+    self.meetingList = [[NSMutableArray alloc] init];
+    self.meetingDetail = [[NSMutableArray alloc] init];
+    self.meetingID = [[NSMutableArray alloc] init];
+    self.meetingLocations = [[NSMutableArray alloc] init];
+    
+    NSArray *result = [self getDataFromDatabase];
+    for (Meeting *m in result)
+    {
+        [self.meetingList addObject:m.title];
+        [self.meetingDetail addObject:m.datetime];
+        [self.meetingID addObject:m.userID];
+        [self.meetingLocations addObject:m.location];
+    }
+    
+    [self.projectTable reloadData];
+}
+
 -(IBAction) onScheduleNewMeeting
 {
     //[self.meetingListDelegate scheduleMeetingClicked:NO];
     self.scheduleMeetingVC = [[iWinScheduleViewMeetingViewController alloc] initWithNibName:@"iWinScheduleViewMeetingViewController" bundle:nil inEditMode:NO withID:nil withDateTime:nil withTitle:nil withLocation:nil];
-    
+    self.scheduleMeetingVC.viewMeetingDelegate = self;
     [self.scheduleMeetingVC setModalPresentationStyle:UIModalPresentationPageSheet];
     [self.scheduleMeetingVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     
@@ -140,7 +210,7 @@
 //        url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 //        NSData *dataURL = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
 //        NSString *strResult = [[NSString alloc] initWithData:dataURL encoding:NSUTF8StringEncoding];
-//        
+//
 //        self.projectList = [[NSMutableArray alloc] initWithArray:[strResult componentsSeparatedByString:@"___"]];
 //        //self.projectList = [NSKeyedUnarchiver unarchiveObjectWithData:self.responseData];
 //        [self.projectTable reloadData];
@@ -149,6 +219,26 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    
+    NSManagedObjectContext *context = [appDelegate managedObjectContext];
+    
+    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Meeting" inManagedObjectContext:context];
+    
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDesc];
+    
+    NSError *error;
+    NSArray *result = [context executeFetchRequest:request
+                                             error:&error];
+    for (Meeting *m in result)
+    {
+        [self.meetingList addObject:m.title];
+        [self.meetingDetail addObject:m.datetime];
+        [self.meetingID addObject:m.userID];
+        [self.meetingLocations addObject:m.location];
+    }
+    
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MeetingCell"];
     if (cell == nil)
     {
@@ -167,10 +257,10 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//    [self.meetingListDelegate scheduleMeetingClicked:YES withID:self.meetingID[indexPath.row] withDateTime:self.meetingDetail[indexPath.row] withTitle:self.meetingList[indexPath.row] withLocation:self.meetingLocations[indexPath.row]];
-    
+    //    [self.meetingListDelegate scheduleMeetingClicked:YES withID:self.meetingID[indexPath.row] withDateTime:self.meetingDetail[indexPath.row] withTitle:self.meetingList[indexPath.row] withLocation:self.meetingLocations[indexPath.row]];
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     self.scheduleMeetingVC = [[iWinScheduleViewMeetingViewController alloc] initWithNibName:@"iWinScheduleViewMeetingViewController" bundle:nil inEditMode:YES withID:self.meetingID[indexPath.row] withDateTime:self.meetingDetail[indexPath.row] withTitle:self.meetingList[indexPath.row] withLocation:self.meetingLocations[indexPath.row]];
-    
+    self.scheduleMeetingVC.viewMeetingDelegate = self;
     [self.scheduleMeetingVC setModalPresentationStyle:UIModalPresentationPageSheet];
     [self.scheduleMeetingVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     
