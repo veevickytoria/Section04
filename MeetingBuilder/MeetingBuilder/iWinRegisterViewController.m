@@ -43,7 +43,7 @@
     if (self.phoneNumberField.text.length == 0) {
         return YES;
     }
-    if (self.phoneNumberField.etxt.length > 12 || self.phoneNumberField.text.length < 8) {
+    if (self.phoneNumberField.text.length > 12 || self.phoneNumberField.text.length < 8) {
         return NO;
     }
     NSArray *phoneParts = [self.phoneNumberField.text componentsSeparatedByString:@"-"];
@@ -78,7 +78,7 @@
         return @"Please enter a valid phone number!";
     }
     if (email.length == 0 || [email rangeOfString:emailSymbol].location == NSNotFound) {
-        return @"Please enter a valid a valid email address!";
+        return @"Please enter a valid email address!";
     }
     return @"";
 }
