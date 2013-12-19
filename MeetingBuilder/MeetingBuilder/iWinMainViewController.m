@@ -71,7 +71,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    self.voiceCommand.hidden = YES;
     iWinPopulateDatabase *db = [[iWinPopulateDatabase alloc] init];
     [db populateContacts];
     
@@ -232,12 +232,12 @@
     [self removeSubViews];
     [self.mainView  addSubview:self.registerViewController.view];
     [self.registerViewController.view setBounds:self.mainView.bounds];
-    [self enableSliding];
 }
 
 -(void) onRegister:(NSString *)email
 {
     [self removeSubViews];
+    [self enableSliding];
     self.homeScreenViewController = [[iWinHomeScreenViewController alloc] initWithNibName:@"iWinHomeScreenViewController" bundle:nil];
     [self.mainView  addSubview:self.homeScreenViewController.view];
     [self.homeScreenViewController.view setBounds:self.mainView.bounds];

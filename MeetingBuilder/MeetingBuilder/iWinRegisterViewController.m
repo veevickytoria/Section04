@@ -36,6 +36,23 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (BOOL)validatePhoneNumber
+{
+    NSCharacterSet* notDigits = [[NSCharacterSet decimalDigitCharacterSet] invertedSet];
+    if (self.phoneNumberField.text.length > 12 || self.phoneNumberField.text.length < 8) {
+        return NO;
+    }
+    NSArray *phoneParts = [self.phoneNumberField.text componentsSeparatedByString:@"-"];
+    for (NSString *stringPart in phoneParts) {
+        if ([stringPart rangeOfCharacterFromSet:notDigits].location != NSNotFound)
+        {
+            
+            return NO;
+        }
+    }
+    return YES;
+}
+
 - (IBAction)onClickRegister:(id)sender
 {
     
@@ -43,8 +60,13 @@
     NSString *email = [[self.emailField text] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     NSString *password = [self.passwordField text];
     NSString *confirmPassword = [self.confirmPasswordField text];
-    if ([password isEqualToString:confirmPassword] && name.length > 0 && email.length > 0 && password.length>0 && confirmPassword.length>0)
+    if (name.length > 0 && email.length > 0 && password.length>5 &&[password isEqualToString:confirmPassword])
     {
+        if (![self validatePhoneNumber]) {
+            [self failRegisterValidation];
+            return;
+        }
+        
         //register
         NSArray *keys = [NSArray arrayWithObjects:@"user", @"pass", nil];
         NSArray *objects = [NSArray arrayWithObjects:email, password,nil];
@@ -83,10 +105,15 @@
     }
     else
     {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Enter valid values" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
-        [alert show];
+        [self failRegisterValidation];
     }
 
+}
+
+- (void)failRegisterValidation
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Enter valid values" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+    [alert show];
 }
 
 - (IBAction)onClickCancel:(id)sender
