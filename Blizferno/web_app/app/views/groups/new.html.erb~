@@ -1,0 +1,40 @@
+
+
+		<h1>Create Project Group</h1>
+		<br />
+		<br />
+		<form>
+			Group Name:
+			<input type="text" name="GroupName" value="" />
+			<br />
+			Description:
+			<input type="text" name="Description" value="" />
+			<br />
+			Members
+			<select>
+			<option value="Josh">Josh</option>
+			<option value="Jearles">Jearles</option>
+			<option value="Lindsey">Lindsey</option>
+			<option value="Corey">Corey</option>
+			<option value="Chris">Chris</option>
+			<option value="Grant">Grant</option>
+		</select>
+		</form>
+		
+		<div>For Attendees: List will form after users have been added.<br />
+			This area will be used for said list.</div>
+
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		
+		<button type="button" class="sexyButton">Create Group</button>
+
+	</div>
+	<div id="rightbar" class="span2" style="position: fixed; right:0px; text-align: center; top:40px; bottom:40px;">
+		<%= render "panes/task_bar" %>
+	</div>
+

@@ -2,6 +2,13 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
 <script type="text/javascript">
 
+    function setCookie(c_name,value,exdays){
+        var exdate=new Date();
+        exdate.setDate(exdate.getDate() + exdays);
+        var c_value=escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString());
+        document.cookie=c_name + "=" + c_value + ";path=/";
+    }
+
     function getCookie(c_name){
         var c_value = document.cookie;
         var c_start = c_value.indexOf(" " + c_name + "=");
@@ -28,32 +35,23 @@
         document.cookie= name + '=;expires=Thu, 01 Jan 2970 00:00:01 GMT;';
     }
 
-    /*function passCheck(){
-        var pass0 = document.getElementById('p0').value();
-        var pass1 = document.getElementById('p1').value();
-        if(pass0 != pass1){
-            document.getElementById('p1').style.box-shadow('0 0 5px 4px red;');
-        }else{
-            document.getElementById('p1').style.box-shadow('none;');
-        }
-    }*/
+    function ConvertFormToJSON(form){
+    	var array = jQuery(form).serializeArray();
+    	var json = {};
 
+    	jQuery.each(array, function() {
+    		json[this.name] = this.value || '';
+    	});
 
+    	return json;
 
-function ConvertFormToJSON(form){
-	var array = jQuery(form).serializeArray();
-	var json = {};
-
-	jQuery.each(array, function() {
-		json[this.name] = this.value || '';
-	});
-
-	return json;
-
-}
-
+    }
 
 $(window).load(function() { 
+    // check if user is already logged in
+    if(getCookie('userID')){
+        window.location.href = '/home_page/index';
+    }
 
     jQuery('#loginForm').bind('submit', function(event){
         event.preventDefault();
@@ -68,7 +66,8 @@ $(window).load(function() {
 	    	dataType: 'json',
 			success:function(data){
 				if(data.userID != null){
-				window.location.href = "/";
+                    setCookie('userID', data.userID,'7');
+				    window.location.href = "/home_page/index";
 				}
 			}
         });
@@ -79,9 +78,17 @@ $(window).load(function() {
         jQuery('#registerForm').bind('submit', function(event){
         event.preventDefault();
 
+        var regName = document.getElementById('regName');
+        var regEmail = document.getElementById('regEmail');
+        var pass = document.getElementById('p0');
+
+        if(regName.value == "" || regEmail.value == "" || pass.value == ""){
+            alert("You did not enter the required fields.");
+            window.location.href = "/";
+        }
+
         var form = this;
         var json = new ConvertFormToJSON(form);
-
         $.ajax({
             type: 'POST',
             url: 'http://csse371-04.csse.rose-hulman.edu/User/',
@@ -89,16 +96,27 @@ $(window).load(function() {
 	    	dataType: 'json',
 			success:function(data){
 				if(data.userID != null){
-				window.location.href = "/";
+<<<<<<< HEAD
+				//window.location.href = "/";
+=======
+				    window.location.href = "/home_page/index";
+>>>>>>> 7fba5595fe1db961d87e03d460d96932665ddda3
 				}
 			}
         });
 
-
         return true;
     });
 });
-
+/*function passCheck(){
+        var pass0 = document.getElementById('p0').value();
+        var pass1 = document.getElementById('p1').value();
+        if(pass0 != pass1){
+            document.getElementById('p1').style.box-shadow('0 0 5px 4px red;');
+        }else{
+            document.getElementById('p1').style.box-shadow('none;');
+        }
+    }*/
 
 /** this doesnt work!!
 $(windows).load(function() {
@@ -136,10 +154,10 @@ alert("urlEnding:" + urlEnding);
 
 </script>
 
-
-
-
-
+<h1>**** TEMP LOGIN DETAILS ****</h1>
+<h2>Email: test@meetingninja.com</h2>
+<h2>Password: changeme</h2>
+<br />
 <div>
 <h1>Login</h1>
             <p>Welcome to our Web App! Please enter credentials below </p>
@@ -157,16 +175,16 @@ alert("urlEnding:" + urlEnding);
 <div>
             <form id="registerForm" method="post">
                 <table style="width: 100%">
-                    <input name="name" placeholder="Full Name" type="text" />
-                    <input name="email" placeholder="Email" type="email" />
-                    <input id='p0' name='password' placeholder='Password' type='password' />
+                    <input id='regName' name="name" placeholder="Full Name" type="text" required />
+                    <input id='regEmail' name="email" placeholder="Email" type="email" required />
+                    <input id='p0' name='password' placeholder='Password' type='password' required />
                     <input name="phone" placeholder="Phone #" type="text" />
                     <input name="company" placeholder="Company" type="text" />
                     <input name="title" placeholder="Title" type="text" />
                     <input name="location" placeholder="Location" type="text" />
                 <!-- <input id="p1" name="passConfirm" placeholder="Confirm password" type="password" onchange="passCheck();" /> -->
-                <input class="button" style='font-size: 14px; cursor: pointer' type="submit" value="Sign Up" />
-		</table>
+                    <input class="button" style='font-size: 14px; cursor: pointer' type="submit" value="Sign Up" />
+                </table>
             </form>
 </div>
 

@@ -78,9 +78,17 @@ $(window).load(function() {
         jQuery('#registerForm').bind('submit', function(event){
         event.preventDefault();
 
+        var regName = document.getElementById('regName');
+        var regEmail = document.getElementById('regEmail');
+        var pass = document.getElementById('p0');
+
+        if(regName.value == "" || regEmail.value == "" || pass.value == ""){
+            alert("You did not enter the required fields.");
+            window.location.href = "/";
+        }
+
         var form = this;
         var json = new ConvertFormToJSON(form);
-
         $.ajax({
             type: 'POST',
             url: 'http://csse371-04.csse.rose-hulman.edu/User/',
@@ -88,7 +96,9 @@ $(window).load(function() {
 	    	dataType: 'json',
 			success:function(data){
 				if(data.userID != null){
-				//window.location.href = "/";
+
+				    window.location.href = "/home_page/index";
+
 				}
 			}
         });
@@ -142,12 +152,9 @@ alert("urlEnding:" + urlEnding);
 
 </script>
 
-
-
-
 <h1>**** TEMP LOGIN DETAILS ****</h1>
-<h2>Email: corey@meetingninja.com</h2>
-<h2>Password: corey</h2>
+<h2>Email: test@meetingninja.com</h2>
+<h2>Password: changeme</h2>
 <br />
 <div>
 <h1>Login</h1>
@@ -166,23 +173,21 @@ alert("urlEnding:" + urlEnding);
 <div>
             <form id="registerForm" method="post">
                 <table style="width: 100%">
-                    <input name="name" placeholder="Full Name" type="text" />
-                    <input name="email" placeholder="Email" type="email" />
-                    <input id='p0' name='password' placeholder='Password' type='password' />
+                    <input id='regName' name="name" placeholder="Full Name" type="text" required />
+                    <input id='regEmail' name="email" placeholder="Email" type="email" required />
+                    <input id='p0' name='password' placeholder='Password' type='password' required />
                     <input name="phone" placeholder="Phone #" type="text" />
                     <input name="company" placeholder="Company" type="text" />
                     <input name="title" placeholder="Title" type="text" />
                     <input name="location" placeholder="Location" type="text" />
                 <!-- <input id="p1" name="passConfirm" placeholder="Confirm password" type="password" onchange="passCheck();" /> -->
-                <input class="button" style='font-size: 14px; cursor: pointer' type="submit" value="Sign Up" />
-		</table>
+                    <input class="button" style='font-size: 14px; cursor: pointer' type="submit" value="Sign Up" />
+                </table>
             </form>
 </div>
 
 <h1>
-Here
-<%= @test %>
-</h1>
+
 
 
 <!--
