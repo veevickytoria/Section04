@@ -9,10 +9,36 @@ header > h1 { display: inline-block; }
 <script type="text/javascript">
   
   var TaskArray;
+  var deleteID;
 
   function hideViewModal()
   {
     $('#viewTaskModal').modal('hide');
+  }
+
+  function showDeleteModal(ID)
+  {
+    deleteID = ID;
+    $('#deleteTaskModal').modal('show');
+  }
+
+  function hideDeleteModal()
+  {
+    // TODO: Put this back in when it works and change it to the delete
+    // $.ajax({
+    //         type: 'GET',
+    //         url: 'http://csse371-04.csse.rose-hulman.edu/Tasks/' + deletelID,
+    //   success:function(data){
+    //     if(data.taskID != null){
+    //       TaskArray = JSON.parse(data);
+    //     }
+    //   }
+    // });
+    alert("The task matching id " + deleteID + " was deleted");
+    
+    $('#deleteTaskModal').modal('hide');
+    // TODO: Put back in
+    //location.reload(true);
   }
 
   function showEditModal()
@@ -234,7 +260,7 @@ header > h1 { display: inline-block; }
       <td><%= task['deadline'] %></td>
       <td><a onClick="showViewModal(<%= task['taskID'] %>)" data-refresh="true" data-toggle='modal'><%= task['title'] %></a></td>
       <td><%= task['project'] %></td>
-      <td colspan='1' style='cursor: pointer; text-align: center' href='#deleteTaskModal' data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
+      <td colspan='1' style='cursor: pointer; text-align: center' onClick="showDeleteModal(<%= task['taskID'] %>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
     </tr>
   <% end %>
   <tr>
