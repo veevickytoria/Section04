@@ -1,18 +1,33 @@
 <style type="text/css">
 	header > h1 { display: inline-block; }
-	.modal-backdrop { z-index: 999; }
+	.modal-backdrop { z-index: 999;}
 	#newMeeting { cursor: pointer; text-align: center; }
+	.modal-body{
+		width:100%;
+	}
 </style>
+<script>
+	// function hideViewModal(){
+	// 	$('#viewMeetingModel').modal('hide');
+	// }
+	// function showViewModal2(){
+	// 	$('#viewMeetingModal').modal('show');
+ //    	$('#editMeetingModal').modal('hide');
+	// }
+	//   function showViewModal(ID){
+ //    	$('#viewMeetingModal').modal('show');
+ //  	}
 
-<h1 style='margin-left: 15%; margin-right: auto;'>Meetings</h1>
+</script>
+<h1 style='margin-left: 100%; margin-right: 10%;'>Meetings</h1>
 
-<!-- Modal -->
-<div class="modal fade" id="newMeetingModal" tabindex="-1" role="dialog" aria-labelledby="newMeetingModalLabel" aria-hidden="true">
+<!-- Create Modal -->
+<div class="modal fade" id="newMeetingModal" tabindex="-1" role="dialog" aria-labelledby="newMeetingModalLabel" aria-hidden="true" style: 'width: 75%'>
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+        <h4 class="modal-title" id="myModalLabel">Create Meeting</h4>
       </div>
       <div class="modal-body">
         <%= render "new" %>
@@ -25,26 +40,56 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteMeetingModal" tabindex="-1" role="dialog" aria-labelledby="deleteMeetingModalLabel" aria-hidden="true" >
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Delete Meeting</h4>
+      </div>
+      <div class="modal-body">
+        <%= render "delete" %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Delete</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
 <table class='table table-hover table-striped' style='width: 70%; margin-left: 15%; margin-right: auto;'>
 	<thead>
-		<tr >
+		<tr>
 			<th>Date</th>
-			<th>Topic</th>
+			<th>Title</th>
 			<th>Where</th>
-			<th>When</th>
+			<th></th>
+			<!-- <th>When</th>
 			<th>Project</th>
-			<th>Agenda</th>
+			<th>Agenda</th> -->
 		</tr>
 	</thead>
-	<tr>
+		<% for meeting in @meetings['meetings'] %>
+		<tr>
+      		<td><%= meeting['datetime'] %></td>
+      		<td><%= meeting['title'] %></td>
+      		<td><%= meeting['location'] %></td>
+      		<td colspan='1' style='cursor: pointer; text-align: center' href='#deleteMeetingModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
+    	</tr>
+ 	 <% end %>
+<!-- 	<tr>
 		<td>01/02/03</td>
 		<td>Baseball</td>
 		<td>Room 42</td>
+		<td></td>
 		<td>6 AM</td>
 		<td>Iceman</td>
 		<td><a href="link">Agenda Link</a></td>
-	</tr>
-	<tr class='alt'>
+	</tr> -->
+<!-- 	<tr class='alt'>
 		<td>04/05/06</td>
 		<td>Music</td>
 		<td>Room 8675309</td>
@@ -59,12 +104,8 @@
 		<td>Happy Hour</td>
 		<td>Neptune Spear</td>
 		<td><a href="link">Agenda Link</a></td>
-	</tr>
-  	<tfoot>
-  		<tr>
-    		<th colspan='6' id='newMeeting' href='#newMeetingModal' data-toggle='modal'>
-    			<span class='glyphicon glyphicon-plus'></span><span>  Create New</span>
-    		</th>
-  		</tr>
-  	</tfoot>
+	</t -->
+  <tr>
+    <td colspan='4' style='cursor: pointer; text-align: center' href='#newMeetingModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
+  </tr>
 </table>

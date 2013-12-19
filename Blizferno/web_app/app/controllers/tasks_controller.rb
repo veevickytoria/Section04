@@ -1,7 +1,7 @@
 class TasksController < ApplicationController
 	def index
 		require 'net/http'
-		@UserID = '350'
+		@UserID = '717'
 		url = URI.parse('http://csse371-04.csse.rose-hulman.edu/User/Tasks/' + @UserID)
 		req = Net::HTTP::Get.new(url.path)
 		res = Net::HTTP.start(url.host, url.port) {|http|
