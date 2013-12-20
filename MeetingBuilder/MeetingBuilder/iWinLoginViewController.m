@@ -29,9 +29,6 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    self.loginButton.layer.cornerRadius = 7;
-    self.loginButton.layer.borderColor = [[UIColor darkGrayColor] CGColor];
-    self.loginButton.layer.borderWidth = 1.0f;
 }
 
 - (void)didReceiveMemoryWarning

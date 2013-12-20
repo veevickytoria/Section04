@@ -2,7 +2,7 @@
 //  Contact.h
 //  MeetingBuilder
 //
-//  Created by CSSE Department on 12/17/13.
+//  Created by CSSE Department on 12/20/13.
 //  Copyright (c) 2013 CSSE371. All rights reserved.
 //
 
@@ -14,8 +14,7 @@
 
 @property (nonatomic, retain) NSString * company;
 @property (nonatomic, retain) NSString * email;
-@property (nonatomic, retain) NSString * firstName;
-@property (nonatomic, retain) NSString * lastName;
+@property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * location;
 @property (nonatomic, retain) NSString * phone;
 @property (nonatomic, retain) NSString * title;

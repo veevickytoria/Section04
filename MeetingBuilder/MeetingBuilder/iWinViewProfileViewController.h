@@ -9,12 +9,12 @@
 
 #import <UIKit/UIKit.h>
 
-@protocol ProfileDelegate <NSObject>
--(void) onClickEditProfile;
--(void) onCancel;
-
-
-@end
+//@protocol ProfileDelegate <NSObject>
+//-(void) onClickEditProfile;
+//-(void) onCancel;
+//
+//
+//@end
 
 @interface iWinViewProfileViewController : UIViewController
 //- (IBAction)onChangePicture:(id)sender;
@@ -33,7 +33,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *titleTextField;
 @property (weak, nonatomic) IBOutlet UITextField *locationTextField;
 
-@property (nonatomic) id<ProfileDelegate> profileDelegate;
+//@property (nonatomic) id<ProfileDelegate> profileDelegate;
 
 
 @end

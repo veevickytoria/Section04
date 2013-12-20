@@ -93,14 +93,7 @@
     self.swipeleft.direction=UISwipeGestureRecognizerDirectionLeft;
     
     self.menuButton.hidden = YES;
-    self.menuButton.layer.cornerRadius = 7;
-    self.menuButton.layer.borderColor = [[UIColor darkGrayColor] CGColor];
-    self.menuButton.layer.borderWidth = 1.0f;
-    
     self.scheduleButton.hidden = YES;
-    self.scheduleButton.layer.cornerRadius = 7;
-    self.scheduleButton.layer.borderColor = [[UIColor darkGrayColor] CGColor];
-    self.scheduleButton.layer.borderWidth = 1.0f;
     
     self.openEars = [[iWinOpenEarsModel alloc] init];
     self.openEars.openEarsDelegate = self;
@@ -242,7 +235,8 @@
     self.homeScreenViewController = [[iWinHomeScreenViewController alloc] initWithNibName:@"iWinHomeScreenViewController" bundle:nil withUserID:userID];
     [self.mainView  addSubview:self.homeScreenViewController.view];
     [self.homeScreenViewController.view setBounds:self.mainView.bounds];
-    
+    [self updateSelectedMenu:self.homeButton];
+    self.openEars.openEarsDelegate = self;
 }
 
 -(void) onCancel
@@ -376,7 +370,7 @@
     self.profileViewController = [[iWinViewProfileViewController alloc] initWithNibName:@"iWinViewProfileViewController" bundle:nil withID: self.userID];
     [self.mainView  addSubview:self.profileViewController.view];
     [self.profileViewController.view setBounds:self.mainView.bounds];
-    self.profileViewController.profileDelegate = self;
+    //self.profileViewController.profileDelegate = self;
     [self animateSlidingMenu:NO];
     
     [self updateSelectedMenu:self.profileButton];

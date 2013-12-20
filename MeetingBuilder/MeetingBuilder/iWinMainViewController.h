@@ -20,7 +20,7 @@
 #import "TKCalendarDayView.h"
 #import "TKCalendarDayEventView.h"
 
-@interface iWinMainViewController : UIViewController <iWinLoginDelegate, iWinRegisterVCDelegate, NoteListDelegate, ViewAddNoteDelegate, SettingsDelegate, ProfileDelegate, OpenEarsDelegate, TKCalendarDayViewDelegate, TKCalendarDayViewDataSource>
+@interface iWinMainViewController : UIViewController <iWinLoginDelegate, iWinRegisterVCDelegate, NoteListDelegate, ViewAddNoteDelegate, SettingsDelegate, OpenEarsDelegate, TKCalendarDayViewDelegate, TKCalendarDayViewDataSource>
 
 @property (weak, nonatomic) IBOutlet UIView *mainView;
 @property (weak, nonatomic) IBOutlet UIView *slideView;

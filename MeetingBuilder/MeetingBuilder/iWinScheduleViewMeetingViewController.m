@@ -82,17 +82,6 @@
     [self.startTimeLabel addGestureRecognizer:tapStartTime];
     [self.endTimeLabel addGestureRecognizer:tapEndTime];
     
-    [self updateButtonUI:self.saveButton];
-    [self updateButtonUI:self.cancelButton];
-    [self updateButtonUI:self.saveAndAddMoreButton];
-    [self updateButtonUI:self.addAgendaButton];
-    [self updateButtonUI:self.addAttendeesButton];
-    [self updateButtonUI:self.visitScheduleButton];
-    
-    [self updateLabelUI:self.startDateLabel];
-    [self updateLabelUI:self.endDateLabel];
-    [self updateLabelUI:self.startTimeLabel];
-    [self updateLabelUI:self.endTimeLabel];
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"MM/dd/yyyy"];
@@ -135,20 +124,6 @@
         [self formatTime:[NSDate date]];
     }
     
-}
-
--(void) updateButtonUI:(UIButton *)button
-{
-    button.layer.cornerRadius = 7;
-    button.layer.borderColor = [[UIColor darkGrayColor] CGColor];
-    button.layer.borderWidth = 1.0f;
-}
-
--(void) updateLabelUI:(UILabel *)label
-{
-    label.layer.cornerRadius = 7;
-    label.layer.borderColor = [[UIColor darkGrayColor] CGColor];
-    label.layer.borderWidth = 1.0f;
 }
 
 - (void)didReceiveMemoryWarning

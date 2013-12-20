@@ -15,6 +15,8 @@
 @property (nonatomic) NSString *pageName;
 @property (nonatomic) BOOL isEditing;
 @property (nonatomic) NSUInteger rowToDelete;
+@property (nonatomic) UIAlertView *deleteAlertView;
+@property (nonatomic) UIAlertView *inviteAlertView;
 @end
 
 @implementation iWinAddUsersViewController
@@ -34,14 +36,10 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    [self updateButtonUI:self.saveButton];
-    [self updateButtonUI:self.cancelButton];
-    [self updateButtonUI:self.sendInviteButton];
-    
-    self.userSearchBar.showsScopeBar = NO;
     
     self.attendeeList = [[NSMutableArray alloc] init];
     self.filteredList = [[NSMutableArray alloc] init];
+    self.userList = [[NSMutableArray alloc] init];
 
     iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     
@@ -49,60 +47,65 @@
     
     NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Contact" inManagedObjectContext:context];
     
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:entityDesc];
-    
-    NSError *error;
-    NSArray *result = [context executeFetchRequest:request
-                                              error:&error];
-    
-    self.userList = [[NSMutableArray alloc] initWithArray:result];
-    
-    
-    
-//    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Users"];
-//    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-//    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:30];
-//    [urlRequest setHTTPMethod:@"GET"];
-//    NSURLResponse * response = nil;
-//    NSError * error = nil;
-//    NSData * data = [NSURLConnection sendSynchronousRequest:urlRequest
-//                                            returningResponse:&response
-//                                                        error:&error];
-//    NSArray *jsonArray;
-//    if (error)
-//    {
-//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Users not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
-//        [alert show];
-//    }
-//    else
-//    {
-//        NSError *jsonParsingError = nil;
-//        jsonArray = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
-//    }
-//    if (jsonArray.count > 0)
-//    {
-//        for (NSDictionary* users in jsonArray)
-//        {
-//            Contact *c = [[Contact alloc] init];
-//            c.userID = [users objectForKey:@"userID"];
+    //for local database
 //
-//            NSString *displayName = (NSString *)[users objectForKey:@"displayName"];
+//    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+//    [request setEntity:entityDesc];
+//    
+//    NSError *error;
+//    NSArray *result = [context executeFetchRequest:request
+//                                              error:&error];
+//    
+//    self.userList = [[NSMutableArray alloc] initWithArray:result];
+    
+    
+    //for backend connection
+    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Users"];
+    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:30];
+    [urlRequest setHTTPMethod:@"GET"];
+    NSURLResponse * response = nil;
+    NSError * error = nil;
+    NSData * data = [NSURLConnection sendSynchronousRequest:urlRequest
+                                            returningResponse:&response
+                                                        error:&error];
+    NSArray *jsonArray;
+    if (error)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Users not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alert show];
+    }
+    else
+    {
+        NSError *jsonParsingError = nil;
+         NSDictionary *deserializedDictionary = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
+        //jsonArray = [[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError] objectAtIndex:0];
+        jsonArray = [deserializedDictionary objectForKey:@"users"];
+    }
+    if (jsonArray.count > 0)
+    {
+        NSLog(@"%d", jsonArray.count);
+        for (NSDictionary* users in jsonArray)
+        {
+            Contact *c = [[Contact alloc] initWithEntity:entityDesc insertIntoManagedObjectContext:context];
+            c.userID = [users objectForKey:@"userID"];
+
+            c.name = (NSString *)[users objectForKey:@"name"];
 //            NSInteger nWords = 2;
 //            NSRange wordRange = NSMakeRange(0, nWords);
 //            NSArray *firstAndLastNames = [[displayName componentsSeparatedByString:@" "] subarrayWithRange:wordRange];
 //            c.firstName = (NSString *)[firstAndLastNames objectAtIndex:0];
 //            c.lastName = (NSString *)[firstAndLastNames objectAtIndex:1];
-//            
-//            c.email = (NSString *)[users objectForKey:@"email"];
-//            c.phone = (NSString *)[users objectForKey:@"phone"];
-//            c.company = (NSString *)[users objectForKey:@"companyc"];
-//            c.title = (NSString *)[users objectForKey:@"title"];
-//            c.location = (NSString *)[users objectForKey:@"location"];
-//            
-//            [self.userList addObject:c];
-//        }
-//    }
+            
+            c.email = (NSString *)[users objectForKey:@"email"];
+            c.phone = (NSString *)[users objectForKey:@"phone"];
+            c.company = (NSString *)[users objectForKey:@"companyc"];
+            c.title = (NSString *)[users objectForKey:@"title"];
+            c.location = (NSString *)[users objectForKey:@"location"];
+            
+            [self.userList addObject:c];
+        }
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -113,6 +116,10 @@
 
 - (IBAction)onClickSendInvite
 {
+    
+    self.inviteAlertView = [[UIAlertView alloc] initWithTitle:@"Invite User" message:@"Enter user email" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Invite", nil];
+    [self.inviteAlertView setAlertViewStyle:UIAlertViewStylePlainTextInput];
+    [self.inviteAlertView show];
 }
 
 - (IBAction)onClickSave
@@ -126,13 +133,6 @@
 {
     //[self.userDelegate returnToPreviousView:self.pageName inEditMode:self.isEditing];
     [self dismissViewControllerAnimated:YES completion:nil];
-}
-
--(void) updateButtonUI:(UIButton *)button
-{
-    button.layer.cornerRadius = 7;
-    button.layer.borderColor = [[UIColor darkGrayColor] CGColor];
-    button.layer.borderWidth = 1.0f;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -150,7 +150,7 @@
         c = (Contact *)[self.attendeeList objectAtIndex:indexPath.row];
     }
     
-    cell.textLabel.text = [NSString stringWithFormat:@"%@ %@", c.firstName, c.lastName];
+    cell.textLabel.text = [NSString stringWithFormat:@"%@", c.name];
     cell.detailTextLabel.text = c.email;
     return cell;
 }
@@ -167,7 +167,7 @@
 #pragma mark Content Filtering
 -(void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope {
     [self.filteredList removeAllObjects];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.firstName contains[c] %@ OR SELF.lastName contains[c] %@ OR SELF.email contains[c] %@", searchText, searchText, searchText];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.name contains[c] %@ OR SELF.email contains[c] %@", searchText, searchText];
     self.filteredList = [NSMutableArray arrayWithArray:[self.userList filteredArrayUsingPredicate:predicate]];
 }
 
@@ -203,21 +203,29 @@ shouldReloadTableForSearchString:(NSString *)searchString
     else
     {
         self.rowToDelete = indexPath.row;
-        UIAlertView *deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this contact?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
-        [deleteAlertView show];
+        self.deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this contact?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
+        [self.deleteAlertView show];
     }
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (buttonIndex == 1)
+    if ([alertView isEqual:self.deleteAlertView])
     {
-        [self.attendeeList removeObjectAtIndex:self.rowToDelete];
-        [self.userListTableView reloadData];
+        if (buttonIndex == 1)
+        {
+            [self.attendeeList removeObjectAtIndex:self.rowToDelete];
+            [self.userListTableView reloadData];
+        }
+        else
+        {
+            self.rowToDelete = -1;
+        }
     }
     else
     {
-        self.rowToDelete = -1;
+        NSString *email = [alertView textFieldAtIndex:0].text;
+        NSLog(@"%@", email);
     }
 }
 

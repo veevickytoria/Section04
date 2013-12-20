@@ -2,7 +2,7 @@
 //  Contact.m
 //  MeetingBuilder
 //
-//  Created by CSSE Department on 12/17/13.
+//  Created by CSSE Department on 12/20/13.
 //  Copyright (c) 2013 CSSE371. All rights reserved.
 //
 
@@ -13,8 +13,7 @@
 
 @dynamic company;
 @dynamic email;
-@dynamic firstName;
-@dynamic lastName;
+@dynamic name;
 @dynamic location;
 @dynamic phone;
 @dynamic title;

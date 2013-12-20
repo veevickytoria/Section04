@@ -23,7 +23,7 @@
 
 @implementation iWinViewProfileViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withID: userID
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withID:(NSInteger)userID
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
@@ -38,7 +38,6 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    [self updateButtonUI:self.editProfile];
     self.isEditing = NO;
     
     iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
@@ -100,13 +99,14 @@
 //    //            iWinContact *c = [[iWinContact alloc] init];
 //    //            c.userID = (NSInteger)[users objectForKey:@"userID"];
 //    //
-//    //            NSString *displayName = (NSString *)[users objectForKey:@"displayName"];
-//    //            NSInteger nWords = 2;
-//    //            NSRange wordRange = NSMakeRange(0, nWords);
-//    //            NSArray *firstAndLastNames = [[displayName componentsSeparatedByString:@" "] subarrayWithRange:wordRange];
-//    //            c.firstName = (NSString *)[firstAndLastNames objectAtIndex:0];
-//    //            c.lastName = (NSString *)[firstAndLastNames objectAtIndex:1];
+//    //            //NSString *displayName = (NSString *)[users objectForKey:@"displayName"];
+//    //            //NSInteger nWords = 2;
+//    //            //NSRange wordRange = NSMakeRange(0, nWords);
+//    //            //NSArray *firstAndLastNames = [[displayName componentsSeparatedByString:@" "] subarrayWithRange:wordRange];
+//    //            //c.firstName = (NSString *)[firstAndLastNames objectAtIndex:0];
+//    //            //c.lastName = (NSString *)[firstAndLastNames objectAtIndex:1];
 //    //
+//                  c.name = (NSString *)[users objectForKey:@"name"];
 //    //            c.email = (NSString *)[users objectForKey:@"email"];
 //    //            c.phone = (NSString *)[users objectForKey:@"phone"];
 //    //            c.company = (NSString *)[users objectForKey:@"companyc"];
@@ -121,7 +121,7 @@
     
     //PULL FROM DB
 
-    [self.displayNameTextField setText:[NSString stringWithFormat:@"%@ %@", self.contact.firstName, self.contact.lastName]];
+    [self.displayNameTextField setText:[NSString stringWithFormat:@"%@", self.contact.name]];
     self.emailTextField.text =  self.contact.email;
     self.phoneTextField.text = self.contact.phone;
     self.companyTextField.text = self.contact.company;
@@ -136,14 +136,6 @@
     [self unUpdateTextFieldUI:self.locationTextField];
     
 
-}
-
--(void) updateButtonUI: (UIButton *)button
-{
-    button.layer.cornerRadius = 7;
-    button.layer.borderColor = [[UIColor darkGrayColor] CGColor];
-    button.layer.borderWidth = 1.0f;
-    [button setTintColor:[UIColor blueColor]];
 }
 
 -(void) updateTextFieldUI: (UITextField *)textField
@@ -206,11 +198,6 @@
 //    
 //    
 //    }
-    
-    
-    
-    
-    
     // SAVE TO DB
     
     
@@ -232,13 +219,12 @@
     
     self.contact = (Contact*)[result objectAtIndex:0];
     
-    NSInteger nWords = 2;
-    NSRange wordRange = NSMakeRange(0, nWords);
-    NSArray *firstAndLastNames = [[self.displayNameTextField.text componentsSeparatedByString:@" "] subarrayWithRange:wordRange];
+//    NSInteger nWords = 2;
+//    NSRange wordRange = NSMakeRange(0, nWords);
+//    NSArray *firstAndLastNames = [[self.displayNameTextField.text componentsSeparatedByString:@" "] subarrayWithRange:wordRange];
     
  
-    [self.contact setValue:(NSString *)[firstAndLastNames objectAtIndex:0] forKey:@"firstName"];
-    [self.contact setValue:(NSString *)[firstAndLastNames objectAtIndex:1] forKey:@"lastName"];
+    [self.contact setValue:self.displayNameTextField.text forKey:@"name"];
     [self.contact setValue:self.emailTextField.text forKey:@"email"];
     [self.contact setValue:self.phoneTextField.text forKey:@"phone"];
     [self.contact setValue:self.companyTextField.text forKey:@"company"];
@@ -326,12 +312,9 @@
         [self updateTextFieldUI:self.emailTextField];
         [self updateTextFieldUI:self.phoneTextField];
         [self updateTextFieldUI:self.locationTextField];
-
-        
-        
+  
         [self.editProfile setTitle:@"Save" forState:UIControlStateNormal];
         [self.editProfile setTintColor:[UIColor greenColor]];
-        [self updateButtonUI:self.cancel];
         self.cancel.hidden = NO;
         
     }

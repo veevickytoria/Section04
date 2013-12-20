@@ -29,8 +29,7 @@
     
     if (result.count <= 1)
     {
-        [newContact setValue:@"Dharmin" forKey:@"firstName"];
-        [newContact setValue:@"Shah" forKey:@"lastName"];
+        [newContact setValue:@"Dharmin Shah" forKey:@"name"];
         [newContact setValue:@"shahdk@rose-hulman.edu" forKey:@"email"];
         [newContact setValue:@"iWin LLC" forKey:@"company"];
         [newContact setValue:@"(812)345-9876" forKey:@"phone"];
@@ -41,15 +40,13 @@
         [context save:&error];
         
         newContact = [NSEntityDescription insertNewObjectForEntityForName:@"Contact" inManagedObjectContext:context];
-        [newContact setValue:@"Rain" forKey:@"firstName"];
-        [newContact setValue:@"Dartt" forKey:@"lastName"];
+        [newContact setValue:@"Rain Dartt" forKey:@"name"];
         [newContact setValue:@"darttrf@rose-hulman.edu" forKey:@"email"];
         [newContact setValue:[NSNumber numberWithInt:2] forKey:@"userID"];
         [context save:&error];
         
         newContact = [NSEntityDescription insertNewObjectForEntityForName:@"Contact" inManagedObjectContext:context];
-        [newContact setValue:@"Brian" forKey:@"firstName"];
-        [newContact setValue:@"Padilla" forKey:@"lastName"];
+        [newContact setValue:@"Brian Padilla" forKey:@"name"];
         [newContact setValue:@"padillbt@rose-hulman.edu" forKey:@"email"];
         [newContact setValue:[NSNumber numberWithInt:3] forKey:@"userID"];
         [context save:&error];

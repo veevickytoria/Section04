@@ -33,7 +33,7 @@
 
 - (void)testInvalidSearch
 {
-    [self.addUsersVC filterContentForSearchText:@"Joe" scope:nil];
+    [self.addUsersVC filterContentForSearchText:@"Joe@Joe.JoeDotCom" scope:nil];
     XCTAssertTrue(self.addUsersVC.filteredList.count == 0, @"Search failed");
 }
 
@@ -43,8 +43,7 @@
     XCTAssertTrue(self.addUsersVC.filteredList.count == 1, @"Search failed");
     
     Contact *contact = (Contact *)[self.addUsersVC.filteredList objectAtIndex:0];
-    XCTAssertTrue([contact.firstName isEqualToString:@"Dharmin"], @"Search failed");
-    XCTAssertTrue([contact.lastName isEqualToString:@"Shah"], @"Search failed");
+    XCTAssertTrue([contact.name isEqualToString:@"Dharmin Shah"], @"Search failed");
     XCTAssertTrue([contact.email isEqualToString:@"shahdk@rose-hulman.edu"], @"Search failed");
 }
 
@@ -54,8 +53,7 @@
     XCTAssertTrue(self.addUsersVC.filteredList.count == 1, @"Search failed");
     
     Contact *contact = (Contact *)[self.addUsersVC.filteredList objectAtIndex:0];
-    XCTAssertTrue([contact.firstName isEqualToString:@"Dharmin"], @"Search failed");
-    XCTAssertTrue([contact.lastName isEqualToString:@"Shah"], @"Search failed");
+    XCTAssertTrue([contact.name isEqualToString:@"Dharmin Shah"], @"Search failed");
     XCTAssertTrue([contact.email isEqualToString:@"shahdk@rose-hulman.edu"], @"Search failed");
 }
 
@@ -65,8 +63,7 @@
     XCTAssertTrue(self.addUsersVC.filteredList.count == 1, @"Search failed");
     
     Contact *contact = (Contact *)[self.addUsersVC.filteredList objectAtIndex:0];
-    XCTAssertTrue([contact.firstName isEqualToString:@"Dharmin"], @"Search failed");
-    XCTAssertTrue([contact.lastName isEqualToString:@"Shah"], @"Search failed");
+    XCTAssertTrue([contact.name isEqualToString:@"Dharmin Shah"], @"Search failed");
     XCTAssertTrue([contact.email isEqualToString:@"shahdk@rose-hulman.edu"], @"Search failed");
 }
 

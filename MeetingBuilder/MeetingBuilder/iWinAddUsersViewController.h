@@ -16,7 +16,6 @@
 
 @interface iWinAddUsersViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *userListTableView;
-@property (weak, nonatomic) IBOutlet UITextField *emailField;
 @property (strong, nonatomic) id<UserDelegate> userDelegate;
 - (IBAction)onClickSendInvite;
 - (IBAction)onClickSave;
@@ -24,10 +23,8 @@
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withPageName:(NSString *)pageName inEditMode:(BOOL)isEditing;
 @property (weak, nonatomic) IBOutlet UIButton *cancelButton;
 @property (weak, nonatomic) IBOutlet UIButton *saveButton;
-@property (weak, nonatomic) IBOutlet UIButton *sendInviteButton;
 @property (strong, nonatomic) NSMutableArray *userList;
 @property (strong, nonatomic) NSMutableArray *attendeeList;
 @property (strong, nonatomic) NSMutableArray *filteredList;
-@property (weak, nonatomic) IBOutlet UISearchBar *userSearchBar;
 -(void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope;
 @end
