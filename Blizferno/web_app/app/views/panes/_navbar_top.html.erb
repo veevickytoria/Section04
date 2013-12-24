@@ -48,11 +48,11 @@ function getCookie(c_name){
     }
   function deleteCookie(name){
       document.cookie= name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/';
-      alert(getCookie('userID'));
   }
 
   function logout(){
     deleteCookie('userID');
+    alert('You have been successfully logged out.');
     window.location.href('/');
   }
 </script>
