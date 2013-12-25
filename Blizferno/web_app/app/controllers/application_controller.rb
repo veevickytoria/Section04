@@ -10,16 +10,17 @@ class ApplicationController < ActionController::Base
   before_filter :getUserInfo
 
   def getUserInfo
-    if (!cookies[:userID].blank?)
-      require 'net/http'
-      @userID = cookies[:userID]
-      url = URI.parse('http://csse371-04.csse.rose-hulman.edu/User/' + @userID)
-      req = Net::HTTP::Get.new(url.path)
-      res = Net::HTTP.start(url.host, url.port) {|http|
-        http.request(req)
-      }
-      @userInfo = JSON.parse(res.body)
-    end
+    @userInfo = {'name'=>'Test Ninja','email'=>'test@meetingninja.com','phone'=>'123-456-7890','company'=>'rose-hulman','title'=>'master ninja','location'=>'the shadows'}
+    # if (!cookies[:userID].blank?)
+    #   require 'net/http'
+    #   @userID = cookies[:userID]
+    #   url = URI.parse('http://csse371-04.csse.rose-hulman.edu/User/' + @userID)
+    #   req = Net::HTTP::Get.new(url.path)
+    #   res = Net::HTTP.start(url.host, url.port) {|http|
+    #     http.request(req)
+    #   }
+    #   @userInfo = JSON.parse(res.body)
+    # end
   end
 
   #before_filter :protect
