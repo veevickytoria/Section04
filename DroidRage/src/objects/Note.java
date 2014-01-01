@@ -11,7 +11,7 @@ public class Note {
 	private String content;
 	// Unique ID for each note
 	private static int counterID;
-	int id;
+	private int id;
 
 	public Note() {
 		counterID++;
@@ -29,6 +29,13 @@ public class Note {
 		this();
 		this.name = name;
 	}
+	
+	public static Note create(int id, String name, String content) {
+		Note n = new Note(name);
+		n.setID(id);
+		n.setContent(content);
+		return n;
+	}
 
 	/**
 	 * Concatenates the given text with the current text
@@ -39,29 +46,14 @@ public class Note {
 		this.content += " " + text;
 	}
 
-	/**
-	 * Gets the content of this note
-	 * 
-	 * @return the content of this note
-	 */
 	public String getContent() {
 		return this.content;
 	}
 
-	/**
-	 * Gets the name of this note
-	 * 
-	 * @return the name of this note
-	 */
 	public String getName() {
 		return this.name;
 	}
 
-	/**
-	 * Gets the ID of this note
-	 * 
-	 * @return the ID of this note
-	 */
 	public int getID() {
 		return this.id;
 	}

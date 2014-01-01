@@ -1,20 +1,20 @@
 package testing;
 
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import objects.Agenda;
+import objects.Group;
 import objects.Meeting;
+import objects.Topic;
 import objects.User;
 
-import com.droidrage.meetingninja.database.DatabaseAdapter;
-import com.droidrage.meetingninja.database.MeetingDatabaseAdapter;
-import com.droidrage.meetingninja.database.UserDatabaseAdapter;
+import com.android.meetingninja.database.MeetingDatabaseAdapter;
+import com.android.meetingninja.database.UserDatabaseAdapter;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -25,40 +25,54 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class Main {
 
-	private static String registerTest(String name, String email, String pass) {
-		String result = new String();
-		try {
-			result = UserDatabaseAdapter.register(name, email, pass);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
-
-	private static User getUserInfoTest(String userID) {
-		User getUser = new User();
-		try {
-			getUser = UserDatabaseAdapter.getUserInfo(userID);
-		} catch (IOException e) {
-			e.printStackTrace();
+	static class UserDB {
+		private static String registerTest(String name, String email,
+				String pass) {
+			String result = new String();
+			try {
+				result = UserDatabaseAdapter.register(name, email, pass);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return result;
 		}
 
-		return getUser;
-	}
+		private static User getUserInfoTest(String userID) {
+			User getUser = new User();
+			try {
+				getUser = UserDatabaseAdapter.getUserInfo(userID);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 
-	private static String loginTest(String email, String pass) {
-		String result = new String();
-		try {
-			result = UserDatabaseAdapter.login(email, pass);
-		} catch (IOException e) {
-			e.printStackTrace();
+			return getUser;
 		}
-		return result;
 
+		private static String loginTest(String email, String pass) {
+			String result = new String();
+			try {
+				result = UserDatabaseAdapter.login(email, pass);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return result;
+
+		}
+
+		private static List<User> getAllUsersTest() {
+			List<User> result = new ArrayList<User>();
+			try {
+				result = UserDatabaseAdapter.getAllUsers();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return result;
+		}
 	}
 
 	private static void createMeeting(String user, Meeting m) {
@@ -81,10 +95,6 @@ public class Main {
 
 	public static void main(String[] args) throws JsonGenerationException,
 			JsonMappingException, IOException {
-		String[] users = new String[] { "cricket", "moorejm", "android", "joe",
-				"cricket2", "Android", "aaaa" };
-		String user = users[users.length - 1];
-
 		// boolean success = urlLogin(user);
 		// if (success) {
 		// System.out.println("User: " + user);
@@ -100,26 +110,68 @@ public class Main {
 		// Date().toString());
 		// createMeeting(user, m);
 
-		 String r = registerTest("Ethan","ethan@example.com", "pass");
-		 System.out.println(r);
+		// String r = UserDB.registerTest("Ethan","ethan@example.com", "pass");
+		// System.out.println(r);
 
-//		String loginTest = loginTest("ethangcampbell@gmail.com", "Booboo");
-//		System.out.println(loginTest);
-
-		// User registered = getUserInfoTest("701");
+		// String loginTest = UserDB.loginTest("ethan@example.com",
+		// "password");
+		// System.out.println(loginTest);
+		//
+		// User registered = UserDB.getUserInfoTest("812");
 		// System.out.println(registered);
 
-		Meeting m = new Meeting();
-		m.setTitle("New Meeting");
-		m.setLocation("O257");
+		// final List<User> allUsers = UserDB.getAllUsersTest();
+		String id;
+		// for (User user : allUsers) {
+		// System.out.println(user);
+		// }
 
-		// jsonStringParsing();
-		// System.out.println();
-		// jsonToObject();
-		// System.out.println();
-		// updateJsonFields();
-		// System.out.println();
-		// jsonToMap();
+		id = "" + 765;
+		// LinkedHashMap<String, String> map = new LinkedHashMap<String,
+		// String>();
+		// map.put("phone", "745-891-6123");
+		// map.put("email", "   ertert@ertert.com");
+		// String s = new String();
+		// try {
+		// s = UserDatabaseAdapter.update(id, map);
+		// } catch (InterruptedException e) {
+		// e.printStackTrace();
+		// }
+		// System.out.println(s);
+		agendaTest();
+	}
+	
+	private static void agendaTest() {
+		Agenda ag = new Agenda();
+		ag.setID(233);
+		Topic topic1 = new Topic("1");
+//		topic1.addTopic(topic1.new Topic("1.1"));
+//		topic1.addTopic(topic1.new Topic("1.2"));
+		Topic topic2 = new Topic("2");
+		Topic topic3 = new Topic("3");
+//		Agenda.Topic subTopic3 = topic3.new Topic("3.1");
+//		subTopic3.addTopic(subTopic3.new Topic("3.1.1"));
+//		topic3.addTopic(subTopic3);
+		ag.addTopic(topic1);
+		ag.addTopic(topic2);
+		ag.addTopic(topic3);	
+		
+//		ag.pprint();
+		User test = new User();
+		test.setUserID(123);
+		test.setDisplayName("Test");
+		Group g = new Group();
+		g.addMember(test.toSimpleUser());
+		g.setID(100);
+		g.setGroupTitle("TestGroup");
+		ObjectMapper mapper = new ObjectMapper();
+		  ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
+		try {
+			System.out.println(writer.writeValueAsString(g));
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 
@@ -215,4 +267,5 @@ public class Main {
 
 	}
 
+		
 }

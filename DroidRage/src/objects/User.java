@@ -3,57 +3,50 @@ package objects;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.List;
 
-import android.graphics.Bitmap;
-
-import com.droidrage.meetingninja.user.UserInfoFetcher;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 
-
-public class User {
-	private String userID;
-	private String displayName;
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({ "userID", "displayName", "email", "phone", "company"
+	, "title", "location"})
+public class User extends SimpleUser {
 	private String email;
 	private String phone = "";
 	private String company = "";
 	private String title = "";
 	private String location = "";
-	private List<Meeting> schedule;
-	private List<Task> tasks;
-	private Bitmap profPic;
-
 
 	public User() {
-		
+		// required empty constructor
 	}
 
-	public User(String userID) {
-		this.userID = userID;
+	public User(int userID) {
+		super.setUserID(userID);
 	}
 
-	public void updateInfo() {
-
-	}
-
+	@Override
 	public String getUserID() {
-		return userID;
+		return super.getUserID();
 	}
 
+	@Override
 	public void setUserID(String id) {
-		this.userID = id;
+		super.setUserID(id);
 	}
 
+	@Override
 	public String getDisplayName() {
 		return displayName;
 	}
 
+	@Override
 	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
+		super.setDisplayName(displayName);
 	}
 
 	public String getEmail() {
@@ -96,31 +89,6 @@ public class User {
 		this.location = location;
 	}
 
-	public List<Meeting> getSchedule() {
-		return (schedule == null || schedule.isEmpty()) ? new ArrayList<Meeting>()
-				: schedule;
-	}
-
-	public List<Task> getTasks() {
-		return tasks;
-	}
-
-	public void setTasks(List<Task> tasks) {
-		this.tasks = tasks;
-	}
-
-	public void setSchedule(List<Meeting> meetingsList) {
-		this.schedule = meetingsList;
-	}
-	
-	public void setProfPic(Bitmap pic){
-		this.profPic = pic;
-	}
-	
-	public Bitmap getProfPic(){
-		return this.profPic;
-	}
-
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -149,6 +117,13 @@ public class User {
 		// }
 		builder.append("************************");
 		return builder.toString();
+	}
+	
+	public SimpleUser toSimpleUser() {
+		SimpleUser simple = new SimpleUser();
+		simple.setUserID(this.userID);
+		simple.setDisplayName(this.displayName);
+		return simple;
 	}
 
 	public static String toJSON(User user) throws JsonGenerationException,
