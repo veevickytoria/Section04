@@ -203,6 +203,21 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 	}else{
 		echo "FALSE node not found";
 	}
+}else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'DELETE')==0){
+	preg_match("#(\d+)#", $_SERVER['REQUEST_URI'], $id);
+	$userNode = $client->getNode($id[0]);
+	if ($userNode != null){
+			//delete relationships
+			$relationArray = $userNode->getRelationships();
+			foreach($relationArray as $rel){
+				$rel->delete();
+			}
+			//delete the node
+			$userNode->delete();
+			echo json_encode(array('valid'=>'true'));
+	} else {
+		echo json_encode(array('errorID'=>'8', 'errorMessage'=>'TaskDelete: Specified node does not exist.'));
+	}
 }else{
 	echo $_SERVER['REQUEST_METHOD'] ." request method not found";
 }
