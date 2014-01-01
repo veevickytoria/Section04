@@ -5,7 +5,7 @@
  * 
  */
 
-package com.android.meetingninja.database;
+package com.android.meetingninja.database.local;
 
 import java.util.ArrayList;
 import java.util.List;

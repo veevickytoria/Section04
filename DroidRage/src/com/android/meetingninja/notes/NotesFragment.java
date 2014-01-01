@@ -24,7 +24,7 @@ import android.widget.Toast;
 
 import com.android.meetingninja.R;
 import com.android.meetingninja.database.AsyncResponse;
-import com.android.meetingninja.database.SQLiteAdapter;
+import com.android.meetingninja.database.local.SQLiteAdapter;
 import com.android.meetingninja.user.SessionManager;
 
 public class NotesFragment extends Fragment implements

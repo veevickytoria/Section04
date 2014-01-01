@@ -11,7 +11,7 @@ import android.widget.EditText;
 
 import com.android.meetingninja.MainActivity;
 import com.android.meetingninja.R;
-import com.android.meetingninja.database.SQLiteAdapter;
+import com.android.meetingninja.database.local.SQLiteAdapter;
 
 public class CreateNoteActivity extends Activity {
 
