@@ -29,9 +29,7 @@
     self.slt = [[Slt alloc] init];
     self.fliteController = [[FliteController alloc] init];
     
-    NSArray *words = [NSArray arrayWithObjects:@"GO", @"MEETINGS", @"TASK", @"TO", @"HOME", @"LOG", @"OUT", @"PROFILE", @"SETTINGS", nil];
-    NSString *myCorpus = [NSString stringWithFormat:@"%@/%@",[[NSBundle mainBundle] resourcePath], @"Dictionary.txt"];
-    NSLog(@"%@", myCorpus);
+    NSArray *words = [NSArray arrayWithObjects:@"GO", @"TO", @"HOME", @"MEETINGS", @"PROFILE", @"TASK", @"NOTES", @"SETTINGS", @"LOG", @"OUT", @"MENU", @"SCHEDULE", @"CREATE", @"EDIT",  nil];
 
     //NSError *error;
     //NSString *x = [NSString stringWithContentsOfFile:myCorpus encoding:NSUTF8StringEncoding error:&error];
@@ -76,11 +74,11 @@
 }
 
 - (void) pocketsphinxDidStartCalibration {
-    [self.openEarsDelegate loading];
     double delayInSeconds = 0.15;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        [self.fliteController say:[NSString stringWithFormat:@"Calibrating"] withVoice:self.slt];
+        //[self.fliteController say:[NSString stringWithFormat:@"Calibrating"] withVoice:self.slt];
+        [self.openEarsDelegate loading];
     });
     
 }
@@ -90,11 +88,11 @@
 }
 
 - (void) pocketsphinxDidStartListening {
-    [self.openEarsDelegate speakNow];
     double delayInSeconds = 0.25;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        [self.fliteController say:[NSString stringWithFormat:@"Speak Now"] withVoice:self.slt];
+       // [self.fliteController say:[NSString stringWithFormat:@"Speak Now"] withVoice:self.slt];
+        [self.openEarsDelegate speakNow];
     });
     
     
@@ -106,11 +104,11 @@
 
 - (void) pocketsphinxDidDetectFinishedSpeech {
     
-    [self.openEarsDelegate detecting];
     double delayInSeconds = 0.35;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        [self.fliteController say:[NSString stringWithFormat:@"Analyzing"] withVoice:self.slt];
+        //[self.fliteController say:[NSString stringWithFormat:@"Analyzing"] withVoice:self.slt];
+        [self.openEarsDelegate detecting];
     });
 }
 
