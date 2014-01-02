@@ -53,6 +53,7 @@
     [self.slideView addGestureRecognizer:self.swiperight];
     self.menuButton.hidden = NO;
     self.scheduleButton.hidden = NO;
+    self.voiceCommand.hidden = NO;
 }
 
 -(void) disableSliding
@@ -61,6 +62,7 @@
     [self.slideView removeGestureRecognizer:self.swiperight];
     self.menuButton.hidden = YES;
     self.scheduleButton.hidden = YES;
+    self.voiceCommand.hidden = YES;
 }
 
 -(void) resetSliding
@@ -72,7 +74,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.voiceCommand.hidden = YES;
+    
     iWinPopulateDatabase *db = [[iWinPopulateDatabase alloc] init];
     [db populateContacts];
     
@@ -94,6 +96,7 @@
     
     self.menuButton.hidden = YES;
     self.scheduleButton.hidden = YES;
+    self.voiceCommand.hidden = YES;
     
     self.openEars = [[iWinOpenEarsModel alloc] init];
     self.openEars.openEarsDelegate = self;
@@ -246,7 +249,8 @@
     [self.slideView removeGestureRecognizer:self.swipeleft];
     [self.slideView removeGestureRecognizer:self.swiperight];
     self.menuButton.hidden = YES;
-    
+    self.scheduleButton.hidden = YES;
+    self.voiceCommand.hidden = YES;
     [self.mainView  addSubview:self.loginViewController.view];
     [self.loginViewController.view setBounds:self.mainView.bounds];
     
@@ -474,13 +478,33 @@
 
 -(void)speechToText:(NSString *)hypothesis
 {
-    if (([hypothesis rangeOfString:@"GO"].location != NSNotFound) && ([hypothesis rangeOfString:@"MEETINGS"].location != NSNotFound))
+    if (([hypothesis rangeOfString:@"GO"].location != NSNotFound) && ([hypothesis rangeOfString:@"HOME"].location != NSNotFound))
+    {
+        [self onClickHome];
+    }
+    else if (([hypothesis rangeOfString:@"GO"].location != NSNotFound) && ([hypothesis rangeOfString:@"MEETINGS"].location != NSNotFound))
     {
         [self onClickMeetings];
+    }
+    else if (([hypothesis rangeOfString:@"GO"].location != NSNotFound) && ([hypothesis rangeOfString:@"PROFILE"].location != NSNotFound))
+    {
+        [self onClickProfile];
     }
     else if (([hypothesis rangeOfString:@"GO"].location != NSNotFound) && ([hypothesis rangeOfString:@"TASK"].location != NSNotFound))
     {
         [self onClickTasks];
+    }
+    else if (([hypothesis rangeOfString:@"GO"].location != NSNotFound) && ([hypothesis rangeOfString:@"NOTES"].location != NSNotFound))
+    {
+        [self onClickNotes];
+    }
+    else if (([hypothesis rangeOfString:@"GO"].location != NSNotFound) && ([hypothesis rangeOfString:@"SETTINGS"].location != NSNotFound))
+    {
+        [self onClickSettings];
+    }
+    else if (([hypothesis rangeOfString:@"LOG"].location != NSNotFound) && ([hypothesis rangeOfString:@"OUT"].location != NSNotFound))
+    {
+        [self onClickLogOut];
     }
     [self.voiceCommand setTitle:@"Voice Command" forState:UIControlStateNormal];
 }
@@ -502,6 +526,7 @@
 
 - (IBAction)startListening:(id)sender
 {
+    [self loading];
     [self.openEars startListening];
 }
 
