@@ -7,17 +7,13 @@ package objects;
  * 
  */
 public class Note {
-	private String name;
+	private String title;
 	private String content;
-	// Unique ID for each note
-	private static int counterID;
-	private int id;
+	private String noteID;
 
 	public Note() {
-		counterID++;
-		this.id = counterID;
-		this.name = String.format("Note %d", id);
-		this.content = new String();
+		this.title = "New Note";
+		this.content = "";
 	}
 
 	/**
@@ -25,16 +21,20 @@ public class Note {
 	 * 
 	 * @param name
 	 */
-	public Note(String name) {
+	public Note(String title) {
 		this();
-		this.name = name;
+		this.title = title;
 	}
-	
-	public static Note create(int id, String name, String content) {
-		Note n = new Note(name);
+
+	public static Note create(int id, String title, String content) {
+		Note n = new Note(title);
 		n.setID(id);
 		n.setContent(content);
 		return n;
+	}
+
+	public static Note create(String id, String title, String content) {
+		return Note.create(Integer.parseInt(id), title, content);
 	}
 
 	/**
@@ -51,15 +51,15 @@ public class Note {
 	}
 
 	public String getName() {
-		return this.name;
+		return this.title;
 	}
 
-	public int getID() {
-		return this.id;
+	public String getID() {
+		return this.noteID;
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.title = name;
 	}
 
 	public void setContent(String content) {
@@ -67,7 +67,12 @@ public class Note {
 	}
 
 	public void setID(int id) {
-		this.id = id;
+		this.noteID = Integer.toString(id);
+	}
+
+	public void setID(String id) {
+		int testInt = Integer.parseInt(id);
+		setID(testInt);
 	}
 
 }

@@ -23,24 +23,25 @@ public class Topic {
 	}
 
 	public Topic(String title) {
-		this.topic = title;		}
-	
+		this.topic = title;
+	}
+
 	@JsonProperty("topic")
 	public String getTitle() {
 		return topic;
 	}
-	
+
 	@JsonProperty("topic")
 	public void setTitle(String title) {
 		topic = title;
 	}
-	
+
 	@JsonProperty("subtopic")
 	public ArrayList<Topic> getTopics() {
 		// TODO Auto-generated method stub
 		return subTopics;
 	}
-	
+
 	@JsonProperty("subtopic")
 	public void setTopics(ArrayList<Topic> topics) {
 		// TODO Auto-generated method stub

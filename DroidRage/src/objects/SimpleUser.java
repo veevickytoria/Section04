@@ -22,7 +22,7 @@ public class SimpleUser {
 		int testInt = Integer.parseInt(id);
 		setUserID(testInt);
 	}
-	
+
 	@JsonProperty("userID")
 	public void setUserID(int id) {
 		this.userID = Integer.toString(id);

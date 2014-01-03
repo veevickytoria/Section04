@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright (C) 2014 The Android Open Source Project
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package com.android.meetingninja.user;
 
 import java.io.IOException;
@@ -30,12 +45,6 @@ import com.android.meetingninja.extras.Utilities;
  * well.
  */
 public class LoginActivity extends Activity {
-
-	/**
-	 * The default email to populate the email field with.
-	 */
-	public static final String EXTRA_EMAIL = "REGISTERED_EMAIL";
-
 	/**
 	 * Keep track of the login task to ensure we can cancel it if requested.
 	 */
@@ -59,7 +68,7 @@ public class LoginActivity extends Activity {
 		setContentView(R.layout.activity_login);
 
 		// Set up the login form.
-		mEmail = getIntent().getStringExtra(EXTRA_EMAIL);
+		mEmail = getIntent().getStringExtra(Intent.EXTRA_EMAIL);
 		mEmailView = (EditText) findViewById(R.id.email);
 		mEmailView.setText(mEmail);
 
@@ -235,22 +244,20 @@ public class LoginActivity extends Activity {
 
 			try {
 				login_result = UserDatabaseAdapter.login(mEmail, mPassword);
-				if (login_result.contains("invalid")){
+				if (login_result.contains("invalid")) {
 					Log.e("LOGIN", mEmail + " does not exist");
 					return false;
-				}else{
-					SessionManager session = new SessionManager(
-							getApplicationContext());
+				} else {
+					SessionManager session = SessionManager.getInstance();
 					session.clear();
 					session.createLoginSession(login_result);
-					
+
 				}
 				// Thread.sleep(2000);
 			} catch (IOException e) {
 				Log.e("LOGIN_ERR", e.toString());
 				return false;
 			}
-			
 
 			// return login_success;
 			return true;
@@ -263,10 +270,10 @@ public class LoginActivity extends Activity {
 
 			// if successful login, start main activity
 			if (success) {
-//				SessionManager session = new SessionManager(
-//						getApplicationContext());
-//				session.clear();
-//				session.createLoginSession(mEmail);
+				// SessionManager session = new SessionManager(
+				// getApplicationContext());
+				// session.clear();
+				// session.createLoginSession(mEmail);
 				Intent main = new Intent(mLoginFormView.getContext(),
 						MainActivity.class);
 				main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

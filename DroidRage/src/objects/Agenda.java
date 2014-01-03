@@ -36,7 +36,6 @@ public class Agenda {
 	public void setID(int id) {
 		this.agendaID = Integer.toString(id);
 	}
-	
 
 	@JsonProperty("title")
 	public String getTitle() {

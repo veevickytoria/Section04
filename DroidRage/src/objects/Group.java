@@ -29,7 +29,7 @@ public class Group {
 		int testInt = Integer.parseInt(id);
 		setID(testInt);
 	}
-	
+
 	@JsonProperty("groupID")
 	public void setID(int id) {
 		this.groupID = Integer.toString(id);
@@ -54,7 +54,7 @@ public class Group {
 	public void setMembers(List<SimpleUser> members) {
 		this.members = members;
 	}
-	
+
 	public void addMember(SimpleUser user) {
 		this.members.add(user);
 	}

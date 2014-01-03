@@ -12,8 +12,8 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "userID", "displayName", "email", "phone", "company"
-	, "title", "location"})
+@JsonPropertyOrder({ "userID", "displayName", "email", "phone", "company",
+		"title", "location" })
 public class User extends SimpleUser {
 	private String email;
 	private String phone = "";
@@ -118,7 +118,7 @@ public class User extends SimpleUser {
 		builder.append("************************");
 		return builder.toString();
 	}
-	
+
 	public SimpleUser toSimpleUser() {
 		SimpleUser simple = new SimpleUser();
 		simple.setUserID(this.userID);

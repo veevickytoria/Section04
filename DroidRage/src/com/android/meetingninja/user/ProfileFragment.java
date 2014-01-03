@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright (C) 2014 The Android Open Source Project
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package com.android.meetingninja.user;
 
 import java.util.ArrayList;
@@ -37,14 +52,14 @@ public class ProfileFragment extends Fragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View v = inflater.inflate(R.layout.fragment_view_profile, container,
-				false);
+		View v = inflater.inflate(R.layout.fragment_profile, container, false);
 		setupViews(v);
-		session = SessionManager.newInstance(getActivity().getApplicationContext());
+		session = SessionManager.getInstance();
 
 		// user = new User(session.getUserDetails().get(session.USERID));
 		infoFetcher = new RetUserObj();
-		infoFetcher.execute(session.getUserDetails().get(SessionManager.USERID));
+		infoFetcher.execute(session.getUserDetails().get(
+				SessionManager.KEY_USERID));
 
 		meetingList = (ListView) v.findViewById(R.id.profile_meetingList);
 		adpt = new MeetingItemAdapter(getActivity(), R.layout.meeting_item,
@@ -79,15 +94,18 @@ public class ProfileFragment extends Fragment implements
 		this.user = user;
 		if (user != null) {
 			mName.setText(user.getDisplayName());
-			mTitleCompany.setText(String.format(getString(R.id.profile_title_company), user.getTitle(), user.getCompany()));
+			mTitleCompany.setText(String.format(
+					getString(R.id.profile_title_company), user.getTitle(),
+					user.getCompany()));
 			mPhone.setText(user.getPhone());
-			mEmail.setText(user.getEmail());			
+			mEmail.setText(user.getEmail());
 		}
-//		Bitmap pic = BitmapFactory.decodeResource(getResources(),
-//				R.drawable.ic_contact_picture);
-//		qcb.setImageBitmap(pic);
+		// Bitmap pic = BitmapFactory.decodeResource(getResources(),
+		// R.drawable.ic_contact_picture);
+		// qcb.setImageBitmap(pic);
 		// bitmapFetcher.execute("http://www.tdnforums.com/uploads/profile/photo-27119.jpg?_r=0");
-		mUserImage.setImageUrl("http://www.tdnforums.com/uploads/profile/photo-27119.jpg?_r=0");
+		mUserImage
+				.setImageUrl("http://www.tdnforums.com/uploads/profile/photo-27119.jpg?_r=0");
 
 	}
 

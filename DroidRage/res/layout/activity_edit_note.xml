@@ -1,33 +1,58 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/RelativeLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity" >
-
-    <!-- Login progress -->
-
-
-    <!-- Login form -->
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin" >
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/noteTitleEditor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:ems="10"
+        android:hint="Title"
+        android:singleLine="true"
+        android:textSize="20sp" />
+
+    <ScrollView
+        android:id="@+id/contentScroller"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/button2"
+        android:layout_above="@+id/btnCancel"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:ems="10"
-        android:gravity="top"
-        android:inputType="textMultiLine"
-        android:textSize="24sp" >
+        android:layout_below="@+id/noteTitleEditor"
+        android:layout_marginTop="6dp" >
 
-        <requestFocus />
-    </EditText>
+        <EditText
+            android:id="@+id/noteContentEditor"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:ems="10"
+            android:gravity="top"
+            android:inputType="textMultiLine"
+            android:textSize="20sp" >
+
+            <requestFocus />
+        </EditText>
+    </ScrollView>
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/btnSave"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/btnCancel"
+        android:layout_alignBottom="@+id/btnCancel"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="40dp"
+        android:onClick="onClick"
+        android:text="Save and Exit" />
+
+    <Button
+        android:id="@+id/btnCancel"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -35,19 +60,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginBottom="20dp"
         android:layout_marginRight="40dp"
-        android:text="Discard Changes" 
-        android:onClick="discard"/>
-
-    <Button
-        android:id="@+id/add_guests_btn"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/button2"
-        android:layout_alignBottom="@+id/button2"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="40dp"
-        android:text="Save and Exit" 
-        android:onClick="save"/>
+        android:onClick="onClick"
+        android:text="Discard Changes" />
 
 </RelativeLayout>

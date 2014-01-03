@@ -1,9 +1,25 @@
+/*******************************************************************************
+ * Copyright (C) 2014 The Android Open Source Project
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package com.android.meetingninja.notes;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import objects.Note;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,22 +40,18 @@ import android.widget.Toast;
 
 import com.android.meetingninja.R;
 import com.android.meetingninja.database.AsyncResponse;
-import com.android.meetingninja.database.local.SQLiteAdapter;
+import com.android.meetingninja.database.local.NoteDBAdapter;
 import com.android.meetingninja.user.SessionManager;
 
 public class NotesFragment extends Fragment implements
 		AsyncResponse<List<Note>> {
+	private static final String TAG = NotesFragment.class.getSimpleName();
 	private SessionManager session;
 	private NoteItemAdapter noteAdpt;
 	private static List<Note> notes = new ArrayList<Note>();
-	private SQLiteAdapter mySQLiteAdapter;
+	private NoteDBAdapter mySQLiteAdapter;
 
 	// private View notesView;
-
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.notes, menu);
-	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,19 +65,19 @@ public class NotesFragment extends Fragment implements
 		// if (test.getStringExtra("NoteID") != null)
 		// Log.e("NOTES", test.getStringExtra("NoteID"));
 
-		session = SessionManager.newInstance(getActivity().getApplicationContext());
+		session = SessionManager.getInstance();
 
 		// TODO: Check for internet connection before receiving notes from DB
 		// TODO: Display a something saying "no notes" if there are no notes
 		// instead of having no notes appear
-		if (notes.size() == 0)
-			createNotes();
+		mySQLiteAdapter = new NoteDBAdapter(getActivity());
 
 		ListView lv = (ListView) v.findViewById(R.id.notesList);
 		noteAdpt = new NoteItemAdapter(getActivity(), R.layout.note_item, notes);
 
 		// setup listview
 		lv.setAdapter(noteAdpt);
+		populateList();
 		lv.setEmptyView(v.findViewById(android.R.id.empty));
 		// make list long-pressable
 		registerForContextMenu(lv);
@@ -95,19 +107,15 @@ public class NotesFragment extends Fragment implements
 			public void onItemClick(AdapterView<?> parentAdapter, View v,
 					int position, long id) {
 				Note n = noteAdpt.getItem(position);
-				CharSequence descStr = n.getContent().isEmpty() ? "No content"
-						: n.getContent();
-				String msg = String.format("%s: %s", n.getName(), descStr);
-				// Toast.makeText(getActivity(), msg,
-				// Toast.LENGTH_SHORT).show();
 
-				Intent editNote = new Intent(v.getContext(),
+				Intent editNote = new Intent(getActivity(),
 						EditNoteActivity.class);
-
-				editNote.putExtra("NoteID", n.getID());
-				editNote.putExtra("NoteContent", n.getContent());
-				editNote.putExtra("NoteName", n.getName());
-				startActivity(editNote);
+				editNote.putExtra("listPosition", position);
+				editNote.putExtra(EditNoteActivity.EXTRA_ID, n.getID());
+				editNote.putExtra(EditNoteActivity.EXTRA_NAME, n.getName());
+				editNote.putExtra(EditNoteActivity.EXTRA_CONTENT,
+						n.getContent());
+				startActivityForResult(editNote, 1);
 
 			}
 		});
@@ -121,11 +129,11 @@ public class NotesFragment extends Fragment implements
 				AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) menuInfo;
 
 				Note n = noteAdpt.getItem(aInfo.position);
-				menu.setHeaderTitle("Options for " + n.getName());
-				menu.add(1, n.getID(), 1, "Add Content");
-				menu.add(2, n.getID(), 2, "Delete");
-				menu.add(3, n.getID(), 3, "Version Control");
-
+				menu.setHeaderTitle("Options for " + "'" + n.getName().trim()
+						+ "'");
+				menu.add(1, aInfo.position, 1, "Add Content");
+				menu.add(2, aInfo.position, 2, "Delete");
+				menu.add(3, aInfo.position, 3, "Version Control");
 			}
 
 		});
@@ -134,30 +142,76 @@ public class NotesFragment extends Fragment implements
 
 	}
 
+	// private View notesView;
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.notes, menu);
+	}
+
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 
-		int id = item.getItemId();
+		int position = item.getItemId();
 		AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) item
 				.getMenuInfo();
 		Toast.makeText(getActivity(), String.format("%s", item.getTitle()),
 				Toast.LENGTH_SHORT).show();
 		switch (item.getGroupId()) {
-		case 1:
+		case 1: // Add Content
 			Toast.makeText(getActivity(), String.format("%s", item.getTitle()),
 					Toast.LENGTH_SHORT).show();
 			break;
-		case 2:
-			removeObjectWithID(id);
+		case 2: // Delete
+			Note note = noteAdpt.getItem(position);
+			mySQLiteAdapter.deleteNote(note);
+			notes.remove(position);
+			noteAdpt.notifyDataSetChanged();
 			break;
 		case 3:
 			Intent versionControl = new Intent(getActivity(),
 					VersionControlActivity.class);
 			startActivity(versionControl);
+			break;
 		default:
+			break;
 		}
 
 		return false;
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == 1) {
+			if (resultCode == Activity.RESULT_OK) {
+				if (data != null) {
+					int listPosition = data.getIntExtra("listPosition", -1);
+					String noteID = data
+							.getStringExtra(EditNoteActivity.EXTRA_ID);
+					String noteName = data
+							.getStringExtra(EditNoteActivity.EXTRA_NAME);
+					String noteContent = data
+							.getStringExtra(EditNoteActivity.EXTRA_CONTENT);
+					// StringBuilder sb = new StringBuilder();
+					// sb.append("[" + listPosition + "] ");
+					// sb.append(noteID + " ");
+					// sb.append(noteName + " ");
+					// sb.append(noteContent);
+					// Log.v(TAG, sb.toString());
+					// populateList();
+					int _id = Integer.parseInt(noteID);
+					if (listPosition != -1)
+						updateNote(listPosition, _id, noteName, noteContent);
+					else
+						updateNote(_id, noteName, noteContent);
+				}
+			} else {
+				if (resultCode == Activity.RESULT_CANCELED) {
+					// nothing to do here
+				}
+			}
+		}
 	}
 
 	/**
@@ -168,39 +222,26 @@ public class NotesFragment extends Fragment implements
 	}
 
 	private void removeObjectWithID(int id) {
-		mySQLiteAdapter = new SQLiteAdapter(this.getActivity());
 
 		Note s = null;
-		for (Note i : notes) {
-			if (i.getID() == id)
-				s = i;
-
+		for (int i = 0; i < noteAdpt.getCount(); i++) {
+			if (Long.toString(id).equals(noteAdpt.getItem(i).getID())) {
+				s = noteAdpt.getItem(i);
+				break;
+			}
 		}
+
 		noteAdpt.remove(s);
-		mySQLiteAdapter.openToWrite();
 		mySQLiteAdapter.deleteNote(id);
-		mySQLiteAdapter.close();
 
 	}
 
 	private void createNotes() {
 
-
-		mySQLiteAdapter = new SQLiteAdapter(this.getActivity());
-		mySQLiteAdapter.openToRead();
-
 		List<Note> contentRead = mySQLiteAdapter.getAllNotes();
 
 		for (Note i : contentRead)
 			notes.add(i);
-
-		mySQLiteAdapter.close();
-
-		// notes.add(new Note("A new note"));
-		//
-		// for (int i = 0; i < 3; i++) {
-		// notes.add(new Note());
-		// }
 
 	}
 
@@ -210,45 +251,45 @@ public class NotesFragment extends Fragment implements
 				String.format("Received %d notes", list.size()),
 				Toast.LENGTH_SHORT).show();
 		noteAdpt.clear();
-		noteAdpt.addAll(list);
-
+		notes.clear();
+		notes.addAll(list);
+		noteAdpt.notifyDataSetChanged();
 	}
 
-	public static boolean updateNote(int noteID, String noteName,
-			String noteContent) {
+	private boolean updateNote(int noteID, String noteName, String noteContent) {
 		Log.d("NOTES", "NoteID " + noteID);
 
-		if (noteID < 0 || noteID >= notes.size())
-			return false;
+		mySQLiteAdapter.updateNote(Note.create(noteID, noteName, noteContent));
+		populateList();
+		return true;
+	}
 
-		notes.get(noteID).setName(noteName);
-		notes.get(noteID).setContent(noteContent);
+	private boolean updateNote(int position, int noteID, String noteName,
+			String noteContent) {
+		if (position < 0 || position >= notes.size())
+			return false;
+		notes.get(position).setName(noteName);
+		notes.get(position).setContent(noteContent);
+		mySQLiteAdapter.updateNote(notes.get(position));
+
+		noteAdpt.notifyDataSetChanged();
 
 		return true;
 	}
 
-	public void createNewNote() {
-		mySQLiteAdapter.openToWrite();
-		long i = mySQLiteAdapter.insertNote("", "New Note");
-		Note s = new Note("New Note");
-		s.addContent("");
-		s.setID((int) i);
-		noteAdpt.add(s);
-		mySQLiteAdapter.close();
+	public Note createBlankNote() {
+		return mySQLiteAdapter.insertNote("New Note", "");
 	}
 
-	public void rebuildListView() {	
+	public void populateList() {
 		noteAdpt.clear();
-		mySQLiteAdapter = new SQLiteAdapter(getActivity());
-		mySQLiteAdapter.openToRead();
+		notes.clear();
 
 		List<Note> contentRead = mySQLiteAdapter.getAllNotes();
+		notes.addAll(contentRead);
 
-		for (Note i : contentRead)
-			notes.add(i);
+		noteAdpt.notifyDataSetChanged();
 
-		mySQLiteAdapter.close();
-		
 	}
 
 }

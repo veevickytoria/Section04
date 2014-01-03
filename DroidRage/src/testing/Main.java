@@ -1,3 +1,6 @@
+/*******************************************************************************
+ * .
+ ******************************************************************************/
 package testing;
 
 import java.io.IOException;
@@ -120,7 +123,7 @@ public class Main {
 		// User registered = UserDB.getUserInfoTest("812");
 		// System.out.println(registered);
 
-		// final List<User> allUsers = UserDB.getAllUsersTest();
+		final List<User> allUsers = UserDB.getAllUsersTest();
 		String id;
 		// for (User user : allUsers) {
 		// System.out.println(user);
@@ -137,26 +140,26 @@ public class Main {
 		// } catch (InterruptedException e) {
 		// e.printStackTrace();
 		// }
-		// System.out.println(s);
-		agendaTest();
+		System.out.println("{'test':'hello'}".replaceAll("\\'", "\\\""));
+		// agendaTest();
 	}
-	
+
 	private static void agendaTest() {
 		Agenda ag = new Agenda();
 		ag.setID(233);
 		Topic topic1 = new Topic("1");
-//		topic1.addTopic(topic1.new Topic("1.1"));
-//		topic1.addTopic(topic1.new Topic("1.2"));
+		// topic1.addTopic(topic1.new Topic("1.1"));
+		// topic1.addTopic(topic1.new Topic("1.2"));
 		Topic topic2 = new Topic("2");
 		Topic topic3 = new Topic("3");
-//		Agenda.Topic subTopic3 = topic3.new Topic("3.1");
-//		subTopic3.addTopic(subTopic3.new Topic("3.1.1"));
-//		topic3.addTopic(subTopic3);
+		// Agenda.Topic subTopic3 = topic3.new Topic("3.1");
+		// subTopic3.addTopic(subTopic3.new Topic("3.1.1"));
+		// topic3.addTopic(subTopic3);
 		ag.addTopic(topic1);
 		ag.addTopic(topic2);
-		ag.addTopic(topic3);	
-		
-//		ag.pprint();
+		ag.addTopic(topic3);
+
+		// ag.pprint();
 		User test = new User();
 		test.setUserID(123);
 		test.setDisplayName("Test");
@@ -165,7 +168,7 @@ public class Main {
 		g.setID(100);
 		g.setGroupTitle("TestGroup");
 		ObjectMapper mapper = new ObjectMapper();
-		  ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
+		ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
 		try {
 			System.out.println(writer.writeValueAsString(g));
 		} catch (JsonProcessingException e) {
@@ -267,5 +270,4 @@ public class Main {
 
 	}
 
-		
 }

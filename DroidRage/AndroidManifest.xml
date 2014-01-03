@@ -41,7 +41,8 @@
         </activity>
         <activity
             android:name="com.android.meetingninja.user.RegisterActivity"
-            android:label="@string/title_activity_register" >
+            android:label="@string/title_activity_register" 
+            android:parentActivityName="com.android.meetingninja.LoginActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.android.meetingninja.LoginActivity" />

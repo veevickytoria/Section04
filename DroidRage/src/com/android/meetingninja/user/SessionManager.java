@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright (C) 2014 The Android Open Source Project
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package com.android.meetingninja.user;
 
 import java.util.HashMap;
@@ -7,47 +22,56 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
+// 
+// http://stackoverflow.com/a/19613702
 public class SessionManager {
+	/**
+	 * Singleton instance to manage SharedPreferences
+	 */
+	private static SessionManager sInstance;
+	private Context _context;
+	// Shared Preferences
+	private SharedPreferences pref;
+
 	// Name of the SharedPreferences file
 	private static final String PREF_NAME = SessionManager.class
 			.getSimpleName();
 
+	// Sharedpref user ID
+	public static final String KEY_USERID = "com.meetingninja.android.preferences.userID";
+
 	// Sharedpref username
-	public static final String USER = "username";
+	public static final String USER = "com.meetingninja.android.preferences.username";
 
 	// Sharedpref login state
-	public static final String LOGGED_IN = "isLoggedIn";
+	public static final String LOGGED_IN = "com.meetingninja.android.preferences.isLoggedIn";
 
-	// Sharedpref user ID
-	public static final String USERID = "userID";
-
-	// Shared Preferences
-	private SharedPreferences pref;
-
-	// Editor for Shared preferences
-	private Editor editor;
-
-	// Context
-	Context _context;
-
-	// Constructor
-	public SessionManager(Context context) {
-		this._context = context;
-		pref = _context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-		editor = pref.edit();
+	public static synchronized SessionManager getInstance() {
+		if (sInstance == null)
+			sInstance = new SessionManager();
+		return sInstance;
 	}
-	
-	public static SessionManager newInstance(Context context) {
-		return new SessionManager(context);
+
+	public void init(Context context) {
+		this._context = context.getApplicationContext();
+		pref = _context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+	}
+
+	private SessionManager() {
+	}
+
+	private SessionManager(Context context) {
+		this.init(context);
 	}
 
 	/**
 	 * Create login session
 	 * */
 	public void createLoginSession(String userID) {
+		Editor editor = pref.edit();
 		// Storing login value as TRUE
 		editor.putString(USER, "user");
-		editor.putString(USERID, userID);
+		editor.putString(KEY_USERID, userID);
 		editor.putBoolean(LOGGED_IN, true);
 		// commit changes
 		editor.commit();
@@ -60,10 +84,14 @@ public class SessionManager {
 		HashMap<String, String> user = new HashMap<String, String>();
 		// user name
 		user.put(USER, pref.getString(USER, null));
-		user.put(USERID, pref.getString(USERID, null));
+		user.put(KEY_USERID, pref.getString(KEY_USERID, null));
 
 		// return user
 		return user;
+	}
+
+	public String getUserID() {
+		return pref.getString(KEY_USERID, null);
 	}
 
 	public void checkLogin() {
@@ -75,9 +103,9 @@ public class SessionManager {
 			// Add flag to start new activity
 			login.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			// User cannot go back to this activity
-//			login.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+			// login.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 			// Show no animation when launching login page
-//			login.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+			login.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 			// Show login page
 			_context.startActivity(login);
 		}
@@ -85,6 +113,7 @@ public class SessionManager {
 	}
 
 	public void clear() {
+		Editor editor = pref.edit();
 		editor.clear();
 		editor.commit();
 	}

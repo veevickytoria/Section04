@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright (C) 2014 The Android Open Source Project
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package com.android.meetingninja;
 
 import java.util.Locale;
@@ -18,6 +33,7 @@ import android.widget.Toast;
 
 import com.android.meetingninja.meetings.MeetingsFragment;
 import com.android.meetingninja.notes.CreateNoteActivity;
+import com.android.meetingninja.notes.EditNoteActivity;
 import com.android.meetingninja.notes.NotesFragment;
 import com.android.meetingninja.tasks.TasksFragment;
 import com.android.meetingninja.user.LoginActivity;
@@ -54,8 +70,8 @@ public class MainActivity extends FragmentActivity implements
 	public static final int NOTES_FRAGMENT = 2;
 	public static final int TASKS_FRAGMENT = 3;
 
-	public static String username;
-	public String fragment;
+	private static final String TAG = MainActivity.class.getSimpleName();
+
 	public Intent callingIntent;
 	private ActionBar actionBar;
 	private static ProfileFragment prof = null;
@@ -69,15 +85,30 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		session = new SessionManager(getApplicationContext());
+
+		SessionManager.getInstance().init(this);
+		session = SessionManager.getInstance();
+
+		session.createLoginSession("0");
 
 		// Check if logged in
-		session.checkLogin();
+		if (!session.isLoggedIn()) {
+			Log.v(TAG, "User is not logged in");
+			Intent login = new Intent(this, LoginActivity.class);
+			// Bring login to front
+			login.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			// User cannot go back to this activity
+			// login.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+			// Show no animation when launching login page
+			login.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+			startActivity(login);
+			finish(); // close main activity
+		} else
+			Log.v(TAG, "UserID" + session.getUserID() + " is logged in already");
 
 		// Else continue
 		setContentView(R.layout.activity_main);
 		setupActionBar();
-		username = session.getUserDetails().get(SessionManager.USER);
 
 	}
 
@@ -121,23 +152,30 @@ public class MainActivity extends FragmentActivity implements
 			actionBar.addTab(tab.setTabListener(this));
 		}
 
-		// Get the extras from the calling intent
-		username = getIntent().getStringExtra(LoginActivity.EXTRA_EMAIL);
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			if (extras.containsKey("Fragment")
+					&& extras.getString("Fragment")
+							.compareToIgnoreCase("notes") == 0) {
+				Log.d("GET_INTENT", extras.getString("Fragment"));
 
-		if (getIntent().hasExtra("Fragment")
-				&& getIntent().getStringExtra("Fragment").compareToIgnoreCase(
-						"notes") == 0) {
-			Log.d("GET_INTENT", getIntent().getStringExtra("Fragment"));
-			callingIntent = getIntent();
+				if (extras.getString("TypeL") != null)
+					if (extras.getString("TypeL").equals("Create")) {
+						notesFrag.populateList();
+						return;
+					}
 
-			if (callingIntent.getStringExtra("TypeL") != null)
-				if (callingIntent.getStringExtra("TypeL").equals("Create")) {
-					notesFrag.rebuildListView();
-					return;
-				}
+				notesFrag.populateList();
 
-			notesFrag.rebuildListView();
+			}
+		}
+	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (data != null) {
+			Log.wtf(TAG, data.getStringExtra(EditNoteActivity.EXTRA_NAME));
 		}
 	}
 
@@ -178,6 +216,7 @@ public class MainActivity extends FragmentActivity implements
 			return true;
 		case R.id.action_logout:
 			session.logoutUser();
+			finish();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

@@ -90,7 +90,7 @@ public class Meeting {
 	public void setAttendance(List<String> attendance) {
 		this.attendance = attendance;
 	}
-	
+
 	public void addAttendee(String userID) {
 		this.attendance.add(userID);
 	}

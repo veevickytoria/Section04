@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright (C) 2014 The Android Open Source Project
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package com.android.meetingninja.tasks;
 
 import java.util.ArrayList;
@@ -18,10 +33,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.meetingninja.R;
-import com.android.meetingninja.user.SessionManager;
 
 public class TasksFragment extends Fragment {
-	private SessionManager session;
 	private List<String> meetingNames = new ArrayList<String>();
 	private HashMap<String, List<Task>> taskLists = new HashMap<String, List<Task>>();
 	private TaskListAdapter taskAdpt;
@@ -33,7 +46,6 @@ public class TasksFragment extends Fragment {
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		View v = inflater.inflate(R.layout.fragment_tasks, container, false);
-		session = new SessionManager(getActivity().getApplicationContext());
 
 		refreshTasks();
 

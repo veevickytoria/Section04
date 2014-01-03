@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright (C) 2014 The Android Open Source Project
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package com.android.meetingninja.user;
 
 import java.io.IOException;
@@ -10,6 +25,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
@@ -90,15 +106,23 @@ public class RegisterActivity extends Activity implements
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		// Respond to the action bar's Up/Home button
 		case android.R.id.home:
-			// This ID represents the Home or Up button. In the case of this
-			// activity, the Up button is shown. Use NavUtils to allow users
-			// to navigate up one level in the application structure. For
-			// more details, see the Navigation pattern on Android Design:
-			//
-			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
-			//
-			NavUtils.navigateUpFromSameTask(this);
+			Intent upIntent = new Intent(this, LoginActivity.class);
+			if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+				// This activity is NOT part of this app's task, so create a new
+				// task
+				// when navigating up, with a synthesized back stack.
+				TaskStackBuilder.create(this)
+				// Add all of this activity's parents to the back stack
+						.addNextIntent(upIntent)
+						// Navigate up to the closest parent
+						.startActivities();
+			} else {
+				// This activity is part of this app's task, so simply
+				// navigate up to the logical parent activity.
+				NavUtils.navigateUpTo(this, upIntent);
+			}
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -157,7 +181,7 @@ public class RegisterActivity extends Activity implements
 			registerTask.execute(name, email, pass);
 
 			Intent goLogin = new Intent(this, LoginActivity.class);
-			goLogin.putExtra(LoginActivity.EXTRA_EMAIL, email);
+			goLogin.putExtra(Intent.EXTRA_EMAIL, email);
 			Toast.makeText(getApplicationContext(), "Registration Successful",
 					Toast.LENGTH_LONG).show();
 			startActivity(goLogin);
