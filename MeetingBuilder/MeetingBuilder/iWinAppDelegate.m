@@ -8,6 +8,7 @@
 
 #import "iWinAppDelegate.h"
 #import "iWinMainViewController.h"
+#import <Parse/Parse.h>
 
 @implementation iWinAppDelegate
 
@@ -23,6 +24,12 @@
     iWinMainViewController *mainViewController = [[iWinMainViewController alloc] initWithNibName:@"iWinMainViewController" bundle:nil];
     self.window.rootViewController = mainViewController;
     [self.window makeKeyAndVisible];
+    
+    //register for push notifications
+    [Parse setApplicationId:@"B9XnZ39grBnt6SyxBibLnxPV8hPQmkdQp6g2MvU5" clientKey:@"qvvWQNlvZcI0fFlXACz7YpTnccaedcHL76gUoLiF"];
+    
+    [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound];
+    
     return YES;
 }
 
@@ -148,6 +155,18 @@
 - (NSURL *)applicationDocumentsDirectory
 {
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+}
+
+-(void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+{
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    [currentInstallation setDeviceTokenFromData:deviceToken];
+    [currentInstallation saveInBackground];
+}
+
+-(void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
+{
+    [PFPush handlePush:userInfo];
 }
 
 @end
