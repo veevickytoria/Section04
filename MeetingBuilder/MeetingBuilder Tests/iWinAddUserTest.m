@@ -9,6 +9,7 @@
 #import <XCTest/XCTest.h>
 #import "iWinAddUsersViewController.h"
 #import "Contact.h"
+#import "iWinAppDelegate.h"
 
 @interface iWinAddUserTest : XCTestCase
 @property (strong, nonatomic) iWinAddUsersViewController *addUsersVC;
@@ -22,6 +23,19 @@
     // Put setup code here; it will be run once, before the first test case.
     self.addUsersVC = [[iWinAddUsersViewController alloc] initWithNibName:@"iWinAddUsersViewController" bundle:nil withPageName:@"Meeting" inEditMode:NO];
     [self.addUsersVC viewDidLoad];
+    
+    iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *context = [appDelegate managedObjectContext];
+    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Contact" inManagedObjectContext:context];
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDesc];
+    
+    NSError *error;
+    NSArray *result = [context executeFetchRequest:request
+                                                error:&error];
+
+    self.addUsersVC.userList = [[NSMutableArray alloc] initWithArray:result];
+    
     NSLog(@"%@", self.addUsersVC.userList);
 }
 
