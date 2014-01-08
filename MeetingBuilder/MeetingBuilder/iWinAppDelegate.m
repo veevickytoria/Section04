@@ -18,6 +18,9 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [Parse setApplicationId:@"B9XnZ39grBnt6SyxBibLnxPV8hPQmkdQp6g2MvU5"
+                  clientKey:@"qvvWQNlvZcI0fFlXACz7YpTnccaedcHL76gUoLiF"];
+    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor whiteColor];
@@ -25,8 +28,6 @@
     self.window.rootViewController = mainViewController;
     [self.window makeKeyAndVisible];
     
-    [Parse setApplicationId:@"B9XnZ39grBnt6SyxBibLnxPV8hPQmkdQp6g2MvU5"
-                  clientKey:@"qvvWQNlvZcI0fFlXACz7YpTnccaedcHL76gUoLiF"];
     
     [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound];
     
