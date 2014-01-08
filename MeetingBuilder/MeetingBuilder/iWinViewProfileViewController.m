@@ -56,11 +56,10 @@
     NSArray *result = [context executeFetchRequest:request
                                              error:&error];
     self.contact = (Contact*)[result objectAtIndex:0];
-
+    
     self.cancel.hidden = YES;
     [self updateTextUI];
     
-    //[self updateButtonUI:self.editProfile];
 }
 -(void)updateTextUI
 {
@@ -141,17 +140,13 @@
 -(void) updateTextFieldUI: (UITextField *)textField
 {
     textField.layer.cornerRadius = 7;
-    textField.layer.borderColor = [[UIColor darkGrayColor] CGColor];
-    textField.layer.borderWidth = 1.0f;
-    //[textView setTintColor:[UIColor blueColor]];
+    textField.layer.borderColor = [[UIColor whiteColor] CGColor];   //May not need
 }
 
 -(void) unUpdateTextFieldUI: (UITextField *)textField
 {
     textField.layer.cornerRadius = 7;
-    textField.layer.borderColor = [[UIColor whiteColor] CGColor];
-    textField.layer.borderWidth = 1.0f;
-    //[textView setTintColor:[UIColor blueColor]];
+    textField.layer.borderColor = [[UIColor whiteColor] CGColor];   //May not need
 }
 
 - (void)didReceiveMemoryWarning
