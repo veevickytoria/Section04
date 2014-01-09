@@ -115,12 +115,7 @@ public class MainActivity extends FragmentActivity implements
 		setContentView(R.layout.activity_main);
 		setupActionBar();
 
-		// Initialize Parse
-		Parse.initialize(this, getString(R.string.parse_application_id),
-				getString(R.string.parse_client_key));
 		ParseAnalytics.trackAppOpened(getIntent());
-		PushService.setDefaultPushCallback(this, MainActivity.class);
-		ParseInstallation.getCurrentInstallation().saveInBackground();
 	}
 
 	private void setupActionBar() {
