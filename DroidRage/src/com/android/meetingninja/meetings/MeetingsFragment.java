@@ -19,14 +19,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import objects.Meeting;
+import objects.Note;
+
+import org.joda.time.DateTime;
+
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnCreateContextMenuListener;
 import android.view.ViewGroup;
@@ -36,12 +43,17 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.meetingninja.MainActivity;
 import com.android.meetingninja.R;
 import com.android.meetingninja.database.AsyncResponse;
+import com.android.meetingninja.database.local.SQLiteMeetingAdapter;
+import com.android.meetingninja.extras.Connectivity;
 import com.android.meetingninja.user.SessionManager;
 
 public class MeetingsFragment extends Fragment implements
 		AsyncResponse<List<Meeting>> {
+
+	private static final String TAG = MeetingsFragment.class.getSimpleName();
 
 	private ListView meetingList;
 	private List<Meeting> meetings = new ArrayList<Meeting>();
@@ -51,6 +63,7 @@ public class MeetingsFragment extends Fragment implements
 	private MeetingFetcherTask fetcher = null;
 
 	private SessionManager session;
+	private SQLiteMeetingAdapter mySQLiteAdapter;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,31 +73,30 @@ public class MeetingsFragment extends Fragment implements
 		setHasOptionsMenu(true);
 
 		session = SessionManager.getInstance();
-		meetingImageButton = (ImageButton) v.findViewById(android.R.id.empty);
-		meetingImageButton.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				createMeeting();
-			}
-		});
+		mySQLiteAdapter = new SQLiteMeetingAdapter(getActivity());
 
 		// setup listview
 		meetingList = (ListView) v.findViewById(R.id.meetingsList);
 		meetingAdpt = new MeetingItemAdapter(getActivity(),
-				R.layout.meeting_item, meetings);
+				R.layout.list_item_meeting, meetings);
 		meetingList.setAdapter(meetingAdpt);
+
+		populateList();
+
+		// pretty images are better than boring text
+		meetingImageButton = (ImageButton) v.findViewById(android.R.id.empty);
 		meetingList.setEmptyView(meetingImageButton);
+		meetingImageButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				editMeeting(null);
+			}
+		});
 
-		// TODO: Check for internet connection before receiving meetings from DB
-		refreshMeetings();
-
-		// setup empty view
-		// View empty = inflater.inflate(R.layout.meetings_list_empty,
-		// container, false);
-		// getActivity().addContentView(empty, new
-		// LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-		// lv.setEmptyView(empty);
+		// check for internet access before getting meetings from remote
+		// database
+		if (Connectivity.isConnected(getActivity()))
+			fetchMeetings();
 
 		// make list long-pressable
 		registerForContextMenu(meetingList);
@@ -97,13 +109,8 @@ public class MeetingsFragment extends Fragment implements
 					@Override
 					public void onItemClick(AdapterView<?> parentAdapter,
 							View v, int position, long id) {
-						Meeting m = meetingAdpt.getItem(position);
-						String msg = m.getTitle();
-						Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT)
-								.show();
-						Intent viewMeeting = new Intent(getActivity(),
-								ViewMeetingActivity.class);
-						startActivity(viewMeeting);
+						Meeting clicked = meetingAdpt.getItem(position);
+						editMeeting(clicked, position);
 
 					}
 				});
@@ -118,11 +125,15 @@ public class MeetingsFragment extends Fragment implements
 							ContextMenuInfo menuInfo) {
 						AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) menuInfo;
 
-						Meeting n = meetingAdpt.getItem(aInfo.position);
+						Meeting longClicked = meetingAdpt
+								.getItem(aInfo.position);
 
-						menu.setHeaderTitle("Options for " + n.getTitle());
-						menu.add(1, 1, 1, "Edit");
-						menu.add(1, 2, 2, "Delete");
+						menu.setHeaderTitle("Options for "
+								+ longClicked.getTitle());
+						menu.add(MainActivity.MEETINGS_FRAGMENT,
+								aInfo.position, 1, "Edit");
+						menu.add(MainActivity.MEETINGS_FRAGMENT,
+								aInfo.position, 2, "Delete");
 
 					}
 				});
@@ -132,36 +143,126 @@ public class MeetingsFragment extends Fragment implements
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.meetings, menu);
+		inflater.inflate(R.menu.meetings_fragment, menu);
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		int position = item.getItemId();
+		boolean handled = false;
+		AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) item
+				.getMenuInfo();
+		if (item.getGroupId() == MainActivity.MEETINGS_FRAGMENT) {
+			switch (item.getOrder()) {
+			case 1: // Edit
+				Toast.makeText(getActivity(), item.getTitle(),
+						Toast.LENGTH_SHORT).show();
+				handled = true;
+				break;
+			case 2: // Delete
+				Meeting meeting = meetingAdpt.getItem(position);
+				mySQLiteAdapter.deleteMeeting(meeting);
+				meetings.remove(position);
+				meetingAdpt.notifyDataSetChanged();
+				handled = true;
+				break;
+			default:
+				Log.wtf(TAG, "Invalid context menu option selected");
+				break;
+			}
+		} else {
+			Log.wtf(TAG, "What happened here?");
+		}
+
+		return handled;
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == 2) {
+			if (resultCode == Activity.RESULT_OK) {
+				if (data != null) {
+					int listPosition = data.getIntExtra("listPosition", -1);
+					Meeting created = data
+							.getParcelableExtra(EditMeetingActivity.EXTRA_MEETING);
+
+					if (data.getStringExtra("method").equals("update")) {
+						Log.d(TAG, "Updating Meeting #" + created.getID());
+						if (listPosition != -1)
+							updateMeeting(listPosition, created);
+						else
+							updateMeeting(created);
+					} else if (data.getStringExtra("method").equals("insert")) {
+						Log.d(TAG, "Inserting Meeting #" + created.getID());
+						// created = mySQLiteAdapter.insertMeeting(created);
+						populateList();
+					}
+				}
+			} else {
+				if (resultCode == Activity.RESULT_CANCELED) {
+					// nothing to do here
+				}
+			}
+		}
 	}
 
 	/**
-	 * Initializes the list of meetings.
+	 * TODO: Gets the meetings from the remote database
 	 */
-	public void refreshMeetings() {
-		fetcher = new MeetingFetcherTask(this);
-		fetcher.execute(session.getUserDetails().get(SessionManager.USER));
+	public void fetchMeetings() {
+		// fetcher = new MeetingFetcherTask(this);
+		// fetcher.execute(session.getUserID());
 	}
 
-	public void createMeeting() {
-		Intent createMeeting = new Intent(getActivity(),
-				EditMeetingsActivity.class);
-		createMeeting.putExtra("edit", true);
-		startActivity(createMeeting);
+	public void editMeeting(Meeting editMe) {
+		editMeeting(editMe, -1);
+	}
+
+	public void editMeeting(Meeting editMe, int position) {
+		Intent editMeeting = new Intent(getActivity(),
+				EditMeetingActivity.class);
+		if (null != editMe) {
+			editMeeting.putExtra(EditMeetingActivity.EXTRA_MEETING, editMe);
+		}
+		if (position >= 0) {
+			editMeeting.putExtra("listPosition", position);
+		}
+
+		editMeeting.putExtra(EditMeetingActivity.EXTRA_EDIT_MODE, true);
+		startActivityForResult(editMeeting, 2);
+	}
+
+	private boolean updateMeeting(Meeting updated) {
+		mySQLiteAdapter.updateMeeting(updated);
+		populateList();
+		return true;
+	}
+
+	private boolean updateMeeting(int position, Meeting updated) {
+		if (position < 0 || position >= meetings.size())
+			return false;
+		meetings.set(position, updated);
+		mySQLiteAdapter.updateMeeting(meetings.get(position));
+
+		meetingAdpt.notifyDataSetChanged();
+
+		return true;
 	}
 
 	@Override
 	public void processFinish(List<Meeting> output) {
+		meetings.clear();
 		meetingAdpt.clear();
-		meetingAdpt.addAll(output);
 
-		if (meetingAdpt.isEmpty()) {
-			meetingList.setVisibility(View.GONE);
-			meetingImageButton.setVisibility(View.VISIBLE);
-		} else {
-			meetingList.setVisibility(View.VISIBLE);
-			meetingImageButton.setVisibility(View.GONE);
-		}
+		meetings.addAll(output);
+
+		meetingAdpt.notifyDataSetChanged();
+	}
+
+	public void populateList() {
+		List<Meeting> contentRead = mySQLiteAdapter.getAllMeetings();
+		processFinish(contentRead);
 	}
 
 }

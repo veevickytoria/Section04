@@ -16,10 +16,15 @@
 package com.android.meetingninja.database;
 
 import java.util.List;
+import java.util.Map;
 
+import objects.Comment;
 import objects.Note;
 
 public class NotesDatabaseAdapter extends DatabaseAdapter {
+
+	private final static String SERVER_EXT = "Note";
+
 	public static List<Note> getNotes(String user) throws Exception {
 		// TODO Implement this method
 		throw new Exception("getNotes: Unimplemented");
@@ -28,5 +33,25 @@ public class NotesDatabaseAdapter extends DatabaseAdapter {
 	public static void createNote(String user, Note n) throws Exception {
 		// TODO Implement this method
 		throw new Exception("createNote: Unimplemented");
+	}
+
+	public static void getNote(String noteID) throws Exception {
+		// TODO Implement this method
+		throw new Exception("getNote: Unimplemented");
+	}
+
+	public static void update(String noteID, Map<String, String> values)
+			throws Exception {
+		// TODO Implement this method
+		throw new Exception("updateNote: Unimplemented");
+	}
+
+	private void updateHelper() {
+
+	}
+
+	public List<Comment> getComments(String noteID) throws Exception {
+		// TODO Implement this method
+		throw new Exception("getComments: Unimplemented");
 	}
 }

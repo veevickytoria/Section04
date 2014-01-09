@@ -19,6 +19,7 @@ public class Agenda {
 	private ArrayList<Topic> topics = new ArrayList<Topic>();
 
 	public Agenda() {
+		// Required empty constructor
 		this("New Agenda");
 	}
 
@@ -49,6 +50,11 @@ public class Agenda {
 
 	public void addTopic(Topic topic) {
 		topics.add(topic);
+	}
+
+	public void addTopic(int index, Topic topic) {
+		if (index < topics.size() && index > 0)
+			topics.add(index, topic);
 	}
 
 	@JsonProperty("content")

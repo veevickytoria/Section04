@@ -35,23 +35,27 @@ import android.view.View.OnCreateContextMenuListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.meetingninja.MainActivity;
 import com.android.meetingninja.R;
 import com.android.meetingninja.database.AsyncResponse;
-import com.android.meetingninja.database.local.NoteDBAdapter;
+import com.android.meetingninja.database.local.SQLiteNoteAdapter;
 import com.android.meetingninja.user.SessionManager;
 
 public class NotesFragment extends Fragment implements
 		AsyncResponse<List<Note>> {
+
 	private static final String TAG = NotesFragment.class.getSimpleName();
+
 	private SessionManager session;
 	private NoteItemAdapter noteAdpt;
-	private static List<Note> notes = new ArrayList<Note>();
-	private NoteDBAdapter mySQLiteAdapter;
+	private ImageButton notesImageButton;
+	private SQLiteNoteAdapter mySQLiteAdapter;
 
-	// private View notesView;
+	private static List<Note> notes = new ArrayList<Note>();
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,20 +71,26 @@ public class NotesFragment extends Fragment implements
 
 		session = SessionManager.getInstance();
 
-		// TODO: Check for internet connection before receiving notes from DB
-		// TODO: Display a something saying "no notes" if there are no notes
-		// instead of having no notes appear
-		mySQLiteAdapter = new NoteDBAdapter(getActivity());
-
-		ListView lv = (ListView) v.findViewById(R.id.notesList);
-		noteAdpt = new NoteItemAdapter(getActivity(), R.layout.note_item, notes);
+		mySQLiteAdapter = new SQLiteNoteAdapter(getActivity());
 
 		// setup listview
+		ListView lv = (ListView) v.findViewById(R.id.notesList);
+		noteAdpt = new NoteItemAdapter(getActivity(), R.layout.list_item_note,
+				notes);
 		lv.setAdapter(noteAdpt);
 		populateList();
-		lv.setEmptyView(v.findViewById(android.R.id.empty));
-		// make list long-pressable
-		registerForContextMenu(lv);
+
+		// pretty images are better than boring text
+		notesImageButton = (ImageButton) v.findViewById(android.R.id.empty);
+		lv.setEmptyView(notesImageButton);
+		notesImageButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent createNote = new Intent(getActivity(),
+						CreateNoteActivity.class);
+				startActivity(createNote);
+			}
+		});
 
 		// Intent updateNote = null;
 		// Bundle bundle;
@@ -100,7 +110,6 @@ public class NotesFragment extends Fragment implements
 		// }
 
 		// Item click event
-		// TODO: Open a window to edit the note here
 		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			@Override
@@ -120,6 +129,9 @@ public class NotesFragment extends Fragment implements
 			}
 		});
 
+		// make list long-pressable
+		registerForContextMenu(lv);
+
 		// Item long-click event
 		// TODO: Add additional options and click-events to these options
 		lv.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
@@ -131,9 +143,12 @@ public class NotesFragment extends Fragment implements
 				Note n = noteAdpt.getItem(aInfo.position);
 				menu.setHeaderTitle("Options for " + "'" + n.getName().trim()
 						+ "'");
-				menu.add(1, aInfo.position, 1, "Add Content");
-				menu.add(2, aInfo.position, 2, "Delete");
-				menu.add(3, aInfo.position, 3, "Version Control");
+				menu.add(MainActivity.NOTES_FRAGMENT, aInfo.position, 1,
+						"Add Content");
+				menu.add(MainActivity.NOTES_FRAGMENT, aInfo.position, 2,
+						"Delete");
+				menu.add(MainActivity.NOTES_FRAGMENT, aInfo.position, 3,
+						"Version Control");
 			}
 
 		});
@@ -142,48 +157,54 @@ public class NotesFragment extends Fragment implements
 
 	}
 
-	// private View notesView;
-
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.notes, menu);
+		inflater.inflate(R.menu.notes_fragment, menu);
 	}
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 
 		int position = item.getItemId();
+		boolean handled = false;
 		AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) item
 				.getMenuInfo();
-		Toast.makeText(getActivity(), String.format("%s", item.getTitle()),
-				Toast.LENGTH_SHORT).show();
-		switch (item.getGroupId()) {
-		case 1: // Add Content
-			Toast.makeText(getActivity(), String.format("%s", item.getTitle()),
-					Toast.LENGTH_SHORT).show();
-			break;
-		case 2: // Delete
-			Note note = noteAdpt.getItem(position);
-			mySQLiteAdapter.deleteNote(note);
-			notes.remove(position);
-			noteAdpt.notifyDataSetChanged();
-			break;
-		case 3:
-			Intent versionControl = new Intent(getActivity(),
-					VersionControlActivity.class);
-			startActivity(versionControl);
-			break;
-		default:
-			break;
+		if (item.getGroupId() == MainActivity.NOTES_FRAGMENT) {
+			switch (item.getOrder()) {
+			case 1: // Add Content
+				Toast.makeText(getActivity(),
+						String.format("%s", item.getTitle()),
+						Toast.LENGTH_SHORT).show();
+				handled = true;
+				break;
+			case 2: // Delete
+				Note note = noteAdpt.getItem(position);
+				mySQLiteAdapter.deleteNote(note);
+				notes.remove(position);
+				noteAdpt.notifyDataSetChanged();
+				handled = true;
+				break;
+			case 3:
+				Intent versionControl = new Intent(getActivity(),
+						VersionControlActivity.class);
+				startActivity(versionControl);
+				handled = true;
+				break;
+			default:
+				Log.wtf(TAG, "Invalid context menu option selected");
+				break;
+			}
+		} else {
+			Log.wtf(TAG, "What happened here?");
 		}
 
-		return false;
+		return handled;
 	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == 1) {
+		if (requestCode == 1) { // EditNoteActivity
 			if (resultCode == Activity.RESULT_OK) {
 				if (data != null) {
 					int listPosition = data.getIntExtra("listPosition", -1);
@@ -210,14 +231,18 @@ public class NotesFragment extends Fragment implements
 				if (resultCode == Activity.RESULT_CANCELED) {
 					// nothing to do here
 				}
+			} // end EditNoteActivity
+		} else if (requestCode == 3) { // CreateNoteActivity
+			if (resultCode == Activity.RESULT_OK) {
+				Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
 			}
-		}
+		} // end CreateNoteActivity
 	}
 
 	/**
 	 * Initializes the list of notes. TODO: Get the notes from the database
 	 */
-	private void refreshNotes() {
+	private void fetchNotes() {
 
 	}
 
@@ -236,7 +261,7 @@ public class NotesFragment extends Fragment implements
 
 	}
 
-	private void createNotes() {
+	private void readLocalNotes() {
 
 		List<Note> contentRead = mySQLiteAdapter.getAllNotes();
 
@@ -257,8 +282,6 @@ public class NotesFragment extends Fragment implements
 	}
 
 	private boolean updateNote(int noteID, String noteName, String noteContent) {
-		Log.d("NOTES", "NoteID " + noteID);
-
 		mySQLiteAdapter.updateNote(Note.create(noteID, noteName, noteContent));
 		populateList();
 		return true;

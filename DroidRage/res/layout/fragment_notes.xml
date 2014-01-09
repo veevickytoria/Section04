@@ -1,9 +1,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/FrameLayout1"
+    android:id="@+id/notesContainer"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".NotesFragment" >
+    android:layout_height="match_parent" >
 
     <ListView
         android:id="@+id/notesList"
@@ -11,13 +10,15 @@
         android:layout_height="fill_parent" >
     </ListView>
 
-    <TextView
+     <ImageButton
         android:id="@android:id/empty"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:gravity="center"
-        android:text="@string/noteslist_empty"
-        android:textSize="18sp"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:layout_gravity="center"
+        android:background="?android:attr/selectableItemBackground"
+        android:contentDescription="@string/title_activity_edit_note"
+        android:scaleType="centerInside"
+        android:src="@drawable/new_note"
         android:visibility="gone" />
 
 </FrameLayout>

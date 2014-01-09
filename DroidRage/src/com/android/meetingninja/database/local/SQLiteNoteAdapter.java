@@ -9,7 +9,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-public class NoteDBAdapter extends SQLiteHelper {
+public class SQLiteNoteAdapter extends SQLiteHelper {
 
 	private SQLiteHelper mDbHelper;
 	private SQLiteDatabase mDb;
@@ -20,7 +20,7 @@ public class NoteDBAdapter extends SQLiteHelper {
 	public static final String TITLE = "title";
 	public static final String CONTENT = "content";
 
-	public NoteDBAdapter(Context context) {
+	public SQLiteNoteAdapter(Context context) {
 		super(context);
 		mDbHelper = SQLiteHelper.getInstance(context);
 	}
@@ -31,10 +31,10 @@ public class NoteDBAdapter extends SQLiteHelper {
 	}
 
 	/**
-	 * Insert a new note to placed in the database
+	 * Insert a new note to be placed in the database
 	 * 
-	 * @param content
 	 * @param name
+	 * @param content
 	 * @return The inserted note with an id assigned
 	 */
 	public Note insertNote(String name, String content) {
@@ -51,6 +51,10 @@ public class NoteDBAdapter extends SQLiteHelper {
 		c.close();
 		close();
 		return newNote;
+	}
+
+	public Note insertNote(Note n) {
+		return insertNote(n.getName(), n.getContent());
 	}
 
 	public void updateNote(Note note) {
@@ -81,6 +85,26 @@ public class NoteDBAdapter extends SQLiteHelper {
 		if (note != null)
 			deleteNote(Long.parseLong(note.getID()));
 	}
+	
+	/**
+	 * Run a query on the notes table. See
+	 * {@link SQLiteDatabase#query(String, String[], String, String[], String, String, String)}
+	 * 
+	 * @param columns
+	 * @param selection
+	 * @param selectionArgs
+	 * @param groupBy
+	 * @param having
+	 * @param orderBy
+	 * @return
+	 */
+	public Cursor query(String[] columns, String selection,
+			String[] selectionArgs, String groupBy, String having,
+			String orderBy) {
+		mDb = mDbHelper.getReadableDatabase();
+		return mDb.query(TABLE_NAME, columns, selection, selectionArgs,
+				groupBy, having, orderBy);
+	}
 
 	public void clear() {
 		mDb = mDbHelper.getWritableDatabase();
@@ -98,8 +122,7 @@ public class NoteDBAdapter extends SQLiteHelper {
 		if (c.moveToFirst()) {
 			do {
 				if ((note = new NoteCursor(c).getModel()) != null)
-					;
-				notes.add(note);
+					notes.add(note);
 			} while (c.moveToNext());
 		}
 		c.close();

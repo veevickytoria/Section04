@@ -18,20 +18,35 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
 	// Common column names
 	public static final String KEY_ID = "_id";
+	public static final String KEY_UPDATED = "lastModified";
 
 	// Table Create Statements
 	// User table create statement
 	private static final String CREATE_TABLE_USER = "CREATE TABLE "
-			+ UserDBAdapter.TABLE_NAME + "(" + KEY_ID
-			+ " INTEGER PRIMARY KEY AUTOINCREMENT," + UserDBAdapter.NAME
-			+ " TEXT NOT NULL," + UserDBAdapter.EMAIL + " TEXT NOT NULL" + ");";
-	private static final String CREATE_TABLE_NOTE = "CREATE TABLE "
-			+ NoteDBAdapter.TABLE_NAME + "(" + KEY_ID
-			+ " INTEGER PRIMARY KEY AUTOINCREMENT," + NoteDBAdapter.TITLE
-			+ " TEXT NOT NULL," + NoteDBAdapter.CONTENT + " TEXT NOT NULL"
-			+ ");";
-
+			+ SQLiteUserAdapter.TABLE_NAME + "(" + KEY_ID
+			+ " INTEGER PRIMARY KEY AUTOINCREMENT," + SQLiteUserAdapter.NAME
+			+ " TEXT NOT NULL," + SQLiteUserAdapter.EMAIL + " TEXT NOT NULL,"
+			+ SQLiteUserAdapter.PHONE + " TEXT NOT NULL,"
+			+ SQLiteUserAdapter.COMPANY + " TEXT NOT NULL,"
+			+ SQLiteUserAdapter.TITLE + " TEXT NOT NULL,"
+			+ SQLiteUserAdapter.LOCATION + " TEXT NOT NULL" + ");";
 	// Notes table create statement
+	private static final String CREATE_TABLE_NOTE = "CREATE TABLE "
+			+ SQLiteNoteAdapter.TABLE_NAME + "(" + KEY_ID
+			+ " INTEGER PRIMARY KEY AUTOINCREMENT," + SQLiteNoteAdapter.TITLE
+			+ " TEXT NOT NULL," + SQLiteNoteAdapter.CONTENT + " TEXT NOT NULL"
+			+ ");";
+	// Meeting table create statement
+	private static final String CREATE_TABLE_MEETING = "CREATE TABLE "
+			+ SQLiteMeetingAdapter.TABLE_NAME + "(" + KEY_ID
+			+ " INTEGER PRIMARY KEY AUTOINCREMENT,"
+			+ SQLiteMeetingAdapter.TITLE + " TEXT NOT NULL,"
+			+ SQLiteMeetingAdapter.LOCATION + " TEXT NOT NULL,"
+			+ SQLiteMeetingAdapter.START_TIME + " INTEGER NOT NULL,"
+			+ SQLiteMeetingAdapter.END_TIME + " INTEGER NOT NULL,"
+			+ SQLiteMeetingAdapter.DESCRIPTION + " TEXT NOT NULL"
+			// + SQLiteMeetingAdapter.ATTENDANCE + " TEXT NOT NULL"
+			+ ");";
 
 	public static synchronized SQLiteHelper getInstance(Context context) {
 		if (sInstance == null)
@@ -49,6 +64,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		// create required tables
 		db.execSQL(CREATE_TABLE_USER);
 		db.execSQL(CREATE_TABLE_NOTE);
+		db.execSQL(CREATE_TABLE_MEETING);
 
 	}
 
@@ -56,9 +72,9 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
 		// on upgrade drop older tables
-		db.execSQL("DROP TABLE IF EXISTS " + UserDBAdapter.TABLE_NAME);
-		db.execSQL("DROP TABLE IF EXISTS " + NoteDBAdapter.TABLE_NAME);
-
+		db.execSQL("DROP TABLE IF EXISTS " + SQLiteUserAdapter.TABLE_NAME);
+		db.execSQL("DROP TABLE IF EXISTS " + SQLiteNoteAdapter.TABLE_NAME);
+		db.execSQL("DROP TABLE IF EXISTS " + SQLiteMeetingAdapter.TABLE_NAME);
 		// create new tables
 		onCreate(db);
 

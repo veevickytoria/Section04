@@ -119,8 +119,25 @@
 
     <style name="Divider">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_height">2dp</item>
         <item name="android:background">?android:attr/listDivider</item>
+    </style>
+    
+    <!-- IOSched 2013 -->
+    
+    <style name="ListItemContainerBase">
+        <item name="android:minHeight">?android:attr/listPreferredItemHeight</item>       
+    </style>
+    
+     <!-- List item text -->
+    <style name="ListItemTitle">
+        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="android:textColor">@color/body_text_1</item>
+    </style>
+    
+     <style name="ListItemSubtitle">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textColor">@color/body_text_2</item>
     </style>
 
 </resources>

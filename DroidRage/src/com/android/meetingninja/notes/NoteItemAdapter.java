@@ -34,7 +34,7 @@ import com.android.meetingninja.R;
  * @author moorejm
  * 
  */
-class NoteItemAdapter extends ArrayAdapter<Note> {
+public class NoteItemAdapter extends ArrayAdapter<Note> {
 	// declaring our ArrayList of items
 	private final List<Note> notes;
 	private final Context context;
@@ -66,7 +66,7 @@ class NoteItemAdapter extends ArrayAdapter<Note> {
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		if (rowView == null) {
-			rowView = inflater.inflate(R.layout.note_item, parent, false);
+			rowView = inflater.inflate(R.layout.list_item_note, parent, false);
 			viewHolder = new ViewHolder();
 
 			viewHolder.title = (TextView) rowView.findViewById(R.id.noteName);

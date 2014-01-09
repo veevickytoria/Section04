@@ -19,6 +19,15 @@ public class Group {
 	@JsonProperty("members")
 	private List<SimpleUser> members = new ArrayList<SimpleUser>();
 
+	public Group() {
+		// Required empty constructor
+	}
+
+	public Group(String groupID, String title) {
+		setID(groupID);
+		setGroupTitle(title);
+	}
+
 	@JsonProperty("groupID")
 	public String getGroupID() {
 		return groupID;

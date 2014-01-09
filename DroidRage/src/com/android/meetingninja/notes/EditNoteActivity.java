@@ -17,16 +17,18 @@ package com.android.meetingninja.notes;
 
 import objects.Note;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 import com.android.meetingninja.R;
-import com.android.meetingninja.database.local.NoteDBAdapter;
+import com.android.meetingninja.database.local.SQLiteNoteAdapter;
 
 public class EditNoteActivity extends Activity {
 
@@ -37,7 +39,7 @@ public class EditNoteActivity extends Activity {
 	private String noteName;
 	private String noteContent;
 
-	private NoteDBAdapter mySQLiteAdapter;
+	private SQLiteNoteAdapter mySQLiteAdapter;
 	private Note newNote;
 	private int listPosition;
 
@@ -45,13 +47,15 @@ public class EditNoteActivity extends Activity {
 	public static final String EXTRA_NAME = "NoteName";
 	public static final String EXTRA_CONTENT = "NoteContent";
 
+	private static final String TAG = EditNoteActivity.class.getSimpleName();
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		mySQLiteAdapter = new NoteDBAdapter(this);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_note);
 		// Show the Up button in the action bar.
 		setupActionBar();
+		mySQLiteAdapter = new SQLiteNoteAdapter(this);
 
 		mTextEditor = (EditText) findViewById(R.id.noteContentEditor);
 		mNoteTitle = (EditText) findViewById(R.id.noteTitleEditor);
@@ -69,21 +73,33 @@ public class EditNoteActivity extends Activity {
 
 		mNoteTitle.setText(noteName);
 		mTextEditor.setText(noteContent);
+		
+		// Scroll to the top of the note content
+		// https://stackoverflow.com/a/3310376
+		final ScrollView scroller = (ScrollView) findViewById(R.id.contentScroller);
+		scroller.post(new Runnable() {
+
+			@Override
+			public void run() {
+				scroller.fullScroll(ScrollView.FOCUS_UP);
+
+			}
+		});
 
 		setTitle("Edit '" + noteName.trim() + "'");
 	}
 
-	public void onClick(View v) {
+	public boolean onActionBarItemSelected(View v) {
 		switch (v.getId()) {
-		case R.id.btnSave:
+		case R.id.action_done:
 			save();
 			break;
-		case R.id.btnCancel:
+		case R.id.action_cancel:
 			cancel();
 			break;
-		default:
-			break;
 		}
+
+		return true;
 
 	}
 
@@ -114,33 +130,41 @@ public class EditNoteActivity extends Activity {
 		finish();
 	}
 
+	private final View.OnClickListener mActionBarListener = new OnClickListener() {
+
+		@Override
+		public void onClick(View v) {
+			onActionBarItemSelected(v);
+
+		}
+	};
+
 	/**
 	 * Set up the {@link android.app.ActionBar}.
 	 */
 	private void setupActionBar() {
+		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+		// Make an Ok/Cancel ActionBar
+		View actionBarButtons = inflater.inflate(R.layout.actionbar_ok_cancel,
+				new LinearLayout(this), false);
 
-	}
+		View cancelActionView = actionBarButtons
+				.findViewById(R.id.action_cancel);
+		cancelActionView.setOnClickListener(mActionBarListener);
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.edit_note, menu);
-		return true;
-	}
+		View doneActionView = actionBarButtons.findViewById(R.id.action_done);
+		doneActionView.setOnClickListener(mActionBarListener);
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			NavUtils.navigateUpFromSameTask(this);
-			return true;
-		case R.id.edit_note_action_save:
-			save();
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
+		getActionBar().setHomeButtonEnabled(false);
+		getActionBar().setDisplayShowHomeEnabled(false);
+		getActionBar().setDisplayHomeAsUpEnabled(false);
+		getActionBar().setDisplayShowTitleEnabled(false);
+
+		getActionBar().setDisplayShowCustomEnabled(true);
+		getActionBar().setCustomView(actionBarButtons);
+		// end Ok-Cancel ActionBar
+
 	}
 
 }

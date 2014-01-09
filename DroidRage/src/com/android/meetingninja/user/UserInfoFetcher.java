@@ -21,6 +21,7 @@ import objects.User;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.android.meetingninja.MainActivity;
 import com.android.meetingninja.database.AsyncResponse;
 import com.android.meetingninja.database.UserDatabaseAdapter;
 
@@ -28,20 +29,22 @@ public class UserInfoFetcher extends AsyncTask<String, Void, User> {
 
 	private AsyncResponse<User> delegate;
 
+	private static final String TAG = UserInfoFetcher.class.getSimpleName();
+
 	public UserInfoFetcher(AsyncResponse<User> delegate) {
 		this.delegate = delegate;
 	}
 
 	@Override
 	protected User doInBackground(String... params) {
-		User user = new User();
+		User user = null;
 
 		try {
 			// params = userID
 			user = UserDatabaseAdapter.getUserInfo(params[0]);
 		} catch (IOException e) {
-			Log.e("UserInfoFetch", "Error: Unable to get userinfo");
-			Log.e("USER_INFO_ERR", e.getLocalizedMessage());
+			Log.e(TAG, "Error: Unable to get userinfo");
+			Log.e(TAG, e.getLocalizedMessage());
 		}
 
 		return user;

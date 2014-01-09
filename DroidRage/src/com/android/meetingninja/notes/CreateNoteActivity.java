@@ -18,26 +18,22 @@ package com.android.meetingninja.notes;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
 import com.android.meetingninja.MainActivity;
 import com.android.meetingninja.R;
-import com.android.meetingninja.database.local.NoteDBAdapter;
+import com.android.meetingninja.database.local.SQLiteNoteAdapter;
 
 public class CreateNoteActivity extends Activity {
 
-	private Bundle extras;
-	String noteContent;
-	String noteName;
-	int noteID;
-	EditText textEditor;
-	private NoteDBAdapter sqliteAdapter;
 	private static final String TAG = CreateNoteActivity.class.getSimpleName();
+
+	private Bundle extras;
+	private String noteContent;
+	private String noteName;
+	private EditText textEditor;
+	private SQLiteNoteAdapter sqliteAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +43,7 @@ public class CreateNoteActivity extends Activity {
 		setupActionBar();
 
 		extras = getIntent().getExtras();
-		sqliteAdapter = new NoteDBAdapter(this);
+		sqliteAdapter = new SQLiteNoteAdapter(this);
 
 		// noteContent = getNote.getStringExtra("NoteContent");
 		// noteName = getNote.getStringExtra("NoteName");
@@ -57,12 +53,11 @@ public class CreateNoteActivity extends Activity {
 
 		textEditor.setText(noteContent);
 
-		setTitle("Edit '" + noteName + "'");
+		setTitle("Edit '" + ((noteName != null) ? noteName : "New Note") + "'");
 	}
 
 	public void createNewNote(View view) {
-		Intent goNotes = new Intent(this, MainActivity.class);
-
+		Intent msgIntent = new Intent();
 		// goNotes.putExtra("NoteID", noteID);
 		// goNotes.putExtra("NoteContent", textEditor.getText().toString());
 		// goNotes.putExtra("NoteName", noteName);
@@ -72,11 +67,11 @@ public class CreateNoteActivity extends Activity {
 
 		sqliteAdapter.insertNote(s, "");
 
-		goNotes.putExtra("TypeL", "Create");
-		goNotes.putExtra("Update", true);
-		goNotes.putExtra("Fragment", "notes");
+		msgIntent.putExtra("TypeL", "Create");
+		msgIntent.putExtra("Update", true);
+		msgIntent.putExtra("Fragment", "notes");
 
-		startActivity(goNotes);
+		setResult(RESULT_OK, msgIntent);
 		finish();
 
 	}
@@ -88,33 +83,6 @@ public class CreateNoteActivity extends Activity {
 
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.edit_note, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			// This ID represents the Home or Up button. In the case of this
-			// activity, the Up button is shown. Use NavUtils to allow users
-			// to navigate up one level in the application structure. For
-			// more details, see the Navigation pattern on Android Design:
-			//
-			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
-			//
-			NavUtils.navigateUpFromSameTask(this);
-			return true;
-		case R.id.action_save:
-			Log.i(TAG, "Save this note");
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
 	}
 
 }

@@ -17,6 +17,7 @@ package com.android.meetingninja.user;
 
 import java.io.IOException;
 
+import objects.User;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -37,8 +38,7 @@ import com.android.meetingninja.R;
 import com.android.meetingninja.database.AsyncResponse;
 import com.android.meetingninja.database.UserDatabaseAdapter;
 
-public class RegisterActivity extends Activity implements
-		AsyncResponse<Boolean> {
+public class RegisterActivity extends Activity implements AsyncResponse<User> {
 
 	EditText nameText;
 	EditText emailText;
@@ -51,6 +51,7 @@ public class RegisterActivity extends Activity implements
 	AlertDialog.Builder passCheck;
 	private RegisterTask registerTask;
 	private boolean mRegisterSuccess;
+	private User registeredUser;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -135,10 +136,10 @@ public class RegisterActivity extends Activity implements
 		confirmPasswordText.setError(null);
 
 		// Store values
-		String name = nameText.getText().toString();
-		String email = emailText.getText().toString();
-		String pass = passwordText.getText().toString();
-		String confPass = confirmPasswordText.getText().toString();
+		String name = nameText.getText().toString().trim();
+		String email = emailText.getText().toString().trim();
+		String pass = passwordText.getText().toString().trim();
+		String confPass = confirmPasswordText.getText().toString().trim();
 
 		Log.d("Registering", name + " : " + email + " : " + pass + " : "
 				+ confPass);
@@ -180,45 +181,52 @@ public class RegisterActivity extends Activity implements
 			registerTask = new RegisterTask(this);
 			registerTask.execute(name, email, pass);
 
-			Intent goLogin = new Intent(this, LoginActivity.class);
-			goLogin.putExtra(Intent.EXTRA_EMAIL, email);
-			Toast.makeText(getApplicationContext(), "Registration Successful",
-					Toast.LENGTH_LONG).show();
-			startActivity(goLogin);
-			finish();
+			if (!mRegisterSuccess) {
+				Toast.makeText(getApplicationContext(),
+						"Registration Unsuccessful", Toast.LENGTH_LONG).show();
+			} else {
+				Intent goLogin = new Intent();
+				goLogin.putExtra(Intent.EXTRA_EMAIL, email);
+
+				setResult(RESULT_OK, goLogin);
+				finish();
+			}
 		}
 
 	}
 
 	@Override
-	public void processFinish(Boolean result) {
-		mRegisterSuccess = result;
+	public void processFinish(User result) {
+		registeredUser = result;
+		mRegisterSuccess = registeredUser != null;
 	}
 
-	private class RegisterTask extends AsyncTask<String, Void, Boolean> {
+	private class RegisterTask extends AsyncTask<String, Void, User> {
 
-		private AsyncResponse<Boolean> delegate;
+		private AsyncResponse<User> delegate;
 
-		public RegisterTask(AsyncResponse<Boolean> del) {
+		public RegisterTask(AsyncResponse<User> del) {
 			this.delegate = del;
 		}
 
 		@Override
-		protected Boolean doInBackground(String... params) {
+		protected User doInBackground(String... params) {
 			boolean success = false;
 			try {
 				// name, email, password
-				UserDatabaseAdapter.register(params[0], params[1], params[2]);
-				success = true;
+				User registerMe = new User();
+				registerMe.setDisplayName(params[0]);
+				registerMe.setEmail(params[1]);
+				return UserDatabaseAdapter.register(registerMe, params[2]);
 			} catch (IOException e) {
 				Log.e("DB Adapter", "Error: Register failed");
 				Log.e("REGISTER_ERR", e.toString());
 			}
-			return success;
+			return null;
 		}
 
 		@Override
-		protected void onPostExecute(Boolean result) {
+		protected void onPostExecute(User result) {
 			super.onPostExecute(result);
 			delegate.processFinish(result);
 		}

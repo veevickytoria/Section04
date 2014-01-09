@@ -2,8 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".NotesActivity" >
+    android:orientation="vertical" >
 
     <!-- WHAT -->
 
@@ -196,6 +195,7 @@
 
     <!-- TIME ZONE - Read-only textview version -->
 
+
     <!-- TIME ZONE - Read/write version with button to launch picker -->
 
     <LinearLayout
@@ -214,7 +214,6 @@
             android:contentDescription="@string/accessibility_pick_time_zone"
             android:gravity="center"
             android:text="Add Agenda" />
-
     </LinearLayout>
 
     <View style="@style/EditEventSeparator" />

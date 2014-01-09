@@ -16,10 +16,10 @@ import com.fasterxml.jackson.core.JsonGenerator;
 		"title", "location" })
 public class User extends SimpleUser {
 	private String email;
-	private String phone = "";
-	private String company = "";
-	private String title = "";
-	private String location = "";
+	private String phone;
+	private String company;
+	private String title;
+	private String location;
 
 	public User() {
 		// required empty constructor
@@ -28,6 +28,19 @@ public class User extends SimpleUser {
 	public User(int userID) {
 		super.setUserID(userID);
 	}
+
+	public User(User copyUser) {
+		super.setUserID((copyUser.getUserID() != null ? copyUser.getUserID()
+				: ""+0));
+		super.setDisplayName(copyUser.getDisplayName());
+		setEmail(copyUser.getEmail());
+		setPhone(copyUser.getPhone());
+		setCompany(copyUser.getCompany());
+		setTitle(copyUser.getTitle());
+		setLocation(getLocation());
+	}
+
+	/* Required Fields */
 
 	@Override
 	public String getUserID() {
@@ -57,8 +70,10 @@ public class User extends SimpleUser {
 		this.email = email;
 	}
 
+	/* Optional fields */
+
 	public String getPhone() {
-		return phone;
+		return (phone != null && !phone.isEmpty()) ? phone : "";
 	}
 
 	public void setPhone(String phone) {
@@ -66,7 +81,7 @@ public class User extends SimpleUser {
 	}
 
 	public String getCompany() {
-		return company;
+		return (company != null && !company.isEmpty()) ? company : "";
 	}
 
 	public void setCompany(String company) {
@@ -74,19 +89,19 @@ public class User extends SimpleUser {
 	}
 
 	public String getTitle() {
-		return title;
+		return (title != null && !title.isEmpty()) ? title : "";
 	}
 
 	public void setTitle(String title) {
 		this.title = title;
 	}
 
-	public String getLocation() {
-		return location;
-	}
-
 	public void setLocation(String location) {
 		this.location = location;
+	}
+
+	public String getLocation() {
+		return (location != null && !location.isEmpty()) ? location : "";
 	}
 
 	@Override
@@ -99,22 +114,14 @@ public class User extends SimpleUser {
 		builder.append(getDisplayName() + "\n");
 		builder.append("getEmail()\t");
 		builder.append(getEmail() + "\n");
-		// if (!getPhone().isEmpty()) {
 		builder.append("getPhone()\t");
 		builder.append(getPhone() + "\n");
-		// }
-		// if (!getCompany().isEmpty()) {
 		builder.append("getCompany()\t");
 		builder.append(getCompany() + "\n");
-		// }
-		// if (!getTitle().isEmpty()) {
 		builder.append("getTitle()\t");
 		builder.append(getTitle() + "\n");
-		// }
-		// if (!getLocation().isEmpty()) {
 		builder.append("getLocation()\t");
 		builder.append(getLocation() + "\n");
-		// }
 		builder.append("************************");
 		return builder.toString();
 	}

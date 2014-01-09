@@ -14,6 +14,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -41,14 +42,14 @@
         </activity>
         <activity
             android:name="com.android.meetingninja.user.RegisterActivity"
-            android:label="@string/title_activity_register" 
-            android:parentActivityName="com.android.meetingninja.LoginActivity">
+            android:label="@string/title_activity_register"
+            android:parentActivityName="com.android.meetingninja.LoginActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.android.meetingninja.LoginActivity" />
         </activity>
         <activity
-            android:name="com.android.meetingninja.meetings.EditMeetingsActivity"
+            android:name="com.android.meetingninja.meetings.EditMeetingActivity"
             android:label="@string/title_activity_meetings"
             android:parentActivityName="com.android.meetingninja.MainActivity" >
             <meta-data

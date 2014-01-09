@@ -34,79 +34,114 @@ import com.android.meetingninja.meetings.MeetingFetcherTask;
 import com.android.meetingninja.meetings.MeetingItemAdapter;
 import com.loopj.android.image.SmartImageView;
 
-public class ProfileFragment extends Fragment implements
-		AsyncResponse<List<Meeting>> {
+public class ProfileFragment extends Fragment {
+
+	private static final String TAG = ProfileFragment.class.getSimpleName();
 
 	private ListView meetingList;
 	private List<Meeting> meetings = new ArrayList<Meeting>();
-	private SessionManager session;
 	private MeetingItemAdapter adpt;
-	private User user;
 
-	private TextView mTitleCompany, mName, mPhone, mEmail;
+	private SessionManager session;
+	private TextView mTitleCompany, mName, mPhone, mEmail, mLocation;
 	private SmartImageView mUserImage;
+	private User displayedUser;
 
 	private RetUserObj infoFetcher = null;
+	private View pageView;
 
 	// private GetProfBitmap bitmapFetcher = null;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View v = inflater.inflate(R.layout.fragment_profile, container, false);
-		setupViews(v);
+		pageView = inflater
+				.inflate(R.layout.fragment_profile, container, false);
+		setupViews(pageView);
 		session = SessionManager.getInstance();
 
-		// user = new User(session.getUserDetails().get(session.USERID));
+		// Peter Pan URL
+		// mUserImage
+		// .setImageUrl("http://www.tdnforums.com/uploads/profile/photo-27119.jpg?_r=0");
+
 		infoFetcher = new RetUserObj();
-		infoFetcher.execute(session.getUserDetails().get(
-				SessionManager.KEY_USERID));
+		infoFetcher.execute(session.getUserID());
 
-		meetingList = (ListView) v.findViewById(R.id.profile_meetingList);
-		adpt = new MeetingItemAdapter(getActivity(), R.layout.meeting_item,
-				meetings);
-		meetingList.setAdapter(adpt);
+		/*
+		 * meetingList = (ListView) pageView
+		 * .findViewById(R.id.profile_meetingList); adpt = new
+		 * MeetingItemAdapter(getActivity(), R.layout.list_item_meeting,
+		 * meetings); meetingList.setAdapter(adpt);
+		 * 
+		 * MeetingFetcherTask fetcher = new MeetingFetcherTask(this);
+		 * fetcher.execute(session.getUserID());
+		 */
 
-		MeetingFetcherTask fetcher = new MeetingFetcherTask(this);
-		fetcher.execute(session.getUserDetails().get(SessionManager.USER));
-
-		return v;
+		return pageView;
 
 	}
 
 	private void setupViews(View v) {
-		mName = (TextView) v.findViewById(R.id.profile_name);
-		mTitleCompany = (TextView) v.findViewById(R.id.profile_title_company);
-		mPhone = (TextView) v.findViewById(R.id.profile_phone);
-		mEmail = (TextView) v.findViewById(R.id.profile_email);
-
 		mUserImage = (SmartImageView) v.findViewById(R.id.view_prof_pic);
 
-	}
+		mName = (TextView) v.findViewById(R.id.profile_name);
+		mTitleCompany = (TextView) v.findViewById(R.id.profile_title_company);
+		mTitleCompany.setVisibility(View.GONE);
+		mLocation = (TextView) v.findViewById(R.id.profile_location);
+		mLocation.setVisibility(View.GONE);
 
-	@Override
-	public void processFinish(List<Meeting> result) {
-		adpt.clear();
-		adpt.addAll(result);
+		mEmail = (TextView) v.findViewById(R.id.profile_email);
+
+		mPhone = (TextView) v.findViewById(R.id.profile_phone);
+		v.findViewById(R.id.profile_phone_row).setVisibility(View.GONE);
 
 	}
 
 	private void setUser(User user) {
-		this.user = user;
+		this.displayedUser = user;
 		if (user != null) {
+			// set display name
 			mName.setText(user.getDisplayName());
-			mTitleCompany.setText(String.format(
-					getString(R.id.profile_title_company), user.getTitle(),
-					user.getCompany()));
-			mPhone.setText(user.getPhone());
-			mEmail.setText(user.getEmail());
-		}
-		// Bitmap pic = BitmapFactory.decodeResource(getResources(),
-		// R.drawable.ic_contact_picture);
-		// qcb.setImageBitmap(pic);
-		// bitmapFetcher.execute("http://www.tdnforums.com/uploads/profile/photo-27119.jpg?_r=0");
-		mUserImage
-				.setImageUrl("http://www.tdnforums.com/uploads/profile/photo-27119.jpg?_r=0");
 
+			// set email
+			mEmail.setText(user.getEmail());
+
+			// set title & company
+			StringBuilder sb = new StringBuilder();
+			if (!(user.getTitle().isEmpty() || user.getCompany().isEmpty())) {
+				if (!user.getTitle().isEmpty())
+					sb.append(user.getTitle());
+				if (!user.getTitle().isEmpty())
+					sb.append(", " + user.getCompany());
+				mTitleCompany.setText(sb);
+				mTitleCompany.setVisibility(View.VISIBLE);
+			} else {
+				mTitleCompany.setVisibility(View.GONE);
+			}
+
+			// set location
+			if (!user.getLocation().isEmpty()) {
+				mLocation.setText(user.getLocation());
+				mLocation.setVisibility(View.VISIBLE);
+			} else {
+				mLocation.setVisibility(View.GONE);
+			}
+
+			// set phone
+			if (!user.getPhone().isEmpty()) {
+				mPhone.setText(user.getPhone());
+				pageView.findViewById(R.id.profile_phone_row).setVisibility(
+						View.VISIBLE);
+			} else {
+				pageView.findViewById(R.id.profile_phone_row).setVisibility(
+						View.GONE);
+			}
+		} else {
+			mTitleCompany.setVisibility(View.GONE);
+			mLocation.setVisibility(View.GONE);
+			pageView.findViewById(R.id.profile_phone_row).setVisibility(
+					View.GONE);
+
+		}
 	}
 
 	final class RetUserObj implements AsyncResponse<User> {
@@ -123,7 +158,8 @@ public class ProfileFragment extends Fragment implements
 
 		@Override
 		public void processFinish(User result) {
-			setUser(result);
+			if (isAdded())
+				setUser(result);
 		}
 	}
 

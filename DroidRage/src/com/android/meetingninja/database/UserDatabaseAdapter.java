@@ -19,6 +19,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,52 +38,15 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 
 public class UserDatabaseAdapter extends DatabaseAdapter {
-	private static String SERVER_EXT = "User";
-	private static String KEY_ID = "userID";
-	private static String KEY_NAME = "name";
-	private static String KEY_EMAIL = "email";
-	private static String KEY_PHONE = "phone";
-	private static String KEY_COMPANY = "company";
-	private static String KEY_TITLE = "title";
-	private static String KEY_LOCATION = "location";
+	private static final String SERVER_EXT = "User";
 
-	public static User nodeToUser(JsonNode node) {
-		User u = new User(); // start parsing a user
-		// if they at least have an email and name
-		if (node.hasNonNull(KEY_EMAIL) && node.hasNonNull(KEY_NAME)) {
-			String email = node.get(KEY_EMAIL).asText();
-			// if their email is in a reasonable format
-			if (Utilities.isValidEmailAddress(email)) {
-				// set the required fields
-				u.setUserID(node.get(KEY_ID).asText());
-				u.setDisplayName(node.get(KEY_NAME).asText());
-				u.setEmail(email);
-				// check and set the optional fields
-				if (node.hasNonNull(KEY_LOCATION))
-					u.setLocation(node.get(KEY_LOCATION).asText());
-				if (node.hasNonNull(KEY_PHONE))
-					u.setPhone(node.get(KEY_PHONE).asText());
-				if (node.hasNonNull(KEY_COMPANY))
-					u.setCompany(node.get(KEY_COMPANY).asText());
-				if (node.hasNonNull(KEY_TITLE))
-					u.setTitle(node.get(KEY_TITLE).asText());
-			}
-		} else {
-			return null;
-		}
-		return u;
-	}
-
-	public static SimpleUser nodeToSimpleUser(JsonNode node) {
-		SimpleUser u = new SimpleUser();
-		if (node.hasNonNull(KEY_NAME)) {
-			u.setUserID(node.get(KEY_ID).asText());
-			u.setDisplayName(node.get(KEY_NAME).asText());
-		} else {
-			return null;
-		}
-		return u;
-	}
+	private static final String KEY_ID = "userID";
+	private static final String KEY_NAME = "name";
+	private static final String KEY_EMAIL = "email";
+	private static final String KEY_PHONE = "phone";
+	private static final String KEY_COMPANY = "company";
+	private static final String KEY_TITLE = "title";
+	private static final String KEY_LOCATION = "location";
 
 	public static User getUserInfo(String userID) throws IOException {
 		// Server URL setup
@@ -101,79 +65,39 @@ public class UserDatabaseAdapter extends DatabaseAdapter {
 		String response = getServerResponse(conn);
 		JsonNode userNode = MAPPER.readTree(response);
 
-		return nodeToUser(userNode);
+		return parseUser(userNode);
 	}
 
-	/**
-	 * Registers a User with the supplied fields
-	 * 
-	 * @param displayName
-	 * @param email
-	 * @param password
-	 * @return "error" or the UserID for the registered user
-	 * @throws IOException
-	 */
-	public static String register(String displayName, String email,
-			String password) throws IOException {
+	public static List<SimpleUser> getContacts(String userID)
+			throws IOException {
 		// Server URL setup
-		String _url = SERVER_NAME + SERVER_EXT;
+		String _url = SERVER_NAME + SERVER_EXT + "/Contacts/" + userID;
 
 		// Establish connection
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
 		// add request header
-		conn.setRequestMethod("POST");
-		addRequestHeader(conn, true);
+		conn.setRequestMethod("GET");
+		addRequestHeader(conn, false);
 
-		// prepare POST payload
-		ByteArrayOutputStream json = new ByteArrayOutputStream();
-		// this type of print stream allows us to get a string easily
-		PrintStream ps = new PrintStream(json);
-		// Create a generator to build the JSON string
-		JsonGenerator jgen = JFACTORY.createGenerator(ps, JsonEncoding.UTF8);
-
-		// Build JSON Object
-		User createUser = new User();
-		createUser.setDisplayName(displayName);
-		createUser.setEmail(email);
-		jgen.writeStartObject();
-		jgen.writeStringField(KEY_NAME, createUser.getDisplayName());
-		jgen.writeStringField("password", password);
-		jgen.writeStringField(KEY_EMAIL, createUser.getEmail());
-		jgen.writeStringField(KEY_PHONE, createUser.getPhone());
-		jgen.writeStringField(KEY_COMPANY, createUser.getCompany());
-		jgen.writeStringField(KEY_TITLE, createUser.getTitle());
-		jgen.writeStringField(KEY_LOCATION, createUser.getLocation());
-		jgen.writeEndObject();
-		jgen.close();
-
-		// Get JSON Object payload from print stream
-		String payload = json.toString("UTF8");
-		ps.close();
-
-		// Send payload
-		int responseCode = sendPostPayload(conn, payload);
+		// Get server response
+		int responseCode = conn.getResponseCode();
 		String response = getServerResponse(conn);
 
-		Map<String, String> responseMap = new HashMap<String, String>();
+		List<SimpleUser> contactsList = new ArrayList<SimpleUser>();
+		final JsonNode contactsArray = MAPPER.readTree(response)
+				.get("contacts");
 
-		/*
-		 * result should get valid={"userID":"##"}
-		 */
-		String result = new String();
-		if (!response.isEmpty()) {
-			responseMap = MAPPER.readValue(response,
-					new TypeReference<HashMap<String, String>>() {
-					});
-			if (!responseMap.containsKey(KEY_ID)) {
-				result = "duplicate email or username";
-			} else
-				result = responseMap.get(KEY_ID);
+		if (contactsArray.isArray()) {
+			for (final JsonNode userNode : contactsArray) {
+				SimpleUser u = null;
+				if ((u = parseSimpleUser(userNode)) != null)
+					contactsList.add(u);
+			}
 		}
 
-		conn.disconnect();
-		return result;
+		return contactsList;
 	}
 
 	public static String login(String email, String pass) throws IOException {
@@ -216,7 +140,7 @@ public class UserDatabaseAdapter extends DatabaseAdapter {
 		 * result should get valid={"userID":"##"}
 		 * invalid={"errorID":"3","errorMessage":"invalid username or password"}
 		 */
-		String result = new String();
+		String result = "";
 		if (!response.isEmpty()) {
 			responseMap = MAPPER.readValue(response,
 					new TypeReference<HashMap<String, String>>() {
@@ -230,6 +154,77 @@ public class UserDatabaseAdapter extends DatabaseAdapter {
 		conn.disconnect();
 		return result;
 
+	}
+
+	/**
+	 * Registers a passed in User and returns that user with an assigned UserID
+	 * @param registerMe
+	 * @param password
+	 * @return the passed-in user with an assigned ID by the server
+	 * @throws IOException
+	 */
+	public static User register(User registerMe, String password)
+			throws IOException {
+		// Server URL setup
+		String _url = SERVER_NAME + SERVER_EXT;
+
+		// Establish connection
+		URL url = new URL(_url);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+		// add request header
+		conn.setRequestMethod("POST");
+		addRequestHeader(conn, true);
+
+		// prepare POST payload
+		ByteArrayOutputStream json = new ByteArrayOutputStream();
+		// this type of print stream allows us to get a string easily
+		PrintStream ps = new PrintStream(json);
+		// Create a generator to build the JSON string
+		JsonGenerator jgen = JFACTORY.createGenerator(ps, JsonEncoding.UTF8);
+
+		// Build JSON Object
+		jgen.writeStartObject();
+		jgen.writeStringField(KEY_NAME, registerMe.getDisplayName());
+		jgen.writeStringField("password", password);
+		jgen.writeStringField(KEY_EMAIL, registerMe.getEmail());
+		jgen.writeStringField(KEY_PHONE, registerMe.getPhone());
+		jgen.writeStringField(KEY_COMPANY, registerMe.getCompany());
+		jgen.writeStringField(KEY_TITLE, registerMe.getTitle());
+		jgen.writeStringField(KEY_LOCATION, registerMe.getLocation());
+		jgen.writeEndObject();
+		jgen.close();
+
+		// Get JSON Object payload from print stream
+		String payload = json.toString("UTF8");
+		ps.close();
+
+		// Send payload
+		int responseCode = sendPostPayload(conn, payload);
+		String response = getServerResponse(conn);
+
+		Map<String, String> responseMap = new HashMap<String, String>();
+		User createUser = new User(registerMe);
+
+		/*
+		 * result should get valid={"userID":"##"}
+		 */
+		String result = "";
+		if (!response.isEmpty()) {
+			responseMap = MAPPER.readValue(response,
+					new TypeReference<HashMap<String, String>>() {
+					});
+			if (!responseMap.containsKey(KEY_ID)) {
+				result = "duplicate email or username";
+				return null;
+			} else {
+				result = responseMap.get(KEY_ID);
+				createUser.setUserID(result);
+			}
+		}
+
+		conn.disconnect();
+		return createUser;
 	}
 
 	public static List<User> getAllUsers() throws IOException {
@@ -253,7 +248,7 @@ public class UserDatabaseAdapter extends DatabaseAdapter {
 			for (final JsonNode userNode : userArray) {
 				User u = null;
 				// assign and check null and do not add local user
-				if ((u = nodeToUser(userNode)) != null
+				if ((u = parseUser(userNode)) != null
 						&& !u.getUserID().equals(
 								SessionManager.getInstance().getUserID()))
 					userList.add(u);
@@ -270,6 +265,7 @@ public class UserDatabaseAdapter extends DatabaseAdapter {
 		ByteArrayOutputStream json = new ByteArrayOutputStream();
 		// this type of print stream allows us to get a string easily
 		PrintStream ps = new PrintStream(json);
+
 		// Create a generator to build the JSON string
 		JsonGenerator jgen = JFACTORY.createGenerator(ps, JsonEncoding.UTF8);
 		for (String key : key_values.keySet()) {
@@ -306,7 +302,7 @@ public class UserDatabaseAdapter extends DatabaseAdapter {
 				}
 			}
 		}));
-		String response = new String();
+		String response = "";
 		for (String p : payloads) {
 			t.run();
 			response = updateHelper(p);
@@ -330,5 +326,43 @@ public class UserDatabaseAdapter extends DatabaseAdapter {
 		String response = getServerResponse(conn);
 		conn.disconnect();
 		return response;
+	}
+
+	public static User parseUser(JsonNode node) {
+		User u = new User(); // start parsing a user
+		// if they at least have an email and name
+		if (node.hasNonNull(KEY_EMAIL) && node.hasNonNull(KEY_NAME)) {
+			String email = node.get(KEY_EMAIL).asText();
+			// if their email is in a reasonable format
+			if (Utilities.isValidEmailAddress(email)) {
+				// set the required fields
+				u.setUserID(node.get(KEY_ID).asText());
+				u.setDisplayName(node.get(KEY_NAME).asText());
+				u.setEmail(email);
+				// check and set the optional fields
+				u.setLocation(node.hasNonNull(KEY_LOCATION) ? node.get(
+						KEY_LOCATION).asText() : "");
+				u.setPhone(node.hasNonNull(KEY_PHONE) ? node.get(KEY_PHONE)
+						.asText() : "");
+				u.setCompany(node.hasNonNull(KEY_COMPANY) ? node.get(
+						KEY_COMPANY).asText() : "");
+				u.setTitle(node.hasNonNull(KEY_TITLE) ? node.get(KEY_TITLE)
+						.asText() : "");
+			}
+		} else {
+			return null;
+		}
+		return u;
+	}
+
+	public static SimpleUser parseSimpleUser(JsonNode node) {
+		SimpleUser u = new SimpleUser();
+		if (node.hasNonNull(KEY_NAME)) {
+			u.setUserID(node.get(KEY_ID).asText());
+			u.setDisplayName(node.get(KEY_NAME).asText());
+		} else {
+			return null;
+		}
+		return u;
 	}
 }

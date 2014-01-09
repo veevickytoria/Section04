@@ -9,20 +9,20 @@
     <!--
          Events have a start date/time and an end date/time. The display shows
          the start and end times like 'From start date To end date'. This is the
-         label before the 'end date'.
+         label before the 'end date'.
     -->
     <string name="edit_event_to_label">To</string>
     <!--
          Events have a start date/time and an end date/time. The display shows
          the start and end times like 'From start date To end date'. This is the
-         label before the 'start date'.
+         label before the 'start date'.
     -->
     <string name="edit_event_from_label">From</string>
 
     <!--
          Label for whether the user is attending this event. This is shown when
          a user is invited to a meeting or event.  The possible answers are
-         'yes', 'no', and 'maybe' (and, initially, 'no response').
+         'yes', 'no', and 'maybe' (and, initially, 'no response').
     -->
     <string name="view_event_response_label">Attending?</string>
     <!-- Response for whether attending an event - accepted [CHAR LIMIT=10] -->
@@ -63,7 +63,7 @@
     <!--
          Some events repeat daily, weekly, monthly, or yearly.  This is the label
          for all the choices about how often an event repeats (including the choice
-         of not repeating).
+         of not repeating).
     -->
     <string name="repeats_label">Repetition</string>
     <!-- Title of event when no explicit title is specified by the user -->
@@ -71,12 +71,12 @@
 
     <!--
          Label for the 'Presence' of an event, which can be either 'busy' (the default)
-         or 'available'  [CHAR LIMIT=15]
+         or 'available'  [CHAR LIMIT=15]
     -->
     <string name="presence_label">Show me as</string>
     <!--
          Label for the 'Privacy' of an event, which can be either 'private'
-         or 'public' [CHAR LIMIT=15]
+         or 'public' [CHAR LIMIT=15]
     -->
     <string name="privacy_label">Privacy</string>
 
@@ -84,5 +84,8 @@
     <string name="reminders_label">Add reminder</string>
     <!-- Reminders label [CHAR LIMIT=15] -->
     <string name="event_info_reminders_label">Reminders</string>
+
+    <!-- Description of the selected marker for accessibility support [CHAR LIMIT = NONE] -->
+    <string name="accessibility_selected_marker_description">Selected event</string>
 
 </resources>

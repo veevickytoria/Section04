@@ -22,5 +22,6 @@
     <string name="title_activity_blank">Blank</string>
     <string name="hello_world">Hello world!</string>
     <string name="loading">Loading\u2026</string>
+    <string name="profile_default_location">Location</string>
 
 </resources>

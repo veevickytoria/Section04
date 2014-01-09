@@ -67,4 +67,12 @@ public class Topic {
 		}
 		return total;
 	}
+
+	public void addTopic(Topic subTopic) {
+		this.subTopics.add(subTopic);
+	}
+	
+	public void addTopic(int index, Topic subTopic) {
+		this.subTopics.add(index, subTopic);
+	}
 }

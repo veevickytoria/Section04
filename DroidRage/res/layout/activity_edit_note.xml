@@ -1,66 +1,42 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/contentScroller"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="6dp"
     android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin" >
 
-    <EditText
-        android:id="@+id/noteTitleEditor"
+    <LinearLayout
+        android:id="@+id/note_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@null"
-        android:ems="10"
-        android:hint="Title"
-        android:singleLine="true"
-        android:textSize="20sp" />
+        android:orientation="vertical" >
 
-    <ScrollView
-        android:id="@+id/contentScroller"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/btnCancel"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/noteTitleEditor"
-        android:layout_marginTop="6dp" >
+        <EditText
+            android:id="@+id/noteTitleEditor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:ems="10"
+            android:hint="Title"
+            android:singleLine="true"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/noteContentEditor"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:background="@null"
             android:ems="10"
             android:gravity="top"
             android:inputType="textMultiLine"
+            android:minHeight="144dp"
             android:textSize="20sp" >
-
-            <requestFocus />
         </EditText>
-    </ScrollView>
+    </LinearLayout>
 
-    <Button
-        android:id="@+id/btnSave"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/btnCancel"
-        android:layout_alignBottom="@+id/btnCancel"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="40dp"
-        android:onClick="onClick"
-        android:text="Save and Exit" />
-
-    <Button
-        android:id="@+id/btnCancel"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="20dp"
-        android:layout_marginRight="40dp"
-        android:onClick="onClick"
-        android:text="Discard Changes" />
-
-</RelativeLayout>
+</ScrollView>

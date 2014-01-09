@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import objects.Meeting;
+import objects.Meeting.AttendeeWrapper;
 
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -37,15 +38,16 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 public class MeetingDatabaseAdapter extends DatabaseAdapter {
 
-	private static String SERVER_EXT = "Meetings";
-	private static String KEY_ID = "meetingID";
-	private static String KEY_TITLE = "title";
-	private static String KEY_LOCATION = "location";
-	private static String KEY_DATETIME = "datetime";
-	private static String KEY_START = "datetimeStart";
-	private static String KEY_END = "datetimeEnd";
-	private static String KEY_DESC = "description";
-	private static String KEY_ATTEND = "attendance";
+	private final static String SERVER_EXT = "Meetings";
+
+	private final static String KEY_ID = "meetingID";
+	private final static String KEY_TITLE = "title";
+	private final static String KEY_LOCATION = "location";
+	private final static String KEY_DATETIME = "datetime";
+	private final static String KEY_START = "datetimeStart";
+	private final static String KEY_END = "datetimeEnd";
+	private final static String KEY_DESC = "description";
+	private final static String KEY_ATTEND = "attendance";
 
 	public static List<Meeting> getMeetings(String userID)
 			throws JsonParseException, JsonMappingException, IOException {
@@ -104,12 +106,11 @@ public class MeetingDatabaseAdapter extends DatabaseAdapter {
 		if (scheduleArray.isArray()) {
 			for (final JsonNode meetingNode : scheduleArray) {
 				Meeting m = new Meeting();
-				if (meetingNode.hasNonNull("title")) {
-					m.setTitle(meetingNode.get("title").asText());
-					m.setDescription(meetingNode.get("description").asText());
-					m.setDatetimeStart(meetingNode.get("datetimeStart")
-							.asText());
-					m.setDatetimeEnd(meetingNode.get("datetimeEnd").asText());
+				if (meetingNode.hasNonNull(KEY_TITLE)) {
+					m.setTitle(meetingNode.get(KEY_TITLE).asText());
+					m.setDescription(meetingNode.get(KEY_DESC).asText());
+					m.setStartTime(meetingNode.get("datetimeStart").asText());
+					m.setEndTime(meetingNode.get("datetimeEnd").asText());
 				}
 				meetingsList.add(m);
 			}
@@ -123,8 +124,7 @@ public class MeetingDatabaseAdapter extends DatabaseAdapter {
 	public static Meeting createMeeting(String userID, Meeting m)
 			throws IOException, MalformedURLException {
 		// Server URL setup
-		String method = "Meeting";
-		String _url = String.format("%s%s/", SERVER_NAME, method);
+		String _url = SERVER_NAME + SERVER_EXT;
 
 		// establish connection
 		URL url = new URL(_url);
@@ -143,18 +143,18 @@ public class MeetingDatabaseAdapter extends DatabaseAdapter {
 		// Build JSON Object
 		jgen.writeStartObject();
 		jgen.writeStringField("userID", userID);
-		jgen.writeStringField("title", m.getTitle());
-		jgen.writeStringField("location", m.getLocation());
-		jgen.writeStringField("datetime", m.getDatetimeStart());
+		jgen.writeStringField(KEY_TITLE, m.getTitle());
+		jgen.writeStringField(KEY_LOCATION, m.getLocation());
+		jgen.writeStringField("datetime", m.getStartTime());
 		jgen.writeArrayFieldStart("attendance");
-		jgen.writeStartArray();
-		// TODO:
-		// for (UserAttendance attendee : m.getAttendees()) {
-		// jgen.writeStartObject();
-		// jgen.writeStringField(attendee.getUserName(),
-		// attendee.isAttending().toString());
-		// jgen.writeEndObject();
-		// }
+		// TODO: Add attendees to meeting
+		for (AttendeeWrapper attendee : m.getAttendance()) {
+			if (attendee.isAttending()) {
+				jgen.writeStartObject();
+				jgen.writeStringField("userID", attendee.getID());
+				jgen.writeEndObject();
+			}
+		}
 		jgen.writeEndArray();
 		jgen.writeEndObject();
 		jgen.close();
@@ -167,8 +167,10 @@ public class MeetingDatabaseAdapter extends DatabaseAdapter {
 		int responseCode = sendPostPayload(conn, payload);
 		String response = getServerResponse(conn);
 
+		// prepare to get the id of the created Meeting
 		Map<String, String> responseMap = new HashMap<String, String>();
-
+		Meeting created = new Meeting(m);
+		
 		/*
 		 * result should get valid={"meetingID":"##"}
 		 */
@@ -184,10 +186,10 @@ public class MeetingDatabaseAdapter extends DatabaseAdapter {
 		}
 
 		if (!result.equalsIgnoreCase("invalid"))
-			m.setID(result);
+			created.setID(result);
 
 		conn.disconnect();
-		return m;
+		return created;
 	}
 
 	private static String getMockMeetingJSON() {

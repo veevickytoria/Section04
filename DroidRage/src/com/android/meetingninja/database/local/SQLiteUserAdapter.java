@@ -9,7 +9,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-public class UserDBAdapter extends SQLiteHelper {
+public class SQLiteUserAdapter extends SQLiteHelper {
 
 	private SQLiteHelper mDbHelper;
 	private SQLiteDatabase mDb;
@@ -19,8 +19,15 @@ public class UserDBAdapter extends SQLiteHelper {
 	// Columns
 	public static final String NAME = "username";
 	public static final String EMAIL = "email";
+	public static final String PHONE = "phone";
+	public static final String COMPANY = "company";
+	public static final String TITLE = "title";
+	public static final String LOCATION = "location";
 
-	public UserDBAdapter(Context context) {
+	private static final String[] allColumns = new String[] { KEY_ID, NAME,
+			EMAIL, PHONE, COMPANY, TITLE, LOCATION };
+
+	public SQLiteUserAdapter(Context context) {
 		super(context);
 		mDbHelper = SQLiteHelper.getInstance(context);
 	}
@@ -36,10 +43,14 @@ public class UserDBAdapter extends SQLiteHelper {
 		ContentValues values = new ContentValues();
 		values.put(NAME, u.getDisplayName());
 		values.put(EMAIL, u.getEmail());
+		values.put(PHONE, u.getPhone());
+		values.put(COMPANY, u.getCompany());
+		values.put(TITLE, u.getTitle());
+		values.put(LOCATION, u.getLocation());
 
 		long insertId = mDb.insert(TABLE_NAME, null, values);
-		Cursor c = mDb.query(TABLE_NAME, new String[] { KEY_ID, NAME, EMAIL },
-				KEY_ID + "=" + insertId, null, null, null, null);
+		Cursor c = mDb.query(TABLE_NAME, allColumns, KEY_ID + "=" + insertId,
+				null, null, null, null);
 		c.moveToFirst();
 		User newUser = new UserCursor(c).getModel();
 		c.close();
@@ -56,7 +67,8 @@ public class UserDBAdapter extends SQLiteHelper {
 	public List<User> getAllUsers() {
 		List<User> users = new ArrayList<User>();
 		mDb = mDbHelper.getReadableDatabase();
-		Cursor c = mDb.query(TABLE_NAME, null, null, null, null, null, NAME);
+		Cursor c = mDb.query(TABLE_NAME, allColumns, null, null, null, null,
+				NAME);
 
 		// looping through all rows and adding to list
 		if (c.moveToFirst()) {
@@ -68,6 +80,26 @@ public class UserDBAdapter extends SQLiteHelper {
 		c.close();
 		close();
 		return users;
+	}
+	
+	/**
+	 * Run a query on the users table. See
+	 * {@link SQLiteDatabase#query(String, String[], String, String[], String, String, String)}
+	 * 
+	 * @param columns
+	 * @param selection
+	 * @param selectionArgs
+	 * @param groupBy
+	 * @param having
+	 * @param orderBy
+	 * @return
+	 */
+	public Cursor query(String[] columns, String selection,
+			String[] selectionArgs, String groupBy, String having,
+			String orderBy) {
+		mDb = mDbHelper.getReadableDatabase();
+		return mDb.query(TABLE_NAME, columns, selection, selectionArgs,
+				groupBy, having, orderBy);
 	}
 
 	private class UserCursor extends ModelCursor<User> {
@@ -82,9 +114,17 @@ public class UserDBAdapter extends SQLiteHelper {
 			int idxID = crsr.getColumnIndex(KEY_ID);
 			int idxUSERNAME = crsr.getColumnIndex(NAME);
 			int idxEMAIL = crsr.getColumnIndex(EMAIL);
+			int idxPHONE = crsr.getColumnIndex(PHONE);
+			int idxCOMPANY = crsr.getColumnIndex(COMPANY);
+			int idxTITLE = crsr.getColumnIndex(TITLE);
+			int idxLOCATION = crsr.getColumnIndex(LOCATION);
 			model.setUserID(crsr.getInt(idxID));
 			model.setDisplayName(crsr.getString(idxUSERNAME));
 			model.setEmail(crsr.getString(idxEMAIL));
+			model.setPhone(crsr.getString(idxPHONE));
+			model.setCompany(crsr.getString(idxCOMPANY));
+			model.setTitle(crsr.getString(idxTITLE));
+			model.setLocation(crsr.getString(idxLOCATION));
 			return model;
 		}
 

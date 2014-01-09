@@ -17,6 +17,7 @@ package com.android.meetingninja.user;
 
 import java.util.HashMap;
 
+import objects.User;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -37,14 +38,17 @@ public class SessionManager {
 	private static final String PREF_NAME = SessionManager.class
 			.getSimpleName();
 
-	// Sharedpref user ID
-	public static final String KEY_USERID = "com.meetingninja.android.preferences.userID";
-
-	// Sharedpref username
-	public static final String USER = "com.meetingninja.android.preferences.username";
+	// User details
+	public static final String KEY_USERID = "com.android.meetingninja.preferences.userID";
+	public static final String USER = "com.android.meetingninja.preferences.username";
+	public static final String EMAIL = "com.android.meetingninja.preferences.email";
+	public static final String PHONE = "com.android.meetingninja.preferences.phone";
+	public static final String COMPANY = "com.android.meetingninja.preferences.company";
+	public static final String TITLE = "com.android.meetingninja.preferences.title";
+	public static final String LOCATION = "com.android.meetingninja.preferences.location";
 
 	// Sharedpref login state
-	public static final String LOGGED_IN = "com.meetingninja.android.preferences.isLoggedIn";
+	public static final String LOGGED_IN = "com.android.meetingninja.preferences.isLoggedIn";
 
 	public static synchronized SessionManager getInstance() {
 		if (sInstance == null)
@@ -65,7 +69,7 @@ public class SessionManager {
 	}
 
 	/**
-	 * Create login session
+	 * Create login session with userID
 	 * */
 	public void createLoginSession(String userID) {
 		Editor editor = pref.edit();
@@ -73,6 +77,25 @@ public class SessionManager {
 		editor.putString(USER, "user");
 		editor.putString(KEY_USERID, userID);
 		editor.putBoolean(LOGGED_IN, true);
+		// commit changes
+		editor.commit();
+	}
+	
+	/**
+	 * Create login session with user object
+	 * */
+	public void createLoginSession(User u) {
+		Editor editor = pref.edit();
+		// Storing login value as TRUE
+		editor.putString(KEY_USERID, u.getUserID());
+		editor.putString(USER, u.getDisplayName());
+		editor.putString(EMAIL, u.getEmail());
+		editor.putString(PHONE, u.getPhone());
+		editor.putString(COMPANY, u.getCompany());
+		editor.putString(TITLE, u.getTitle());
+		editor.putString(LOCATION, u.getLocation()); 
+		editor.putBoolean(LOGGED_IN, true);
+		
 		// commit changes
 		editor.commit();
 	}

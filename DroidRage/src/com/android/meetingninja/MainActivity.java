@@ -89,7 +89,7 @@ public class MainActivity extends FragmentActivity implements
 		SessionManager.getInstance().init(this);
 		session = SessionManager.getInstance();
 
-		session.createLoginSession("0");
+//		session.createLoginSession("749");
 
 		// Check if logged in
 		if (!session.isLoggedIn()) {
@@ -104,7 +104,8 @@ public class MainActivity extends FragmentActivity implements
 			startActivity(login);
 			finish(); // close main activity
 		} else
-			Log.v(TAG, "UserID" + session.getUserID() + " is logged in already");
+			Log.v(TAG, "UserID " + session.getUserID()
+					+ " is logged in");
 
 		// Else continue
 		setContentView(R.layout.activity_main);
@@ -152,31 +153,28 @@ public class MainActivity extends FragmentActivity implements
 			actionBar.addTab(tab.setTabListener(this));
 		}
 
-		Bundle extras = getIntent().getExtras();
-		if (extras != null) {
-			if (extras.containsKey("Fragment")
-					&& extras.getString("Fragment")
-							.compareToIgnoreCase("notes") == 0) {
-				Log.d("GET_INTENT", extras.getString("Fragment"));
-
-				if (extras.getString("TypeL") != null)
-					if (extras.getString("TypeL").equals("Create")) {
-						notesFrag.populateList();
-						return;
-					}
-
-				notesFrag.populateList();
-
-			}
-		}
+		/*
+		 * Bundle extras = getIntent().getExtras(); if (extras != null) { if
+		 * (extras.containsKey("Fragment") && extras.getString("Fragment")
+		 * .compareToIgnoreCase("notes") == 0) { Log.d("GET_INTENT",
+		 * extras.getString("Fragment"));
+		 * 
+		 * if (extras.getString("TypeL") != null) if
+		 * (extras.getString("TypeL").equals("Create")) {
+		 * notesFrag.populateList(); return; }
+		 * 
+		 * notesFrag.populateList();
+		 * 
+		 * } }
+		 */
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (data != null) {
-			Log.wtf(TAG, data.getStringExtra(EditNoteActivity.EXTRA_NAME));
-		}
+		// if (data != null) {
+		// Log.wtf(TAG, data.getStringExtra(EditNoteActivity.EXTRA_NAME));
+		// }
 	}
 
 	@Override
@@ -195,7 +193,8 @@ public class MainActivity extends FragmentActivity implements
 			case (MEETINGS_FRAGMENT):
 				Toast.makeText(this, "Refreshing Meetings", Toast.LENGTH_SHORT)
 						.show();
-				meetingsFrag.refreshMeetings();
+				// meetingsFrag.fetchMeetings();
+				meetingsFrag.populateList();
 				return true;
 			case (NOTES_FRAGMENT):
 				Toast.makeText(this, "Refreshing Notes", Toast.LENGTH_SHORT)
@@ -206,13 +205,11 @@ public class MainActivity extends FragmentActivity implements
 			}
 
 		case R.id.action_new_meeting:
-			meetingsFrag.createMeeting();
+			meetingsFrag.editMeeting(null);
 			return true;
 		case R.id.action_new_note:
-			Toast.makeText(this, "Create a note", Toast.LENGTH_SHORT).show();
 			Intent createNote = new Intent(this, CreateNoteActivity.class);
-			startActivity(createNote);
-			// notesFrag.createNewNote();
+			startActivityForResult(createNote, 3);
 			return true;
 		case R.id.action_logout:
 			session.logoutUser();

@@ -17,6 +17,7 @@ package com.android.meetingninja.user;
 
 import java.io.IOException;
 
+import objects.User;
 import android.R.anim;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -61,17 +62,45 @@ public class LoginActivity extends Activity {
 	private View mLoginStatusView;
 	private TextView mLoginStatusMessageView;
 
+	private static final String TAG = LoginActivity.class.getSimpleName();
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_login);
+		setupViews();
 
 		// Set up the login form.
-		mEmail = getIntent().getStringExtra(Intent.EXTRA_EMAIL);
-		mEmailView = (EditText) findViewById(R.id.email);
-		mEmailView.setText(mEmail);
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			mEmail = extras.getString(Intent.EXTRA_EMAIL);
+			mEmailView.setText(mEmail);
+		}
 
+		findViewById(R.id.sign_in_button).setOnClickListener(
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						attemptLogin();
+					}
+				});
+		findViewById(R.id.register_button).setOnClickListener(
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						Intent register = new Intent(LoginActivity.this,
+								RegisterActivity.class);
+						if (!TextUtils.isEmpty(mEmail)) {
+							register.putExtra(Intent.EXTRA_EMAIL, mEmail);
+						}
+						startActivityForResult(register, 0);
+					}
+				});
+	}
+
+	private void setupViews() {
+		mEmailView = (EditText) findViewById(R.id.email);
 		mPasswordView = (EditText) findViewById(R.id.password);
 		mPasswordView
 				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -90,34 +119,13 @@ public class LoginActivity extends Activity {
 		mLoginStatusView = findViewById(R.id.login_status);
 		mLoginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
 
-		findViewById(R.id.sign_in_button).setOnClickListener(
-				new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						attemptLogin();
-					}
-				});
-		findViewById(R.id.register_button).setOnClickListener(
-				new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						Intent register = new Intent(LoginActivity.this,
-								RegisterActivity.class);
-						// if (!TextUtils.isEmpty(mUsername)) {
-						// register.putExtra(RegisterActivity.ARG_USERNAME,
-						// mUsername);
-						// }
-						startActivity(register);
-					}
-				});
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		getMenuInflater().inflate(R.menu.login, menu);
-		return true;
-	}
+	/*
+	 * @Override public boolean onCreateOptionsMenu(Menu menu) {
+	 * super.onCreateOptionsMenu(menu); getMenuInflater().inflate(R.menu.login,
+	 * menu); return true; }
+	 */
 
 	/**
 	 * Attempts to sign in or register the account specified by the login form.
@@ -189,6 +197,18 @@ public class LoginActivity extends Activity {
 		}
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == 0) {
+			if (resultCode == Activity.RESULT_OK) {
+				if (data != null) {
+					mEmailView.setText(data.getStringExtra(Intent.EXTRA_EMAIL));
+				}
+			}
+		}
+	}
+
 	/**
 	 * Shows the progress UI and hides the login form.
 	 */
@@ -237,25 +257,27 @@ public class LoginActivity extends Activity {
 	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 		@Override
 		protected Boolean doInBackground(Void... params) {
-			// TODO: attempt authentication against a network service.
-			// TODO: register a new account
-
 			String login_result = "";
 
 			try {
 				login_result = UserDatabaseAdapter.login(mEmail, mPassword);
 				if (login_result.contains("invalid")) {
-					Log.e("LOGIN", mEmail + " does not exist");
+					Log.e(TAG, mEmail + " does not exist");
 					return false;
 				} else {
 					SessionManager session = SessionManager.getInstance();
 					session.clear();
 					session.createLoginSession(login_result);
-
+					User loggedIn = UserDatabaseAdapter
+							.getUserInfo(login_result);
+					session.createLoginSession(loggedIn);
 				}
-				// Thread.sleep(2000);
+				Thread.sleep(2000);
 			} catch (IOException e) {
-				Log.e("LOGIN_ERR", e.toString());
+				Log.e(TAG + " Error", e.getLocalizedMessage());
+				return false;
+			} catch (InterruptedException e) {
+				Log.e(TAG + " Error", e.getLocalizedMessage());
 				return false;
 			}
 
