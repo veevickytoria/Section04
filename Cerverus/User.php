@@ -205,8 +205,13 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 	}
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'DELETE')==0){
 	preg_match("#(\d+)#", $_SERVER['REQUEST_URI'], $id);
-	$userNode = $client->getNode($id[0]);
-	if ($userNode != null){
+	$node = $client->getNode($id[0]);
+	//check if node is a node
+	if ($node != null){
+			//check if node has user index
+			$userNode = $userIndex->findOne('email', $node->getProperty('email'));
+			//check if it is a user
+			if($userNode != NULL){
 			//delete relationships
 			$relationArray = $userNode->getRelationships();
 			foreach($relationArray as $rel){
@@ -215,6 +220,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 			//delete the node
 			$userNode->delete();
 			echo json_encode(array('valid'=>'true'));
+			}
 	} else {
 		echo json_encode(array('errorID'=>'8', 'errorMessage'=>'TaskDelete: Specified node does not exist.'));
 	}
