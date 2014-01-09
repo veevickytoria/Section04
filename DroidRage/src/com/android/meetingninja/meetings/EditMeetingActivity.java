@@ -49,11 +49,6 @@ import com.android.meetingninja.database.MeetingDatabaseAdapter;
 import com.android.meetingninja.database.local.SQLiteMeetingAdapter;
 import com.android.meetingninja.extras.MyDateUtils;
 import com.android.meetingninja.user.SessionManager;
-import com.doomonafireball.betterpickers.calendardatepicker.CalendarDatePickerDialog;
-import com.doomonafireball.betterpickers.calendardatepicker.CalendarDatePickerDialog.OnDateSetListener;
-import com.doomonafireball.betterpickers.radialtimepicker.RadialPickerLayout;
-import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog;
-import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog.OnTimeSetListener;
 
 public class EditMeetingActivity extends FragmentActivity implements
 		AsyncResponse<Boolean> {

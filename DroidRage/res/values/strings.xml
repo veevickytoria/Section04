@@ -23,5 +23,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="loading">Loading\u2026</string>
     <string name="profile_default_location">Location</string>
+    <string name="parse_application_id">EMatFstc8b29syE3hcVBrNndCdwjRudulpFBUwdt</string>
+    <string name="parse_client_key">pmsPdsBrpUyQIQfYR8sFe5sNpeHnLKlz1rfLuaEP</string>
 
 </resources>
