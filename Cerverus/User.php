@@ -56,6 +56,40 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 	}else{
 		echo json_encode(array("errorID"=>1, "errorMessage"=>"email invalid email or password"));
 	}	
+}else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'schedule')==0){
+        //GET getUserSchedule
+        $userNode=$client->getNode($_GET['id']);
+        $relationArray = $userNode->getRelationships(array());
+        $fullarray=array();
+        foreach($relationArray as $rel){
+				$booleanFound=0;
+                $node = $rel->getStartNode();
+                $tempArray=$node->getProperties();
+                $array=array();
+                $array['id']=$node->getId();
+                $array['title']=$tempArray['title'];
+				$array['description']=$tempArray['description'];
+                //$array['relation']=$rel->getType();
+                if(strcasecmp($rel->getType(),'ASSIGNED_TO')==0 || strcasecmp($rel->getType(),'ASSIGNED_FROM')==0 ||strcasecmp($rel->getType(),'CREATED_BY')==0){
+                        $array['datetimeEnd']=$tempArray['deadline'];
+						$array['datetimeStart']=$tempArray['dateCreated'];
+						$array['type']='task';
+                }else if(strcasecmp($rel->getType(),'MADE_MEETING')==0 ||strcasecmp($rel->getType(),'ATTEND_MEETING')==0){
+						$array['datetimeStart']=$tempArray['datetime'];
+						$array['datetimeEnd']=$tempArray['endDatetime'];
+						$array['type']='meeting';
+				}
+				foreach($fullarray as $checkArray){
+					if($checkArray['id']==$node->getId()){
+						$booleanFound=1;
+					}
+				}
+				if($booleanFound==0){
+					array_push($fullarray,$array);
+				}
+        }
+        $lastarray=array('schedule'=>$fullarray);
+        echo json_encode($lastarray);
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'tasks')==0){
 	//GET getUserTasks
 	$userNode=$client->getNode($_GET['id']);
