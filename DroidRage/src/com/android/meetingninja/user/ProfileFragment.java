@@ -30,7 +30,6 @@ import android.widget.TextView;
 
 import com.android.meetingninja.R;
 import com.android.meetingninja.database.AsyncResponse;
-import com.android.meetingninja.meetings.MeetingFetcherTask;
 import com.android.meetingninja.meetings.MeetingItemAdapter;
 import com.loopj.android.image.SmartImageView;
 

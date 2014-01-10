@@ -85,7 +85,7 @@ public class SQLiteNoteAdapter extends SQLiteHelper {
 		if (note != null)
 			deleteNote(Long.parseLong(note.getID()));
 	}
-	
+
 	/**
 	 * Run a query on the notes table. See
 	 * {@link SQLiteDatabase#query(String, String[], String, String[], String, String, String)}

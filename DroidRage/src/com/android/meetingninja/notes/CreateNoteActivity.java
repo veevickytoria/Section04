@@ -21,7 +21,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
-import com.android.meetingninja.MainActivity;
 import com.android.meetingninja.R;
 import com.android.meetingninja.database.local.SQLiteNoteAdapter;
 

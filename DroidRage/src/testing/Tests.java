@@ -4,11 +4,8 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
-import org.joda.time.DateTime;
 
 import objects.Agenda;
 import objects.Group;
@@ -120,7 +117,7 @@ public class Tests {
 		groupTest();
 		dateTimeParsingTest();
 	}
-	
+
 	private static void dateTimeParsingTest() {
 		String serverTimeStart = "Saturday, 15-Aug-15 23:59:59 UTC";
 		String serverTimeEnd = "Sunday, 16-Aug-15 23:59:59 UTC";

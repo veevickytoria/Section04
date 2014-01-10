@@ -52,7 +52,7 @@ public class MeetingDatabaseAdapter extends DatabaseAdapter {
 	public static List<Meeting> getMeetings(String userID)
 			throws JsonParseException, JsonMappingException, IOException {
 		// Server URL setup
-		String _url = SERVER_NAME + SERVER_EXT + "/" + userID;
+		String _url = BASE_URL + SERVER_EXT + "/" + userID;
 		// establish connection
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -83,7 +83,7 @@ public class MeetingDatabaseAdapter extends DatabaseAdapter {
 	public static List<Meeting> getSchedule(String userID)
 			throws JsonParseException, JsonMappingException, IOException {
 		// Server URL setup
-		String _url = SERVER_NAME + SERVER_EXT + "/" + userID;
+		String _url = BASE_URL + SERVER_EXT + "/" + userID;
 		// establish connection
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -124,7 +124,7 @@ public class MeetingDatabaseAdapter extends DatabaseAdapter {
 	public static Meeting createMeeting(String userID, Meeting m)
 			throws IOException, MalformedURLException {
 		// Server URL setup
-		String _url = SERVER_NAME + SERVER_EXT;
+		String _url = BASE_URL + SERVER_EXT;
 
 		// establish connection
 		URL url = new URL(_url);
@@ -170,7 +170,7 @@ public class MeetingDatabaseAdapter extends DatabaseAdapter {
 		// prepare to get the id of the created Meeting
 		Map<String, String> responseMap = new HashMap<String, String>();
 		Meeting created = new Meeting(m);
-		
+
 		/*
 		 * result should get valid={"meetingID":"##"}
 		 */

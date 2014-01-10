@@ -14,7 +14,7 @@ public class Comment {
 	private String commentBy;
 	@JsonProperty("content")
 	private String content;
-	
+
 	public Comment() {
 		// Required empty constructor
 	}

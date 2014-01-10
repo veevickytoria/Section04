@@ -15,10 +15,17 @@
  ******************************************************************************/
 package com.android.meetingninja.extras;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.SocketAddress;
+
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
+
+import com.android.meetingninja.database.DatabaseAdapter;
 
 /**
  * Check device's network connectivity and speed
@@ -49,6 +56,21 @@ public class Connectivity {
 	public static boolean isConnected(Context context) {
 		NetworkInfo info = Connectivity.getNetworkInfo(context);
 		return (info != null && info.isConnected());
+	}
+
+	public static boolean canReachBackend() throws IOException {
+		boolean exists = false;
+		SocketAddress sockaddr = new InetSocketAddress(
+				DatabaseAdapter.BASE_URL, 80);
+		// create an unbound socket
+		Socket sock = new Socket();
+		// This method will block no more than timeoutMs
+		int timeoutMs = 2000; // 2 seconds
+		// If the timeout occurs, SocketTimeoutException is thrown
+		sock.connect(sockaddr, timeoutMs);
+
+		exists = true;
+		return exists;
 	}
 
 	/**

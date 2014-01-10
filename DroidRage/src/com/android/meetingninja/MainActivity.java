@@ -18,17 +18,14 @@ package com.android.meetingninja;
 import java.util.ArrayList;
 
 import objects.Meeting;
-import android.app.ActionBar;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
-import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
@@ -38,7 +35,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.android.meetingninja.database.local.SQLiteHelper;
 import com.android.meetingninja.meetings.MeetingItemAdapter;
 import com.android.meetingninja.meetings.MeetingsFragment;
 import com.android.meetingninja.notes.CreateNoteActivity;

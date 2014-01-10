@@ -30,7 +30,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
@@ -307,10 +306,9 @@ public class LoginActivity extends Activity {
 
 			// if successful login, start main activity
 			if (success) {
-				Intent main = new Intent(LoginActivity.this,
-						MainActivity.class);
-//				main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//				main.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+				Intent main = new Intent(LoginActivity.this, MainActivity.class);
+				// main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				// main.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
 				startActivity(main);
 				overridePendingTransition(anim.fade_in, anim.fade_out);

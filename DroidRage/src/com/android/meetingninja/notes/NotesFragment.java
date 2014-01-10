@@ -234,7 +234,8 @@ public class NotesFragment extends Fragment implements
 			} // end EditNoteActivity
 		} else if (requestCode == 3) { // CreateNoteActivity
 			if (resultCode == Activity.RESULT_OK) {
-				Toast.makeText(getActivity(), "New Note Created", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getActivity(), "New Note Created",
+						Toast.LENGTH_SHORT).show();
 			}
 		} // end CreateNoteActivity
 	}

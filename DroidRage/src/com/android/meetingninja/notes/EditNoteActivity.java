@@ -73,7 +73,7 @@ public class EditNoteActivity extends Activity {
 
 		mNoteTitle.setText(noteName);
 		mTextEditor.setText(noteContent);
-		
+
 		// Scroll to the top of the note content
 		// https://stackoverflow.com/a/3310376
 		final ScrollView scroller = (ScrollView) findViewById(R.id.contentScroller);

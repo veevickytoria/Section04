@@ -14,7 +14,8 @@ class NavDrawerListAdapter extends BaseAdapter {
 	private Context context;
 	private ArrayList<NavDrawerItem> navDrawerItems;
 
-	public NavDrawerListAdapter(Context context, ArrayList<NavDrawerItem> navDrawerItems) {
+	public NavDrawerListAdapter(Context context,
+			ArrayList<NavDrawerItem> navDrawerItems) {
 		this.context = context;
 		this.navDrawerItems = navDrawerItems;
 	}
@@ -26,23 +27,23 @@ class NavDrawerListAdapter extends BaseAdapter {
 			LayoutInflater vi = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			v = vi.inflate(R.layout.drawer_item, null);
-			
+
 		}
 		ImageView imgIcon = (ImageView) v.findViewById(R.id.icon);
-        TextView txtTitle = (TextView) v.findViewById(R.id.title);
-        TextView txtCount = (TextView) v.findViewById(R.id.counter);
-         
-        imgIcon.setImageResource(navDrawerItems.get(position).getIcon());        
-        txtTitle.setText(navDrawerItems.get(position).getTitle());
-        
-        // displaying count
-        // check whether it set visible or not
-        if(navDrawerItems.get(position).getCounterVisibility()){
-        	txtCount.setText(navDrawerItems.get(position).getCount());
-        }else{
-        	// hide the counter view
-        	txtCount.setVisibility(View.GONE);
-        }
+		TextView txtTitle = (TextView) v.findViewById(R.id.title);
+		TextView txtCount = (TextView) v.findViewById(R.id.counter);
+
+		imgIcon.setImageResource(navDrawerItems.get(position).getIcon());
+		txtTitle.setText(navDrawerItems.get(position).getTitle());
+
+		// displaying count
+		// check whether it set visible or not
+		if (navDrawerItems.get(position).getCounterVisibility()) {
+			txtCount.setText(navDrawerItems.get(position).getCount());
+		} else {
+			// hide the counter view
+			txtCount.setVisibility(View.GONE);
+		}
 		return v;
 	}
 

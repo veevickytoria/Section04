@@ -1,16 +1,14 @@
 package objects;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-
-import com.android.meetingninja.extras.MyDateUtils;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.android.meetingninja.extras.MyDateUtils;
 
 public class Meeting implements Parcelable {
 	private String meetingID;

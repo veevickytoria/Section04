@@ -81,7 +81,7 @@ public class SQLiteUserAdapter extends SQLiteHelper {
 		close();
 		return users;
 	}
-	
+
 	/**
 	 * Run a query on the users table. See
 	 * {@link SQLiteDatabase#query(String, String[], String, String[], String, String, String)}

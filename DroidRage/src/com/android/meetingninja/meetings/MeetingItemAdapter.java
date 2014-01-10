@@ -20,9 +20,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import com.android.meetingninja.R;
-import com.android.meetingninja.extras.MyDateUtils;
-
 import objects.Meeting;
 import android.content.Context;
 import android.util.Log;
@@ -31,6 +28,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import com.android.meetingninja.R;
+import com.android.meetingninja.extras.MyDateUtils;
 
 /**
  * A class to display the meetings in a specific format for the items of the

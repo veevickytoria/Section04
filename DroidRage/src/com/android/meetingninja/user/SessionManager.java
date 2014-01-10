@@ -80,7 +80,7 @@ public class SessionManager {
 		// commit changes
 		editor.commit();
 	}
-	
+
 	/**
 	 * Create login session with user object
 	 * */
@@ -93,9 +93,9 @@ public class SessionManager {
 		editor.putString(PHONE, u.getPhone());
 		editor.putString(COMPANY, u.getCompany());
 		editor.putString(TITLE, u.getTitle());
-		editor.putString(LOCATION, u.getLocation()); 
+		editor.putString(LOCATION, u.getLocation());
 		editor.putBoolean(LOGGED_IN, true);
-		
+
 		// commit changes
 		editor.commit();
 	}

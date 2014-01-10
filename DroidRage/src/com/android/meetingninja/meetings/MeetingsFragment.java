@@ -19,10 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import objects.Meeting;
-import objects.Note;
-
-import org.joda.time.DateTime;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -154,7 +150,8 @@ public class MeetingsFragment extends Fragment implements
 		boolean handled = false;
 		AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) item
 				.getMenuInfo();
-		if (item.getGroupId() == MainActivity.DrawerLabel.MEETINGS.getPosition()) {
+		if (item.getGroupId() == MainActivity.DrawerLabel.MEETINGS
+				.getPosition()) {
 			switch (item.getOrder()) {
 			case 1: // Edit
 				Toast.makeText(getActivity(), item.getTitle(),

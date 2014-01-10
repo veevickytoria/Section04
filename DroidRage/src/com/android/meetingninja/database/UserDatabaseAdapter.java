@@ -19,7 +19,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,7 +49,7 @@ public class UserDatabaseAdapter extends DatabaseAdapter {
 
 	public static User getUserInfo(String userID) throws IOException {
 		// Server URL setup
-		String _url = SERVER_NAME + SERVER_EXT + "/" + userID;
+		String _url = BASE_URL + SERVER_EXT + "/" + userID;
 
 		// Establish connection
 		URL url = new URL(_url);
@@ -71,7 +70,7 @@ public class UserDatabaseAdapter extends DatabaseAdapter {
 	public static List<SimpleUser> getContacts(String userID)
 			throws IOException {
 		// Server URL setup
-		String _url = SERVER_NAME + SERVER_EXT + "/Contacts/" + userID;
+		String _url = BASE_URL + SERVER_EXT + "/Contacts/" + userID;
 
 		// Establish connection
 		URL url = new URL(_url);
@@ -102,7 +101,7 @@ public class UserDatabaseAdapter extends DatabaseAdapter {
 
 	public static String login(String email, String pass) throws IOException {
 		// Server URL setup
-		String _url = SERVER_NAME + SERVER_EXT + "/" + "Login";
+		String _url = BASE_URL + SERVER_EXT + "/" + "Login";
 
 		// Establish connection
 		URL url = new URL(_url);
@@ -158,16 +157,17 @@ public class UserDatabaseAdapter extends DatabaseAdapter {
 
 	/**
 	 * Registers a passed in User and returns that user with an assigned UserID
+	 * 
 	 * @param registerMe
 	 * @param password
 	 * @return the passed-in user with an assigned ID by the server
 	 * @throws IOException
-	 * @throws UserExistsException 
+	 * @throws UserExistsException
 	 */
 	public static User register(User registerMe, String password)
 			throws IOException, UserExistsException {
 		// Server URL setup
-		String _url = SERVER_NAME + SERVER_EXT;
+		String _url = BASE_URL + SERVER_EXT;
 
 		// Establish connection
 		URL url = new URL(_url);
@@ -229,7 +229,7 @@ public class UserDatabaseAdapter extends DatabaseAdapter {
 	}
 
 	public static List<User> getAllUsers() throws IOException {
-		String _url = SERVER_NAME + SERVER_EXT + "/" + "Users";
+		String _url = BASE_URL + SERVER_EXT + "/" + "Users";
 		// Establish connection
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -313,7 +313,7 @@ public class UserDatabaseAdapter extends DatabaseAdapter {
 
 	private static String updateHelper(String jsonPayload) throws IOException {
 		// Server URL setup
-		String _url = SERVER_NAME + SERVER_EXT;
+		String _url = BASE_URL + SERVER_EXT;
 
 		// Establish connection
 		URL url = new URL(_url);

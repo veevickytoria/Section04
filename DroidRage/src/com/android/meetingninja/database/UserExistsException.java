@@ -10,10 +10,9 @@ public class UserExistsException extends Exception {
 	public UserExistsException() {
 		super();
 	}
-	
+
 	public UserExistsException(String arg0) {
 		super(arg0);
 	}
-	
-	
+
 }

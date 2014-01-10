@@ -17,7 +17,8 @@ public class ApplicationController extends Application {
 	/**
 	 * Log or request TAG
 	 */
-	public static final String TAG = ApplicationController.class.getSimpleName();
+	public static final String TAG = ApplicationController.class
+			.getSimpleName();
 
 	/**
 	 * Global request queue for Volley

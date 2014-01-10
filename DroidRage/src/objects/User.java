@@ -31,7 +31,7 @@ public class User extends SimpleUser {
 
 	public User(User copyUser) {
 		super.setUserID((copyUser.getUserID() != null ? copyUser.getUserID()
-				: ""+0));
+				: "" + 0));
 		super.setDisplayName(copyUser.getDisplayName());
 		setEmail(copyUser.getEmail());
 		setPhone(copyUser.getPhone());

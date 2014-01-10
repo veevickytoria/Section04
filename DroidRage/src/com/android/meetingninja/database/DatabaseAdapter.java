@@ -27,7 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class DatabaseAdapter {
 
-	protected final static String SERVER_NAME = "http://csse371-04.csse.rose-hulman.edu/";
+	public final static String BASE_URL = "http://csse371-04.csse.rose-hulman.edu/";
 	protected final static String USER_AGENT = "Mozilla/5.0";
 	protected final static String CONTENT_TYPE = "application/json";
 	protected final static String ACCEPT_TYPE = "application/json";
