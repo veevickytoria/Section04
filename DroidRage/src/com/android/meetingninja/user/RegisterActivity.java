@@ -37,6 +37,7 @@ import android.widget.Toast;
 import com.android.meetingninja.R;
 import com.android.meetingninja.database.AsyncResponse;
 import com.android.meetingninja.database.UserDatabaseAdapter;
+import com.android.meetingninja.database.UserExistsException;
 
 public class RegisterActivity extends Activity implements AsyncResponse<User> {
 
@@ -51,7 +52,6 @@ public class RegisterActivity extends Activity implements AsyncResponse<User> {
 	AlertDialog.Builder passCheck;
 	private RegisterTask registerTask;
 	private boolean mRegisterSuccess;
-	private User registeredUser;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +89,7 @@ public class RegisterActivity extends Activity implements AsyncResponse<User> {
 
 					@Override
 					public void onClick(View v) {
-						register();
+						tryRegister();
 					}
 				});
 	}
@@ -129,7 +129,26 @@ public class RegisterActivity extends Activity implements AsyncResponse<User> {
 		return super.onOptionsItemSelected(item);
 	}
 
-	private void register() {
+	@Override
+	public void onBackPressed() {
+		Intent upIntent = new Intent(this, LoginActivity.class);
+		if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+			// This activity is NOT part of this app's task, so create a new
+			// task
+			// when navigating up, with a synthesized back stack.
+			TaskStackBuilder.create(this)
+			// Add all of this activity's parents to the back stack
+					.addNextIntent(upIntent)
+					// Navigate up to the closest parent
+					.startActivities();
+		} else {
+			// This activity is part of this app's task, so simply
+			// navigate up to the logical parent activity.
+			NavUtils.navigateUpTo(this, upIntent);
+		}
+	}
+
+	private void tryRegister() {
 		// Reset errors
 		emailText.setError(null);
 		passwordText.setError(null);
@@ -180,25 +199,26 @@ public class RegisterActivity extends Activity implements AsyncResponse<User> {
 		} else {
 			registerTask = new RegisterTask(this);
 			registerTask.execute(name, email, pass);
-
-			if (!mRegisterSuccess) {
-				Toast.makeText(getApplicationContext(),
-						"Registration Unsuccessful", Toast.LENGTH_LONG).show();
-			} else {
-				Intent goLogin = new Intent();
-				goLogin.putExtra(Intent.EXTRA_EMAIL, email);
-
-				setResult(RESULT_OK, goLogin);
-				finish();
-			}
+			// go to process finish
 		}
 
 	}
 
 	@Override
 	public void processFinish(User result) {
-		registeredUser = result;
-		mRegisterSuccess = registeredUser != null;
+		mRegisterSuccess = (result != null);
+
+		if (!mRegisterSuccess) {
+			Toast.makeText(getApplicationContext(),
+					"Registration Unsuccessful", Toast.LENGTH_LONG).show();
+		} else {
+			Intent goLogin = new Intent();
+			goLogin.putExtra(Intent.EXTRA_EMAIL, result.getEmail());
+			goLogin.putExtra("registerSuccess", mRegisterSuccess);
+			setResult(RESULT_OK, goLogin);
+			finish();
+		}
+
 	}
 
 	private class RegisterTask extends AsyncTask<String, Void, User> {
@@ -211,7 +231,6 @@ public class RegisterActivity extends Activity implements AsyncResponse<User> {
 
 		@Override
 		protected User doInBackground(String... params) {
-			boolean success = false;
 			try {
 				// name, email, password
 				User registerMe = new User();
@@ -220,6 +239,8 @@ public class RegisterActivity extends Activity implements AsyncResponse<User> {
 				return UserDatabaseAdapter.register(registerMe, params[2]);
 			} catch (IOException e) {
 				Log.e("DB Adapter", "Error: Register failed");
+				Log.e("REGISTER_ERR", e.toString());
+			} catch (UserExistsException e) {
 				Log.e("REGISTER_ERR", e.toString());
 			}
 			return null;

@@ -23,5 +23,13 @@
     <color name="agenda_item_where_text_color">#FF666666</color>
     <!-- Color of the event location's text in an agenda item  -->
     <color name="agenda_item_where_declined_text_color">#66666666</color>
+    
+    <!-- Navigation Drawer  -->
+     <color name="list_item_title">#fff</color>
+    <color name="list_background">#303030</color>
+    <color name="list_background_pressed">#992416</color>
+    <color name="list_divider">#272727</color>
+    <color name="counter_text_bg">#626262</color>
+    <color name="counter_text_color">#c5c4c4</color>
 
 </resources>

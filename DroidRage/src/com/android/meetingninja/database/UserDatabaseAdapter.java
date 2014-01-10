@@ -162,9 +162,10 @@ public class UserDatabaseAdapter extends DatabaseAdapter {
 	 * @param password
 	 * @return the passed-in user with an assigned ID by the server
 	 * @throws IOException
+	 * @throws UserExistsException 
 	 */
 	public static User register(User registerMe, String password)
-			throws IOException {
+			throws IOException, UserExistsException {
 		// Server URL setup
 		String _url = SERVER_NAME + SERVER_EXT;
 
@@ -216,7 +217,7 @@ public class UserDatabaseAdapter extends DatabaseAdapter {
 					});
 			if (!responseMap.containsKey(KEY_ID)) {
 				result = "duplicate email or username";
-				return null;
+				throw new UserExistsException(result);
 			} else {
 				result = responseMap.get(KEY_ID);
 				createUser.setUserID(result);

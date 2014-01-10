@@ -143,12 +143,12 @@ public class NotesFragment extends Fragment implements
 				Note n = noteAdpt.getItem(aInfo.position);
 				menu.setHeaderTitle("Options for " + "'" + n.getName().trim()
 						+ "'");
-				menu.add(MainActivity.NOTES_FRAGMENT, aInfo.position, 1,
-						"Add Content");
-				menu.add(MainActivity.NOTES_FRAGMENT, aInfo.position, 2,
-						"Delete");
-				menu.add(MainActivity.NOTES_FRAGMENT, aInfo.position, 3,
-						"Version Control");
+				menu.add(MainActivity.DrawerLabel.NOTES.getPosition(),
+						aInfo.position, 1, "Add Content");
+				menu.add(MainActivity.DrawerLabel.NOTES.getPosition(),
+						aInfo.position, 2, "Delete");
+				menu.add(MainActivity.DrawerLabel.NOTES.getPosition(),
+						aInfo.position, 3, "Version Control");
 			}
 
 		});
@@ -169,7 +169,7 @@ public class NotesFragment extends Fragment implements
 		boolean handled = false;
 		AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) item
 				.getMenuInfo();
-		if (item.getGroupId() == MainActivity.NOTES_FRAGMENT) {
+		if (item.getGroupId() == MainActivity.DrawerLabel.NOTES.getPosition()) {
 			switch (item.getOrder()) {
 			case 1: // Add Content
 				Toast.makeText(getActivity(),
@@ -234,7 +234,7 @@ public class NotesFragment extends Fragment implements
 			} // end EditNoteActivity
 		} else if (requestCode == 3) { // CreateNoteActivity
 			if (resultCode == Activity.RESULT_OK) {
-				Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getActivity(), "New Note Created", Toast.LENGTH_SHORT).show();
 			}
 		} // end CreateNoteActivity
 	}

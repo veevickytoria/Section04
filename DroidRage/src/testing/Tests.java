@@ -18,6 +18,7 @@ import objects.User;
 
 import com.android.meetingninja.database.MeetingDatabaseAdapter;
 import com.android.meetingninja.database.UserDatabaseAdapter;
+import com.android.meetingninja.database.UserExistsException;
 import com.android.meetingninja.extras.MyDateUtils;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -35,6 +36,8 @@ public class Tests {
 			try {
 				registered = UserDatabaseAdapter.register(user, pass);
 			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (UserExistsException e) {
 				e.printStackTrace();
 			}
 			return registered;

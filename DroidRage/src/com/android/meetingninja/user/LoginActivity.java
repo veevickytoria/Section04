@@ -35,6 +35,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.meetingninja.MainActivity;
 import com.android.meetingninja.R;
@@ -74,6 +75,11 @@ public class LoginActivity extends Activity {
 		// Set up the login form.
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
+			boolean registerSucces = extras
+					.getBoolean("registerSuccess", false);
+			if (registerSucces)
+				Toast.makeText(LoginActivity.this, "Registration Successful",
+						Toast.LENGTH_SHORT).show();
 			mEmail = extras.getString(Intent.EXTRA_EMAIL);
 			mEmailView.setText(mEmail);
 		}
@@ -126,6 +132,15 @@ public class LoginActivity extends Activity {
 	 * super.onCreateOptionsMenu(menu); getMenuInflater().inflate(R.menu.login,
 	 * menu); return true; }
 	 */
+
+	@Override
+	public void onBackPressed() {
+		if (mLoginStatusView.isShown()) {
+			mAuthTask.cancel(true);
+			showProgress(false);
+		} else
+			super.onBackPressed();
+	}
 
 	/**
 	 * Attempts to sign in or register the account specified by the login form.
@@ -292,16 +307,12 @@ public class LoginActivity extends Activity {
 
 			// if successful login, start main activity
 			if (success) {
-				// SessionManager session = new SessionManager(
-				// getApplicationContext());
-				// session.clear();
-				// session.createLoginSession(mEmail);
-				Intent main = new Intent(mLoginFormView.getContext(),
+				Intent main = new Intent(LoginActivity.this,
 						MainActivity.class);
-				main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				main.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+//				main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//				main.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
-				startActivityForResult(main, 0);
+				startActivity(main);
 				overridePendingTransition(anim.fade_in, anim.fade_out);
 			} else {
 				mPasswordView
@@ -315,5 +326,6 @@ public class LoginActivity extends Activity {
 			mAuthTask = null;
 			showProgress(false);
 		}
+
 	}
 }
