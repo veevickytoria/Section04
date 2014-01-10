@@ -123,12 +123,9 @@ postFormAsJSON('testing', 'User/Login/');
 alert("stuff");
 });
 
-
-
 function postFormAsJSON(formId, urlEnding){
     jQuery('#'+ formId).bind('submit', function(event){
         event.preventDefault();
-
 
 alert("FormId:" + formId);
 alert("urlEnding:" + urlEnding);
@@ -149,10 +146,27 @@ alert("urlEnding:" + urlEnding);
 }
 
 **/
+function areCookiesEnabled()
+{
+    var cookiesEnabled = (navigator.cookiesEnabled) ? true : false;
+
+    if (typeof navigator.cookiesEnabled == "undefined" && !cookiesEnabled)
+    { 
+        document.cookie="testcookie";
+        cookiesEnabled = (document.cookie.indexOf("testcookie") != -1) ? true : false;
+    }
+    if(!cookiesEnabled)
+        alert('You do not have cookies enabled. To continue using this site, please re-enable cookies and refresh the page.');
+}
 
 </script>
-
-<div style=>
+<!-- Check for Javascript on local machine -->
+<noscript>
+    <h1 style='text-align:center;text-decoration:underline;font-weight:bold'>YOU DO NOT HAVE JAVASCRIPT ENABLED</h1>
+    <h2 style='text-align:center;font-style:italic'>Please Enable Javascript to Continue Using this Site.</h2>
+</noscript>
+<br />
+<div>
 <h1>**** TEMP LOGIN DETAILS ****</h1>
 <h2>Email: test@meetingninja.com</h2>
 <h2>Password: changeme</h2>
