@@ -8,6 +8,7 @@
 
 #import "iWinAppDelegate.h"
 #import "iWinMainViewController.h"
+#import <Parse/Parse.h>
 
 @implementation iWinAppDelegate
 
@@ -17,12 +18,19 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [Parse setApplicationId:@"B9XnZ39grBnt6SyxBibLnxPV8hPQmkdQp6g2MvU5"
+                  clientKey:@"qvvWQNlvZcI0fFlXACz7YpTnccaedcHL76gUoLiF"];
+    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor whiteColor];
     iWinMainViewController *mainViewController = [[iWinMainViewController alloc] initWithNibName:@"iWinMainViewController" bundle:nil];
     self.window.rootViewController = mainViewController;
     [self.window makeKeyAndVisible];
+    
+    
+    [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound];
+    
     return YES;
 }
 
@@ -148,6 +156,18 @@
 - (NSURL *)applicationDocumentsDirectory
 {
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+}
+
+-(void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+{
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    [currentInstallation setDeviceTokenFromData:deviceToken];
+    [currentInstallation saveInBackground];
+}
+
+-(void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
+{
+    [PFPush handlePush:userInfo];
 }
 
 @end

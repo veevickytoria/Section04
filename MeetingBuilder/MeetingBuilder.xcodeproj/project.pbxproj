@@ -45,6 +45,10 @@
 		0A7F1CDB1858FD820017209D /* iWinAddUserTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7F1CDA1858FD820017209D /* iWinAddUserTest.m */; };
 		0A7F1CDF185908790017209D /* iWinContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7F1CDE185908790017209D /* iWinContact.m */; };
 		0A7F1CE218611FB10017209D /* iWinPopulateDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7F1CE118611FB10017209D /* iWinPopulateDatabase.m */; };
+		0A8C13A2187DEA07005A25DE /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8C13A1187DEA07005A25DE /* Parse.framework */; };
+		0A8C13A4187DEA43005A25DE /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8C13A3187DEA43005A25DE /* CoreLocation.framework */; };
+		0A8C13A6187DEA54005A25DE /* libz.1.1.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8C13A5187DEA53005A25DE /* libz.1.1.3.dylib */; };
+		0A8C13A8187DEA65005A25DE /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8C13A7187DEA65005A25DE /* StoreKit.framework */; };
 		0A91DC9B1835D7AB00741349 /* OCCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91DC931835D7AB00741349 /* OCCalendarView.m */; };
 		0A91DC9C1835D7AB00741349 /* OCCalendarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91DC951835D7AB00741349 /* OCCalendarViewController.m */; };
 		0A91DC9D1835D7AB00741349 /* OCDaysView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91DC971835D7AB00741349 /* OCDaysView.m */; };
@@ -234,7 +238,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0A04455617F3825C000FF2A0 /* MeetingBuilder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MeetingBuilder.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0A04455617F3825C000FF2A0 /* Meeting Ninja.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Meeting Ninja.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A04455917F3825D000FF2A0 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		0A04455B17F3825D000FF2A0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		0A04455D17F3825D000FF2A0 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -290,6 +294,10 @@
 		0A7F1CE018611FB10017209D /* iWinPopulateDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinPopulateDatabase.h; sourceTree = "<group>"; };
 		0A7F1CE118611FB10017209D /* iWinPopulateDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinPopulateDatabase.m; sourceTree = "<group>"; };
 		0A7F1CE3186124380017209D /* MeetingBuilder 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MeetingBuilder 2.xcdatamodel"; sourceTree = "<group>"; };
+		0A8C13A1187DEA07005A25DE /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
+		0A8C13A3187DEA43005A25DE /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		0A8C13A5187DEA53005A25DE /* libz.1.1.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.1.3.dylib; path = usr/lib/libz.1.1.3.dylib; sourceTree = SDKROOT; };
+		0A8C13A7187DEA65005A25DE /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		0A91DC921835D7AB00741349 /* OCCalendarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCCalendarView.h; sourceTree = "<group>"; };
 		0A91DC931835D7AB00741349 /* OCCalendarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCCalendarView.m; sourceTree = "<group>"; };
 		0A91DC941835D7AB00741349 /* OCCalendarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCCalendarViewController.h; sourceTree = "<group>"; };
@@ -484,10 +492,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A8C13A8187DEA65005A25DE /* StoreKit.framework in Frameworks */,
+				0A8C13A6187DEA54005A25DE /* libz.1.1.3.dylib in Frameworks */,
+				0A8C13A4187DEA43005A25DE /* CoreLocation.framework in Frameworks */,
 				79753AA81861095F0015098B /* MapKit.framework in Frameworks */,
 				79753AA91861095F0015098B /* QuartzCore.framework in Frameworks */,
 				0A97EDAA184169ED00160B5A /* AudioToolbox.framework in Frameworks */,
 				0A97EDAB184169ED00160B5A /* AVFoundation.framework in Frameworks */,
+				0A8C13A2187DEA07005A25DE /* Parse.framework in Frameworks */,
 				0ACE33B517FD246F003B9C0A /* SystemConfiguration.framework in Frameworks */,
 				0ACE33B317FD2461003B9C0A /* Security.framework in Frameworks */,
 				0ACE33B117FD245B003B9C0A /* MobileCoreServices.framework in Frameworks */,
@@ -530,7 +542,7 @@
 		0A04455717F3825C000FF2A0 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				0A04455617F3825C000FF2A0 /* MeetingBuilder.app */,
+				0A04455617F3825C000FF2A0 /* Meeting Ninja.app */,
 				0A7F1CC6185637310017209D /* MeetingBuilder Tests.xctest */,
 			);
 			name = Products;
@@ -539,6 +551,10 @@
 		0A04455817F3825C000FF2A0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0A8C13A7187DEA65005A25DE /* StoreKit.framework */,
+				0A8C13A5187DEA53005A25DE /* libz.1.1.3.dylib */,
+				0A8C13A3187DEA43005A25DE /* CoreLocation.framework */,
+				0A8C13A1187DEA07005A25DE /* Parse.framework */,
 				79F59D10186176E6009E2C78 /* TapkuLibrary.xcodeproj */,
 				79753AA61861095F0015098B /* MapKit.framework */,
 				79753AA71861095F0015098B /* QuartzCore.framework */,
@@ -1037,7 +1053,7 @@
 			);
 			name = MeetingBuilder;
 			productName = MeetingBuilder;
-			productReference = 0A04455617F3825C000FF2A0 /* MeetingBuilder.app */;
+			productReference = 0A04455617F3825C000FF2A0 /* Meeting Ninja.app */;
 			productType = "com.apple.product-type.application";
 		};
 		0A7F1CC5185637310017209D /* MeetingBuilder Tests */ = {
@@ -1432,6 +1448,7 @@
 					/Users/csse/Documents/CSSE371/Section04/MeetingBuilder/MeetingBuilder/Framework,
 					/Users/richard/csse374_JrProject/MeetingBuilder/MeetingBuilder/Framework,
 					/Users/csse/Documents/Section04/MeetingBuilder/MeetingBuilder/Framework,
+					/Users/csse/Documents/CSSE371/Section04/MeetingBuilder,
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MeetingBuilder/MeetingBuilder-Prefix.pch";
@@ -1441,11 +1458,8 @@
 				);
 				INFOPLIST_FILE = "MeetingBuilder/MeetingBuilder-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-all_load",
-				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "Meeting Ninja";
 				PROVISIONING_PROFILE = "";
 				USER_HEADER_SEARCH_PATHS = "\"$(BUILT_PRODUCTS_DIR)/../../Headers\"";
 				WRAPPER_EXTENSION = app;
@@ -1464,6 +1478,7 @@
 					/Users/csse/Documents/CSSE371/Section04/MeetingBuilder/MeetingBuilder/Framework,
 					/Users/richard/csse374_JrProject/MeetingBuilder/MeetingBuilder/Framework,
 					/Users/csse/Documents/Section04/MeetingBuilder/MeetingBuilder/Framework,
+					/Users/csse/Documents/CSSE371/Section04/MeetingBuilder,
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MeetingBuilder/MeetingBuilder-Prefix.pch";
@@ -1473,11 +1488,8 @@
 				);
 				INFOPLIST_FILE = "MeetingBuilder/MeetingBuilder-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-all_load",
-				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "Meeting Ninja";
 				PROVISIONING_PROFILE = "";
 				USER_HEADER_SEARCH_PATHS = "\"$(BUILT_PRODUCTS_DIR)/../../Headers\"";
 				WRAPPER_EXTENSION = app;
@@ -1488,7 +1500,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/MeetingBuilder.app/MeetingBuilder";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Meeting Ninja.app/Meeting Ninja";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
@@ -1520,7 +1532,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/MeetingBuilder.app/MeetingBuilder";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Meeting Ninja.app/Meeting Ninja";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
