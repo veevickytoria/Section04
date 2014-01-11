@@ -14,7 +14,6 @@
 #import "iWinPopulateDatabase.h"
 #import "NSDate+TKCategory.h"
 #import "NSDate+CalendarGrid.h"
-#import <Parse/Parse.h>
 
 
 @interface iWinMainViewController ()
@@ -118,11 +117,6 @@
 	self.dayView.delegate = self;
 	self.dayView.dataSource = self;
 	[self.rightSlideView addSubview:self.dayView];
-
-    //test parse object
-//    PFObject *testObject = [PFObject objectWithClassName:@"TestObject"];
-//    [testObject setObject:@"bar" forKey:@"foo"];
-//    [testObject save];
 }
 - (void) viewDidUnload {
 	self.dayView = nil;
