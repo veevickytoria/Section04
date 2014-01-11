@@ -18,12 +18,20 @@ package com.android.meetingninja.database;
 import java.util.List;
 import java.util.Map;
 
+import android.net.Uri;
+import android.net.Uri.Builder;
 import objects.Comment;
 import objects.Note;
 
-public class NotesDatabaseAdapter extends DatabaseAdapter {
+public class NotesDatabaseAdapter extends AbstractDatabaseAdapter {
+	
+	public static String getBaseUrl() {
+		return BASE_URL + "Note";
+	}
 
-	private final static String SERVER_EXT = "Note";
+	public static Uri.Builder getBaseUri() {
+		return Uri.parse(getBaseUrl()).buildUpon();
+	}
 
 	public static List<Note> getNotes(String user) throws Exception {
 		// TODO Implement this method

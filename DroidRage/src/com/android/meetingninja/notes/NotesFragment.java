@@ -221,7 +221,7 @@ public class NotesFragment extends Fragment implements
 					// sb.append(noteContent);
 					// Log.v(TAG, sb.toString());
 					// populateList();
-					int _id = Integer.parseInt(noteID);
+					int _id = Integer.valueOf(noteID);
 					if (listPosition != -1)
 						updateNote(listPosition, _id, noteName, noteContent);
 					else

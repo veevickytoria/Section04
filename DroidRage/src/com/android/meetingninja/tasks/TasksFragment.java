@@ -69,7 +69,7 @@ public class TasksFragment extends Fragment {
 								+ " : "
 								+ taskLists
 										.get(meetingNames.get(groupPosition))
-										.get(childPosition).getName(),
+										.get(childPosition).getTitle(),
 						Toast.LENGTH_SHORT).show();
 				return false;
 			}
@@ -118,24 +118,36 @@ class TaskListAdapter extends BaseExpandableListAdapter {
 		return childPosition;
 	}
 
+	// class for caching the views in a row
+	private class ChildViewHolder {
+		TextView taskName, taskDescription;
+	}
+
+	ChildViewHolder viewHolder;
+
 	@Override
 	public View getChildView(int groupPosition, int childPosition,
 			boolean isLastChild, View convertView, ViewGroup parent) {
-		if (convertView == null) {
-			LayoutInflater infalInflater = (LayoutInflater) this.context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			convertView = infalInflater.inflate(R.layout.task_item, null);
-		}
-		TextView taskName = (TextView) convertView.findViewById(R.id.taskName);
-		TextView taskDiscription = (TextView) convertView
-				.findViewById(R.id.taskDiscription);
-		final String Name = ((Task) getChild(groupPosition, childPosition))
-				.getName();
-		final String Disc = ((Task) getChild(groupPosition, childPosition))
-				.getContent();
-		taskName.setText(Name);
-		taskDiscription.setText(Disc);
-		return convertView;
+		View rowView = convertView;
+		LayoutInflater inflater = (LayoutInflater) context
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		if (rowView == null) {
+			rowView = inflater.inflate(R.layout.task_item, null);
+			viewHolder = new ChildViewHolder();
+			viewHolder.taskName = (TextView) convertView
+					.findViewById(R.id.taskName);
+			viewHolder.taskDescription = (TextView) convertView
+					.findViewById(R.id.taskDiscription);
+
+			rowView.setTag(viewHolder);
+		} else
+			viewHolder = (ChildViewHolder) rowView.getTag();
+
+		Task t = (Task) getChild(groupPosition, childPosition);
+
+		viewHolder.taskName.setText(t.getTitle());
+		viewHolder.taskDescription.setText(t.getDescription());
+		return rowView;
 	}
 
 	@Override
@@ -158,20 +170,32 @@ class TaskListAdapter extends BaseExpandableListAdapter {
 		return groupPosition;
 	}
 
+	private class GroupViewHolder {
+		TextView meetingName;
+	}
+
+	GroupViewHolder groupViewHolder;
+
 	@Override
 	public View getGroupView(int groupPosition, boolean isExpanded,
 			View convertView, ViewGroup parent) {
-		if (convertView == null) {
-			LayoutInflater infalInflater = (LayoutInflater) this.context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			convertView = infalInflater.inflate(R.layout.task_sublist, null);
-		}
-		String name = (String) getGroup(groupPosition);
-		TextView meetingName = (TextView) convertView
-				.findViewById(R.id.task_group);
-		meetingName.setText(name);
+		View groupView = convertView;
+		LayoutInflater inflater = (LayoutInflater) context
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		if (groupView == null) {
+			groupView = inflater.inflate(R.layout.task_sublist, null);
+			groupViewHolder = new GroupViewHolder();
+			groupViewHolder.meetingName = (TextView) groupView
+					.findViewById(R.id.task_group);
 
-		return convertView;
+			groupView.setTag(groupViewHolder);
+		} else
+			groupViewHolder = (GroupViewHolder) groupView.getTag();
+
+		String name = (String) getGroup(groupPosition);
+		groupViewHolder.meetingName.setText(name);
+
+		return groupView;
 	}
 
 	@Override

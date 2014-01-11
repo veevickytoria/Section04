@@ -28,6 +28,9 @@ import java.util.Map;
 
 import objects.Meeting;
 import objects.Meeting.AttendeeWrapper;
+import objects.Schedule;
+import android.net.Uri;
+import android.net.Uri.Builder;
 
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -36,23 +39,30 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 
-public class MeetingDatabaseAdapter extends DatabaseAdapter {
+public class MeetingDatabaseAdapter extends AbstractDatabaseAdapter {
 
-	private final static String SERVER_EXT = "Meetings";
+	protected final static String KEY_ID = "meetingID";
+	protected final static String KEY_TITLE = "title";
+	protected final static String KEY_LOCATION = "location";
+	protected final static String KEY_DATETIME = "datetime";
+	protected final static String KEY_START = "datetimeStart";
+	protected final static String KEY_END = "datetimeEnd";
+	protected final static String KEY_DESC = "description";
+	protected final static String KEY_ATTEND = "attendance";
 
-	private final static String KEY_ID = "meetingID";
-	private final static String KEY_TITLE = "title";
-	private final static String KEY_LOCATION = "location";
-	private final static String KEY_DATETIME = "datetime";
-	private final static String KEY_START = "datetimeStart";
-	private final static String KEY_END = "datetimeEnd";
-	private final static String KEY_DESC = "description";
-	private final static String KEY_ATTEND = "attendance";
+	public static String getBaseUrl() {
+		return BASE_URL + "Meetings";
+	}
+
+	public static Uri.Builder getBaseUri() {
+		return Uri.parse(getBaseUrl()).buildUpon();
+	}
 
 	public static List<Meeting> getMeetings(String userID)
 			throws JsonParseException, JsonMappingException, IOException {
 		// Server URL setup
-		String _url = BASE_URL + SERVER_EXT + "/" + userID;
+		String _url = getBaseUri().appendPath(userID).build().toString();
+
 		// establish connection
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -80,51 +90,10 @@ public class MeetingDatabaseAdapter extends DatabaseAdapter {
 		return meetingsList;
 	}
 
-	public static List<Meeting> getSchedule(String userID)
-			throws JsonParseException, JsonMappingException, IOException {
-		// Server URL setup
-		String _url = BASE_URL + SERVER_EXT + "/" + userID;
-		// establish connection
-		URL url = new URL(_url);
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-		// add request header
-		conn.setRequestMethod("GET");
-		addRequestHeader(conn, false);
-
-		// Get server response
-		// TODO: Uncomment this later
-		// int responseCode = conn.getResponseCode();
-		// String response = getServerResponse(conn);
-		String response = getMockMeetingJSON();
-
-		// Initialize ObjectMapper
-		List<Meeting> meetingsList = new ArrayList<Meeting>();
-		final JsonNode scheduleArray = MAPPER.readTree(response)
-				.get("schedule");
-
-		if (scheduleArray.isArray()) {
-			for (final JsonNode meetingNode : scheduleArray) {
-				Meeting m = new Meeting();
-				if (meetingNode.hasNonNull(KEY_TITLE)) {
-					m.setTitle(meetingNode.get(KEY_TITLE).asText());
-					m.setDescription(meetingNode.get(KEY_DESC).asText());
-					m.setStartTime(meetingNode.get("datetimeStart").asText());
-					m.setEndTime(meetingNode.get("datetimeEnd").asText());
-				}
-				meetingsList.add(m);
-			}
-
-		}
-
-		conn.disconnect();
-		return meetingsList;
-	}
-
 	public static Meeting createMeeting(String userID, Meeting m)
 			throws IOException, MalformedURLException {
 		// Server URL setup
-		String _url = BASE_URL + SERVER_EXT;
+		String _url = getBaseUri().build().toString();
 
 		// establish connection
 		URL url = new URL(_url);
@@ -192,10 +161,24 @@ public class MeetingDatabaseAdapter extends DatabaseAdapter {
 		return created;
 	}
 
-	private static String getMockMeetingJSON() {
-		return "{\"schedule\":" + "[{\"title\":\"get the milk\","
-				+ "\"description\":\"2% milk from kroger\", "
-				+ "\"datetimeStart\":\"Monday, 15-Aug-15 23:59:59 UTC\", "
-				+ "\"datetimeEnd\":\"Monday, 16-Aug-15 23:59:59 UTC\"}]}";
+	public static Meeting parseMeeting(JsonNode node) {
+		Meeting m = new Meeting();
+		if (node.hasNonNull(KEY_ID)) {
+			m.setID(node.get(KEY_ID).asText());
+			m.setTitle(node.get(KEY_TITLE).asText());
+			m.setLocation(node.get(KEY_LOCATION).asText());
+			m.setStartTime(node.get(KEY_START).asText());
+			m.setEndTime(node.get(KEY_END).asText());
+			m.setDescription(node.get(KEY_DESC).asText());
+			JsonNode attendance = node.get(KEY_ATTEND);
+			if (attendance.isArray()) {
+				for (final JsonNode attendeeNode : attendance) {
+					m.addAttendee(attendeeNode.get("userID").asText());
+				}
+			}
+		} else
+			return null;
+
+		return m;
 	}
 }

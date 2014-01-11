@@ -206,8 +206,7 @@ public class LoginActivity extends Activity {
 			mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
 			showProgress(true);
 			mAuthTask = new UserLoginTask();
-			mAuthTask.execute((Void) null);
-
+			mAuthTask.execute((Void) null); // runs on background thread
 		}
 	}
 

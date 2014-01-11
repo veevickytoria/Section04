@@ -35,7 +35,7 @@ public class Group {
 
 	@JsonProperty("groupID")
 	public void setID(String id) {
-		int testInt = Integer.parseInt(id);
+		int testInt = Integer.valueOf(id);
 		setID(testInt);
 	}
 

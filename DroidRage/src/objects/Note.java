@@ -34,36 +34,11 @@ public class Note {
 	}
 
 	public static Note create(String id, String title, String content) {
-		return Note.create(Integer.parseInt(id), title, content);
-	}
-
-	/**
-	 * Concatenates the given text with the current text
-	 * 
-	 * @param text
-	 */
-	public void addContent(String text) {
-		this.content += " " + text;
-	}
-
-	public String getContent() {
-		return this.content;
-	}
-
-	public String getName() {
-		return this.title;
+		return Note.create(Integer.valueOf(id), title, content);
 	}
 
 	public String getID() {
 		return this.noteID;
-	}
-
-	public void setName(String name) {
-		this.title = name;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
 	}
 
 	public void setID(int id) {
@@ -73,6 +48,31 @@ public class Note {
 	public void setID(String id) {
 		int testInt = Integer.parseInt(id);
 		setID(testInt);
+	}
+
+	public String getName() {
+		return this.title;
+	}
+
+	public void setName(String name) {
+		this.title = name;
+	}
+
+	public String getContent() {
+		return this.content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	/**
+	 * Concatenates the given text with the current text
+	 * 
+	 * @param text
+	 */
+	public void addContent(String text) {
+		this.content += " " + text;
 	}
 
 }

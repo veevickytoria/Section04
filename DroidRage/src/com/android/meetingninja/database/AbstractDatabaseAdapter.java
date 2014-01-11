@@ -22,17 +22,30 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URLConnection;
 
+import android.net.Uri;
+import android.net.Uri.Builder;
+
+import com.android.meetingninja.ApplicationController;
+import com.android.volley.RequestQueue;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class DatabaseAdapter {
+public abstract class AbstractDatabaseAdapter {
 
-	public final static String BASE_URL = "http://csse371-04.csse.rose-hulman.edu/";
+	protected final static String BASE_URL = "http://csse371-04.csse.rose-hulman.edu/";
 	protected final static String USER_AGENT = "Mozilla/5.0";
 	protected final static String CONTENT_TYPE = "application/json";
 	protected final static String ACCEPT_TYPE = "application/json";
 	protected final static JsonFactory JFACTORY = new JsonFactory();
 	protected final static ObjectMapper MAPPER = new ObjectMapper(JFACTORY);
+	
+	public static String getBaseUrl() {
+		return BASE_URL;
+	}
+	
+	public static Uri.Builder getBaseUri() {
+		return Uri.parse(getBaseUrl()).buildUpon();
+	}
 
 	protected static void addRequestHeader(URLConnection connection,
 			boolean isPost) {

@@ -10,7 +10,7 @@ public class NinjaAuthenticatorService extends Service {
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		StubAccountAuthenticator authenticator = new StubAccountAuthenticator(
+		NinjaAccountAuthenticator authenticator = new NinjaAccountAuthenticator(
 				this);
 		return authenticator.getIBinder();
 	}

@@ -28,9 +28,16 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.meetingninja.ApplicationController;
 import com.android.meetingninja.R;
 import com.android.meetingninja.database.AsyncResponse;
+import com.android.meetingninja.database.JsonNodeRequest;
+import com.android.meetingninja.database.UserDatabaseAdapter;
 import com.android.meetingninja.meetings.MeetingItemAdapter;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.loopj.android.image.SmartImageView;
 
 public class ProfileFragment extends Fragment {
@@ -62,8 +69,10 @@ public class ProfileFragment extends Fragment {
 		// mUserImage
 		// .setImageUrl("http://www.tdnforums.com/uploads/profile/photo-27119.jpg?_r=0");
 
-		infoFetcher = new RetUserObj();
-		infoFetcher.execute(session.getUserID());
+//		infoFetcher = new RetUserObj();
+//		infoFetcher.execute(session.getUserID());
+		
+		fetchUserInfo(session.getUserID());
 
 		/*
 		 * meetingList = (ListView) pageView
@@ -93,6 +102,30 @@ public class ProfileFragment extends Fragment {
 		mPhone = (TextView) v.findViewById(R.id.profile_phone);
 		v.findViewById(R.id.profile_phone_row).setVisibility(View.GONE);
 
+	}
+
+	private void fetchUserInfo(String userID) {
+		String _url = UserDatabaseAdapter.getBaseUri().appendPath(userID).build().toString();
+
+		JsonNodeRequest req = new JsonNodeRequest(_url, null,
+				new Response.Listener<JsonNode>() {
+					@Override
+					public void onResponse(JsonNode response) {
+						VolleyLog.v("Response:%n %s", response);
+						User retUser = UserDatabaseAdapter.parseUser(response);
+						ProfileFragment.this.setUser(retUser);
+					}
+				}, new Response.ErrorListener() {
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						VolleyLog.e("Error: ", error.getMessage());
+
+					}
+				});
+
+		// add the request object to the queue to be executed
+		ApplicationController app = ApplicationController.getInstance();
+		app.addToRequestQueue(req, "JSON");
 	}
 
 	private void setUser(User user) {

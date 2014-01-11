@@ -22,7 +22,7 @@ public class Version {
 	}
 
 	public void setId(String id) {
-		int testInt = Integer.parseInt(id);
+		int testInt = Integer.valueOf(id);
 		setId(testInt);
 	}
 

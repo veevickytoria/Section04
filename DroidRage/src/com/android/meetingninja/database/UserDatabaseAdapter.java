@@ -25,31 +25,57 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import objects.Event;
+import objects.Meeting;
+import objects.ObjectMocker;
+import objects.Schedule;
 import objects.SimpleUser;
+import objects.Task;
 import objects.User;
+import android.net.Uri;
+import android.net.Uri.Builder;
+import android.text.TextUtils;
+import android.text.style.SuperscriptSpan;
+import android.util.Log;
 
+import com.android.meetingninja.ApplicationController;
 import com.android.meetingninja.extras.Utilities;
 import com.android.meetingninja.user.SessionManager;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 
-public class UserDatabaseAdapter extends DatabaseAdapter {
-	private static final String SERVER_EXT = "User";
+public class UserDatabaseAdapter extends AbstractDatabaseAdapter {
 
-	private static final String KEY_ID = "userID";
-	private static final String KEY_NAME = "name";
-	private static final String KEY_EMAIL = "email";
-	private static final String KEY_PHONE = "phone";
-	private static final String KEY_COMPANY = "company";
-	private static final String KEY_TITLE = "title";
-	private static final String KEY_LOCATION = "location";
+	private static final String TAG = UserDatabaseAdapter.class.getSimpleName();
+
+	protected static final String KEY_ID = "userID";
+	protected static final String KEY_NAME = "name";
+	protected static final String KEY_EMAIL = "email";
+	protected static final String KEY_PHONE = "phone";
+	protected static final String KEY_COMPANY = "company";
+	protected static final String KEY_TITLE = "title";
+	protected static final String KEY_LOCATION = "location";
+
+	public static String getBaseUrl() {
+		return BASE_URL + "User";
+	}
+
+	public static Uri.Builder getBaseUri() {
+		return Uri.parse(getBaseUrl()).buildUpon();
+	}
 
 	public static User getUserInfo(String userID) throws IOException {
 		// Server URL setup
-		String _url = BASE_URL + SERVER_EXT + "/" + userID;
+		String _url = getBaseUri().appendPath(userID).build().toString();
 
 		// Establish connection
 		URL url = new URL(_url);
@@ -70,8 +96,8 @@ public class UserDatabaseAdapter extends DatabaseAdapter {
 	public static List<SimpleUser> getContacts(String userID)
 			throws IOException {
 		// Server URL setup
-		String _url = BASE_URL + SERVER_EXT + "/Contacts/" + userID;
-
+		String _url = getBaseUri().appendPath("Contacts").appendPath(userID)
+				.build().toString();
 		// Establish connection
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -99,10 +125,71 @@ public class UserDatabaseAdapter extends DatabaseAdapter {
 		return contactsList;
 	}
 
+	public static Schedule getSchedule(String userID)
+			throws JsonParseException, JsonMappingException, IOException {
+		// Server URL setup
+		String _url = getBaseUri().appendPath("Schedule").appendPath(userID)
+				.build().toString();
+		// establish connection
+		URL url = new URL(_url);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+		// add request header
+		conn.setRequestMethod("GET");
+		addRequestHeader(conn, false);
+
+		// Get server response
+		// TODO: Uncomment this later
+		// int responseCode = conn.getResponseCode();
+		// String response = getServerResponse(conn);
+		String response = ObjectMocker.getMockScheule();
+
+		// Initialize ObjectMapper
+		Schedule sched = new Schedule();
+		Event event = null;
+		final JsonNode scheduleArray = MAPPER.readTree(response)
+				.get("schedule");
+
+		JsonNode _id;
+		if (scheduleArray.isArray()) {
+			for (final JsonNode meetingOrTaskNode : scheduleArray) {
+				if ((_id = meetingOrTaskNode.get("id")) != null) {
+					String type = meetingOrTaskNode.hasNonNull("type") ? meetingOrTaskNode
+							.get("type").asText() : null;
+					if (TextUtils.equals(type, "meeting")) {
+						event = new Meeting();
+					} else if (TextUtils.equals(type, "task")) {
+						event = new Task();
+					}
+					if (event != null) {
+						event.setID(_id.asText());
+						event.setTitle(meetingOrTaskNode.get(
+								MeetingDatabaseAdapter.KEY_TITLE).asText());
+						event.setDescription(meetingOrTaskNode.get(
+								MeetingDatabaseAdapter.KEY_DESC).asText());
+						event.setStartTime(meetingOrTaskNode.get(
+								MeetingDatabaseAdapter.KEY_START).asText());
+						event.setEndTime(meetingOrTaskNode.get(
+								MeetingDatabaseAdapter.KEY_END).asText());
+						if (event instanceof Meeting)
+							sched.addMeeting((Meeting) event);
+						else if (event instanceof Task)
+							sched.addTask((Task) event);
+						else
+							Log.w(TAG + "> getSchedule", "Event cast failure");
+					}
+				}
+			} // end for
+
+		}
+
+		conn.disconnect();
+		return sched;
+	}
+
 	public static String login(String email, String pass) throws IOException {
 		// Server URL setup
-		String _url = BASE_URL + SERVER_EXT + "/" + "Login";
-
+		String _url = getBaseUri().appendPath("Login").build().toString();
 		// Establish connection
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -167,7 +254,7 @@ public class UserDatabaseAdapter extends DatabaseAdapter {
 	public static User register(User registerMe, String password)
 			throws IOException, UserExistsException {
 		// Server URL setup
-		String _url = BASE_URL + SERVER_EXT;
+		String _url = getBaseUri().build().toString();
 
 		// Establish connection
 		URL url = new URL(_url);
@@ -229,7 +316,7 @@ public class UserDatabaseAdapter extends DatabaseAdapter {
 	}
 
 	public static List<User> getAllUsers() throws IOException {
-		String _url = BASE_URL + SERVER_EXT + "/" + "Users";
+		String _url = getBaseUri().appendPath("Users").build().toString();
 		// Establish connection
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -313,7 +400,7 @@ public class UserDatabaseAdapter extends DatabaseAdapter {
 
 	private static String updateHelper(String jsonPayload) throws IOException {
 		// Server URL setup
-		String _url = BASE_URL + SERVER_EXT;
+		String _url = getBaseUri().build().toString();
 
 		// Establish connection
 		URL url = new URL(_url);
@@ -331,8 +418,8 @@ public class UserDatabaseAdapter extends DatabaseAdapter {
 
 	public static User parseUser(JsonNode node) {
 		User u = new User(); // start parsing a user
-		// if they at least have an email and name
-		if (node.hasNonNull(KEY_EMAIL) && node.hasNonNull(KEY_NAME)) {
+		// if they at least have an id, email, and name
+		if (node.hasNonNull(KEY_ID) && node.hasNonNull(KEY_EMAIL) && node.hasNonNull(KEY_NAME)) {
 			String email = node.get(KEY_EMAIL).asText();
 			// if their email is in a reasonable format
 			if (Utilities.isValidEmailAddress(email)) {

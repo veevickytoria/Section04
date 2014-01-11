@@ -15,9 +15,11 @@
  ******************************************************************************/
 package com.android.meetingninja;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import objects.Meeting;
+import objects.ObjectMocker;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
@@ -133,6 +135,7 @@ public class MainActivity extends FragmentActivity {
 
 		// Track the usage of the application with Parse SDK
 		ParseAnalytics.trackAppOpened(getIntent());
+		
 	}
 
 	private void setupActionBar() {

@@ -1,22 +1,14 @@
 package objects;
 
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.android.meetingninja.extras.MyDateUtils;
-
-public class Meeting implements Parcelable {
+public class Meeting extends Event implements Parcelable {
 	private String meetingID;
-	private String title;
-	private String location;
-	private String startTime;
-	private String endTime;
-	private String description;
+	
 	private List<AttendeeWrapper> attendance = new ArrayList<AttendeeWrapper>();
 
 	private enum Attendance_Status {
@@ -61,78 +53,16 @@ public class Meeting implements Parcelable {
 		setAttendance(copyMeeting.getAttendance());
 	}
 
+
+	@Override
 	public String getID() {
-		return meetingID;
+		return this.meetingID;
 	}
 
-	public void setID(String id) {
-		int testInt = Integer.parseInt(id);
-		setID(testInt);
-	}
-
+	@Override
 	public void setID(int id) {
 		this.meetingID = Integer.toString(id);
-	}
-
-	public String getTitle() {
-		return (title != null && !title.isEmpty()) ? title : "";
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getLocation() {
-		return (location != null && !location.isEmpty()) ? location : "";
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
-	}
-
-	public String getStartTime() {
-		return (startTime != null && !startTime.isEmpty()) ? startTime
-				: MyDateUtils.SERVER_DATE_FORMAT.format(new Date(0L));
-	}
-
-	public long getStartTime_Time() throws ParseException {
-		return MyDateUtils.SERVER_DATE_FORMAT.parse(startTime).getTime();
-	}
-
-	public void setStartTime(String datetimeStart) {
-		this.startTime = datetimeStart;
-	}
-
-	public void setStartTime(long msStartTime) {
-		Date start = new Date(msStartTime);
-		this.startTime = MyDateUtils.SERVER_DATE_FORMAT.format(start);
-	}
-
-	public String getEndTime() {
-		return (endTime != null && !endTime.isEmpty()) ? endTime
-				: MyDateUtils.SERVER_DATE_FORMAT.format(new Date(1L));
-	}
-
-	public long getEndTime_Time() throws ParseException {
-		return MyDateUtils.SERVER_DATE_FORMAT.parse(endTime).getTime();
-	}
-
-	public void setEndTime(String datetimeEnd) {
-		this.endTime = datetimeEnd;
-	}
-
-	public void setEndTime(long msEndTime) {
-		Date end = new Date(msEndTime);
-		this.endTime = MyDateUtils.SERVER_DATE_FORMAT.format(end);
-	}
-
-	public String getDescription() {
-		return (description != null && !description.isEmpty()) ? description
-				: "";
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
+		
 	}
 
 	public List<AttendeeWrapper> getAttendance() {
@@ -177,7 +107,7 @@ public class Meeting implements Parcelable {
 				.readArrayList(AttendeeWrapper.class.getClassLoader());
 	}
 
-	public static final Parcelable.Creator<Meeting> CREATOR = new Parcelable.Creator<Meeting>() {
+	public static final Parcelable.Creator<Meeting> PARCELER = new Parcelable.Creator<Meeting>() {
 
 		public Meeting createFromParcel(Parcel in) {
 			return new Meeting(in);

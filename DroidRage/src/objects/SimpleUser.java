@@ -19,7 +19,7 @@ public class SimpleUser {
 
 	@JsonProperty("userID")
 	public void setUserID(String id) {
-		int testInt = Integer.parseInt(id);
+		int testInt = Integer.valueOf(id);
 		setUserID(testInt);
 	}
 

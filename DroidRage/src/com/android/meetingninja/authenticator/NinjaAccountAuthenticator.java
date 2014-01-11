@@ -14,12 +14,12 @@ import android.os.Bundle;
  * @author moorejm
  * 
  */
-public class StubAccountAuthenticator extends AbstractAccountAuthenticator {
+public class NinjaAccountAuthenticator extends AbstractAccountAuthenticator {
 
-	private String TAG = StubAccountAuthenticator.class.getSimpleName();
+	private String TAG = NinjaAccountAuthenticator.class.getSimpleName();
 	private final Context mContext;
 
-	public StubAccountAuthenticator(Context context) {
+	public NinjaAccountAuthenticator(Context context) {
 		super(context);
 
 		mContext = context;

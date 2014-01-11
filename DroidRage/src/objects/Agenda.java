@@ -29,13 +29,18 @@ public class Agenda {
 
 	@JsonProperty("agendaID")
 	public void setID(String id) {
-		int testInt = Integer.parseInt(id);
+		int testInt = Integer.valueOf(id);
 		setID(testInt);
 	}
 
 	@JsonProperty("agendaID")
 	public void setID(int id) {
 		this.agendaID = Integer.toString(id);
+	}
+	
+	@JsonProperty("agendaID")
+	public String getID() {
+		return this.agendaID;
 	}
 
 	@JsonProperty("title")
