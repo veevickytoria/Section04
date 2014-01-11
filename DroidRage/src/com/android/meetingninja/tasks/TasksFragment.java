@@ -134,9 +134,9 @@ class TaskListAdapter extends BaseExpandableListAdapter {
 		if (rowView == null) {
 			rowView = inflater.inflate(R.layout.task_item, null);
 			viewHolder = new ChildViewHolder();
-			viewHolder.taskName = (TextView) convertView
+			viewHolder.taskName = (TextView) rowView
 					.findViewById(R.id.taskName);
-			viewHolder.taskDescription = (TextView) convertView
+			viewHolder.taskDescription = (TextView) rowView
 					.findViewById(R.id.taskDiscription);
 
 			rowView.setTag(viewHolder);
