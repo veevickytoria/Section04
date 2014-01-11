@@ -126,13 +126,13 @@
     self.companyTextField.text = self.contact.company;
     self.titleTextField.text = self.contact.title;
     self.locationTextField.text = self.contact.location;
-    
-    [self unUpdateTextFieldUI:self.displayNameTextField];
-    [self unUpdateTextFieldUI:self.companyTextField];
-    [self unUpdateTextFieldUI:self.titleTextField];
-    [self unUpdateTextFieldUI:self.emailTextField];
-    [self unUpdateTextFieldUI:self.phoneTextField];
-    [self unUpdateTextFieldUI:self.locationTextField];
+//    
+//    [self unUpdateTextFieldUI:self.displayNameTextField];
+//    [self unUpdateTextFieldUI:self.companyTextField];
+//    [self unUpdateTextFieldUI:self.titleTextField];
+//    [self unUpdateTextFieldUI:self.emailTextField];
+//    [self unUpdateTextFieldUI:self.phoneTextField];
+//    [self unUpdateTextFieldUI:self.locationTextField];
     
 
 }
