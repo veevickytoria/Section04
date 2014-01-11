@@ -7,9 +7,10 @@
 //
 
 #import <XCTest/XCTest.h>
+#import "iWinViewAndChangeSettingsViewController.h"
 
 @interface iWinSettingsTest : XCTestCase
-
+@property (strong, nonatomic) iWinViewAndChangeSettingsViewController *settingsVC;
 @end
 
 @implementation iWinSettingsTest
@@ -18,6 +19,10 @@
 {
     [super setUp];
     // Put setup code here; it will be run once, before the first test case.
+    self.settingsVC = [[iWinViewAndChangeSettingsViewController alloc] initWithNibName:@"iWinViewAndChangeSettingsViewController" bundle:nil withID:1];
+    [self.settingsVC viewDidLoad];
+    [self.settingsVC view];
+
 }
 
 - (void)tearDown
@@ -26,7 +31,32 @@
     [super tearDown];
 }
 
-- (void)testExample
+- (void)testEmailChangeCorrectOldPassword
+{
+    XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
+}
+
+- (void)testEmailChangeIncorrectOrNoOldPassword
+{
+    XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
+}
+
+- (void)testPasswordChangeCorrectOldPassword
+{
+    XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
+}
+
+- (void)testPasswordChangeIncorrectOrNoOldPassword
+{
+    XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
+}
+
+- (void)testEmailAndPasswordChangeCorrectPassword
+{
+    XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
+}
+
+- (void)testEmailAndPasswordChangeIncorrectOrNoOldPassword
 {
     XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
 }

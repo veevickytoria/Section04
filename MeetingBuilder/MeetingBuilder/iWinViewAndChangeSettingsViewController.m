@@ -14,7 +14,9 @@
 @interface iWinViewAndChangeSettingsViewController ()
 @property (nonatomic) BOOL isEditing;
 @property (nonatomic) Contact *contact;
-@property (nonatomic) NSInteger userID;@end
+@property (nonatomic) NSInteger userID;
+@end
+
 
 @implementation iWinViewAndChangeSettingsViewController
 
@@ -32,7 +34,13 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
+    self.emailTextField.text = @"steve.jobs'@apple.com";
+    self.cancelButton.hidden = YES;
+    [self showFields:NO];
+    [self clearFields];
+ //   self.whenToNotifyPicker.numberOfComponents = 5;
+ //   self.whenToNotifyPicker.
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -43,91 +51,87 @@
 
 -(IBAction)onCancel:(id)sender
 {
-    //PULL FROM DB
-    
-    
-//    self.displayNameTextField.userInteractionEnabled = NO;
-//    self.companyTextField.userInteractionEnabled = NO;
-//    self.titleTextField.userInteractionEnabled = NO;
-//    self.emailTextField.userInteractionEnabled = NO;
-//    self.phoneTextField.userInteractionEnabled = NO;
-//    self.locationTextField.userInteractionEnabled = NO;
-//    
-//    [self updateTextUI];
-    
-    //    [self unUpdateTextFieldUI:self.displayNameTextField];
-    //    [self unUpdateTextFieldUI:self.companyTextField];
-    //    [self unUpdateTextFieldUI:self.titleTextField];
-    //    [self unUpdateTextFieldUI:self.emailTextField];
-    //    [self unUpdateTextFieldUI:self.phoneTextField];
-    //    [self unUpdateTextFieldUI:self.locationTextField];
-    
-    
-    //    self.displayNameTextField.text =  [NSString stringWithFormat:@"%@ %@", self.contact.firstName, self.contact.lastName];
-    //    self.emailTextField.text =  self.contact.email;
-    //    self.phoneTextField.text = self.contact.phone;
-    //    self.companyTextField.text = self.contact.company;
-    //    self.titleTextField.text = self.contact.title;
-    //    self.locationTextField.text = self.contact.location;
-    
-//    [self.editProfile setTintColor:[UIColor blueColor]];
-//    self.isEditing = NO;
-//    [self.editProfile setTitle:@"Edit Profile" forState:UIControlStateNormal];
-//    self.cancel.hidden = YES;
-//    
+    [self.saveAndEditButton setTintColor:[UIColor blueColor]];
+    [self showFields:NO];
+    [self clearFields];
+    self.isEditing = NO;
+    [self.saveAndEditButton setTitle:@"Change Email/Password" forState:UIControlStateNormal];
+    self.cancelButton.hidden = YES;
+    //Pull Email from DB
 }
 
--(IBAction)onEditProfile:(id)sender
+-(IBAction)onEdit:(id)sender
 {
-//    if (self.isEditing) {
-//        [self saveChanges];
-//        self.displayNameTextField.userInteractionEnabled = NO;
-//        self.companyTextField.userInteractionEnabled = NO;
-//        self.titleTextField.userInteractionEnabled = NO;
-//        self.emailTextField.userInteractionEnabled = NO;
-//        self.phoneTextField.userInteractionEnabled = NO;
-//        self.locationTextField.userInteractionEnabled = NO;
-//        
-//        [self unUpdateTextFieldUI:self.displayNameTextField];
-//        [self unUpdateTextFieldUI:self.companyTextField];
-//        [self unUpdateTextFieldUI:self.titleTextField];
-//        [self unUpdateTextFieldUI:self.emailTextField];
-//        [self unUpdateTextFieldUI:self.phoneTextField];
-//        [self unUpdateTextFieldUI:self.locationTextField];
-//        
-//        
-//        [self.editProfile setTitle:@"Edit Profile" forState:UIControlStateNormal];
-//        [self.editProfile setTintColor:[UIColor blueColor]];
-//        [self saveChanges];
-//        self.cancel.hidden = YES;
-//        self.isEditing = NO;
-//        
-//    } else{
-//        self.isEditing = YES;
-//        self.displayNameTextField.userInteractionEnabled = YES;
-//        self.companyTextField.userInteractionEnabled = YES;
-//        self.titleTextField.userInteractionEnabled = YES;
-//        self.emailTextField.userInteractionEnabled = YES;
-//        self.phoneTextField.userInteractionEnabled = YES;
-//        self.locationTextField.userInteractionEnabled = YES;
-//        
-//        [self updateTextFieldUI:self.displayNameTextField];
-//        [self updateTextFieldUI:self.companyTextField];
-//        [self updateTextFieldUI:self.titleTextField];
-//        [self updateTextFieldUI:self.emailTextField];
-//        [self updateTextFieldUI:self.phoneTextField];
-//        [self updateTextFieldUI:self.locationTextField];
-//        
-//        [self.editProfile setTitle:@"Save" forState:UIControlStateNormal];
-//        [self.editProfile setTintColor:[UIColor greenColor]];
-//        self.cancel.hidden = NO;
-//        
-//    }
+    if (self.isEditing) {
+        [self saveChanges];
+        [self showFields:NO];
+        [self clearFields];
+        [self.saveAndEditButton setTitle:@"Change Email/Password" forState:UIControlStateNormal];
+        [self.saveAndEditButton setTintColor:[UIColor blueColor]];
+        [self saveChanges];
+        [self enableInteraction:NO];
+        self.cancelButton.hidden = YES;
+        self.isEditing = NO;
+    } else{
+        self.isEditing = YES;
+        [self showFields:YES];
+        [self.saveAndEditButton setTitle:@"Save" forState:UIControlStateNormal];
+        [self.saveAndEditButton setTintColor:[UIColor greenColor]];
+        self.cancelButton.hidden = NO;
+        [self enableInteraction:YES];
+    }
+}
+    
+-(void) saveChanges
+{
+    //Push new password and email to DB only if old password matches.
+    //You must enter old password for any change to take affect.
 }
 
--(void)saveChanges
+-(void) showFields: (BOOL) show
 {
-    //blah
+    if(show) {
+        self.oldPasswordTextField.text = @"";
+        self.oldPasswordLabel.text = @"Old Passwprd";
+        self.confirmPasswordTextField.hidden = NO;
+        self.passwordTextField.hidden = NO;
+        //self.oldPasswordTextField.hidden = NO;
+        self.confirmPasswordLabel.hidden = NO;
+        self.oldPasswordLabel.hidden = NO;
+        //self.passwordLabel.hidden = NO;
+    } else{
+        self.oldPasswordTextField.text = @"********";
+        self.oldPasswordLabel.text = @"Password";
+        self.confirmPasswordTextField.hidden = YES;
+        self.passwordTextField.hidden = YES;
+       // self.oldPasswordTextField.hidden = YES;
+        self.confirmPasswordLabel.hidden = YES;
+       // self.oldPasswordLabel.hidden = YES;
+        self.passwordLabel.hidden = YES;
+    }
+    
+}
+
+-(void) enableInteraction: (BOOL) enable
+{
+    if (enable){
+        self.emailTextField.userInteractionEnabled = YES;
+        self.confirmPasswordTextField.userInteractionEnabled = YES;
+        self.passwordTextField.userInteractionEnabled = YES;
+        self.oldPasswordTextField.userInteractionEnabled = YES;
+    }else{
+        self.emailTextField.userInteractionEnabled = NO;
+        self.confirmPasswordTextField.userInteractionEnabled = NO;
+        self.passwordTextField.userInteractionEnabled = NO;
+        self.oldPasswordTextField.userInteractionEnabled = NO;
+    }
+}
+
+- (void) clearFields
+{
+    self.oldPasswordTextField.text = @"";
+    self.passwordTextField.text = @"";
+    self.confirmPasswordTextField.text = @"";
 }
 
 @end

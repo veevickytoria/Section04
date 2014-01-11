@@ -19,8 +19,10 @@
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withID:(NSInteger) userID;
 
-- (IBAction)clickCancel:(id)sender;
-- (IBAction)clickSave:(id)sender;
+- (IBAction)changeSwitch:(id)sender;
+
+- (IBAction)onCancel:(id)sender;
+- (IBAction)onEdit:(id)sender;
 
 @property (weak, nonatomic) IBOutlet UITextField *emailTextField;
 @property (weak, nonatomic) IBOutlet UITextField *oldPasswordTextField;
@@ -30,5 +32,9 @@
 @property (weak, nonatomic) IBOutlet UISwitch *shouldNotifySwitch;
 @property (weak, nonatomic) IBOutlet UIButton *cancelButton;
 @property (weak, nonatomic) IBOutlet UIButton *saveAndEditButton;
+@property (weak, nonatomic) IBOutlet UILabel *confirmPasswordLabel;
+@property (weak, nonatomic) IBOutlet UILabel *passwordLabel;
+@property (weak, nonatomic) IBOutlet UILabel *oldPasswordLabel;
+
 
 @end

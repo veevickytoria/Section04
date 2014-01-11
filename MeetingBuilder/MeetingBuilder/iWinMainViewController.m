@@ -364,7 +364,7 @@
 {
     [self removeSubViews];
     [self enableSliding];
-    self.settingsViewController = [[iWinViewAndChangeSettingsViewController alloc] initWithNibName:@"iWinViewAndChangeSettingsViewController" bundle:nil];
+    self.settingsViewController = [[iWinViewAndChangeSettingsViewController alloc] initWithNibName:@"iWinViewAndChangeSettingsViewController" bundle:nil withID:self.userID];
     [self.mainView  addSubview:self.settingsViewController.view];
     [self.settingsViewController.view setBounds:self.mainView.bounds];
     self.settingsViewController.settingsDelegate = self;
