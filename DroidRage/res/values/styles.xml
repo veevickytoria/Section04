@@ -86,8 +86,8 @@
         <item name="android:paddingRight">2dip</item>
         <item name="android:singleLine">true</item>
     </style>
-    
-     <style name="EditEventCustomActionButton" parent="android:style/Widget.Holo.Light.ActionButton">
+
+    <style name="EditEventCustomActionButton" parent="android:style/Widget.Holo.Light.ActionButton">
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_weight">1</item>
@@ -122,22 +122,108 @@
         <item name="android:layout_height">2dp</item>
         <item name="android:background">?android:attr/listDivider</item>
     </style>
-    
+
     <!-- IOSched 2013 -->
-    
+
     <style name="ListItemContainerBase">
-        <item name="android:minHeight">?android:attr/listPreferredItemHeight</item>       
+        <item name="android:minHeight">?android:attr/listPreferredItemHeight</item>
     </style>
-    
-     <!-- List item text -->
+
+    <!-- List item text -->
     <style name="ListItemTitle">
         <item name="android:textSize">@dimen/text_size_large</item>
         <item name="android:textColor">@color/body_text_1</item>
     </style>
-    
-     <style name="ListItemSubtitle">
+
+    <style name="ListItemSubtitle">
         <item name="android:textSize">@dimen/text_size_medium</item>
         <item name="android:textColor">@color/body_text_2</item>
     </style>
+
+    <!-- BetterPickers -->
+    <style name="medium_bold">
+        <item name="android:textSize">@dimen/medium_font_size</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="medium_bold_hms" parent="medium_bold">
+        <item name="android:textSize">@dimen/medium_font_size_hms</item>
+    </style>
+
+    <style name="medium_light">
+        <item name="android:textSize">@dimen/medium_font_size</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <style name="medium_light_header" parent="medium_light">
+        <item name="android:textSize">@dimen/medium_font_size_header</item>
+    </style>
+
+    <style name="medium_light_hms" parent="medium_light">
+        <item name="android:textSize">@dimen/medium_font_size_hms</item>
+    </style>
+
+    <style name="medium_bold_date" parent="@style/medium_bold">
+        <item name="android:textSize">@dimen/medium_date_font_size</item>
+    </style>
+
+    <style name="medium_light_date" parent="@style/medium_bold">
+        <item name="android:textSize">@dimen/medium_date_font_size</item>
+    </style>
+
+    <style name="medium_light_expiration">
+        <item name="android:textSize">@dimen/medium_expiration_font_size</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="label">
+        <item name="android:textSize">@dimen/label_font_size</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:fontFamily">sans-serif-condensed</item>
+    </style>
+
+    <style name="dialpad">
+        <item name="android:textSize">@dimen/dialpad_font_size</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <style name="dialpad_text" parent="dialpad">
+        <item name="android:textSize">@dimen/dialpad_font_size_ampm</item>
+    </style>
+
+    <style name="dialog_button">
+        <item name="android:textSize">@dimen/dialog_button_font_size</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:minHeight">48dp</item>
+    </style>
+
+    <style name="tablet_dialpad">
+        <item name="android:textSize">@dimen/tablet_dialpad_font_size</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:fontFamily">sans-serif-condensed</item>
+    </style>
+
+    <style name="tablet_dialpad_text">
+        <item name="android:textSize">@dimen/tablet_dialpad_font_size_ampm</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:fontFamily">sans-serif-condensed</item>
+    </style>
+
+    <style name="aosp_time_label">
+        <item name="android:textSize">@dimen/time_label_size</item>
+        <item name="android:textColor">@color/numbers_text_color</item>
+    </style>
+
+    <style name="aosp_ampm_label">
+        <item name="android:textSize">@dimen/ampm_label_size</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/ampm_text_color</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="aosp_day_of_week_label_condensed" />
 
 </resources>

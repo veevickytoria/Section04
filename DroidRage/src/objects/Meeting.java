@@ -107,7 +107,7 @@ public class Meeting extends Event implements Parcelable {
 				.readArrayList(AttendeeWrapper.class.getClassLoader());
 	}
 
-	public static final Parcelable.Creator<Meeting> PARCELER = new Parcelable.Creator<Meeting>() {
+	public static final Parcelable.Creator<Meeting> CREATOR = new Parcelable.Creator<Meeting>() {
 
 		public Meeting createFromParcel(Parcel in) {
 			return new Meeting(in);

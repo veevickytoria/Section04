@@ -46,6 +46,7 @@ public class SessionManager {
 	public static final String COMPANY = "com.android.meetingninja.preferences.company";
 	public static final String TITLE = "com.android.meetingninja.preferences.title";
 	public static final String LOCATION = "com.android.meetingninja.preferences.location";
+	public static final String PAGE = "com.android.meetingninja.preferences.page";
 
 	// Sharedpref login state
 	public static final String LOGGED_IN = "com.android.meetingninja.preferences.isLoggedIn";
@@ -104,13 +105,17 @@ public class SessionManager {
 	 * Get stored session data
 	 * */
 	public HashMap<String, String> getUserDetails() {
-		HashMap<String, String> user = new HashMap<String, String>();
-		// user name
-		user.put(USER, pref.getString(USER, null));
-		user.put(KEY_USERID, pref.getString(KEY_USERID, null));
-
-		// return user
-		return user;
+		HashMap<String, String> details = new HashMap<String, String>();
+		
+		details.put(KEY_USERID, pref.getString(KEY_USERID, null));
+		details.put(USER, pref.getString(USER, null));
+		details.put(EMAIL, pref.getString(EMAIL, null));
+		details.put(PHONE, pref.getString(PHONE, null));
+		details.put(COMPANY, pref.getString(COMPANY, null));
+		details.put(TITLE, pref.getString(TITLE, null));
+		details.put(LOCATION, pref.getString(LOCATION, null));
+		// return details
+		return details;
 	}
 
 	public String getUserID() {
@@ -150,5 +155,15 @@ public class SessionManager {
 
 	public boolean isLoggedIn() {
 		return pref.getBoolean(LOGGED_IN, false);
+	}
+	
+	public void setPage(int position) {
+		Editor editor = pref.edit();
+		editor.putInt(PAGE, position);
+		editor.commit();
+	}
+	
+	public int getPage() {
+		return pref.getInt(PAGE, 0);
 	}
 }

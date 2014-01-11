@@ -27,9 +27,12 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -45,6 +48,11 @@ import com.android.meetingninja.database.MeetingDatabaseAdapter;
 import com.android.meetingninja.database.local.SQLiteMeetingAdapter;
 import com.android.meetingninja.extras.MyDateUtils;
 import com.android.meetingninja.user.SessionManager;
+import com.doomonafireball.betterpickers.calendardatepicker.CalendarDatePickerDialog;
+import com.doomonafireball.betterpickers.calendardatepicker.CalendarDatePickerDialog.OnDateSetListener;
+import com.doomonafireball.betterpickers.radialtimepicker.RadialPickerLayout;
+import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog;
+import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog.OnTimeSetListener;
 
 public class EditMeetingActivity extends FragmentActivity implements
 		AsyncResponse<Boolean> {
@@ -60,6 +68,7 @@ public class EditMeetingActivity extends FragmentActivity implements
 	private SimpleDateFormat dateFormat = MyDateUtils.APP_DATE_FORMAT;
 
 	private SQLiteMeetingAdapter mySQLiteAdapter;
+	private SessionManager session;
 	private Meeting displayedMeeting;
 
 	public static final String EXTRA_TITLE = "title";
@@ -80,6 +89,7 @@ public class EditMeetingActivity extends FragmentActivity implements
 		// Do some initializations
 		is24 = android.text.format.DateFormat
 				.is24HourFormat(getApplicationContext());
+		session = SessionManager.getInstance();
 		timeFormat = is24 ? MyDateUtils._24_TIME_FORMAT
 				: MyDateUtils._12_TIME_FORMAT;
 		extras = getIntent().getExtras();
@@ -201,25 +211,29 @@ public class EditMeetingActivity extends FragmentActivity implements
 		mDescription.setText(mDescription.getText().toString().trim());
 	}
 
-	/*
-	 * @Override public boolean onCreateOptionsMenu(Menu menu) { // Inflate the
-	 * menu; this adds items to the action bar if it is present.
-	 * getMenuInflater().inflate(R.menu.new_meeting, menu); return true; }
-	 * 
-	 * @Override public boolean onOptionsItemSelected(MenuItem item) { switch
-	 * (item.getItemId()) { case android.R.id.home: // This ID represents the
-	 * Home or Up button. In the case of this // activity, the Up button is
-	 * shown. Use NavUtils to allow users // to navigate up one level in the
-	 * application structure. For // more details, see the Navigation pattern on
-	 * Android Design: // //
-	 * http://developer.android.com/design/patterns/navigation.html#up-vs-back
-	 * // NavUtils.navigateUpFromSameTask(this); return true; case
-	 * R.id.action_save: // TODO : Create a meeting // Meeting m = new
-	 * Meeting(1, mTitle.getText().toString(), mLocation //
-	 * .getText().toString(), mFromDate.getText().toString() + "@" // +
-	 * mFromTime.getText().toString()); creater = new MeetingSaveTask(this); //
-	 * creater.execute(m); } return super.onOptionsItemSelected(item); }
-	 */
+	// @Override
+	// public boolean onCreateOptionsMenu(Menu menu) {
+	// // Inflate the menu this adds items to the action bar if it is present.
+	// getMenuInflater().inflate(R.menu.new_meeting, menu);
+	// return true;
+	// }
+	//
+	// @Override
+	// public boolean onOptionsItemSelected(MenuItem item) {
+	// switch (item.getItemId()) {
+	// case android.R.id.home:
+	// // This ID represents the Home or Up button. In the case of this
+	// // activity, the Up button is shown. Use NavUtils to allow users
+	// // to navigate up one level in the application structure. For
+	// // more details, see the Navigation pattern on Android Design:
+	// //
+	// http://developer.android.com/design/patterns/navigation.html#up-vs-back
+	// // NavUtils.navigateUpFromSameTask(this); return true;
+	// case R.id.action_save:
+	// break;
+	// }
+	// return super.onOptionsItemSelected(item);
+	// }
 
 	@Override
 	public void processFinish(Boolean result) {
@@ -273,7 +287,7 @@ public class EditMeetingActivity extends FragmentActivity implements
 	}
 
 	private class DateClickListener implements OnClickListener,
-			android.app.DatePickerDialog.OnDateSetListener {
+			OnDateSetListener {
 		Button button;
 		Calendar cal;
 
@@ -284,21 +298,41 @@ public class EditMeetingActivity extends FragmentActivity implements
 
 		@Override
 		public void onClick(View v) {
-			new DatePickerDialog(EditMeetingActivity.this, this,
-					cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
-					cal.get(Calendar.DAY_OF_MONTH)).show();
-			// FragmentManager fm = getSupportFragmentManager();
-			// CalendarDatePickerDialog calendarDatePickerDialog =
-			// CalendarDatePickerDialog
-			// .newInstance(DateClickListener.this,
+			// new DatePickerDialog(EditMeetingActivity.this, this,
 			// cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
-			// cal.get(Calendar.DAY_OF_MONTH));
-			// calendarDatePickerDialog.show(fm, "fragment_date_picker_name");
+			// cal.get(Calendar.DAY_OF_MONTH)).show();
+			FragmentManager fm = getSupportFragmentManager();
+			CalendarDatePickerDialog calendarDatePickerDialog = CalendarDatePickerDialog
+					.newInstance(DateClickListener.this,
+							cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
+							cal.get(Calendar.DAY_OF_MONTH));
+			calendarDatePickerDialog.show(fm, "fragment_date_picker_name");
 		}
 
+		// @Override
+		// public void onDateSet(DatePicker view, int year, int monthOfYear,
+		// int dayOfMonth) {
+		// int yr, month, day;
+		// yr = cal.get(Calendar.YEAR);
+		// month = cal.get(Calendar.MONTH);
+		// day = cal.get(Calendar.DAY_OF_MONTH);
+		//
+		// cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+		// cal.set(Calendar.MONTH, monthOfYear);
+		// cal.set(Calendar.YEAR, year);
+		// if (cal.before(start) || cal.after(end)) {
+		// cal.set(Calendar.YEAR, yr);
+		// cal.set(Calendar.MONTH, month);
+		// cal.set(Calendar.DAY_OF_MONTH, day); // error message return;
+		// }
+		//
+		// button.setText(dateFormat.format(cal.getTime()));
+		//
+		// }
+
 		@Override
-		public void onDateSet(DatePicker view, int year, int monthOfYear,
-				int dayOfMonth) {
+		public void onDateSet(CalendarDatePickerDialog dialog, int year,
+				int monthOfYear, int dayOfMonth) {
 			int yr, month, day;
 			yr = cal.get(Calendar.YEAR);
 			month = cal.get(Calendar.MONTH);
@@ -310,32 +344,18 @@ public class EditMeetingActivity extends FragmentActivity implements
 			if (cal.before(start) || cal.after(end)) {
 				cal.set(Calendar.YEAR, yr);
 				cal.set(Calendar.MONTH, month);
-				cal.set(Calendar.DAY_OF_MONTH, day); // error message return;
+				cal.set(Calendar.DAY_OF_MONTH, day);
+				// error message
+				return;
 			}
 
 			button.setText(dateFormat.format(cal.getTime()));
-
 		}
-
-		/*
-		 * @Override public void onDateSet(CalendarDatePickerDialog dialog, int
-		 * year, int monthOfYear, int dayOfMonth) { int yr, month, day; yr =
-		 * cal.get(Calendar.YEAR); month = cal.get(Calendar.MONTH); day =
-		 * cal.get(Calendar.DAY_OF_MONTH);
-		 * 
-		 * cal.set(Calendar.DAY_OF_MONTH, dayOfMonth); cal.set(Calendar.MONTH,
-		 * monthOfYear); cal.set(Calendar.YEAR, year); if (cal.before(start) ||
-		 * cal.after(end)) { cal.set(Calendar.YEAR, yr); cal.set(Calendar.MONTH,
-		 * month); cal.set(Calendar.DAY_OF_MONTH, day); // error message return;
-		 * }
-		 * 
-		 * button.setText(dateFormat.format(cal.getTime())); }
-		 */
 
 	}
 
 	private class TimeClickListener implements OnClickListener,
-			android.app.TimePickerDialog.OnTimeSetListener {
+			OnTimeSetListener {
 		Button button;
 		Calendar cal;
 
@@ -351,21 +371,39 @@ public class EditMeetingActivity extends FragmentActivity implements
 		public void onClick(View v) {
 			is24 = android.text.format.DateFormat
 					.is24HourFormat(getApplicationContext());
-			new TimePickerDialog(EditMeetingActivity.this, this,
-					cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE),
-					is24).show();
-			// FragmentManager fm = getSupportFragmentManager();
-			// RadialTimePickerDialog timePickerDialog = RadialTimePickerDialog
-			// .newInstance(TimeClickListener.this,
-			// cal.get(Calendar.HOUR_OF_DAY),
-			// cal.get(Calendar.MINUTE), is24);
-			// timePickerDialog.show(fm, "fragment_time_picker_name");
+			// new TimePickerDialog(EditMeetingActivity.this, this,
+			// cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE),
+			// is24).show();
+			FragmentManager fm = getSupportFragmentManager();
+			RadialTimePickerDialog timePickerDialog = RadialTimePickerDialog
+					.newInstance(TimeClickListener.this,
+							cal.get(Calendar.HOUR_OF_DAY),
+							cal.get(Calendar.MINUTE), is24);
+			timePickerDialog.show(fm, "fragment_time_picker_name");
 		}
 
-		@Override
-		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+		// @Override
+		// public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+		//
+		// // should it recheck 24 or 12 hour mode?
+		// int hour, min;
+		// hour = cal.get(Calendar.HOUR_OF_DAY);
+		// min = cal.get(Calendar.MINUTE);
+		// cal.set(Calendar.HOUR_OF_DAY, hourOfDay);
+		// cal.set(Calendar.MINUTE, minute);
+		//
+		// if (cal.before(start) || cal.after(end)) {
+		// cal.set(Calendar.HOUR_OF_DAY, hour);
+		// cal.set(Calendar.MINUTE, min);
+		// return; // error message
+		// }
+		//
+		// button.setText(timeFormat.format(cal.getTime()));
+		// }
 
-			// should it recheck 24 or 12 hour mode?
+		@Override
+		public void onTimeSet(RadialPickerLayout dialog, int hourOfDay,
+				int minute) {
 			int hour, min;
 			hour = cal.get(Calendar.HOUR_OF_DAY);
 			min = cal.get(Calendar.MINUTE);
@@ -377,25 +415,8 @@ public class EditMeetingActivity extends FragmentActivity implements
 				cal.set(Calendar.MINUTE, min);
 				return; // error message
 			}
-
 			button.setText(timeFormat.format(cal.getTime()));
 		}
-
-		/*
-		 * @Override public void onTimeSet(RadialPickerLayout dialog, int
-		 * hourOfDay, int minute) { int hour, min; hour =
-		 * cal.get(Calendar.HOUR_OF_DAY); min = cal.get(Calendar.MINUTE);
-		 * cal.set(Calendar.HOUR_OF_DAY, hourOfDay); cal.set(Calendar.MINUTE,
-		 * minute);
-		 * 
-		 * if (cal.before(start) || cal.after(end)) {
-		 * cal.set(Calendar.HOUR_OF_DAY, hour); cal.set(Calendar.MINUTE, min);
-		 * return; // error message }
-		 * 
-		 * button.setText(timeFormat.format(cal.getTime()));
-		 * 
-		 * }
-		 */
 
 	}
 
@@ -410,7 +431,6 @@ public class EditMeetingActivity extends FragmentActivity implements
 		protected Boolean doInBackground(Meeting... params) {
 			Meeting m = params[0];
 			try {
-				SessionManager session = SessionManager.getInstance();
 				String userID = session.getUserID();
 				MeetingDatabaseAdapter.createMeeting(userID, m);
 			} catch (Exception e) {

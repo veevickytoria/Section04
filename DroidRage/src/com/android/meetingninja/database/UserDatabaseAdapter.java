@@ -334,11 +334,9 @@ public class UserDatabaseAdapter extends AbstractDatabaseAdapter {
 
 		if (userArray.isArray()) {
 			for (final JsonNode userNode : userArray) {
-				User u = null;
+				User u = parseUser(userNode);
 				// assign and check null and do not add local user
-				if ((u = parseUser(userNode)) != null
-						&& !u.getUserID().equals(
-								SessionManager.getInstance().getUserID()))
+				if (u != null)
 					userList.add(u);
 			}
 		}
@@ -419,10 +417,13 @@ public class UserDatabaseAdapter extends AbstractDatabaseAdapter {
 	public static User parseUser(JsonNode node) {
 		User u = new User(); // start parsing a user
 		// if they at least have an id, email, and name
-		if (node.hasNonNull(KEY_ID) && node.hasNonNull(KEY_EMAIL) && node.hasNonNull(KEY_NAME)) {
+		if (node.hasNonNull(KEY_EMAIL) && node.has(KEY_NAME)
+				&& node.hasNonNull(KEY_ID)) {
 			String email = node.get(KEY_EMAIL).asText();
 			// if their email is in a reasonable format
-			if (Utilities.isValidEmailAddress(email)) {
+			if (!TextUtils.isEmpty(node.get(KEY_NAME).asText())
+					&& Utilities.isValidEmailAddress(email)) {
+				Log.d(TAG, email);
 				// set the required fields
 				u.setUserID(node.get(KEY_ID).asText());
 				u.setDisplayName(node.get(KEY_NAME).asText());
@@ -436,11 +437,34 @@ public class UserDatabaseAdapter extends AbstractDatabaseAdapter {
 						KEY_COMPANY).asText() : "");
 				u.setTitle(node.hasNonNull(KEY_TITLE) ? node.get(KEY_TITLE)
 						.asText() : "");
+			} else {
+				Log.w(TAG, "Parsed null. ID = " + node.get(KEY_ID).asText());
+				return null;
 			}
 		} else {
+			Log.w(TAG, "Parsed null");
 			return null;
 		}
 		return u;
+	}
+
+	public static List<User> parseUserList(JsonNode node) {
+		List<User> userList = new ArrayList<User>();
+		final JsonNode userArray = node.get("users");
+
+		if (userArray.isArray()) {
+			for (final JsonNode userNode : userArray) {
+				User u = parseUser(userNode);
+				// assign and check null and do not add local user
+				if (u != null
+						&& !TextUtils.equals(u.getUserID(), SessionManager
+								.getInstance().getUserID())) {
+					userList.add(u);
+				}
+			}
+		}
+
+		return userList;
 	}
 
 	public static SimpleUser parseSimpleUser(JsonNode node) {

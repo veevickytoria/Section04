@@ -5,16 +5,15 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import objects.Agenda;
 import objects.Group;
-import objects.Meeting;
-import objects.ObjectMocker;
 import objects.Topic;
 import objects.User;
 
-import com.android.meetingninja.database.MeetingDatabaseAdapter;
 import com.android.meetingninja.database.UserDatabaseAdapter;
 import com.android.meetingninja.database.UserExistsException;
 import com.android.meetingninja.extras.MyDateUtils;
@@ -74,32 +73,8 @@ public class Tests {
 		}
 	}
 
-	static class MeetingDB {
-		private static void createMeeting(String user, Meeting m) {
-			try {
-				MeetingDatabaseAdapter.createMeeting(user, m);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-
-		private static List<Meeting> getMeetings(String user) {
-			List<Meeting> meetings = new ArrayList<Meeting>();
-			try {
-				meetings = MeetingDatabaseAdapter.getMeetings(user);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return meetings;
-		}
-
-	}
-
 	public static void main(String[] args) throws JsonGenerationException,
 			JsonMappingException, IOException {
-		// Meeting m = new Meeting(1, "New Meeting", "Location", new
-		// Date().toString());
-		// createMeeting(user, m);
 
 		// String r = UserDB.registerTest("Ethan","ethan@example.com", "pass");
 		// System.out.println(r);
@@ -114,6 +89,7 @@ public class Tests {
 		// for (User user : allUsers) {
 		// System.out.println(user);
 		// }
+		
 		agendaTest();
 		groupTest();
 		dateTimeParsingTest();

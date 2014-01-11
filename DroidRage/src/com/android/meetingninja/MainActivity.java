@@ -17,6 +17,8 @@ package com.android.meetingninja;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import objects.Meeting;
 import objects.ObjectMocker;
@@ -45,6 +47,7 @@ import com.android.meetingninja.tasks.TasksFragment;
 import com.android.meetingninja.user.LoginActivity;
 import com.android.meetingninja.user.ProfileFragment;
 import com.android.meetingninja.user.SessionManager;
+import com.android.meetingninja.user.UserListFragment;
 import com.parse.ParseAnalytics;
 
 /**
@@ -75,8 +78,8 @@ public class MainActivity extends FragmentActivity {
 	private MeetingItemAdapter rightDraweradapter;
 
 	public enum DrawerLabel {
-		MEETINGS(0), NOTES(1), TASKS(2), PROFILE(3), SETTINGS(4), ABOUT(5), LOGOUT(
-				6);
+		MEETINGS(0), NOTES(1), TASKS(2), PROFILE(3), GROUPS(4), PROJECTS(5), SETTINGS(
+				6), ABOUT(7), LOGOUT(8);
 
 		private int position;
 
@@ -90,7 +93,7 @@ public class MainActivity extends FragmentActivity {
 
 	}
 
-	public Intent callingIntent;
+	private Bundle icicle;
 	private CharSequence mTitle;
 	private SessionManager session;
 	private static ProfileFragment profFrag;
@@ -98,11 +101,12 @@ public class MainActivity extends FragmentActivity {
 	private static NotesFragment notesFrag;
 	private static TasksFragment tasksFrag;
 
-	private int pageSelection = 0;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		icicle = new Bundle();
+		if (savedInstanceState != null)
+			this.icicle.putAll(savedInstanceState);
 
 		SessionManager.getInstance().init(MainActivity.this);
 		session = SessionManager.getInstance();
@@ -128,14 +132,12 @@ public class MainActivity extends FragmentActivity {
 		setContentView(R.layout.activity_main);
 		setupLeftDrawer();
 		setupActionBar();
-		if (savedInstanceState == null) {
-			// on first time display view for first nav item
-			selectItem(pageSelection);
-		}
+		// on first time display view for first nav item
+		selectItem(session.getPage());
 
 		// Track the usage of the application with Parse SDK
 		ParseAnalytics.trackAppOpened(getIntent());
-		
+
 	}
 
 	private void setupActionBar() {
@@ -203,8 +205,7 @@ public class MainActivity extends FragmentActivity {
 	private void selectItem(int position) {
 		// Create a new fragment and specify the planet to show based on
 		// position
-		pageSelection = position;
-		FragmentManager fragmentManager = getSupportFragmentManager();
+		session.setPage(position);
 		Fragment fragment = null;
 		Bundle args = new Bundle();
 		DrawerLabel clickedLabel = DrawerLabel.values()[position];
@@ -223,6 +224,17 @@ public class MainActivity extends FragmentActivity {
 		case PROFILE:
 			fragment = new ProfileFragment();
 			profFrag = (ProfileFragment) fragment;
+			break;
+		case GROUPS:
+			// fragment = new DummyFragment();
+			// args.putString("Content", "TODO: Groups Page");
+			// fragment.setArguments(args);
+			fragment = new UserListFragment();
+			break;
+		case PROJECTS:
+			fragment = new DummyFragment();
+			args.putString("Content", "TODO: Projects Page");
+			fragment.setArguments(args);
 			break;
 		case SETTINGS:
 			fragment = new DummyFragment();
@@ -245,6 +257,7 @@ public class MainActivity extends FragmentActivity {
 
 		if (fragment != null) {
 			// Insert the fragment by replacing any existing fragment
+			FragmentManager fragmentManager = getSupportFragmentManager();
 			fragmentManager.beginTransaction()
 					.replace(R.id.content_frame, fragment).commit();
 
@@ -293,16 +306,19 @@ public class MainActivity extends FragmentActivity {
 
 	@Override
 	protected void onPause() {
-		// TODO Auto-generated method stub
-		Log.v(TAG, "Pausing");
 		super.onPause();
+		Log.v(TAG, "Pausing");
 	}
 
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
-		Log.v(TAG, "Resuming");
 		super.onResume();
+		Log.v(TAG, "Resuming");
+		if (session == null) {
+			session = SessionManager.getInstance();
+		}
+		selectItem(session.getPage());
+
 	}
 
 	@Override
@@ -329,7 +345,7 @@ public class MainActivity extends FragmentActivity {
 		// Handle other action bar items...
 		switch (item.getItemId()) {
 		case R.id.action_refresh:
-			switch (DrawerLabel.values()[pageSelection]) {
+			switch (DrawerLabel.values()[session.getPage()]) {
 			case MEETINGS:
 				Toast.makeText(this, "Refreshing Meetings", Toast.LENGTH_SHORT)
 						.show();
@@ -355,6 +371,8 @@ public class MainActivity extends FragmentActivity {
 			return true;
 		case R.id.action_logout:
 			logout();
+			return true;
+		case R.id.action_settings:
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

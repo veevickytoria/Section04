@@ -17,11 +17,14 @@ package com.android.meetingninja.user;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import objects.Meeting;
 import objects.User;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,7 +57,7 @@ public class ProfileFragment extends Fragment {
 	private User displayedUser;
 
 	private RetUserObj infoFetcher = null;
-	private View pageView;
+	private View pageView, informationView, emptyView;
 
 	// private GetProfBitmap bitmapFetcher = null;
 	@Override
@@ -65,14 +68,23 @@ public class ProfileFragment extends Fragment {
 		setupViews(pageView);
 		session = SessionManager.getInstance();
 
+		Bundle extras = getArguments();
+		displayedUser = new User();
+		if (extras != null && extras.containsKey("userID")) {
+			displayedUser.setUserID(extras.getString("userID"));
+		} else {
+			Log.v(TAG, "Displaying Current User");
+			displayedUser.setUserID(session.getUserID());
+		}
+
 		// Peter Pan URL
 		// mUserImage
 		// .setImageUrl("http://www.tdnforums.com/uploads/profile/photo-27119.jpg?_r=0");
 
-//		infoFetcher = new RetUserObj();
-//		infoFetcher.execute(session.getUserID());
-		
-		fetchUserInfo(session.getUserID());
+		// infoFetcher = new RetUserObj();
+		// infoFetcher.execute(session.getUserID());
+
+		fetchUserInfo(displayedUser.getUserID());
 
 		/*
 		 * meetingList = (ListView) pageView
@@ -102,10 +114,33 @@ public class ProfileFragment extends Fragment {
 		mPhone = (TextView) v.findViewById(R.id.profile_phone);
 		v.findViewById(R.id.profile_phone_row).setVisibility(View.GONE);
 
+		informationView = v.findViewById(R.id.profile_container);
+		emptyView = v.findViewById(android.R.id.empty);
+
 	}
 
 	private void fetchUserInfo(String userID) {
-		String _url = UserDatabaseAdapter.getBaseUri().appendPath(userID).build().toString();
+		displayedUser = new User();
+		// Local user is stored in SessionManager, so do not fetch
+		if (TextUtils.equals(userID, session.getUserID())) {
+			displayedUser.setUserID(session.getUserID());
+			Map<String, String> details = session.getUserDetails();
+			displayedUser.setDisplayName(details.get(SessionManager.USER));
+			displayedUser.setCompany(details.get(SessionManager.COMPANY));
+			displayedUser.setTitle(details.get(SessionManager.TITLE));
+			displayedUser.setLocation(details.get(SessionManager.LOCATION));
+			displayedUser.setEmail(details.get(SessionManager.EMAIL));
+			displayedUser.setPhone(details.get(SessionManager.PHONE));
+			setUser(displayedUser);
+			return;
+		}
+
+		String _url = UserDatabaseAdapter.getBaseUri().appendPath(userID)
+				.build().toString();
+
+		// Swap visibility while loading information
+		emptyView.setVisibility(View.VISIBLE);
+		informationView.setVisibility(View.GONE);
 
 		JsonNodeRequest req = new JsonNodeRequest(_url, null,
 				new Response.Listener<JsonNode>() {
@@ -174,6 +209,10 @@ public class ProfileFragment extends Fragment {
 					View.GONE);
 
 		}
+
+		// Swap visibility after loading information
+		emptyView.setVisibility(View.GONE);
+		informationView.setVisibility(View.VISIBLE);
 	}
 
 	final class RetUserObj implements AsyncResponse<User> {

@@ -1,7 +1,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/profile_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    tools:context=".user.ProfileFragment" >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,7 +39,6 @@
                     android:id="@+id/profile_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/profile_default_name"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:textStyle="bold" />
 
@@ -45,15 +46,12 @@
                     android:id="@+id/profile_title_company"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/profile_default_title_company"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <TextView
                     android:id="@+id/profile_location"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/profile_default_location" />
-
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
             <LinearLayout
@@ -94,7 +92,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:paddingLeft="8dp"
-                            android:text="@string/profile_default_email"
                             android:textSize="18sp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -103,7 +100,7 @@
                     android:id="@+id/profile_phone_row"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                     android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
                     android:orientation="vertical" >
 
                     <TextView
@@ -134,7 +131,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:paddingLeft="8dp"
-                            android:text="@android:string/emptyPhoneNumber"
                             android:textSize="18sp" />
                     </LinearLayout>
                 </LinearLayout>
@@ -158,7 +154,7 @@
 
                     <View
                         style="@style/Divider"
-                         android:layout_height="1dp"
+                        android:layout_height="1dp"
                         android:background="@android:color/holo_red_dark" />
 
                     <ListView
@@ -171,14 +167,24 @@
         </LinearLayout>
     </LinearLayout>
 
-    <TextView
-        android:id="@id/android:empty"
+    <RelativeLayout
+        android:id="@android:id/empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fontFamily="sans-serif-light"
         android:gravity="center"
-        android:text="@string/no_contact_selected"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:visibility="gone" />
+        android:visibility="gone" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical" >
+
+            <TextView
+                android:id="@+id/profile_empty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No contact selected" />
+        </LinearLayout>
+    </RelativeLayout>
 
 </FrameLayout>

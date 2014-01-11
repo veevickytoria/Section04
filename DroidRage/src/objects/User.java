@@ -3,6 +3,11 @@ package objects;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
+
+import objects.Meeting.AttendeeWrapper;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -14,7 +19,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "userID", "displayName", "email", "phone", "company",
 		"title", "location" })
-public class User extends SimpleUser {
+public class User extends SimpleUser implements Parcelable {
 	private String email;
 	private String phone;
 	private String company;
@@ -38,6 +43,10 @@ public class User extends SimpleUser {
 		setCompany(copyUser.getCompany());
 		setTitle(copyUser.getTitle());
 		setLocation(getLocation());
+	}
+
+	public User(Parcel in) {
+		readFromParcel(in);
 	}
 
 	/* Required Fields */
@@ -132,6 +141,46 @@ public class User extends SimpleUser {
 		simple.setDisplayName(this.displayName);
 		return simple;
 	}
+
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(getUserID());
+		dest.writeString(getDisplayName());
+		dest.writeString(getEmail());
+		dest.writeString(getPhone());
+		dest.writeString(getCompany());
+		dest.writeString(getTitle());
+		dest.writeString(getLocation());
+
+	}
+
+	private void readFromParcel(Parcel in) {
+		userID = in.readString();
+		displayName = in.readString();
+		email = in.readString();
+		phone = in.readString();
+		company = in.readString();
+		title = in.readString();
+		location = in.readString();
+	}
+
+	public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
+
+		public User createFromParcel(Parcel in) {
+			return new User(in);
+		}
+
+		public User[] newArray(int size) {
+			return new User[size];
+		}
+
+	};
 
 	public static String toJSON(User user) throws JsonGenerationException,
 			IOException {
