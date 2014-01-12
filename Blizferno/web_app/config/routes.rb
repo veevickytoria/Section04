@@ -58,6 +58,7 @@ WebApp::Application.routes.draw do
 
 
   post "login/index"
+  get "login/index"
 
   get "home_page/index"
   get "home_page/tabpage"
