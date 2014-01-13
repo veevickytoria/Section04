@@ -14,6 +14,8 @@ $client= new Client();
         //get the index
         $notiIndex = new Index\NodeIndex($client, 'Notifications');
         $notiIndex->save();
+		$userIndex = new Index\NodeIndex($client, 'Users');
+		$userIndex->save();
 
 if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
 	//create notification POST
@@ -22,7 +24,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
         
         //create the node
         $notiNode= $client->makeNode();
-        
+        $notiNode->save();
         //sets the property on the node
         $notiNode->setProperty('datetime', $postContent->datetime)->setProperty('type', $postContent->type)
 				->setProperty('nodeID', $notiNode->getID())
@@ -44,11 +46,56 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
         $array['notiID']=$notiNode->getId();
         echo json_encode($array);
         
-}else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') == 0){
-        //getNotificationInfo
-        $notiNode=$client->getNode($_GET['id']);
-        $array=$notiNode->getProperties();
-        echo json_encode($array);
+}else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') == 0){ 	
+
+	//getnode
+    $node=$client->getNode($_GET['id']);
+    
+	//check if node is for real
+	if ($node != null){
+	
+		//check if node has user index
+		$userNode = $userIndex->findOne('email', $node->getProperty('email'));
+		
+		//check if it is a user
+		if($userNode != NULL){
+		
+			//get the notifications related
+			$relationArray = $userNode->getRelationships(array('NOTIFIES'), Relationship::DirectionIn);
+			
+			
+			$fullarray=array();
+			
+			//find statistics
+			$i = 0;
+			$userID = $userNode->getId();
+			
+			//load up the notifications into an array
+			foreach($relationArray as $rel){
+			
+				$node = $rel->getStartNode();
+				$tempArray=$node->getProperties();
+				$array=array();
+				$array['datetime']=$tempArray['datetime'];
+				$array['type']=$rel->getType();
+				$array['nodeID']=strval($tempArray['nodeID']);
+				$array['description']=$tempArray['description'];
+				
+				$i = $i + 1;
+				
+				array_push($fullarray,$array);	
+		
+			}
+			//finish up array
+			$lastarray=array('totalAmount'=>strval($i), 'userID'=>strval($userID),'notifications'=>$fullarray);
+			
+			//echo array back
+			echo json_encode($lastarray);
+		}	
+	
+	} else {
+		echo json_encode(array('errorID'=>'8', 'errorMessage'=>'NotificationGet: Specified node does not exist.'));
+	}
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'PUT') == 0){
         //updateNotification
         
