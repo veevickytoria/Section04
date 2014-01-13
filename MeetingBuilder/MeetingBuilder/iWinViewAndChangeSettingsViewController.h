@@ -14,7 +14,7 @@
 -(void)onclickCancelSettings;
 @end
 
-@interface iWinViewAndChangeSettingsViewController : UIViewController
+@interface iWinViewAndChangeSettingsViewController : UIViewController <UIPickerViewDelegate,UIPickerViewDataSource>
 //@property (nonatomic) id<SettingsDelegate> settingsDelegate;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withID:(NSInteger) userID;

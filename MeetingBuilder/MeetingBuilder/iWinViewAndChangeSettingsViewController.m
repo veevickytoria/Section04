@@ -20,15 +20,19 @@
 
 @implementation iWinViewAndChangeSettingsViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withID:(NSInteger) userID;
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withID:(NSInteger) userID
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
         self.userID = userID;
-        [self viewDidLoad];
     }
     return self;
+}
+
+-(IBAction)changeSwitch:(id)sender
+{
+    
 }
 
 - (void)viewDidLoad
@@ -38,6 +42,7 @@
     self.cancelButton.hidden = YES;
     [self showFields:NO];
     [self clearFields];
+ //   self.whenToNotifyPicker.
  //   self.whenToNotifyPicker.numberOfComponents = 5;
  //   self.whenToNotifyPicker.
     
