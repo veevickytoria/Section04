@@ -1,5 +1,4 @@
 WebApp::Application.routes.draw do
-  get "projects/index"
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
@@ -75,7 +74,14 @@ WebApp::Application.routes.draw do
   get "tasks/index"
   get "tasks/new"
   get "tasks/view"
-  get "tasks/list"
+  get "tasks/edit"
+  get "tasks/delete"
+
+  get "projects/index"
+  get "projects/new"
+  get "projects/view"
+  get "projects/edit"
+  get "project/delete"
 
   get "preferences/home"
 
