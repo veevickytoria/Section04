@@ -287,7 +287,7 @@
         
         
         [self.editProfile setTitle:@"Edit Profile" forState:UIControlStateNormal];
-        [self.editProfile setTintColor:[UIColor blueColor]];
+        [self.editProfile setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
         [self saveChanges];
         self.cancel.hidden = YES;
         self.isEditing = NO;
@@ -309,7 +309,7 @@
         [self updateTextFieldUI:self.locationTextField];
   
         [self.editProfile setTitle:@"Save" forState:UIControlStateNormal];
-        [self.editProfile setTintColor:[UIColor greenColor]];
+        [self.editProfile setTitleColor:[UIColor greenColor] forState:UIControlStateNormal];
         self.cancel.hidden = NO;
         
     }

@@ -35,6 +35,21 @@
     
 }
 
+-(NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
+{
+    return 1;
+}
+
+-(NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
+{
+    return 0;//[regions count];
+}
+
+-(NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
+{
+    return @"";//[regions objectsAtIndex:row];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -42,6 +57,7 @@
     self.cancelButton.hidden = YES;
     [self showFields:NO];
     [self clearFields];
+    [self enableInteraction:NO];
  //   self.whenToNotifyPicker.
  //   self.whenToNotifyPicker.numberOfComponents = 5;
  //   self.whenToNotifyPicker.
@@ -59,6 +75,7 @@
     [self.saveAndEditButton setTintColor:[UIColor blueColor]];
     [self showFields:NO];
     [self clearFields];
+    [self enableInteraction:NO];
     self.isEditing = NO;
     [self.saveAndEditButton setTitle:@"Change Email/Password" forState:UIControlStateNormal];
     self.cancelButton.hidden = YES;
@@ -72,7 +89,7 @@
         [self showFields:NO];
         [self clearFields];
         [self.saveAndEditButton setTitle:@"Change Email/Password" forState:UIControlStateNormal];
-        [self.saveAndEditButton setTintColor:[UIColor blueColor]];
+        [self.saveAndEditButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
         [self saveChanges];
         [self enableInteraction:NO];
         self.cancelButton.hidden = YES;
@@ -81,7 +98,7 @@
         self.isEditing = YES;
         [self showFields:YES];
         [self.saveAndEditButton setTitle:@"Save" forState:UIControlStateNormal];
-        [self.saveAndEditButton setTintColor:[UIColor greenColor]];
+        [self.saveAndEditButton setTitleColor:[UIColor greenColor] forState:UIControlStateNormal];
         self.cancelButton.hidden = NO;
         [self enableInteraction:YES];
     }
@@ -97,13 +114,14 @@
 {
     if(show) {
         self.oldPasswordTextField.text = @"";
-        self.oldPasswordLabel.text = @"Old Passwprd";
+        self.oldPasswordLabel.text = @"Old Password";
         self.confirmPasswordTextField.hidden = NO;
         self.passwordTextField.hidden = NO;
+        //self.passwordLabel.text = @"Password";
         //self.oldPasswordTextField.hidden = NO;
         self.confirmPasswordLabel.hidden = NO;
         self.oldPasswordLabel.hidden = NO;
-        //self.passwordLabel.hidden = NO;
+        self.passwordLabel.hidden = NO;
     } else{
         self.oldPasswordTextField.text = @"********";
         self.oldPasswordLabel.text = @"Password";
