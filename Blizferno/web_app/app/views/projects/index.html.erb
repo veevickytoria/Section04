@@ -24,7 +24,7 @@ function hideDeleteModal(){
   // TODO: Put this back in when it works and change it to the delete
     // $.ajax({
     //         type: 'GET',
-    //         url: 'http://csse371-04.csse.rose-hulman.edu/Tasks/' + deletelID,
+    //         url: 'http://csse371-04.csse.rose-hulman.edu/Project/' + deletelID,
     //   success:function(data){
     //     if(data.taskID != null){
     //       TaskArray = JSON.parse(data);
@@ -103,7 +103,7 @@ function showViewModal(ID){
     ProjectArray = JSON.parse('{"projectID":"4","projectTitle":"Project Cuatro","description":"Develop iOS application","group":"iOS","meetings":[{"meetingID":"1","title":"Weekly Update"},{"meetingID":"2","title":"Meeting with Steven"}],"notes":[{"noteID":"1","title":"Problems"},{"noteID":"2","title":"Change Requests"}],"members":[{"userID":"11","displayName":"Alpha"},{"userID":"12","displayName":"Dharmin"}]}');
     }
 
-    document.getElementById("titleV").innerHTML = ProjectArray["projecttitle"];
+    document.getElementById("titleV").innerHTML = ProjectArray["projectTitle"];
     document.getElementById("descriptionV").innerHTML = ProjectArray["description"];
     document.getElementById("groupV").innerHTML = ProjectArray["group"];
 

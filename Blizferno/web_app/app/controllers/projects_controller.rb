@@ -6,7 +6,7 @@ class ProjectsController < ApplicationController
 		end
 		require 'net/http'
 		@UserID = '717'
-		url = URI.parse('http://csse371-04.csse.rose-hulman.edu/User/Tasks/' + @UserID)
+		url = URI.parse('http://csse371-04.csse.rose-hulman.edu/User/Projects/' + @UserID)
 		req = Net::HTTP::Get.new(url.path)
 		res = Net::HTTP.start(url.host, url.port) {|http|
 			http.request(req)
