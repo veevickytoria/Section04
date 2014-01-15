@@ -90,6 +90,19 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
         }
         $lastarray=array('schedule'=>$fullarray);
         echo json_encode($lastarray);
+}else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'Notes')==0){
+	$userNode=$client->getNode($_GET['id']);
+	$relationArray = $userNode->getRelationships(array());
+	$fullarray=array();
+	foreach($relationArray as $rel){
+		$node = $rel->getStartNode();
+		$tempArray=$node->getProperties();
+		$array=array();
+		$array['noteID']=$node->getId();
+		$array['noteTitle']=$tempArray['noteTitle'];
+	}
+	$lastarray=array('notes'=>$fullarray);
+	echo json_encode($lastarray);
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'tasks')==0){
 	//GET getUserTasks
 	$userNode=$client->getNode($_GET['id']);
