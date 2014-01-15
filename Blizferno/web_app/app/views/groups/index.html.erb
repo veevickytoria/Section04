@@ -153,6 +153,21 @@ $('#viewGroupModal').modal('show');
 $('#editGroupModal').modal('hide');
 }
 
+function validateGroup(){
+  var title = document.forms["input"]["title"].value;
+  var type = document.forms["input"]["type"].value;
+  var desc = document.forms["input"]["desc"].value;
+  var groupMembers = getMembers('grpMemSlct');
+  alert("The following fields were added to the db: Title: " + title + ", Type: " + type + ", Description: " + desc + ", GroupMembers: " + groupMembers);
+}
+
+function getMembers(id){
+  var newMembers = [];
+  $( '#' + id + ' :selected' ).each( function( i, selected ) {
+      newMembers[i] = $( selected ).text();
+  });
+  return newMembers;
+}
 
 </script>
 
@@ -169,7 +184,7 @@ $('#editGroupModal').modal('hide');
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary" onclick="showmembs()" form="createGroup">Submit</button>
+        <button type="submit" class="btn btn-primary" form="createGroup">Submit</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -232,8 +247,6 @@ $('#editGroupModal').modal('hide');
 </div><!-- /.modal -->
 
 <h1 style='margin-left: 15%; margin-right: auto;'>Groups</h1>
-
-
 
 <table class='table table-hover table-striped' style='width: 70%; margin-left: 15%; margin-right: auto;'>
   <thead>
