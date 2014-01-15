@@ -18,7 +18,7 @@
                 <outlet property="saveAndEditButton" destination="OEa-bf-eQw" id="YhO-4f-ZHc"/>
                 <outlet property="shouldNotifySwitch" destination="c9z-E5-8vJ" id="3po-Mb-8YV"/>
                 <outlet property="view" destination="2" id="3"/>
-                <outlet property="whenToNotifyPicker" destination="PXh-KR-Q8U" id="25J-0o-xLd"/>
+                <outlet property="whenToNotifyPicker" destination="tDI-jV-yjJ" id="BQb-52-zXa"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -136,10 +136,6 @@
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PXh-KR-Q8U">
-                    <rect key="frame" x="0.0" y="400" width="768" height="216"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                </pickerView>
                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FD0-tr-2ZA">
                     <rect key="frame" x="0.0" y="887" width="768" height="30"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -151,6 +147,15 @@
                         <action selector="onDelete:" destination="-1" eventType="touchUpInside" id="tIZ-GZ-1EW"/>
                     </connections>
                 </button>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="tDI-jV-yjJ">
+                    <rect key="frame" x="241" y="445" width="320" height="343"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="uyz-8x-H7U"/>
+                        <outlet property="delegate" destination="-1" id="oyy-Ky-4oG"/>
+                    </connections>
+                </tableView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>

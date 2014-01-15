@@ -15,5 +15,7 @@
 @property (nonatomic, retain) NSString * email;
 @property (nonatomic, retain) NSString * password;
 @property (nonatomic, retain) NSNumber * userID;
+@property (nonatomic, retain) NSNumber * shouldNotify;
+@property (nonatomic, retain) NSNumber * whenToNotify;
 
 @end

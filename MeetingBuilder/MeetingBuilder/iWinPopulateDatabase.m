@@ -75,6 +75,8 @@
         
         [newSettings setValue:@"shahdk@rose-hulman.edu" forKey:@"email"];
         [newSettings setValue:@"123456" forKey:@"password"];
+        [newSettings setValue:[NSNumber numberWithInt:1] forKey:@"whenToNotify"];
+        [newSettings setValue:[NSNumber numberWithInt:1] forKey:@"shouldNotify"];
         [newSettings setValue:[NSNumber numberWithInt:1] forKey:@"userID"];
 
         [context save:&error];

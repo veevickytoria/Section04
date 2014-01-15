@@ -34,26 +34,6 @@
     return self;
 }
 
--(IBAction)changeSwitch:(id)sender
-{
-    
-}
-
--(NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
-{
-    return 1;
-}
-
--(NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
-{
-    return [self.options count];
-}
-
--(NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
-{
-    return [self.options objectAtIndex:row];
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -62,9 +42,12 @@
     [self showFields:NO];
     [self enableInteraction:NO];
     self.options = [[NSArray alloc] initWithObjects:@"At time of event",@"5 minutes before",@"15 minutes before", @"30 minutes before", @"1 hour before", @"2 hours before", @"1 day before",@"2 days before", nil];
- //   self.whenToNotifyPicker.
- //   self.whenToNotifyPicker.numberOfComponents = 5;
- //   self.whenToNotifyPicker.
+    //   set table
+    //   set should notify
+    
+    //
+    //
+    //
     iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     
     NSManagedObjectContext *context = [appDelegate managedObjectContext];
@@ -94,14 +77,52 @@
     
     NSError *error1;
     NSArray *result1 = [context executeFetchRequest:request1
-                                             error:&error1];
+                                              error:&error1];
     self.settings = (Settings*)[result1 objectAtIndex:0];
     //
     //
     //
     
     self.emailTextField.text = self.contact.email;
+    [self.shouldNotifySwitch setOn:[self.settings.shouldNotify boolValue]];
+}
+
+-(IBAction)changeSwitch:(id)sender
+{
     
+}
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return [self.options count];
+}
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"PickerCell"];
+    cell.textLabel.text = [self.options objectAtIndex:indexPath.row];
+    if ([[NSNumber numberWithInt:indexPath.row] isEqual:self.settings.whenToNotify])
+    {
+        [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
+    }
+    return cell;
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    for (int i=0; i<[self.options count]; i++)
+    {
+        UITableViewCell *cell = [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+        if (i == indexPath.row)
+        {
+            [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
+        }
+        else
+        {
+            [cell setAccessoryType:UITableViewCellAccessoryNone];
+        }
+    }
 }
 
 - (void)didReceiveMemoryWarning

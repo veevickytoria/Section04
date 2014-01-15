@@ -19,7 +19,9 @@
     <entity name="Settings" representedClassName="Settings" syncable="YES">
         <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="password" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="shouldNotify" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="userID" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="whenToNotify" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
     </entity>
     <elements>
         <element name="Contact" positionX="0" positionY="0" width="0" height="0"/>

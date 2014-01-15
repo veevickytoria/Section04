@@ -14,7 +14,7 @@
 -(void)onclickCancelSettings;
 @end
 
-@interface iWinViewAndChangeSettingsViewController : UIViewController <UIPickerViewDelegate,UIPickerViewDataSource, UIAlertViewDelegate>
+@interface iWinViewAndChangeSettingsViewController : UIViewController <UITableViewDelegate,UITableViewDataSource, UIAlertViewDelegate>
 //@property (nonatomic) id<SettingsDelegate> settingsDelegate;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withID:(NSInteger) userID;
@@ -29,7 +29,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *oldPasswordTextField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordTextField;
 @property (weak, nonatomic) IBOutlet UITextField *confirmPasswordTextField;
-@property (weak, nonatomic) IBOutlet UIPickerView *whenToNotifyPicker;
+@property (weak, nonatomic) IBOutlet UITableView *whenToNotifyPicker;
 @property (weak, nonatomic) IBOutlet UISwitch *shouldNotifySwitch;
 @property (weak, nonatomic) IBOutlet UIButton *cancelButton;
 @property (weak, nonatomic) IBOutlet UIButton *saveAndEditButton;
