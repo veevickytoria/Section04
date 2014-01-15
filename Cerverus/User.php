@@ -139,6 +139,28 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 	}
 	$lastarray=array('meetings'=>$fullarray);
 	echo json_encode($lastarray);
+}else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') == 0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'comments') == 0){
+	//get the ID
+	$id=$_GET['id'];
+	$object = $client->getNode($id);
+	$allCommentRels = $object->getRelationships(array('COMMENTED'), Relationship::DirectionOut);
+	
+	$return = array();
+	
+	foreach($allCommentRels as $rel){
+		//get the comment and it's properties
+		$comment = $rel->getEndNode();
+		//get the user who posted it
+		$postedByRel = $comment->getRelationships(array('COMMENTED_ON'), Relationship::DirectionOut);
+		$postedTo = $postedByRel[0]->getStartNode();
+		$commentInfo = array("commentID" => $comment->getId(),
+							"commentBy" => $id,
+							"postedTo" => $postedTo->getId());
+		//get the json
+		$return[] = array_merge($commentInfo, $comment->getProperties());
+		
+	}
+	echo json_encode(array("comments" => $return));	
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
 	// register method
     
