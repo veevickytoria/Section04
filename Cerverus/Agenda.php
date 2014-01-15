@@ -25,11 +25,17 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
 	
 	//sets the property on the node
 	$agendaNode->setProperty('title', $postContent->title)
-		->setProperty('content', $postContent->content); //this should probobaly be a set of relationships
-	
+		->setProperty('meeting', $postContent->meeting)
+		->setProperty('content', $postContent->content);
+		
 	//actually add the node in the db
 	$agendaNode->save();
 	
+	//relate agenda to meeting
+	$meeting = $client->getNode($postContent->meeting);
+    $meetingRel = $meeting->relateTo($agenda, 'FOLLOWS')
+                ->save();
+                
 	//get properties on the node
 	$agendaProps= $agendaNode->getProperties();
 	
@@ -53,8 +59,16 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
 			$agenda->save();
 			$array = $agenda->getProperties();
 			echo json_encode($array);
+		}else if(strcasecmp($postContent->field, 'meeting') ==0){
+			$agenda->setProperty('meeting', $postContent->value);
+			$meeting = $client->getNode($postContent->value);
+			$relations = $agenda->getRelationships(array('FOLLOWS'));
+			$relations[0]->setEndNode($meeting)
+				->save();
+			$agenda->save();
+			$array = $agenda->getProperties();
+			echo json_encode($array);
 		}else if(strcasecmp($postContent->field, 'content') ==0){
-			//this will be vastly more complex
 			$agenda->setProperty('content', $postContent->value);
 			$agenda->save();
 			$array = $agenda->getProperties();
