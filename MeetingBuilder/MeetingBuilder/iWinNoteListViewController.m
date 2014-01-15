@@ -56,7 +56,14 @@
 
 -(IBAction) onCreateNewNote
 {
-    [self.noteListDelegate addViewNoteClicked:NO];
+    //[self.noteListDelegate addViewNoteClicked:NO];
+//    self.scheduleMeetingVC = [[iWinScheduleViewMeetingViewController alloc] initWithNibName:@"iWinScheduleViewMeetingViewController" bundle:nil inEditMode:NO withID:nil withDateTime:nil withTitle:nil withLocation:nil];
+//    self.scheduleMeetingVC.viewMeetingDelegate = self;
+//    [self.scheduleMeetingVC setModalPresentationStyle:UIModalPresentationPageSheet];
+//    [self.scheduleMeetingVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+//    
+//    [self presentViewController:self.scheduleMeetingVC animated:YES completion:nil];
+//    self.scheduleMeetingVC.view.superview.bounds = CGRectMake(0,0,768,1003);
 }
 
 

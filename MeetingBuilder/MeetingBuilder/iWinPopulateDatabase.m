@@ -53,4 +53,34 @@
     }
 }
 
+
+-(void)populateSettings
+{
+    iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    
+    NSManagedObjectContext *context = [appDelegate managedObjectContext];
+    NSManagedObject *newSettings = [NSEntityDescription insertNewObjectForEntityForName:@"Settings" inManagedObjectContext:context];
+    NSError *error;
+    
+    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Settings" inManagedObjectContext:context];
+    
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDesc];
+    
+    NSArray *result = [context executeFetchRequest:request
+                                             error:&error];
+    
+    if (result.count <= 1)
+    {
+        
+        [newSettings setValue:@"shahdk@rose-hulman.edu" forKey:@"email"];
+        [newSettings setValue:@"123456" forKey:@"password"];
+        [newSettings setValue:[NSNumber numberWithInt:1] forKey:@"whenToNotify"];
+        [newSettings setValue:[NSNumber numberWithInt:1] forKey:@"shouldNotify"];
+        [newSettings setValue:[NSNumber numberWithInt:1] forKey:@"userID"];
+
+        [context save:&error];
+    }
+}
+
 @end

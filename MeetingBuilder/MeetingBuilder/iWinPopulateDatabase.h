@@ -10,4 +10,5 @@
 
 @interface iWinPopulateDatabase : NSObject
 -(void)populateContacts;
+-(void)populateSettings;
 @end
