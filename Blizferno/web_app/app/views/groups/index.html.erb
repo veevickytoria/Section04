@@ -130,7 +130,7 @@ function showViewGroupModal(ID)
 
 if (ID == 1)
 {
-  GroupArray = JSON.parse('{"groups":[{"groupID":"1","groupTitle":"NWA","groupType":"hardcore gangsta"}');
+  GroupArray = JSON.parse('{"groupID":"1","groupTitle":"NWA","groupType":"hardcore gangsta"}');
 }
 else if (ID == 2)
 {
@@ -146,13 +146,14 @@ else if (ID == 4)
 }
 
 
-document.getElementById("IDV").innerHTML = GroupArray["groupID"];
+//document.getElementById("IDV").innerHTML = GroupArray["groupID"];
 document.getElementById("titleV").innerHTML = GroupArray["groupTitle"];
 document.getElementById("typeV").innerHTML = GroupArray["groupType"];
 
 $('#viewGroupModal').modal('show');
 $('#editGroupModal').modal('hide');
 }
+
 </script>
 
 <!-- Create Modal -->
