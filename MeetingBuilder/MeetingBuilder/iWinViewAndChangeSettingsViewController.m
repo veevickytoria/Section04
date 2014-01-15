@@ -9,13 +9,16 @@
 #import "iWinViewAndChangeSettingsViewController.h"
 #import "iWinAppDelegate.h"
 #import "Contact.h"
+#import "Settings.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface iWinViewAndChangeSettingsViewController ()
 @property (nonatomic) BOOL isEditing;
 @property (nonatomic) Contact *contact;
+@property (nonatomic) Settings *settings;
 @property (nonatomic) NSInteger userID;
 @property (nonatomic) NSArray *options;
+@property (nonatomic) UIAlertView *deleteAlertView;
 @end
 
 
@@ -54,7 +57,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.emailTextField.text = @"steve.jobs'@apple.com";
+    
     self.cancelButton.hidden = YES;
     [self showFields:NO];
     [self enableInteraction:NO];
@@ -62,6 +65,42 @@
  //   self.whenToNotifyPicker.
  //   self.whenToNotifyPicker.numberOfComponents = 5;
  //   self.whenToNotifyPicker.
+    iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    
+    NSManagedObjectContext *context = [appDelegate managedObjectContext];
+    
+    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Contact" inManagedObjectContext:context];
+    
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDesc];
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userID = 1"];
+    [request setPredicate:predicate];
+    
+    NSError *error;
+    NSArray *result = [context executeFetchRequest:request
+                                             error:&error];
+    self.contact = (Contact*)[result objectAtIndex:0];
+    
+    
+    
+    NSEntityDescription *entityDesc1 = [NSEntityDescription entityForName:@"Settings" inManagedObjectContext:context];
+    
+    NSFetchRequest *request1 = [[NSFetchRequest alloc] init];
+    [request1 setEntity:entityDesc1];
+    
+    NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"userID = 1"];
+    [request1 setPredicate:predicate1];
+    
+    NSError *error1;
+    NSArray *result1 = [context executeFetchRequest:request1
+                                             error:&error1];
+    self.settings = (Settings*)[result1 objectAtIndex:0];
+    //
+    //
+    //
+    
+    self.emailTextField.text = self.contact.email;
     
 }
 
@@ -78,22 +117,49 @@
     [self clearFields];
     [self enableInteraction:NO];
     self.isEditing = NO;
+    self.oldPasswordTextField.text = @"********";
     [self.saveAndEditButton setTitle:@"Change Email/Password" forState:UIControlStateNormal];
     self.cancelButton.hidden = YES;
     //Pull Email from DB
 }
 
+-(IBAction)onDelete:(id)sender
+{
+    self.deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this contact?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
+    [self.deleteAlertView show];
+}
+
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1)
+    {
+            //Perform deletion
+    }
+   
+}
+
 -(IBAction)onEdit:(id)sender
 {
     if (self.isEditing) {
-        [self saveChanges];
-        [self showFields:NO];
-        [self.saveAndEditButton setTitle:@"Change Email/Password" forState:UIControlStateNormal];
-        [self.saveAndEditButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-        [self saveChanges];
-        [self enableInteraction:NO];
-        self.cancelButton.hidden = YES;
-        self.isEditing = NO;
+        ///Saving the info
+        
+        
+        if ([self.oldPasswordTextField.text isEqual:self.settings.password] && [self.passwordTextField.text isEqual:self.confirmPasswordTextField.text]) {
+          
+            [self showFields:NO];
+            [self.saveAndEditButton setTitle:@"Change Email/Password" forState:UIControlStateNormal];
+            [self.saveAndEditButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+            [self saveChanges];
+            [self enableInteraction:NO];
+            self.cancelButton.hidden = YES;
+            self.isEditing = NO;
+        } else {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Old password or confirmation password did not match." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+            [alert show];
+            [self clearFields];
+        }
+        
     } else{
         self.isEditing = YES;
         [self showFields:YES];
@@ -109,6 +175,10 @@
 {
     //Push new password and email to DB only if old password matches.
     //You must enter old password for any change to take affect.
+    self.contact.email = self.emailTextField.text;
+    self.settings.password = self.confirmPasswordTextField.text;
+    self.settings.password = self.confirmPasswordTextField.text;
+    
 }
 
 -(void) showFields: (BOOL) show
@@ -123,6 +193,7 @@
         self.confirmPasswordLabel.hidden = NO;
         self.oldPasswordLabel.hidden = NO;
         self.passwordLabel.hidden = NO;
+        
     } else{
         self.oldPasswordTextField.text = @"********";
         self.oldPasswordLabel.text = @"Password:";
