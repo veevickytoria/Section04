@@ -41,7 +41,7 @@
     [self.addNoteDelegate saveNoteClicked];
 }
 - (IBAction)cancelButton:(id)sender {
-    [self.addNoteDelegate cancelNoteClicked];
+      [self dismissViewControllerAnimated:YES completion:Nil];
 }
 
 - (IBAction)mergeNotesButton:(id)sender {
@@ -57,7 +57,7 @@
 
 -(void)saveMergeClicked{
     [self dismissViewControllerAnimated:YES completion:Nil];
-    
+
 }
 -(void)cancelMergeClicked
 {

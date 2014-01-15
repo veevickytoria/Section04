@@ -7,6 +7,7 @@
 //
 
 #import "iWinNoteListViewController.h"
+#import "iWinViewAndAddNotesViewController.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface iWinNoteListViewController ()
@@ -14,6 +15,8 @@
 @property (strong, nonatomic) NSMutableArray *noteList;
 @property (strong, nonatomic) NSMutableArray *noteDetail;
 @property (strong, nonatomic) NSString* email;
+
+@property (strong, nonatomic) iWinViewAndAddNotesViewController *createNoteVC;
 @end
 
 
@@ -56,14 +59,11 @@
 
 -(IBAction) onCreateNewNote
 {
-    //[self.noteListDelegate addViewNoteClicked:NO];
-//    self.scheduleMeetingVC = [[iWinScheduleViewMeetingViewController alloc] initWithNibName:@"iWinScheduleViewMeetingViewController" bundle:nil inEditMode:NO withID:nil withDateTime:nil withTitle:nil withLocation:nil];
-//    self.scheduleMeetingVC.viewMeetingDelegate = self;
-//    [self.scheduleMeetingVC setModalPresentationStyle:UIModalPresentationPageSheet];
-//    [self.scheduleMeetingVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-//    
-//    [self presentViewController:self.scheduleMeetingVC animated:YES completion:nil];
-//    self.scheduleMeetingVC.view.superview.bounds = CGRectMake(0,0,768,1003);
+    self.createNoteVC = [[iWinViewAndAddNotesViewController alloc] initWithNibName:@"iWinViewAndAddNotesViewController" bundle:nil inEditMode:NO];
+    [self.createNoteVC setModalPresentationStyle:UIModalPresentationPageSheet];
+    [self.createNoteVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+    [self presentViewController:self.createNoteVC animated:YES completion:nil];
+    self.createNoteVC.view.superview.bounds = CGRectMake(0,0,768,1003);
 }
 
 

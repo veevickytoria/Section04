@@ -23,5 +23,6 @@
 - (IBAction)saveButton:(id)sender;
 - (IBAction)cancelButton:(id)sender;
 - (IBAction)mergeNotesButton:(id)sender;
-
+@property (weak, nonatomic) IBOutlet UITextField *titleField;
+@property (weak, nonatomic) IBOutlet UITextView *noteField;
 @end
