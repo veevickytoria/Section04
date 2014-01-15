@@ -358,10 +358,10 @@
 {
     [self removeSubViews];
     [self enableSliding];
-    self.settingsViewController = [[iWinViewAndChangeSettingsViewController alloc] initWithNibName:@"iWinViewAndChangeSettingsViewController" bundle:nil];
+    self.settingsViewController = [[iWinViewAndChangeSettingsViewController alloc] initWithNibName:@"iWinViewAndChangeSettingsViewController" bundle:nil withID:self.userID];
     [self.mainView  addSubview:self.settingsViewController.view];
     [self.settingsViewController.view setBounds:self.mainView.bounds];
-    self.settingsViewController.settingsDelegate = self;
+    //self.settingsViewController.settingsDelegate = self;
     [self animateSlidingMenu:NO];
     
     [self updateSelectedMenu:self.settingsButton];
@@ -374,7 +374,7 @@
     self.profileViewController = [[iWinViewProfileViewController alloc] initWithNibName:@"iWinViewProfileViewController" bundle:nil withID: self.userID];
     [self.mainView  addSubview:self.profileViewController.view];
     [self.profileViewController.view setBounds:self.mainView.bounds];
-    //self.profileViewController.profileDelegate = self;
+   //self.profileViewController.profileDelegate = self;
     [self animateSlidingMenu:NO];
     
     [self updateSelectedMenu:self.profileButton];
