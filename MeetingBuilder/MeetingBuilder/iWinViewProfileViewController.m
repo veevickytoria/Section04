@@ -60,6 +60,13 @@
     self.cancel.hidden = YES;
     [self updateTextUI];
     
+    [self.displayNameTextField setBorderStyle:UITextBorderStyleNone];
+    [self.companyTextField setBorderStyle:UITextBorderStyleNone];
+    [self.titleTextField setBorderStyle:UITextBorderStyleNone];
+    [self.emailTextField setBorderStyle:UITextBorderStyleNone];
+    [self.phoneTextField setBorderStyle:UITextBorderStyleNone];
+    [self.locationTextField setBorderStyle:UITextBorderStyleNone];
+    
 }
 -(void)updateTextUI
 {
@@ -242,6 +249,14 @@
     self.emailTextField.userInteractionEnabled = NO;
     self.phoneTextField.userInteractionEnabled = NO;
     self.locationTextField.userInteractionEnabled = NO;
+    
+    [self.displayNameTextField setBorderStyle:UITextBorderStyleNone];
+    [self.companyTextField setBorderStyle:UITextBorderStyleNone];
+    [self.titleTextField setBorderStyle:UITextBorderStyleNone];
+    [self.emailTextField setBorderStyle:UITextBorderStyleNone];
+    [self.phoneTextField setBorderStyle:UITextBorderStyleNone];
+    [self.locationTextField setBorderStyle:UITextBorderStyleNone];
+
 
     [self updateTextUI];
     
@@ -278,6 +293,13 @@
         self.phoneTextField.userInteractionEnabled = NO;
         self.locationTextField.userInteractionEnabled = NO;
         
+        [self.displayNameTextField setBorderStyle:UITextBorderStyleNone];
+        [self.companyTextField setBorderStyle:UITextBorderStyleNone];
+        [self.titleTextField setBorderStyle:UITextBorderStyleNone];
+        [self.emailTextField setBorderStyle:UITextBorderStyleNone];
+        [self.phoneTextField setBorderStyle:UITextBorderStyleNone];
+        [self.locationTextField setBorderStyle:UITextBorderStyleNone];
+        
         [self unUpdateTextFieldUI:self.displayNameTextField];
         [self unUpdateTextFieldUI:self.companyTextField];
         [self unUpdateTextFieldUI:self.titleTextField];
@@ -300,6 +322,13 @@
         self.emailTextField.userInteractionEnabled = YES;
         self.phoneTextField.userInteractionEnabled = YES;
         self.locationTextField.userInteractionEnabled = YES;
+        
+        [self.displayNameTextField setBorderStyle:UITextBorderStyleRoundedRect];
+        [self.companyTextField setBorderStyle:UITextBorderStyleRoundedRect];
+        [self.titleTextField setBorderStyle:UITextBorderStyleRoundedRect];
+        [self.emailTextField setBorderStyle:UITextBorderStyleRoundedRect];
+        [self.phoneTextField setBorderStyle:UITextBorderStyleRoundedRect];
+        [self.locationTextField setBorderStyle:UITextBorderStyleRoundedRect];
         
         [self updateTextFieldUI:self.displayNameTextField];
         [self updateTextFieldUI:self.companyTextField];

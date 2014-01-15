@@ -15,6 +15,7 @@
 @property (nonatomic) BOOL isEditing;
 @property (nonatomic) Contact *contact;
 @property (nonatomic) NSInteger userID;
+@property (nonatomic) NSArray *options;
 @end
 
 
@@ -42,12 +43,12 @@
 
 -(NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
 {
-    return 0;//[regions count];
+    return [self.options count];
 }
 
 -(NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
 {
-    return @"";//[regions objectsAtIndex:row];
+    return [self.options objectAtIndex:row];
 }
 
 - (void)viewDidLoad
@@ -56,8 +57,8 @@
     self.emailTextField.text = @"steve.jobs'@apple.com";
     self.cancelButton.hidden = YES;
     [self showFields:NO];
-    [self clearFields];
     [self enableInteraction:NO];
+    self.options = [[NSArray alloc] initWithObjects:@"At time of event",@"5 minutes before",@"15 minutes before", @"30 minutes before", @"1 hour before", @"2 hours before", @"1 day before",@"2 days before", nil];
  //   self.whenToNotifyPicker.
  //   self.whenToNotifyPicker.numberOfComponents = 5;
  //   self.whenToNotifyPicker.
@@ -87,7 +88,6 @@
     if (self.isEditing) {
         [self saveChanges];
         [self showFields:NO];
-        [self clearFields];
         [self.saveAndEditButton setTitle:@"Change Email/Password" forState:UIControlStateNormal];
         [self.saveAndEditButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
         [self saveChanges];
@@ -97,6 +97,7 @@
     } else{
         self.isEditing = YES;
         [self showFields:YES];
+        [self clearFields];
         [self.saveAndEditButton setTitle:@"Save" forState:UIControlStateNormal];
         [self.saveAndEditButton setTitleColor:[UIColor greenColor] forState:UIControlStateNormal];
         self.cancelButton.hidden = NO;
@@ -114,7 +115,7 @@
 {
     if(show) {
         self.oldPasswordTextField.text = @"";
-        self.oldPasswordLabel.text = @"Old Password";
+        self.oldPasswordLabel.text = @"Old Password:";
         self.confirmPasswordTextField.hidden = NO;
         self.passwordTextField.hidden = NO;
         //self.passwordLabel.text = @"Password";
@@ -124,7 +125,7 @@
         self.passwordLabel.hidden = NO;
     } else{
         self.oldPasswordTextField.text = @"********";
-        self.oldPasswordLabel.text = @"Password";
+        self.oldPasswordLabel.text = @"Password:";
         self.confirmPasswordTextField.hidden = YES;
         self.passwordTextField.hidden = YES;
        // self.oldPasswordTextField.hidden = YES;
@@ -142,11 +143,17 @@
         self.confirmPasswordTextField.userInteractionEnabled = YES;
         self.passwordTextField.userInteractionEnabled = YES;
         self.oldPasswordTextField.userInteractionEnabled = YES;
+        [self.emailTextField setBorderStyle:UITextBorderStyleRoundedRect];
+        [self.oldPasswordTextField setBorderStyle:UITextBorderStyleRoundedRect];
     }else{
         self.emailTextField.userInteractionEnabled = NO;
         self.confirmPasswordTextField.userInteractionEnabled = NO;
         self.passwordTextField.userInteractionEnabled = NO;
         self.oldPasswordTextField.userInteractionEnabled = NO;
+        [self.emailTextField setBorderStyle:UITextBorderStyleNone];
+        [self.oldPasswordTextField setBorderStyle:UITextBorderStyleNone];
+
+
     }
 }
 
