@@ -57,6 +57,7 @@
 
 -(void)saveMergeClicked{
     [self dismissViewControllerAnimated:YES completion:Nil];
+    
 }
 -(void)cancelMergeClicked
 {
