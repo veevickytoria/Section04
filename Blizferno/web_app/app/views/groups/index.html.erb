@@ -1,45 +1,45 @@
 
 
-		<!-- The tasks in the GET POST requests need to be changed to groups. Implement a check on edit so it doesn't fuck up the backend db (db? more like dp.)-->
+<!-- The tasks in the GET POST requests need to be changed to groups. Implement a check on edit so it doesn't fuck up the backend db (db? more like dp.)-->
 
 
 <style type="text/css">
-	header > h1 { display: inline-block; }
-	.modal-backdrop { z-index: 999;}
-	#newGroup { cursor: pointer; text-align: center; }
-	.modal-body{
-		width:100%;
-	}
+header > h1 { display: inline-block; }
+.modal-backdrop { z-index: 999;}
+#newGroup { cursor: pointer; text-align: center; }
+.modal-body{
+  width:100%;
+}
 </style>
 <script type='text/javascript' src='//code.jquery.com/jquery-1.10.2.min.js'></script>
 <script type = 'text/javascript'>
 
 
-  var GroupArray;
-  var deleteID;
+var GroupArray;
+var deleteID;
 
 
-  function hideGroupModal()
-  {
-    $('#viewGroupModal').modal('hide');
-  }
+function hideGroupModal()
+{
+  $('#viewGroupModal').modal('hide');
+}
 
-  function showEditModal()
-  {
-    $('#editGroupModal').modal('hide');
-    $('#editGroupModal').on('hidden.bs.modal', function() {
-      $(this).removeData('bs.modal');
-    });
-   // TODO: Put this back in when it works
-   // $.ajax({
-   //         type: 'GET',
-   //         url: 'http://csse371-04.csse.rose-hulman.edu/Groups/' + ID,
-   //   success:function(data){
-   //     if(data.groupID != null){
-   //       GroupArray = JSON.parse(data);
-   //     }
-   //   }
-   // });
+function showEditModal()
+{
+  $('#editGroupModal').modal('hide');
+  $('#editGroupModal').on('hidden.bs.modal', function() {
+    $(this).removeData('bs.modal');
+  });
+// TODO: Put this back in when it works
+// $.ajax({
+//         type: 'GET',
+//         url: 'http://csse371-04.csse.rose-hulman.edu/Groups/' + ID,
+//   success:function(data){
+//     if(data.groupID != null){
+//       GroupArray = JSON.parse(data);
+//     }
+//   }
+// });
 
 document.getElementById("IDE").value = GroupArray["groupID"];
 document.getElementById("titleE").value = GroupArray["groupTitle"];
@@ -51,26 +51,26 @@ $('#viewGroupModal').modal('hide');
 }
 
 function showDeleteModal(ID){
-    deleteID = ID;
-    $('#deleteGroupModal').modal('show');
-  }
+  deleteID = ID;
+  $('#deleteGroupModal').modal('show');
+}
 
 function hideDeleteModal(){
-    // TODO: Put this back in when it works and change it to the delete
-    // $.ajax({
-    //         type: 'GET',
-    //         url: 'http://csse371-04.csse.rose-hulman.edu/Tasks/' + deletelID,
-    //   success:function(data){
-    //     if(data.taskID != null){
-    //       GroupArray = JSON.parse(data);
-    //     }
-    //   }
-    // });
-    alert("The task matching id " + deleteID + " was deleted");
-    
-    $('#deleteGroupModal').modal('hide');
-    // TODO: Put back in
-    //location.reload(true);
+// TODO: Put this back in when it works and change it to the delete
+// $.ajax({
+//         type: 'GET',
+//         url: 'http://csse371-04.csse.rose-hulman.edu/Tasks/' + deletelID,
+//   success:function(data){
+//     if(data.taskID != null){
+//       GroupArray = JSON.parse(data);
+//     }
+//   }
+// });
+alert("The task matching id " + deleteID + " was deleted");
+
+$('#deleteGroupModal').modal('hide');
+// TODO: Put back in
+//location.reload(true);
 }
 
 
@@ -83,29 +83,29 @@ function showGroupModalNoID()
     $(this).removeData('bs.modal');
   });
 
-   // Edit info
-   GroupArray["groupID"] = document.getElementById("IDE").value;
-   GroupArray["groupTitle"] = document.getElementById("titleE").value;
-   GroupArray["groupType"] = document.getElementById("typeE").value;
+// Edit info
+GroupArray["groupID"] = document.getElementById("IDE").value;
+GroupArray["groupTitle"] = document.getElementById("titleE").value;
+GroupArray["groupType"] = document.getElementById("typeE").value;
 
-   // TODO: Put this back in when it works and change it to update info then add a pull
-   // $.ajax({
-   //         type: '',
-   //         url: 'http://csse371-04.csse.rose-hulman.edu/Tasks/' + ID,
-   //   success:function(data){
-   //     if(data.taskID != null){
-   //       GroupArray = JSON.parse(data);
-   //     }
-   //   }
-   // });
+// TODO: Put this back in when it works and change it to update info then add a pull
+// $.ajax({
+//         type: '',
+//         url: 'http://csse371-04.csse.rose-hulman.edu/Tasks/' + ID,
+//   success:function(data){
+//     if(data.taskID != null){
+//       GroupArray = JSON.parse(data);
+//     }
+//   }
+// });
 
-   // Update view info
-   	document.getElementById("IDV").innerHTML = GroupArray["groupID"];
-	document.getElementById("titleV").innerHTML = GroupArray["groupTitle"];
-	document.getElementById("typeV").innerHTML = GroupArray["groupType"];
+// Update view info
+document.getElementById("IDV").innerHTML = GroupArray["groupID"];
+document.getElementById("titleV").innerHTML = GroupArray["groupTitle"];
+document.getElementById("typeV").innerHTML = GroupArray["groupType"];
 
-   $('#viewGroupModal').modal('show');
-   $('#editGroupModal').modal('hide');
+$('#viewGroupModal').modal('show');
+$('#editGroupModal').modal('hide');
 
 }
 
@@ -116,16 +116,16 @@ function showViewGroupModal(ID)
     $(this).removeData('bs.modal');
   });
 
-   // TODO: Put this back in when it works
-   // $.ajax({
-   //         type: 'GET',
-   //         url: 'http://csse371-04.csse.rose-hulman.edu/Tasks/' + ID,
-   //   success:function(data){
-   //     if(data.taskID != null){
-   //       GroupArray = JSON.parse(data);
-   //     }
-   //   }
-   // });
+// TODO: Put this back in when it works
+// $.ajax({
+//         type: 'GET',
+//         url: 'http://csse371-04.csse.rose-hulman.edu/Tasks/' + ID,
+//   success:function(data){
+//     if(data.taskID != null){
+//       GroupArray = JSON.parse(data);
+//     }
+//   }
+// });
 
 
 if (ID == 1)
@@ -154,6 +154,15 @@ $('#viewGroupModal').modal('show');
 $('#editGroupModal').modal('hide');
 }
 
+<<<<<<< HEAD
+=======
+function showmembs(){
+  $( '#multSel :selected' ).each( function( i, selected ) {
+    alert($( selected ).text());
+  });
+}// end function
+
+>>>>>>> b1605c888baf5cab3721487b60449beec00e9951
 </script>
 
 <!-- Create Modal -->
@@ -165,10 +174,11 @@ $('#editGroupModal').modal('hide');
         <h4 class="modal-title" id="myModalLabel">Create Group</h4>
       </div>
       <div class="modal-body">
+        <%= render "new" %>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary" form="createGroup">Submit</button>
+        <button type="submit" class="btn btn-primary" onclick="showmembs()" form="createGroup">Submit</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -201,7 +211,7 @@ $('#editGroupModal').modal('hide');
         <h4 class="modal-title" id="myModalLabel">View Group Details</h4>
       </div>
       <div class="modal-body">
-      <%= render "view" %>
+        <%= render "view" %>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -234,21 +244,21 @@ $('#editGroupModal').modal('hide');
 
 
 <table class='table table-hover table-striped' style='width: 70%; margin-left: 15%; margin-right: auto;'>
-	<thead>
-		<tr>
-			<th>Group ID</th>
-			<th>Group Name</th>
-			<th>Group Type</th>
-		</tr>
-	</thead>
-		<% for group in @groups['groups'] %>
-		<tr>
-      		<td><%= group['groupID'] %></td>
-      		<td><a onClick="showViewGroupModal(<%= group['groupID'] %>)" href = '#viewGroupModal' data-refresh = 'true' data-toggle='modal'><%= group['groupTitle'] %></a></td>
-      		<td><%= group['groupType'] %></td>
-      		<td colspan='1' style='cursor: pointer; text-align: center' onclick="showDeleteModal(<%= group['groupID'] %>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
-    	</tr>
- 	 <% end %>
+  <thead>
+    <tr>
+      <th>Group ID</th>
+      <th>Group Name</th>
+      <th>Group Type</th>
+    </tr>
+  </thead>
+  <% for group in @groups['groups'] %>
+  <tr>
+    <td><%= group['groupID'] %></td>
+    <td><a onClick="showViewGroupModal(<%= group['groupID'] %>)" href = '#viewGroupModal' data-refresh = 'true' data-toggle='modal'><%= group['groupTitle'] %></a></td>
+    <td><%= group['groupType'] %></td>
+    <td colspan='1' style='cursor: pointer; text-align: center' onclick="showDeleteModal(<%= group['groupID'] %>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
+  </tr>
+  <% end %>
 
   <tr>
     <td colspan='4' style='cursor: pointer; text-align: center' href='#newGroupModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>

@@ -67,7 +67,6 @@ WebApp::Application.routes.draw do
   get "meetings/index"
   
   get "groups/index"
-  get "groups/new"
   
   get "profile/index"
   
