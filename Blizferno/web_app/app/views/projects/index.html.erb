@@ -88,26 +88,49 @@ function showViewModal(ID){
 
     if (ID == 1)
     {
-    ProjectArray = JSON.parse ('{"projectID":"1","projectTitle":"Delete a Task","description":"Allows the user to delete a task",}');
+    ProjectArray = JSON.parse ('{"projectID":"1","projectTitle":"Project Uno","description":"Develop web application","group":"Web","meetings":[{"meetingID":"1","title":"Weekly Update"},{"meetingID":"2","title":"Meeting with Steven"}],"notes":[{"noteID":"1","title":"Problems"},{"noteID":"2","title":"Change Requests"}],"members":[{"userID":"1","displayName":"Lindsey"},{"userID":"2","displayName":"Corey"},{"userID":"3","displayName":"Jonathan"},{"userID":"4","displayName":"Chris"},{"userID":"5","displayName":"Grant"},{"userID":"6","displayName":"Josh"}]}');
     }
     else if (ID == 2)
     {
-    ProjectArray = JSON.parse('{"projectID":"2","projectTitle":"Create a Meeting","description":"Allows the user to create a meeting",}');
+    ProjectArray = JSON.parse('{"projectID":"2","projectTitle":"Project Dos","description":"Develop backend application","group":"Backend","meetings":[{"meetingID":"1","title":"Weekly Update"},{"meetingID":"3","title":"Meeting with Steven"}],"notes":[{"noteID":"1","title":"Problems"},{"noteID":"2","title":"Change Requests"}],"members":[{"userID":"7","displayName":"Paul"},{"userID":"8","displayName":"David"}]}');
     }
     else if (ID == 3)
     {
-    ProjectArray = JSON.parse('{"projectID":"3","projectTitle":"Create a Task","description":"Allows the user to create a task",}');
+    ProjectArray = JSON.parse('{"projectID":"3","projectTitle":"Project Tres","description":"Develop android application","group":"Android","meetings":[{"meetingID":"1","title":"Weekly Update"},{"meetingID":"2","title":"Meeting with Steven"}],"notes":[{"noteID":"1","title":"Problems"},{"noteID":"2","title":"Change Requests"}],"members":[{"userID":"9","displayName":"William"},{"userID":"10","displayName":"Maxwell"}]}');
     }
     else if (ID == 4)
     {
-    ProjectArray = JSON.parse('{"projectID":"4","projectTitle":"View a Task","description":"Allows the user to view a task",}');
+    ProjectArray = JSON.parse('{"projectID":"4","projectTitle":"Project Cuatro","description":"Develop iOS application","group":"iOS","meetings":[{"meetingID":"1","title":"Weekly Update"},{"meetingID":"2","title":"Meeting with Steven"}],"notes":[{"noteID":"1","title":"Problems"},{"noteID":"2","title":"Change Requests"}],"members":[{"userID":"11","displayName":"Alpha"},{"userID":"12","displayName":"Dharmin"}]}');
     }
 
-    document.getElementById("titleV").innerHTML = TaskArray["title"];
-    document.getElementById("descriptionV").innerHTML = TaskArray["description"];
+    document.getElementById("titleV").innerHTML = ProjectArray["projecttitle"];
+    document.getElementById("descriptionV").innerHTML = ProjectArray["description"];
+    document.getElementById("groupV").innerHTML = ProjectArray["group"];
+
+    populateTableRows(ProjectArray["meetings"], "title", "TableMeetingsV");
+    populateTableRows(ProjectArray["notes"], "title", "TableNotesV");
+    populateTableRows(ProjectArray["members"], "displayName", "TableMembersV");
     
     $('#viewProjectModal').modal('show');
     $('#editProjectModal').modal('hide');
+}
+
+function populateTableRows(JSONArray, JSONDisplayColumn, tableID){
+  var table = document.getElementById(tableID);
+
+  if(table.rows.length != 0){
+    for(var i = table.rows.length - 1; i > -1; i--){
+      table.deleteRow(i);
+    }
+  }
+
+  for (var k in JSONArray){
+    var rowCount = table.rows.length;
+    var row = table.insertRow(rowCount);
+
+    var cell = row.insertCell(0);
+    cell.innerHTML = JSONArray[k][JSONDisplayColumn];
+  }
 }
 
 </script>
