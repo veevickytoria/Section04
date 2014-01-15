@@ -1,0 +1,38 @@
+<script type="text/javascript">
+
+function validateForm(){
+	var title = document.forms["input"]["projectTitle"].value;
+	var meetings = document.forms["input"]["meetings"].value;
+	var notes = document.forms["input"]["notes"].value;
+	var members = document.forms["input"]["members"].value;
+	var displayName = document.forms["input"]["displayName"].value;
+
+	alert("The following project was added to the db: " + title + " " + meetings + " " + notes + " " + members + " " + displayname);
+
+	return true;
+}
+
+</script>
+
+<span style="font-size:28px; color:#f00;"><strong><span style="font-size:18px;">All fields are required. </span></strong></span>
+<form name="input" id="createProject" action="http://csse371-04.csse.rose-hulman.edu/Project/" onsubmit="return validateForm()" method="post">
+	<span style="font-size:28px;"><strong><span style="font-size:18px;">Project Title: </span></strong></span>
+	<br>
+	<input type="text" name="projectTitle" maxlength="50" size="25">
+	<br>
+	<span style="font-size:28px;"><strong><span style="font-size:18px;">Associated Meetings: </span></strong></span>
+	<br>
+	<input type="text" name="meetings" maxlength="50" size="25">
+	<br>
+	<span style="font-size:28px;"><strong><span style="font-size:18px;">Associated Notes: </span></strong></span>
+	<br>
+	<input type="text" name="notes" maxlength="50" size="25">
+	<br>
+	<span style="font-size:28px;"><strong><span style="font-size:18px;">Members: </span></strong></span>
+	<br>
+	<input type="text" name="members" maxlength="50" size="25">
+	<br>
+	<span style="font-size:28px;"><strong><span style="font-size:18px;">Display Name: </span></strong></span>
+	<br>
+	<input type="text" name="displayName" maxlength="50" size="25">
+	<br>
