@@ -66,7 +66,7 @@ function hideDeleteModal(){
 //     }
 //   }
 // });
-alert("The task matching id " + deleteID + " was deleted");
+alert("The group matching id " + deleteID + " was deleted");
 
 $('#deleteGroupModal').modal('hide');
 // TODO: Put back in
@@ -184,6 +184,7 @@ $('#editGroupModal').modal('hide');
         <h4 class="modal-title" id="myModalLabel">Delete Group</h4>
       </div>
       <div class="modal-body">
+        <%= render "delete" %>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
