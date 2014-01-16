@@ -29,7 +29,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
 		->setProperty('content', $postContent->content)
 		->save();
 	
-	//realte the Note to the user who created it
+	//relate the Note to the user who created it
 	$user = $client->getNode($postContent->createdBy);
 	$userRel = $user->relateTo($noteNode, 'CREATED')->save();
 	$response= $noteIndex->add($noteNode, 'ID', $noteNode->getId());
@@ -42,10 +42,9 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0){
 	//getNoteInfo
 	$noteNode=$client->getNode($_GET['id']);			
-	$createdByRel = $comment->getRelationships(array('CREATED'), Relationship::DirectionIn;
-	$createdBy = $postedToRel[0]->getStartNode();	
-	echo json_encode(array_merge(array("nodeID"=>$noteNode->getID(), "createdBy"=>createdBy->getId())), 
-					$noteNode->getProperties());
+	$createdByRel = $noteNode->getRelationships(array('CREATED'), Relationship::DirectionIn);
+	$createdBy = $createdByRel[0]->getStartNode();	
+	echo json_encode(array_merge(array("nodeID"=>$noteNode->getId()), $noteNode->getProperties()));
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'PUT')==0){
 	//updateNote
 	$postContent = json_decode(@file_get_contents('php://input'));
@@ -54,30 +53,25 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
 
 	if(sizeof($note) >0){
 		//get userID of who created the node
-		$createdByRel = $comment->getRelationships(array('CREATED'), Relationship::DirectionIn;
-		$createdBy = $postedToRel[0]->getStartNode();		
+		$createdByRel = $note->getRelationships(array('CREATED'), Relationship::DirectionIn);
+		$createdBy = $createdByRel[0]->getStartNode();	
+		$array = array("noteID"=>$note->getId(),"createdBy"=>$createdBy->getId());
 		
 		//edit the title property
 		if (strcasecmp($postContent->field, 'title') ==0){
 			$note->setProperty('title', $postContent->value);
 			$note->save();
-			$array = $note->getProperties();
-			$array['noteID']=$note->getId();
-			echo json_encode($array);
+			echo json_encode(array_merge($array, $note->getProperties()));
 		//edit the title property
 		}else if(strcasecmp($postContent->field, 'description') ==0){
 			$note->setProperty('description', $postContent->value);
 			$note->save();
-			$array = $note->getProperties();
-			$array['noteID']=$note->getId();
-			echo json_encode($array);
+			echo json_encode(array_merge($array, $note->getProperties()));
 		//edit the title property
 		}else if(strcasecmp($postContent->field, 'content') ==0){
 			$note->setProperty('content', $postContent->value);
 			$note->save();
-			$array = $note->getProperties();
-			$array['noteID']=$note->getId();
-			echo json_encode($array);
+			echo json_encode(array_merge($array, $note->getProperties()));
 		//tell the user they can't change the person who created the note
 		}else if(strcasecmp($postContent->field, 'createdBy') ==0){
 			echo json_encode(array("errorID"=>"8", "errorMessage"=>"createdBy field is immutable."));
