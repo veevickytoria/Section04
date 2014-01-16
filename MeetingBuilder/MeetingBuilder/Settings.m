@@ -14,5 +14,7 @@
 @dynamic email;
 @dynamic password;
 @dynamic userID;
+@dynamic shouldNotify;
+@dynamic whenToNotify;
 
 @end

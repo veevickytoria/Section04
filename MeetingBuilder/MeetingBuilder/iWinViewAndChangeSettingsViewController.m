@@ -18,6 +18,8 @@
 @property (nonatomic) Settings *settings;
 @property (nonatomic) NSInteger userID;
 @property (nonatomic) NSArray *options;
+@property (nonatomic) NSNumber *tableIndex;
+@property (nonatomic)NSManagedObjectContext *context;
 @property (nonatomic) UIAlertView *deleteAlertView;
 @end
 
@@ -34,26 +36,6 @@
     return self;
 }
 
--(IBAction)changeSwitch:(id)sender
-{
-    
-}
-
--(NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
-{
-    return 1;
-}
-
--(NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
-{
-    return [self.options count];
-}
-
--(NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
-{
-    return [self.options objectAtIndex:row];
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -62,14 +44,15 @@
     [self showFields:NO];
     [self enableInteraction:NO];
     self.options = [[NSArray alloc] initWithObjects:@"At time of event",@"5 minutes before",@"15 minutes before", @"30 minutes before", @"1 hour before", @"2 hours before", @"1 day before",@"2 days before", nil];
- //   self.whenToNotifyPicker.
- //   self.whenToNotifyPicker.numberOfComponents = 5;
- //   self.whenToNotifyPicker.
+    
+    //
+    //
+    //
     iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     
-    NSManagedObjectContext *context = [appDelegate managedObjectContext];
+    self.context = [appDelegate managedObjectContext];
     
-    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Contact" inManagedObjectContext:context];
+    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Contact" inManagedObjectContext:self.context];
     
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:entityDesc];
@@ -78,13 +61,13 @@
     [request setPredicate:predicate];
     
     NSError *error;
-    NSArray *result = [context executeFetchRequest:request
+    NSArray *result = [self.context executeFetchRequest:request
                                              error:&error];
     self.contact = (Contact*)[result objectAtIndex:0];
     
     
     
-    NSEntityDescription *entityDesc1 = [NSEntityDescription entityForName:@"Settings" inManagedObjectContext:context];
+    NSEntityDescription *entityDesc1 = [NSEntityDescription entityForName:@"Settings" inManagedObjectContext:self.context];
     
     NSFetchRequest *request1 = [[NSFetchRequest alloc] init];
     [request1 setEntity:entityDesc1];
@@ -93,15 +76,62 @@
     [request1 setPredicate:predicate1];
     
     NSError *error1;
-    NSArray *result1 = [context executeFetchRequest:request1
-                                             error:&error1];
+    NSArray *result1 = [self.context executeFetchRequest:request1
+                                              error:&error1];
     self.settings = (Settings*)[result1 objectAtIndex:0];
     //
     //
     //
     
     self.emailTextField.text = self.contact.email;
+    [self.shouldNotifySwitch setOn:[self.settings.shouldNotify boolValue]];
     
+}
+
+-(IBAction)changeSwitch:(id)sender
+{
+    //Don't think this method is worthwhile
+    if([self.shouldNotifySwitch isOn]){
+        self.settings.shouldNotify = [NSNumber numberWithInt:1];
+    } else {
+        self.settings.shouldNotify = [NSNumber numberWithInt:0];
+    }
+    [self saveChanges];
+}
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return [self.options count];
+}
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"PickerCell"];
+    cell.textLabel.text = [self.options objectAtIndex:indexPath.row];
+    if ([[NSNumber numberWithInt:indexPath.row] isEqual:self.settings.whenToNotify])
+    {
+        [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
+    }
+    return cell;
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    for (int i=0; i<[self.options count]; i++)
+    {
+        UITableViewCell *cell = [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+        if (i == indexPath.row)
+        {
+            [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
+            self.tableIndex = [NSNumber numberWithInt:i];
+        }
+        else
+        {
+            [cell setAccessoryType:UITableViewCellAccessoryNone];
+        }
+    }
+    [self saveChanges];
 }
 
 - (void)didReceiveMemoryWarning
@@ -170,15 +200,33 @@
         [self enableInteraction:YES];
     }
 }
-    
+
+- (IBAction)onSaveSwitch:(id)sender
+{
+    if([self.shouldNotifySwitch isOn]){
+        self.settings.shouldNotify = [NSNumber numberWithInt:1];
+    } else {
+        self.settings.shouldNotify = [NSNumber numberWithInt:0];
+    }
+}
+- (IBAction)onSaveTable:(id)sender
+{
+    self.settings.whenToNotify = self.tableIndex;
+}
+
 -(void) saveChanges
 {
     //Push new password and email to DB only if old password matches.
     //You must enter old password for any change to take affect.
     self.contact.email = self.emailTextField.text;
+    self.settings.email = self.emailTextField.text;
+    if ([self.confirmPasswordTextField.text isEqual: @""]){
+        //Don't change the password because no new one was entered
+    }else{
     self.settings.password = self.confirmPasswordTextField.text;
-    self.settings.password = self.confirmPasswordTextField.text;
-    
+    }
+    NSError *error;
+    [self.context save:&error];
 }
 
 -(void) showFields: (BOOL) show
@@ -188,8 +236,6 @@
         self.oldPasswordLabel.text = @"Old Password:";
         self.confirmPasswordTextField.hidden = NO;
         self.passwordTextField.hidden = NO;
-        //self.passwordLabel.text = @"Password";
-        //self.oldPasswordTextField.hidden = NO;
         self.confirmPasswordLabel.hidden = NO;
         self.oldPasswordLabel.hidden = NO;
         self.passwordLabel.hidden = NO;
@@ -199,9 +245,7 @@
         self.oldPasswordLabel.text = @"Password:";
         self.confirmPasswordTextField.hidden = YES;
         self.passwordTextField.hidden = YES;
-       // self.oldPasswordTextField.hidden = YES;
         self.confirmPasswordLabel.hidden = YES;
-       // self.oldPasswordLabel.hidden = YES;
         self.passwordLabel.hidden = YES;
     }
     
