@@ -12,54 +12,40 @@ require("phar://neo4jphp.phar");
 $client= new Client();
 
 	//get the index
-	$noteIndex = new Index\NodeIndex($client, 'notes');
+	$noteIndex = new Index\NodeIndex($client, 'Note');
 	$noteIndex->save();
 if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
 	//createNote method
 	
 	//get the json string post content
 	$postContent = json_decode(@file_get_contents('php://input'));
-	
+
 	//create the node
-	$noteNode= $client->makeNode();
-	
+	$noteNode = $client->makeNode();
 	//sets the property on the node
-	$noteNode->setProperty('user', $postContent->user)
-		->setProperty('title', $postContent->title)
-		->setProperty('location', $postContent->location)
-		->setProperty('date', $postContent->date);
-	
-	//actually add the node in the db
-	$noteNode->save();
-	
-	//realte the Note to the user who created it
-	$user = $client->getNode($postContent->user);
-	$userRel = $user->relateTo($noteNode, 'CREATED')
+	$noteNode->setProperty('title', $postContent->title)
+		->setProperty('description', $postContent->description)
+		->setProperty('dateCreated', $postContent->dateCreated)
+		->setProperty('content', $postContent->content)
 		->save();
 	
+	//realte the Note to the user who created it
+	$user = $client->getNode($postContent->createdBy);
+	$userRel = $user->relateTo($noteNode, 'CREATED')->save();
+	$response= $noteIndex->add($noteNode, 'ID', $noteNode->getId());
+	
+	//TODO make this relate to a group, project, or meeting
+	
 	//get properties on the node
-	$noteProps= $noteNode->getProperties();
-	
-	$response= $noteIndex->add($noteNode, 'user', $noteProps['user']);
-	echo $response;
-}else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'comments')==0){
-	//viewComments
-	$note = $client->getNode($_GET['id']);
-	
-	$commentRelations = $note->getRelationships(array('POSTED_TO'));
-	$commentArray = array();
-	foreach($commentRelations as $rel){
-		$comment = $rel->getStartNode();
-		$commentArray[] = $comment->getProperties;
-	}
-	$response = json_encode($commentArray);
-	echo "comments:$response\n";
+	$noteProps= $noteNode->getProperties();	
+	echo json_encode(array_merge(array("nodeID"=>$noteNode->getID()), $noteProps));
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0){
 	//getNoteInfo
-	$noteNode=$client->getNode($_GET['id']);
-	foreach ($noteNode->getProperties() as $key => $value) {
-		echo "$key: $value\n";
-	}
+	$noteNode=$client->getNode($_GET['id']);			
+	$createdByRel = $comment->getRelationships(array('CREATED'), Relationship::DirectionIn;
+	$createdBy = $postedToRel[0]->getStartNode();	
+	echo json_encode(array_merge(array("nodeID"=>$noteNode->getID(), "createdBy"=>createdBy->getId())), 
+					$noteNode->getProperties());
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'PUT')==0){
 	//updateNote
 	$postContent = json_decode(@file_get_contents('php://input'));
@@ -67,66 +53,77 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
 	$note=$client->getNode($postContent->noteID);
 
 	if(sizeof($note) >0){
-		if(strcasecmp($postContent->field, 'user') ==0){
-			$note->setProperty('user', $postContent->value);
-			$note->save();
-			$array = $note->getProperties();
-			echo json_encode($array);
-		}else if(strcasecmp($postContent->field, 'title') ==0){
+		//get userID of who created the node
+		$createdByRel = $comment->getRelationships(array('CREATED'), Relationship::DirectionIn;
+		$createdBy = $postedToRel[0]->getStartNode();		
+		
+		//edit the title property
+		if (strcasecmp($postContent->field, 'title') ==0){
 			$note->setProperty('title', $postContent->value);
 			$note->save();
 			$array = $note->getProperties();
+			$array['noteID']=$note->getId();
 			echo json_encode($array);
+		//edit the title property
 		}else if(strcasecmp($postContent->field, 'description') ==0){
 			$note->setProperty('description', $postContent->value);
 			$note->save();
 			$array = $note->getProperties();
+			$array['noteID']=$note->getId();
 			echo json_encode($array);
+		//edit the title property
 		}else if(strcasecmp($postContent->field, 'content') ==0){
 			$note->setProperty('content', $postContent->value);
 			$note->save();
 			$array = $note->getProperties();
+			$array['noteID']=$note->getId();
 			echo json_encode($array);
+		//tell the user they can't change the person who created the note
+		}else if(strcasecmp($postContent->field, 'createdBy') ==0){
+			echo json_encode(array("errorID"=>"8", "errorMessage"=>"createdBy field is immutable."));
+		//tell the user they can't change the date it was created
+		}else if(strcasecmp($postContent->field, 'dateCreated') ==0){
+			echo json_encode(array("errorID"=>"8", "errorMessage"=>"dateCreated field is immutable."));
+		//unrecognized paramater
 		}else{
-			echo "No node updated.";
+			echo json_encode(array("errorID"=>"9", "errorMessage"=>$postContent->field." is an unrecognized field."));
 		}
-	
+	//general 'you done fucked up' error message
 	}else{
-		echo "FALSE node not found";
+		echo json_encode(array('errorID' => '5', 'errorMessage'=>'Given node ID is not recognized in database'));
 	}
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'DELETE')==0){
 	//deleteNote
 	//get the id
-        preg_match("#(\d+)#", $_SERVER['REQUEST_URI'], $id);
+	$id=$_GET['id'];
         
-        //get the node
-        $node = $client->getNode($id[0]);
-        //make sure the node exists
-        if($node != NULL){
-                //check if node has note index
-                $note = $noteIndex->findOne('ID', ''.$id[0]);
-                                
-                //only delete the node if it's a note
-                if($note != NULL){
-                        //get the relationships
-                        $relations = $note->getRelationships();
-                        foreach($relations as $rel){
-                                //remove all relationships
-                                $rel->delete();
-                        }                
-                        
-                        //delete node and return true
-                        $note->delete();
-                  	    $array = array('valid'=>'true');
- 						echo json_encode($array);
-                } else {
-                        //return an error otherwise
-                        $errorarray = array('errorID' => '4', 'errorMessage'=>'Given node ID is not a note node');
- 				}
-		echo json_encode($errorarray);
+	//get the node
+	$node = $client->getNode($id);
+	//make sure the node exists
+	if($node != NULL){
+		//check if node has note index
+		$note = $noteIndex->findOne('ID', ''.$id);
+						
+		//only delete the node if it's a note
+		if($note != NULL){
+			//get the relationships
+			$relations = $note->getRelationships();
+			foreach($relations as $rel){
+					//remove all relationships
+					$rel->delete();
+			}
+			
+			//delete node and return true
+			$note->delete();
+			$array = array('valid'=>'true');
+			echo json_encode($array);
 		} else {
-     	//return an error if ID doesn't point to a node
-		echo '{"errorID":"5", "errorMessage":"Given node ID is not recognized in database"}';
+			//return an error otherwise
+			$errorarray = array('errorID' => '4', 'errorMessage'=>'Given node ID is not a note node');
+			echo json_encode($errorarray);
+		}
+	} else {
+		//return an error if ID doesn't point to a node
 		$errorarray = array('errorID' => '5', 'errorMessage'=>'Given node ID is not recognized in database');
 		echo json_encode($errorarray);
 	}

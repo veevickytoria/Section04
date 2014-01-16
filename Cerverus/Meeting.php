@@ -24,10 +24,10 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
         $meetingNode= $client->makeNode();
         
         //sets the property on the node
-        $meetingNode->setProperty('user', $postContent->userID)
+        $meetingNode->setProperty('userID', $postContent->userID)
                 ->setProperty('title', $postContent->title)
                 ->setProperty('datetime', $postContent->datetime)
-				->setProperty('endDatetime', $postContent->datetime)
+				->setProperty('endDatetime', $postContent->endDatetime)
                 ->setProperty('description',$postContent->description)
                 ->setProperty('location', $postContent->location);
         
