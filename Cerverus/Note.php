@@ -45,6 +45,15 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'comments')==0){
 	//viewComments
 	$note = $client->getNode($_GET['id']);
+	
+	$commentRelations = $note->getRelationships(array('POSTED_TO'));
+	$commentArray = array();
+	foreach($commentRelations as $rel){
+		$comment = $rel->getStartNode();
+		$commentArray[] = $comment->getProperties;
+	}
+	$response = json_encode($commentArray);
+	echo "comments:$response\n";
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0){
 	//getNoteInfo
 	$noteNode=$client->getNode($_GET['id']);
