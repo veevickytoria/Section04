@@ -165,31 +165,6 @@
 - (IBAction)onClickSave
 {
     //save the meeting
-    //    NSArray *keys = [NSArray arrayWithObjects:@"title", @"userID", @"datetime", @"location", @"attendance", nil];
-    //    NSArray *objects = [NSArray arrayWithObjects:self.titleField.text, @"1",[NSString stringWithFormat:@"%@ %@", self.startDateLabel.text, self.startTimeLabel.text],self.placeField.text,@"", nil];
-    //
-    //    NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-    //    NSData *jsonData;
-    //    NSString *jsonString;
-    //
-    //    if ([NSJSONSerialization isValidJSONObject:jsonDictionary])
-    //    {
-    //        jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:nil];
-    //        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    //    }
-    //    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Meeting/"];
-    //
-    //    NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
-    //    [urlRequest setHTTPMethod:@"POST"];
-    //    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    //    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    //    [urlRequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-length"];
-    //    [urlRequest setHTTPBody:jsonData];
-    //    NSURLResponse * response = nil;
-    //    NSError * error = nil;
-    //    [NSURLConnection sendSynchronousRequest:urlRequest
-    //                          returningResponse:&response
-    //                                      error:&error];
     
     //for local satabase
     iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
@@ -198,16 +173,43 @@
     if (!self.isEditing)
     {
         
-        NSManagedObject *newMeeting = [NSEntityDescription insertNewObjectForEntityForName:@"Meeting" inManagedObjectContext:context];
-        NSError *error;
+//        NSManagedObject *newMeeting = [NSEntityDescription insertNewObjectForEntityForName:@"Meeting" inManagedObjectContext:context];
+//        NSError *error;
+//        
+//        
+//        [newMeeting setValue:self.titleField.text forKey:@"title"];
+//        [newMeeting setValue:self.placeField.text forKey:@"location"];
+//        [newMeeting setValue:[NSString stringWithFormat: @"%@ %@ %@ %@", self.startDateLabel.text, self.startTimeLabel.text, self.endDateLabel.text, self.endTimeLabel.text] forKey:@"datetime"];
+//        [newMeeting setValue:[NSNumber numberWithInt:0] forKey:@"userID"];
+//        [newMeeting setValue:@"false" forKey:@"attendance"];
+//        [context save:&error];
         
+        NSArray *keys = [NSArray arrayWithObjects:@"title", @"userID", @"datetime", @"location", @"endDatetime", @"description", @"attendance", nil];
+        NSArray *objects = [NSArray arrayWithObjects:self.titleField.text, @"1",[NSString stringWithFormat:@"%@ %@", self.startDateLabel.text, self.startTimeLabel.text],self.placeField.text,@"", nil];
         
-        [newMeeting setValue:self.titleField.text forKey:@"title"];
-        [newMeeting setValue:self.placeField.text forKey:@"location"];
-        [newMeeting setValue:[NSString stringWithFormat: @"%@ %@ %@ %@", self.startDateLabel.text, self.startTimeLabel.text, self.endDateLabel.text, self.endTimeLabel.text] forKey:@"datetime"];
-        [newMeeting setValue:[NSNumber numberWithInt:0] forKey:@"userID"];
-        [newMeeting setValue:@"false" forKey:@"attendance"];
-        [context save:&error];
+        NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+        NSData *jsonData;
+        NSString *jsonString;
+        
+        if ([NSJSONSerialization isValidJSONObject:jsonDictionary])
+        {
+            jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:nil];
+            jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        }
+        NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Meeting/"];
+        
+        NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+        [urlRequest setHTTPMethod:@"POST"];
+        [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+        [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+        [urlRequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-length"];
+        [urlRequest setHTTPBody:jsonData];
+        NSURLResponse * response = nil;
+        NSError * error = nil;
+        [NSURLConnection sendSynchronousRequest:urlRequest
+                                returningResponse:&response
+                                            error:&error];
+
         
     }
     else

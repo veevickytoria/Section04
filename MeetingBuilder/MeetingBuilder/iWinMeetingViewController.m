@@ -14,7 +14,7 @@
 @interface iWinMeetingViewController ()
 @property (strong, nonatomic) NSMutableArray *meetingList;
 @property (strong, nonatomic) NSMutableArray *meetingDetail;
-@property (strong, nonatomic) NSString* email;
+@property (nonatomic) NSInteger userID;
 @property (strong, nonatomic) iWinScheduleViewMeetingViewController *scheduleMeetingVC;
 @property (strong, nonatomic) NSMutableArray *meetingID;
 @property (strong, nonatomic) NSMutableArray *meetingLocations;
@@ -23,11 +23,11 @@
 
 @implementation iWinMeetingViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withEmail:(NSString *)email
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withID:(NSInteger)userID
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.email = email;
+        self.userID = userID;
     }
     return self;
 }
@@ -40,47 +40,69 @@
     self.meetingID = [[NSMutableArray alloc] init];
     self.meetingLocations = [[NSMutableArray alloc] init];
     
-    NSArray *result = [self getDataFromDatabase];
-    for (Meeting *m in result)
+//    NSArray *result = [self getDataFromDatabase];
+//    for (Meeting *m in result)
+//    {
+//        [self.meetingList addObject:m.title];
+//        [self.meetingDetail addObject:m.datetime];
+//        [self.meetingID addObject:m.userID];
+//        [self.meetingLocations addObject:m.location];
+//    }
+    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Meetings/%d", self.userID];
+    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:30];
+    [urlRequest setHTTPMethod:@"GET"];
+    NSURLResponse * response = nil;
+    NSError * error = nil;
+    NSData * data = [NSURLConnection sendSynchronousRequest:urlRequest
+                                            returningResponse:&response
+                                                        error:&error];
+    NSArray *jsonArray;
+    if (error)
     {
-        [self.meetingList addObject:m.title];
-        [self.meetingDetail addObject:m.datetime];
-        [self.meetingID addObject:m.userID];
-        [self.meetingLocations addObject:m.location];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Meetings not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alert show];
     }
-    //    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Meeting/", self.email];
-    //    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    //    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:30];
-    //    [urlRequest setHTTPMethod:@"GET"];
-    //    NSURLResponse * response = nil;
-    //    NSError * error = nil;
-    //    NSData * data = [NSURLConnection sendSynchronousRequest:urlRequest
-    //                                          returningResponse:&response
-    //                                                      error:&error];
-    //    //check login
-    //    NSArray *jsonArray;
-    //    if (error)
-    //    {
-    //        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Meetings not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
-    //        [alert show];
-    //    }
-    //    else
-    //    {
-    //        NSError *jsonParsingError = nil;
-    //        jsonArray = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
-    //    }
-    //    if (jsonArray.count > 0)
-    //    {
-    //        for (NSDictionary* meetings in jsonArray)
-    //        {
-    //            [self.meetingList addObject:[meetings objectForKey:@"title"]];
-    //            [self.meetingDetail addObject:[meetings objectForKey:@"datetime"]];
-    //            [self.meetingID addObject:[meetings objectForKey:@"id"]];
-    //            [self.meetingLocations addObject:[meetings objectForKey:@"location"]];
-    //        }
-    //
-    //    }
+    else
+    {
+        NSError *jsonParsingError = nil;
+        NSDictionary *deserializedDictionary = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
+        jsonArray = [deserializedDictionary objectForKey:@"meetings"];
+    }
+    if (jsonArray.count > 0)
+    {
+        for (NSDictionary* meetings in jsonArray)
+        {
+            [self.meetingList addObject:[meetings objectForKey:@"title"]];
+            [self.meetingID addObject:[meetings objectForKey:@"meetingID"]];
+        }
+    }
     
+    
+    for (int i = 0; i < [self.meetingID count]; i++)
+    {
+        NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Meeting/%d", [self.meetingID[i] integerValue]];
+        url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:30];
+        [urlRequest setHTTPMethod:@"GET"];
+        NSURLResponse * response = nil;
+        NSError * error = nil;
+        NSData * data = [NSURLConnection sendSynchronousRequest:urlRequest
+                                              returningResponse:&response
+                                                          error:&error];
+        if (error)
+        {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Meetings not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+            [alert show];
+        }
+        else
+        {
+            NSError *jsonParsingError = nil;
+            NSDictionary *deserializedDictionary = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
+            [self.meetingDetail addObject:[deserializedDictionary objectForKey:@"datetime"]];
+            [self.meetingLocations addObject:[deserializedDictionary objectForKey:@"location"]];
+        }
+    }
     
     //for local database
 //    iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
