@@ -32,6 +32,7 @@ RewriteRule ^Task/([0-9]+)/?$ Task.php?id=$1 [NC,L]
 
 RewriteRule ^Comment/?$ Comment.php [NC,L]
 RewriteRule ^Comment/([0-9]+)/?$ Comment.php?id=$1 [NC,L]
+RewriteRule ^Comment/All/([0-9]+)/?$ Comment.php?cat=all&id=$1 [NC,L]
 
 RewriteRule ^Agenda/?$ Agenda.php [NC,L]
 RewriteRule ^Agenda/([0-9]+)/?$ Agenda.php?id=$1 [NC,L]
