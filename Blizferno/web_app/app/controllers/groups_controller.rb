@@ -16,7 +16,7 @@ class GroupsController < ApplicationController
 		#@tasks = JSON.parse(res.body)
 		@groups = JSON.parse('{"groups":[{"groupID":"1","groupTitle":"NWA","groupType":"hardcore gangsta"},
 			{"groupID":"2","groupTitle":"Group? More like poop!","groupType":"lolz"},
-			{"groupID":"3","groupTitle":"KKK","groupType":"racist"},
+			{"groupID":"3","groupTitle":"Purgatory","groupType":"limbo"},
 			{"groupID":"4","groupTitle":"Murdah Squad","groupType":"serial killer"}]}')
 
 	end
