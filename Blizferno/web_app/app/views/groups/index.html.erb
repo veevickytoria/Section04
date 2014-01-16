@@ -84,7 +84,7 @@ function showGroupModalNoID()
   });
 
 // Edit info
-GroupArray["groupID"] = document.getElementById("IDE").value;
+//GroupArray["groupID"] = document.getElementById("IDE").value;
 GroupArray["groupTitle"] = document.getElementById("titleE").value;
 GroupArray["groupType"] = document.getElementById("typeE").value;
 
@@ -100,7 +100,7 @@ GroupArray["groupType"] = document.getElementById("typeE").value;
 // });
 
 // Update view info
-document.getElementById("IDV").innerHTML = GroupArray["groupID"];
+//document.getElementById("IDV").innerHTML = GroupArray["groupID"];
 document.getElementById("titleV").innerHTML = GroupArray["groupTitle"];
 document.getElementById("typeV").innerHTML = GroupArray["groupType"];
 
@@ -237,10 +237,11 @@ function getMembers(id){
         <h4 class="modal-title" id="myModalLabel">Edit Group Details</h4>
       </div>
       <div class="modal-body">
+        <%= render "edit" %>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" onclick="showMeetingModalNoID()" data-refresh="true" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" onclick="showMeetingModalNoID()" data-refresh="true" >Save Changes</button>
+        <button type="button" class="btn btn-default" onclick="showGroupModalNoID()" data-refresh="true" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="showGroupModalNoID()" data-refresh="true" >Save Changes</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
