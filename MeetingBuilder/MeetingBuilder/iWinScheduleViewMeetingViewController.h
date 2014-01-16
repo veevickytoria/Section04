@@ -22,7 +22,7 @@
 - (IBAction)onClickSave;
 - (IBAction)onClickSaveAndAddMore;
 - (IBAction)onClickCancel;
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil inEditMode:(BOOL)isEditing withID:(NSString*) meetingID withDateTime:(NSString*) dateTime withTitle:(NSString*) title withLocation:(NSString*) location;
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withUserID:(NSInteger)userID withMeetingID:(NSInteger)meetingID;
 @property (weak, nonatomic) IBOutlet UIButton *saveAndAddMoreButton;
 @property (weak, nonatomic) IBOutlet UITextField *titleField;
 @property (weak, nonatomic) IBOutlet UILabel *startDateLabel;

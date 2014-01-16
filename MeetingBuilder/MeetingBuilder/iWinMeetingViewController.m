@@ -194,7 +194,7 @@
 -(IBAction) onScheduleNewMeeting
 {
     //[self.meetingListDelegate scheduleMeetingClicked:NO];
-    self.scheduleMeetingVC = [[iWinScheduleViewMeetingViewController alloc] initWithNibName:@"iWinScheduleViewMeetingViewController" bundle:nil inEditMode:NO withID:nil withDateTime:nil withTitle:nil withLocation:nil];
+    self.scheduleMeetingVC = [[iWinScheduleViewMeetingViewController alloc] initWithNibName:@"iWinScheduleViewMeetingViewController" bundle:nil withUserID:self.userID withMeetingID:-1];
     self.scheduleMeetingVC.viewMeetingDelegate = self;
     [self.scheduleMeetingVC setModalPresentationStyle:UIModalPresentationPageSheet];
     [self.scheduleMeetingVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
@@ -281,7 +281,7 @@
 {
     //    [self.meetingListDelegate scheduleMeetingClicked:YES withID:self.meetingID[indexPath.row] withDateTime:self.meetingDetail[indexPath.row] withTitle:self.meetingList[indexPath.row] withLocation:self.meetingLocations[indexPath.row]];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    self.scheduleMeetingVC = [[iWinScheduleViewMeetingViewController alloc] initWithNibName:@"iWinScheduleViewMeetingViewController" bundle:nil inEditMode:YES withID:self.meetingID[indexPath.row] withDateTime:self.meetingDetail[indexPath.row] withTitle:self.meetingList[indexPath.row] withLocation:self.meetingLocations[indexPath.row]];
+    self.scheduleMeetingVC = [[iWinScheduleViewMeetingViewController alloc] initWithNibName:@"iWinScheduleViewMeetingViewController" bundle:nil withUserID:self.userID withMeetingID:[self.meetingID[indexPath.row] integerValue]];
     self.scheduleMeetingVC.viewMeetingDelegate = self;
     [self.scheduleMeetingVC setModalPresentationStyle:UIModalPresentationPageSheet];
     [self.scheduleMeetingVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];

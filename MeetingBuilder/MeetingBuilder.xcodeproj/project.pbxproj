@@ -54,6 +54,7 @@
 		0A91DC9C1835D7AB00741349 /* OCCalendarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91DC951835D7AB00741349 /* OCCalendarViewController.m */; };
 		0A91DC9D1835D7AB00741349 /* OCDaysView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91DC971835D7AB00741349 /* OCDaysView.m */; };
 		0A91DC9E1835D7AB00741349 /* OCSelectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91DC991835D7AB00741349 /* OCSelectionView.m */; };
+		0A95D1EE188787B900749438 /* Meeting.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A95D1ED188787B900749438 /* Meeting.m */; };
 		0A96E7E4185BE72700EAB0DC /* iWinViewProfileTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A96E7E3185BE72700EAB0DC /* iWinViewProfileTest.m */; };
 		0A96E7E7185FAA6200EAB0DC /* iWinProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A96E7E6185FAA6200EAB0DC /* iWinProfile.m */; };
 		0A97EDAA184169ED00160B5A /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A97EDA8184169ED00160B5A /* AudioToolbox.framework */; };
@@ -211,7 +212,6 @@
 		79FCE0101862295E008345B3 /* UIView+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF911862295E008345B3 /* UIView+TKCategory.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		79FCE0111862295E008345B3 /* UIViewController+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF921862295E008345B3 /* UIViewController+TKCategory.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		79FCE0121862295E008345B3 /* UIViewController+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF931862295E008345B3 /* UIViewController+TKCategory.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		DE0F520018626877008BB858 /* Meeting.m in Sources */ = {isa = PBXBuildFile; fileRef = DE0F51FF18626877008BB858 /* Meeting.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -311,6 +311,8 @@
 		0A91DC981835D7AB00741349 /* OCSelectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCSelectionView.h; sourceTree = "<group>"; };
 		0A91DC991835D7AB00741349 /* OCSelectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCSelectionView.m; sourceTree = "<group>"; };
 		0A91DC9A1835D7AB00741349 /* OCTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCTypes.h; sourceTree = "<group>"; };
+		0A95D1EC188787B900749438 /* Meeting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Meeting.h; sourceTree = "<group>"; };
+		0A95D1ED188787B900749438 /* Meeting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Meeting.m; sourceTree = "<group>"; };
 		0A96E7E3185BE72700EAB0DC /* iWinViewProfileTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinViewProfileTest.m; sourceTree = "<group>"; };
 		0A96E7E5185FAA6200EAB0DC /* iWinProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinProfile.h; sourceTree = "<group>"; };
 		0A96E7E6185FAA6200EAB0DC /* iWinProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinProfile.m; sourceTree = "<group>"; };
@@ -487,8 +489,6 @@
 		79FCDF911862295E008345B3 /* UIView+TKCategory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "UIView+TKCategory.m"; path = "../tapkulibrary-master/src/TapkuLibrary/UIView+TKCategory.m"; sourceTree = "<group>"; };
 		79FCDF921862295E008345B3 /* UIViewController+TKCategory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UIViewController+TKCategory.h"; path = "../tapkulibrary-master/src/TapkuLibrary/UIViewController+TKCategory.h"; sourceTree = "<group>"; };
 		79FCDF931862295E008345B3 /* UIViewController+TKCategory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+TKCategory.m"; path = "../tapkulibrary-master/src/TapkuLibrary/UIViewController+TKCategory.m"; sourceTree = "<group>"; };
-		DE0F51FE18626877008BB858 /* Meeting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Meeting.h; sourceTree = "<group>"; };
-		DE0F51FF18626877008BB858 /* Meeting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Meeting.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -772,12 +772,12 @@
 		0A7F1CDC185908550017209D /* Data Model */ = {
 			isa = PBXGroup;
 			children = (
+				0A95D1EC188787B900749438 /* Meeting.h */,
+				0A95D1ED188787B900749438 /* Meeting.m */,
 				0A8E8062188730D900C488FD /* Settings.h */,
 				0A8E8063188730D900C488FD /* Settings.m */,
 				0AAED3B61864F38900A162DF /* Contact.h */,
 				0AAED3B71864F38900A162DF /* Contact.m */,
-				DE0F51FE18626877008BB858 /* Meeting.h */,
-				DE0F51FF18626877008BB858 /* Meeting.m */,
 				0A7F1CDD185908790017209D /* iWinContact.h */,
 				0A7F1CDE185908790017209D /* iWinContact.m */,
 				0A96E7E5185FAA6200EAB0DC /* iWinProfile.h */,
@@ -1326,7 +1326,6 @@
 				0ACE339A17FCF5F8003B9C0A /* iWinMeetingViewController.m in Sources */,
 				0A91DC9E1835D7AB00741349 /* OCSelectionView.m in Sources */,
 				0A7F1CDF185908790017209D /* iWinContact.m in Sources */,
-				DE0F520018626877008BB858 /* Meeting.m in Sources */,
 				0A1A7296181A1802009A49E5 /* iWinAgendaItemViewController.m in Sources */,
 				79753A7E1860F3B50015098B /* iWinMeeting.m in Sources */,
 				0A1A72A8181A2C5E009A49E5 /* iWinAddUsersViewController.m in Sources */,
@@ -1342,6 +1341,7 @@
 				7941FDD5182A0DCE00AAA92E /* iWinViewProfileViewController.m in Sources */,
 				0A7E516517FBEBA200A4B8B7 /* iWinRegisterViewController.m in Sources */,
 				0A91DC9C1835D7AB00741349 /* OCCalendarViewController.m in Sources */,
+				0A95D1EE188787B900749438 /* Meeting.m in Sources */,
 				0AAED3B81864F38900A162DF /* Contact.m in Sources */,
 				0A7F1CE218611FB10017209D /* iWinPopulateDatabase.m in Sources */,
 				0A1A728A1819F590009A49E5 /* iWinScheduleViewMeetingViewController.m in Sources */,

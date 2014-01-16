@@ -18,31 +18,34 @@
 @property (nonatomic) BOOL isStartDate;
 @property (nonatomic) NSDate *startDate;
 @property (nonatomic) NSDate *endDate;
-@property (strong, nonatomic) NSString *meetingID;
+@property (nonatomic) NSInteger meetingID;
 @property (strong, nonatomic) NSString *dateTime;
-@property (strong, nonatomic) NSString *title;
-@property (strong, nonatomic) NSString *location;
+//@property (strong, nonatomic) NSString *title;
+//@property (strong, nonatomic) NSString *location;
 @property (strong, nonatomic) UIPopoverController *popOverController;
 @property (strong, nonatomic) OCCalendarViewController* ocCalVC;
 @property (strong, nonatomic) iWinViewAndAddViewController *agendaController;
 @property (strong, nonatomic) iWinAddUsersViewController *userViewController;
 @property (strong, nonatomic) UIDatePicker *datePicker;
 @property (strong, nonatomic) UIDatePicker *enddatePicker;
-
+@property (nonatomic) NSInteger userID;
 @end
 
 @implementation iWinScheduleViewMeetingViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil inEditMode:(BOOL)isEditing withID:(NSString*) meetingID withDateTime:(NSString*) dateTime withTitle:(NSString*) title withLocation:(NSString*) location //withMeeting:(Meeting *)newMeeting
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withUserID:(NSInteger)userID withMeetingID:(NSInteger)meetingID
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        self.isEditing = isEditing;
+        
         self.meetingID = meetingID;
-        self.dateTime = dateTime;
-        self.location = location;
-        self.title = title;
+        self.isEditing = YES;
+        self.userID = userID;
+        if (meetingID == -1)
+        {
+            self.isEditing = NO;
+        }
     }
     return self;
 }
@@ -90,8 +93,9 @@
     {
         
         self.headerLabel.text = @"View Meeting";
-        self.titleField.text = self.title;
-        self.placeField.text = self.location;
+        //TODO
+//        self.titleField.text = self.title;
+//        self.placeField.text = self.location;
         [self.addAgendaButton setTitle:@"Agenda 101" forState:UIControlStateNormal];
         self.saveAndAddMoreButton.hidden = YES;
         
@@ -185,7 +189,7 @@
 //        [context save:&error];
         
         NSArray *keys = [NSArray arrayWithObjects:@"title", @"userID", @"datetime", @"location", @"endDatetime", @"description", @"attendance", nil];
-        NSArray *objects = [NSArray arrayWithObjects:self.titleField.text, @"1",[NSString stringWithFormat:@"%@ %@", self.startDateLabel.text, self.startTimeLabel.text],self.placeField.text,@"", nil];
+        NSArray *objects = [NSArray arrayWithObjects:self.titleField.text,self.userID,[NSString stringWithFormat:@"%@ %@", self.startDateLabel.text, self.startTimeLabel.text],self.placeField.text,[NSString stringWithFormat:@"%@ %@", self.endDateLabel.text, self.endTimeLabel.text], @"", @"", nil];
         
         NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
         NSData *jsonData;
