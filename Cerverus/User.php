@@ -44,7 +44,7 @@ $client= new Client();
 	$userIndex->save();
 	
 if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'Login')==0){
-	//login method
+	// login method
 	$postContent = json_decode(@file_get_contents('php://input'));
 	$email=$userIndex->findOne('email',$postContent->email);	
 	if (sizeof($email)!=0){ //check if there is a node with the given email.
@@ -56,6 +56,17 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 	}else{
 		echo json_encode(array("errorID"=>1, "errorMessage"=>"email invalid email or password"));
 	}	
+}else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'test')==0){
+	//testing method to check if mailing is working correctly
+	$to = 'rujirasl@rose-hulman.edu';
+	$subject = 'the subject';
+	$message = 'hello';
+	$headers = 'From: webmaster@meetingNinja.com' . "\r\n" .
+    'Reply-To: webmaster@meetingNinja.com' . "\r\n" .
+    'X-Mailer: PHP/' . phpversion();
+
+	mail($to, $subject, $message, $headers);
+	
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'schedule')==0){
         //GET getUserSchedule
         $userNode=$client->getNode($_GET['id']);
