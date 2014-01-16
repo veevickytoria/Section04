@@ -19,9 +19,7 @@
 @property (nonatomic) NSDate *startDate;
 @property (nonatomic) NSDate *endDate;
 @property (nonatomic) NSInteger meetingID;
-@property (strong, nonatomic) NSString *dateTime;
-//@property (strong, nonatomic) NSString *title;
-//@property (strong, nonatomic) NSString *location;
+@property (strong, nonatomic) NSManagedObjectContext *context;
 @property (strong, nonatomic) UIPopoverController *popOverController;
 @property (strong, nonatomic) OCCalendarViewController* ocCalVC;
 @property (strong, nonatomic) iWinViewAndAddViewController *agendaController;
@@ -29,6 +27,7 @@
 @property (strong, nonatomic) UIDatePicker *datePicker;
 @property (strong, nonatomic) UIDatePicker *enddatePicker;
 @property (nonatomic) NSInteger userID;
+@property (strong, nonatomic) Meeting *meeting;
 @end
 
 @implementation iWinScheduleViewMeetingViewController
@@ -63,6 +62,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    self.context = [appDelegate managedObjectContext];
     // Do any additional setup after loading the view from its nib.
     self.isStartDate = NO;
     self.headerLabel.text = @"Schedule a Meeting";
@@ -93,21 +95,37 @@
     {
         
         self.headerLabel.text = @"View Meeting";
-        //TODO
-//        self.titleField.text = self.title;
-//        self.placeField.text = self.location;
         [self.addAgendaButton setTitle:@"Agenda 101" forState:UIControlStateNormal];
         self.saveAndAddMoreButton.hidden = YES;
         
         NSInteger nWords = 6;
         NSRange wordRange = NSMakeRange(0, nWords);
-        NSArray *dateAndTime = [[self.dateTime componentsSeparatedByString:@" "] subarrayWithRange:wordRange];
         
-        NSString *startdate = [dateAndTime objectAtIndex:0];
-        NSString *starttime = [NSString stringWithFormat:@"%@ %@", [dateAndTime objectAtIndex:1], [dateAndTime objectAtIndex:2]];
         
-        NSString *enddate = [dateAndTime objectAtIndex:3];
-        NSString *endtime = [NSString stringWithFormat:@"%@ %@", [dateAndTime objectAtIndex:4], [dateAndTime objectAtIndex:5]];
+        NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Meeting" inManagedObjectContext:self.context];
+        
+        NSFetchRequest *request = [[NSFetchRequest alloc] init];
+        [request setEntity:entityDesc];
+        
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"meetingID = %d", self.meetingID];
+        [request setPredicate:predicate];
+        
+        NSError *error;
+        NSArray *result = [self.context executeFetchRequest:request
+                                                 error:&error];
+        self.meeting = (Meeting*)[result objectAtIndex:0];
+        
+        self.titleField.text = self.meeting.title;
+        self.placeField.text = self.meeting.location;
+        
+        NSArray *startDateAndTime = [[self.meeting.datetime componentsSeparatedByString:@" "] subarrayWithRange:wordRange];
+        NSArray *endDateAndTime = [[self.meeting.endDatetime componentsSeparatedByString:@" "] subarrayWithRange:wordRange];
+        
+        NSString *startdate = [startDateAndTime objectAtIndex:0];
+        NSString *starttime = [NSString stringWithFormat:@"%@ %@", [startDateAndTime objectAtIndex:1], [startDateAndTime objectAtIndex:2]];
+        
+        NSString *enddate = [endDateAndTime objectAtIndex:0];
+        NSString *endtime = [NSString stringWithFormat:@"%@ %@", [endDateAndTime objectAtIndex:1], [endDateAndTime objectAtIndex:2]];
         
         self.startDateLabel.text = startdate;
         self.endDateLabel.text = enddate;
@@ -171,9 +189,9 @@
     //save the meeting
     
     //for local satabase
-    iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     
-    NSManagedObjectContext *context = [appDelegate managedObjectContext];
+    
+    
     if (!self.isEditing)
     {
         
@@ -188,8 +206,13 @@
 //        [newMeeting setValue:@"false" forKey:@"attendance"];
 //        [context save:&error];
         
-        NSArray *keys = [NSArray arrayWithObjects:@"title", @"userID", @"datetime", @"location", @"endDatetime", @"description", @"attendance", nil];
-        NSArray *objects = [NSArray arrayWithObjects:self.titleField.text,self.userID,[NSString stringWithFormat:@"%@ %@", self.startDateLabel.text, self.startTimeLabel.text],self.placeField.text,[NSString stringWithFormat:@"%@ %@", self.endDateLabel.text, self.endTimeLabel.text], @"", @"", nil];
+        
+        NSArray *userIDKeys = [NSArray arrayWithObjects:@"userID", nil];
+        NSArray *userIDObjects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.userID] stringValue], nil];
+        NSArray *userIDJsonDictionary = [NSArray arrayWithObject:[NSDictionary dictionaryWithObjects:userIDObjects forKeys:userIDKeys]];
+        
+        NSArray *keys = [NSArray arrayWithObjects:@"userID", @"title", @"location", @"datetime", @"endDatetime", @"description", @"attendance", nil];
+        NSArray *objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.userID] stringValue], self.titleField.text, self.placeField.text, [NSString stringWithFormat:@"%@ %@", self.startDateLabel.text, self.startTimeLabel.text],[NSString stringWithFormat:@"%@ %@", self.endDateLabel.text, self.endTimeLabel.text], @"Test Meeting", userIDJsonDictionary, nil];
         
         NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
         NSData *jsonData;
@@ -210,15 +233,16 @@
         [urlRequest setHTTPBody:jsonData];
         NSURLResponse * response = nil;
         NSError * error = nil;
-        [NSURLConnection sendSynchronousRequest:urlRequest
-                                returningResponse:&response
-                                            error:&error];
-
-        
+        NSData * data =[NSURLConnection sendSynchronousRequest:urlRequest
+                                             returningResponse:&response
+                                                         error:&error];
+        NSError *jsonParsingError = nil;
+        NSDictionary *deserializedDictionary = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments|NSJSONReadingMutableContainers error:&jsonParsingError];
+        self.meetingID = [[deserializedDictionary objectForKey:@"meetingID"] integerValue];
     }
     else
     {
-        NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Meeting" inManagedObjectContext:context];
+        NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Meeting" inManagedObjectContext:self.context];
         
         NSFetchRequest *request = [[NSFetchRequest alloc] init];
         [request setEntity:entityDesc];
@@ -227,7 +251,7 @@
         [request setPredicate:predicate];
         
         NSError *error;
-        NSArray *result = [context executeFetchRequest:request
+        NSArray *result = [self.context executeFetchRequest:request
                                                  error:&error];
         
         Meeting *newMeeting = (Meeting*)[result objectAtIndex:0];
@@ -235,7 +259,7 @@
         [newMeeting setValue:self.placeField.text forKey:@"location"];
         [newMeeting setValue:[NSString stringWithFormat: @"%@ %@ %@ %@", self.startDateLabel.text, self.startTimeLabel.text, self.endDateLabel.text, self.endTimeLabel.text] forKey:@"datetime"];
         [newMeeting setValue:@"false" forKey:@"attendance"];
-        [context save:&error];
+        [self.context save:&error];
         
     }
     [self.viewMeetingDelegate refreshMeetingList];

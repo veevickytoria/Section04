@@ -84,19 +84,12 @@
     }
     if (jsonArray.count > 0)
     {
-        NSLog(@"%d", jsonArray.count);
         for (NSDictionary* users in jsonArray)
         {
             Contact *c = [[Contact alloc] initWithEntity:entityDesc insertIntoManagedObjectContext:context];
             c.userID = [users objectForKey:@"userID"];
 
             c.name = (NSString *)[users objectForKey:@"name"];
-//            NSInteger nWords = 2;
-//            NSRange wordRange = NSMakeRange(0, nWords);
-//            NSArray *firstAndLastNames = [[displayName componentsSeparatedByString:@" "] subarrayWithRange:wordRange];
-//            c.firstName = (NSString *)[firstAndLastNames objectAtIndex:0];
-//            c.lastName = (NSString *)[firstAndLastNames objectAtIndex:1];
-            
             c.email = (NSString *)[users objectForKey:@"email"];
             c.phone = (NSString *)[users objectForKey:@"phone"];
             c.company = (NSString *)[users objectForKey:@"companyc"];
@@ -150,7 +143,10 @@
         c = (Contact *)[self.attendeeList objectAtIndex:indexPath.row];
     }
     
-    cell.textLabel.text = [NSString stringWithFormat:@"%@", c.name];
+    cell.textLabel.text =  c.name;
+    if (c.name.length == 0){
+        cell.textLabel.text = c.email;
+    }
     cell.detailTextLabel.text = c.email;
     return cell;
 }
@@ -200,8 +196,15 @@ shouldReloadTableForSearchString:(NSString *)searchString
         }
         [self.searchDisplayController setActive:NO];
     }
-    else
-    {
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;
+}
+
+// Override to support editing the table view.
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
         self.rowToDelete = indexPath.row;
         self.deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this contact?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
         [self.deleteAlertView show];
