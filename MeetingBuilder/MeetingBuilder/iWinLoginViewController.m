@@ -44,7 +44,7 @@
     
     NSString *email = [[self.userNameField text] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     NSString *password = [self sha256HashFor:[self.passwordField text]];
-    [self.loginDelegate login:1];
+//    [self.loginDelegate login:1];
     
     //
     //CREATE Settings object for local datamodel so that we can have access to the password on the settings page

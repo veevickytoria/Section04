@@ -14,5 +14,5 @@
 @property (weak, nonatomic) IBOutlet UIButton *scheduleMeetingButton;
 @property (weak, nonatomic) IBOutlet UITableView *projectTable;
 - (IBAction)onScheduleNewMeeting;
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withEmail:(NSString *)email;
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withID:(NSInteger)userID;
 @end

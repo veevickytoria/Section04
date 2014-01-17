@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "OCCalendarViewController.h"
+#import "iWinAddUsersViewController.h"
 
 @protocol ViewMeetingDelegate <NSObject>
 
@@ -15,14 +16,14 @@
 
 @end
 
-@interface iWinScheduleViewMeetingViewController : UIViewController <OCCalendarDelegate>
+@interface iWinScheduleViewMeetingViewController : UIViewController <OCCalendarDelegate, UserDelegate, UITableViewDataSource, UITableViewDelegate>
 - (IBAction)onAddAgenda;
 - (IBAction)onAddAttendees;
 - (IBAction)onViewMySchedule;
 - (IBAction)onClickSave;
 - (IBAction)onClickSaveAndAddMore;
 - (IBAction)onClickCancel;
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil inEditMode:(BOOL)isEditing withID:(NSString*) meetingID withDateTime:(NSString*) dateTime withTitle:(NSString*) title withLocation:(NSString*) location;
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withUserID:(NSInteger)userID withMeetingID:(NSInteger)meetingID;
 @property (weak, nonatomic) IBOutlet UIButton *saveAndAddMoreButton;
 @property (weak, nonatomic) IBOutlet UITextField *titleField;
 @property (weak, nonatomic) IBOutlet UILabel *startDateLabel;
@@ -37,5 +38,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *cancelButton;
 @property (weak, nonatomic) IBOutlet UIButton *addAttendeesButton;
 @property (weak, nonatomic) IBOutlet UIButton *visitScheduleButton;
+@property (weak, nonatomic) IBOutlet UITableView *attendeeTableView;
 @property (weak, nonatomic) IBOutlet UIButton *addAgendaButton;
 @end
