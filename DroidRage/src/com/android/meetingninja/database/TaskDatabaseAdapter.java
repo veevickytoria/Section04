@@ -35,7 +35,7 @@ public class TaskDatabaseAdapter  extends AbstractDatabaseAdapter{
 	protected final static String KEY_ISCOMPLEATED = "iscompleted";
 	
 	public static String getBaseUrl(){
-		return BASE_URL + "Task";
+		return BASE_URL;
 	}
 	public static Uri.Builder getBaseUri(){
 		return Uri.parse(getBaseUrl()).buildUpon();
@@ -44,9 +44,41 @@ public class TaskDatabaseAdapter  extends AbstractDatabaseAdapter{
 	
 	
 	
-	public static List<Task> getTask(String userID) throws JsonParseException, JsonMappingException, IOException{
+	public static void getTask(Task t) throws JsonParseException, JsonMappingException, IOException{
 		//Server URL setup
-		String _url = getBaseUri().appendPath(userID).build().toString();
+		String _url = getBaseUri().appendPath("/Task/").appendPath(t.getID()).build().toString();
+		URL url = new URL(_url);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		
+		//add request header
+		conn.setRequestMethod("GET");
+		addRequestHeader(conn,false);
+		
+		//Get server response
+		int responseCode = conn.getResponseCode();
+		String response = getServerResponse(conn);
+		
+		//Initialize ObjectMapper
+		//List<Task> taskList = new ArrayList<Task>();
+		final JsonNode taskNode = MAPPER.readTree(response);
+		
+		//if(taskArray.isArray()){
+		//	for(final JsonNode taskNode : taskArray){
+		parseTask(taskNode,t);
+		
+		//		if(t!=null){
+		//			taskList.add(t);
+		//		}
+		//	}
+		//}
+		conn.disconnect();
+		//return void;
+		
+	}
+	
+	public static List<Task> getTasks(String userID) throws JsonParseException, JsonMappingException, IOException{
+		//Server URL setup
+		String _url = getBaseUri().appendPath("/User/Task/").appendPath(userID).build().toString();
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		
@@ -64,8 +96,7 @@ public class TaskDatabaseAdapter  extends AbstractDatabaseAdapter{
 		
 		if(taskArray.isArray()){
 			for(final JsonNode taskNode : taskArray){
-				//TODO: do this
-				Task t = parseTask(taskNode);
+				Task t = parseTasks(taskNode);
 				if(t!=null){
 					taskList.add(t);
 				}
@@ -73,9 +104,9 @@ public class TaskDatabaseAdapter  extends AbstractDatabaseAdapter{
 		}
 		
 		conn.disconnect();
-		return taskList;
-		
+		return taskList;	
 	}
+	
 
 	/*public static void createTask(String userID, Task t) throws IOException,MalformedURLException {
 		//server url setup
@@ -104,8 +135,9 @@ public class TaskDatabaseAdapter  extends AbstractDatabaseAdapter{
 		// TODO Implement this method
 		throw new Exception("createNote: Unimplemented");
 	}*/
-	public static Task parseTask(JsonNode node){
-		Task t = new Task(); //start parsing a task
+	
+	public static Task parseTask(JsonNode node,Task t){
+		//start parsing a task
 		if (node.hasNonNull(KEY_ID)){
 			String id = node.get(KEY_ID).asText();
 			
@@ -126,7 +158,19 @@ public class TaskDatabaseAdapter  extends AbstractDatabaseAdapter{
 		return t;
 	
 	}
+	public static Task parseTasks(JsonNode node){
+		Task t = new Task(); //start parsing a task
+		if (node.hasNonNull(KEY_ID)){
+			String id = node.get(KEY_ID).asText();
 
+			t.setTitle(node.hasNonNull(KEY_TITLE) ? node.get(KEY_TITLE).asText():"");
+		}else{
+			Log.w(TAG, "Parsed null");
+			return null;
+		}
+		return t;
+
+	}
 
 
 }

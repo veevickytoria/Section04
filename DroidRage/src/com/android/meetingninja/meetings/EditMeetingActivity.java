@@ -280,7 +280,6 @@ public class EditMeetingActivity extends FragmentActivity implements
 			if (extras != null)
 				msgIntent.putExtra("listPosition",
 						extras.getInt("listPosition", -1));
-
 			setResult(RESULT_OK, msgIntent);
 			finish();
 		}
