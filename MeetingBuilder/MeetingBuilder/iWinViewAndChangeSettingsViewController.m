@@ -40,7 +40,7 @@
 {
     [super viewDidLoad];
     
-    self.cancelButton.hidden = YES;
+    //self.cancelButton.hidden = YES;
     [self showFields:NO];
     [self enableInteraction:NO];
     self.options = [[NSArray alloc] initWithObjects:@"At time of event",@"5 minutes before",@"15 minutes before", @"30 minutes before", @"1 hour before", @"2 hours before", @"1 day before",@"2 days before", nil];
@@ -82,6 +82,7 @@
     //
     //
     //
+    
     
     self.emailTextField.text = self.contact.email;
     [self.shouldNotifySwitch setOn:[self.settings.shouldNotify boolValue]];
@@ -142,6 +143,8 @@
 
 -(IBAction)onCancel:(id)sender
 {
+    //CLOSE PAGE
+    
     [self.saveAndEditButton setTintColor:[UIColor blueColor]];
     [self showFields:NO];
     [self clearFields];
@@ -149,7 +152,7 @@
     self.isEditing = NO;
     self.oldPasswordTextField.text = @"********";
     [self.saveAndEditButton setTitle:@"Change Email/Password" forState:UIControlStateNormal];
-    self.cancelButton.hidden = YES;
+    
     //Pull Email from DB
 }
 
@@ -171,43 +174,42 @@
 
 -(IBAction)onEdit:(id)sender
 {
-    if (self.isEditing) {
-        ///Saving the info
-        
-        
-        if ([self.oldPasswordTextField.text isEqual:self.settings.password] && [self.passwordTextField.text isEqual:self.confirmPasswordTextField.text]) {
-          
-            [self showFields:NO];
-            [self.saveAndEditButton setTitle:@"Change Email/Password" forState:UIControlStateNormal];
-            [self.saveAndEditButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-            [self saveChanges];
-            [self enableInteraction:NO];
-            self.cancelButton.hidden = YES;
-            self.isEditing = NO;
-        } else {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Old password or confirmation password did not match." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
-            [alert show];
-            [self clearFields];
-        }
-        
-    } else{
+    
         self.isEditing = YES;
         [self showFields:YES];
         [self clearFields];
-        [self.saveAndEditButton setTitle:@"Save" forState:UIControlStateNormal];
-        [self.saveAndEditButton setTitleColor:[UIColor greenColor] forState:UIControlStateNormal];
-        self.cancelButton.hidden = NO;
+        self.saveAndEditButton.hidden = YES;
         [self enableInteraction:YES];
-    }
 }
 
 - (IBAction)onSaveSwitch:(id)sender
 {
+    //Save should notify switch
     if([self.shouldNotifySwitch isOn]){
         self.settings.shouldNotify = [NSNumber numberWithInt:1];
     } else {
         self.settings.shouldNotify = [NSNumber numberWithInt:0];
     }
+    
+    //Save when to notify table
+    self.settings.whenToNotify = self.tableIndex;
+    
+    //Save the rest
+    if ([self.oldPasswordTextField.text isEqual:self.settings.password] && [self.passwordTextField.text isEqual:self.confirmPasswordTextField.text]) {
+        [self showFields:NO];
+        [self.saveAndEditButton setTitle:@"Change Email/Password" forState:UIControlStateNormal];
+        [self.saveAndEditButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+        [self saveChanges];
+        [self enableInteraction:NO];
+        self.isEditing = NO;
+        self.saveAndEditButton.hidden = NO;
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Old password or confirmation password did not match." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alert show];
+        [self clearFields];
+    }
+    
+    
 }
 - (IBAction)onSaveTable:(id)sender
 {
@@ -228,6 +230,17 @@
     NSError *error;
     [self.context save:&error];
 }
+
+-(void) saveNotificationsChangesToDB
+{
+    
+}
+
+-(void) saveEmailOrPasswordChangesToDB
+{
+    
+}
+
 
 -(void) showFields: (BOOL) show
 {

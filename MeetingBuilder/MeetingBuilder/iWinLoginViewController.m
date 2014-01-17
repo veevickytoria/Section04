@@ -8,6 +8,8 @@
 
 #import "iWinLoginViewController.h"
 #import <QuartzCore/QuartzCore.h>
+#import "Settings.h"
+#import "iWinAppDelegate.h"
 #include <CommonCrypto/CommonDigest.h>
 
 @interface iWinLoginViewController ()
@@ -43,6 +45,33 @@
     NSString *email = [[self.userNameField text] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     NSString *password = [self sha256HashFor:[self.passwordField text]];
     [self.loginDelegate login:1];
+    
+    //
+    //CREATE Settings object for local datamodel so that we can have access to the password on the settings page
+    iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    
+    NSManagedObjectContext *context = [appDelegate managedObjectContext];
+    if (!self.isEditing)
+    {
+        
+        NSManagedObject *newMeeting = [NSEntityDescription insertNewObjectForEntityForName:@"Meeting" inManagedObjectContext:context];
+        NSError *error;
+        
+        
+//        [newMeeting setValue:self.titleField.text forKey:@"title"];
+//        [newMeeting setValue:self.placeField.text forKey:@"location"];
+//        [newMeeting setValue:[NSString stringWithFormat: @"%@ %@ %@ %@", self.startDateLabel.text, self.startTimeLabel.text, self.endDateLabel.text, self.endTimeLabel.text] forKey:@"datetime"];
+//        [newMeeting setValue:[NSNumber numberWithInt:0] forKey:@"userID"];
+//        [newMeeting setValue:@"false" forKey:@"attendance"];
+//        [context save:&error];
+        
+    }
+
+    //
+    //
+    
+    
+    
     
 //    if (password.length > 0 && email.length>0)
 //    {
