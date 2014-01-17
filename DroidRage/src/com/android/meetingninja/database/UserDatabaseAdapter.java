@@ -336,8 +336,9 @@ public class UserDatabaseAdapter extends AbstractDatabaseAdapter {
 			for (final JsonNode userNode : userArray) {
 				User u = parseUser(userNode);
 				// assign and check null and do not add local user
-				if (u != null)
+				if (u != null){
 					userList.add(u);
+				}
 			}
 		}
 
