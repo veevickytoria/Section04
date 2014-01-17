@@ -46,89 +46,74 @@
     NSString *password = [self sha256HashFor:[self.passwordField text]];
 //    [self.loginDelegate login:1];
     
-    //
-    //CREATE Settings object for local datamodel so that we can have access to the password on the settings page
-    iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     
-    NSManagedObjectContext *context = [appDelegate managedObjectContext];
-    if (!self.isEditing)
+    if (password.length > 0 && email.length>0)
     {
+        //register
+        NSArray *keys = [NSArray arrayWithObjects:@"email", @"password", nil];
+        NSArray *objects = [NSArray arrayWithObjects:email, password,nil];
         
-        NSManagedObject *newMeeting = [NSEntityDescription insertNewObjectForEntityForName:@"Meeting" inManagedObjectContext:context];
-        NSError *error;
+        NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+        NSData *jsonData;
+        NSString *jsonString;
         
+        if ([NSJSONSerialization isValidJSONObject:jsonDictionary])
+        {
+            jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:nil];
+            jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        }
+        NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Login"];
         
-//        [newMeeting setValue:self.titleField.text forKey:@"title"];
-//        [newMeeting setValue:self.placeField.text forKey:@"location"];
-//        [newMeeting setValue:[NSString stringWithFormat: @"%@ %@ %@ %@", self.startDateLabel.text, self.startTimeLabel.text, self.endDateLabel.text, self.endTimeLabel.text] forKey:@"datetime"];
-//        [newMeeting setValue:[NSNumber numberWithInt:0] forKey:@"userID"];
-//        [newMeeting setValue:@"false" forKey:@"attendance"];
-//        [context save:&error];
-        
-    }
+        NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+        [urlRequest setHTTPMethod:@"POST"];
+        [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+        [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+        [urlRequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-length"];
+        [urlRequest setHTTPBody:jsonData];
+        NSURLResponse * response = nil;
+        NSError * error = nil;
+        NSData * data =[NSURLConnection sendSynchronousRequest:urlRequest
+                                             returningResponse:&response
+                                                         error:&error];
+        NSInteger userID = 0;
+        if (error) {
+            // Handle error.
+        }
+        else
+        {
+            NSError *jsonParsingError = nil;
+            NSDictionary *deserializedDictionary = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
+            
 
-    //
-    //
-    
-    
-    
-    
-//    if (password.length > 0 && email.length>0)
-//    {
-//        //register
-//        NSArray *keys = [NSArray arrayWithObjects:@"email", @"password", nil];
-//        NSArray *objects = [NSArray arrayWithObjects:email, password,nil];
-//        
-//        NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-//        NSData *jsonData;
-//        NSString *jsonString;
-//        
-//        if ([NSJSONSerialization isValidJSONObject:jsonDictionary])
-//        {
-//            jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:nil];
-//            jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-//        }
-//        NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Login"];
-//        
-//        NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
-//        [urlRequest setHTTPMethod:@"POST"];
-//        [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-//        [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-//        [urlRequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-length"];
-//        [urlRequest setHTTPBody:jsonData];
-//        NSURLResponse * response = nil;
-//        NSError * error = nil;
-//        NSData * data =[NSURLConnection sendSynchronousRequest:urlRequest
-//                                             returningResponse:&response
-//                                                         error:&error];
-//        NSInteger userID = 0;
-//        if (error) {
-//            // Handle error.
-//        }
-//        else
-//        {
-//            NSError *jsonParsingError = nil;
-//            NSDictionary *deserializedDictionary = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
-//            
-//
-//            if ([deserializedDictionary objectForKey:@"userID"])
-//            {
-//                userID = (NSInteger)[deserializedDictionary objectForKey:@"userID"];
-//                [self.loginDelegate login:userID];
-//            }
-//            else
-//            {
-//                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Username/Password not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
-//                [alert show];
-//            }
-//        }
-//       
-//    }
-//    else
-//    {
-//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Enter valid values" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
-//        [alert show];
-//    }
+            if ([deserializedDictionary objectForKey:@"userID"])
+            {
+                userID = (NSInteger)[deserializedDictionary objectForKey:@"userID"];
+                [self.loginDelegate login:userID];
+            }
+            else
+            {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Username/Password not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+                [alert show];
+            }
+        }
+        
+        
+        //Saving off the password to the local data model
+        
+        iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+        NSManagedObjectContext *context = [appDelegate managedObjectContext];
+        NSManagedObject *newSettings = [NSEntityDescription insertNewObjectForEntityForName:@"Settings" inManagedObjectContext:context];
+        [newSettings setValue:self.passwordField.text forKey:@"password"];
+        [newSettings setValue:[NSNumber numberWithInt:0] forKey:@"userID"];
+        [context save:&error];
+        
+       
+    }
+    else
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Enter valid values" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alert show];
+    }
     
 }
 

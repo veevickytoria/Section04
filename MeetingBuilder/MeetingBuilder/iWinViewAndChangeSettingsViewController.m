@@ -19,7 +19,7 @@
 @property (nonatomic) NSInteger userID;
 @property (nonatomic) NSArray *options;
 @property (nonatomic) NSNumber *tableIndex;
-@property (nonatomic)NSManagedObjectContext *context;
+@property (nonatomic) NSManagedObjectContext *context;
 @property (nonatomic) UIAlertView *deleteAlertView;
 @end
 
