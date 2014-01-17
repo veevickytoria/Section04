@@ -32,7 +32,7 @@ public class TaskDatabaseAdapter  extends AbstractDatabaseAdapter{
 	protected final static String KEY_ASSIGNEDTO = "assignedto";
 	protected final static String KEY_ASSIGNEDFROM = "assignedfrom";
 	protected final static String KEY_CREATEDBY = "createdby";
-	//protected final static boolean KEY_ISCOMPLEATED = "iscompleted";
+	protected final static String KEY_ISCOMPLEATED = "iscompleted";
 	
 	public static String getBaseUrl(){
 		return BASE_URL + "Task";
@@ -118,7 +118,7 @@ public class TaskDatabaseAdapter  extends AbstractDatabaseAdapter{
 			t.setAssignedTo(node.hasNonNull(KEY_ASSIGNEDTO) ? node.get(KEY_ASSIGNEDTO).asText(): "");
 			t.setAssignedFrom(node.hasNonNull(KEY_ASSIGNEDFROM) ? node.get(KEY_ASSIGNEDFROM).asText(): "");
 			t.setCreatedBy(node.hasNonNull(KEY_CREATEDBY) ? node.get(KEY_CREATEDBY).asText(): "");
-			//t.setIsCompleted(node.hasNonNull(KEY_ISCOMPLETED)? node.get(KEY_ISCOMPLETED).asboolean: false):
+			t.setIsCompleted(node.hasNonNull(KEY_ISCOMPLEATED)? node.get(KEY_ISCOMPLEATED).asBoolean(): false);
 		}else{
 			Log.w(TAG, "Parsed null");
 			return null;

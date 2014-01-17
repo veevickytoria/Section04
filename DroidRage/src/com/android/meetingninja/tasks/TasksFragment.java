@@ -35,12 +35,19 @@ import android.widget.Toast;
 
 import com.android.meetingninja.R;
 import com.android.meetingninja.ViewTaskActivity;
+import com.android.meetingninja.database.AsyncResponse;
 import com.android.meetingninja.notes.CreateNoteActivity;
+import com.android.meetingninja.user.SessionManager;
 
-public class TasksFragment extends Fragment {
+public class TasksFragment extends Fragment implements AsyncResponse<List<Task>> {
+	
 	private List<String> meetingNames = new ArrayList<String>();
 	private HashMap<String, List<Task>> taskLists = new HashMap<String, List<Task>>();
 	private TaskListAdapter taskAdpt;
+	
+	private TaskFetcherTask fetcher = null;
+	private SessionManager session;
+	
 
 	// make tasks adapter
 
@@ -49,7 +56,7 @@ public class TasksFragment extends Fragment {
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		View v = inflater.inflate(R.layout.fragment_tasks, container, false);
-
+		session = SessionManager.getInstance();
 		refreshTasks();
 
 		ExpandableListView lv = (ExpandableListView) v
@@ -60,6 +67,9 @@ public class TasksFragment extends Fragment {
 		lv.setAdapter(taskAdpt);
 		// lv.setEmptyView(v.findViewById(R.id.ta))
 		registerForContextMenu(lv);
+		
+		fetcher = new TaskFetcherTask(this);
+		fetcher.execute("5316");
 
 		lv.setOnChildClickListener(new OnChildClickListener() {
 
@@ -89,6 +99,15 @@ public class TasksFragment extends Fragment {
 		meetingNames.add("meeting 1");
 		meetingNames.add("meeting 2");
 		meetingNames.add("meeting 3");
+	}
+
+	@Override
+	public void processFinish(List<Task> result) {
+		
+		taskLists.get("meeting 1").clear();
+		taskLists.get("meeting 1").addAll(result);
+		taskAdpt.notifyDataSetChanged();
+		
 	}
 
 }
