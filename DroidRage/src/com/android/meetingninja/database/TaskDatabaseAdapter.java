@@ -34,6 +34,7 @@ public class TaskDatabaseAdapter  extends AbstractDatabaseAdapter{
 	protected final static String KEY_ASSIGNEDFROM = "assignedFrom";
 	protected final static String KEY_CREATEDBY = "createdBy";
 	protected final static String KEY_ISCOMPLEATED = "isCompleted";
+	protected final static String KEY_TYPE = "type";
 	
 	public static String getBaseUrl(){
 		return BASE_URL;
@@ -111,34 +112,6 @@ public class TaskDatabaseAdapter  extends AbstractDatabaseAdapter{
 	}
 	
 
-	/*public static void createTask(String userID, Task t) throws IOException,MalformedURLException {
-		//server url setup
-		String _url = getBaseUri().appendPath(userID).build().toString();
-		URL url = new URL(_url);
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-		
-		//add request header
-		conn.setRequestMethod("GET");
-		addRequestHeader(conn,true);
-		
-		//prepare the post for posting
-		ByteArrayOutputStream json = new ByteArrayOutputStream();
-		//this type of print stream allow us to get a string easily
-		PrintStream ps = new PrintStream(json);
-		//Create a generator to build the Json string
-		JsonGenerator jgen = JFACTORY.createGenerator(ps,JsonEncoding.URF8);
-		//Build Json Object
-		jgen.writeStartObject();
-		jgen.writeStringField("userID",userID);
-		jgen.writeStringField(KEY_TITLE, t.getTitle());
-		jgen.writeStringField(KEY_DESC, t.getDescription());
-		jgen.writeStringField(KEY_;)
-		
-		
-		// TODO Implement this method
-		throw new Exception("createNote: Unimplemented");
-	}*/
-	
 	public static Task parseTask(JsonNode node,Task t){
 		//start parsing a task
 		if (node.hasNonNull(KEY_ID)){
@@ -153,7 +126,9 @@ public class TaskDatabaseAdapter  extends AbstractDatabaseAdapter{
 			t.setAssignedTo(node.hasNonNull(KEY_ASSIGNEDTO) ? node.get(KEY_ASSIGNEDTO).asText() : "");
 			t.setAssignedFrom(node.hasNonNull(KEY_ASSIGNEDFROM) ? node.get(KEY_ASSIGNEDFROM).asText() : "");
 			t.setCreatedBy(node.hasNonNull(KEY_CREATEDBY) ? node.get(KEY_CREATEDBY).asText() : "");
+			t.setType(node.hasNonNull(KEY_TYPE) ? node.get(KEY_TYPE).asText() : "");
 			t.setIsCompleted(node.hasNonNull(KEY_ISCOMPLEATED)? node.get(KEY_ISCOMPLEATED).asBoolean() : false);
+		
 		}else{
 			Log.w(TAG, "Parsed null");
 			return null;
