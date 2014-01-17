@@ -134,6 +134,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.android.meetingninja.MainActivity" />
         </activity>
+        <activity
+            android:name="com.android.meetingninja.ViewTaskActivity"
+            android:label="@string/title_activity_view_task" >
+        </activity>
     </application>
 
 </manifest>

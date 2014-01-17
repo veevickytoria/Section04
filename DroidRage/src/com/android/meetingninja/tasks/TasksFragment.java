@@ -21,6 +21,7 @@ import java.util.List;
 
 import objects.Task;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -33,6 +34,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.meetingninja.R;
+import com.android.meetingninja.ViewTaskActivity;
+import com.android.meetingninja.notes.CreateNoteActivity;
 
 public class TasksFragment extends Fragment {
 	private List<String> meetingNames = new ArrayList<String>();
@@ -63,14 +66,9 @@ public class TasksFragment extends Fragment {
 			@Override
 			public boolean onChildClick(ExpandableListView parent, View v,
 					int groupPosition, int childPosition, long id) {
-				Toast.makeText(
-						getActivity(),
-						meetingNames.get(groupPosition)
-								+ " : "
-								+ taskLists
-										.get(meetingNames.get(groupPosition))
-										.get(childPosition).getTitle(),
-						Toast.LENGTH_SHORT).show();
+				Intent viewTask = new Intent(getActivity(),
+						ViewTaskActivity.class);
+				startActivity(viewTask);
 				return false;
 			}
 		});
