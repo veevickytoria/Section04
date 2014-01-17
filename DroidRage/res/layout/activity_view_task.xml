@@ -41,8 +41,8 @@
 
                     <TextView
                         android:id="@+id/dateCreated"
-                        android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="2dp"
                         android:layout_weight="2"
                         android:hint="Date Created:"
@@ -50,8 +50,8 @@
 
                     <TextView
                         android:id="@+id/task_date_created_text"
-                        android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:hint="November 13, 2013"
                         android:minHeight="16dp" />
@@ -64,8 +64,8 @@
 
                     <TextView
                         android:id="@+id/dateAssigned"
-                        android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="2dp"
                         android:layout_weight="2"
                         android:hint="Date Assigned:"
@@ -73,8 +73,8 @@
 
                     <TextView
                         android:id="@+id/task_date_assigned_text"
-                        android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:hint="November 13, 2013"
                         android:minHeight="16dp" />
@@ -87,8 +87,8 @@
 
                     <TextView
                         android:id="@+id/dateDeadline"
-                        android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="2dp"
                         android:layout_weight="2"
                         android:hint="Deadline:"
@@ -96,8 +96,8 @@
 
                     <TextView
                         android:id="@+id/task_date_deadline_text"
-                        android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:hint="November 13, 2013"
                         android:minHeight="16dp" />
@@ -168,7 +168,7 @@
                 android:gravity="center_vertical"
                 android:text="Completed?" />
 
-            <RadioGroup
+            <LinearLayout
                 android:id="@+id/task_response_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -177,26 +177,34 @@
                 android:orientation="horizontal"
                 android:paddingTop="5dip" >
 
-                <RadioButton
-                    android:id="@+id/task_response_yes"
+                <TextView
+                    android:id="@+id/task_completed_text"
                     style="@style/TextAppearance.EditEvent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center_vertical"
+                    android:gravity="center_vertical|center_horizontal"
                     android:maxWidth="128dip"
                     android:text="@string/response_yes" />
 
-                <RadioButton
-                    android:id="@+id/task_response_no"
-                    style="@style/TextAppearance.EditEvent"
+                <Button
+                    android:id="@+id/task_complete_button"
+                    style="@style/TextAppearance.EditEvent_LabelSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:maxWidth="128dip"
-                    android:text="@string/response_no" />
-            </RadioGroup>
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginBottom="0dip"
+                    android:layout_marginTop="0dip"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:contentDescription="@string/reminders_label"
+                    android:gravity="top"
+                    android:minHeight="20dip"
+                    android:paddingBottom="12dp"
+                    android:text="Complete this now"
+                    android:textAllCaps="false"
+                    android:textColor="#FF777777"
+                    android:textSize="18sp" />
+            </LinearLayout>
 
             <View style="@style/EditEventSeparator" />
         </LinearLayout>
@@ -208,18 +216,19 @@
             android:orientation="vertical" >
 
             <TextView
-                android:id="@+id/task_assigned_to_label"
+                android:id="@+id/task_assigned_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
                 android:hint="Assigned to" />
 
-            <ListView
-                android:id="@+id/task_users_assigned"
+            <TextView
+                android:id="@+id/task_assigned_text"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
+                android:text="User assigned to"
                 android:ems="10" >
-            </ListView>
+            </TextView>
         </LinearLayout>
 
         <!-- REMINDERS -->

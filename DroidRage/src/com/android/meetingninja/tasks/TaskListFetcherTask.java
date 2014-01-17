@@ -12,11 +12,11 @@ import com.android.meetingninja.database.TaskDatabaseAdapter;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class TaskFetcherTask extends AsyncTask<String, Void, List<Task>> {
+public class TaskListFetcherTask extends AsyncTask<String, Void, List<Task>> {
 	
 	private AsyncResponse<List<Task>> delegate;
 	
-	public TaskFetcherTask(AsyncResponse<List<Task>> delegate){
+	public TaskListFetcherTask(AsyncResponse<List<Task>> delegate){
 		this.delegate = delegate;
 	}
 	@Override
@@ -24,7 +24,7 @@ public class TaskFetcherTask extends AsyncTask<String, Void, List<Task>> {
 		List<Task> dbTasks = new ArrayList<Task>();
 		
 		try{
-			dbTasks = TaskDatabaseAdapter.getTask(params[0]);
+			dbTasks = TaskDatabaseAdapter.getTasks(params[0]);
 		} catch(IOException e){
 			Log.e("TaskFetch", "Error: Unable to get tasks");
 			Log.e("TASKS_ERR", e.getLocalizedMessage());

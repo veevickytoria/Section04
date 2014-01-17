@@ -23,7 +23,8 @@ public class Task extends Event implements Parcelable {
 	private String completionCriteria;
 	private String assignedTo;
 	private String assignedFrom;
-	private String createdBy;		//title, description, deadline, compeltion criteria, assigned to
+	private String createdBy;
+	private String type;			//title, description, deadline, compeltion criteria, assigned to
 	
 
 	public Task() {
@@ -45,7 +46,15 @@ public class Task extends Event implements Parcelable {
 	public void setTaskID(String taskID) {
 		this.taskID = taskID;
 	}
-
+	
+	public void setType(String type){
+		this.type = type;
+	}
+	
+	public String getType(){
+		return this.type;
+	}
+	
 	public String getTitle() {
 		return title;
 	}
@@ -207,5 +216,30 @@ public class Task extends Event implements Parcelable {
 		String json = _json.toString("UTF8");
 		ps.close();
 		return json;
+	}
+	
+	@Override
+	public String toString(){
+		StringBuilder builder = new StringBuilder();
+		builder.append("*** Task Details ***\n");
+		builder.append("getTaskID()\t");
+		builder.append(getTaskID() + "\n");
+		builder.append("getTitle()\t");
+		builder.append(getTitle() + "\n");
+		builder.append("getDescription()\t");
+		builder.append(getDescription() + "\n");
+		builder.append("getDateCreated()\t");
+		builder.append(getDateCreated() + "\n");
+		builder.append("getDeadline()\t");
+		builder.append(getDeadline() + "\n");
+		builder.append("getIsCompleted()\t");
+		builder.append(getIsCompleted() + "\n");
+		builder.append("getAssignedTo()\t");
+		builder.append(getAssignedTo() + "\n");
+		builder.append("getCreatedBy()\t");
+		builder.append(getCreatedBy() + "\n");
+		builder.append("getAssingedFrom()\t");
+		builder.append(getAssignedFrom() + "\n");
+		return builder.toString();
 	}
 }

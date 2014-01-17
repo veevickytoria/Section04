@@ -45,7 +45,8 @@ public class TasksFragment extends Fragment implements AsyncResponse<List<Task>>
 	private HashMap<String, List<Task>> taskLists = new HashMap<String, List<Task>>();
 	private TaskListAdapter taskAdpt;
 	
-	private TaskFetcherTask fetcher = null;
+	private TaskListFetcherTask taskListfetcher = null;
+	private TaskFetcherResp taskInfoFetcher = null;
 	private SessionManager session;
 	
 
@@ -68,22 +69,29 @@ public class TasksFragment extends Fragment implements AsyncResponse<List<Task>>
 		// lv.setEmptyView(v.findViewById(R.id.ta))
 		registerForContextMenu(lv);
 		
-		fetcher = new TaskFetcherTask(this);
-		fetcher.execute("5316");
+		taskListfetcher = new TaskListFetcherTask(this);
+		taskListfetcher.execute("5316");
+		taskInfoFetcher = new TaskFetcherResp(this);
 
 		lv.setOnChildClickListener(new OnChildClickListener() {
 
 			@Override
 			public boolean onChildClick(ExpandableListView parent, View v,
 					int groupPosition, int childPosition, long id) {
-				Intent viewTask = new Intent(getActivity(),
-						ViewTaskActivity.class);
-				startActivity(viewTask);
+				//Intent viewTask = new Intent(getActivity(),
+				//		ViewTaskActivity.class);
+				//startActivity(viewTask);
+				Task t = (Task) taskAdpt.getChild(groupPosition, childPosition);
+				loadTask(t);
 				return false;
 			}
 		});
 
 		return v;
+	}
+	
+	private void loadTask(Task task){
+		this.taskInfoFetcher.openTask(task);
 	}
 
 	private void refreshTasks() {
