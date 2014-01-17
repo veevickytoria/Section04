@@ -29,7 +29,7 @@ public class TaskFetcherResp implements AsyncResponse<Void>{
 	}
 	
 	public void openTask(Task task){
-		System.out.println("task id in fetcher:   " + task.getID());
+		System.out.println("task id in fetcher:   " + task.getType());
 		this.task = task;
 		this.fetcher.execute(task);
 	}

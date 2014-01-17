@@ -212,6 +212,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_weight="1"
             android:orientation="vertical" >
 
@@ -219,15 +220,15 @@
                 android:id="@+id/task_assigned_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
                 android:hint="Assigned to" />
 
             <TextView
                 android:id="@+id/task_assigned_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="User assigned to"
-                android:ems="10" >
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:ems="10"
+                android:text="User assigned to" >
             </TextView>
         </LinearLayout>
 
@@ -237,6 +238,7 @@
             android:id="@+id/task_reminders_row"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/vertical_spacer"
             android:focusable="true"
             android:orientation="vertical" >
 

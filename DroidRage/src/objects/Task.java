@@ -165,19 +165,24 @@ public class Task extends Event implements Parcelable {
 		dest.writeString(getAssignedTo());
 		dest.writeString(getAssignedFrom());
 		dest.writeString(getCreatedBy());
+		dest.writeString(getTaskID());
+		dest.writeString(getType());
 	}
 	
 	public void readFromParcel(Parcel in){
-		completionCriteria = in.readString();
 		title = in.readString();
-		description = in.readString();
-		dateCreated = in.readString();
-		deadline = in.readString();
 		isCompleted = Boolean.parseBoolean(in.readString());
+		description = in.readString();
+		deadline = in.readString();
+		dateCreated = in.readString();
+		dateAssigned = in.readString();
+		completionCriteria = in.readString();
 		assignedTo = in.readString();
-		createdBy = in.readString();
 		assignedFrom = in.readString();
+		createdBy = in.readString();
 		taskID = in.readString();
+		type = in.readString();
+		
 		
 	}
 	
@@ -240,6 +245,8 @@ public class Task extends Event implements Parcelable {
 		builder.append(getCreatedBy() + "\n");
 		builder.append("getAssingedFrom()\t");
 		builder.append(getAssignedFrom() + "\n");
+		builder.append("getType()\t");
+		builder.append(getType() + "\n");
 		return builder.toString();
 	}
 }

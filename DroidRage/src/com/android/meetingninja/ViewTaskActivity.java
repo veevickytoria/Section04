@@ -15,15 +15,17 @@ import android.widget.TextView;
 public class ViewTaskActivity extends Activity {
 	private TextView taskName, dateCreated, dateAssigned, deadline,
 				description, completionCriteria, isCompleted, assignedLabel, assignedText;
+	RetUserObj fetcher = null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_view_task);
 		Intent i = getIntent();
 		Task task = i.getParcelableExtra("task");
+		System.out.println(task.toString());
+		fetcher = new RetUserObj();
 		setupViews();
 		setTask(task);
-		System.out.println(task.toString());
 	}
 
 	@Override
@@ -59,12 +61,14 @@ public class ViewTaskActivity extends Activity {
 			isCompleted.setText("No");  //TODO: change this to use string xml
 		}
 		
-		if(task.getType().equals("ASSIGNED TO")){
+		if(task.getType().equals("ASSIGNED_TO")){
 			assignedLabel.setText("Assigned From:");
-			assignedText.setText(task.getAssignedFrom());
+			//assignedText.setText(task.getAssignedFrom());
+			fetcher.execute(task.getAssignedFrom());
 		}else{
 			assignedLabel.setText("Assigned To:");
-			assignedText.setText(task.getAssignedTo());
+			//assignedText.setText(task.getAssignedTo());
+			fetcher.execute(task.getAssignedTo());
 		}
 	}
 	

@@ -49,6 +49,10 @@ public class TasksFragment extends Fragment implements AsyncResponse<List<Task>>
 	private TaskFetcherResp taskInfoFetcher = null;
 	private SessionManager session;
 	
+	private final String assignedToMe = "Assigned to me";
+	private final String iAssigned = "I assigned";
+	private final String iCreated = "I created";
+	
 
 	// make tasks adapter
 
@@ -96,26 +100,26 @@ public class TasksFragment extends Fragment implements AsyncResponse<List<Task>>
 
 	private void refreshTasks() {
 		ArrayList<Task> l1 = new ArrayList<Task>(), l2 = new ArrayList<Task>(), l3 = new ArrayList<Task>();
-		l1.add(new Task("testing first"));
-		l1.add(new Task("task 1"));
-		l1.add(new Task("and again and again"));
-		taskLists.put("meeting 1", l1);
-		l2.add(new Task("task 2"));
-		taskLists.put("meeting 2", l2);
-		l3.add(new Task("task 3"));
-		taskLists.put("meeting 3", l3);
-		meetingNames.add("meeting 1");
-		meetingNames.add("meeting 2");
-		meetingNames.add("meeting 3");
+		taskLists.put(assignedToMe, l1);
+		taskLists.put(iAssigned, l2);
+		taskLists.put(iCreated, l3);
+		meetingNames.add(assignedToMe);
+		meetingNames.add(iAssigned);
+		meetingNames.add(iCreated);
 	}
 
 	@Override
 	public void processFinish(List<Task> result) {
-		
-		taskLists.get("meeting 1").clear();
-		taskLists.get("meeting 1").addAll(result);
+		for(Task task : result){
+			if(task.getType().equals("ASSIGNED_TO")){
+				taskLists.get(assignedToMe).add(task);
+			}else if(task.getType().equals("ASSIGNED_FROM")){
+				taskLists.get(iAssigned).add(task);
+			}else{
+				taskLists.get(iCreated).add(task);
+			}
+		}
 		taskAdpt.notifyDataSetChanged();
-		
 	}
 
 }

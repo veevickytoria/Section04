@@ -126,7 +126,6 @@ public class TaskDatabaseAdapter  extends AbstractDatabaseAdapter{
 			t.setAssignedTo(node.hasNonNull(KEY_ASSIGNEDTO) ? node.get(KEY_ASSIGNEDTO).asText() : "");
 			t.setAssignedFrom(node.hasNonNull(KEY_ASSIGNEDFROM) ? node.get(KEY_ASSIGNEDFROM).asText() : "");
 			t.setCreatedBy(node.hasNonNull(KEY_CREATEDBY) ? node.get(KEY_CREATEDBY).asText() : "");
-			t.setType(node.hasNonNull(KEY_TYPE) ? node.get(KEY_TYPE).asText() : "");
 			t.setIsCompleted(node.hasNonNull(KEY_ISCOMPLEATED)? node.get(KEY_ISCOMPLEATED).asBoolean() : false);
 		
 		}else{
@@ -142,6 +141,7 @@ public class TaskDatabaseAdapter  extends AbstractDatabaseAdapter{
 			String id = node.get(KEY_ID_LIST).asText();
 			t.setID(id);
 			t.setTitle(node.hasNonNull(KEY_TITLE) ? node.get(KEY_TITLE).asText():"");
+			t.setType(node.hasNonNull(KEY_TYPE) ? node.get(KEY_TYPE).asText() : "");
 		}else{
 			Log.w(TAG, "Parsed null");
 			return null;
