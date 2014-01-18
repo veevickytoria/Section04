@@ -51,6 +51,15 @@
     NSString *password = [self sha256HashFor:[self.passwordField text]];
 //    [self.loginDelegate login:1];
     
+//    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/5331"];
+//    
+//    NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+//    [urlRequest setHTTPMethod:@"DELETE"];
+//    NSURLResponse * response = nil;
+//    NSError * error = nil;
+//    [NSURLConnection sendSynchronousRequest:urlRequest
+//                          returningResponse:&response
+//                                      error:&error];
     
     if (password.length > 0 && email.length>0)
     {
@@ -102,18 +111,6 @@
                 [alert show];
             }
         }
-        
-        
-        //Saving off the password to the local data model
-        
-        iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-        NSManagedObjectContext *context = [appDelegate managedObjectContext];
-        NSManagedObject *newSettings = [NSEntityDescription insertNewObjectForEntityForName:@"Settings" inManagedObjectContext:context];
-        [newSettings setValue:self.passwordField.text forKey:@"password"];
-        [newSettings setValue:[NSNumber numberWithInt:0] forKey:@"userID"];
-        [context save:&error];
-        
-       
     }
     else
     {
