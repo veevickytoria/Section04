@@ -146,8 +146,7 @@ alert("urlEnding:" + urlEnding);
 }
 
 **/
-function areCookiesEnabled()
-{
+function areCookiesEnabled(){
     var cookiesEnabled = (navigator.cookiesEnabled) ? true : false;
 
     if (typeof navigator.cookiesEnabled == "undefined" && !cookiesEnabled)
@@ -173,12 +172,12 @@ function areCookiesEnabled()
 </div>
 <br />
 <div>
-<h1>Login</h1>
-            <p>Welcome to our Web App! Please enter credentials below </p>
+<h1 style='margin-left: 24%; margin-right: auto'>Login</h1>
+            <p style='margin-left: 24%; margin-right: auto'>Welcome to our Web App! Please enter credentials below </p>
             <form id="loginForm" method="post">
-                <input name="email" placeholder="Email" type="text" />
-                <input name="password" placeholder="Password" type="password" />
-                <input class="button" style="font-size: 14px; cursor: pointer; visibility: none;" type="submit" value="Login" />
+                <input name="email" style='width:52%; margin-left: 24%; margin-right: auto' placeholder="Email" type="text" />
+                <input name="password" style='margin-left: 24%; margin-right: auto; width:52%' placeholder="Password" type="password" />
+                <input class="button" style="margin-left: 24%; margin-right: auto; font-size: 14px; cursor: pointer; visibility: none;" type="submit" value="Login" />
                 <br />
                 <p id="invalidLogin" style="text-align: center; color: #F59C17; font-size: 18px; display: none; font-weight: bold; padding-top: 10px;">
                 Invalid Username or Password</p>
@@ -186,7 +185,9 @@ function areCookiesEnabled()
                 Forgot?</a>
             </form>
 </div>
-<div>
+<br /><br /><br />
+<h1>~~TEMP REDESIGN~~</h1>
+<!-- <div>
             <form id="registerForm" method="post">
                 <table style="width: 100%">
                     <input id='regName' name="name" placeholder="Full Name" type="text" required />
@@ -200,7 +201,7 @@ function areCookiesEnabled()
                     <input class="button" style='font-size: 14px; cursor: pointer' type="submit" value="Sign Up" />
                 </table>
             </form>
-</div>
+</div> -->
 
 <h1>
 

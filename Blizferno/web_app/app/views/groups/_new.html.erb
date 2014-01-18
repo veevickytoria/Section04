@@ -1,16 +1,12 @@
-
-
-<h1>Create Group</h1>
-<br />
-<form name='input' id='createGroup' onsubmit="validateGroup()">
+<form name='input' id='createGroup' onsubmit='validateGroup()'>
 	<h5>Group Title</h5>
-	<input name='title' type="text" class="form-control" style='width:40%' placeholder="Title" />
+	<input name='title' type='text' id='newTitle' class='form-control' placeholder='Title' />
 	<h5>Type</h5>
-	<input name='type' type="text" class="form-control" style='width:40%' placeholder="Type" />
+	<input name='type' type='text' id='newType' class='form-control' placeholder='Type' />
 	<h5>Description</h5>
-	<input name='desc' type="text" class="form-control" style='width:80%' placeholder="Description" />
+	<input name='desc' type='text' id='newDesc' class='form-control' placeholder='Description' />
 	<h5>Group Members</h5>
-	<select multiple id="grpMemSlct" size='6' style='width:50%' class="form-control">
+	<select multiple id='grpMemSlct' size='6' class='form-control'>
 		<option disabled>Select multiple by holding Ctrl/CMD</option>
 		<option value='1'>Santa Claus</option>
 		<option value='2'>WasARebel</option>
