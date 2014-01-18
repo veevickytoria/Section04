@@ -72,7 +72,7 @@
         NSData * data =[NSURLConnection sendSynchronousRequest:urlRequest
                                              returningResponse:&response
                                                          error:&error];
-        NSInteger userID = 0;
+        NSInteger userID = -1;
         if (error) {
             // Handle error.
         }
@@ -84,7 +84,7 @@
 
             if ([deserializedDictionary objectForKey:@"userID"])
             {
-                userID = (NSInteger)[deserializedDictionary objectForKey:@"userID"];
+                userID = [[deserializedDictionary objectForKey:@"userID"] integerValue];
                 [self.loginDelegate login:userID];
             }
             else

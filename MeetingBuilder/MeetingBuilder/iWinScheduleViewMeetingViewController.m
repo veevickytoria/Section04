@@ -303,15 +303,17 @@
 
 -(void) saveNewMeeting
 {
-    NSMutableArray *userIDKeys = [[NSMutableArray alloc] init];
-    NSMutableArray *userIDObjects = [[NSMutableArray alloc] init];
+    
+    NSMutableArray *userIDJsonDictionary = [[NSMutableArray alloc] init];
     for (int i = 0; i<[self.userList count]; i++)
     {
         Contact *c = (Contact *)self.userList[i];
-        [userIDKeys addObject:@"userID"];
-        [userIDObjects addObject:[c.userID stringValue]];
+        NSArray *userIDKeys = [[NSArray alloc] initWithObjects:@"userID", nil];
+        NSArray *userIDObjects = [[NSArray alloc] initWithObjects:[c.userID stringValue], nil];
+        NSDictionary *dict = [NSDictionary dictionaryWithObjects:userIDObjects forKeys:userIDKeys];
+        [userIDJsonDictionary addObject:dict];
     }
-    NSArray *userIDJsonDictionary = [NSArray arrayWithObject:[NSDictionary dictionaryWithObjects:userIDObjects forKeys:userIDKeys]];
+    
     
     NSArray *keys = [NSArray arrayWithObjects:@"userID", @"title", @"location", @"datetime", @"endDatetime", @"description", @"attendance", nil];
     NSArray *objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.userID] stringValue], self.titleField.text, self.placeField.text, [NSString stringWithFormat:@"%@ %@", self.startDateLabel.text, self.startTimeLabel.text],[NSString stringWithFormat:@"%@ %@", self.endDateLabel.text, self.endTimeLabel.text], @"Test Meeting", userIDJsonDictionary, nil];

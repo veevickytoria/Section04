@@ -107,7 +107,7 @@
         for (NSDictionary* meetings in jsonArray)
         {
             [self.meetingList addObject:[meetings objectForKey:@"title"]];
-            [self.meetingID addObject:[meetings objectForKey:@"meetingID"]];
+            [self.meetingID addObject:[meetings objectForKey:@"id"]];
         }
         [self populateMeetingDetails];
     }
@@ -139,17 +139,17 @@
             [self.meetingDetail addObject:[deserializedDictionary objectForKey:@"datetime"]];
             [self.meetingLocations addObject:[deserializedDictionary objectForKey:@"location"]];
             
-            NSArray *jsonArray = [deserializedDictionary objectForKey:@"attendance"];
-            NSMutableString *attendeeList;
-            if (jsonArray.count > 0)
-            {
-                for (NSDictionary* users in jsonArray)
-                {
-                    [attendeeList appendFormat:@"%@,", (NSString *)[users objectForKey:@"userID"]];
-                }
-            }
-            
-            [attendeeList deleteCharactersInRange:NSMakeRange([attendeeList length]-1, 1)];
+//            NSArray *jsonArray = [deserializedDictionary objectForKey:@"attendance"];
+//            NSMutableString *attendeeList;
+//            if (jsonArray.count > 0)
+//            {
+//                for (NSDictionary* users in jsonArray)
+//                {
+//                    [attendeeList appendFormat:@"%@,", (NSString *)[users objectForKey:@"userID"]];
+//                }
+//            }
+//            
+//            [attendeeList deleteCharactersInRange:NSMakeRange([attendeeList length]-1, 1)];
             iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
             
             NSManagedObjectContext *context = [appDelegate managedObjectContext];
@@ -159,11 +159,11 @@
             [newMeeting setValue:[deserializedDictionary objectForKey:@"title"] forKey:@"title"];
             [newMeeting setValue:[deserializedDictionary objectForKey:@"location"] forKey:@"location"];
             [newMeeting setValue:[deserializedDictionary objectForKey:@"endDatetime"] forKey:@"endDatetime"];
-            [newMeeting setValue:[deserializedDictionary objectForKey:@"meetingID"] forKey:@"meetingID"];
+            //[newMeeting setValue:[deserializedDictionary objectForKey:@"meetingID"] forKey:@"meetingID"];
             [newMeeting setValue:[deserializedDictionary objectForKey:@"datetime"] forKey:@"datetime"];
             [newMeeting setValue:[NSNumber numberWithInt:self.userID] forKey:@"userID"];
-            [newMeeting setValue:attendeeList forKey:@"attendance"];
-            [newMeeting setValue:[deserializedDictionary objectForKey:@"description"] forKey:@"description"];
+            //[newMeeting setValue:attendeeList forKey:@"attendance"];
+            [newMeeting setValue:[deserializedDictionary objectForKey:@"description"] forKey:@"meetingDesc"];
             [context save:&error];
         }
     }
