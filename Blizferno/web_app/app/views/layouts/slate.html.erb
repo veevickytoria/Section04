@@ -6,8 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= content_for?(:title) ? yield(:title) : "Meeting Ninja" %></title>
   <%= csrf_meta_tags %>
-  <%= stylesheet_link_tag "slate", :media => "all" %>
 
+  <!-- STYLESHEETS -->
+  <%= stylesheet_link_tag "slate", :media => "all" %>
   <%= yield(:page_stylesheet) if content_for?(:page_stylesheet) %>
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= stylesheet_link_tag params[:controller] %>
@@ -23,8 +24,10 @@
   <!-- Sitewide info-link bar 
   %= render '/panes/navbar_bottom' %>
   -->
-  <!-- Javascripts -->
+
+  <!-- JAVASCRIPTS -->
   <%= javascript_include_tag "slate" %>
   <%= yield(:page_javascript) if content_for?(:page_javascript) %>
+  <%= javascript_include_tag "application" %>
 </body>
 </html>
