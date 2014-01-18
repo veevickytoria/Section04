@@ -11,6 +11,7 @@ header > h1 { display: inline-block; }
   width:100%;
 }
 </style>
+<script type='text/javascript' src='//code.jquery.com/jquery-1.10.2.min.js'></script>
 <script type = 'text/javascript'>
 
 
@@ -163,7 +164,7 @@ function validateGroup(){
 function getMembers(id){
   var newMembers = [];
   $( '#' + id + ' :selected' ).each( function( i, selected ) {
-    newMembers[i] = $( selected ).text();
+      newMembers[i] = $( selected ).text();
   });
   return newMembers;
 }
@@ -176,7 +177,7 @@ function getMembers(id){
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h1 class="modal-title" id="myModalLabel">Create Group</h1>
+        <h4 class="modal-title" id="myModalLabel">Create Group</h4>
       </div>
       <div class="modal-body">
         <%= render "new" %>
