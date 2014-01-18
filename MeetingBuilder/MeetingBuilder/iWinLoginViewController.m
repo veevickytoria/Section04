@@ -8,6 +8,8 @@
 
 #import "iWinLoginViewController.h"
 #import <QuartzCore/QuartzCore.h>
+#import "Settings.h"
+#import "iWinAppDelegate.h"
 #include <CommonCrypto/CommonDigest.h>
 
 @interface iWinLoginViewController ()
@@ -43,6 +45,7 @@
     NSString *email = [[self.userNameField text] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     NSString *password = [self sha256HashFor:[self.passwordField text]];
 //    [self.loginDelegate login:1];
+    
     
     if (password.length > 0 && email.length>0)
     {
@@ -93,6 +96,17 @@
                 [alert show];
             }
         }
+        
+        
+        //Saving off the password to the local data model
+        
+        iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+        NSManagedObjectContext *context = [appDelegate managedObjectContext];
+        NSManagedObject *newSettings = [NSEntityDescription insertNewObjectForEntityForName:@"Settings" inManagedObjectContext:context];
+        [newSettings setValue:self.passwordField.text forKey:@"password"];
+        [newSettings setValue:[NSNumber numberWithInt:0] forKey:@"userID"];
+        [context save:&error];
+        
        
     }
     else
