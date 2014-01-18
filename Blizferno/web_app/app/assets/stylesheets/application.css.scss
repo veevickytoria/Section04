@@ -11,35 +11,3 @@
  *= require_self
  *
  */
-
-/* CSS for Navbars */
-
- body{
- 	padding: 0px;
- }
-
- .center {
- 	margin-left: auto;
- 	margin-right: auto;
- }
-
- .center.navbar .nav,
- .center.navbar .nav > li {
- 	float:none;
- 	display:inline-block;
- 	*display:inline; /* ie7 fix */
- 	*zoom:1; /* hasLayout ie7 trigger */
- 	vertical-align: top;
- }
-
- .center.navbar-inner {
- 	text-align:center;
- }
-
- .center .dropdown-menu {
- 	text-align: left;
- }
-
- .navbar-inner {
- 	margin: 0 auto;
- }
