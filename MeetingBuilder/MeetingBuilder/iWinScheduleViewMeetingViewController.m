@@ -34,6 +34,7 @@
 @property (strong, nonatomic) NSMutableArray *userList;
 @property (strong, nonatomic) NSDateFormatter *dateFormatter;
 @property (nonatomic) NSUInteger rowToDelete;
+@property (nonatomic) UIAlertView *deleteAlertView;
 @end
 
 @implementation iWinScheduleViewMeetingViewController
@@ -243,13 +244,33 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         self.rowToDelete = indexPath.row;
-        UIAlertView *deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this contact?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
+        UIAlertView *deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this meeting?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
         [deleteAlertView show];
     }
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+    if ([alertView isEqual:self.deleteAlertView])
+    {
+        if (buttonIndex == 1)
+        {
+            //Perform deletion
+            NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Meeting/%d", self.meetingID];
+            
+            NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+            [urlRequest setHTTPMethod:@"DELETE"];
+            NSURLResponse * response = nil;
+            NSError * error = nil;
+            [NSURLConnection sendSynchronousRequest:urlRequest
+                                  returningResponse:&response
+                                              error:&error];
+            //TODO: Add error checking.
+            [self.viewMeetingDelegate refreshMeetingList];
+        }
+    }
+    else
+    {
         if (buttonIndex == 1)
         {
             [self.userList removeObjectAtIndex:self.rowToDelete];
@@ -259,6 +280,7 @@
         {
             self.rowToDelete = -1;
         }
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -507,6 +529,13 @@
     //self.durationField.text = @"";
     self.placeField.text = @"";
     [self.addAgendaButton setTitle:@"Add Agenda" forState:UIControlStateNormal];
+}
+
+- (IBAction)onDeleteMeeting {
+    
+    
+    self.deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this contact?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
+    [self.deleteAlertView show];
 }
 
 - (IBAction)onClickCancel

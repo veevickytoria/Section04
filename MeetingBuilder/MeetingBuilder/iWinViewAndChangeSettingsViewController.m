@@ -22,6 +22,7 @@
 @property (nonatomic) NSNumber *tableIndex;
 @property (nonatomic) NSManagedObjectContext *context;
 @property (nonatomic) UIAlertView *deleteAlertView;
+@property (nonatomic) BOOL passwordEdited;
 @end
 
 
@@ -45,7 +46,7 @@
     [self showFields:NO];
     [self enableInteraction:NO];
     self.options = [[NSArray alloc] initWithObjects:@"At time of event",@"5 minutes before",@"15 minutes before", @"30 minutes before", @"1 hour before", @"2 hours before", @"1 day before",@"2 days before", nil];
-    
+    self.passwordEdited = NO;
     //
     //
     //
@@ -133,7 +134,7 @@
             [cell setAccessoryType:UITableViewCellAccessoryNone];
         }
     }
-    [self saveChanges];
+   // [self saveChanges];
 }
 
 - (void)didReceiveMemoryWarning
@@ -187,27 +188,33 @@
 -(IBAction)onEdit:(id)sender
 {
     
-        self.isEditing = YES;
-        [self showFields:YES];
-        [self clearFields];
-        self.saveAndEditButton.hidden = YES;
-        [self enableInteraction:YES];
+    self.isEditing = YES;
+    [self showFields:YES];
+    [self clearFields];
+    self.saveAndEditButton.hidden = YES;
+    [self enableInteraction:YES];
+    self.passwordEdited = YES;
 }
 
 - (IBAction)onSaveSwitch:(id)sender
 {
     //Save should notify switch
     if([self.shouldNotifySwitch isOn]){
-        self.settings.shouldNotify = [NSNumber numberWithInt:1];
+        [self.settings setValue:[NSNumber numberWithInt:1] forKey:@"shouldNotify"];
     } else {
-        self.settings.shouldNotify = [NSNumber numberWithInt:0];
+        [self.settings setValue:[NSNumber numberWithInt:0] forKey:@"shouldNotify"];
     }
     
     //Save when to notify table
-    self.settings.whenToNotify = self.tableIndex;
+    [self.settings setValue:self.tableIndex forKey:@"whenToNotify"];
     
+    NSString *errorMessage = @"";
+    if (self.passwordEdited)
+    {
+        errorMessage = [self validateSettings];
+    }
     //Save the rest
-    if ([self.oldPasswordTextField.text isEqual:self.settings.password] && [self.passwordTextField.text isEqual:self.confirmPasswordTextField.text]) {
+    if (errorMessage.length == 0) {
         [self showFields:NO];
         [self.saveAndEditButton setTitle:@"Change Email/Password" forState:UIControlStateNormal];
         [self.saveAndEditButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
@@ -215,8 +222,13 @@
         [self enableInteraction:NO];
         self.isEditing = NO;
         self.saveAndEditButton.hidden = NO;
+        self.passwordEdited = NO;
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Successful" message:@"Settings were successfully saved!" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alert show];
+        
     } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Old password or confirmation password did not match." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:errorMessage delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
         [alert show];
         [self clearFields];
     }
@@ -254,23 +266,14 @@
 //    }
 //    NSError *error;
 //    [self.context save:&error];
-    NSString *errorMessage = [self validateSettings];
-    if (errorMessage.length == 0)
-    {
-        [self.contact setValue:self.emailTextField.text forKey:@"email"];
-        [self.settings setValue:self.emailTextField.text forKey:@"email"];
-        [self.settings setValue:[self sha256HashFor:self.passwordTextField.text] forKey:@"password"];
-        [self.settings setValue:[NSNumber numberWithInt:[self.shouldNotifySwitch isOn]] forKey:@"shouldNotify"];
-        [self.settings setValue:[self getNotificationOption] forKey:@"whenToNotify"];
-        NSError *error;
-        [self.context save:&error];
-        [self saveToServer];
-    }
-    else
-    {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:errorMessage delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
-        [alert show];
-    }
+    [self.contact setValue:self.emailTextField.text forKey:@"email"];
+    [self.settings setValue:self.emailTextField.text forKey:@"email"];
+    [self.settings setValue:[self sha256HashFor:self.passwordTextField.text] forKey:@"password"];
+    [self.settings setValue:[NSNumber numberWithInt:[self.shouldNotifySwitch isOn]] forKey:@"shouldNotify"];
+    [self.settings setValue:[self getNotificationOption] forKey:@"whenToNotify"];
+    NSError *error;
+    [self.context save:&error];
+    [self saveToServer];
 }
 
 -(void)saveToServer

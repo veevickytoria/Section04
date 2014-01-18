@@ -25,12 +25,11 @@
     self.window.rootViewController = mainViewController;
     [self.window makeKeyAndVisible];
     
-    
     //[application registerForRemoteNotificationTypes:UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound];
     UILocalNotification *locationNotification = [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
     if (locationNotification) {
         // Set icon badge number to zero
-        application.applicationIconBadgeNumber = 0;
+        application.applicationIconBadgeNumber = application.applicationIconBadgeNumber - 1;
     }
     
     return YES;
@@ -174,7 +173,7 @@
 //    // Request to reload table view data
 //    [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadData" object:self];
     
-    application.applicationIconBadgeNumber = 0;
+    application.applicationIconBadgeNumber = application.applicationIconBadgeNumber - 1;
 }
 
 @end
