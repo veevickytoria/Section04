@@ -170,6 +170,8 @@
         [newSetting setValue:[NSNumber numberWithInt:userID] forKey:@"userID"];
         [newSetting setValue:email forKey:@"email"];
         [newSetting setValue:password forKey:@"password"];
+        [newSetting setValue:[NSNumber numberWithBool:YES] forKey:@"shouldNotify"];
+        [newSetting setValue:[NSNumber numberWithInt:2] forKey:@"whenToNotify"];
         [self.context save:&error];
     }
     else
