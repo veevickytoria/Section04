@@ -178,8 +178,8 @@
         [NSURLConnection sendSynchronousRequest:urlRequest
                                              returningResponse:&response
                                                          error:&error];
-        
         //TODO: Add error checking.
+        [self.settingsDelegate onDeleteAccount];
     }
    
 }
@@ -259,7 +259,7 @@
     {
         [self.contact setValue:self.emailTextField.text forKey:@"email"];
         [self.settings setValue:self.emailTextField.text forKey:@"email"];
-        [self.settings setValue:self.passwordTextField.text forKey:@"password"];
+        [self.settings setValue:[self sha256HashFor:self.passwordTextField.text] forKey:@"password"];
         [self.settings setValue:[NSNumber numberWithInt:[self.shouldNotifySwitch isOn]] forKey:@"shouldNotify"];
         [self.settings setValue:[self getNotificationOption] forKey:@"whenToNotify"];
         NSError *error;
@@ -333,6 +333,11 @@
     NSString *password = self.passwordTextField.text;
     NSString *confirmPassword = self.confirmPasswordTextField.text;
     NSString *emailSymbol = @"@";
+    
+    if (![[self sha256HashFor:self.oldPasswordTextField.text] isEqualToString:self.settings.password])
+    {
+        return @"Old password incorrect";
+    }
     
     if (password.length < 6) {
         return @"Password must be at least 6 characters!";

@@ -471,11 +471,9 @@
     [self onClickTasks];
 }
 
--(void) onClickSaveSettings{
-    
-}
--(void) onclickCancelSettings{
-    
+-(void) onDeleteAccount
+{
+    [self onClickLogOut];
 }
 
 -(void)speechToText:(NSString *)hypothesis

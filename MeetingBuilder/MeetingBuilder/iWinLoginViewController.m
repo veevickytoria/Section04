@@ -102,7 +102,7 @@
             if ([deserializedDictionary objectForKey:@"userID"])
             {
                 userID = [[deserializedDictionary objectForKey:@"userID"] integerValue];
-                [self createContactWithID:userID withEmail:email withPassword:self.passwordField.text];
+                [self createContactWithID:userID withEmail:email withPassword:password];
                 [self.loginDelegate login:userID];
             }
             else
