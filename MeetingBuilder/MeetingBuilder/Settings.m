@@ -2,7 +2,7 @@
 //  Settings.m
 //  MeetingBuilder
 //
-//  Created by CSSE Department on 1/15/14.
+//  Created by CSSE Department on 1/17/14.
 //  Copyright (c) 2014 CSSE371. All rights reserved.
 //
 
@@ -13,8 +13,8 @@
 
 @dynamic email;
 @dynamic password;
-@dynamic userID;
 @dynamic shouldNotify;
+@dynamic userID;
 @dynamic whenToNotify;
 
 @end

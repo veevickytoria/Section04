@@ -57,7 +57,7 @@
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:entityDesc];
     
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userID = 1"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userID = %d", self.userID];
     [request setPredicate:predicate];
     
     NSError *error;
@@ -72,7 +72,7 @@
     NSFetchRequest *request1 = [[NSFetchRequest alloc] init];
     [request1 setEntity:entityDesc1];
     
-    NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"userID = 1"];
+    NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"userID = %d", self.userID];
     [request1 setPredicate:predicate1];
     
     NSError *error1;
