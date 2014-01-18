@@ -475,6 +475,7 @@
                 break;
         }
         localNotification.fireDate = fireDate;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadData" object:self];
         localNotification.applicationIconBadgeNumber = [[UIApplication sharedApplication] applicationIconBadgeNumber] + 1;
         [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
     }

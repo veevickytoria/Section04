@@ -145,9 +145,9 @@
     NSError *error;
     if ([result count] == 0)
     {
-        NSManagedObject *newSetting = [NSEntityDescription insertNewObjectForEntityForName:@"Contact" inManagedObjectContext:self.context];
-        [newSetting setValue:[NSNumber numberWithInt:userID] forKey:@"userID"];
-        [newSetting setValue:email forKey:@"email"];
+        NSManagedObject *newContact = [NSEntityDescription insertNewObjectForEntityForName:@"Contact" inManagedObjectContext:self.context];
+        [newContact setValue:[NSNumber numberWithInt:userID] forKey:@"userID"];
+        [newContact setValue:email forKey:@"email"];
         [self.context save:&error];
     }
     else
@@ -170,15 +170,17 @@
         [newSetting setValue:[NSNumber numberWithInt:userID] forKey:@"userID"];
         [newSetting setValue:email forKey:@"email"];
         [newSetting setValue:password forKey:@"password"];
-        [newSetting setValue:[NSNumber numberWithBool:YES] forKey:@"shouldNotify"];
+        [newSetting setValue:[NSNumber numberWithInt:1] forKey:@"shouldNotify"];
         [newSetting setValue:[NSNumber numberWithInt:2] forKey:@"whenToNotify"];
         [self.context save:&error];
     }
     else
     {
-        Contact *updateSettings = (Contact*)[result objectAtIndex:0];
+        Settings *updateSettings = (Settings*)[result objectAtIndex:0];
         [updateSettings setValue:email forKey:@"email"];
         [updateSettings setValue:password forKey:@"password"];
+        [updateSettings setValue:[NSNumber numberWithInt:1] forKey:@"shouldNotify"];
+        [updateSettings setValue:[NSNumber numberWithInt:2] forKey:@"whenToNotify"];
         [self.context save:&error];
     }
 }
