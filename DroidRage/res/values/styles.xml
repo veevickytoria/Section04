@@ -226,4 +226,10 @@
 
     <style name="aosp_day_of_week_label_condensed" />
 
+    <!-- TreeView -->
+    <style name="treeViewListStyle" parent="@android:attr/listViewStyle">
+        <item name="android:background">@android:color/white</item>
+        <item name="android:divider">@drawable/divider</item>
+    </style>
+
 </resources>

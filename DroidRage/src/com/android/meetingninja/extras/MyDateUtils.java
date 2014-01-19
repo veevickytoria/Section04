@@ -12,4 +12,6 @@ public class MyDateUtils {
 			"HH:mm", Locale.US);
 	public static final SimpleDateFormat _12_TIME_FORMAT = new SimpleDateFormat(
 			"hh:mma", Locale.US);
+	public static final SimpleDateFormat DURATION = new SimpleDateFormat(
+			"hh:mm:ss", Locale.US);
 }

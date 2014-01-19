@@ -23,13 +23,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
-// 
 // http://stackoverflow.com/a/19613702
 public class SessionManager {
 	/**
 	 * Singleton instance to manage SharedPreferences
 	 */
-	private static SessionManager sInstance;
+	private static volatile SessionManager sInstance;
 	private Context _context;
 	// Shared Preferences
 	private SharedPreferences pref;
@@ -51,6 +50,11 @@ public class SessionManager {
 	// Sharedpref login state
 	public static final String LOGGED_IN = "com.android.meetingninja.preferences.isLoggedIn";
 
+	/**
+	 * Gets a singleton instance of the session manager
+	 * 
+	 * @return
+	 */
 	public static synchronized SessionManager getInstance() {
 		if (sInstance == null)
 			sInstance = new SessionManager();
@@ -72,7 +76,7 @@ public class SessionManager {
 	/**
 	 * Create login session with userID
 	 * */
-	public void createLoginSession(String userID) {
+	public synchronized void createLoginSession(String userID) {
 		Editor editor = pref.edit();
 		// Storing login value as TRUE
 		editor.putString(USER, "user");
@@ -85,7 +89,7 @@ public class SessionManager {
 	/**
 	 * Create login session with user object
 	 * */
-	public void createLoginSession(User u) {
+	public synchronized void createLoginSession(User u) {
 		Editor editor = pref.edit();
 		// Storing login value as TRUE
 //		editor.putString(KEY_USERID, u.getUserID());
@@ -104,9 +108,9 @@ public class SessionManager {
 	/**
 	 * Get stored session data
 	 * */
-	public HashMap<String, String> getUserDetails() {
+	public synchronized HashMap<String, String> getUserDetails() {
 		HashMap<String, String> details = new HashMap<String, String>();
-		
+
 		details.put(KEY_USERID, pref.getString(KEY_USERID, null));
 		details.put(USER, pref.getString(USER, null));
 		details.put(EMAIL, pref.getString(EMAIL, null));
@@ -118,11 +122,11 @@ public class SessionManager {
 		return details;
 	}
 
-	public String getUserID() {
+	public synchronized String getUserID() {
 		return pref.getString(KEY_USERID, null);
 	}
 
-	public void checkLogin() {
+	public synchronized void checkLogin() {
 		if (!this.isLoggedIn()) {
 			// Go back to login page
 			Intent login = new Intent(_context, LoginActivity.class);
@@ -140,30 +144,40 @@ public class SessionManager {
 
 	}
 
-	public void clear() {
+	public synchronized void clear() {
 		Editor editor = pref.edit();
 		editor.clear();
 		editor.commit();
 	}
 
-	public void logoutUser() {
+	public synchronized void logoutUser() {
 		clear();
 		// Will always go to login page after clearing preferences
 		checkLogin();
 
 	}
 
-	public boolean isLoggedIn() {
+	public synchronized boolean isLoggedIn() {
 		return pref.getBoolean(LOGGED_IN, false);
 	}
-	
-	public void setPage(int position) {
+
+	/**
+	 * Store the last pressed navigation drawer position
+	 */
+	public synchronized void setPage(int position) {
 		Editor editor = pref.edit();
 		editor.putInt(PAGE, position);
 		editor.commit();
 	}
-	
-	public int getPage() {
+
+	/**
+	 * Get the last pressed navigation drawer position. If doesn't exist,
+	 * returns 0.
+	 * 
+	 * @return the last pressed navigation drawer position, or 0, if doesn't
+	 *         exist
+	 */
+	public synchronized int getPage() {
 		return pref.getInt(PAGE, 0);
 	}
 }

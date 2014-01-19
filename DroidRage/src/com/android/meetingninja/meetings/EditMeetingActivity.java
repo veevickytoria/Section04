@@ -44,6 +44,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.android.meetingninja.R;
+import com.android.meetingninja.agenda.AgendaActivity;
 import com.android.meetingninja.database.AsyncResponse;
 import com.android.meetingninja.database.MeetingDatabaseAdapter;
 import com.android.meetingninja.database.local.SQLiteMeetingAdapter;
@@ -210,6 +211,18 @@ public class EditMeetingActivity extends FragmentActivity implements
 		mTitle.setText(mTitle.getText().toString().trim());
 		mLocation.setText(mLocation.getText().toString().trim());
 		mDescription.setText(mDescription.getText().toString().trim());
+	}
+
+	public boolean handleClick(View v) {
+		switch (v.getId()) {
+		case R.id.add_agenda_button:
+			Intent act = new Intent(EditMeetingActivity.this, AgendaActivity.class);
+			startActivity(act);
+			break;
+		default:
+			break;
+		}
+		return true;
 	}
 
 	// @Override

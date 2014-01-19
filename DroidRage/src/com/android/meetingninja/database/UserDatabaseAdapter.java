@@ -116,8 +116,8 @@ public class UserDatabaseAdapter extends AbstractDatabaseAdapter {
 
 		if (contactsArray.isArray()) {
 			for (final JsonNode userNode : contactsArray) {
-				SimpleUser u = null;
-				if ((u = parseSimpleUser(userNode)) != null)
+				SimpleUser u = parseSimpleUser(userNode);
+				if (u != null)
 					contactsList.add(u);
 			}
 		}
@@ -142,46 +142,9 @@ public class UserDatabaseAdapter extends AbstractDatabaseAdapter {
 		// TODO: Uncomment this later
 		// int responseCode = conn.getResponseCode();
 		// String response = getServerResponse(conn);
-		String response = ObjectMocker.getMockScheule();
+		String response = ObjectMocker.getMockSchedule();
 
-		// Initialize ObjectMapper
-		Schedule sched = new Schedule();
-		Event event = null;
-		final JsonNode scheduleArray = MAPPER.readTree(response)
-				.get("schedule");
-
-		JsonNode _id;
-		if (scheduleArray.isArray()) {
-			for (final JsonNode meetingOrTaskNode : scheduleArray) {
-				if ((_id = meetingOrTaskNode.get("id")) != null) {
-					String type = meetingOrTaskNode.hasNonNull("type") ? meetingOrTaskNode
-							.get("type").asText() : null;
-					if (TextUtils.equals(type, "meeting")) {
-						event = new Meeting();
-					} else if (TextUtils.equals(type, "task")) {
-						event = new Task();
-					}
-					if (event != null) {
-						event.setID(_id.asText());
-						event.setTitle(meetingOrTaskNode.get(
-								MeetingDatabaseAdapter.KEY_TITLE).asText());
-						event.setDescription(meetingOrTaskNode.get(
-								MeetingDatabaseAdapter.KEY_DESC).asText());
-						event.setStartTime(meetingOrTaskNode.get(
-								MeetingDatabaseAdapter.KEY_START).asText());
-						event.setEndTime(meetingOrTaskNode.get(
-								MeetingDatabaseAdapter.KEY_END).asText());
-						if (event instanceof Meeting)
-							sched.addMeeting((Meeting) event);
-						else if (event instanceof Task)
-							sched.addTask((Task) event);
-						else
-							Log.w(TAG + "> getSchedule", "Event cast failure");
-					}
-				}
-			} // end for
-
-		}
+		Schedule sched = parseSchedule(MAPPER.readTree(response));
 
 		conn.disconnect();
 		return sched;
@@ -478,5 +441,48 @@ public class UserDatabaseAdapter extends AbstractDatabaseAdapter {
 			return null;
 		}
 		return u;
+	}
+
+	public static Schedule parseSchedule(JsonNode node) {
+		// Initialize ObjectMapper
+		Schedule sched = null;
+		Event event = null;
+		final JsonNode scheduleArray = node.get("schedule");
+
+		JsonNode _id;
+		if (scheduleArray.isArray()) {
+			sched = new Schedule();
+			for (final JsonNode meetingOrTaskNode : scheduleArray) {
+				if ((_id = meetingOrTaskNode.get("id")) != null) {
+					String type = meetingOrTaskNode.hasNonNull("type") ? meetingOrTaskNode
+							.get("type").asText() : null;
+					if (TextUtils.equals(type, "meeting")) {
+						event = new Meeting();
+					} else if (TextUtils.equals(type, "task")) {
+						event = new Task();
+					}
+					if (event != null) {
+						event.setID(_id.asText());
+						event.setTitle(meetingOrTaskNode.get(
+								MeetingDatabaseAdapter.KEY_TITLE).asText());
+						event.setDescription(meetingOrTaskNode.get(
+								MeetingDatabaseAdapter.KEY_DESC).asText());
+						event.setStartTime(meetingOrTaskNode.get(
+								MeetingDatabaseAdapter.KEY_START).asText());
+						event.setEndTime(meetingOrTaskNode.get(
+								MeetingDatabaseAdapter.KEY_END).asText());
+						if (event instanceof Meeting)
+							sched.addMeeting((Meeting) event);
+						else if (event instanceof Task)
+							sched.addTask((Task) event);
+						else
+							Log.w(TAG + "> getSchedule", "Event cast failure");
+					}
+				}
+			} // end for
+
+		}
+
+		return sched;
 	}
 }

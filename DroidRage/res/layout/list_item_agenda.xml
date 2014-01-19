@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ListItemContainerBase"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center_vertical"
+    android:padding="2dip" >
+
+    <TextView
+        android:id="@+id/agenda_topic_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:padding="4dip"
+        android:text="TextView"
+        android:textSize="@dimen/text_size_medium" />
+
+    <EditText
+        android:id="@+id/agenda_edit_topic"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@null"
+        android:inputType="textCapSentences"
+        android:padding="4dip"
+        android:text="Edittext"
+        android:textSize="@dimen/text_size_medium" />
+
+    <Button
+        android:id="@+id/agenda_topicAddBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:padding="4dip"
+        android:text="Add" />
+
+    <Button
+        android:id="@+id/agenda_topicTimeBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:padding="4dip"
+        android:text="Time" />
+
+</LinearLayout>

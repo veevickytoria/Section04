@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import objects.Meeting.AttendeeWrapper;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.view.View.OnClickListener;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -19,7 +20,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "userID", "displayName", "email", "phone", "company",
 		"title", "location" })
-public class User extends SimpleUser implements Parcelable {
+public class User extends SimpleUser implements Parcelable, IJSONObject {
 	private String email;
 	private String phone;
 	private String company;
@@ -182,8 +183,7 @@ public class User extends SimpleUser implements Parcelable {
 
 	};
 
-	public static String toJSON(User user) throws JsonGenerationException,
-			IOException {
+	public String toJSON() throws JsonGenerationException, IOException {
 		ByteArrayOutputStream _json = new ByteArrayOutputStream();
 		// this type of print stream allows us to get a string easily
 		PrintStream ps = new PrintStream(_json);
@@ -193,13 +193,13 @@ public class User extends SimpleUser implements Parcelable {
 
 		// Build JSON Object
 		jgen.writeStartObject();
-		jgen.writeStringField("userID", user.getUserID());
-		jgen.writeStringField("displayName", user.getDisplayName());
-		jgen.writeStringField("email", user.getEmail());
-		jgen.writeStringField("phone", user.getPhone());
-		jgen.writeStringField("company", user.getCompany());
-		jgen.writeStringField("title", user.getTitle());
-		jgen.writeStringField("location", user.getLocation());
+		jgen.writeStringField("userID", getUserID());
+		jgen.writeStringField("displayName", getDisplayName());
+		jgen.writeStringField("email", getEmail());
+		jgen.writeStringField("phone", getPhone());
+		jgen.writeStringField("company", getCompany());
+		jgen.writeStringField("title", getTitle());
+		jgen.writeStringField("location", getLocation());
 		jgen.writeEndObject();
 		jgen.close();
 

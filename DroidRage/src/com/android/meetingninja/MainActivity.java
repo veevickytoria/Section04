@@ -15,16 +15,27 @@
  ******************************************************************************/
 package com.android.meetingninja;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
+import objects.Agenda;
+import objects.Event;
 import objects.Meeting;
 import objects.ObjectMocker;
+import objects.Schedule;
+import objects.Task;
+import objects.Topic;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
@@ -32,6 +43,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,15 +51,31 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.meetingninja.database.AgendaDatabaseAdapter;
+import com.android.meetingninja.database.JsonNodeRequest;
+import com.android.meetingninja.database.UserDatabaseAdapter;
 import com.android.meetingninja.meetings.MeetingItemAdapter;
 import com.android.meetingninja.meetings.MeetingsFragment;
 import com.android.meetingninja.notes.CreateNoteActivity;
 import com.android.meetingninja.notes.NotesFragment;
+import com.android.meetingninja.schedule.ScheduleAdapter;
 import com.android.meetingninja.tasks.TasksFragment;
 import com.android.meetingninja.user.LoginActivity;
 import com.android.meetingninja.user.ProfileFragment;
 import com.android.meetingninja.user.SessionManager;
 import com.android.meetingninja.user.UserListFragment;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.fasterxml.jackson.core.JsonEncoding;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.foound.widget.AmazingListView;
 import com.parse.ParseAnalytics;
 
 /**
@@ -66,16 +94,15 @@ public class MainActivity extends FragmentActivity {
 	private String[] leftDrawerItemNames; // labels
 	private TypedArray leftDrawerItemIcons; // icons next to text
 	private DrawerLayout drawerLayout; // the "frame" of main activity
-	private ListView leftDrawerList, rightDrawerList; // the listviews for the
-														// drawersFs
+	private ListView leftDrawerList; // the listviews for the
+										// drawers
+	private AmazingListView rightDrawerList;
 	private ActionBarDrawerToggle drawerToggle; // open&close toggle
 	private CharSequence mDrawerTitle; // title for the drawer
 	private ArrayList<NavDrawerItem> leftDrawerItems; // object wrapper for left
 														// drawer
-	private ArrayList<Meeting> rightDrawerItems; // object wrapper for right
-													// drawer
 	private NavDrawerListAdapter leftDrawerAdapter;
-	private MeetingItemAdapter rightDraweradapter;
+	private ScheduleAdapter rightDrawerAdapter;
 
 	public enum DrawerLabel {
 		MEETINGS(0), NOTES(1), TASKS(2), PROFILE(3), GROUPS(4), PROJECTS(5), SETTINGS(
@@ -130,10 +157,13 @@ public class MainActivity extends FragmentActivity {
 
 		// Else continue
 		setContentView(R.layout.activity_main);
-		setupLeftDrawer();
 		setupActionBar();
+		setupViews();
+		setupLeftDrawer();
 		// on first time display view for first nav item
 		selectItem(session.getPage());
+
+		setupRightDrawer();
 
 		// Track the usage of the application with Parse SDK
 		ParseAnalytics.trackAppOpened(getIntent());
@@ -146,6 +176,12 @@ public class MainActivity extends FragmentActivity {
 		getActionBar().setHomeButtonEnabled(true);
 	}
 
+	private void setupViews() {
+		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		leftDrawerList = (ListView) findViewById(R.id.left_drawer);
+		rightDrawerList = (AmazingListView) findViewById(R.id.right_drawer);
+	}
+
 	private void setupLeftDrawer() {
 		// Get the strings
 		leftDrawerItemNames = getResources().getStringArray(
@@ -155,9 +191,6 @@ public class MainActivity extends FragmentActivity {
 				R.array.nav_drawer_icons);
 
 		// Get the views
-		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		leftDrawerList = (ListView) findViewById(R.id.left_drawer);
-		rightDrawerList = (ListView) findViewById(R.id.right_drawer);
 
 		leftDrawerItems = new ArrayList<NavDrawerItem>();
 		for (int i = 0; i < leftDrawerItemNames.length; i++) {
@@ -199,6 +232,48 @@ public class MainActivity extends FragmentActivity {
 		// drawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
 		// GravityCompat.END);
 
+	}
+
+	private void setupRightDrawer() {
+		rightDrawerList.setPinnedHeaderView(LayoutInflater.from(this).inflate(
+				R.layout.list_item_schedule_header, rightDrawerList, false));
+		Schedule sched = new Schedule();
+		try {
+			sched = UserDatabaseAdapter.getSchedule("");
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Meeting m = new Meeting();
+		m.setStartTime(0L);
+		sched.addMeeting(m);
+		m = new Meeting();
+		m.setStartTime(918723912L);
+		sched.addMeeting(m);
+		m = new Meeting();
+		m.setStartTime(928374983274L);
+		sched.addMeeting(m);
+		m = new Meeting();
+		m.setStartTime(38501234L);
+		for (int i = 0; i < 5; i++) {
+			sched.addMeeting(m);
+		}
+		m = new Meeting();
+		m.setStartTime(12321387L);
+		sched.addMeeting(m);
+		for (int i = 0; i < 3; i++) {
+			sched.addMeeting(m);
+		}
+		sched.sort();
+		rightDrawerAdapter = new ScheduleAdapter(MainActivity.this, sched);
+		rightDrawerList.setAdapter(rightDrawerAdapter);
+		rightDrawerAdapter.notifyDataSetChanged();
 	}
 
 	/** Swaps fragments in the main content view */
@@ -373,6 +448,9 @@ public class MainActivity extends FragmentActivity {
 			logout();
 			return true;
 		case R.id.action_settings:
+			Agenda go = Test.createAgenda();
+			AgendaTask task = new AgendaTask();
+			task.execute(go); // send
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -412,4 +490,52 @@ public class MainActivity extends FragmentActivity {
 		}
 	}
 
+	private static class Test {
+
+		private static Agenda createAgenda() {
+			Agenda ag = new Agenda();
+			ag.setAttachedMeetingID("");
+			ag.setTitle("Android Agenda");
+			Topic topic1 = new Topic("1");
+			topic1.addTopic(new Topic("1.1"));
+			topic1.addTopic(new Topic("1.2"));
+			topic1.addTopic(0, new Topic("1.01"));
+			Topic topic2 = new Topic("2");
+			Topic topic3 = new Topic("3");
+			Topic subTopic3 = new Topic("3.1");
+			subTopic3.addTopic(new Topic("3.1.1"));
+			topic3.addTopic(subTopic3);
+			ag.addTopic(topic1);
+			ag.addTopic(topic2);
+			ag.addTopic(topic3);
+			return ag;
+		}
+	}
+
+	class AgendaTask extends AsyncTask<Agenda, Void, Agenda> {
+
+		@Override
+		protected Agenda doInBackground(Agenda... params) {
+			Agenda create = null;
+			try {
+				ObjectMapper maper = new ObjectMapper();
+				
+				System.out.println(maper.writeValueAsString(params[0]));
+			
+//				create = AgendaDatabaseAdapter.createAgenda(params[0]);
+			} catch (IOException e) {
+				Log.e(TAG, e.getLocalizedMessage());
+			}
+			return create;
+		}
+
+		@Override
+		protected void onPostExecute(Agenda result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+			if (result != null)
+				Log.v(TAG, result.getID());
+		}
+
+	}
 }

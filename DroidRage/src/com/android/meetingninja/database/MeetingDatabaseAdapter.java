@@ -117,12 +117,12 @@ public class MeetingDatabaseAdapter extends AbstractDatabaseAdapter {
 		jgen.writeStringField("datetime", m.getStartTime());
 		jgen.writeArrayFieldStart("attendance");
 		// TODO: Add attendees to meeting
-		for (AttendeeWrapper attendee : m.getAttendance()) {
-			if (attendee.isAttending()) {
-				jgen.writeStartObject();
-				jgen.writeStringField("userID", attendee.getID());
-				jgen.writeEndObject();
-			}
+		for (String attendee : m.getAttendance()) {
+			// if (attendee.isAttending()) {
+			jgen.writeStartObject();
+			jgen.writeStringField("userID", attendee);
+			jgen.writeEndObject();
+			// }
 		}
 		jgen.writeEndArray();
 		jgen.writeEndObject();

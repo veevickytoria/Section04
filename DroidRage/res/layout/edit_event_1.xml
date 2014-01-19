@@ -213,7 +213,9 @@
             android:layout_gravity="center_vertical"
             android:contentDescription="@string/accessibility_pick_time_zone"
             android:gravity="center"
+            android:onClick="handleClick"
             android:text="Add Agenda" />
+
     </LinearLayout>
 
     <View style="@style/EditEventSeparator" />

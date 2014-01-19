@@ -12,8 +12,8 @@ import java.util.Map;
 import objects.Agenda;
 import objects.Group;
 import objects.Topic;
-import objects.User;
 
+import com.android.meetingninja.database.AgendaDatabaseAdapter;
 import com.android.meetingninja.database.UserDatabaseAdapter;
 import com.android.meetingninja.database.UserExistsException;
 import com.android.meetingninja.extras.MyDateUtils;
@@ -26,53 +26,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class Tests {
-
-	static class UserDB {
-		private static User registerTest(User user, String pass) {
-			User registered = null;
-			try {
-				registered = UserDatabaseAdapter.register(user, pass);
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (UserExistsException e) {
-				e.printStackTrace();
-			}
-			return registered;
-		}
-
-		private static User getUserInfoTest(String userID) {
-			User getUser = new User();
-			try {
-				getUser = UserDatabaseAdapter.getUserInfo(userID);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			return getUser;
-		}
-
-		private static String loginTest(String email, String pass) {
-			String result = new String();
-			try {
-				result = UserDatabaseAdapter.login(email, pass);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return result;
-
-		}
-
-		private static List<User> getAllUsersTest() {
-			List<User> result = new ArrayList<User>();
-			try {
-				result = UserDatabaseAdapter.getAllUsers();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return result;
-		}
-	}
-
+	
 	public static void main(String[] args) throws JsonGenerationException,
 			JsonMappingException, IOException {
 
@@ -89,9 +43,7 @@ public class Tests {
 		// for (User user : allUsers) {
 		// System.out.println(user);
 		// }
-		
-		agendaTest();
-		groupTest();
+	
 		dateTimeParsingTest();
 	}
 
@@ -123,42 +75,7 @@ public class Tests {
 		System.out.println(fmt.format(new Date(testEnd)));
 	}
 
-	private static void agendaTest() {
-		Agenda ag = new Agenda();
-		ag.setID(233);
-		Topic topic1 = new Topic("1");
-		topic1.addTopic(new Topic("1.1"));
-		topic1.addTopic(new Topic("1.2"));
-		topic1.addTopic(0, new Topic("1.01"));
-		Topic topic2 = new Topic("2");
-		Topic topic3 = new Topic("3");
-		Topic subTopic3 = new Topic("3.1");
-		subTopic3.addTopic(new Topic("3.1.1"));
-		topic3.addTopic(subTopic3);
-		ag.addTopic(topic1);
-		ag.addTopic(topic2);
-		ag.addTopic(topic3);
-
-		ag.pprint();
-	}
-
-	private static void groupTest() {
-		User test = new User();
-		test.setUserID(123);
-		test.setDisplayName("Test");
-		Group g = new Group();
-		g.addMember(test.toSimpleUser());
-		g.setID(100);
-		g.setGroupTitle("TestGroup");
-		ObjectMapper mapper = new ObjectMapper();
-		ObjectWriter writer = mapper.writer().withDefaultPrettyPrinter();
-		try {
-			System.out.println(writer.writeValueAsString(g));
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+	
 
 	private static void updateJsonFields() throws JsonProcessingException,
 			IOException {

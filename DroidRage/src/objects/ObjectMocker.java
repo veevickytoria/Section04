@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import android.util.Xml.Encoding;
@@ -143,15 +144,24 @@ public final class ObjectMocker {
 		return json;
 	}
 
-	public static String getMockScheule() throws IOException {
+	public static String getMockSchedule() throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		PrintStream ps = new PrintStream(baos);
 		JsonGenerator jgen = JFACT.createGenerator(ps, JsonEncoding.UTF8);
 
 		Task task1 = new Task();
 		task1.setID(1);
+		task1.setTitle("Get the milk");
+		task1.setDescription("2% milk from Kroger");
+		task1.setStartTime(new Date(2013, 8, 23).getTime());
+		task1.setEndTime(new Date(2013, 8, 24).getTime());
+
 		Meeting meeting1 = new Meeting();
-		meeting1.setID(1);
+		meeting1.setID(2);
+		meeting1.setTitle("Computer Science Scrum");
+		meeting1.setDescription("Job Placement for new employees");
+		meeting1.setStartTime(new Date(2013, 7, 23).getTime());
+		meeting1.setEndTime(new Date(2013, 7, 24).getTime());
 
 		jgen.writeStartObject(); // start schedule
 		jgen.writeArrayFieldStart("schedule"); // start meeting-task array

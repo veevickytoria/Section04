@@ -3,41 +3,35 @@ package objects;
 import java.text.ParseException;
 import java.util.Date;
 
+import android.util.Log;
+
 import com.android.meetingninja.extras.MyDateUtils;
 
-public abstract class Event {
+public abstract class Event implements Comparable<Event> {
 	protected String title;
-	protected String location;
 	protected String startTime;
 	protected String endTime;
 	protected String description;
-	
+
 	public Event() {
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	public abstract String getID();
+
 	public abstract void setID(int id);
-	
+
 	public void setID(String id) {
 		int testInt = Integer.valueOf(id);
 		setID(testInt);
 	}
-	
+
 	public String getTitle() {
 		return (title != null && !title.isEmpty()) ? title : "";
 	}
 
 	public void setTitle(String title) {
 		this.title = title;
-	}
-
-	public String getLocation() {
-		return (location != null && !location.isEmpty()) ? location : "";
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
 	}
 
 	public String getStartTime() {
@@ -83,5 +77,17 @@ public abstract class Event {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public int compareTo(Event another) {
+		if (another == null)
+			return 1;
+		try {
+			return Long.valueOf(getStartTime_Time()).compareTo(
+					Long.valueOf(another.getStartTime_Time()));
+		} catch (ParseException e) {
+			Log.e("Meeting compareTo ", e.getLocalizedMessage());
+		}
+		return 1;
 	}
 }
