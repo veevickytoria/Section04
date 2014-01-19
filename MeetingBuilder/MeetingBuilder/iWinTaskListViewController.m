@@ -13,14 +13,16 @@
 @interface iWinTaskListViewController ()
 @property (strong, nonatomic) NSMutableArray *itemList;
 @property (strong, nonatomic) NSMutableArray *itemDetail;
+@property (nonatomic) NSInteger userID;
 @property (strong, nonatomic) iWinAddAndViewTaskViewController *addViewTaskViewController;
 @end
 
 @implementation iWinTaskListViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil userID:(NSInteger) userID
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self.userID = userID;
     if (self) {
         // Custom initialization
     }
@@ -56,7 +58,7 @@
 - (IBAction)onClickCreateNewTask
 {
     //[self.taskListDelegate createNewTaskClicked:NO];
-    self.addViewTaskViewController = [[iWinAddAndViewTaskViewController alloc] initWithNibName:@"iWinAddAndViewTaskViewController" bundle:nil inEditMode:NO];
+    self.addViewTaskViewController = [[iWinAddAndViewTaskViewController alloc] initWithNibName:@"iWinAddAndViewTaskViewController" bundle:nil withUserID:self.userID];
     [self.addViewTaskViewController setModalPresentationStyle:UIModalPresentationPageSheet];
     [self.addViewTaskViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     
@@ -89,7 +91,7 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    self.addViewTaskViewController = [[iWinAddAndViewTaskViewController alloc] initWithNibName:@"iWinAddAndViewTaskViewController" bundle:nil inEditMode:YES];
+    self.addViewTaskViewController = [[iWinAddAndViewTaskViewController alloc] initWithNibName:@"iWinAddAndViewTaskViewController" bundle:nil withUserID:self.userID];
     [self.addViewTaskViewController setModalPresentationStyle:UIModalPresentationPageSheet];
     [self.addViewTaskViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     

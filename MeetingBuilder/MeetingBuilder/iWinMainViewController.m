@@ -349,7 +349,7 @@
     [self animateSlidingMenu:NO];
     [self updateSelectedMenu:self.tasksButton];
     
-    self.taskListViewController = [[iWinTaskListViewController alloc] initWithNibName:@"iWinTaskListViewController" bundle:nil];
+    self.taskListViewController = [[iWinTaskListViewController alloc] initWithNibName:@"iWinTaskListViewController" bundle:nil userID:self.userID];
     [self.mainView  addSubview:self.taskListViewController.view];
     [self.taskListViewController.view setBounds:self.mainView.bounds];
     [self resetSliding];

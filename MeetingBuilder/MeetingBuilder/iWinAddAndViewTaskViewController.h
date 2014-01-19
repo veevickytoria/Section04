@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OCCalendarViewController.h"
 
-@interface iWinAddAndViewTaskViewController : UIViewController
+@interface iWinAddAndViewTaskViewController : UIViewController <OCCalendarDelegate>
 - (IBAction)onClickCancel;
 - (IBAction)onClickSave;
 - (IBAction)onClickSaveAndAddMore;
@@ -21,7 +22,10 @@
 @property (weak, nonatomic) IBOutlet UITextField *dueField;
 @property (weak, nonatomic) IBOutlet UITextView *descriptionField;
 @property (weak, nonatomic) IBOutlet UITextField *createdByField;
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil inEditMode:(BOOL)isEditing;
+@property (weak, nonatomic) IBOutlet UISwitch *isCompleted;
+@property (weak, nonatomic) IBOutlet UILabel *endDateLabel;
+@property (weak, nonatomic) IBOutlet UILabel *endTimeLabel;
 - (IBAction)onClickAddAssignees;
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withUserID:(NSInteger)userID;
 
 @end
