@@ -198,6 +198,7 @@
 
 - (IBAction)onSaveSwitch:(id)sender
 {
+   
     //Save should notify switch
     if([self.shouldNotifySwitch isOn]){
         [self.settings setValue:[NSNumber numberWithInt:1] forKey:@"shouldNotify"];
@@ -207,6 +208,8 @@
     
     //Save when to notify table
     [self.settings setValue:self.tableIndex forKey:@"whenToNotify"];
+    
+    
     
     NSString *errorMessage = @"";
     if (self.passwordEdited)
@@ -232,7 +235,8 @@
         [alert show];
         [self clearFields];
     }
-    
+    self.isEditing = NO;
+    self.oldPasswordTextField.text = @"********";
     
 }
 - (IBAction)onSaveTable:(id)sender
