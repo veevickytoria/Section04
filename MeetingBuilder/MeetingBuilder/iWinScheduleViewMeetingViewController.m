@@ -13,6 +13,8 @@
 #import <QuartzCore/QuartzCore.h>
 #import "Meeting.h"
 #import "Contact.h"
+#import "Settings.h"
+
 
 @interface iWinScheduleViewMeetingViewController ()
 @property (nonatomic) BOOL isEditing;
@@ -32,6 +34,7 @@
 @property (strong, nonatomic) NSMutableArray *userList;
 @property (strong, nonatomic) NSDateFormatter *dateFormatter;
 @property (nonatomic) NSUInteger rowToDelete;
+@property (nonatomic) UIAlertView *deleteAlertView;
 @end
 
 @implementation iWinScheduleViewMeetingViewController
@@ -241,13 +244,33 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         self.rowToDelete = indexPath.row;
-        UIAlertView *deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this contact?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
+        UIAlertView *deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this meeting?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
         [deleteAlertView show];
     }
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+    if ([alertView isEqual:self.deleteAlertView])
+    {
+        if (buttonIndex == 1)
+        {
+            //Perform deletion
+            NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Meeting/%d", self.meetingID];
+            
+            NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+            [urlRequest setHTTPMethod:@"DELETE"];
+            NSURLResponse * response = nil;
+            NSError * error = nil;
+            [NSURLConnection sendSynchronousRequest:urlRequest
+                                  returningResponse:&response
+                                              error:&error];
+            //TODO: Add error checking.
+            [self.viewMeetingDelegate refreshMeetingList];
+        }
+    }
+    else
+    {
         if (buttonIndex == 1)
         {
             [self.userList removeObjectAtIndex:self.rowToDelete];
@@ -257,6 +280,7 @@
         {
             self.rowToDelete = -1;
         }
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -303,15 +327,17 @@
 
 -(void) saveNewMeeting
 {
-    NSMutableArray *userIDKeys = [[NSMutableArray alloc] init];
-    NSMutableArray *userIDObjects = [[NSMutableArray alloc] init];
+    
+    NSMutableArray *userIDJsonDictionary = [[NSMutableArray alloc] init];
     for (int i = 0; i<[self.userList count]; i++)
     {
         Contact *c = (Contact *)self.userList[i];
-        [userIDKeys addObject:@"userID"];
-        [userIDObjects addObject:[c.userID stringValue]];
+        NSArray *userIDKeys = [[NSArray alloc] initWithObjects:@"userID", nil];
+        NSArray *userIDObjects = [[NSArray alloc] initWithObjects:[c.userID stringValue], nil];
+        NSDictionary *dict = [NSDictionary dictionaryWithObjects:userIDObjects forKeys:userIDKeys];
+        [userIDJsonDictionary addObject:dict];
     }
-    NSArray *userIDJsonDictionary = [NSArray arrayWithObject:[NSDictionary dictionaryWithObjects:userIDObjects forKeys:userIDKeys]];
+    
     
     NSArray *keys = [NSArray arrayWithObjects:@"userID", @"title", @"location", @"datetime", @"endDatetime", @"description", @"attendance", nil];
     NSArray *objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.userID] stringValue], self.titleField.text, self.placeField.text, [NSString stringWithFormat:@"%@ %@", self.startDateLabel.text, self.startTimeLabel.text],[NSString stringWithFormat:@"%@ %@", self.endDateLabel.text, self.endTimeLabel.text], @"Test Meeting", userIDJsonDictionary, nil];
@@ -345,12 +371,6 @@
 
 - (IBAction)onClickSave
 {
-    //save the meeting
-    
-    //for local satabase
-    
-    
-    
     if (!self.isEditing)
     {
         
@@ -364,9 +384,13 @@
 //        [newMeeting setValue:[NSNumber numberWithInt:0] forKey:@"userID"];
 //        [newMeeting setValue:@"false" forKey:@"attendance"];
 //        [context save:&error];
-        
-        
         [self saveNewMeeting];
+//        UILocalNotification* localNotification = [[UILocalNotificationalloc] init];
+//        localNotification.fireDate = [NSDate dateWithTimeIntervalSinceNow:60];
+//        localNotification.alertBody = @"Your alert message";
+//        localNotification.timeZone = [NSTimeZone defaultTimeZone];
+//        [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+
     }
     else
     {
@@ -390,7 +414,108 @@
         [self.context save:&error];
         
     }
+    [self scheduleNotification];
     [self.viewMeetingDelegate refreshMeetingList];
+}
+
+-(void) scheduleNotification
+{
+    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Settings" inManagedObjectContext:self.context];
+
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDesc];
+
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userID = %d", self.userID];
+    [request setPredicate:predicate];
+
+    NSError *error;
+    NSArray *result = [self.context executeFetchRequest:request
+                                                  error:&error];
+    
+    Settings *settings = (Settings *)[result objectAtIndex:0];
+    if ([settings.shouldNotify boolValue])
+    {
+        [self removeOldNotifications];
+        
+        NSString *meetingStartDate = [NSString stringWithFormat:@"%@ %@", self.startDateLabel.text, self.startTimeLabel.text];
+        NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
+        [formatter setDateFormat:@"MM/dd/yyyy hh:mm a"];
+        NSDate *dateTimeOfMeeting = [formatter dateFromString:meetingStartDate];
+
+        UILocalNotification* localNotification = [[UILocalNotification alloc] init];
+        localNotification.timeZone = [NSTimeZone defaultTimeZone];
+        
+        NSNumber *meetingID = [NSNumber numberWithInt:self.meetingID];
+        NSArray *key = [[NSArray alloc] initWithObjects:@"meetingID", nil];
+        NSArray *object = [[NSArray alloc] initWithObjects:meetingID, nil];
+        NSDictionary *userInfo = [[NSDictionary alloc] initWithObjects:object forKeys:key];
+        localNotification.userInfo = userInfo;
+        
+        NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
+        NSDate *fireDate;
+        switch ([settings.whenToNotify integerValue]) {
+            case 0:
+                fireDate = dateTimeOfMeeting;
+                localNotification.alertBody = [NSString stringWithFormat:@"%@ meeting starts now", self.titleField.text];
+                break;
+            case 1:
+                [dateComponents setMinute:-5];
+                fireDate = [[NSCalendar currentCalendar] dateByAddingComponents:dateComponents toDate:dateTimeOfMeeting options:0];
+                localNotification.alertBody = [NSString stringWithFormat:@"%@ meeting starts in 5 minutes", self.titleField.text];
+                break;
+            case 2:
+                [dateComponents setMinute:-15];
+                fireDate = [[NSCalendar currentCalendar] dateByAddingComponents:dateComponents toDate:dateTimeOfMeeting options:0];
+                localNotification.alertBody = [NSString stringWithFormat:@"%@ meeting starts in 15 minutes", self.titleField.text];
+                break;
+            case 3:
+                [dateComponents setMinute:-30];
+                fireDate = [[NSCalendar currentCalendar] dateByAddingComponents:dateComponents toDate:dateTimeOfMeeting options:0];
+                localNotification.alertBody = [NSString stringWithFormat:@"%@ meeting starts in 30 minutes", self.titleField.text];
+                break;
+            case 4:
+                [dateComponents setHour:-1];
+                fireDate = [[NSCalendar currentCalendar] dateByAddingComponents:dateComponents toDate:dateTimeOfMeeting options:0];
+                localNotification.alertBody = [NSString stringWithFormat:@"%@ meeting starts in 1 hour", self.titleField.text];
+                break;
+            case 5:
+                [dateComponents setHour:-2];
+                fireDate = [[NSCalendar currentCalendar] dateByAddingComponents:dateComponents toDate:dateTimeOfMeeting options:0];
+                localNotification.alertBody = [NSString stringWithFormat:@"%@ meeting starts in 2 hours", self.titleField.text];
+                break;
+            case 6:
+                [dateComponents setDay:-1];
+                fireDate = [[NSCalendar currentCalendar] dateByAddingComponents:dateComponents toDate:dateTimeOfMeeting options:0];
+                localNotification.alertBody = [NSString stringWithFormat:@"%@ meeting starts in 1 day", self.titleField.text];
+                break;
+            case 7:
+                [dateComponents setDay:-2];
+                fireDate = [[NSCalendar currentCalendar] dateByAddingComponents:dateComponents toDate:dateTimeOfMeeting options:0];
+                localNotification.alertBody = [NSString stringWithFormat:@"%@ meeting starts in 2 days", self.titleField.text];
+                break;
+            default:
+                break;
+        }
+        localNotification.fireDate = fireDate;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadData" object:self];
+        localNotification.applicationIconBadgeNumber = [[UIApplication sharedApplication] applicationIconBadgeNumber] + 1;
+        [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+    }
+}
+-(void) removeOldNotifications
+{
+    NSArray *notifications = [[UIApplication sharedApplication] scheduledLocalNotifications];
+    for (int i=0; i<[notifications count]; i++)
+    {
+        UILocalNotification* notification = [notifications objectAtIndex:i];
+        NSDictionary *userInfo = notification.userInfo;
+        NSInteger meetingId=[[userInfo valueForKey:@"meetingID"] integerValue];
+        if (meetingId == self.meetingID)
+        {
+            [[UIApplication sharedApplication] cancelLocalNotification:notification];
+            break;
+        }
+    }
 }
 
 - (IBAction)onClickSaveAndAddMore
@@ -404,6 +529,13 @@
     //self.durationField.text = @"";
     self.placeField.text = @"";
     [self.addAgendaButton setTitle:@"Add Agenda" forState:UIControlStateNormal];
+}
+
+- (IBAction)onDeleteMeeting {
+    
+    
+    self.deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this contact?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
+    [self.deleteAlertView show];
 }
 
 - (IBAction)onClickCancel

@@ -18,6 +18,7 @@
 @property (strong, nonatomic) iWinScheduleViewMeetingViewController *scheduleMeetingVC;
 @property (strong, nonatomic) NSMutableArray *meetingID;
 @property (strong, nonatomic) NSMutableArray *meetingLocations;
+@property (nonatomic) NSInteger selectedMeeting;
 
 @end
 
@@ -39,7 +40,7 @@
     self.meetingDetail = [[NSMutableArray alloc] init];
     self.meetingID = [[NSMutableArray alloc] init];
     self.meetingLocations = [[NSMutableArray alloc] init];
-    
+    self.selectedMeeting = -1;
     [self populateMeetingList];
 //    NSArray *result = [self getDataFromDatabase];
 //    for (Meeting *m in result)
@@ -107,7 +108,7 @@
         for (NSDictionary* meetings in jsonArray)
         {
             [self.meetingList addObject:[meetings objectForKey:@"title"]];
-            [self.meetingID addObject:[meetings objectForKey:@"meetingID"]];
+            [self.meetingID addObject:[meetings objectForKey:@"id"]];
         }
         [self populateMeetingDetails];
     }
@@ -139,17 +140,17 @@
             [self.meetingDetail addObject:[deserializedDictionary objectForKey:@"datetime"]];
             [self.meetingLocations addObject:[deserializedDictionary objectForKey:@"location"]];
             
-            NSArray *jsonArray = [deserializedDictionary objectForKey:@"attendance"];
-            NSMutableString *attendeeList;
-            if (jsonArray.count > 0)
-            {
-                for (NSDictionary* users in jsonArray)
-                {
-                    [attendeeList appendFormat:@"%@,", (NSString *)[users objectForKey:@"userID"]];
-                }
-            }
-            
-            [attendeeList deleteCharactersInRange:NSMakeRange([attendeeList length]-1, 1)];
+//            NSArray *jsonArray = [deserializedDictionary objectForKey:@"attendance"];
+//            NSMutableString *attendeeList;
+//            if (jsonArray.count > 0)
+//            {
+//                for (NSDictionary* users in jsonArray)
+//                {
+//                    [attendeeList appendFormat:@"%@,", (NSString *)[users objectForKey:@"userID"]];
+//                }
+//            }
+//            
+//            [attendeeList deleteCharactersInRange:NSMakeRange([attendeeList length]-1, 1)];
             iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
             
             NSManagedObjectContext *context = [appDelegate managedObjectContext];
@@ -159,11 +160,11 @@
             [newMeeting setValue:[deserializedDictionary objectForKey:@"title"] forKey:@"title"];
             [newMeeting setValue:[deserializedDictionary objectForKey:@"location"] forKey:@"location"];
             [newMeeting setValue:[deserializedDictionary objectForKey:@"endDatetime"] forKey:@"endDatetime"];
-            [newMeeting setValue:[deserializedDictionary objectForKey:@"meetingID"] forKey:@"meetingID"];
+            [newMeeting setValue:self.meetingID[i] forKey:@"meetingID"];
             [newMeeting setValue:[deserializedDictionary objectForKey:@"datetime"] forKey:@"datetime"];
             [newMeeting setValue:[NSNumber numberWithInt:self.userID] forKey:@"userID"];
-            [newMeeting setValue:attendeeList forKey:@"attendance"];
-            [newMeeting setValue:[deserializedDictionary objectForKey:@"description"] forKey:@"description"];
+            //[newMeeting setValue:attendeeList forKey:@"attendance"];
+            [newMeeting setValue:[deserializedDictionary objectForKey:@"description"] forKey:@"meetingDesc"];
             [context save:&error];
         }
     }
@@ -219,25 +220,25 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    
-    NSManagedObjectContext *context = [appDelegate managedObjectContext];
-    
-    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Meeting" inManagedObjectContext:context];
-    
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:entityDesc];
-    
-    NSError *error;
-    NSArray *result = [context executeFetchRequest:request
-                                             error:&error];
-    for (Meeting *m in result)
-    {
-        [self.meetingList addObject:m.title];
-        [self.meetingDetail addObject:m.datetime];
-        [self.meetingID addObject:m.userID];
-        [self.meetingLocations addObject:m.location];
-    }
+//    iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+//    
+//    NSManagedObjectContext *context = [appDelegate managedObjectContext];
+//    
+//    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Meeting" inManagedObjectContext:context];
+//    
+//    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+//    [request setEntity:entityDesc];
+//    
+//    NSError *error;
+//    NSArray *result = [context executeFetchRequest:request
+//                                             error:&error];
+//    for (Meeting *m in result)
+//    {
+//        [self.meetingList addObject:m.title];
+//        [self.meetingDetail addObject:m.datetime];
+//        [self.meetingID addObject:m.userID];
+//        [self.meetingLocations addObject:m.location];
+//    }
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MeetingCell"];
     if (cell == nil)
@@ -276,6 +277,28 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         //add code here for when you hit delete
+        self.selectedMeeting = indexPath.row;
+        UIAlertView *deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this meeting?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
+        [deleteAlertView show];
+    }
+}
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1)
+    {
+        NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Meeting/%d", self.selectedMeeting];
+    
+        NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+        [urlRequest setHTTPMethod:@"DELETE"];
+        NSURLResponse * response = nil;
+        NSError * error = nil;
+        [NSURLConnection sendSynchronousRequest:urlRequest
+                              returningResponse:&response
+                                          error:&error];
+        //TODO: Add error checking.
+        self.selectedMeeting = -1;
+        [self refreshMeetingList];
     }
 }
 
