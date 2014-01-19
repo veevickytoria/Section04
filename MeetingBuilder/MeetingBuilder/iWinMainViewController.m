@@ -236,6 +236,7 @@
 {
     [self removeSubViews];
     [self enableSliding];
+    self.userID = userID;
     self.homeScreenViewController = [[iWinHomeScreenViewController alloc] initWithNibName:@"iWinHomeScreenViewController" bundle:nil withUserID:userID];
     [self.mainView  addSubview:self.homeScreenViewController.view];
     [self.homeScreenViewController.view setBounds:self.mainView.bounds];
@@ -321,7 +322,7 @@
 {
     [self removeSubViews];
     [self enableSliding];
-    self.meetingListViewController = [[iWinMeetingViewController alloc] initWithNibName:@"iWinMeetingViewController" bundle:nil withEmail:self.user];
+    self.meetingListViewController = [[iWinMeetingViewController alloc] initWithNibName:@"iWinMeetingViewController" bundle:nil withID:self.userID];
     [self.mainView  addSubview:self.meetingListViewController.view];
     [self.meetingListViewController.view setBounds:self.mainView.bounds];
     [self animateSlidingMenu:NO];
@@ -348,8 +349,7 @@
     [self enableSliding];
     [self animateSlidingMenu:NO];
     [self updateSelectedMenu:self.tasksButton];
-    
-    self.taskListViewController = [[iWinTaskListViewController alloc] initWithNibName:@"iWinTaskListViewController" bundle:nil];
+    self.taskListViewController = [[iWinTaskListViewController alloc] initWithNibName:@"iWinTaskListViewController" bundle:nil userID:self.userID];
     [self.mainView  addSubview:self.taskListViewController.view];
     [self.taskListViewController.view setBounds:self.mainView.bounds];
     [self resetSliding];
@@ -470,11 +470,9 @@
     [self onClickTasks];
 }
 
--(void) onClickSaveSettings{
-    
-}
--(void) onclickCancelSettings{
-    
+-(void) onDeleteAccount
+{
+    [self onClickLogOut];
 }
 
 -(void)speechToText:(NSString *)hypothesis

@@ -2,8 +2,8 @@
 //  Contact.m
 //  MeetingBuilder
 //
-//  Created by CSSE Department on 12/20/13.
-//  Copyright (c) 2013 CSSE371. All rights reserved.
+//  Created by CSSE Department on 1/17/14.
+//  Copyright (c) 2014 CSSE371. All rights reserved.
 //
 
 #import "Contact.h"
@@ -13,8 +13,8 @@
 
 @dynamic company;
 @dynamic email;
-@dynamic name;
 @dynamic location;
+@dynamic name;
 @dynamic phone;
 @dynamic title;
 @dynamic userID;

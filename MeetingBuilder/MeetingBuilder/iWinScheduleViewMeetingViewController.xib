@@ -8,6 +8,7 @@
             <connections>
                 <outlet property="addAgendaButton" destination="yax-7M-GF9" id="iAE-l8-jxF"/>
                 <outlet property="addAttendeesButton" destination="Yt4-nR-mvG" id="Mkj-xB-yha"/>
+                <outlet property="attendeeTableView" destination="q0y-jI-qFz" id="D5F-ia-vTm"/>
                 <outlet property="cancelButton" destination="nYp-L3-fc6" id="DXZ-Sm-KrW"/>
                 <outlet property="endDateLabel" destination="PKb-3j-1Mk" id="Qis-kZ-rQG"/>
                 <outlet property="endTimeLabel" destination="xh9-YE-83D" id="vSH-qN-nHc"/>
@@ -113,9 +114,9 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1c5-Kd-wED">
-                    <rect key="frame" x="83" y="466" width="146" height="30"/>
+                    <rect key="frame" x="315" y="825" width="178" height="30"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="21"/>
                     <state key="normal" title="View My Schedule">
                         <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -198,6 +199,26 @@
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="q0y-jI-qFz">
+                    <rect key="frame" x="257" y="457" width="326" height="315"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="Krw-bb-FSg"/>
+                        <outlet property="delegate" destination="-1" id="Ub2-vq-q16"/>
+                    </connections>
+                </tableView>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nmA-G9-7AA">
+                    <rect key="frame" x="0.0" y="907" width="804" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <state key="normal" title="Delete Meeting">
+                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                    <connections>
+                        <action selector="onDeleteMeeting" destination="-1" eventType="touchUpInside" id="lag-bH-kH4"/>
+                    </connections>
+                </button>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>

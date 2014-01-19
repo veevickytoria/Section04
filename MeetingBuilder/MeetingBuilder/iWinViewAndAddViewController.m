@@ -15,16 +15,18 @@
 @property (nonatomic) BOOL isEditing;
 @property (nonatomic) iWinAgendaItemViewController *agendaItemViewController;
 @property (strong, nonatomic) iWinAddUsersViewController *userViewController;
+@property (nonatomic) NSInteger agendaID;
 @end
 
 @implementation iWinViewAndAddViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil inEditMode:(BOOL)isEditing
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withID: (NSInteger) agendaID
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        self.isEditing = isEditing;
+//        self.isEditing = isEditing;
+        self.agendaID = agendaID;
     }
     return self;
 }
@@ -61,7 +63,8 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ItemCell"];
     }
     
-    cell.textLabel.text = (NSString *)[self.itemList objectAtIndex:indexPath.row];
+    NSString *agendaItemName = [[self.itemList objectAtIndex:indexPath.row] objectForKey:@"title"];
+    cell.textLabel.text = agendaItemName;
     return cell;
 }
 
@@ -72,7 +75,31 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-   // [self.meetingListDelegate meetingSelected];
+    //This is where edit on a row happen: indexPath.row
+    
+    NSDictionary *agendaItem = [self.itemList objectAtIndex:indexPath.row];
+    NSString *agendaItemName = [agendaItem objectForKey:@"title"];
+    NSString *agendaItemDuration = [agendaItem objectForKey:@"duration"];
+    NSString *agendaItemDescription = [agendaItem objectForKey:@"description"];
+
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    self.agendaItemViewController = [[iWinAgendaItemViewController alloc]
+                                     initWithNibName:@"iWinAgendaItemViewController" bundle:nil];
+    self.agendaItemViewController.itemTitle = agendaItemName;
+    self.agendaItemViewController.itemDuration = agendaItemDuration;
+    self.agendaItemViewController.itemDescription = agendaItemDescription;
+
+    self.agendaItemViewController.itemIndex = indexPath.row;
+    
+    
+    self.agendaItemViewController.itemDelegate = self;
+    [self.agendaItemViewController setModalPresentationStyle:UIModalPresentationPageSheet];
+    [self.agendaItemViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+    
+    [self presentViewController:self.agendaItemViewController animated:YES completion:nil];
+    self.agendaItemViewController.view.superview.bounds = CGRectMake(0,0,556,283);
+    
 }
 
 - (IBAction)onClickSave
@@ -88,7 +115,7 @@
 
 - (IBAction)onClickAddItem
 {
-    self.agendaItemViewController = [[iWinAgendaItemViewController alloc] initWithNibName:@"iWinAgendaItemViewController" bundle:nil inEditMode:NO];
+    self.agendaItemViewController = [[iWinAgendaItemViewController alloc] initWithNibName:@"iWinAgendaItemViewController" bundle:nil];
     self.agendaItemViewController.itemDelegate = self;
     [self.agendaItemViewController setModalPresentationStyle:UIModalPresentationFormSheet];
     [self.agendaItemViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
@@ -108,9 +135,19 @@
     self.userViewController.view.superview.bounds = CGRectMake(0,0,768,1003);
 }
 
--(void)saveItem:(NSString *)name
+-(void)saveItem:(NSString *)name duration: (NSString*) duration description:(NSString*)
+description itemIndex: (NSInteger *) itemIndex
 {
-    [self.itemList addObject:name];
+    if((NSInteger)self.agendaItemViewController.itemIndex > -1){
+        NSDictionary *agendaItem = @{@"title" : name, @"duration": duration, @"description": description};
+        [self.itemList replaceObjectAtIndex:self.agendaItemViewController.itemIndex withObject:agendaItem];
+    }
+    
+    else{
+    NSDictionary *agendaItem = @{@"title" : name, @"duration": duration, @"description": description};
+    [self.itemList addObject:agendaItem];
+    }
+    
     [self.itemTableView reloadData];
     [self dismissViewControllerAnimated:YES completion:Nil];
 }
