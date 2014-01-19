@@ -57,7 +57,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 			echo json_encode(array("errorID"=>1, "errorMessage"=>"pass invalid email or password"));
 		}
 	}else{
-		echo json_encode(array("errorID"=>1, "errorMessage"=>"email invalid email or password"));
+		echo json_encode(array("errorID"=>2, "errorMessage"=>"email invalid email or password"));
 	}	
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'test')==0){
 	//testing method to check if mailing is working correctly
@@ -211,8 +211,8 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 	$users= $userIndex->query('email:*');
 	for($ii=0;$ii<sizeof($users);$ii++){
 		$array=$users[$ii]->getProperties();
-		$array['password']="********";
 		$array['userID']=$users[$ii]->getId();
+		unset($array['password']);
 		$results[$ii]= $array;
 	}
 	echo json_encode(array("users"=>$results));
@@ -239,6 +239,20 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 	if(sizeof($user) >0){	
 		//all fields
 		if(array_key_exists($field, $user->getProperties())){
+			//check if the field is the email
+			if(strcasecmp($field, 'email') == 0){
+				//check if email already exists
+				if($userIndex->findOne('email', $node->getProperty('email')) != NULL){
+					//remove index on this email
+					$userIndex->remove($user, 'email', $user->getProperty('email'));
+					//add the new index
+					$userIndex->add($user, 'email', $value);
+				} else {
+					//return error if email exists
+					echo json_encode(array('errorID'=>'11', 'errorMessage'=>'Email already linked to another account'));
+					return;
+				}
+			}
 			//change the field
 			$user->setProperty($field, $value);
 			$user->save();
