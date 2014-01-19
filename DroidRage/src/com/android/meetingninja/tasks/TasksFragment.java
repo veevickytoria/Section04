@@ -26,15 +26,16 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.LinearLayout;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.meetingninja.R;
-import com.android.meetingninja.ViewTaskActivity;
 import com.android.meetingninja.database.AsyncResponse;
 import com.android.meetingninja.notes.CreateNoteActivity;
 import com.android.meetingninja.user.SessionManager;
@@ -63,7 +64,8 @@ public class TasksFragment extends Fragment implements AsyncResponse<List<Task>>
 		View v = inflater.inflate(R.layout.fragment_tasks, container, false);
 		session = SessionManager.getInstance();
 		refreshTasks();
-
+		
+		
 		ExpandableListView lv = (ExpandableListView) v
 				.findViewById(R.id.tasksList);
 
@@ -121,7 +123,6 @@ public class TasksFragment extends Fragment implements AsyncResponse<List<Task>>
 		}
 		taskAdpt.notifyDataSetChanged();
 	}
-
 }
 
 class TaskListAdapter extends BaseExpandableListAdapter {
@@ -236,5 +237,6 @@ class TaskListAdapter extends BaseExpandableListAdapter {
 	public boolean isChildSelectable(int groupPosition, int childPosition) {
 		return true;
 	}
+	
 
 }

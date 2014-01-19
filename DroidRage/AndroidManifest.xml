@@ -135,8 +135,12 @@
                 android:value="com.android.meetingninja.MainActivity" />
         </activity>
         <activity
-            android:name="com.android.meetingninja.ViewTaskActivity"
+            android:name="com.android.meetingninja.tasks.ViewTaskActivity"
             android:label="@string/title_activity_view_task" >
+        </activity>
+        <activity
+            android:name="com.android.meetingninja.tasks.EditTaskActivity"
+            android:label="@string/title_activity_edit_task" >
         </activity>
     </application>
 

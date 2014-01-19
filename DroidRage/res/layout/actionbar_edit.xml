@@ -1,0 +1,36 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:divider="?android:attr/dividerVertical"
+    android:dividerPadding="12dip"
+    android:orientation="horizontal">
+
+    <!-- id must match corresponding menu item id -->
+
+   
+    
+    <View
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_gravity="right|center_vertical"
+        android:background="#ff383838" />
+
+    <!-- id must match corresponding menu item id -->
+
+    <LinearLayout
+        android:id="@+id/action_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        style="@style/EditEventCustomActionButton"
+        android:gravity = "right|center_vertical">"
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/EditEventCustomActionButtonText"
+            android:text="Edit" />
+    </LinearLayout>
+
+</LinearLayout>

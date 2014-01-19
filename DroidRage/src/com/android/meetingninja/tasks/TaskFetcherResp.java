@@ -3,7 +3,6 @@ package com.android.meetingninja.tasks;
 import java.io.IOException;
 import java.util.List;
 
-import com.android.meetingninja.ViewTaskActivity;
 import com.android.meetingninja.database.AsyncResponse;
 import com.android.meetingninja.database.TaskDatabaseAdapter;
 

@@ -40,7 +40,6 @@
                     android:layout_marginLeft="@dimen/activity_horizontal_margin" >
 
                     <TextView
-                        android:id="@+id/dateCreated"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="2dp"
@@ -49,7 +48,6 @@
                         android:textColor="@android:color/secondary_text_dark" />
 
                     <TextView
-                        android:id="@+id/task_edit_date_created_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
@@ -63,7 +61,6 @@
                     android:layout_marginLeft="@dimen/activity_horizontal_margin" >
 
                     <TextView
-                        android:id="@+id/dateAssigned"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="2dp"
@@ -72,7 +69,6 @@
                         android:textColor="@android:color/secondary_text_dark" />
 
                     <TextView
-                        android:id="@+id/task_date_assigned_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
@@ -86,7 +82,6 @@
                     android:layout_marginLeft="@dimen/activity_horizontal_margin" >
 
                     <TextView
-                        android:id="@+id/dateDeadline"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="2dp"
@@ -94,14 +89,17 @@
                         android:hint="Deadline:"
                         android:textColor="@android:color/secondary_text_dark" />
 
-                    <TextView
-                        android:id="@+id/task_date_deadline_text"
-                        android:layout_width="wrap_content"
+                    <Button
+                        android:id="@+id/task_edit_deadline"
+                        style="@style/TextAppearance.EditEvent_SpinnerButton"
+                        android:layout_width="0px"
                         android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:hint="November 13, 2013"
-                        android:minHeight="16dp" />
-                </LinearLayout>
+                        android:layout_marginRight="0dp"
+                        android:layout_weight="7"
+                        android:paddingRight="4dp"
+                        android:singleLine="true" />
+
+</LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -111,14 +109,13 @@
                 android:orientation="vertical" >
 
                 <TextView
-                    android:id="@+id/task_desc_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/vertical_spacer"
                     android:hint="Description:"
                     android:inputType="text" />
 
-                <TextView
+                <EditText
                     android:id="@+id/task_edit_desc_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -151,8 +148,8 @@
                     android:hint="Completion Criteria:"
                     android:inputType="text" />
 
-                <TextView
-                    android:id="@+id/task_edit_comp_crit_text"
+                <EditText
+                    android:id="@+id/task_dit_comp_crit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/vertical_spacer"
