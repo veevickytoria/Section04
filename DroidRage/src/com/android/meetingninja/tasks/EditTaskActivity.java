@@ -62,13 +62,12 @@ public class EditTaskActivity extends Activity implements AsyncResponse<Boolean>
 		completionCriteria = (EditText) findViewById(R.id.task_edit_comp_crit);
 		//TODO: is 24 stuff
 
-		extras = getIntent().getExtras();
-		//edit_mode = extras.getBoolean(EXTRA_EDIT_MODE,true);
+		Intent i = getIntent();
 		if(extras!= null && !extras.isEmpty()){
 			displayTask = extras.getParcelable(EXTRA_TASK);
 		}
-		setupView();
-
+		setupView(); 
+		displayTask = i.getParcelableExtra("task"); 
 		if(displayTask != null){
 			Title.setText(displayTask.getTitle());
 			completionCriteria.setText(displayTask.getCompletionCriteria());
@@ -116,7 +115,6 @@ public class EditTaskActivity extends Activity implements AsyncResponse<Boolean>
 	private boolean onActionBarItemSelected(View v){
 		switch (v.getId()){
 		case R.id.action_done:
-			System.out.println("got here");
 			if(Title.getText().equals(null)){
 				Title.setText("");
 			}
@@ -152,27 +150,24 @@ public class EditTaskActivity extends Activity implements AsyncResponse<Boolean>
 		}
 	}
 	private void save(){
-		System.out.println("next point");
 		if(TextUtils.isEmpty(Title.getText())){
-			System.out.println("broken?");
 			Toast.makeText(this, "Empty Task not created", Toast.LENGTH_SHORT).show();
 			setResult(RESULT_CANCELED);
 			finish();
 		} else {
-			System.out.println("checkpoint");
 			Intent msgIntent = new Intent();
-			Task newTask = new Task();
-			System.out.println("check2");
 			trimTextView();
 			String title,desc,compCrit;
-			System.out.println("check3");
-			//title = Title.getText().toString();
-			//desc = Description.getText().toString();
-			//compCrit = completionCriteria.getText().toString();
-
+			/*title = Title.getText().toString();
+			desc = Description.getText().toString();
+			compCrit = completionCriteria.getText().toString();*/
+			TaskUpdater tUpdate = new TaskUpdater();
+			tUpdate.updateTask(displayTask);
+			
 			//TODO: setup newTask
 			if(displayTask!=null){
 			}
+			
 			finish();
 
 		}
@@ -202,7 +197,7 @@ public class EditTaskActivity extends Activity implements AsyncResponse<Boolean>
 		}
 
 	}
-	public class TaskSaveTask extends AsyncTask<Task, Void, Boolean> {
+	/*public class TaskSaveTask extends AsyncTask<Task, Void, Boolean> {
 		private AsyncResponse<Boolean> delegate;
 		public TaskSaveTask(AsyncResponse<Boolean> delegate){
 			this.delegate = delegate;
@@ -226,5 +221,5 @@ public class EditTaskActivity extends Activity implements AsyncResponse<Boolean>
 			super.onPostExecute(result);
 		}
 
-	}
+	}*/
 }
