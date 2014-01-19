@@ -182,7 +182,7 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 			}
 			Intent msgIntent = new Intent();
 			
-			msgIntent.putExtra(EXTRA_TASK, displayTask.getID());
+			msgIntent.putExtra(EXTRA_TASK, displayTask);
 			setResult(RESULT_OK,msgIntent);
 			
 			finish();
@@ -215,8 +215,10 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 			cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 			cal.set(Calendar.MONTH,monthOfYear);
 			cal.set(Calendar.YEAR, year);
-			//if(cal.before(calendar))
+			Calendar c1;
 			
+			//if(cal.before(Calendar.getInstance()l))
+			//start.setTimeInMillis(displayedMeeting.getStartTime_Time());
 			
 			
 			
