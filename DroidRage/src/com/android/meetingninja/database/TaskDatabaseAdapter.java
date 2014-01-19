@@ -129,13 +129,15 @@ public class TaskDatabaseAdapter  extends AbstractDatabaseAdapter{
 		String isCompPayload = getEditPayload(task.getID(), "isCompleted", Boolean.toString(task.getIsCompleted()));
 		String deadlinePayload = getEditPayload(task.getID(), "deadline", task.getEndTime());
 		String compCritPayload = getEditPayload(task.getID(), "completionCriteria", task.getCompletionCriteria());
-		
+		String assignedToPayload = getEditPayload(task.getID(), "assignedTo", task.getAssignedTo());
 		//Get server response
-		int responseCode = conn.getResponseCode();
+		int responseCode = sendPostPayload(conn, titlePayload);
 		String response = getServerResponse(conn);
+		final JsonNode taskNode = MAPPER.readTree(response);
+		parseTask(taskNode, task);
 		
 		
-		return null;
+		return task;
 	}
 	
 	private static String getEditPayload(String taskID, String field, String value) throws IOException {
