@@ -7,6 +7,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="iWinViewAndAddNotesViewController">
             <connections>
                 <outlet property="noteField" destination="pum-1g-5rd" id="jun-O1-HLS"/>
+                <outlet property="saveButton" destination="0dg-Fe-Iz0" id="S56-Fc-IRh"/>
                 <outlet property="titleField" destination="0rt-oY-bOl" id="5S9-Lb-bs3"/>
                 <outlet property="view" destination="2" id="3"/>
             </connections>
@@ -53,9 +54,9 @@
                     </connections>
                 </button>
                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pum-1g-5rd">
-                    <rect key="frame" x="99" y="108" width="570" height="722"/>
+                    <rect key="frame" x="20" y="108" width="728" height="722"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <color key="backgroundColor" red="0.76729910710000004" green="0.76729910710000004" blue="0.76729910710000004" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                 </textView>

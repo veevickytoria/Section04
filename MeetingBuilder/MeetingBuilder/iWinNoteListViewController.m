@@ -59,7 +59,7 @@
 
 -(IBAction) onCreateNewNote
 {
-    self.createNoteVC = [[iWinViewAndAddNotesViewController alloc] initWithNibName:@"iWinViewAndAddNotesViewController" bundle:nil inEditMode:NO];
+    self.createNoteVC = [[iWinViewAndAddNotesViewController alloc] initWithNibName:@"iWinViewAndAddNotesViewController" bundle:nil withNoteID:-1];
     [self.createNoteVC setModalPresentationStyle:UIModalPresentationPageSheet];
     [self.createNoteVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     [self presentViewController:self.createNoteVC animated:YES completion:nil];

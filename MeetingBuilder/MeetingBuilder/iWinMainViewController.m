@@ -432,7 +432,7 @@
     [self enableSliding];
     [self animateSlidingMenu:NO];
     [self resetSliding];
-    self.viewAddNoteViewController = [[iWinViewAndAddNotesViewController alloc] initWithNibName:@"iWinViewAndAddNotesViewController" bundle:nil inEditMode:isEditing];
+    self.viewAddNoteViewController = [[iWinViewAndAddNotesViewController alloc] initWithNibName:@"iWinViewAndAddNotesViewController" bundle:nil withNoteID:-1];
     [self.mainView  addSubview:self.viewAddNoteViewController.view];
     [self.viewAddNoteViewController.view setBounds:self.mainView.bounds];
     self.viewAddNoteViewController.addNoteDelegate = self;

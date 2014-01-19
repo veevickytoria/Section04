@@ -19,10 +19,11 @@
 
 @interface iWinViewAndAddNotesViewController : UIViewController <MergeNoteDelegate>
 @property (nonatomic) id<ViewAddNoteDelegate> addNoteDelegate;
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil inEditMode:(BOOL)isEditing;
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withNoteID:(NSInteger)noteID;
 - (IBAction)saveButton:(id)sender;
 - (IBAction)cancelButton:(id)sender;
 - (IBAction)mergeNotesButton:(id)sender;
 @property (weak, nonatomic) IBOutlet UITextField *titleField;
 @property (weak, nonatomic) IBOutlet UITextView *noteField;
+@property (weak, nonatomic) IBOutlet UIButton *saveButton;
 @end
