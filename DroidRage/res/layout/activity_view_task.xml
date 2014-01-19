@@ -119,7 +119,7 @@
                     android:inputType="text" />
 
                 <TextView
-                    android:id="@+id/task_edit_desc_text"
+                    android:id="@+id/task_desc_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/vertical_spacer"
@@ -152,7 +152,7 @@
                     android:inputType="text" />
 
                 <TextView
-                    android:id="@+id/task_edit_comp_crit_text"
+                    android:id="@+id/task_comp_crit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/vertical_spacer"
