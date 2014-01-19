@@ -55,8 +55,11 @@ public class EditTaskActivity extends Activity implements AsyncResponse<Boolean>
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_edit_event);
+		setContentView(R.layout.activity_edit_task);
 		setupActionBar();
+		Title= (EditText) findViewById(R.id.task_edit_title);
+		Description = (EditText) findViewById(R.id.task_edit_desc);
+		completionCriteria = (EditText) findViewById(R.id.task_edit_comp_crit);
 		//TODO: is 24 stuff
 
 		extras = getIntent().getExtras();
@@ -87,18 +90,6 @@ public class EditTaskActivity extends Activity implements AsyncResponse<Boolean>
 	};
 
 	private void setupActionBar(){
-		//		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		//		View actionBarButtons = inflater.inflate(R.layout.actionbar_ok_cancel, new LinearLayout(this), false);
-		//		View cancelActionView = actionBarButtons.findViewById(R.id.actoin_cancel);
-		//		View doneActionView = actionBarButtons.findViewById(R.id.action_done);
-		//		doneActionView.setOnClickListener(tActionBarListener);
-		//		
-		//		getActionBar().setHomeButtonEnabled(false);
-		//		getActionBar().setDisplayHomeAsUpEnabled(false);
-		//		getActionBar().setDisplayHomeAsUpEnabled(false);
-		//		getActionBar().setDisplayShowTitleEnabled(false);
-		//		getActionBar().setDisplayShowCustomEnabled(false);
-		//		getActionBar().setCustomView(actionBarButtons);
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		// Make an Ok/Cancel ActionBar
@@ -125,6 +116,10 @@ public class EditTaskActivity extends Activity implements AsyncResponse<Boolean>
 	private boolean onActionBarItemSelected(View v){
 		switch (v.getId()){
 		case R.id.action_done:
+			System.out.println("got here");
+			if(Title.getText().equals(null)){
+				Title.setText("");
+			}
 			save();
 			break;
 		case R.id.action_cancel:
@@ -157,22 +152,28 @@ public class EditTaskActivity extends Activity implements AsyncResponse<Boolean>
 		}
 	}
 	private void save(){
+		System.out.println("next point");
 		if(TextUtils.isEmpty(Title.getText())){
+			System.out.println("broken?");
 			Toast.makeText(this, "Empty Task not created", Toast.LENGTH_SHORT).show();
 			setResult(RESULT_CANCELED);
 			finish();
 		} else {
+			System.out.println("checkpoint");
 			Intent msgIntent = new Intent();
 			Task newTask = new Task();
+			System.out.println("check2");
 			trimTextView();
 			String title,desc,compCrit;
-			title = Title.getText().toString();
-			desc = Description.getText().toString();
-			compCrit = completionCriteria.getText().toString();
+			System.out.println("check3");
+			//title = Title.getText().toString();
+			//desc = Description.getText().toString();
+			//compCrit = completionCriteria.getText().toString();
 
 			//TODO: setup newTask
 			if(displayTask!=null){
 			}
+			finish();
 
 		}
 	}

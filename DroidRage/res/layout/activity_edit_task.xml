@@ -13,8 +13,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
-            <TextView
-                android:id="@+id/task_title_label"
+            <EditText
+                android:id="@+id/task_edit_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -98,8 +98,7 @@
                         android:layout_weight="7"
                         android:paddingRight="4dp"
                         android:singleLine="true" />
-
-</LinearLayout>
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -149,7 +148,7 @@
                     android:inputType="text" />
 
                 <EditText
-                    android:id="@+id/task_dit_comp_crit_text"
+                    android:id="@+id/task_edit_comp_crit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/vertical_spacer"
