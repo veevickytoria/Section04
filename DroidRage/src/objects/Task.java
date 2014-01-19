@@ -14,17 +14,14 @@ import android.os.Parcelable;
 
 public class Task extends Event implements Parcelable {
 	private String taskID;
-	private String title;
 	private boolean isCompleted;
-	private String description;
-	private String deadline;
 	private String dateCreated;
 	private String dateAssigned;
 	private String completionCriteria;
 	private String assignedTo;
 	private String assignedFrom;
 	private String createdBy;
-	private String type;			//title, description, deadline, compeltion criteria, assigned to
+	private String type;			//title, description, isCompleted, deadline, compeltion criteria, assigned to
 	
 
 	public Task() {
@@ -38,14 +35,6 @@ public class Task extends Event implements Parcelable {
 	public Task(Parcel parcel){
 		readFromParcel(parcel);
 	}
-
-	public String getTaskID() {
-		return taskID;
-	}
-
-	public void setTaskID(String taskID) {
-		this.taskID = taskID;
-	}
 	
 	public void setType(String type){
 		this.type = type;
@@ -55,13 +44,6 @@ public class Task extends Event implements Parcelable {
 		return this.type;
 	}
 	
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
 
 	public boolean getIsCompleted() {
 		return isCompleted;
@@ -69,22 +51,6 @@ public class Task extends Event implements Parcelable {
 
 	public void setIsCompleted(boolean isCompleted) {
 		this.isCompleted = isCompleted;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getDeadline() {
-		return deadline;
-	}
-
-	public void setDeadline(String deadline) {
-		this.deadline = deadline;
 	}
 
 	public String getDateCreated() {
@@ -143,7 +109,6 @@ public class Task extends Event implements Parcelable {
 	@Override
 	public void setID(int id) {
 		this.taskID = Integer.toString(id);
-
 	}
 
 	@Override
@@ -158,14 +123,14 @@ public class Task extends Event implements Parcelable {
 		dest.writeString(getTitle());
 		dest.writeString(Boolean.toString(getIsCompleted()));
 		dest.writeString(getDescription());
-		dest.writeString(getDeadline());
+		dest.writeString(getEndTime());
 		dest.writeString(getDateCreated());
 		dest.writeString(getDateAssigned());
 		dest.writeString(getCompletionCriteria());
 		dest.writeString(getAssignedTo());
 		dest.writeString(getAssignedFrom());
 		dest.writeString(getCreatedBy());
-		dest.writeString(getTaskID());
+		dest.writeString(getID());
 		dest.writeString(getType());
 	}
 	
@@ -173,7 +138,7 @@ public class Task extends Event implements Parcelable {
 		title = in.readString();
 		isCompleted = Boolean.parseBoolean(in.readString());
 		description = in.readString();
-		deadline = in.readString();
+		endTime = in.readString();
 		dateCreated = in.readString();
 		dateAssigned = in.readString();
 		completionCriteria = in.readString();
@@ -206,10 +171,10 @@ public class Task extends Event implements Parcelable {
 
 		// Build JSON Object
 		jgen.writeStartObject();
-		jgen.writeStringField("taskID", task.getTaskID());
+		jgen.writeStringField("taskID", task.getID());
 		jgen.writeBooleanField("isCompleted", task.getIsCompleted());
 		jgen.writeStringField("description", task.getDescription());
-		jgen.writeStringField("deadline", task.getDeadline());
+		jgen.writeStringField("deadline", task.getEndTime());
 		jgen.writeStringField("dateCreated", task.getDateCreated());
 		jgen.writeStringField("dateAssigned", task.getDateAssigned());
 		jgen.writeStringField("completionCriteria", task.getCompletionCriteria());
@@ -228,7 +193,7 @@ public class Task extends Event implements Parcelable {
 		StringBuilder builder = new StringBuilder();
 		builder.append("*** Task Details ***\n");
 		builder.append("getTaskID()\t");
-		builder.append(getTaskID() + "\n");
+		builder.append(getID() + "\n");
 		builder.append("getTitle()\t");
 		builder.append(getTitle() + "\n");
 		builder.append("getDescription()\t");
@@ -236,7 +201,7 @@ public class Task extends Event implements Parcelable {
 		builder.append("getDateCreated()\t");
 		builder.append(getDateCreated() + "\n");
 		builder.append("getDeadline()\t");
-		builder.append(getDeadline() + "\n");
+		builder.append(getEndTime() + "\n");
 		builder.append("getIsCompleted()\t");
 		builder.append(getIsCompleted() + "\n");
 		builder.append("getAssignedTo()\t");
