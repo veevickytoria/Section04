@@ -153,7 +153,7 @@
     [self enableInteraction:NO];
     self.isEditing = NO;
     self.oldPasswordTextField.text = @"********";
-    [self.saveAndEditButton setTitle:@"Change Email/Password" forState:UIControlStateNormal];
+    self.saveAndEditButton.hidden = NO;
     
     //Pull Email from DB
 }
