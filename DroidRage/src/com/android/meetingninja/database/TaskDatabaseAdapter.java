@@ -8,7 +8,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
+import com.android.meetingninja.R;
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -111,6 +113,48 @@ public class TaskDatabaseAdapter  extends AbstractDatabaseAdapter{
 		return taskList;	
 	}
 	
+	public static Task editTask(Task task) throws IOException{
+		String _url = getBaseUri().appendPath("Task").build().toString();
+		URL url = new URL(_url);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		
+		//add request header
+		conn.setRequestMethod("PUT");
+		addRequestHeader(conn,false);
+		//title, description, isCompleted, deadline, compeltion criteria, assigned to
+
+		
+		String titlePayload = getEditPayload(task.getID(), "title", task.getTitle());
+		String descPayload = getEditPayload(task.getID(), "description", task.getDescription());
+		String isCompPayload = getEditPayload(task.getID(), "isCompleted", Boolean.toString(task.getIsCompleted()));
+		String deadlinePayload = getEditPayload(task.getID(), "deadline", task.getEndTime());
+		String compCritPayload = getEditPayload(task.getID(), "completionCriteria", task.getCompletionCriteria());
+		
+		//Get server response
+		int responseCode = conn.getResponseCode();
+		String response = getServerResponse(conn);
+		
+		
+		return null;
+	}
+	
+	private static String getEditPayload(String taskID, String field, String value) throws IOException {
+		ByteArrayOutputStream json = new ByteArrayOutputStream();
+		// this type of print stream allows us to get a string easily
+		PrintStream ps = new PrintStream(json);
+		// Create a generator to build the JSON string
+		JsonGenerator jgen = JFACTORY.createGenerator(ps, JsonEncoding.UTF8);
+		//Build JSON Object for Title
+		jgen.writeStartObject();
+		jgen.writeStringField("taskID", taskID);
+		jgen.writeStringField("field", field);
+		jgen.writeStringField("value", value);
+		jgen.writeEndObject();
+		jgen.close();
+		String payload = json.toString("UTF8");
+		ps.close();
+		return payload;
+	}
 
 	public static Task parseTask(JsonNode node,Task t){
 		//start parsing a task
@@ -119,7 +163,7 @@ public class TaskDatabaseAdapter  extends AbstractDatabaseAdapter{
 			
 			t.setDescription(node.hasNonNull(KEY_DESC)? node.get(KEY_DESC).asText() : "");
 			t.setTitle(node.hasNonNull(KEY_TITLE) ? node.get(KEY_TITLE).asText() : "");
-			t.setDeadline(node.hasNonNull(KEY_DEADLINE) ? node.get(KEY_DEADLINE).asText() : "");
+			t.setEndTime(node.hasNonNull(KEY_DEADLINE) ? node.get(KEY_DEADLINE).asText() : "");
 			t.setDateCreated(node.hasNonNull(KEY_DATECREATED) ? node.get(KEY_DATECREATED).asText() : "");
 			t.setDateAssigned(node.hasNonNull(KEY_DATEASSIGNED)? node.get(KEY_DATEASSIGNED).asText() : "");
 			t.setCompletionCriteria(node.hasNonNull(KEY_COMPCRIT) ? node.get(KEY_COMPCRIT).asText() : "");
