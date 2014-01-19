@@ -230,58 +230,35 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 	$postContent = json_decode(@file_get_contents('php://input'));
 	
 	$user=$client->getNode($postContent->userID);
+	$field = $postContent->field;
+	$value = $postContent->value;
+	$array = array('userID'=>$user->getId());
 
-	if(sizeof($user) >0){
-		if(strcasecmp($postContent->field, 'password') ==0){
-			$hashword = $postContent->value;
-			$user->setProperty('password', create_hash(hashword));
+	if(sizeof($user) >0){	
+		//password
+		if(strcasecmp($field, 'password') ==0){
+			//change the password
+			$user->setProperty('password', create_hash($value));
 			$user->save();
-			$array = $user->getProperties();
-			$array['password']="********";
+			//set the return array
+			$array = array_merge($array, $user->getProperties());
+			unset($array['password']);
 			echo json_encode($array);
-		}else if(strcasecmp($postContent->field, 'name') ==0){
-			$user->setProperty('name', $postContent->value);
+		//all other fields
+		}else if(array_key_exists($field, $user->getProperties())){
+			//change the field
+			$user->setProperty($field, $value);
 			$user->save();
-			$array = $user->getProperties();
-			$array['password']="********";
+			//get the return array
+			$array = array_merge($array, $user->getProperties());
+			unset($array['password']);
 			echo json_encode($array);
-		}else if(strcasecmp($postContent->field, 'company') ==0){
-			$user->setProperty('company', $postContent->value);
-			$user->save();
-			$array = $user->getProperties();
-			$array['password']="********";
-			echo json_encode($array);
-		}else if(strcasecmp($postContent->field, 'phone') ==0){
-			$user->setProperty('phone', $postContent->value);
-			$user->save();
-			$array = $user->getProperties();
-			$array['password']="********";
-			echo json_encode($array);
-		}else if(strcasecmp($postContent->field, 'title') ==0){
-			$user->setProperty('title', $postContent->value);
-			$user->save();
-			$array = $user->getProperties();
-			$array['password']="********";
-			echo json_encode($array);
-		}else if(strcasecmp($postContent->field, 'location') ==0){
-			$user->setProperty('location', $postContent->value);
-			$user->save();
-			$array = $user->getProperties();
-			$array['password']="********";
-			echo json_encode($array);
-		}else if(strcasecmp($postContent->field, 'email') ==0){
-			$user->setProperty('email', $postContent->value);
-			$user->save();
-			$array = $user->getProperties();
-			$array['password']="********";
-			echo json_encode($array);
+		//invalid field
 		}else{
-			echo "No node updated.";
+			echo json_encode(array('errorID'=>'9', 'errorMessage'=>$field.'is an unknown field for User'));
 		}
-		
-
 	}else{
-		echo "FALSE node not found";
+		echo json_encode(array('errorID'=>'10', 'errorMessage'=>$postContent->userID.'is an unrecognized node ID in the database'));
 	}
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'DELETE')==0){
 	preg_match("#(\d+)#", $_SERVER['REQUEST_URI'], $id);
