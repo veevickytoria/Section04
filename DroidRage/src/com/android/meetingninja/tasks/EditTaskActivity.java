@@ -15,20 +15,16 @@ import com.android.meetingninja.R;
 import com.doomonafireball.betterpickers.calendardatepicker.CalendarDatePickerDialog;
 import com.doomonafireball.betterpickers.calendardatepicker.CalendarDatePickerDialog.OnDateSetListener;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -215,14 +211,13 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 			cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 			cal.set(Calendar.MONTH,monthOfYear);
 			cal.set(Calendar.YEAR, year);
-			Calendar c1;
-			
-			//if(cal.before(Calendar.getInstance()l))
-			//start.setTimeInMillis(displayedMeeting.getStartTime_Time());
-			
-			
-			
-			
+			Calendar now = null;
+			now.getInstance();
+			if(cal.before(now)){
+				
+			}else{
+				tDeadline.setText(dateFormat.format(cal.getTime()));
+			}			
 			// TODO Auto-generated method stub
 			
 		}
