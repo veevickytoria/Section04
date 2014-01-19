@@ -11,15 +11,17 @@ import com.android.meetingninja.database.AsyncResponse;
 import com.android.meetingninja.database.TaskDatabaseAdapter;
 import com.android.meetingninja.extras.MyDateUtils;
 import com.android.meetingninja.user.SessionManager;
+import com.android.meetingninja.R;
 import com.doomonafireball.betterpickers.calendardatepicker.CalendarDatePickerDialog;
 import com.doomonafireball.betterpickers.calendardatepicker.CalendarDatePickerDialog.OnDateSetListener;
-import com.android.meetingninja.R;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,7 +34,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class EditTaskActivity extends Activity implements AsyncResponse<Boolean>{
+public class EditTaskActivity extends FragmentActivity implements AsyncResponse<Boolean>{
 
 	private EditText Description, completionCriteria, Title;
 	private TextView assignedDateLabel,createdDateLabel;
@@ -41,12 +43,13 @@ public class EditTaskActivity extends Activity implements AsyncResponse<Boolean>
 
 	private SessionManager session;
 	private Task displayTask;
+	Calendar cal;
 
-	public static final String EXTRA_TITLE = "title";
+	/*public static final String EXTRA_TITLE = "title";
 	public static final String EXTRA_DESCRIPTION = "description";
-	public static final String EXTRA_EDIT_MODE = "editing";
-	public static final String EXTRA_TASK = "displayTask";
-
+	public static final String EXTRA_EDIT_MODE = "editing";*/
+	public static final String EXTRA_TASK = "task";
+	
 	private static final String TAG = EditTaskActivity.class.getSimpleName();
 
 	@Override
@@ -60,7 +63,7 @@ public class EditTaskActivity extends Activity implements AsyncResponse<Boolean>
 		tDeadline = (Button) findViewById(R.id.task_edit_deadline);
 		Intent i = getIntent();
 		setupView(); 
-		displayTask = i.getParcelableExtra("task"); 
+		displayTask = i.getParcelableExtra(EXTRA_TASK); 
 		if(displayTask != null){
 			Title.setText(displayTask.getTitle());
 			completionCriteria.setText(displayTask.getCompletionCriteria());
@@ -71,10 +74,11 @@ public class EditTaskActivity extends Activity implements AsyncResponse<Boolean>
 			int month = (int) Integer.parseInt(deadline.substring(0, 2));
 			int year = (int) Integer.parseInt(deadline.substring(6));
 			int day = (int) Integer.parseInt(deadline.substring(3,5));
-			Calendar cal = Calendar.getInstance();
+			cal = Calendar.getInstance();
 			cal.set(year, month, day);
 			
 			tDeadline.setText(deadline);
+			tDeadline.setOnClickListener(new DateClickListener());
 			//findViewById(R.id.task_edit_deadline)
 			//createdDate = findViewById(R.id.task_edit_date_created).toString();
 			
@@ -194,17 +198,29 @@ public class EditTaskActivity extends Activity implements AsyncResponse<Boolean>
 		}
 
 		@Override
-		public void onClick(View arg0) {
+		public void onClick(View v) {
 			//TODO calendar stuff
-			//FragmentManager fm = getSupportFragmentManager();
-			CalendarDatePickerDialog calendarDatePicketDalog = CalendarDatePickerDialog.newInstance(DateClickListener.this, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
-
-
+			FragmentManager fm = getSupportFragmentManager();
+			CalendarDatePickerDialog calendarDatePickerDialog = CalendarDatePickerDialog.newInstance(DateClickListener.this, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+			calendarDatePickerDialog.show(fm,"fragment_date_picker_name");
 		}
 
 		@Override
 		public void onDateSet(CalendarDatePickerDialog dialog, int year,
 				int monthOfYear, int dayOfMonth) {
+			int yr,month,day;
+			yr = cal.get(Calendar.YEAR);
+			month = cal.get(Calendar.MONTH);
+			day = cal.get(Calendar.DAY_OF_MONTH);
+			cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+			cal.set(Calendar.MONTH,monthOfYear);
+			cal.set(Calendar.YEAR, year);
+			//if(cal.before(calendar))
+			
+			
+			
+			
+			
 			// TODO Auto-generated method stub
 			
 		}
