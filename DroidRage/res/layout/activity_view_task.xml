@@ -195,6 +195,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginBottom="0dip"
                     android:layout_marginTop="0dip"
+                    android:onClick="completeTask"
                     android:background="?android:attr/selectableItemBackground"
                     android:contentDescription="@string/reminders_label"
                     android:gravity="top"

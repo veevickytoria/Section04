@@ -65,7 +65,10 @@ public class ViewTaskActivity extends Activity {
 
 	}
 	
-	public void completeTask(){
+	public void completeTask(View v){
+		TaskUpdater updater = new TaskUpdater();
+		task.setIsCompleted(true);
+		updater.updateTask(task);
 		
 	}
 

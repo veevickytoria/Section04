@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -113,17 +114,7 @@ public class TaskDatabaseAdapter  extends AbstractDatabaseAdapter{
 		return taskList;	
 	}
 	
-	public static Task editTask(Task task) throws IOException{
-		String _url = getBaseUri().appendPath("Task").build().toString();
-		URL url = new URL(_url);
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-		
-		//add request header
-		conn.setRequestMethod("PUT");
-		addRequestHeader(conn,false);
-		//title, description, isCompleted, deadline, compeltion criteria, assigned to
-
-		
+	public static Task editTask(Task task) throws IOException{		
 		String titlePayload = getEditPayload(task.getID(), "title", task.getTitle());
 		String descPayload = getEditPayload(task.getID(), "description", task.getDescription());
 		String isCompPayload = getEditPayload(task.getID(), "isCompleted", Boolean.toString(task.getIsCompleted()));
@@ -131,24 +122,26 @@ public class TaskDatabaseAdapter  extends AbstractDatabaseAdapter{
 		String compCritPayload = getEditPayload(task.getID(), "completionCriteria", task.getCompletionCriteria());
 		String assignedToPayload = getEditPayload(task.getID(), "assignedTo", task.getAssignedTo());
 		//Get server response
-		sendPostPayload(conn, titlePayload);
-		getServerResponse(conn);
-		sendPostPayload(conn, descPayload);
-		getServerResponse(conn);
-		sendPostPayload(conn, isCompPayload);
-		getServerResponse(conn);
-		sendPostPayload(conn, deadlinePayload);
-		getServerResponse(conn);
-		sendPostPayload(conn, compCritPayload);
-		getServerResponse(conn);
-		int responseCode = sendPostPayload(conn, assignedToPayload);
-		String response = getServerResponse(conn);
+		sendSingleEdit(titlePayload);
+		sendSingleEdit(descPayload);
+		sendSingleEdit(isCompPayload);
+		sendSingleEdit(deadlinePayload);
+		sendSingleEdit(compCritPayload);
+		String response = sendSingleEdit(assignedToPayload);
 		final JsonNode taskNode = MAPPER.readTree(response);
-		parseTask(taskNode, task);
-		
-		
-		
+		parseTaskNoCheck(taskNode, task);
 		return task;
+	}
+	
+	private static String sendSingleEdit(String payload) throws IOException{
+		String _url = getBaseUri().appendPath("Task").build().toString();
+		URL url = new URL(_url);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setRequestMethod("PUT");
+		addRequestHeader(conn,false);
+		sendPostPayload(conn, payload);
+		return getServerResponse(conn);
+		
 	}
 	
 	private static String getEditPayload(String taskID, String field, String value) throws IOException {
@@ -168,11 +161,17 @@ public class TaskDatabaseAdapter  extends AbstractDatabaseAdapter{
 		ps.close();
 		return payload;
 	}
-
-	public static Task parseTask(JsonNode node,Task t){
-		//start parsing a task
+	
+	public static void parseTask(JsonNode node, Task t){
 		if (node.hasNonNull(KEY_ID)){
-			String id = node.get(KEY_ID).asText();
+			parseTaskNoCheck(node, t);
+			
+		}else{
+			Log.w(TAG, "Parsed null");
+		}
+	}
+	public static void parseTaskNoCheck(JsonNode node,Task t){
+		//start parsing a task
 			
 			t.setDescription(node.hasNonNull(KEY_DESC)? node.get(KEY_DESC).asText() : "");
 			t.setTitle(node.hasNonNull(KEY_TITLE) ? node.get(KEY_TITLE).asText() : "");
@@ -184,12 +183,7 @@ public class TaskDatabaseAdapter  extends AbstractDatabaseAdapter{
 			t.setAssignedFrom(node.hasNonNull(KEY_ASSIGNEDFROM) ? node.get(KEY_ASSIGNEDFROM).asText() : "");
 			t.setCreatedBy(node.hasNonNull(KEY_CREATEDBY) ? node.get(KEY_CREATEDBY).asText() : "");
 			t.setIsCompleted(node.hasNonNull(KEY_ISCOMPLEATED)? node.get(KEY_ISCOMPLEATED).asBoolean() : false);
-		
-		}else{
-			Log.w(TAG, "Parsed null");
-			return null;
-		}
-		return t;
+	
 	
 	}
 	public static Task parseTasks(JsonNode node){

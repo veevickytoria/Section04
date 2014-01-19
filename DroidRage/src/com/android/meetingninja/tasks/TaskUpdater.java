@@ -18,7 +18,7 @@ public class TaskUpdater implements AsyncResponse<Task> {
 		this.updater = new TaskUpdateTask(this);
 	}
 	public void updateTask(Task task){
-		this.updater.doInBackground(task);
+		this.updater.execute(task);
 	}
 	@Override
 	public void processFinish(Task result) {
@@ -45,7 +45,7 @@ class TaskUpdateTask extends AsyncTask<Task, Void, Task>{
 		try{
 			t = TaskDatabaseAdapter.editTask(params[0]);
 		}catch(IOException e){
-			Log.e("TaskFetch", "Error: Unable to get task info");
+			Log.e("TaskUpdate", "Error: Unable to update task info");
 			Log.e("TASKS_ERR", e.getLocalizedMessage());
 		}
 		return t;
