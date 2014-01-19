@@ -115,7 +115,7 @@ public class TaskDatabaseAdapter  extends AbstractDatabaseAdapter{
 	}
 	
 	public static Boolean deleteTask(String taskID) throws IOException{
-		String _url = getBaseUri().appendPath("Tasks").appendPath(taskID).build().toString();
+		String _url = getBaseUri().appendPath("Task").appendPath(taskID).build().toString();
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		

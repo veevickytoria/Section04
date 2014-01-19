@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import objects.Task;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -63,6 +64,15 @@ public class TasksFragment extends Fragment implements AsyncResponse<List<Task>>
 		super.onCreateView(inflater, container, savedInstanceState);
 		View v = inflater.inflate(R.layout.fragment_tasks, container, false);
 		session = SessionManager.getInstance();
+		System.out.println(session.getUserID());
+		ArrayList<Task> l1 = new ArrayList<Task>(), l2 = new ArrayList<Task>(), l3 = new ArrayList<Task>();
+		taskLists.put(assignedToMe, l1);
+		taskLists.put(iAssigned, l2);
+		taskLists.put(iCreated, l3);
+		meetingNames.add(assignedToMe);
+		meetingNames.add(iAssigned);
+		meetingNames.add(iCreated);
+		
 		refreshTasks();
 		
 		
@@ -75,9 +85,7 @@ public class TasksFragment extends Fragment implements AsyncResponse<List<Task>>
 		// lv.setEmptyView(v.findViewById(R.id.ta))
 		registerForContextMenu(lv);
 		
-		taskListfetcher = new TaskListFetcherTask(this);
-		taskListfetcher.execute("5316");
-		taskInfoFetcher = new TaskFetcherResp(this);
+		
 
 		lv.setOnChildClickListener(new OnChildClickListener() {
 
@@ -95,19 +103,25 @@ public class TasksFragment extends Fragment implements AsyncResponse<List<Task>>
 
 		return v;
 	}
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data){
+		if(requestCode == 6){
+			if(resultCode == Activity.RESULT_OK){
+				System.out.println("deleted task");
+				refreshTasks();
+			}
+		}
+	}
 	
 	private void loadTask(Task task){
 		this.taskInfoFetcher.openTask(task);
 	}
 
 	private void refreshTasks() {
-		ArrayList<Task> l1 = new ArrayList<Task>(), l2 = new ArrayList<Task>(), l3 = new ArrayList<Task>();
-		taskLists.put(assignedToMe, l1);
-		taskLists.put(iAssigned, l2);
-		taskLists.put(iCreated, l3);
-		meetingNames.add(assignedToMe);
-		meetingNames.add(iAssigned);
-		meetingNames.add(iCreated);
+		taskListfetcher = new TaskListFetcherTask(this);
+		System.out.println(session.getUserID());
+		taskListfetcher.execute(session.getUserID());
+		taskInfoFetcher = new TaskFetcherResp(this);
 	}
 
 	@Override

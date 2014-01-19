@@ -28,7 +28,6 @@ public class TaskFetcherResp implements AsyncResponse<Void>{
 	}
 	
 	public void openTask(Task task){
-		System.out.println("task id in fetcher:   " + task.getType());
 		this.task = task;
 		this.fetcher.execute(task);
 	}
@@ -37,7 +36,7 @@ public class TaskFetcherResp implements AsyncResponse<Void>{
 		Intent viewTask = new Intent(this.frag.getActivity(),
 				ViewTaskActivity.class);
 		viewTask.putExtra("task", this.task);
-		this.frag.startActivityForResult(viewTask, 5);//(viewTask);
+		this.frag.startActivityForResult(viewTask, 6);//(viewTask);
 		
 	}
 	

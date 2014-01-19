@@ -56,8 +56,13 @@ public class ViewTaskActivity extends Activity {
 		case R.id.edit_item_task:
 			Intent editTask = new Intent(this, EditTaskActivity.class);
 			editTask.putExtra("task", task);
-			this.startActivity(editTask);
+			this.startActivityForResult(editTask, 5);
 			return true;
+		case R.id.delete_item_task:
+			TaskDeleter deleter = new TaskDeleter();
+			deleter.deleteTask(task.getID());
+			setResult(RESULT_OK);
+			finish();
 			default: return super.onOptionsItemSelected(item);
 		}
 
@@ -104,7 +109,6 @@ public class ViewTaskActivity extends Activity {
 		deadline.setText(task.getEndTime());
 		description.setText(task.getDescription());
 		completionCriteria.setText(task.getCompletionCriteria());
-		System.out.println(task.getIsCompleted());
 		if(task.getIsCompleted()){
 			isCompleted.setText("Yes"); //TODO: change this to use string xml
 		}else{
