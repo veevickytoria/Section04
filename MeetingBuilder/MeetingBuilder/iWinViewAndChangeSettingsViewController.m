@@ -11,6 +11,7 @@
 #import "Contact.h"
 #import "Settings.h"
 #import <QuartzCore/QuartzCore.h>
+#include <CommonCrypto/CommonDigest.h>
 
 @interface iWinViewAndChangeSettingsViewController ()
 @property (nonatomic) BOOL isEditing;
@@ -21,6 +22,7 @@
 @property (nonatomic) NSNumber *tableIndex;
 @property (nonatomic) NSManagedObjectContext *context;
 @property (nonatomic) UIAlertView *deleteAlertView;
+@property (nonatomic) BOOL passwordEdited;
 @end
 
 
@@ -44,7 +46,7 @@
     [self showFields:NO];
     [self enableInteraction:NO];
     self.options = [[NSArray alloc] initWithObjects:@"At time of event",@"5 minutes before",@"15 minutes before", @"30 minutes before", @"1 hour before", @"2 hours before", @"1 day before",@"2 days before", nil];
-    
+    self.passwordEdited = NO;
     //
     //
     //
@@ -57,7 +59,7 @@
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:entityDesc];
     
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userID = 1"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userID = %d", self.userID];
     [request setPredicate:predicate];
     
     NSError *error;
@@ -72,7 +74,7 @@
     NSFetchRequest *request1 = [[NSFetchRequest alloc] init];
     [request1 setEntity:entityDesc1];
     
-    NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"userID = 1"];
+    NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"userID = %d", self.userID];
     [request1 setPredicate:predicate1];
     
     NSError *error1;
@@ -132,7 +134,7 @@
             [cell setAccessoryType:UITableViewCellAccessoryNone];
         }
     }
-    [self saveChanges];
+   // [self saveChanges];
 }
 
 - (void)didReceiveMemoryWarning
@@ -151,7 +153,7 @@
     [self enableInteraction:NO];
     self.isEditing = NO;
     self.oldPasswordTextField.text = @"********";
-    [self.saveAndEditButton setTitle:@"Change Email/Password" forState:UIControlStateNormal];
+    self.saveAndEditButton.hidden = NO;
     
     //Pull Email from DB
 }
@@ -168,6 +170,17 @@
     if (buttonIndex == 1)
     {
             //Perform deletion
+        NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/%d", self.userID];
+        
+        NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+        [urlRequest setHTTPMethod:@"DELETE"];
+        NSURLResponse * response = nil;
+        NSError * error = nil;
+        [NSURLConnection sendSynchronousRequest:urlRequest
+                                             returningResponse:&response
+                                                         error:&error];
+        //TODO: Add error checking.
+        [self.settingsDelegate onDeleteAccount];
     }
    
 }
@@ -175,27 +188,36 @@
 -(IBAction)onEdit:(id)sender
 {
     
-        self.isEditing = YES;
-        [self showFields:YES];
-        [self clearFields];
-        self.saveAndEditButton.hidden = YES;
-        [self enableInteraction:YES];
+    self.isEditing = YES;
+    [self showFields:YES];
+    [self clearFields];
+    self.saveAndEditButton.hidden = YES;
+    [self enableInteraction:YES];
+    self.passwordEdited = YES;
 }
 
 - (IBAction)onSaveSwitch:(id)sender
 {
+   
     //Save should notify switch
     if([self.shouldNotifySwitch isOn]){
-        self.settings.shouldNotify = [NSNumber numberWithInt:1];
+        [self.settings setValue:[NSNumber numberWithInt:1] forKey:@"shouldNotify"];
     } else {
-        self.settings.shouldNotify = [NSNumber numberWithInt:0];
+        [self.settings setValue:[NSNumber numberWithInt:0] forKey:@"shouldNotify"];
     }
     
     //Save when to notify table
-    self.settings.whenToNotify = self.tableIndex;
+    [self.settings setValue:self.tableIndex forKey:@"whenToNotify"];
     
+    
+    
+    NSString *errorMessage = @"";
+    if (self.passwordEdited)
+    {
+        errorMessage = [self validateSettings];
+    }
     //Save the rest
-    if ([self.oldPasswordTextField.text isEqual:self.settings.password] && [self.passwordTextField.text isEqual:self.confirmPasswordTextField.text]) {
+    if (errorMessage.length == 0) {
         [self showFields:NO];
         [self.saveAndEditButton setTitle:@"Change Email/Password" forState:UIControlStateNormal];
         [self.saveAndEditButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
@@ -203,12 +225,18 @@
         [self enableInteraction:NO];
         self.isEditing = NO;
         self.saveAndEditButton.hidden = NO;
+        self.passwordEdited = NO;
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Successful" message:@"Settings were successfully saved!" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alert show];
+        
     } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Old password or confirmation password did not match." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:errorMessage delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
         [alert show];
         [self clearFields];
     }
-    
+    self.isEditing = NO;
+    self.oldPasswordTextField.text = @"********";
     
 }
 - (IBAction)onSaveTable:(id)sender
@@ -216,29 +244,132 @@
     self.settings.whenToNotify = self.tableIndex;
 }
 
+-(NSNumber*)getNotificationOption
+{
+    for (int i=0; i<[self.options count]; i++)
+    {
+        UITableViewCell *cell = [self.whenToNotifyPicker cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+        if (cell.accessoryType == UITableViewCellAccessoryCheckmark)
+        {
+            return [NSNumber numberWithInt:i];
+        }
+    }
+    return [NSNumber numberWithInt:-1];
+}
+
 -(void) saveChanges
 {
     //Push new password and email to DB only if old password matches.
     //You must enter old password for any change to take affect.
-    self.contact.email = self.emailTextField.text;
-    self.settings.email = self.emailTextField.text;
-    if ([self.confirmPasswordTextField.text isEqual: @""]){
-        //Don't change the password because no new one was entered
-    }else{
-    self.settings.password = self.confirmPasswordTextField.text;
-    }
+//    self.contact.email = self.emailTextField.text;
+//    self.settings.email = self.emailTextField.text;
+//    if ([self.confirmPasswordTextField.text isEqual: @""]){
+//        //Don't change the password because no new one was entered
+//    }else{
+//    self.settings.password = self.confirmPasswordTextField.text;
+//    }
+//    NSError *error;
+//    [self.context save:&error];
+    [self.contact setValue:self.emailTextField.text forKey:@"email"];
+    [self.settings setValue:self.emailTextField.text forKey:@"email"];
+    [self.settings setValue:[self sha256HashFor:self.passwordTextField.text] forKey:@"password"];
+    [self.settings setValue:[NSNumber numberWithInt:[self.shouldNotifySwitch isOn]] forKey:@"shouldNotify"];
+    [self.settings setValue:[self getNotificationOption] forKey:@"whenToNotify"];
     NSError *error;
     [self.context save:&error];
+    [self saveToServer];
 }
 
--(void) saveNotificationsChangesToDB
+-(void)saveToServer
 {
+ //   NSArray *keys = [NSArray arrayWithObjects:@"userID", @"field", @"value", nil];
+ //   NSArray *objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.userID] stringValue], @"password", [self sha256HashFor: self.passwordTextField.text],nil];
     
+    NSArray *keys = [NSArray arrayWithObjects:@"userID", @"field", @"value", nil];
+    NSArray *objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.userID] stringValue], @"email", self.emailTextField.text,nil];
+    
+    NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+    NSData *jsonData;
+    NSString *jsonString;
+    
+    if ([NSJSONSerialization isValidJSONObject:jsonDictionary])
+    {
+        jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:nil];
+        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    }
+    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/"];
+    
+    NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+    [urlRequest setHTTPMethod:@"PUT"];
+    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [urlRequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-length"];
+    [urlRequest setHTTPBody:jsonData];
+    NSURLResponse * response = nil;
+    NSError * error = nil;
+    NSData * data =[NSURLConnection sendSynchronousRequest:urlRequest
+                                         returningResponse:&response
+                                                     error:&error];
+    
+//    jsonDictionary = [NSDictionary dictionaryWithObjects:objects1 forKeys:keys1];
+//    
+//    if ([NSJSONSerialization isValidJSONObject:jsonDictionary])
+//    {
+//        jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:nil];
+//        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+//    }
+//    [urlRequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-length"];
+//    [urlRequest setHTTPBody:jsonData];
+//    data =[NSURLConnection sendSynchronousRequest:urlRequest
+//                                returningResponse:&response
+//                                            error:&error];
+    
+    if (error) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Could not save to the server" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alert show];
+    }
+    else
+    {
+        NSError *jsonParsingError = nil;
+        NSDictionary *deserializedDictionary = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
+    }
 }
 
--(void) saveEmailOrPasswordChangesToDB
+- (NSString*)validateSettings
 {
+    NSString *email = self.emailTextField.text;
+    NSString *password = self.passwordTextField.text;
+    NSString *confirmPassword = self.confirmPasswordTextField.text;
+    NSString *emailSymbol = @"@";
     
+    if (![[self sha256HashFor:self.oldPasswordTextField.text] isEqualToString:self.settings.password])
+    {
+        return @"Old password incorrect";
+    }
+    
+    if (password.length < 6) {
+        return @"Password must be at least 6 characters!";
+    }
+    if (![password isEqualToString:confirmPassword]) {
+        return @"Please enter matching passwords!";
+    }
+    if (email.length == 0 || [email rangeOfString:emailSymbol].location == NSNotFound) {
+        return @"Please enter a valid email address!";
+    }
+    return @"";
+}
+
+-(NSString*)sha256HashFor:(NSString*)input
+{
+    const char* str = [input UTF8String];
+    unsigned char result[CC_SHA256_DIGEST_LENGTH];
+    CC_SHA256(str, strlen(str), result);
+    
+    NSMutableString *ret = [NSMutableString stringWithCapacity:CC_SHA256_DIGEST_LENGTH*2];
+    for(int i = 0; i<CC_SHA256_DIGEST_LENGTH; i++)
+    {
+        [ret appendFormat:@"%02x",result[i]];
+    }
+    return ret;
 }
 
 

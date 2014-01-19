@@ -16,12 +16,13 @@
 
 @end
 
-@interface iWinScheduleViewMeetingViewController : UIViewController <OCCalendarDelegate, UserDelegate, UITableViewDataSource, UITableViewDelegate>
+@interface iWinScheduleViewMeetingViewController : UIViewController <OCCalendarDelegate, UserDelegate, UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate>
 - (IBAction)onAddAgenda;
 - (IBAction)onAddAttendees;
 - (IBAction)onViewMySchedule;
 - (IBAction)onClickSave;
 - (IBAction)onClickSaveAndAddMore;
+- (IBAction)onDeleteMeeting;
 - (IBAction)onClickCancel;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withUserID:(NSInteger)userID withMeetingID:(NSInteger)meetingID;
 @property (weak, nonatomic) IBOutlet UIButton *saveAndAddMoreButton;
