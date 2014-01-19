@@ -269,11 +269,11 @@
 {
     if ([self.addAgendaButton.titleLabel.text isEqualToString:@"Add Agenda"])
     {
-        self.agendaController = [[iWinViewAndAddViewController alloc] initWithNibName:@"iWinViewAndAddViewController" bundle:nil inEditMode:NO];
+        self.agendaController = [[iWinViewAndAddViewController alloc] initWithNibName:@"iWinViewAndAddViewController" bundle:nil];
     }
     else
     {
-        self.agendaController = [[iWinViewAndAddViewController alloc] initWithNibName:@"iWinViewAndAddViewController" bundle:nil inEditMode:YES];
+        self.agendaController = [[iWinViewAndAddViewController alloc] initWithNibName:@"iWinViewAndAddViewController" bundle:nil];
     }
     [self.agendaController setModalPresentationStyle:UIModalPresentationPageSheet];
     [self.agendaController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
