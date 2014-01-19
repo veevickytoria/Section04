@@ -185,9 +185,8 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 		$userNode= $client->makeNode();
 		
 		// sets the property on the node
-		$userNode->setProperty('email', $postContent->email)->setProperty('password',create_hash($postContent->password));
 		$userNode->setProperty('email', $postContent->email);
-		$userNode->setProperty('password',create_hash($postContent->password));
+		$userNode->setProperty('password',$postContent->password);
 		$userNode->setProperty('phone',$postContent->phone);
 		$userNode->setProperty('company',$postContent->company);
 		$userNode->setProperty('title',$postContent->title);
@@ -235,17 +234,8 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 	$array = array('userID'=>$user->getId());
 
 	if(sizeof($user) >0){	
-		//password
-		if(strcasecmp($field, 'password') ==0){
-			//change the password
-			$user->setProperty('password', create_hash($value));
-			$user->save();
-			//set the return array
-			$array = array_merge($array, $user->getProperties());
-			unset($array['password']);
-			echo json_encode($array);
-		//all other fields
-		}else if(array_key_exists($field, $user->getProperties())){
+		//all fields
+		if(array_key_exists($field, $user->getProperties())){
 			//change the field
 			$user->setProperty($field, $value);
 			$user->save();
