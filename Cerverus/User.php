@@ -39,16 +39,19 @@ define("HASH_PBKDF2_INDEX", 3);
  */
 $client= new Client();
 
-	//get the index
-	$userIndex = new Index\NodeIndex($client, 'Users');
-	$userIndex->save();
+//get the index
+$userIndex = new Index\NodeIndex($client, 'Users');
+$userIndex->save();
 	
 if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'Login')==0){
 	// login method
 	$postContent = json_decode(@file_get_contents('php://input'));
-	$email=$userIndex->findOne('email',$postContent->email);	
+	$email=$userIndex->findOne('email',$postContent->email);
 	if (sizeof($email)!=0){ //check if there is a node with the given email.
-		if(validate_password($postContent->password,$email->getProperty('password'))==1){
+		//get the properties
+		$properties = $email->getProperties();
+		//check given password vs stored password
+		if(strcasecmp($postContent->password, $properties['password']) == 0){
 			echo json_encode(array("userID"=>$email->getId()));
 		}else{
 			echo json_encode(array("errorID"=>1, "errorMessage"=>"pass invalid email or password"));
@@ -179,7 +182,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 	$postContent = json_decode(@file_get_contents('php://input'));
 	
 	$email=$userIndex->findOne('email',$postContent->email);	
-	if(sizeof($email) ==0){ //make sure no nodes already exist with the given email
+	if($email == NULL){ //make sure no nodes already exist with the given email
 		
 		// create the node
 		$userNode= $client->makeNode();
