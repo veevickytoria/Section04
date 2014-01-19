@@ -55,7 +55,7 @@ public class ViewTaskActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		
 		switch(item.getItemId()){
-		case R.id.edit_item:
+		case R.id.edit_item_task:
 			Intent editTask = new Intent(this, EditTaskActivity.class);
 			editTask.putExtra("task", task);
 			this.startActivity(editTask);
@@ -71,7 +71,7 @@ public class ViewTaskActivity extends Activity {
 		dateAssigned = (TextView) this.findViewById(R.id.task_date_assigned_text);
 		deadline = (TextView) this.findViewById(R.id.task_date_deadline_text);
 		description = (TextView) this.findViewById(R.id.task_edit_desc_text);
-		completionCriteria = (TextView) this.findViewById(R.id.task_edit_comp_crit_text);
+		completionCriteria = (TextView) this.findViewById(R.id.task_comp_crit_text);
 		isCompleted = (TextView) this.findViewById(R.id.task_completed_text);
 		assignedLabel = (TextView) this.findViewById(R.id.task_assigned_label);
 		assignedText = (TextView) this.findViewById(R.id.task_assigned_text);
@@ -81,7 +81,7 @@ public class ViewTaskActivity extends Activity {
 		taskName.setText(task.getTitle());
 		dateCreated.setText(task.getDateCreated());
 		dateAssigned.setText(task.getDateAssigned());
-		deadline.setText(task.getDeadline());
+		deadline.setText(task.getEndTime());
 		description.setText(task.getDescription());
 		completionCriteria.setText(task.getCompletionCriteria());
 
