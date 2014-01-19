@@ -220,7 +220,35 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-  
+//    iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+//    
+//    NSManagedObjectContext *context = [appDelegate managedObjectContext];
+//    
+//    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Meeting" inManagedObjectContext:context];
+//    
+//    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+//    [request setEntity:entityDesc];
+//    
+//    NSError *error;
+//    NSArray *result = [context executeFetchRequest:request
+//                                             error:&error];
+//    for (Meeting *m in result)
+//    {
+//        [self.meetingList addObject:m.title];
+//        [self.meetingDetail addObject:m.datetime];
+//        [self.meetingID addObject:m.userID];
+//        [self.meetingLocations addObject:m.location];
+//    }
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MeetingCell"];
+    if (cell == nil)
+    {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"MeetingCell"];
+    }
+    
+    cell.textLabel.text = (NSString *)[self.meetingList objectAtIndex:indexPath.row];
+    cell.detailTextLabel.text = (NSString *)[self.meetingDetail objectAtIndex:indexPath.row];
+    return cell;
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
