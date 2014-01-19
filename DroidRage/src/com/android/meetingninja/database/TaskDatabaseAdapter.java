@@ -114,13 +114,29 @@ public class TaskDatabaseAdapter  extends AbstractDatabaseAdapter{
 		return taskList;	
 	}
 	
+	public static Boolean deleteTask(String taskID) throws IOException{
+		String _url = getBaseUri().appendPath("Tasks").appendPath(taskID).build().toString();
+		URL url = new URL(_url);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		
+		//add request header
+		conn.setRequestMethod("DELETE");
+		addRequestHeader(conn,false);
+		int responseCode = conn.getResponseCode();
+		String response = getServerResponse(conn);
+		
+		MAPPER.readTree(response);
+		
+		return null;
+	}
+	
 	public static Task editTask(Task task) throws IOException{		
-		String titlePayload = getEditPayload(task.getID(), "title", task.getTitle());
-		String descPayload = getEditPayload(task.getID(), "description", task.getDescription());
-		String isCompPayload = getEditPayload(task.getID(), "isCompleted", Boolean.toString(task.getIsCompleted()));
-		String deadlinePayload = getEditPayload(task.getID(), "deadline", task.getEndTime());
-		String compCritPayload = getEditPayload(task.getID(), "completionCriteria", task.getCompletionCriteria());
-		String assignedToPayload = getEditPayload(task.getID(), "assignedTo", task.getAssignedTo());
+		String titlePayload = getEditPayload(task.getID(), KEY_TITLE, task.getTitle());
+		String descPayload = getEditPayload(task.getID(), KEY_DESC, task.getDescription());
+		String isCompPayload = getEditPayload(task.getID(), KEY_ISCOMPLEATED, Boolean.toString(task.getIsCompleted()));
+		String deadlinePayload = getEditPayload(task.getID(), KEY_DEADLINE, task.getEndTime());
+		String compCritPayload = getEditPayload(task.getID(), KEY_COMPCRIT, task.getCompletionCriteria());
+		String assignedToPayload = getEditPayload(task.getID(), KEY_ASSIGNEDTO, task.getAssignedTo());
 		//Get server response
 		sendSingleEdit(titlePayload);
 		sendSingleEdit(descPayload);

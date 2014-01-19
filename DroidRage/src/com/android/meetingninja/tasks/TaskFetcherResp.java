@@ -37,7 +37,7 @@ public class TaskFetcherResp implements AsyncResponse<Void>{
 		Intent viewTask = new Intent(this.frag.getActivity(),
 				ViewTaskActivity.class);
 		viewTask.putExtra("task", this.task);
-		this.frag.startActivity(viewTask);
+		this.frag.startActivityForResult(viewTask, 5);//(viewTask);
 		
 	}
 	

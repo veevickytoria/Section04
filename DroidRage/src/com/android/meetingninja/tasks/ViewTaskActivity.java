@@ -38,8 +38,6 @@ public class ViewTaskActivity extends Activity {
 		//setupActionBar();
 		Intent i = getIntent();
 		task = i.getParcelableExtra("task");
-		System.out.println(task.toString());
-		fetcher = new RetUserObj();
 		setupViews();
 		setTask();
 	}
@@ -65,10 +63,16 @@ public class ViewTaskActivity extends Activity {
 
 	}
 	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data){
+		
+	}
+	
 	public void completeTask(View v){
 		TaskUpdater updater = new TaskUpdater();
 		task.setIsCompleted(true);
 		updater.updateTask(task);
+		setTask();
 		
 	}
 
@@ -91,12 +95,13 @@ public class ViewTaskActivity extends Activity {
 		deadline.setText(task.getEndTime());
 		description.setText(task.getDescription());
 		completionCriteria.setText(task.getCompletionCriteria());
-
+		System.out.println(task.getIsCompleted());
 		if(task.getIsCompleted()){
 			isCompleted.setText("Yes"); //TODO: change this to use string xml
 		}else{
 			isCompleted.setText("No");  //TODO: change this to use string xml
 		}
+		fetcher = new RetUserObj();
 
 		if(task.getType().equals("ASSIGNED_TO")){
 			assignedLabel.setText("Assigned From:");
