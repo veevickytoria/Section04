@@ -48,11 +48,13 @@
                         android:textColor="@android:color/secondary_text_dark" />
 
                     <TextView
+                        android:id="@+id/task_edit_date_created"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:hint="November 13, 2013"
                         android:minHeight="16dp" />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -69,11 +71,13 @@
                         android:textColor="@android:color/secondary_text_dark" />
 
                     <TextView
+                        android:id="@+id/task_edit_date_assigned"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:hint="November 13, 2013"
                         android:minHeight="16dp" />
+
                 </LinearLayout>
 
                 <LinearLayout

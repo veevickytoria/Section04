@@ -29,17 +29,14 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class EditTaskActivity extends Activity implements AsyncResponse<Boolean>{
 
-	//TODO: 
-	private Bundle extras; 
 	private EditText Description, completionCriteria, Title;
+	private TextView assignedDateLabel,createdDateLabel;
 	private Button tDeadline;
-	//private boolean is24, edit_mode;
-	//private Calendar start, end;
-	//private TastSaveTask creater = null;
 	private SimpleDateFormat dateFormat = MyDateUtils.APP_DATE_FORMAT;
 
 	private SessionManager session;
@@ -60,21 +57,32 @@ public class EditTaskActivity extends Activity implements AsyncResponse<Boolean>
 		Title= (EditText) findViewById(R.id.task_edit_title);
 		Description = (EditText) findViewById(R.id.task_edit_desc);
 		completionCriteria = (EditText) findViewById(R.id.task_edit_comp_crit);
-		//TODO: is 24 stuff
-
+		tDeadline = (Button) findViewById(R.id.task_edit_deadline);
 		Intent i = getIntent();
-		if(extras!= null && !extras.isEmpty()){
-			displayTask = extras.getParcelable(EXTRA_TASK);
-		}
 		setupView(); 
 		displayTask = i.getParcelableExtra("task"); 
 		if(displayTask != null){
 			Title.setText(displayTask.getTitle());
 			completionCriteria.setText(displayTask.getCompletionCriteria());
 			Description.setText(displayTask.getDescription());
+			String deadline = displayTask.getEndTime();
+			
+			//maybe for calendar 
+			int month = (int) Integer.parseInt(deadline.substring(0, 2));
+			int year = (int) Integer.parseInt(deadline.substring(6));
+			int day = (int) Integer.parseInt(deadline.substring(3,5));
+			Calendar cal = Calendar.getInstance();
+			cal.set(year, month, day);
+			
+			tDeadline.setText(deadline);
+			//findViewById(R.id.task_edit_deadline)
+			//createdDate = findViewById(R.id.task_edit_date_created).toString();
+			
+			//assignedDateLabel.setText(dateFormat.format(assignedDate));
+			//createdDateLabel.setText(dateFormat.format(createdDate));
 		}
 		//TODO: calender stuff
-
+		
 
 
 
@@ -121,7 +129,6 @@ public class EditTaskActivity extends Activity implements AsyncResponse<Boolean>
 			save();
 			break;
 		case R.id.action_cancel:
-			//TODO: Resultcanceled?
 			setResult(RESULT_CANCELED);
 			finish();
 			break;
@@ -155,18 +162,24 @@ public class EditTaskActivity extends Activity implements AsyncResponse<Boolean>
 			setResult(RESULT_CANCELED);
 			finish();
 		} else {
-			Intent msgIntent = new Intent();
+			
 			trimTextView();
-			String title,desc,compCrit;
-			/*title = Title.getText().toString();
-			desc = Description.getText().toString();
-			compCrit = completionCriteria.getText().toString();*/
+			//String title,desc,compCrit;
+			displayTask.setTitle(Title.getText().toString());
+			displayTask.setDescription(Description.getText().toString());
+			System.out.println(completionCriteria.getText().toString());
+			displayTask.setCompletionCriteria(completionCriteria.getText().toString());
+			System.out.println(displayTask.getCompletionCriteria());
 			TaskUpdater tUpdate = new TaskUpdater();
 			tUpdate.updateTask(displayTask);
 			
 			//TODO: setup newTask
 			if(displayTask!=null){
 			}
+			Intent msgIntent = new Intent();
+			
+			msgIntent.putExtra(EXTRA_TASK, displayTask.getID());
+			setResult(RESULT_OK,msgIntent);
 			
 			finish();
 
