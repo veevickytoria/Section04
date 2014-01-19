@@ -78,6 +78,7 @@
 		7941FDC91828843500AAA92E /* iWinViewAndChangeSettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7941FDC71828843500AAA92E /* iWinViewAndChangeSettingsViewController.xib */; };
 		7941FDD5182A0DCE00AAA92E /* iWinViewProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7941FDD3182A0DCE00AAA92E /* iWinViewProfileViewController.m */; };
 		7941FDD6182A0DCE00AAA92E /* iWinViewProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7941FDD4182A0DCE00AAA92E /* iWinViewProfileViewController.xib */; };
+		7969B223188B6EED00354F37 /* Task.m in Sources */ = {isa = PBXBuildFile; fileRef = 7969B222188B6EED00354F37 /* Task.m */; };
 		79753A7B1860F2B70015098B /* iWinSchedule.m in Sources */ = {isa = PBXBuildFile; fileRef = 79753A7A1860F2B70015098B /* iWinSchedule.m */; };
 		79753A7E1860F3B50015098B /* iWinMeeting.m in Sources */ = {isa = PBXBuildFile; fileRef = 79753A7D1860F3B50015098B /* iWinMeeting.m */; };
 		79753AA81861095F0015098B /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79753AA61861095F0015098B /* MapKit.framework */; };
@@ -344,6 +345,8 @@
 		7941FDD2182A0DCE00AAA92E /* iWinViewProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinViewProfileViewController.h; sourceTree = "<group>"; };
 		7941FDD3182A0DCE00AAA92E /* iWinViewProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinViewProfileViewController.m; sourceTree = "<group>"; };
 		7941FDD4182A0DCE00AAA92E /* iWinViewProfileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iWinViewProfileViewController.xib; sourceTree = "<group>"; };
+		7969B221188B6EED00354F37 /* Task.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Task.h; sourceTree = "<group>"; };
+		7969B222188B6EED00354F37 /* Task.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Task.m; sourceTree = "<group>"; };
 		79753A791860F2B70015098B /* iWinSchedule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinSchedule.h; sourceTree = "<group>"; };
 		79753A7A1860F2B70015098B /* iWinSchedule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinSchedule.m; sourceTree = "<group>"; };
 		79753A7C1860F3B50015098B /* iWinMeeting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinMeeting.h; sourceTree = "<group>"; };
@@ -788,6 +791,8 @@
 				79753A7D1860F3B50015098B /* iWinMeeting.m */,
 				0A7F1CE018611FB10017209D /* iWinPopulateDatabase.h */,
 				0A7F1CE118611FB10017209D /* iWinPopulateDatabase.m */,
+				7969B221188B6EED00354F37 /* Task.h */,
+				7969B222188B6EED00354F37 /* Task.m */,
 			);
 			name = "Data Model";
 			sourceTree = "<group>";
@@ -1271,6 +1276,7 @@
 				79FCDFDE1862295E008345B3 /* TKShimmerLabel.m in Sources */,
 				79FCDFDF1862295E008345B3 /* TKSlideToUnlockView.h in Sources */,
 				79FCDFE01862295E008345B3 /* TKSlideToUnlockView.m in Sources */,
+				7969B223188B6EED00354F37 /* Task.m in Sources */,
 				79FCDFE11862295E008345B3 /* TKSwitchCell.h in Sources */,
 				79FCDFE21862295E008345B3 /* TKSwitchCell.m in Sources */,
 				79FCDFE31862295E008345B3 /* TKTableViewCell.h in Sources */,
