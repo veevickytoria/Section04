@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "OCCalendarViewController.h"
+#import "iWinAddUsersViewController.h"
 
-@interface iWinAddAndViewTaskViewController : UIViewController <OCCalendarDelegate>
+@interface iWinAddAndViewTaskViewController : UIViewController <OCCalendarDelegate, UserDelegate>
 - (IBAction)onClickCancel;
 - (IBAction)onClickSave;
 - (IBAction)onClickSaveAndAddMore;

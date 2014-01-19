@@ -191,8 +191,12 @@ shouldReloadTableForSearchString:(NSString *)searchString
         NSArray *checkArray = [self.attendeeList filteredArrayUsingPredicate:predicate];
         if (checkArray.count == 0)
         {
-            [self.attendeeList addObject:c];
-            [self.userListTableView reloadData];
+//            if ([self.pageName isEqualToString:@"Task"]){
+//                self.attendeeList[0] = c;
+//            }else{
+                [self.attendeeList addObject:c];
+                [self.userListTableView reloadData];
+//            }
         }
         [self.searchDisplayController setActive:NO];
     }

@@ -9,6 +9,7 @@
 #import "iWinAddAndViewTaskViewController.h"
 #import "iWinAddUsersViewController.h"
 #import <QuartzCore/QuartzCore.h>
+#import "Contact.h"
 
 @interface iWinAddAndViewTaskViewController ()
 @property (nonatomic) NSInteger taskID;
@@ -23,6 +24,7 @@
 @property (strong, nonatomic) OCCalendarViewController* ocCalVC;
 @property (strong, nonatomic) UIDatePicker *enddatePicker;
 @property (strong, nonatomic) NSDateFormatter *dateFormatter;
+@property (strong, nonatomic) NSMutableArray *userList;
 
 @end
 
@@ -40,10 +42,10 @@
 
 - (IBAction)onClickAddAssignees
 {
-    self.userViewController = [[iWinAddUsersViewController alloc] initWithNibName:@"iWinAddUsersViewController" bundle:nil withPageName:@"Meeting" inEditMode:self.isEditing];
+    self.userViewController = [[iWinAddUsersViewController alloc] initWithNibName:@"iWinAddUsersViewController" bundle:nil withPageName:@"Task" inEditMode:self.isEditing];
     [self.userViewController setModalPresentationStyle:UIModalPresentationPageSheet];
     [self.userViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-    
+    self.userViewController.userDelegate = self;
     [self presentViewController:self.userViewController animated:YES completion:nil];
     self.userViewController.view.superview.bounds = CGRectMake(0,0,768,1003);
 }
@@ -71,8 +73,8 @@
         self.descriptionField.text = @"Description about the task";
         self.createdByField.text = @"Jim";
     }
+    self.userList = [[NSMutableArray alloc] init];
     
-
     self.saveAndAddMoreButton.hidden = NO;
     self.endDateLabel.userInteractionEnabled = YES;
     self.endTimeLabel.userInteractionEnabled = YES;
@@ -104,9 +106,19 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+-(void)selectedUsers:(NSMutableArray *)userList
+{
+    self.userList = userList;
+    if ([self.userList count] > 0){
+        Contact *c = (Contact *) self.userList[0];
+        [self.addAssigneeButton setTitle:c.name forState:UIControlStateNormal];
+    }
+}
+
 - (IBAction)onClickSave
 {
-   
+    Contact *c = (Contact *) self.userList[0];
+    
     NSArray *keys = [NSArray arrayWithObjects:
                      @"title",
                      @"isCompleted",
@@ -128,7 +140,7 @@
                         [NSString stringWithFormat:@"%@ %@", self.endDateLabel.text, self.endTimeLabel.text],
                         [NSString stringWithFormat:@"%@ %@", self.endDateLabel.text, self.endTimeLabel.text],
                         @"nothing",
-                        [[NSNumber numberWithInt:self.userID] stringValue],
+                        [c.userID stringValue],
                         [[NSNumber numberWithInt:self.userID] stringValue],
                         [[NSNumber numberWithInt:self.userID] stringValue],
                         nil];
@@ -158,7 +170,7 @@
     NSError *jsonParsingError = nil;
     NSDictionary *deserializedDictionary = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments|NSJSONReadingMutableContainers error:&jsonParsingError];
     self.taskID = [[deserializedDictionary objectForKey:@"taskID"] integerValue];
-//    [self dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewControllerAnimated:YES completion:nil];
     
 }
 

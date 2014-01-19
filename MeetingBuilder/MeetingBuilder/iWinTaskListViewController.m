@@ -29,7 +29,6 @@
     if (self) {
         // Custom initialization
     }
-    NSLog([NSString stringWithFormat:@"My userID = %d", userID]);
     return self;
 }
 
@@ -41,14 +40,7 @@
     self.itemList = [[NSMutableArray alloc] init];
     self.itemDetail = [[NSMutableArray alloc] init];
     
-    self.taskIDs = [[NSMutableArray alloc] init];
-    
-//    [self.itemList addObject:@"Research Libraries"];
-//    [self.itemDetail addObject:@"Due: 10/24/13 9:00 pm"];
-//    
-//    [self.itemList addObject:@"Finish MS3"];
-//    [self.itemDetail addObject:@"Due: 10/25/13 11:10 pm"];
-    
+    self.taskIDs = [[NSMutableArray alloc] init];    
     
     self.createTaskButton.layer.cornerRadius = 7;
     self.createTaskButton.layer.borderColor = [[UIColor darkGrayColor] CGColor];
@@ -84,10 +76,11 @@
     {
         for (NSDictionary* tasks in jsonArray)
         {
-            [self.itemList addObject:[tasks objectForKey:@"title"]];
-            [self.taskIDs addObject:[tasks objectForKey:@"id"]];
-//            [self.itemList addObject:@"idekam"];
-//            [self.taskIDs addObject:@"3"];
+            NSString *relationship = [tasks objectForKey:@"type"];
+            if ([relationship isEqual:@"ASSIGNED_TO"]){
+                [self.itemList addObject:[tasks objectForKey:@"title"]];
+                [self.taskIDs addObject:[tasks objectForKey:@"id"]];
+            }
         }
         [self populateTaskDetails];
     }
