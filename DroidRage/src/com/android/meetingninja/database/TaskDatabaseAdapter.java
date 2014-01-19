@@ -131,10 +131,21 @@ public class TaskDatabaseAdapter  extends AbstractDatabaseAdapter{
 		String compCritPayload = getEditPayload(task.getID(), "completionCriteria", task.getCompletionCriteria());
 		String assignedToPayload = getEditPayload(task.getID(), "assignedTo", task.getAssignedTo());
 		//Get server response
-		int responseCode = sendPostPayload(conn, titlePayload);
+		sendPostPayload(conn, titlePayload);
+		getServerResponse(conn);
+		sendPostPayload(conn, descPayload);
+		getServerResponse(conn);
+		sendPostPayload(conn, isCompPayload);
+		getServerResponse(conn);
+		sendPostPayload(conn, deadlinePayload);
+		getServerResponse(conn);
+		sendPostPayload(conn, compCritPayload);
+		getServerResponse(conn);
+		int responseCode = sendPostPayload(conn, assignedToPayload);
 		String response = getServerResponse(conn);
 		final JsonNode taskNode = MAPPER.readTree(response);
 		parseTask(taskNode, task);
+		
 		
 		
 		return task;

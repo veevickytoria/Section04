@@ -64,6 +64,10 @@ public class ViewTaskActivity extends Activity {
 		}
 
 	}
+	
+	public void completeTask(){
+		
+	}
 
 	private void setupViews(){
 		taskName = (TextView) this.findViewById(R.id.task_title_label);
