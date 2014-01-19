@@ -32,7 +32,7 @@ public class TaskDatabaseAdapter  extends AbstractDatabaseAdapter{
 	protected final static String KEY_DEADLINE = "deadline";
 	protected final static String KEY_DATECREATED = "dateCreated";
 	protected final static String KEY_DATEASSIGNED = "dateAssigned";
-	protected final static String KEY_COMPCRIT = "complitionCriteria";
+	protected final static String KEY_COMPCRIT = "completionCriteria";
 	protected final static String KEY_ASSIGNEDTO = "assignedTo";
 	protected final static String KEY_ASSIGNEDFROM = "assignedFrom";
 	protected final static String KEY_CREATEDBY = "createdBy";
@@ -125,9 +125,8 @@ public class TaskDatabaseAdapter  extends AbstractDatabaseAdapter{
 		int responseCode = conn.getResponseCode();
 		String response = getServerResponse(conn);
 		
-		MAPPER.readTree(response);
+		return MAPPER.readTree(response).get("valid").asBoolean();
 		
-		return null;
 	}
 	
 	public static Task editTask(Task task) throws IOException{		
@@ -138,6 +137,7 @@ public class TaskDatabaseAdapter  extends AbstractDatabaseAdapter{
 		String compCritPayload = getEditPayload(task.getID(), KEY_COMPCRIT, task.getCompletionCriteria());
 		String assignedToPayload = getEditPayload(task.getID(), KEY_ASSIGNEDTO, task.getAssignedTo());
 		//Get server response
+		System.out.println(task.getCompletionCriteria());
 		sendSingleEdit(titlePayload);
 		sendSingleEdit(descPayload);
 		sendSingleEdit(isCompPayload);
