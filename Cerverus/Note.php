@@ -38,13 +38,13 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
 	
 	//get properties on the node
 	$noteProps= $noteNode->getProperties();	
-	echo json_encode(array_merge(array("nodeID"=>$noteNode->getID()), $noteProps));
+	echo json_encode(array_merge(array("noteID"=>$noteNode->getID()), $noteProps));
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0){
 	//getNoteInfo
 	$noteNode=$client->getNode($_GET['id']);			
 	$createdByRel = $noteNode->getRelationships(array('CREATED'), Relationship::DirectionIn);
 	$createdBy = $createdByRel[0]->getStartNode();	
-	echo json_encode(array_merge(array("nodeID"=>$noteNode->getId()), $noteNode->getProperties()));
+	echo json_encode(array_merge(array("noteID"=>$noteNode->getId()), $noteNode->getProperties()));
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'PUT')==0){
 	//updateNote
 	$postContent = json_decode(@file_get_contents('php://input'));
