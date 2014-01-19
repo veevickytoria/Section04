@@ -66,11 +66,11 @@ public class ViewTaskActivity extends Activity {
 	}
 
 	private void setupViews(){
-		taskName = (TextView) this.findViewById(R.id.task_edit_title_label);
-		dateCreated = (TextView) this.findViewById(R.id.task_edit_date_created_text);
+		taskName = (TextView) this.findViewById(R.id.task_title_label);
+		dateCreated = (TextView) this.findViewById(R.id.task_date_created_text);
 		dateAssigned = (TextView) this.findViewById(R.id.task_date_assigned_text);
 		deadline = (TextView) this.findViewById(R.id.task_date_deadline_text);
-		description = (TextView) this.findViewById(R.id.task_edit_desc_text);
+		description = (TextView) this.findViewById(R.id.task_desc_text);
 		completionCriteria = (TextView) this.findViewById(R.id.task_comp_crit_text);
 		isCompleted = (TextView) this.findViewById(R.id.task_completed_text);
 		assignedLabel = (TextView) this.findViewById(R.id.task_assigned_label);
