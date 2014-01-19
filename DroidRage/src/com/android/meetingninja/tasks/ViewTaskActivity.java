@@ -65,7 +65,16 @@ public class ViewTaskActivity extends Activity {
 	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data){
-		
+		if(requestCode == 5 ){
+			if(resultCode == RESULT_OK){
+				if(data != null){
+					task = data.getParcelableExtra("task");
+					setTask();
+				}
+			}else if (resultCode == RESULT_CANCELED){
+				//do nothing here
+			}
+		}
 	}
 	
 	public void completeTask(View v){
