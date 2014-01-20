@@ -36,14 +36,17 @@ import android.widget.Toast;
 /**
  * This is a very simple adapter that provides very basic tree view with a
  * checkboxes and simple item description.
+ * @param <T>
  * 
  */
-public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
+public class AgendaItemAdapter<T> extends AbstractTreeViewAdapter<Topic> {
 	private final String TAG = AgendaItemAdapter.class.getSimpleName();
 	private Context mContext;
 	private TreeBuilder<Topic> builder;
 	private TreeStateManager<Topic> manager;
 	private static int _topics = 0;
+	private Agenda Agen = new Agenda();
+	private final HashMap<Topic,Boolean> Comparison;
 
 	// private void changeSelected(final boolean isChecked, final Long id) {
 	// if (isChecked) {
@@ -61,6 +64,7 @@ public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 		this.builder = treeBuilder;
 		this.manager = treeStateManager;
 		_topics = manager.getVisibleCount();
+		Comparison = new HashMap<Topic,Boolean>();
 	}
 
 	private Map<String, String> getDescription(final Topic topic) {
@@ -92,26 +96,68 @@ public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 		return updated;
 	}
 
+	
+	public void addhash(Topic s){
+		Comparison.put(s, true);
+		
+	}
+	
 	@Override
 	public LinearLayout updateView(final View view,
 			final TreeNodeInfo<Topic> treeNodeInfo) {
+		
 		final LinearLayout rowView = (LinearLayout) view;
+		
+		
+//		LinearLayout rowView;
+//		LayoutInflater inflater = (LayoutInflater) mContext
+//				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//		rowView = (LinearLayout) inflater.inflate(R.layout.list_item_agenda, null, false);
+
 		final Topic rowTopic = treeNodeInfo.getId();
+		
+		if(rowTopic==null)
+			return rowView; 
+		
+		System.out.println("Echo: Checked"+rowTopic);
+		
+		if(Comparison.get(rowTopic)== null)
+			return rowView;
+		
+		if(Comparison.get(rowTopic).booleanValue()){
+			Comparison.put(rowTopic, false);
+			return rowView;
+			
+		}else{
+			Comparison.put(rowTopic, true);
+			
+		}
 
 		final EditText mTitle = (EditText) rowView
 				.findViewById(R.id.agenda_edit_topic);
+
+		
 		final TextView mTime = (TextView) rowView
 				.findViewById(R.id.agenda_topic_time);
 
+		mTitle.setText(rowTopic.getTitle());
+		
+		System.out.println("Echo: Here"+ rowTopic+""+mTitle);
+		
 		mTitle.addTextChangedListener(new TextWatcher() {
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
 				String text = s.toString();
+
 				rowTopic.setTitle(text);
 				mTitle.setTag(text);
-				Log.d(TAG, "Text changed");
+
+				Log.d(TAG, "Text changed" + treeNodeInfo.getLevel() + " "
+						+ treeNodeInfo.getId());
+				manager.getChildren(treeNodeInfo.getId());
+
 			}
 
 			@Override
@@ -163,17 +209,17 @@ public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 		return rowView;
 	}
 
-//	@Override
-//	public void handleItemClick(final View view, final Object id) {
-//		final Topic t = (Topic) id;
-//		final TreeNodeInfo<Topic> info = getManager().getNodeInfo(t);
-//		if (info.isWithChildren()) {
-//			super.handleItemClick(view, id);
-//		} else {
-//			final ViewGroup vg = (ViewGroup) view;
-//
-//		}
-//	}
+	// @Override
+	// public void handleItemClick(final View view, final Object id) {
+	// final Topic t = (Topic) id;
+	// final TreeNodeInfo<Topic> info = getManager().getNodeInfo(t);
+	// if (info.isWithChildren()) {
+	// super.handleItemClick(view, id);
+	// } else {
+	// final ViewGroup vg = (ViewGroup) view;
+	//
+	// }
+	// }
 
 	@Override
 	public long getItemId(final int position) {
@@ -191,11 +237,11 @@ public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 
 		@Override
 		public void onClick(View v) {
-//			HmsPickerBuilder hms = new HmsPickerBuilder().setFragmentManager(
-//					((FragmentActivity) getActivity())
-//							.getSupportFragmentManager()).setStyleResId(
-//					R.style.BetterPickersDialogFragment);
-//			hms.show();
+			// HmsPickerBuilder hms = new HmsPickerBuilder().setFragmentManager(
+			// ((FragmentActivity) getActivity())
+			// .getSupportFragmentManager()).setStyleResId(
+			// R.style.BetterPickersDialogFragment);
+			// hms.show();
 			Topic t = (Topic) v.getTag();
 			Map<String, String> info = getDescription(t);
 			Log.d(TAG, info.get("title"));
@@ -214,7 +260,11 @@ public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 		public void onClick(View v) {
 			// final Topic t = (Topic) v.getTag();
 			Topic subT = new Topic(); // TODO : Make new subtopic
+			subT.setTitle("New Topic");
+			Agen.addTopic(subT);
 			parent.addTopic(subT);
+			System.out.println("Echo: Created"+subT);
+			Comparison.put(subT, true);
 			if (getManager().isInTree(parent))
 				builder.addRelation(parent, subT);
 			else {

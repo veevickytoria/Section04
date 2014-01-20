@@ -113,7 +113,8 @@
         <activity
             android:name="com.android.meetingninja.agenda.AgendaActivity"
             android:label="@string/title_activity_agenda" 
-            android:configChanges="orientation|keyboardHidden" >
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" >
         </activity>
 
         <provider
