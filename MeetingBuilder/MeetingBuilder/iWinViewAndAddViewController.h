@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "iWinAgendaItemViewController.h"
+#import "iWinScheduleViewMeetingViewController.h"
 
-@interface iWinViewAndAddViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, AgendaItemDelegate>
+@interface iWinViewAndAddViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, AgendaItemDelegate, NSURLConnectionDelegate>
 - (IBAction)onClickSave;
 - (IBAction)onClickCancel;
 - (IBAction)onClickAddItem;
@@ -21,5 +22,10 @@
 @property (weak, nonatomic) IBOutlet UIButton *addAttendeesButton;
 @property (weak, nonatomic) IBOutlet UIButton *addItemButton;
 @property (weak, nonatomic) IBOutlet UITableView *itemTableView;
+@property (weak, nonatomic) iWinScheduleViewMeetingViewController *delegate;
+@property (nonatomic) BOOL isAgendaCreated;
+
+@property (nonatomic, assign) NSInteger meetingID;
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil inEditMode:(BOOL)isEditing;
 @end
