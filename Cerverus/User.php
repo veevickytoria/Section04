@@ -242,9 +242,10 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 			//check if the field is the email
 			if(strcasecmp($field, 'email') == 0){
 				//check if email already exists
-				if($userIndex->findOne('email', $node->getProperty('email')) != NULL){
+				if($userIndex->findOne('email', $value) == NULL){
 					//remove index on this email
-					$userIndex->remove($user, 'email', $user->getProperty('email'));
+					$old = $user->getProperty('email');
+					$userIndex->remove($user);
 					//add the new index
 					$userIndex->add($user, 'email', $value);
 				} else {
