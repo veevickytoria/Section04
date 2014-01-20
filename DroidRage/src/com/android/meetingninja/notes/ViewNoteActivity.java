@@ -20,15 +20,15 @@ import com.android.meetingninja.R.menu;
 public class ViewNoteActivity extends Activity {
 
 	private Intent getNote;
-	String noteContent;
-	String noteName;
-	int noteID;
-	String creator;
-	String editor;
-	TextView contentsText;
-	TextView titleText;
-	TextView createdText;
-	TextView editedText;
+	private String noteContent;
+	private String noteName;
+	private int noteID;
+	private String creator;
+	private String editor;
+	private TextView contentsText;
+	private TextView titleText;
+	private TextView createdText;
+	private TextView editedText;
 		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +106,7 @@ public class ViewNoteActivity extends Activity {
 	}
 
 	private void edit() {
-		Intent editNote = new Intent(getWindow().getDecorView().getRootView().getContext(), EditNoteActivity.class);
+		Intent editNote = new Intent(ViewNoteActivity.this, EditNoteActivity.class);
 
 		editNote.putExtras(getIntent().getExtras());
 		startActivityForResult(editNote, 1);

@@ -1,14 +1,20 @@
 package objects;
 
+import java.io.IOException;
+
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.core.JsonGenerationException;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "noteID", "createdBy", "title", "description", "content",
 		"dateCreated" })
-public class Note {
+public class Note implements Parcelable, IJSONObject {
 
 	@JsonProperty("noteID")
 	private String noteID;
@@ -22,6 +28,18 @@ public class Note {
 	private String content;
 	@JsonProperty("dateCreated")
 	private String dateCreated;
+	
+	public Note() {
+		// Required empty constructor
+	}
+	
+	public Note(Note copyNote) {
+		
+	}
+	
+	public Note(Parcel in) {
+		readFromParcel(in);
+	}
 
 	@JsonProperty("noteID")
 	public String getNoteID() {
@@ -90,6 +108,45 @@ public class Note {
 	public void setDateCreated(String dateCreated) {
 		this.dateCreated = dateCreated;
 	}
+	
+	public static final Parcelable.Creator<Note> CREATOR = new Parcelable.Creator<Note>() {
+
+		public Note createFromParcel(Parcel in) {
+			return new Note(in);
+		}
+
+		public Note[] newArray(int size) {
+			return new Note[size];
+		}
+
+	};
+	
+	public void readFromParcel(Parcel in) {
+		this.noteID = in.readString();
+		this.createdBy = in.readString();
+		this.title = in.readString();
+		this.description = in.readString();
+		this.content = in.readString();
+		this.dateCreated = in.readString();
+		
+	}
+
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(getNoteID());
+		dest.writeString(getCreatedBy());
+		dest.writeString(getTitle());
+		dest.writeString(getDescription());
+		dest.writeString(getContent());
+		dest.writeString(getDateCreated());
+		
+	}
 
 	public static class NoteBuilder {
 		private String noteID;
@@ -98,39 +155,45 @@ public class Note {
 		private String description;
 		private String content;
 		private String dateCreated;
-
+	
 		public NoteBuilder() {
-
+	
 		}
-
+	
 		public NoteBuilder id(String id) {
 			this.noteID = id;
 			return this;
 		}
-
+	
 		public NoteBuilder createdBy(String userID) {
 			this.createdBy = userID;
 			return this;
 		}
-
+	
 		public NoteBuilder title(String title) {
 			this.title = title;
 			return this;
 		}
-
+	
 		public NoteBuilder description(String desc) {
 			this.description = desc;
 			return this;
 		}
-
+	
 		public NoteBuilder content(String content) {
 			this.content = content;
 			return this;
 		}
-
+	
 		public NoteBuilder dateModified(String dateTime) {
 			this.dateCreated = dateTime;
 			return this;
 		}
+	}
+
+	@Override
+	public String toJSON() throws JsonGenerationException, IOException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
