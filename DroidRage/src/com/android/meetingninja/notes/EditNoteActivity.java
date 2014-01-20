@@ -38,6 +38,7 @@ public class EditNoteActivity extends Activity {
 	private String noteID;
 	private String noteName;
 	private String noteContent;
+	private String noteCreator;
 
 	private SQLiteNoteAdapter mySQLiteAdapter;
 	private Note newNote;
@@ -46,6 +47,7 @@ public class EditNoteActivity extends Activity {
 	public static final String EXTRA_ID = "NoteID";
 	public static final String EXTRA_TITLE = "NoteName";
 	public static final String EXTRA_CONTENT = "NoteContent";
+	public static final String EXTRA_CREATOR = "NoteCreator";
 
 	private static final String TAG = EditNoteActivity.class.getSimpleName();
 
@@ -66,6 +68,7 @@ public class EditNoteActivity extends Activity {
 			noteID = extras.getString(EXTRA_ID);
 			noteName = extras.getString(EXTRA_TITLE);
 			noteContent = extras.getString(EXTRA_CONTENT);
+			noteCreator = extras.getString(EXTRA_CREATOR);
 		} else {
 			noteName = "New Note";
 			noteContent = "";
@@ -113,11 +116,13 @@ public class EditNoteActivity extends Activity {
 		intentMessage.putExtra(EXTRA_ID, noteID);
 		intentMessage.putExtra(EXTRA_TITLE, title);
 		intentMessage.putExtra(EXTRA_CONTENT, content);
+		intentMessage.putExtra(EXTRA_CREATOR, noteCreator);
 
 		newNote = new Note();
 		newNote.setNoteID(noteID);
 		newNote.setTitle(title);
 		newNote.setContent(content);
+		newNote.setCreatedBy(noteCreator);
 
 		mySQLiteAdapter.updateNote(newNote);
 

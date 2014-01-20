@@ -65,7 +65,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.android.meetingninja.MainActivity" />
         </activity>
-            <activity
+        <activity
             android:name="com.android.meetingninja.tasks.CreateTasksActivity"
             android:label="@string/title_activity_tasks"
             android:parentActivityName="com.android.meetingninja.MainActivity" >
@@ -83,6 +83,14 @@
         <activity
             android:name="com.android.meetingninja.notes.EditNoteActivity"
             android:label="@string/title_activity_edit_note"
+            android:parentActivityName="com.android.meetingninja.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.android.meetingninja.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.android.meetingninja.notes.ViewNoteActivity"
+            android:label="@string/title_activity_view_note"
             android:parentActivityName="com.android.meetingninja.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -112,8 +120,8 @@
 
         <activity
             android:name="com.android.meetingninja.agenda.AgendaActivity"
-            android:label="@string/title_activity_agenda" 
             android:configChanges="orientation|keyboardHidden"
+            android:label="@string/title_activity_agenda"
             android:screenOrientation="portrait" >
         </activity>
 
