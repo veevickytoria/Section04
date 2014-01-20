@@ -17,12 +17,16 @@ public class SQLiteNoteAdapter extends SQLiteHelper {
 	protected static final String TABLE_NAME = "notes";
 
 	// Columns
-	public static final String TITLE = "title";
-	public static final String CONTENT = "content";
+	public static final String KEY_CREATED_BY = "createdByUser";
+	public static final String KEY_TITLE = "title";
+	public static final String KEY_DESC = "description";
+	public static final String KEY_CONTENT = "content";
+	
 
 	public SQLiteNoteAdapter(Context context) {
 		super(context);
 		mDbHelper = SQLiteHelper.getInstance(context);
+		
 	}
 
 	@Override
@@ -40,11 +44,11 @@ public class SQLiteNoteAdapter extends SQLiteHelper {
 	public Note insertNote(String name, String content) {
 		mDb = mDbHelper.getWritableDatabase();
 		ContentValues contentValues = new ContentValues();
-		contentValues.put(TITLE, name);
-		contentValues.put(CONTENT, content);
+		contentValues.put(KEY_TITLE, name);
+		contentValues.put(KEY_CONTENT, content);
 		long insertID = mDb.insert(TABLE_NAME, null, contentValues);
 		Cursor c = mDb.query(TABLE_NAME,
-				new String[] { KEY_ID, TITLE, CONTENT }, KEY_ID + "="
+				new String[] { KEY_ID, KEY_TITLE, KEY_CONTENT }, KEY_ID + "="
 						+ insertID, null, null, null, null);
 		c.moveToFirst();
 		Note newNote = new NoteCursor(c).getModel();
@@ -54,7 +58,7 @@ public class SQLiteNoteAdapter extends SQLiteHelper {
 	}
 
 	public Note insertNote(Note n) {
-		return insertNote(n.getName(), n.getContent());
+		return insertNote(n.getTitle(), n.getContent());
 	}
 
 	public void updateNote(Note note) {
@@ -64,9 +68,9 @@ public class SQLiteNoteAdapter extends SQLiteHelper {
 			return;
 		}
 		ContentValues data = new ContentValues();
-		data.put(TITLE, note.getName());
-		data.put(CONTENT, note.getContent());
-		mDb.update(TABLE_NAME, data, KEY_ID + "=" + note.getID(), null);
+		data.put(KEY_TITLE, note.getTitle());
+		data.put(KEY_CONTENT, note.getContent());
+		mDb.update(TABLE_NAME, data, KEY_ID + "=" + note.getNoteID(), null);
 		close();
 	}
 
@@ -83,7 +87,7 @@ public class SQLiteNoteAdapter extends SQLiteHelper {
 
 	public void deleteNote(Note note) {
 		if (note != null)
-			deleteNote(Long.parseLong(note.getID()));
+			deleteNote(Long.parseLong(note.getNoteID()));
 	}
 
 	/**
@@ -114,7 +118,7 @@ public class SQLiteNoteAdapter extends SQLiteHelper {
 
 	public List<Note> getAllNotes() {
 		List<Note> notes = new ArrayList<Note>();
-		String[] columns = new String[] { KEY_ID, TITLE, CONTENT };
+		String[] columns = new String[] { KEY_ID, KEY_TITLE, KEY_CONTENT };
 		mDb = mDbHelper.getReadableDatabase();
 		Cursor c = mDb.query(TABLE_NAME, columns, null, null, null, null, null);
 		Note note = null;
@@ -140,10 +144,10 @@ public class SQLiteNoteAdapter extends SQLiteHelper {
 		@Override
 		public Note getModel() {
 			int idxID = crsr.getColumnIndex(KEY_ID);
-			int idxTITLE = crsr.getColumnIndex(TITLE);
-			int idxCONTENT = crsr.getColumnIndex(CONTENT);
-			model.setID(crsr.getInt(idxID));
-			model.setName(crsr.getString(idxTITLE));
+			int idxTITLE = crsr.getColumnIndex(KEY_TITLE);
+			int idxCONTENT = crsr.getColumnIndex(KEY_CONTENT);
+			model.setNoteID(""+crsr.getInt(idxID));
+			model.setTitle(crsr.getString(idxTITLE));
 			model.setContent(crsr.getString(idxCONTENT));
 			return model;
 		}

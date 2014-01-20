@@ -20,8 +20,10 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URL;
 import java.net.URLConnection;
 
+import objects.User;
 import android.net.Uri;
 import android.net.Uri.Builder;
 
@@ -30,7 +32,7 @@ import com.android.volley.RequestQueue;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public abstract class AbstractDatabaseAdapter {
+public abstract class BaseDatabaseAdapter {
 
 	protected final static String BASE_URL = "http://csse371-04.csse.rose-hulman.edu/";
 	protected final static String USER_AGENT = "Mozilla/5.0";
@@ -38,6 +40,8 @@ public abstract class AbstractDatabaseAdapter {
 	protected final static String ACCEPT_TYPE = "application/json";
 	protected final static JsonFactory JFACTORY = new JsonFactory();
 	protected final static ObjectMapper MAPPER = new ObjectMapper(JFACTORY);
+	protected final static String ERROR_ID = "errorID";
+	protected final static String ERROR_MESSAGE = "errorMessage";
 	
 	public static String getBaseUrl() {
 		return BASE_URL;
@@ -81,6 +85,24 @@ public abstract class AbstractDatabaseAdapter {
 
 		// return page contents
 		return response.toString();
+	}
+	
+	protected static String updateHelper(String jsonPayload) throws IOException {
+		// Server URL setup
+		String _url = getBaseUri().build().toString();
+
+		// Establish connection
+		URL url = new URL(_url);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+		// add request header
+		conn.setRequestMethod("PUT");
+		addRequestHeader(conn, true);
+
+		int responseCode = sendPostPayload(conn, jsonPayload);
+		String response = getServerResponse(conn);
+		conn.disconnect();
+		return response;
 	}
 
 }

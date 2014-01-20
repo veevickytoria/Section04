@@ -16,6 +16,7 @@
 package com.android.meetingninja.notes;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import objects.Note;
@@ -120,8 +121,8 @@ public class NotesFragment extends Fragment implements
 				Intent editNote = new Intent(getActivity(),
 						EditNoteActivity.class);
 				editNote.putExtra("listPosition", position);
-				editNote.putExtra(EditNoteActivity.EXTRA_ID, n.getID());
-				editNote.putExtra(EditNoteActivity.EXTRA_NAME, n.getName());
+				editNote.putExtra(EditNoteActivity.EXTRA_ID, n.getNoteID());
+				editNote.putExtra(EditNoteActivity.EXTRA_TITLE, n.getTitle());
 				editNote.putExtra(EditNoteActivity.EXTRA_CONTENT,
 						n.getContent());
 				startActivityForResult(editNote, 1);
@@ -141,7 +142,7 @@ public class NotesFragment extends Fragment implements
 				AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) menuInfo;
 
 				Note n = noteAdpt.getItem(aInfo.position);
-				menu.setHeaderTitle("Options for " + "'" + n.getName().trim()
+				menu.setHeaderTitle("Options for " + "'" + n.getTitle().trim()
 						+ "'");
 				menu.add(MainActivity.DrawerLabel.NOTES.getPosition(),
 						aInfo.position, 1, "Add Content");
@@ -211,7 +212,7 @@ public class NotesFragment extends Fragment implements
 					String noteID = data
 							.getStringExtra(EditNoteActivity.EXTRA_ID);
 					String noteName = data
-							.getStringExtra(EditNoteActivity.EXTRA_NAME);
+							.getStringExtra(EditNoteActivity.EXTRA_TITLE);
 					String noteContent = data
 							.getStringExtra(EditNoteActivity.EXTRA_CONTENT);
 					// StringBuilder sb = new StringBuilder();
@@ -251,7 +252,7 @@ public class NotesFragment extends Fragment implements
 
 		Note s = null;
 		for (int i = 0; i < noteAdpt.getCount(); i++) {
-			if (Long.toString(id).equals(noteAdpt.getItem(i).getID())) {
+			if (Long.toString(id).equals(noteAdpt.getItem(i).getNoteID())) {
 				s = noteAdpt.getItem(i);
 				break;
 			}
@@ -283,7 +284,11 @@ public class NotesFragment extends Fragment implements
 	}
 
 	private boolean updateNote(int noteID, String noteName, String noteContent) {
-		mySQLiteAdapter.updateNote(Note.create(noteID, noteName, noteContent));
+		Note create = new Note();
+		create.setNoteID(""+noteID);
+		create.setTitle(noteName);
+		create.setContent(noteContent);
+		mySQLiteAdapter.updateNote(create);
 		populateList();
 		return true;
 	}
@@ -292,7 +297,7 @@ public class NotesFragment extends Fragment implements
 			String noteContent) {
 		if (position < 0 || position >= notes.size())
 			return false;
-		notes.get(position).setName(noteName);
+		notes.get(position).setTitle(noteName);
 		notes.get(position).setContent(noteContent);
 		mySQLiteAdapter.updateNote(notes.get(position));
 

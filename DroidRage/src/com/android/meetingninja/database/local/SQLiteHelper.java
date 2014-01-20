@@ -33,8 +33,8 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 	// Notes table create statement
 	private static final String CREATE_TABLE_NOTE = "CREATE TABLE "
 			+ SQLiteNoteAdapter.TABLE_NAME + "(" + KEY_ID
-			+ " INTEGER PRIMARY KEY AUTOINCREMENT," + SQLiteNoteAdapter.TITLE
-			+ " TEXT NOT NULL," + SQLiteNoteAdapter.CONTENT + " TEXT NOT NULL"
+			+ " INTEGER PRIMARY KEY AUTOINCREMENT," + SQLiteNoteAdapter.KEY_TITLE
+			+ " TEXT NOT NULL," + SQLiteNoteAdapter.KEY_CONTENT + " TEXT NOT NULL"
 			+ ");";
 	// Meeting table create statement
 	private static final String CREATE_TABLE_MEETING = "CREATE TABLE "

@@ -19,6 +19,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,8 +28,11 @@ import java.util.List;
 import java.util.Map;
 
 import objects.Event;
+import objects.Group;
 import objects.Meeting;
 import objects.MockObjectFactory;
+import objects.Note;
+import objects.Project;
 import objects.Schedule;
 import objects.SimpleUser;
 import objects.Task;
@@ -53,7 +58,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 
-public class UserDatabaseAdapter extends AbstractDatabaseAdapter {
+public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 
 	private static final String TAG = UserDatabaseAdapter.class.getSimpleName();
 
@@ -125,31 +130,6 @@ public class UserDatabaseAdapter extends AbstractDatabaseAdapter {
 		return contactsList;
 	}
 
-	public static Schedule getSchedule(String userID)
-			throws JsonParseException, JsonMappingException, IOException {
-		// Server URL setup
-		String _url = getBaseUri().appendPath("Schedule").appendPath(userID)
-				.build().toString();
-		// establish connection
-		URL url = new URL(_url);
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-		// add request header
-		conn.setRequestMethod("GET");
-		addRequestHeader(conn, false);
-
-		// Get server response
-		// TODO: Uncomment this later
-		// int responseCode = conn.getResponseCode();
-		// String response = getServerResponse(conn);
-		String response = MockObjectFactory.getMockSchedule();
-
-		Schedule sched = parseSchedule(MAPPER.readTree(response));
-
-		conn.disconnect();
-		return sched;
-	}
-
 	public static String login(String email, String pass) throws IOException {
 		// Server URL setup
 		String _url = getBaseUri().appendPath("Login").build().toString();
@@ -204,38 +184,198 @@ public class UserDatabaseAdapter extends AbstractDatabaseAdapter {
 		return result;
 
 	}
-	
-	public static List<Task> getTasks(String userID) throws JsonParseException, JsonMappingException, IOException{
-		//Server URL setup
-		String _url = getBaseUri().appendPath("Tasks").appendPath(userID).build().toString();
+
+	public static Schedule getSchedule(String userID)
+			throws JsonParseException, JsonMappingException, IOException {
+		// Server URL setup
+		String _url = getBaseUri().appendPath("Schedule").appendPath(userID)
+				.build().toString();
+		// establish connection
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-		
-		//add request header
+
+		// add request header
 		conn.setRequestMethod("GET");
-		addRequestHeader(conn,false);
-		
-		//Get server response
+		addRequestHeader(conn, false);
+
+		// Get server response
+		// TODO: Uncomment this later
+		// int responseCode = conn.getResponseCode();
+		// String response = getServerResponse(conn);
+		String response = MockObjectFactory.getMockSchedule();
+
+		Schedule sched = parseSchedule(MAPPER.readTree(response));
+
+		conn.disconnect();
+		return sched;
+	}
+
+	public static List<User> getAllUsers() throws IOException {
+		String _url = getBaseUri().appendPath("Users").build().toString();
+		// Establish connection
+		URL url = new URL(_url);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+		// add request header
+		conn.setRequestMethod("GET");
+		addRequestHeader(conn, false);
+
+		// Get server response
 		int responseCode = conn.getResponseCode();
 		String response = getServerResponse(conn);
-		
-		//Initialize ObjectMapper
+
+		List<User> userList = new ArrayList<User>();
+		final JsonNode userArray = MAPPER.readTree(response).get("users");
+
+		if (userArray.isArray()) {
+			for (final JsonNode userNode : userArray) {
+				User u = parseUser(userNode);
+				// assign and check null and do not add local user
+				if (u != null) {
+					userList.add(u);
+				}
+			}
+		}
+
+		conn.disconnect();
+		return userList;
+	}
+
+	public static List<Group> getGroups(String userID) throws IOException {
+		// Server URL setup
+		String _url = getBaseUri().appendPath("Groups").appendPath(userID)
+				.build().toString();
+		URL url = new URL(_url);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+		// add request header
+		conn.setRequestMethod("GET");
+		addRequestHeader(conn, false);
+
+		// Get server response
+		int responseCode = conn.getResponseCode();
+		String response = getServerResponse(conn);
+
+		// Initialize ObjectMapper
+		List<Group> groupList = new ArrayList<Group>();
+		final JsonNode groupArray = MAPPER.readTree(response).get("groups");
+
+		if (groupArray.isArray()) {
+			for (final JsonNode groupNode : groupArray) {
+				Group g = GroupDatabaseAdapter.parseGroup(groupNode);
+				if (g != null) {
+					groupList.add(g);
+				}
+			}
+		} else {
+			Log.e(TAG, "Error parsing user's group list");
+		}
+
+		conn.disconnect();
+		return groupList;
+	}
+
+	public static List<Project> getProject(String userID) throws IOException {
+		// Server URL setup
+		String _url = getBaseUri().appendPath("Projects").appendPath(userID)
+				.build().toString();
+		URL url = new URL(_url);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+		// add request header
+		conn.setRequestMethod("GET");
+		addRequestHeader(conn, false);
+
+		// Get server response
+		int responseCode = conn.getResponseCode();
+		String response = getServerResponse(conn);
+
+		// Initialize ObjectMapper
+		List<Project> projectList = new ArrayList<Project>();
+		final JsonNode projectArray = MAPPER.readTree(response).get("projects");
+
+		if (projectArray.isArray()) {
+			for (final JsonNode projectNode : projectArray) {
+				Project p = ProjectDatabaseAdapter.parseProject(projectNode);
+				if (p != null) {
+					projectList.add(p);
+				}
+			}
+		} else {
+			Log.e(TAG, "Error parsing user's project list");
+		}
+
+		conn.disconnect();
+		return projectList;
+	}
+
+	public static List<Note> getNotes(String userID) throws IOException {
+		// Server URL setup
+		String _url = getBaseUri().appendPath("Notes").appendPath(userID)
+				.build().toString();
+		URL url = new URL(_url);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+		// add request header
+		conn.setRequestMethod("GET");
+		addRequestHeader(conn, false);
+
+		// Get server response
+		int responseCode = conn.getResponseCode();
+		String response = getServerResponse(conn);
+
+		// Initialize ObjectMapper
+		List<Note> noteList = new ArrayList<Note>();
+		final JsonNode noteArray = MAPPER.readTree(response).get("notes");
+
+		if (noteArray.isArray()) {
+			for (final JsonNode noteNode : noteArray) {
+				Note n = NotesDatabaseAdapter.parseNote(noteNode);
+				if (n != null) {
+					noteList.add(n);
+				}
+			}
+		} else {
+			Log.e(TAG, "Error parsing user's project list");
+		}
+
+		conn.disconnect();
+		return noteList;
+	}
+
+	public static List<Task> getTasks(String userID) throws JsonParseException,
+			JsonMappingException, IOException {
+		// Server URL setup
+		String _url = getBaseUri().appendPath("Tasks").appendPath(userID)
+				.build().toString();
+		URL url = new URL(_url);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+		// add request header
+		conn.setRequestMethod("GET");
+		addRequestHeader(conn, false);
+
+		// Get server response
+		int responseCode = conn.getResponseCode();
+		String response = getServerResponse(conn);
+
+		// Initialize ObjectMapper
 		List<Task> taskList = new ArrayList<Task>();
 		final JsonNode taskArray = MAPPER.readTree(response).get("tasks");
-		
-		if(taskArray.isArray()){
-			for(final JsonNode taskNode : taskArray){
+
+		if (taskArray.isArray()) {
+			for (final JsonNode taskNode : taskArray) {
 				Task t = TaskDatabaseAdapter.parseTasks(taskNode);
-				if(t!=null){
+				if (t != null) {
 					taskList.add(t);
 				}
 			}
-		}else{
-			System.out.println("bla bla bla");
+		} else {
+			Log.e(TAG, "Error parsing user's task list");
 		}
-		
+
 		conn.disconnect();
-		return taskList;	
+		return taskList;
 	}
 
 	/**
@@ -244,7 +384,7 @@ public class UserDatabaseAdapter extends AbstractDatabaseAdapter {
 	 * @param registerMe
 	 * @param password
 	 * @return the passed-in user with an assigned ID by the server
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public static User register(User registerMe, String password)
 			throws Exception {
@@ -310,38 +450,7 @@ public class UserDatabaseAdapter extends AbstractDatabaseAdapter {
 		return createUser;
 	}
 
-	public static List<User> getAllUsers() throws IOException {
-		String _url = getBaseUri().appendPath("Users").build().toString();
-		// Establish connection
-		URL url = new URL(_url);
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-		// add request header
-		conn.setRequestMethod("GET");
-		addRequestHeader(conn, false);
-
-		// Get server response
-		int responseCode = conn.getResponseCode();
-		String response = getServerResponse(conn);
-
-		List<User> userList = new ArrayList<User>();
-		final JsonNode userArray = MAPPER.readTree(response).get("users");
-
-		if (userArray.isArray()) {
-			for (final JsonNode userNode : userArray) {
-				User u = parseUser(userNode);
-				// assign and check null and do not add local user
-				if (u != null){
-					userList.add(u);
-				}
-			}
-		}
-
-		conn.disconnect();
-		return userList;
-	}
-
-	public static String update(String userID, Map<String, String> key_values)
+	public static User update(String userID, Map<String, String> key_values)
 			throws JsonGenerationException, IOException, InterruptedException {
 		// prepare POST payload
 		ByteArrayOutputStream json = new ByteArrayOutputStream();
@@ -389,40 +498,37 @@ public class UserDatabaseAdapter extends AbstractDatabaseAdapter {
 			t.run();
 			response = updateHelper(p);
 		}
-		return response;
+		return parseUser(MAPPER.readTree(response));
 	}
 
-	private static String updateHelper(String jsonPayload) throws IOException {
-		// Server URL setup
-		String _url = getBaseUri().build().toString();
-
-		// Establish connection
+	public static Boolean deleteUser(String userID) throws IOException {
+		String _url = getBaseUri().appendPath(userID).build().toString();
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
 		// add request header
-		conn.setRequestMethod("PUT");
-		addRequestHeader(conn, true);
-
-		int responseCode = sendPostPayload(conn, jsonPayload);
+		conn.setRequestMethod("DELETE");
+		addRequestHeader(conn, false);
+		int responseCode = conn.getResponseCode();
 		String response = getServerResponse(conn);
-		conn.disconnect();
-		return response;
+
+		return MAPPER.readTree(response).get("deleted").asBoolean();
+
 	}
 
 	public static User parseUser(JsonNode node) {
 		User u = new User(); // start parsing a user
 		// if they at least have an id, email, and name
 		if (node.hasNonNull(KEY_EMAIL) && node.has(KEY_NAME)
-				//&& node.hasNonNull(KEY_ID)
-				) {
+		// && node.hasNonNull(KEY_ID)
+		) {
 			String email = node.get(KEY_EMAIL).asText();
 			// if their email is in a reasonable format
 			if (!TextUtils.isEmpty(node.get(KEY_NAME).asText())
 					&& Utilities.isValidEmailAddress(email)) {
 				Log.d(TAG, email);
 				// set the required fields
-				//u.setUserID(node.get(KEY_ID).asText());
+				// u.setUserID(node.get(KEY_ID).asText());
 				u.setDisplayName(node.get(KEY_NAME).asText());
 				u.setEmail(email);
 				// check and set the optional fields

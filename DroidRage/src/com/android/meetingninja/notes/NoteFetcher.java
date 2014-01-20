@@ -24,6 +24,7 @@ import android.util.Log;
 
 import com.android.meetingninja.database.AsyncResponse;
 import com.android.meetingninja.database.NotesDatabaseAdapter;
+import com.android.meetingninja.database.UserDatabaseAdapter;
 
 /**
  * Represents an asynchronous task to receive notes from the database
@@ -40,7 +41,7 @@ class NoteFetcherTask extends AsyncTask<String, Void, List<Note>> {
 		List<Note> dbNotes = new ArrayList<Note>();
 
 		try {
-			dbNotes = NotesDatabaseAdapter.getNotes(params[0]);
+			dbNotes = UserDatabaseAdapter.getNotes(params[0]);
 		} catch (Exception e) {
 			Log.e("NotesFetch", "Error getting notes");
 			Log.e("NOTES_ERR", e.toString());

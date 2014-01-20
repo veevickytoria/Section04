@@ -38,6 +38,13 @@ public class Agenda implements IJSONObject {
 		this.title = title;
 	}
 
+	public Agenda(Agenda create) {
+		setID(create.getID());
+		setTitle(create.getTitle());
+		setAttachedMeetingID(create.getAttachedMeetingID());
+		setTopics(create.getTopics());
+	}
+
 	@JsonProperty("agendaID")
 	public void setID(String id) {
 		int testInt = Integer.valueOf(id);

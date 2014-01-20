@@ -39,7 +39,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 
-public class MeetingDatabaseAdapter extends AbstractDatabaseAdapter {
+public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 
 	protected final static String KEY_ID = "meetingID";
 	protected final static String KEY_TITLE = "title";

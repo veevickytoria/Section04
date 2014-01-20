@@ -20,7 +20,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 
-import com.android.meetingninja.database.AbstractDatabaseAdapter;
+import com.android.meetingninja.database.BaseDatabaseAdapter;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -61,7 +61,7 @@ public class Connectivity {
 	public static boolean canReachBackend() throws IOException {
 		boolean exists = false;
 		SocketAddress sockaddr = new InetSocketAddress(
-				AbstractDatabaseAdapter.getBaseUrl(), 80);
+				BaseDatabaseAdapter.getBaseUrl(), 80);
 		// create an unbound socket
 		Socket sock = new Socket();
 		// This method will block no more than timeoutMs

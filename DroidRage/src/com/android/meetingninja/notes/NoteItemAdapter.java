@@ -80,7 +80,7 @@ public class NoteItemAdapter extends ArrayAdapter<Note> {
 		// Setup from the note_item XML file
 		Note note = notes.get(position);
 
-		viewHolder.title.setText(note.getName());
+		viewHolder.title.setText(note.getTitle());
 		String content = note.getContent();
 		int max_length = 200;
 		if (content.length() > max_length)

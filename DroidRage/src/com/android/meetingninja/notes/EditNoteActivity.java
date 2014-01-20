@@ -44,7 +44,7 @@ public class EditNoteActivity extends Activity {
 	private int listPosition;
 
 	public static final String EXTRA_ID = "NoteID";
-	public static final String EXTRA_NAME = "NoteName";
+	public static final String EXTRA_TITLE = "NoteName";
 	public static final String EXTRA_CONTENT = "NoteContent";
 
 	private static final String TAG = EditNoteActivity.class.getSimpleName();
@@ -64,7 +64,7 @@ public class EditNoteActivity extends Activity {
 		if (extras != null) {
 			listPosition = extras.getInt("listPosition", -1);
 			noteID = extras.getString(EXTRA_ID);
-			noteName = extras.getString(EXTRA_NAME);
+			noteName = extras.getString(EXTRA_TITLE);
 			noteContent = extras.getString(EXTRA_CONTENT);
 		} else {
 			noteName = "New Note";
@@ -111,10 +111,13 @@ public class EditNoteActivity extends Activity {
 		intentMessage.putExtra("Fragment", "notes");
 		intentMessage.putExtra("listPosition", listPosition);
 		intentMessage.putExtra(EXTRA_ID, noteID);
-		intentMessage.putExtra(EXTRA_NAME, title);
+		intentMessage.putExtra(EXTRA_TITLE, title);
 		intentMessage.putExtra(EXTRA_CONTENT, content);
 
-		newNote = Note.create(noteID, title, content);
+		newNote = new Note();
+		newNote.setNoteID(noteID);
+		newNote.setTitle(title);
+		newNote.setContent(content);
 
 		mySQLiteAdapter.updateNote(newNote);
 

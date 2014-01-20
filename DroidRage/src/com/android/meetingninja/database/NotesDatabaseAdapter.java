@@ -18,13 +18,21 @@ package com.android.meetingninja.database;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import android.net.Uri;
 import android.net.Uri.Builder;
 import objects.Comment;
 import objects.Note;
 
-public class NotesDatabaseAdapter extends AbstractDatabaseAdapter {
-	
+public class NotesDatabaseAdapter extends BaseDatabaseAdapter {
+	protected static final String KEY_ID = "noteID";
+	protected static final String KEY_CREATED_BY = "createdBy";
+	protected static final String KEY_TITLE = "title";
+	protected static final String KEY_DESC = "description";
+	protected static final String KEY_CONTENT = "content";
+	protected static final String KEY_UPDATED = "dateCreated";
+
 	public static String getBaseUrl() {
 		return BASE_URL + "Note";
 	}
@@ -33,19 +41,14 @@ public class NotesDatabaseAdapter extends AbstractDatabaseAdapter {
 		return Uri.parse(getBaseUrl()).buildUpon();
 	}
 
-	public static List<Note> getNotes(String user) throws Exception {
+	public static void getNote(String noteID) throws Exception {
 		// TODO Implement this method
-		throw new Exception("getNotes: Unimplemented");
+		throw new Exception("getNote: Unimplemented");
 	}
 
 	public static void createNote(String user, Note n) throws Exception {
 		// TODO Implement this method
 		throw new Exception("createNote: Unimplemented");
-	}
-
-	public static void getNote(String noteID) throws Exception {
-		// TODO Implement this method
-		throw new Exception("getNote: Unimplemented");
 	}
 
 	public static void update(String noteID, Map<String, String> values)
@@ -54,12 +57,13 @@ public class NotesDatabaseAdapter extends AbstractDatabaseAdapter {
 		throw new Exception("updateNote: Unimplemented");
 	}
 
-	private void updateHelper() {
-
-	}
-
 	public List<Comment> getComments(String noteID) throws Exception {
 		// TODO Implement this method
 		throw new Exception("getComments: Unimplemented");
+	}
+
+	public static Note parseNote(JsonNode noteNode) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

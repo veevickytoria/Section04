@@ -22,7 +22,7 @@ import objects.Task;
 
 import android.net.Uri;
 import android.util.Log;
-public class TaskDatabaseAdapter  extends AbstractDatabaseAdapter{
+public class TaskDatabaseAdapter  extends BaseDatabaseAdapter{
 	private static final String TAG = UserDatabaseAdapter.class.getSimpleName();
 	
 	protected final static String KEY_ID_LIST = "id";
@@ -92,7 +92,7 @@ public class TaskDatabaseAdapter  extends AbstractDatabaseAdapter{
 		int responseCode = conn.getResponseCode();
 		String response = getServerResponse(conn);
 		
-		return MAPPER.readTree(response).get("valid").asBoolean();
+		return MAPPER.readTree(response).get("deleted").asBoolean();
 		
 	}
 	
