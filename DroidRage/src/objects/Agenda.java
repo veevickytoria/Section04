@@ -44,8 +44,8 @@ public class Agenda implements IJSONObject {
 		setID(testInt);
 	}
 
-	@JsonProperty("agendaID")
-	public void setID(int id) {
+	@JsonIgnore
+	private void setID(int id) {
 		this.agendaID = Integer.toString(id);
 	}
 

@@ -44,32 +44,31 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class AgendaActivity extends FragmentActivity {
 
-	private final Set<Long> selected = new HashSet<Long>();
-
 	private static final String TAG = AgendaActivity.class.getSimpleName();
-	private TextView mTitleView;
-	private Button mAddTopicBtn;
 	private TreeViewList treeView;
 	private TreeBuilder<Topic> treeBuilder = null;
 	private TreeStateManager<Topic> manager = null;
 	private AgendaItemAdapter mAgendaAdpt;
-	private boolean collapsible;
+	
+	private TextView mTitleView;
+	private Button mAddTopicBtn;
 	private Agenda mAgenda;
+	private boolean collapsible;
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		boolean newCollapsible;
+		ObjectMapper mapper = new ObjectMapper();
 
+		// TODO : Get Agenda attached to meeting
 		String json = "";
 		try {
 			json = MockObjectFactory.getMockAgenda();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		ObjectMapper mapper = new ObjectMapper();
 
 		try {
 			mAgenda = mapper.readValue(json, Agenda.class);
@@ -85,17 +84,11 @@ public class AgendaActivity extends FragmentActivity {
 		}
 
 		mAgenda = new Agenda();
-
+		// End getAgenda 
+		
 		if (savedInstanceState == null) {
 			manager = new InMemoryTreeStateManager<Topic>();
-			treeBuilder = new TreeBuilder<Topic>(
-					manager);
-
-			buildTree(treeBuilder);
-
-			Log.d(TAG, manager.toString());
-			// newTreeType = TreeType.SIMPLE;
-			newCollapsible = true;
+			newCollapsible = false;
 		} else {
 			manager = (TreeStateManager<Topic>) savedInstanceState
 					.getSerializable("treeManager");
@@ -104,42 +97,34 @@ public class AgendaActivity extends FragmentActivity {
 
 		setContentView(R.layout.activity_agenda);
 		setupViews();
+		treeBuilder = new TreeBuilder<Topic>(manager);
 
 		int depth = 0;
 		if (mAgenda != null) {
-			mAgendaAdpt = new AgendaItemAdapter(this, mAgenda, manager, depth);
-			mTitleView.setText(mAgenda.getTitle());
 			depth = mAgenda.getDepth();
-			// checkEmpty();
-
+			mAgendaAdpt = new AgendaItemAdapter(this, manager, treeBuilder,
+					depth);
+			mTitleView.setText(mAgenda.getTitle());
+			buildTree(treeBuilder);
 		}
 		treeView.setAdapter(mAgendaAdpt);
 
 		setCollapsible(newCollapsible);
 
-		registerForContextMenu(treeView);
+		// registerForContextMenu(treeView);
 	}
-
-	// private void checkEmpty() {
-	// if (mAgenda.getTitle().isEmpty() || mAgenda.getTopics().size() <= 0) {
-	// findViewById(R.id.content_frame).setVisibility(View.GONE);
-	// findViewById(android.R.id.empty).setVisibility(View.VISIBLE);
-	// }
-	//
-	// }
 
 	private void setupViews() {
 		treeView = (TreeViewList) findViewById(R.id.agendaTreeView);
 		mTitleView = (TextView) findViewById(R.id.agenda_title);
 		mAddTopicBtn = (Button) findViewById(R.id.agenda_addTopicBtn);
-		mAddTopicBtn.setOnClickListener(new AddTopicListener());
+		mAddTopicBtn.setOnClickListener(new TopicListener());
 
 	}
-	
+
 	private void buildTree(final TreeBuilder<Topic> builder) {
-		Topic t = null;
-		for (Iterator<Topic> i = mAgenda.getTopics().iterator(); i.hasNext();) {
-			t = i.next();
+		final ArrayList<Topic> topics = mAgenda.getTopics();
+		for (Topic t : topics) {
 			builder.addRelation(null, t);
 			buildTreeHelper(builder, t);
 		}
@@ -147,10 +132,8 @@ public class AgendaActivity extends FragmentActivity {
 
 	private void buildTreeHelper(final TreeBuilder<Topic> builder,
 			final Topic root) {
-		Topic sub_t = null;
 		final ArrayList<Topic> topicList = root.getTopics();
-		for (Iterator<Topic> i = topicList.iterator(); i.hasNext();) {
-			sub_t = i.next();
+		for (Topic sub_t : topicList) {
 			builder.addRelation(root, sub_t);
 			buildTreeHelper(builder, sub_t);
 		}
@@ -171,29 +154,45 @@ public class AgendaActivity extends FragmentActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.agenda, menu);
+		getMenuInflater().inflate(R.menu.agenda_menu, menu);
 		return true;
 	}
-	
-	private class AddTopicListener implements OnClickListener {
+
+	private class TopicListener implements OnClickListener {
 		@Override
 		public void onClick(View v) {
 			switch (v.getId()) {
 			case R.id.agenda_addTopicBtn:
-				Topic t = new Topic();
-				t.setTime(120);
+				Topic t = new Topic(); // TODO : Create a Topic
 				treeBuilder.addRelation(null, t);
 				break;
 
 			default:
 				break;
 			}
-			
+
 		}
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onPrepareOptionsMenu(final Menu menu) {
+		final MenuItem collapsibleMenu = menu
+				.findItem(R.id.collapsible_menu_item);
+		if (collapsible) {
+			collapsibleMenu.setTitle(R.string.collapsible_menu_disable);
+			collapsibleMenu.setTitleCondensed(getResources().getString(
+					R.string.collapsible_condensed_disable));
+			collapsibleMenu.setChecked(collapsible);
+		} else {
+			collapsibleMenu.setTitle(R.string.collapsible_menu_enable);
+			collapsibleMenu.setTitleCondensed(getResources().getString(
+					R.string.collapsible_condensed_enable));
+		}
+		return super.onPrepareOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(final MenuItem item) {
 		// Handle presses on the action bar items
 		// Pass the event to ActionBarDrawerToggle, if it returns
 		// true, then it has handled the app icon touch event
@@ -204,62 +203,27 @@ public class AgendaActivity extends FragmentActivity {
 		case R.id.action_delete:
 			Intent intent = getIntent();
 			Boolean isCreated = intent.getBooleanExtra("isCreated", false);
-
 			if (isCreated) {
-				String AgendaID = intent.getStringExtra("agendaID");
-				AsyncTask<String, Void, Void> deleteTask = new deleteAgendaTask();
-				
-				deleteTask.execute(AgendaID);
-
+				String agendaID = intent.getStringExtra("agendaID");
+				AsyncTask<String, Void, Void> deleteTask = new DeleteAgendaTask();
+				deleteTask.execute(agendaID);
 			}
 			finish();
 			return true;
+		case R.id.collapsible_menu_item:
+			setCollapsible(!this.collapsible);
+			break;
+		case R.id.expand_all_menu_item:
+			manager.expandEverythingBelow(null);
+			break;
+		case R.id.collapse_all_menu_item:
+			manager.collapseChildren(null);
+			break;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
-
+		return true;
 	}
-
-	// @Override
-	// public boolean onCreateOptionsMenu(final Menu menu) {
-	// final MenuInflater inflater = getMenuInflater();
-	// inflater.inflate(R.menu.main_menu, menu);
-	// return true;
-	// }
-
-	// @Override
-	// public boolean onPrepareOptionsMenu(final Menu menu) {
-	// final MenuItem collapsibleMenu = menu
-	// .findItem(R.id.collapsible_menu_item);
-	// if (collapsible) {
-	// collapsibleMenu.setTitle(R.string.collapsible_menu_disable);
-	// collapsibleMenu.setTitleCondensed(getResources().getString(
-	// R.string.collapsible_condensed_disable));
-	// } else {
-	// collapsibleMenu.setTitle(R.string.collapsible_menu_enable);
-	// collapsibleMenu.setTitleCondensed(getResources().getString(
-	// R.string.collapsible_condensed_enable));
-	// }
-	// return super.onPrepareOptionsMenu(menu);
-	// }
-
-	// @Override
-	// public boolean onOptionsItemSelected(final MenuItem item) {
-	// if (item.getItemId() == R.id.simple_menu_item) {
-	// setTreeAdapter(TreeType.SIMPLE);
-	// } else if (item.getItemId() == R.id.fancy_menu_item) {
-	// setTreeAdapter(TreeType.FANCY);
-	// } else if (item.getItemId() == R.id.collapsible_menu_item) {
-	// setCollapsible(!this.collapsible);
-	// } else if (item.getItemId() == R.id.expand_all_menu_item) {
-	// manager.expandEverythingBelow(null);
-	// } else if (item.getItemId() == R.id.collapse_all_menu_item) {
-	// manager.collapseChildren(null);
-	// } else {
-	// return false;
-	// }
-	// return true;
-	// }
 
 	// @Override
 	// public void onCreateContextMenu(final ContextMenu menu, final View v,
@@ -306,12 +270,11 @@ public class AgendaActivity extends FragmentActivity {
 	// return super.onContextItemSelected(item);
 	// }
 	// }
-	
+
 	/**
-	 * Represents an asynchronous login/registration task used to authenticate
-	 * the user.
+	 * Represents an asynchronous task used to delete the agenda
 	 */
-	public class deleteAgendaTask extends AsyncTask<String, Void, Void> {
+	public class DeleteAgendaTask extends AsyncTask<String, Void, Void> {
 		@Override
 		protected Void doInBackground(String... params) {
 			String AgendaID = params[0];

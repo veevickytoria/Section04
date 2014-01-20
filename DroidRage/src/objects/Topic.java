@@ -25,7 +25,7 @@ public class Topic implements Serializable {
 	private ArrayList<Topic> subTopics = new ArrayList<Topic>();
 
 	public Topic() {
-		this("New Topic");
+		// Required empty constructor
 	}
 
 	public Topic(String title) {
@@ -34,7 +34,7 @@ public class Topic implements Serializable {
 
 	@JsonProperty("topic")
 	public String getTitle() {
-		return topic;
+		return (topic != null && !topic.isEmpty()) ? topic : "";
 	}
 
 	@JsonProperty("topic")
@@ -60,14 +60,17 @@ public class Topic implements Serializable {
 		setTime(testInt);
 	}
 
-	@JsonProperty("time")
-	public void setTime(int time) {
+	@JsonIgnore
+	private void setTime(int time) {
 		this.time = Integer.toString(time);
 	}
 
 	@JsonProperty("time")
 	public String getTime() {
-		return Long.toString(getTotalSubtopicTime(this));
+		// if (this.subTopics.size() > 0)
+		// return Long.toString(getTotalSubtopicTime(this));
+		// else
+		return (time != null && !time.isEmpty()) ? time : "0";
 	}
 
 	@JsonIgnore
@@ -76,6 +79,7 @@ public class Topic implements Serializable {
 		final Topic root = t;
 		final ArrayList<Topic> topicList = root.getTopics();
 		total += Integer.valueOf(root.getTime());
+
 		for (Iterator<Topic> i = topicList.iterator(); i.hasNext();) {
 			total += getTotalSubtopicTime(i.next());
 		}

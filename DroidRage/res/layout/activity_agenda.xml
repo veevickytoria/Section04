@@ -1,60 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/content_frame"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/content_padding_normal" >
 
     <LinearLayout
-        android:id="@+id/agenda_outside_layout"
-        android:layout_width="wrap_content"
+        android:id="@android:id/title"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="horizontal" >
 
-        <LinearLayout
-            android:id="@android:id/title"
-            android:layout_width="fill_parent"
+        <EditText
+            android:id="@+id/agenda_title"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="Title" >
+        </EditText>
 
-            <EditText
-                android:id="@+id/agenda_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:hint="Title"
-                android:textSize="@dimen/text_size_large" >
-
-                <requestFocus />
-            </EditText>
-
-            <Button
-                android:id="@+id/agenda_addTopicBtn"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackground"
-                android:hint="Add Topic"
-                android:minHeight="28dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/agenda_view"
-            android:layout_width="fill_parent"
+        <Button
+            android:id="@+id/agenda_addTopicBtn"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
-
-            <pl.polidea.treeview.TreeViewList
-                android:id="@+id/agendaTreeView"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_gravity="right|center_vertical"
-                android:divider="@color/blue"
-                android:dividerHeight="1dp"
-                android:scrollbars="vertical"
-                android:smoothScrollbar="true" />
-
-        </LinearLayout>
+            android:background="?android:attr/selectableItemBackground"
+            android:hint="+ Add Topic"
+            android:minHeight="28dp" />
     </LinearLayout>
 
-</FrameLayout>
+    <pl.polidea.treeview.TreeViewList
+        android:id="@+id/agendaTreeView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical"
+        android:smoothScrollbar="true" />
+
+</LinearLayout>

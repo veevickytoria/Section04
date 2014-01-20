@@ -1,5 +1,10 @@
 package com.android.meetingninja.agenda;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.android.meetingninja.R;
 import com.doomonafireball.betterpickers.hmspicker.HmsPickerBuilder;
 import com.doomonafireball.betterpickers.hmspicker.HmsPickerDialogFragment;
@@ -7,17 +12,26 @@ import com.doomonafireball.betterpickers.hmspicker.HmsPickerDialogFragment;
 import objects.Agenda;
 import objects.Topic;
 import pl.polidea.treeview.AbstractTreeViewAdapter;
+import pl.polidea.treeview.TreeBuilder;
 import pl.polidea.treeview.TreeNodeInfo;
 import pl.polidea.treeview.TreeStateManager;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * This is a very simple adapter that provides very basic tree view with a
@@ -25,39 +39,11 @@ import android.widget.TextView;
  * 
  */
 public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
-
-	private Agenda mAgenda;
+	private final String TAG = AgendaItemAdapter.class.getSimpleName();
 	private Context mContext;
-
-	// private final OnCheckedChangeListener onCheckedChange = new
-	// OnCheckedChangeListener() {
-	// @Override
-	// public void onCheckedChanged(final CompoundButton buttonView,
-	// final boolean isChecked) {
-	// final Long id = (Long) buttonView.getTag();
-	// changeSelected(isChecked, id);
-	// }
-	//
-	// };
-
-	@Override
-	public int getViewTypeCount() {
-		// TODO Auto-generated method stub
-		return 1;
-	}
-
-	private final OnClickListener onTimeBtnClick = new OnClickListener() {
-
-		@Override
-		public void onClick(View v) {
-			HmsPickerBuilder hms = new HmsPickerBuilder().setFragmentManager(
-					((FragmentActivity) getActivity())
-							.getSupportFragmentManager()).setStyleResId(
-					R.style.BetterPickersDialogFragment);
-			hms.show();
-
-		}
-	};
+	private TreeBuilder<Topic> builder;
+	private TreeStateManager<Topic> manager;
+	private static int _topics = 0;
 
 	// private void changeSelected(final boolean isChecked, final Long id) {
 	// if (isChecked) {
@@ -67,131 +53,175 @@ public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 	// }
 	// }
 
-	public AgendaItemAdapter(final Context context, final Agenda agenda,
+	public AgendaItemAdapter(final Context context,
 			final TreeStateManager<Topic> treeStateManager,
-			final int numberOfLevels) {
+			TreeBuilder<Topic> treeBuilder, final int numberOfLevels) {
 		super((Activity) context, treeStateManager, numberOfLevels);
-		this.mAgenda = agenda;
 		this.mContext = context;
+		this.builder = treeBuilder;
+		this.manager = treeStateManager;
+		_topics = manager.getVisibleCount();
 	}
 
-	// private String getDescription(final long id) {
-	// final Integer[] hierarchy = getManager().getHierarchyDescription(id);
-	// return "Node " + id + Arrays.asList(hierarchy);
-	// return "Topic " + id;
-	// }
+	private Map<String, String> getDescription(final Topic topic) {
+		HashMap<String, String> values = new HashMap<String, String>();
+		values.put("title", topic.getTitle());
+		values.put("levels",
+				Arrays.asList(getManager().getHierarchyDescription(topic))
+						.toString());
 
-	private String getDescription(final Topic topic) {
-		StringBuilder sb = new StringBuilder(topic.getTitle());
-		int mins = Integer.valueOf(topic.getTime()); // in minutes
-		int hrs = 0; // get hours
-		hrs = mins % 60;
-		mins -= hrs*60;
-		if (mins >= 0) {
-			sb.append(String.format(" (%dh, %2dm)", hrs, mins));
+		int totalMins = Integer.valueOf(topic.getTime()); // in minutes
+		int hrs = totalMins / 60; // get hours
+		int mins = totalMins % 60;
+		if (totalMins >= 60) {
+			values.put("time", String.format(" (%dh %02dm)", hrs, mins));
+		} else if (totalMins >= 0) {
+			values.put("time", String.format(" (%02dm)", hrs, mins));
 		}
-		
-		return sb.toString();
-	}
-	
-	// class for caching the views in a row
-	private class ViewHolder {
-		TextView title;
-		EditText editor;
-		Button addTopicBtn, setTimeBtn;
-	}
 
-	ViewHolder viewHolder;
+		return values;
+	}
 
 	@Override
 	public View getNewChildView(final TreeNodeInfo<Topic> treeNodeInfo) {
-		final LinearLayout viewLayout = (LinearLayout) getActivity()
-				.getLayoutInflater().inflate(R.layout.list_item_agenda, null);
-		return updateView(viewLayout, treeNodeInfo);
+		LayoutInflater inflater = getActivity().getLayoutInflater();
+		final LinearLayout viewLayout = (LinearLayout) inflater.inflate(
+				R.layout.list_item_agenda, null);
+		View updated = updateView(viewLayout, treeNodeInfo);
+
+		return updated;
 	}
 
 	@Override
 	public LinearLayout updateView(final View view,
 			final TreeNodeInfo<Topic> treeNodeInfo) {
 		final LinearLayout rowView = (LinearLayout) view;
+		final Topic rowTopic = treeNodeInfo.getId();
 
-		final TextView topicTitleView = (TextView) rowView
-				.findViewById(R.id.agenda_topic_title);
-		final EditText topicTitleEditor = (EditText) rowView
+		final EditText mTitle = (EditText) rowView
 				.findViewById(R.id.agenda_edit_topic);
-//		topicTitleEditor.setVisibility(View.GONE);
-		// final TextView levelView = (TextView) rowView
-		// .findViewById(R.id.demo_list_item_level);
-		topicTitleView.setOnClickListener(new View.OnClickListener() {
+		final TextView mTime = (TextView) rowView
+				.findViewById(R.id.agenda_topic_time);
+
+		mTitle.addTextChangedListener(new TextWatcher() {
 
 			@Override
-			public void onClick(View v) {
-				if (topicTitleView.isShown()) {
-					// topicTitleView.setVisibility(View.GONE);
-					topicTitleEditor.setVisibility(View.VISIBLE);
-				}
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				String text = s.toString();
+				rowTopic.setTitle(text);
+				mTitle.setTag(text);
+				Log.d(TAG, "Text changed");
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
 
 			}
 		});
-
-		topicTitleView.setText(getDescription(treeNodeInfo.getId()));
-		// levelView.setText(Integer.toString(treeNodeInfo.getLevel()));
-		final Button timeBtn = (Button) rowView
+		final Button mAddTopicBtn = (Button) rowView
+				.findViewById(R.id.agenda_subtopicAddBtn);
+		final Button mTimeBtn = (Button) rowView
 				.findViewById(R.id.agenda_topicTimeBtn);
-		timeBtn.setTag(treeNodeInfo.getId());
-		timeBtn.setOnClickListener(onTimeBtnClick);
 
+		// Add SubTopic Button
+		// mAddTopicBtn.setTag(rowTopic);
+		mAddTopicBtn.setOnClickListener(new SubTopicListener(rowTopic));
+
+		// Set Time Button
+		mTimeBtn.setTag(rowTopic);
+		mTimeBtn.setOnClickListener(new OnTimeBtnClick());
+
+		Map<String, String> info = getDescription(rowTopic);
+		// String title = "";
+		// if (mTitle.getTag() != null) {
+		// title = (String) mTitle.getTag();
+		// Log.d(TAG + "using title >>", title);
+		// } else {
+		// title = info.containsKey("title") ? info.get("title") : "";
+		// }
+		// mTitle.setText(title);
+		mTitle.setText(rowTopic.getTitle());
+		String time = info.containsKey("time") ? info.get("time") : "";
+		mTime.setText(time);
+
+		// If a topic has subTopics, then its time is determined by the sum of
+		// the subTopics
 		if (treeNodeInfo.isWithChildren()) {
-			timeBtn.setVisibility(View.GONE);
+			// mTimeBtn.setVisibility(View.GONE);
+			mTime.setVisibility(View.GONE);
 		} else {
-			timeBtn.setVisibility(View.VISIBLE);
+			mTimeBtn.setVisibility(View.VISIBLE);
 			// timeBtn.setChecked(selected.contains(treeNodeInfo.getId()));
 		}
-		// timeBtn.setOnCheckedChangeListener(onCheckedChange);
+
 		return rowView;
 	}
 
-	// @Override
-	// public void handleItemClick(final View view, final Object id) {
-	// final Long longId = (Long) id;
-	// final TreeNodeInfo<Topic> info = getManager().getNodeInfo(longId);
-	// if (info.isWithChildren()) {
-	// super.handleItemClick(view, id);
-	// } else {
-	// final ViewGroup vg = (ViewGroup) view;
-	// final CheckBox cb = (CheckBox) vg
-	// .findViewById(R.id.demo_list_checkbox);
-	// cb.performClick();
-	// }
-	// }
+//	@Override
+//	public void handleItemClick(final View view, final Object id) {
+//		final Topic t = (Topic) id;
+//		final TreeNodeInfo<Topic> info = getManager().getNodeInfo(t);
+//		if (info.isWithChildren()) {
+//			super.handleItemClick(view, id);
+//		} else {
+//			final ViewGroup vg = (ViewGroup) view;
+//
+//		}
+//	}
 
 	@Override
 	public long getItemId(final int position) {
+
 		return (long) position;
 	}
 
-	private class TimeClickListener implements OnClickListener,
-			HmsPickerDialogFragment.HmsPickerDialogHandler {
-		Button button;
-		
+	@Override
+	public int getViewTypeCount() {
+		// TODO Auto-generated method stub
+		return 1;
+	}
 
-		public TimeClickListener(Button b) {
-			this.button = b;
+	private class OnTimeBtnClick implements OnClickListener {
+
+		@Override
+		public void onClick(View v) {
+//			HmsPickerBuilder hms = new HmsPickerBuilder().setFragmentManager(
+//					((FragmentActivity) getActivity())
+//							.getSupportFragmentManager()).setStyleResId(
+//					R.style.BetterPickersDialogFragment);
+//			hms.show();
+			Topic t = (Topic) v.getTag();
+			Map<String, String> info = getDescription(t);
+			Log.d(TAG, info.get("title"));
+
+		}
+	}
+
+	private class SubTopicListener implements OnClickListener {
+		private final Topic parent;
+
+		public SubTopicListener(Topic parent) {
+			this.parent = parent;
 		}
 
 		@Override
 		public void onClick(View v) {
-			// TODO Auto-generated method stub
-			
+			// final Topic t = (Topic) v.getTag();
+			Topic subT = new Topic(); // TODO : Make new subtopic
+			parent.addTopic(subT);
+			if (getManager().isInTree(parent))
+				builder.addRelation(parent, subT);
+			else {
+				Log.wtf(TAG, "Topic is not in tree?");
+			}
+			// getManager().notifyDataSetChanged();
 		}
 
-		@Override
-		public void onDialogHmsSet(int reference, int hours, int minutes,
-				int seconds) {
-			if (seconds >= 30)
-				minutes++;
-			String time = String.format("%dh:%dm", hours, minutes);
-			
-		}
 	}
 }

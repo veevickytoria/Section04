@@ -94,7 +94,7 @@ public final class MockObjectFactory {
 		JsonGenerator jgen = JFACT.createGenerator(ps, JsonEncoding.UTF8);
 
 		Agenda ag = new Agenda();
-		ag.setID(404);
+		ag.setID("404");
 		ag.setTitle("Discussing Food");
 		Topic topic1 = new Topic("Cheese Types");
 		topic1.addTopic(new Topic("Swiss"));

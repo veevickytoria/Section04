@@ -104,7 +104,8 @@
 
         <activity
             android:name="com.android.meetingninja.agenda.AgendaActivity"
-            android:label="@string/title_activity_agenda" >
+            android:label="@string/title_activity_agenda" 
+            android:configChanges="orientation|keyboardHidden" >
         </activity>
 
         <provider
