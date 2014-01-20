@@ -12,14 +12,22 @@ import pl.polidea.treeview.InMemoryTreeStateManager;
 import pl.polidea.treeview.TreeBuilder;
 import pl.polidea.treeview.TreeStateManager;
 import pl.polidea.treeview.TreeViewList;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.meetingninja.MainActivity;
 import com.android.meetingninja.R;
+import com.android.meetingninja.MainActivity.DrawerLabel;
+import com.android.meetingninja.database.AgendaDatabaseAdapter;
+import com.android.meetingninja.notes.CreateNoteActivity;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -110,7 +118,7 @@ public class AgendaActivity extends FragmentActivity {
 			mAgendaAdpt = new AgendaItemAdapter(this, mAgenda, manager, depth);
 			mTitleView.setText(mAgenda.getTitle());
 			checkEmpty();
-			
+
 		}
 		treeView.setAdapter(mAgendaAdpt);
 
@@ -164,6 +172,36 @@ public class AgendaActivity extends FragmentActivity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.agenda, menu);
 		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle presses on the action bar items
+		// Pass the event to ActionBarDrawerToggle, if it returns
+		// true, then it has handled the app icon touch event
+
+		// Handle other action bar items...
+		switch (item.getItemId()) {
+
+		case R.id.action_delete:
+			Intent intent = getIntent();
+			Boolean isCreated = intent.getBooleanExtra("isCreated", false);
+
+			if (isCreated) {
+				String AgendaID = intent.getStringExtra("agendaID");
+				try {
+					AgendaDatabaseAdapter.deleteAgenda(AgendaID);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+			}
+			finish();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+
 	}
 
 	// @Override

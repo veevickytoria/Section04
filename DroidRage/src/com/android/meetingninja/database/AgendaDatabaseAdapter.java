@@ -33,6 +33,24 @@ public class AgendaDatabaseAdapter extends AbstractDatabaseAdapter {
 	public static Uri.Builder getBaseUri() {
 		return Uri.parse(getBaseUrl()).buildUpon();
 	}
+	
+	public static void deleteAgenda(String agendaID) throws IOException{
+	
+		// Server URL setup
+		String _url = getBaseUri().appendPath(agendaID).build().toString();
+
+		// Establish connection
+		URL url = new URL(_url);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+		// add request header
+		conn.setRequestMethod("DELETE");
+		addRequestHeader(conn, false);
+
+		// Get server response
+		int responseCode = conn.getResponseCode();
+		getServerResponse(conn);		
+	}
 
 	public static Agenda getAgenda(String agendaID) throws IOException {
 		// Server URL setup

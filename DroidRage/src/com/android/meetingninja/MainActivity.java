@@ -448,9 +448,7 @@ public class MainActivity extends FragmentActivity {
 			logout();
 			return true;
 		case R.id.action_settings:
-			Agenda go = Test.createAgenda();
-			AgendaTask task = new AgendaTask();
-			task.execute(go); // send
+			Toast.makeText(this, "AS", Toast.LENGTH_SHORT).show();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -519,10 +517,10 @@ public class MainActivity extends FragmentActivity {
 			Agenda create = null;
 			try {
 				ObjectMapper maper = new ObjectMapper();
-				
+
 				System.out.println(maper.writeValueAsString(params[0]));
-			
-//				create = AgendaDatabaseAdapter.createAgenda(params[0]);
+
+				// create = AgendaDatabaseAdapter.createAgenda(params[0]);
 			} catch (IOException e) {
 				Log.e(TAG, e.getLocalizedMessage());
 			}
