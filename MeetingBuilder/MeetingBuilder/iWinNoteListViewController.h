@@ -7,17 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "iWinViewAndAddNotesViewController.h"
 
 @protocol NoteListDelegate <NSObject>
 
 -(void)addViewNoteClicked :(BOOL)isEditing;
 @end
 
-@interface iWinNoteListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate, NSURLConnectionDelegate>
+@interface iWinNoteListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate, NSURLConnectionDelegate, ViewAddNoteDelegate>
 @property (strong, nonatomic) NSMutableData *responseData;
 @property (weak, nonatomic) IBOutlet UIButton *createNoteButton;
 @property (weak, nonatomic) IBOutlet UITableView *noteTable;
 @property (nonatomic) id<NoteListDelegate> noteListDelegate;
 - (IBAction)onCreateNewNote;
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withEmail:(NSString *)email;
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withUserID:(NSInteger)userID;
 @end

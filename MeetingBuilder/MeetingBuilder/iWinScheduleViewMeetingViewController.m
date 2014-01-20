@@ -15,7 +15,6 @@
 #import "Contact.h"
 #import "Settings.h"
 
-
 @interface iWinScheduleViewMeetingViewController ()
 @property (nonatomic) BOOL isEditing;
 @property (nonatomic) BOOL isStartDate;
@@ -69,6 +68,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    //_isAgendaCreated = false;
     
     iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     self.context = [appDelegate managedObjectContext];
@@ -294,14 +294,17 @@
     if ([self.addAgendaButton.titleLabel.text isEqualToString:@"Add Agenda"])
     {
         self.agendaController = [[iWinViewAndAddViewController alloc] initWithNibName:@"iWinViewAndAddViewController" bundle:nil];
+        self.agendaController.meetingID = self.meetingID;
     }
     else
     {
         self.agendaController = [[iWinViewAndAddViewController alloc] initWithNibName:@"iWinViewAndAddViewController" bundle:nil];
+        self.agendaController.meetingID = self.meetingID;
     }
     [self.agendaController setModalPresentationStyle:UIModalPresentationPageSheet];
     [self.agendaController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-    
+    self.agendaController.delegate = self;
+    self.agendaController.isAgendaCreated = [self.addAgendaButton.titleLabel.text isEqualToString:@"Add Agenda"] ? NO : YES;
     [self presentViewController:self.agendaController animated:YES completion:nil];
     self.agendaController.view.superview.bounds = CGRectMake(0,0,768,1003);
 }
@@ -543,6 +546,7 @@
     //[self.scheduleDelegate cancelClicked];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
+
 
 - (void)startDateClicked
 {

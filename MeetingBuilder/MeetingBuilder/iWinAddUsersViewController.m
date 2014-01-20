@@ -120,7 +120,7 @@
     //save
     [self.userDelegate selectedUsers:self.attendeeList];
     [self dismissViewControllerAnimated:YES completion:nil];
-}
+}   
 
 - (IBAction)onClickCancel
 {
