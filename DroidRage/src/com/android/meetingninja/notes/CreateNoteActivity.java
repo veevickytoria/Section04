@@ -31,7 +31,8 @@ public class CreateNoteActivity extends Activity {
 	private Bundle extras;
 	private String noteContent;
 	private String noteName;
-	private EditText textEditor;
+	private String noteCreator;
+	private EditText textEditor, creatorText;
 	private SQLiteNoteAdapter sqliteAdapter;
 
 	@Override
@@ -49,6 +50,7 @@ public class CreateNoteActivity extends Activity {
 		// noteID = getNote.getIntExtra("NoteID", 0);
 
 		textEditor = (EditText) findViewById(R.id.nameText);
+		creatorText = (EditText) findViewById(R.id.CreatorTest);
 
 		textEditor.setText(noteContent);
 
@@ -62,13 +64,15 @@ public class CreateNoteActivity extends Activity {
 		// goNotes.putExtra("NoteName", noteName);
 
 		String s = textEditor.getText().toString();
+		noteCreator = creatorText.getText().toString();
 		System.out.println("Echo: " + s);
 
-		sqliteAdapter.insertNote(s, "");
+		sqliteAdapter.insertNote(s, "", noteCreator);
 
 		msgIntent.putExtra("TypeL", "Create");
 		msgIntent.putExtra("Update", true);
 		msgIntent.putExtra("Fragment", "notes");
+		msgIntent.putExtra("NoteCreator", noteCreator);
 
 		setResult(RESULT_OK, msgIntent);
 		finish();

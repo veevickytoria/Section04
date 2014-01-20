@@ -118,12 +118,13 @@ public class NotesFragment extends Fragment implements
 				Note n = noteAdpt.getItem(position);
 
 				Intent editNote = new Intent(getActivity(),
-						EditNoteActivity.class);
+						ViewNoteActivity.class);
 				editNote.putExtra("listPosition", position);
 				editNote.putExtra(EditNoteActivity.EXTRA_ID, n.getNoteID());
 				editNote.putExtra(EditNoteActivity.EXTRA_TITLE, n.getTitle());
 				editNote.putExtra(EditNoteActivity.EXTRA_CONTENT,
 						n.getContent());
+				editNote.putExtra(EditNoteActivity.EXTRA_CREATOR,n.getCreatedBy());
 				startActivityForResult(editNote, 1);
 
 			}
@@ -214,6 +215,8 @@ public class NotesFragment extends Fragment implements
 							.getStringExtra(EditNoteActivity.EXTRA_TITLE);
 					String noteContent = data
 							.getStringExtra(EditNoteActivity.EXTRA_CONTENT);
+					String noteCreator = data
+							.getStringExtra(EditNoteActivity.EXTRA_CREATOR);
 					// StringBuilder sb = new StringBuilder();
 					// sb.append("[" + listPosition + "] ");
 					// sb.append(noteID + " ");
@@ -223,9 +226,9 @@ public class NotesFragment extends Fragment implements
 					// populateList();
 					int _id = Integer.valueOf(noteID);
 					if (listPosition != -1)
-						updateNote(listPosition, _id, noteName, noteContent);
+						updateNote(listPosition, _id, noteName, noteContent, noteCreator);
 					else
-						updateNote(_id, noteName, noteContent);
+						updateNote(_id, noteName, noteContent, noteCreator);
 				}
 			} else {
 				if (resultCode == Activity.RESULT_CANCELED) {
@@ -282,18 +285,19 @@ public class NotesFragment extends Fragment implements
 		noteAdpt.notifyDataSetChanged();
 	}
 
-	private boolean updateNote(int noteID, String noteName, String noteContent) {
+	private boolean updateNote(int noteID, String noteName, String noteContent, String noteCreator) {
 		Note create = new Note();
 		create.setNoteID("" + noteID);
 		create.setTitle(noteName);
 		create.setContent(noteContent);
+		create.setCreatedBy(noteCreator);
 		mySQLiteAdapter.updateNote(create);
 		populateList();
 		return true;
 	}
 
 	private boolean updateNote(int position, int noteID, String noteName,
-			String noteContent) {
+			String noteContent, String noteCreator) {
 		if (position < 0 || position >= notes.size())
 			return false;
 		notes.get(position).setTitle(noteName);
@@ -306,7 +310,7 @@ public class NotesFragment extends Fragment implements
 	}
 
 	public Note createBlankNote() {
-		return mySQLiteAdapter.insertNote("New Note", "");
+		return mySQLiteAdapter.insertNote("New Note", "", "unknown");
 	}
 
 	public void populateList() {

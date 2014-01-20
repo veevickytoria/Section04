@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/edit_note_action_edit"
+        android:orderInCategory="100"
+        android:title="@string/action_save"
+        android:showAsAction="withText|ifRoom"
+        android:icon="@drawable/ic_menu_edit"/>
+
+</menu>

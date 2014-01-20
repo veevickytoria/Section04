@@ -32,7 +32,7 @@ public class SQLiteNoteAdapter extends SQLiteHelper {
 	protected static final String TABLE_NAME = "notes";
 
 	// Columns
-	public static final String KEY_CREATED_BY = "createdByUser";
+	public static final String KEY_CREATED_BY = "createdBy";
 	public static final String KEY_TITLE = "title";
 	public static final String KEY_DESC = "description";
 	public static final String KEY_CONTENT = "content";
@@ -55,11 +55,12 @@ public class SQLiteNoteAdapter extends SQLiteHelper {
 	 * @param content
 	 * @return The inserted note with an id assigned
 	 */
-	public Note insertNote(String name, String content) {
+	public Note insertNote(String name, String content, String creator) {
 		mDb = mDbHelper.getWritableDatabase();
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(KEY_TITLE, name);
 		contentValues.put(KEY_CONTENT, content);
+		//contentValues.put(KEY_CREATED_BY, creator);
 		long insertID = mDb.insert(TABLE_NAME, null, contentValues);
 		Cursor c = mDb.query(TABLE_NAME, new String[] { KEY_ID, KEY_TITLE,
 				KEY_CONTENT }, KEY_ID + "=" + insertID, null, null, null, null);
@@ -71,7 +72,7 @@ public class SQLiteNoteAdapter extends SQLiteHelper {
 	}
 
 	public Note insertNote(Note n) {
-		return insertNote(n.getTitle(), n.getContent());
+		return insertNote(n.getTitle(), n.getContent(), n.getCreatedBy());
 	}
 
 	public void updateNote(Note note) {
@@ -83,6 +84,7 @@ public class SQLiteNoteAdapter extends SQLiteHelper {
 		ContentValues data = new ContentValues();
 		data.put(KEY_TITLE, note.getTitle());
 		data.put(KEY_CONTENT, note.getContent());
+		//data.put(KEY_CREATED_BY, note.getCreatedBy());
 		mDb.update(TABLE_NAME, data, KEY_ID + "=" + note.getNoteID(), null);
 		close();
 	}
