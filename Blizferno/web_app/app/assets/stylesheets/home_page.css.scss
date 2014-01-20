@@ -1,19 +1,12 @@
-/*// Place all the styles related to the home_page controller here.
+// Place all the styles related to the home_page controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-body{
-    background-color: #1a1a1a;
-    color: white;
+.panel-group{
+  width: 50%;
+  margin: 10% auto;
 }
-  li.homePage {
-    display: inline-block;
-    padding: 10px;
-    margin: 10px;
-    width: 300px;
-    min-height: 450px;
-    vertical-align: top;
-    background-color: #fafafa;
-    border: 2px dashed #d9d9d9;
-  }
-*/
+
+.btn.panel-title{
+  width: 100%;
+}

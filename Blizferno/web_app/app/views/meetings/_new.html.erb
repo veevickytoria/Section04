@@ -1,26 +1,13 @@
 <!-- <div id = 'menu' style = 'width: 50%; float:left'> -->
-<script type="text/javascript">
-	function validateForm()
-	{
-	
-	var title = document.forms["input"]["title"].value;
-	// var attendees = document.forms["input"]["attendees"].value;
-	var datetime = document.forms["input"]["datetime"].value;
-	var location = document.forms["input"]["location"].value;
-	alert("The following fields were added to the db: " + title + " " + datetime + " " + location);
-
-	return true;
-	}
-</script>
-
 <form name="input" id = "createMeeting" onsubmit="return validateForm()" action ="http://csse371-04.csse.rose-hulman.edu/Meeting/" method = 'post'>
-		<p>Topic</p>
+		<h5>Topic</h5>
 		<input type='text' name = "title" style = "width: 100%" placeholder="Topic" />
-		<br />
-		<p>Description*</p>
+		
+		<h5>Description*</h5>
 		<textarea style = 'width: 100%' placeholder='Description'></textarea>
-		<br />
-		<p>Attendees</p>
+		
+		<h5>Attendees</h5>
+		<pre></pre>
 		<!-- <table>
 			<tr>
 				<td>
@@ -36,9 +23,7 @@
 			</tr>
 		</table> -->
 		
-		<pre style='font-size:12px'></pre>
-		<br />
-		<p>Date</p>
+		<h5>Date</h5>
 		<table>
 			<tr>
 				<td>
@@ -46,57 +31,61 @@
 				</td>
 			</tr>
 		</table>
-		<br />
-		<p>Location</p>
+		
+		<h5>Location</h5>
 		<table>
 			<tr>
 				<td>
 					<input type='text' name ="location" style='width: 100%' placeholder='Location' />
 				</td>
-				<td style='padding-left: 5px;'><input type='button' value='Search Locations' /></td>
+				<td style='padding-left: 5px;'>
+					<input type='button' value='Search Locations' />
+				</td>
 			</tr>
 		</table>
-		<br />
-		<p>Project*</p>
+		
+		<h5>Project*</h5>
 		<table>
 			<tr>
 				<td>
-					<input type='text' name = 'project' style='width: 100%;' placeholder='Project' />
+					<input type='text' name = 'project' placeholder='Project' />
 				</td>
-				<td style='padding-left: 5px;'><input type='button' value='Search Projects' /></td>
+				<td style='padding-left: 5px;'>
+					<input type='button' value='Search Projects' />
+				</td>
 			</tr>
 		</table>
-		
-		<br />
-		<p>Agenda</p>
+
+		<h5>Agenda</h5>
 		<table style='width: 100%;'>
 			<tr>
-				<td style='width: 100%'><input type='url' name = 'agenda' style='width: 100%' placeholder='Paste Link' /></td>
-				<td style='width: 30%'><input type='button' value='Attach Google Doc' /></td>
+				<td style='width: 70%'>
+					<input type='url' name = 'agenda' style='width: 100%' placeholder='Paste Link' />
+				</td>
+				<td style='width: 30%'>
+					<input type='button' value='Attach Google Doc' />
+				</td>
 			</tr>
 		</table>
 		
-<!-- </div> -->
-<!-- <div id = 'content' style = 'width: 50%; float:right'> -->
-		<br />
-		Tasks:<br /><br />
+		<!-- </div> -->
+		<!-- <div id = 'content' style = 'width: 50%; float:right'> -->
+		<h5>Tasks:</h5>
 		<input type='text' name = 'task' placeholder='Task' />
 		<select>
 			<option>Assigned User</option>
 			<option>------------</option>
 			<option>other users here</option>
 		</select>
-		<br />
-		<p style='font-size:12px;'>More tasks...</p>
-		<br /><br />
-		<!-- <div class='checkboxes'>
+		<p>More tasks...</p>
+		<!-- 
+		<div class='checkboxes'>
 		<label><input type='radio' name='schedule' /><span> Accept Suggested Time</span></label>
 		<label><input type='radio' name='schedule' /><span> Go to Scheduling Assistant</span></label>
 		</div>
 		<br /><br />
 		<input type='submit' style='font-size: 16px;padding-top: 2px;' name='createMeeting' value='Create Meeting' /> -->
 	</form>
-
 <!-- </div> -->
 
 
