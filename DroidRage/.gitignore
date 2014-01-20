@@ -1,3 +1,13 @@
+.metadata
+.gradle
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+.loadpath
+
 # built application files
 *.apk
 *.ap_
