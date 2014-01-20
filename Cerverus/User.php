@@ -77,7 +77,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
         $fullarray=array();
         foreach($relationArray as $rel){
 				$booleanFound=0;
-                $node = $rel->getStartNode();
+                $node = $rel->getEndNode();
                 $tempArray=$node->getProperties();
                 $array=array();
                 $array['id']=$node->getId();
@@ -106,7 +106,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
         echo json_encode($lastarray);
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'Notes')==0){
 	$userNode=$client->getNode($_GET['id']);
-	$relationArray = $userNode->getRelationships(array());
+	$relationArray = $userNode->getRelationships(array('CREATED'));
 	$fullarray=array();
 	foreach($relationArray as $rel){
 		$node = $rel->getStartNode();
@@ -120,7 +120,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'tasks')==0){
 	//GET getUserTasks
 	$userNode=$client->getNode($_GET['id']);
-	$relationArray = $userNode->getRelationships(array());
+	$relationArray = $userNode->getRelationships(array('ASSIGNED_TO', 'ASSIGNED_FROM'));
 	$fullarray=array();
 	foreach($relationArray as $rel){
 		$node = $rel->getStartNode();
@@ -138,7 +138,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'meetings')==0){
 	//GET getUserMeetings
 	$userNode=$client->getNode($_GET['id']);
-	$relationArray = $userNode->getRelationships(array());
+	$relationArray = $userNode->getRelationships(array('MADE_MEETING','ATTEND_MEETING'));
 	$fullarray=array();
 	foreach($relationArray as $rel){
 		$node = $rel->getStartNode();
