@@ -124,7 +124,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 	$relationArray = $userNode->getRelationships(array('ASSIGNED_TO', 'ASSIGNED_FROM'));
 	$fullarray=array();
 	foreach($relationArray as $rel){
-		$node = $rel->getStartNode();
+		$node = $rel->getEndNode();
 		$tempArray=$node->getProperties();
 		$array=array();
 		$array['id']=$node->getId();
@@ -142,7 +142,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 	$relationArray = $userNode->getRelationships(array('MADE_MEETING','ATTEND_MEETING'));
 	$fullarray=array();
 	foreach($relationArray as $rel){
-		$node = $rel->getStartNode();
+		$node = $rel->getEndNode();
 		$tempArray=$node->getProperties();
 		$array=array();
 		$array['id']=$node->getId();
