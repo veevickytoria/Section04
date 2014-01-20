@@ -21,10 +21,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
-<<<<<<< HEAD
-=======
 import android.view.MenuInflater;
->>>>>>> 434c5bb93e6e36dd1a063e35f02564350f87f4e4
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -112,12 +109,8 @@ public class AgendaActivity extends FragmentActivity {
 		if (mAgenda != null) {
 			mAgendaAdpt = new AgendaItemAdapter(this, mAgenda, manager, depth);
 			mTitleView.setText(mAgenda.getTitle());
-<<<<<<< HEAD
 			depth = mAgenda.getDepth();
 			// checkEmpty();
-=======
-			checkEmpty();
->>>>>>> 434c5bb93e6e36dd1a063e35f02564350f87f4e4
 
 		}
 		treeView.setAdapter(mAgendaAdpt);
@@ -143,12 +136,6 @@ public class AgendaActivity extends FragmentActivity {
 
 	}
 	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// TODO Auto-generated method stub
-		return super.onOptionsItemSelected(item);
-	}
-
 	private void buildTree(final TreeBuilder<Topic> builder) {
 		Topic t = null;
 		for (Iterator<Topic> i = mAgenda.getTopics().iterator(); i.hasNext();) {
