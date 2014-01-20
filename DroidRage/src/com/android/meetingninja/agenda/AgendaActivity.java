@@ -61,6 +61,7 @@ public class AgendaActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		boolean newCollapsible;
 		ObjectMapper mapper = new ObjectMapper();
+		
 
 		// TODO : Get Agenda attached to meeting
 		String json = "";
@@ -84,6 +85,7 @@ public class AgendaActivity extends FragmentActivity {
 		}
 
 		mAgenda = new Agenda();
+
 		// End getAgenda
 
 		if (savedInstanceState == null) {
@@ -104,6 +106,7 @@ public class AgendaActivity extends FragmentActivity {
 			depth = mAgenda.getDepth();
 			mAgendaAdpt = new AgendaItemAdapter(this, manager, treeBuilder,
 					depth);
+			mAgendaAdpt.addActivity(this);
 			mTitleView.setText(mAgenda.getTitle());
 			buildTree(treeBuilder);
 		}
@@ -139,6 +142,23 @@ public class AgendaActivity extends FragmentActivity {
 		}
 	}
 
+	public void reconstructTree(){
+		manager.clear();
+		mAgendaAdpt.refresh();
+		
+		int depth = 0;
+		if (mAgenda != null) {
+			depth = mAgenda.getDepth();
+			mAgendaAdpt = new AgendaItemAdapter(this, manager, treeBuilder,
+					depth);
+			mAgendaAdpt.addActivity(this);
+			mTitleView.setText(mAgenda.getTitle());
+			buildTree(treeBuilder);
+		}
+		treeView.setAdapter(mAgendaAdpt);
+
+	}
+	
 	@Override
 	protected void onSaveInstanceState(final Bundle outState) {
 		outState.putSerializable("treeManager", manager);
@@ -164,8 +184,10 @@ public class AgendaActivity extends FragmentActivity {
 			switch (v.getId()) {
 			case R.id.agenda_addTopicBtn:
 				Topic t = new Topic(); // TODO : Create a Topic
-				treeBuilder.addRelation(null, t);
-				mAgendaAdpt.addhash(t);
+				t.setTitle("new topic");
+				mAgenda.addTopic(t);
+				reconstructTree();
+				
 				break;
 
 			default:
