@@ -33,13 +33,13 @@ import android.widget.Toast;
 public class EditTaskActivity extends FragmentActivity implements AsyncResponse<Boolean>{
 
 	private EditText Description, completionCriteria, Title;
-	private TextView assignedDateLabel,createdDateLabel;
+	private TextView assignedDateLabel,createdDateLabel,isCompleted;
 	private Button tDeadline;
 	private SimpleDateFormat dateFormat = MyDateUtils.APP_DATE_FORMAT;
 
 	private SessionManager session;
 	private Task displayTask;
-	Calendar cal;
+	Calendar cal = null;
 
 	/*public static final String EXTRA_TITLE = "title";
 	public static final String EXTRA_DESCRIPTION = "description";
@@ -57,6 +57,7 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 		Description = (EditText) findViewById(R.id.task_edit_desc);
 		completionCriteria = (EditText) findViewById(R.id.task_edit_comp_crit);
 		tDeadline = (Button) findViewById(R.id.task_edit_deadline);
+		isCompleted = (TextView) findViewById(R.id.task_edit_completed);
 		Intent i = getIntent();
 		setupView(); 
 		displayTask = i.getParcelableExtra(EXTRA_TASK); 
@@ -64,17 +65,27 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 			Title.setText(displayTask.getTitle());
 			completionCriteria.setText(displayTask.getCompletionCriteria());
 			Description.setText(displayTask.getDescription());
+			String comp="No";
+			if(displayTask.getIsCompleted()){
+				comp="Yes";
+			}
+			isCompleted.setText(comp);
 			String deadline = displayTask.getEndTime();
+			String monthdayyear[] = deadline.split("/");
 			
 			//maybe for calendar 
-			int month = (int) Integer.parseInt(deadline.substring(0, 2));
-			int year = (int) Integer.parseInt(deadline.substring(6));
-			int day = (int) Integer.parseInt(deadline.substring(3,5));
+			int month = (int) Integer.parseInt(monthdayyear[0]);
+			int year = (int) Integer.parseInt(monthdayyear[2]);
+			int day = (int) Integer.parseInt(monthdayyear[1]);
+			
 			cal = Calendar.getInstance();
-			cal.set(year, month, day);
+			cal.set(Calendar.YEAR,year);
+			cal.set(Calendar.MONTH,month-1);
+			cal.set(Calendar.DAY_OF_MONTH,day);
+			
 			
 			tDeadline.setText(deadline);
-			tDeadline.setOnClickListener(new DateClickListener());
+			tDeadline.setOnClickListener(new DateClickListener(tDeadline,cal));
 			//findViewById(R.id.task_edit_deadline)
 			//createdDate = findViewById(R.id.task_edit_date_created).toString();
 			
@@ -167,17 +178,17 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 			//String title,desc,compCrit;
 			displayTask.setTitle(Title.getText().toString());
 			displayTask.setDescription(Description.getText().toString());
-			System.out.println(completionCriteria.getText().toString());
 			displayTask.setCompletionCriteria(completionCriteria.getText().toString());
-			System.out.println(displayTask.getCompletionCriteria());
+			displayTask.setEndTime(tDeadline.getText().toString());
+			//displayTask.setEndTime(cal.get(Calendar.MONTH)-1+"/"+cal.get(Calendar.DAY_OF_MONTH)+"/"+cal.get(Calendar.YEAR));
 			TaskUpdater tUpdate = new TaskUpdater();
 			tUpdate.updateTask(displayTask);
 			
 			//TODO: setup newTask
 			if(displayTask!=null){
 			}
-			Intent msgIntent = new Intent();
 			
+			Intent msgIntent = new Intent();
 			msgIntent.putExtra(EXTRA_TASK, displayTask);
 			setResult(RESULT_OK,msgIntent);
 			
@@ -188,11 +199,10 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 	private class DateClickListener implements OnClickListener,OnDateSetListener{
 		Button button;
 		Calendar cal;
-		public void DateClickListener(Button b, Calendar c){
+		public DateClickListener(Button b, Calendar c) {
 			this.button = b;
 			this.cal = c;
 		}
-
 		@Override
 		public void onClick(View v) {
 			//TODO calendar stuff
@@ -204,48 +214,22 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 		@Override
 		public void onDateSet(CalendarDatePickerDialog dialog, int year,
 				int monthOfYear, int dayOfMonth) {
-			int yr,month,day;
-			yr = cal.get(Calendar.YEAR);
-			month = cal.get(Calendar.MONTH);
-			day = cal.get(Calendar.DAY_OF_MONTH);
-			cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-			cal.set(Calendar.MONTH,monthOfYear);
-			cal.set(Calendar.YEAR, year);
+			Calendar tempcal = Calendar.getInstance();
+			tempcal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+			tempcal.set(Calendar.MONTH,monthOfYear);
+			tempcal.set(Calendar.YEAR, year);
 			Calendar now = null;
-			now.getInstance();
-			if(cal.before(now)){
-				
+			now = Calendar.getInstance();
+			now.add(Calendar.DAY_OF_MONTH, -1);
+			if(tempcal.before(now)){
 			}else{
-				tDeadline.setText(dateFormat.format(cal.getTime()));
+				cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+				cal.set(Calendar.MONTH,monthOfYear);
+				cal.set(Calendar.YEAR, year);
+				tDeadline.setText(cal.get(Calendar.MONTH)+1+"/"+cal.get(Calendar.DAY_OF_MONTH)+"/"+cal.get(Calendar.YEAR));
 			}			
-			// TODO Auto-generated method stub
 			
 		}
 
 	}
-	/*public class TaskSaveTask extends AsyncTask<Task, Void, Boolean> {
-		private AsyncResponse<Boolean> delegate;
-		public TaskSaveTask(AsyncResponse<Boolean> delegate){
-			this.delegate = delegate;
-		}
-		@Override
-		protected Boolean doInBackground(Task... params) {
-			Task t = params[0];
-			try {
-				String userID = session.getUserID();
-				//TODO: edittask in task adapter
-			} catch(Exception e){
-				Log.e("MeetingSave","Error: Failed to save task");
-				Log.e("MEETING_ERR", e.toString());
-				return false;
-			}
-			return true;
-		}
-		@Override
-		protected void onPostExecute(Boolean result){
-			delegate.processFinish(result);
-			super.onPostExecute(result);
-		}
-
-	}*/
 }

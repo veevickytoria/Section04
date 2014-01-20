@@ -19,23 +19,30 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import objects.Meeting;
 import objects.Task;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.meetingninja.MainActivity;
 import com.android.meetingninja.R;
 import com.android.meetingninja.database.AsyncResponse;
 import com.android.meetingninja.notes.CreateNoteActivity;
@@ -63,8 +70,9 @@ public class TasksFragment extends Fragment implements AsyncResponse<List<Task>>
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		View v = inflater.inflate(R.layout.fragment_tasks, container, false);
+		setHasOptionsMenu(true);
+		
 		session = SessionManager.getInstance();
-		System.out.println(session.getUserID());
 		ArrayList<Task> l1 = new ArrayList<Task>(), l2 = new ArrayList<Task>(), l3 = new ArrayList<Task>();
 		taskLists.put(assignedToMe, l1);
 		taskLists.put(iAssigned, l2);
@@ -104,10 +112,25 @@ public class TasksFragment extends Fragment implements AsyncResponse<List<Task>>
 		return v;
 	}
 	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+		inflater.inflate(R.menu.task_fragment_menu, menu);
+	}
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch(item.getItemId()){
+		case R.id.action_refresh_task:
+			refreshTasks();
+			return true;
+		case R.id.action_new_task:
+			//max put your stuff here
+			return true;
+			default: return super.onContextItemSelected(item);
+		}
+	}
+	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data){
 		if(requestCode == 6){
 			if(resultCode == Activity.RESULT_OK){
-				System.out.println("deleted task");
 				refreshTasks();
 			}
 		}
@@ -126,6 +149,9 @@ public class TasksFragment extends Fragment implements AsyncResponse<List<Task>>
 
 	@Override
 	public void processFinish(List<Task> result) {
+		taskLists.get(assignedToMe).clear();
+		taskLists.get(iAssigned).clear();
+		taskLists.get(iCreated).clear();
 		for(Task task : result){
 			if(task.getType().equals("ASSIGNED_TO")){
 				taskLists.get(assignedToMe).add(task);

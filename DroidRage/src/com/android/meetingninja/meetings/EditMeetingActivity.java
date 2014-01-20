@@ -217,6 +217,14 @@ public class EditMeetingActivity extends FragmentActivity implements
 		switch (v.getId()) {
 		case R.id.add_agenda_button:
 			Intent act = new Intent(EditMeetingActivity.this, AgendaActivity.class);
+			
+			
+			//Todo: Get and set the agenda ID values
+			
+			act.putExtra("isCreated", false);
+			act.putExtra("AgendaID", "55");
+			
+			
 			startActivity(act);
 			break;
 		default:

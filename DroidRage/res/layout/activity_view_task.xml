@@ -20,7 +20,7 @@
                 android:ems="10"
                 android:enabled="true"
                 android:gravity="center"
-                android:hint="Task Name"
+                android:hint="@string/task_name"
                 android:textSize="25sp" />
 
             <View
@@ -45,7 +45,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="2dp"
                         android:layout_weight="2"
-                        android:hint="Date Created:"
+                        android:hint="@string/date_created"
                         android:textColor="@android:color/secondary_text_dark" />
 
                     <TextView
@@ -53,7 +53,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
-                        android:hint="November 13, 2013"
+                        android:hint="@string/unknown_date"
                         android:minHeight="16dp" />
                 </LinearLayout>
 
@@ -68,7 +68,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="2dp"
                         android:layout_weight="2"
-                        android:hint="Date Assigned:"
+                        android:hint="@string/date_assigned"
                         android:textColor="@android:color/secondary_text_dark" />
 
                     <TextView
@@ -76,7 +76,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
-                        android:hint="November 13, 2013"
+                        android:hint="@string/unknown_date"
                         android:minHeight="16dp" />
                 </LinearLayout>
 
@@ -91,7 +91,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="2dp"
                         android:layout_weight="2"
-                        android:hint="Deadline:"
+                        android:hint="@string/deadline"
                         android:textColor="@android:color/secondary_text_dark" />
 
                     <TextView
@@ -99,7 +99,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
-                        android:hint="November 13, 2013"
+                        android:hint="@string/unknown_date"
                         android:minHeight="16dp" />
                 </LinearLayout>
             </LinearLayout>
