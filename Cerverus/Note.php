@@ -41,7 +41,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
 	echo json_encode(array_merge(array("noteID"=>$noteNode->getID()), $noteProps));
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0){
 	//getNoteInfo
-	$noteNode=$client->getNode($_GET['id']);			
+	$noteNode=$client->getNode($_GET['noteID']);			
 	$createdByRel = $noteNode->getRelationships(array('CREATED'), Relationship::DirectionIn);
 	$createdBy = $createdByRel[0]->getStartNode();	
 	echo json_encode(array_merge(array("noteID"=>$noteNode->getId()), $noteNode->getProperties()));
@@ -89,7 +89,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'DELETE')==0){
 	//deleteNote
 	//get the id
-	$id=$_GET['id'];
+	$id=$_GET['noteID'];
         
 	//get the node
 	$node = $client->getNode($id);
