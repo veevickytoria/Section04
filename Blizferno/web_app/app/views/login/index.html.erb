@@ -175,7 +175,6 @@
             var form = this;
             var json = new ConvertFormToJSON(form);
             json.password = SHA256(json.password);
-            alert(json.password);
 
             $.ajax({
                 type: 'POST',
