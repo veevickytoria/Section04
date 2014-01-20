@@ -16,7 +16,7 @@
 
 @interface iWinAddUsersViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *userListTableView;
-@property (strong, nonatomic) id<UserDelegate> userDelegate;
+@property (nonatomic) id<UserDelegate> userDelegate;
 - (IBAction)onClickSendInvite;
 - (IBAction)onClickSave;
 - (IBAction)onClickCancel;

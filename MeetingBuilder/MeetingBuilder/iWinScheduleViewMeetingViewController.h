@@ -24,6 +24,8 @@
 - (IBAction)onClickSaveAndAddMore;
 - (IBAction)onDeleteMeeting;
 - (IBAction)onClickCancel;
+
+- (IBAction)viewAgendas:(id)sender;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withUserID:(NSInteger)userID withMeetingID:(NSInteger)meetingID;
 @property (weak, nonatomic) IBOutlet UIButton *saveAndAddMoreButton;
 @property (weak, nonatomic) IBOutlet UITextField *titleField;
@@ -41,4 +43,5 @@
 @property (weak, nonatomic) IBOutlet UIButton *visitScheduleButton;
 @property (weak, nonatomic) IBOutlet UITableView *attendeeTableView;
 @property (weak, nonatomic) IBOutlet UIButton *addAgendaButton;
+@property (nonatomic) BOOL isAgendaCreated;
 @end
