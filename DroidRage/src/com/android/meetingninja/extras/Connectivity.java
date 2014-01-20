@@ -20,12 +20,12 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 
-import com.android.meetingninja.database.BaseDatabaseAdapter;
-
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
+
+import com.android.meetingninja.database.BaseDatabaseAdapter;
 
 /**
  * Check device's network connectivity and speed

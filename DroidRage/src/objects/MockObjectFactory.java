@@ -3,11 +3,7 @@ package objects;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-
-import android.util.Xml.Encoding;
 
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonFactory;
@@ -108,7 +104,6 @@ public final class MockObjectFactory {
 		ag.addTopic(topic1);
 		ag.addTopic(topic2);
 		ag.addTopic(topic3);
-		
 
 		jgen.flush();
 		jgen.close();

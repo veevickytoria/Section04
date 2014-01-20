@@ -16,7 +16,6 @@
 package com.android.meetingninja.notes;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import objects.Note;
@@ -285,7 +284,7 @@ public class NotesFragment extends Fragment implements
 
 	private boolean updateNote(int noteID, String noteName, String noteContent) {
 		Note create = new Note();
-		create.setNoteID(""+noteID);
+		create.setNoteID("" + noteID);
 		create.setTitle(noteName);
 		create.setContent(noteContent);
 		mySQLiteAdapter.updateNote(create);

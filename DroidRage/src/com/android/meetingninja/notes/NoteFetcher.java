@@ -23,7 +23,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.android.meetingninja.database.AsyncResponse;
-import com.android.meetingninja.database.NotesDatabaseAdapter;
 import com.android.meetingninja.database.UserDatabaseAdapter;
 
 /**

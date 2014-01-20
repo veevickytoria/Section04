@@ -23,12 +23,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
-import objects.User;
 import android.net.Uri;
-import android.net.Uri.Builder;
 
-import com.android.meetingninja.ApplicationController;
-import com.android.volley.RequestQueue;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -42,11 +38,11 @@ public abstract class BaseDatabaseAdapter {
 	protected final static ObjectMapper MAPPER = new ObjectMapper(JFACTORY);
 	protected final static String ERROR_ID = "errorID";
 	protected final static String ERROR_MESSAGE = "errorMessage";
-	
+
 	public static String getBaseUrl() {
 		return BASE_URL;
 	}
-	
+
 	public static Uri.Builder getBaseUri() {
 		return Uri.parse(getBaseUrl()).buildUpon();
 	}
@@ -86,7 +82,7 @@ public abstract class BaseDatabaseAdapter {
 		// return page contents
 		return response.toString();
 	}
-	
+
 	protected static String updateHelper(String jsonPayload) throws IOException {
 		// Server URL setup
 		String _url = getBaseUri().build().toString();

@@ -107,7 +107,7 @@ public class Agenda implements IJSONObject {
 			pprint(i.next(), 0);
 		}
 	}
-	
+
 	protected void pprint(Topic s, int depth) {
 		final Topic root = s;
 		final ArrayList<Topic> topicList = root.getTopics();
@@ -120,7 +120,7 @@ public class Agenda implements IJSONObject {
 			pprint(i.next(), depth + 1);
 		}
 	}
-	
+
 	@JsonIgnore
 	public int getDepth() {
 		int depth = 0;
@@ -129,7 +129,7 @@ public class Agenda implements IJSONObject {
 		}
 		return depth;
 	}
-	
+
 	@JsonIgnore
 	private int depthHelper(Topic t, int depth) {
 		int subDepth = 0;
@@ -164,10 +164,10 @@ public class Agenda implements IJSONObject {
 
 		// Get JSON Object payload from print stream
 		String json = _json.toString("UTF8");
-//		ps.close();
+		// ps.close();
 		return json;
-		
-//		return mapper.writeValueAsString(this);
-		
+
+		// return mapper.writeValueAsString(this);
+
 	}
 }

@@ -1,5 +1,4 @@
 /*******************************************************************************
-
  * Copyright (C) 2014 The Android Open Source Project
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,8 +20,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import objects.Meeting;
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -32,15 +29,11 @@ import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.android.meetingninja.R;
@@ -216,15 +209,14 @@ public class EditMeetingActivity extends FragmentActivity implements
 	public boolean handleClick(View v) {
 		switch (v.getId()) {
 		case R.id.add_agenda_button:
-			Intent act = new Intent(EditMeetingActivity.this, AgendaActivity.class);
-			
-			
-			//Todo: Get and set the agenda ID values
-			
+			Intent act = new Intent(EditMeetingActivity.this,
+					AgendaActivity.class);
+
+			// Todo: Get and set the agenda ID values
+
 			act.putExtra("isCreated", false);
 			act.putExtra("AgendaID", "55");
-			
-			
+
 			startActivity(act);
 			break;
 		default:

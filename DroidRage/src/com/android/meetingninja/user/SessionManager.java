@@ -92,7 +92,7 @@ public class SessionManager {
 	public synchronized void createLoginSession(User u) {
 		Editor editor = pref.edit();
 		// Storing login value as TRUE
-//		editor.putString(KEY_USERID, u.getUserID());
+		// editor.putString(KEY_USERID, u.getUserID());
 		editor.putString(USER, u.getDisplayName());
 		editor.putString(EMAIL, u.getEmail());
 		editor.putString(PHONE, u.getPhone());

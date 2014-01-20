@@ -15,22 +15,12 @@
  ******************************************************************************/
 package com.android.meetingninja;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 import objects.Agenda;
-import objects.Event;
 import objects.Meeting;
-import objects.MockObjectFactory;
 import objects.Schedule;
-import objects.Task;
 import objects.Topic;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -51,10 +41,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.android.meetingninja.database.AgendaDatabaseAdapter;
-import com.android.meetingninja.database.JsonNodeRequest;
 import com.android.meetingninja.database.UserDatabaseAdapter;
-import com.android.meetingninja.meetings.MeetingItemAdapter;
 import com.android.meetingninja.meetings.MeetingsFragment;
 import com.android.meetingninja.notes.CreateNoteActivity;
 import com.android.meetingninja.notes.NotesFragment;
@@ -64,16 +51,8 @@ import com.android.meetingninja.user.LoginActivity;
 import com.android.meetingninja.user.ProfileFragment;
 import com.android.meetingninja.user.SessionManager;
 import com.android.meetingninja.user.UserListFragment;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.fasterxml.jackson.core.JsonEncoding;
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.foound.widget.AmazingListView;
 import com.parse.ParseAnalytics;

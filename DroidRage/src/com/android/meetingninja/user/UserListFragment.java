@@ -1,19 +1,37 @@
+/*******************************************************************************
+ * Copyright (C) 2014 The Android Open Source Project
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package com.android.meetingninja.user;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
-import org.apache.http.auth.UsernamePasswordCredentials;
-
-import objects.Meeting;
-import objects.Note;
 import objects.User;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.support.v4.app.ListFragment;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.android.meetingninja.ApplicationController;
 import com.android.meetingninja.R;
-import com.android.meetingninja.R.layout;
 import com.android.meetingninja.database.AsyncResponse;
 import com.android.meetingninja.database.JsonNodeRequest;
 import com.android.meetingninja.database.UserDatabaseAdapter;
@@ -21,25 +39,7 @@ import com.android.meetingninja.database.local.SQLiteUserAdapter;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonRequest;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.ListFragment;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListView;
 
 public class UserListFragment extends ListFragment implements
 		AsyncResponse<List<User>> {

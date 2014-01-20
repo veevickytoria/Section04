@@ -18,12 +18,11 @@ package com.android.meetingninja.database;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
-import android.net.Uri;
-import android.net.Uri.Builder;
 import objects.Comment;
 import objects.Note;
+import android.net.Uri;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class NotesDatabaseAdapter extends BaseDatabaseAdapter {
 	protected static final String KEY_ID = "noteID";

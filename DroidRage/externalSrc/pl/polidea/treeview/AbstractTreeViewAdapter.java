@@ -1,12 +1,9 @@
 package pl.polidea.treeview;
 
-import com.android.meetingninja.R;
-
 import android.app.Activity;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
+
+import com.android.meetingninja.R;
 
 /**
  * Adapter used to feed the table view.
@@ -166,13 +165,13 @@ public abstract class AbstractTreeViewAdapter<T> extends BaseAdapter implements
 		// + " with position " + position);
 		final TreeNodeInfo<T> nodeInfo = getTreeNodeInfo(position);
 		if (convertView == null) {
-//			Log.d(TAG, "Creating the view a new");
+			// Log.d(TAG, "Creating the view a new");
 			final LinearLayout layout = (LinearLayout) layoutInflater.inflate(
 					getTreeListItemWrapperId(), null);
 			return populateTreeItem(layout, getNewChildView(nodeInfo),
 					nodeInfo, true);
 		} else {
-//			Log.d(TAG, "Reusing the view");
+			// Log.d(TAG, "Reusing the view");
 			final LinearLayout linear = (LinearLayout) convertView;
 			final FrameLayout frameLayout = (FrameLayout) linear
 					.findViewById(R.id.treeview_list_item_frame);

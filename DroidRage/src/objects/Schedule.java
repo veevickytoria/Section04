@@ -32,7 +32,7 @@ public class Schedule {
 		events.addAll(getTasks());
 		return events;
 	}
-	
+
 	public void sort() {
 		Collections.sort(meetings);
 		Collections.sort(tasks);

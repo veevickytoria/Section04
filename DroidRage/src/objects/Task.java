@@ -4,13 +4,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
-
-import android.os.Parcel;
-import android.os.Parcelable;
 
 public class Task extends Event implements Parcelable {
 	private String taskID;
@@ -21,8 +21,8 @@ public class Task extends Event implements Parcelable {
 	private String assignedTo;
 	private String assignedFrom;
 	private String createdBy;
-	private String type;			//title, description, isCompleted, deadline, compeltion criteria, assigned to
-	
+	private String type; // title, description, isCompleted, deadline,
+							// compeltion criteria, assigned to
 
 	public Task() {
 		// Required empty constructor
@@ -31,19 +31,18 @@ public class Task extends Event implements Parcelable {
 	public Task(String name) {
 		this.title = name;
 	}
-	
-	public Task(Parcel parcel){
+
+	public Task(Parcel parcel) {
 		readFromParcel(parcel);
 	}
-	
-	public void setType(String type){
+
+	public void setType(String type) {
 		this.type = type;
 	}
-	
-	public String getType(){
+
+	public String getType() {
 		return this.type;
 	}
-	
 
 	public boolean getIsCompleted() {
 		return isCompleted;
@@ -133,8 +132,8 @@ public class Task extends Event implements Parcelable {
 		dest.writeString(getID());
 		dest.writeString(getType());
 	}
-	
-	public void readFromParcel(Parcel in){
+
+	public void readFromParcel(Parcel in) {
 		title = in.readString();
 		isCompleted = Boolean.parseBoolean(in.readString());
 		description = in.readString();
@@ -147,21 +146,21 @@ public class Task extends Event implements Parcelable {
 		createdBy = in.readString();
 		taskID = in.readString();
 		type = in.readString();
-		
-		
+
 	}
-	
-	public static final Parcelable.Creator<Task> CREATOR = new Parcelable.Creator<Task>(){
-		public Task createFromParcel(Parcel in){
+
+	public static final Parcelable.Creator<Task> CREATOR = new Parcelable.Creator<Task>() {
+		public Task createFromParcel(Parcel in) {
 			return new Task(in);
 		}
-		
-		public Task[] newArray(int size){
+
+		public Task[] newArray(int size) {
 			return new Task[size];
 		}
 	};
 
-	public static String toJSON(Task task) throws JsonGenerationException, IOException{
+	public static String toJSON(Task task) throws JsonGenerationException,
+			IOException {
 		ByteArrayOutputStream _json = new ByteArrayOutputStream();
 		// this type of print stream allows us to get a string easily
 		PrintStream ps = new PrintStream(_json);
@@ -177,19 +176,20 @@ public class Task extends Event implements Parcelable {
 		jgen.writeStringField("deadline", task.getEndTime());
 		jgen.writeStringField("dateCreated", task.getDateCreated());
 		jgen.writeStringField("dateAssigned", task.getDateAssigned());
-		jgen.writeStringField("completionCriteria", task.getCompletionCriteria());
+		jgen.writeStringField("completionCriteria",
+				task.getCompletionCriteria());
 		jgen.writeStringField("assignedTo", task.getAssignedTo());
 		jgen.writeStringField("assignedFrom", task.getAssignedFrom());
 		jgen.writeStringField("createdBy", task.getCreatedBy());
 		jgen.close();
-		
+
 		String json = _json.toString("UTF8");
 		ps.close();
 		return json;
 	}
-	
+
 	@Override
-	public String toString(){
+	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("*** Task Details ***\n");
 		builder.append("getTaskID()\t");

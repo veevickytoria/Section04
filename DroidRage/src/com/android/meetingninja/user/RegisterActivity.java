@@ -146,11 +146,12 @@ public class RegisterActivity extends Activity implements AsyncResponse<User> {
 			NavUtils.navigateUpTo(this, upIntent);
 		}
 	}
-	
+
 	@Override
 	public void finish() {
 		super.finish();
-		overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+		overridePendingTransition(android.R.anim.fade_in,
+				android.R.anim.fade_out);
 	}
 
 	private void tryRegister() {

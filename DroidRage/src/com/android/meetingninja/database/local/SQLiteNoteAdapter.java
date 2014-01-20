@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright (C) 2014 The Android Open Source Project
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package com.android.meetingninja.database.local;
 
 import java.util.ArrayList;
@@ -21,12 +36,11 @@ public class SQLiteNoteAdapter extends SQLiteHelper {
 	public static final String KEY_TITLE = "title";
 	public static final String KEY_DESC = "description";
 	public static final String KEY_CONTENT = "content";
-	
 
 	public SQLiteNoteAdapter(Context context) {
 		super(context);
 		mDbHelper = SQLiteHelper.getInstance(context);
-		
+
 	}
 
 	@Override
@@ -47,9 +61,8 @@ public class SQLiteNoteAdapter extends SQLiteHelper {
 		contentValues.put(KEY_TITLE, name);
 		contentValues.put(KEY_CONTENT, content);
 		long insertID = mDb.insert(TABLE_NAME, null, contentValues);
-		Cursor c = mDb.query(TABLE_NAME,
-				new String[] { KEY_ID, KEY_TITLE, KEY_CONTENT }, KEY_ID + "="
-						+ insertID, null, null, null, null);
+		Cursor c = mDb.query(TABLE_NAME, new String[] { KEY_ID, KEY_TITLE,
+				KEY_CONTENT }, KEY_ID + "=" + insertID, null, null, null, null);
 		c.moveToFirst();
 		Note newNote = new NoteCursor(c).getModel();
 		c.close();
@@ -146,7 +159,7 @@ public class SQLiteNoteAdapter extends SQLiteHelper {
 			int idxID = crsr.getColumnIndex(KEY_ID);
 			int idxTITLE = crsr.getColumnIndex(KEY_TITLE);
 			int idxCONTENT = crsr.getColumnIndex(KEY_CONTENT);
-			model.setNoteID(""+crsr.getInt(idxID));
+			model.setNoteID("" + crsr.getInt(idxID));
 			model.setTitle(crsr.getString(idxTITLE));
 			model.setContent(crsr.getString(idxCONTENT));
 			return model;

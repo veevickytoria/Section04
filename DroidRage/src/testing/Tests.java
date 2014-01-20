@@ -3,29 +3,14 @@ package testing;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
-import objects.Agenda;
-import objects.Group;
-import objects.Topic;
-
-import com.android.meetingninja.database.AgendaDatabaseAdapter;
-import com.android.meetingninja.database.UserDatabaseAdapter;
 import com.android.meetingninja.extras.MyDateUtils;
 import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class Tests {
-	
+
 	public static void main(String[] args) throws JsonGenerationException,
 			JsonMappingException, IOException {
 
@@ -42,7 +27,7 @@ public class Tests {
 		// for (User user : allUsers) {
 		// System.out.println(user);
 		// }
-	
+
 		dateTimeParsingTest();
 	}
 
@@ -73,5 +58,5 @@ public class Tests {
 		System.out.println(testEnd);
 		System.out.println(fmt.format(new Date(testEnd)));
 	}
-	
+
 }

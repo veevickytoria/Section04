@@ -27,10 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import objects.Meeting;
-import objects.Meeting.AttendeeWrapper;
-import objects.Schedule;
 import android.net.Uri;
-import android.net.Uri.Builder;
 
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerator;
