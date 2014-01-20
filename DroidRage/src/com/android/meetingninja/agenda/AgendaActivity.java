@@ -8,11 +8,14 @@ import java.util.Set;
 
 import objects.Agenda;
 import objects.Topic;
+import objects.User;
 import pl.polidea.treeview.InMemoryTreeStateManager;
 import pl.polidea.treeview.TreeBuilder;
 import pl.polidea.treeview.TreeStateManager;
 import pl.polidea.treeview.TreeViewList;
+import android.R.anim;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -27,7 +30,10 @@ import com.android.meetingninja.MainActivity;
 import com.android.meetingninja.R;
 import com.android.meetingninja.MainActivity.DrawerLabel;
 import com.android.meetingninja.database.AgendaDatabaseAdapter;
+import com.android.meetingninja.database.UserDatabaseAdapter;
 import com.android.meetingninja.notes.CreateNoteActivity;
+import com.android.meetingninja.user.LoginActivity;
+import com.android.meetingninja.user.SessionManager;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -189,11 +195,9 @@ public class AgendaActivity extends FragmentActivity {
 
 			if (isCreated) {
 				String AgendaID = intent.getStringExtra("agendaID");
-				try {
-					AgendaDatabaseAdapter.deleteAgenda(AgendaID);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				AsyncTask<String, Void, Void> deleteTask = new deleteAgendaTask();
+				
+				deleteTask.execute(AgendaID);
 
 			}
 			finish();
@@ -290,5 +294,25 @@ public class AgendaActivity extends FragmentActivity {
 	// return super.onContextItemSelected(item);
 	// }
 	// }
+	
+	/**
+	 * Represents an asynchronous login/registration task used to authenticate
+	 * the user.
+	 */
+	public class deleteAgendaTask extends AsyncTask<String, Void, Void> {
+		@Override
+		protected Void doInBackground(String... params) {
+			String AgendaID = params[0];
+			try {
+				AgendaDatabaseAdapter.deleteAgenda(AgendaID);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
+
+		}
+
+	}
 
 }
