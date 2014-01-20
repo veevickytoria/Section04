@@ -165,6 +165,7 @@ public class AgendaActivity extends FragmentActivity {
 			case R.id.agenda_addTopicBtn:
 				Topic t = new Topic(); // TODO : Create a Topic
 				treeBuilder.addRelation(null, t);
+				mAgendaAdpt.addhash(t);
 				break;
 
 			default:
