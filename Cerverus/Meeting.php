@@ -27,7 +27,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
         $meetingNode->setProperty('userID', $postContent->userID)
                 ->setProperty('title', $postContent->title)
                 ->setProperty('datetime', $postContent->datetime)
-				->setProperty('endDatetime', $postContent->endDatetime)
+				->setProperty('duration', $postContent->duration)
                 ->setProperty('description',$postContent->description)
                 ->setProperty('location', $postContent->location);
         
@@ -84,8 +84,8 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
                         $array = $meeting->getProperties();
                         $array['meetingID']=$meeting->getId();
                         echo json_encode($array);
-                }else if(strcasecmp($postContent->field, 'endDatetime') ==0){
-                        $meeting->setProperty('endDatetime', $postContent->value);
+                }else if(strcasecmp($postContent->field, 'duration') ==0){
+                        $meeting->setProperty('duration', $postContent->value);
                         $meeting->save();
                         $array = $meeting->getProperties();
                         $array['meetingID']=$meeting->getId();
