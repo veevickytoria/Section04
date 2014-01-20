@@ -209,8 +209,6 @@
 		79FCE0101862295E008345B3 /* UIView+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF911862295E008345B3 /* UIView+TKCategory.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		79FCE0111862295E008345B3 /* UIViewController+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF921862295E008345B3 /* UIViewController+TKCategory.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		79FCE0121862295E008345B3 /* UIViewController+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF931862295E008345B3 /* UIViewController+TKCategory.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		DE8C8CE1188C8A130097E405 /* iWinAgendasViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE8C8CE0188C8A130097E405 /* iWinAgendasViewController.m */; };
-		DE8C8CE3188C8A460097E405 /* iWinAgendasViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = DE8C8CE2188C8A460097E405 /* iWinAgendasViewController.xib */; };
 		DEED1ACC1889F97B00FDAA27 /* AcousticModelEnglish.bundle in Resources */ = {isa = PBXBuildFile; fileRef = DEED1AC81889F97B00FDAA27 /* AcousticModelEnglish.bundle */; };
 		DEED1ACD1889F97B00FDAA27 /* AcousticModelSpanish.bundle in Resources */ = {isa = PBXBuildFile; fileRef = DEED1AC91889F97B00FDAA27 /* AcousticModelSpanish.bundle */; };
 		DEED1ACE1889F97B00FDAA27 /* OpenEars.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DEED1ACA1889F97B00FDAA27 /* OpenEars.framework */; };
@@ -490,9 +488,6 @@
 		79FCDF911862295E008345B3 /* UIView+TKCategory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "UIView+TKCategory.m"; path = "../tapkulibrary-master/src/TapkuLibrary/UIView+TKCategory.m"; sourceTree = "<group>"; };
 		79FCDF921862295E008345B3 /* UIViewController+TKCategory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UIViewController+TKCategory.h"; path = "../tapkulibrary-master/src/TapkuLibrary/UIViewController+TKCategory.h"; sourceTree = "<group>"; };
 		79FCDF931862295E008345B3 /* UIViewController+TKCategory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+TKCategory.m"; path = "../tapkulibrary-master/src/TapkuLibrary/UIViewController+TKCategory.m"; sourceTree = "<group>"; };
-		DE8C8CDF188C8A130097E405 /* iWinAgendasViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinAgendasViewController.h; sourceTree = "<group>"; };
-		DE8C8CE0188C8A130097E405 /* iWinAgendasViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinAgendasViewController.m; sourceTree = "<group>"; };
-		DE8C8CE2188C8A460097E405 /* iWinAgendasViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iWinAgendasViewController.xib; sourceTree = "<group>"; };
 		DEED1AC81889F97B00FDAA27 /* AcousticModelEnglish.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AcousticModelEnglish.bundle; sourceTree = "<group>"; };
 		DEED1AC91889F97B00FDAA27 /* AcousticModelSpanish.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AcousticModelSpanish.bundle; sourceTree = "<group>"; };
 		DEED1ACA1889F97B00FDAA27 /* OpenEars.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = OpenEars.framework; sourceTree = "<group>"; };
@@ -610,9 +605,6 @@
 				0A1A72721819E143009A49E5 /* HomeScreen */,
 				0A04457317F3825D000FF2A0 /* MeetingBuilder.xcdatamodeld */,
 				0A04456217F3825D000FF2A0 /* Supporting Files */,
-				DE8C8CDF188C8A130097E405 /* iWinAgendasViewController.h */,
-				DE8C8CE0188C8A130097E405 /* iWinAgendasViewController.m */,
-				DE8C8CE2188C8A460097E405 /* iWinAgendasViewController.xib */,
 			);
 			path = MeetingBuilder;
 			sourceTree = "<group>";
@@ -1188,7 +1180,6 @@
 				0A04457017F3825D000FF2A0 /* Default@2x.png in Resources */,
 				DEED1ACD1889F97B00FDAA27 /* AcousticModelSpanish.bundle in Resources */,
 				0A04457217F3825D000FF2A0 /* Default-568h@2x.png in Resources */,
-				DE8C8CE3188C8A460097E405 /* iWinAgendasViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1328,7 +1319,6 @@
 				79FCE0091862295E008345B3 /* UIScreen+TKCategory.h in Sources */,
 				79FCE00A1862295E008345B3 /* UIScreen+TKCategory.m in Sources */,
 				79FCE00B1862295E008345B3 /* UIScrollview+TKCategory.h in Sources */,
-				DE8C8CE1188C8A130097E405 /* iWinAgendasViewController.m in Sources */,
 				79FCE00C1862295E008345B3 /* UIScrollview+TKCategory.m in Sources */,
 				79FCE00D1862295E008345B3 /* UITextField+TKCategory.h in Sources */,
 				79FCE00E1862295E008345B3 /* UITextField+TKCategory.m in Sources */,
