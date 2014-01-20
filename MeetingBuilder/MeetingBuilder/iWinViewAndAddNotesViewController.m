@@ -11,16 +11,19 @@
 
 @interface iWinViewAndAddNotesViewController ()
 @property (nonatomic) NSInteger noteID;
+@property (nonatomic) NSString *noteDate;
+@property (nonatomic) NSInteger userID;
 @property (nonatomic) BOOL inEditMode;
 @property (nonatomic) iWinMergeNoteViewController *mergeNoteViewController;
 @end
 
 @implementation iWinViewAndAddNotesViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withNoteID:(NSInteger)noteID
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withNoteID:(NSInteger)noteID withUserID:(NSInteger)userID
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     self.inEditMode = YES;
+    self.userID = userID;
     if (self) {
         // Custom initialization
         self.noteID = noteID;
@@ -55,6 +58,10 @@
         self.inEditMode = NO;
         [self.saveButton setTitle:@"Edit" forState:UIControlStateNormal];
         [self.saveButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+        if (self.noteID != -1) {
+            [self deleteNote];
+        }
+        [self saveNote];
     }
     else {
         self.inEditMode = YES;
@@ -63,19 +70,40 @@
     }
 }
 
+-(void)deleteNote
+{
+    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Note/%d", self.noteID];
+    
+    NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+    [urlRequest setHTTPMethod:@"DELETE"];
+    NSURLResponse * response = nil;
+    NSError * error = nil;
+    [NSURLConnection sendSynchronousRequest:urlRequest
+                          returningResponse:&response
+                                      error:&error];
+
+    [self.addNoteDelegate refreshNoteList];
+    [self dismissViewControllerAnimated:YES completion:Nil];
+}
+
 - (void)saveNote
 {
 
     NSString *title = [[self.titleField text] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    NSString *note = [[self.noteField text] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    NSString *content = [[self.noteField text] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    
+    NSDateFormatter* df = [[NSDateFormatter alloc]init];
+    [df setDateFormat:@"MM/dd/yyyy hh:mm a"];
+    NSString *date = [df stringFromDate:[NSDate date]];
     
     //create note in database
-    NSArray *keys = [NSArray arrayWithObjects:@"titleText", @"description", @"contentText", nil];
-    NSArray *objects = [NSArray arrayWithObjects:title, @"HOLDER", note, nil];
+    NSArray *keys = [NSArray arrayWithObjects:@"createdBy", @"title", @"description", @"content", @"dateCreated", nil];
+    NSArray *objects = [NSArray arrayWithObjects:[NSNumber numberWithInt:self.userID], title, @"HOLDER", content, date, nil];
     
     NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
     NSData *jsonData;
     NSString *jsonString;
+    
     
     if ([NSJSONSerialization isValidJSONObject:jsonDictionary])
     {
@@ -96,16 +124,13 @@
                                          returningResponse:&response
                                                      error:&error];
     NSLog(@"Console");
-    NSInteger userID = -1;
     if (error) {
         [self noteCreationAlert:YES];
     }
     else
     {
-        [self noteCreationAlert:NO];
-//        NSError *jsonParsingError = nil;
-//        NSDictionary *deserializedDictionary = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
-//        userID = [[deserializedDictionary objectForKey:@"noteID"] integerValue];
+        [self.addNoteDelegate refreshNoteList];
+        [self dismissViewControllerAnimated:YES completion:Nil];
     }
 
 }

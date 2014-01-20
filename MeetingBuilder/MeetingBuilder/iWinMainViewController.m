@@ -335,7 +335,7 @@
 {
     [self removeSubViews];
     [self enableSliding];
-    self.noteViewController = [[iWinNoteListViewController alloc] initWithNibName:@"iWinNoteListViewController" bundle:nil];
+    self.noteViewController = [[iWinNoteListViewController alloc] initWithNibName:@"iWinNoteListViewController" bundle:nil withUserID:self.userID];
     [self.mainView addSubview:self.noteViewController.view];
     [self.noteViewController.view setBounds:self.mainView.bounds];
     self.noteViewController.noteListDelegate = self;
@@ -432,7 +432,7 @@
     [self enableSliding];
     [self animateSlidingMenu:NO];
     [self resetSliding];
-    self.viewAddNoteViewController = [[iWinViewAndAddNotesViewController alloc] initWithNibName:@"iWinViewAndAddNotesViewController" bundle:nil withNoteID:-1];
+    self.viewAddNoteViewController = [[iWinViewAndAddNotesViewController alloc] initWithNibName:@"iWinViewAndAddNotesViewController" bundle:nil withNoteID:-1 withUserID:self.userID];
     [self.mainView  addSubview:self.viewAddNoteViewController.view];
     [self.viewAddNoteViewController.view setBounds:self.mainView.bounds];
     self.viewAddNoteViewController.addNoteDelegate = self;
