@@ -8,6 +8,7 @@
 
 //#import "iWinEditProfileViewController.h"
 #import "iWinViewProfileViewController.h"
+#import "iWinViewAndCreateGroupViewController.h"
 //#import "iWinViewAndAddViewController.h"
 #import "iWinAppDelegate.h"
 #import "Contact.h"
@@ -17,6 +18,7 @@
 @property (nonatomic) BOOL isEditing;
 @property (nonatomic) Contact *contact;
 @property (nonatomic) NSInteger userID;
+@property (strong, nonatomic) iWinViewAndCreateGroupViewController *createGroupVC;
 //@property (nonatomic) iWinProfile *profile;
 //@property (strong, nonatomic) iWinEditProfileViewController *editProfileViewController;
 @end
@@ -282,6 +284,16 @@
     
 }
 
+- (IBAction)onCreateGroup:(id)sender {
+    self.createGroupVC = [[iWinViewAndCreateGroupViewController alloc] initWithNibName:@"iWinViewAndCreateGroupViewController" bundle:nil withUserID:self.userID withGroupID:-1];
+    
+    [self.createGroupVC setModalPresentationStyle:UIModalPresentationPageSheet];
+    [self.createGroupVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+    
+    [self presentViewController:self.createGroupVC animated:YES completion:nil];
+    self.createGroupVC.view.superview.bounds = CGRectMake(0,0,768,1003);
+}
+
 -(IBAction)onEditProfile:(id)sender
 {
     if (self.isEditing) {
@@ -343,4 +355,5 @@
         
     }
 }
+
 @end
