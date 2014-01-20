@@ -28,17 +28,32 @@ public class Note implements Parcelable, IJSONObject {
 	private String content;
 	@JsonProperty("dateCreated")
 	private String dateCreated;
-	
+
 	public Note() {
 		// Required empty constructor
 	}
-	
+
 	public Note(Note copyNote) {
+		this.noteID = copyNote.getNoteID();
+		this.createdBy = copyNote.getCreatedBy();
+		this.title = copyNote.getTitle();
+		this.description = copyNote.getDescription();
+		this.content = copyNote.getContent();
+		this.dateCreated = copyNote.getDateCreated();
 		
 	}
-	
+
 	public Note(Parcel in) {
 		readFromParcel(in);
+	}
+
+	public Note(NoteBuilder noteBuilder) {
+		this.noteID = noteBuilder.noteID;
+		this.createdBy = noteBuilder.createdBy;
+		this.title = noteBuilder.title;
+		this.description = noteBuilder.description;
+		this.content = noteBuilder.content;
+		this.dateCreated = noteBuilder.dateCreated;
 	}
 
 	@JsonProperty("noteID")
@@ -108,7 +123,7 @@ public class Note implements Parcelable, IJSONObject {
 	public void setDateCreated(String dateCreated) {
 		this.dateCreated = dateCreated;
 	}
-	
+
 	public static final Parcelable.Creator<Note> CREATOR = new Parcelable.Creator<Note>() {
 
 		public Note createFromParcel(Parcel in) {
@@ -120,7 +135,7 @@ public class Note implements Parcelable, IJSONObject {
 		}
 
 	};
-	
+
 	public void readFromParcel(Parcel in) {
 		this.noteID = in.readString();
 		this.createdBy = in.readString();
@@ -128,7 +143,7 @@ public class Note implements Parcelable, IJSONObject {
 		this.description = in.readString();
 		this.content = in.readString();
 		this.dateCreated = in.readString();
-		
+
 	}
 
 	@Override
@@ -145,7 +160,7 @@ public class Note implements Parcelable, IJSONObject {
 		dest.writeString(getDescription());
 		dest.writeString(getContent());
 		dest.writeString(getDateCreated());
-		
+
 	}
 
 	public static class NoteBuilder {
@@ -155,39 +170,43 @@ public class Note implements Parcelable, IJSONObject {
 		private String description;
 		private String content;
 		private String dateCreated;
-	
+
 		public NoteBuilder() {
-	
+
 		}
-	
+
 		public NoteBuilder id(String id) {
 			this.noteID = id;
 			return this;
 		}
-	
+
 		public NoteBuilder createdBy(String userID) {
 			this.createdBy = userID;
 			return this;
 		}
-	
+
 		public NoteBuilder title(String title) {
 			this.title = title;
 			return this;
 		}
-	
+
 		public NoteBuilder description(String desc) {
 			this.description = desc;
 			return this;
 		}
-	
+
 		public NoteBuilder content(String content) {
 			this.content = content;
 			return this;
 		}
-	
+
 		public NoteBuilder dateModified(String dateTime) {
 			this.dateCreated = dateTime;
 			return this;
+		}
+		
+		public Note build() {
+			return new Note(this);
 		}
 	}
 
