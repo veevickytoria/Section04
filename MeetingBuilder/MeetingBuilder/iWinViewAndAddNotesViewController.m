@@ -22,7 +22,6 @@
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withNoteID:(NSInteger)noteID withUserID:(NSInteger)userID
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    self.inEditMode = YES;
     self.userID = userID;
     if (self) {
         // Custom initialization
@@ -38,10 +37,37 @@
     self.noteField.layer.borderColor = [[UIColor blackColor] CGColor];
     self.noteField.layer.borderWidth = 0.7f;
     self.noteField.layer.cornerRadius = 15.0f;
+    self.inEditMode = YES;
     
     // change page according to wether or not it is an existing note
+    // if existing note - change out of edit mode
     if (self.noteID != -1) {
-        [self.saveButton sendActionsForControlEvents:UIControlEventTouchUpInside];
+        [self toggleEditModes];
+        [self loadNoteIntoView];
+    }
+}
+
+-(void)toggleEditModes
+{
+    if (self.inEditMode) {
+        [self.saveButton setTitle:@"Edit" forState:UIControlStateNormal];
+        [self.saveButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+        self.titleField.userInteractionEnabled = NO;
+        self.noteField.userInteractionEnabled = NO;
+        [self.titleField setBorderStyle:UITextBorderStyleNone];
+        self.noteField.layer.borderWidth = 0.0f;
+        self.deleteButton.hidden = YES;
+        self.inEditMode = NO;
+    }
+    else {
+        [self.saveButton setTitle:@"Save" forState:UIControlStateNormal];
+        [self.saveButton setTitleColor:[UIColor greenColor] forState:UIControlStateNormal];
+        self.titleField.userInteractionEnabled = YES;
+        self.noteField.userInteractionEnabled = YES;
+        [self.titleField setBorderStyle:UITextBorderStyleRoundedRect];
+        self.noteField.layer.borderWidth = 0.7f;
+        self.deleteButton.hidden = NO;
+        self.inEditMode = YES;
     }
 }
 
@@ -52,21 +78,66 @@
 }
 
 
+-(void)loadNoteIntoView
+{
+    // retreive notes from db
+    
+    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Note/%d", self.noteID];
+    NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+    NSURLResponse * response = nil;
+    NSError * error = nil;
+    NSData * data =[NSURLConnection sendSynchronousRequest:urlRequest
+                                         returningResponse:&response
+                                                     error:&error];
+    if (error) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Failure" message:@"Could not load your note" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alert show];
+    }
+    else
+    {
+        NSError *jsonParsingError = nil;
+        NSDictionary *deserializedDictionary = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments|NSJSONReadingMutableContainers error:&jsonParsingError];
+        
+        self.titleField.text = [deserializedDictionary objectForKey:@"title"];
+        self.noteField.text = [deserializedDictionary objectForKey:@"content"];
+    }
+}
+
+
 -(IBAction)saveButton:(id)sender
 {
     if (self.inEditMode) {
-        self.inEditMode = NO;
-        [self.saveButton setTitle:@"Edit" forState:UIControlStateNormal];
-        [self.saveButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-        if (self.noteID != -1) {
-            [self deleteNote];
+        // if new note
+        if (self.noteID == -1) {
+            // save note from scratch
+            [self saveNote];
         }
-        [self saveNote];
+        else {
+            // save note for update
+            NSString *title = [[self.titleField text] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+            NSString *content = [[self.noteField text] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+            [self updateNote:NO : @"title" : title];
+            [self updateNote:YES : @"content" : content];
+        }
     }
     else {
-        self.inEditMode = YES;
-        [self.saveButton setTitle:@"Save" forState:UIControlStateNormal];
-        [self.saveButton setTitleColor:[UIColor greenColor] forState:UIControlStateNormal];
+        [self toggleEditModes];
+    }
+}
+
+// Override to support editing the table view.
+- (IBAction)confirmDeleteAlert
+{
+        UIAlertView *deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this note?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
+        [deleteAlertView show];
+}
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1)
+    {
+        [self deleteNote];
+        [self.addNoteDelegate refreshNoteList];
     }
 }
 
@@ -123,7 +194,6 @@
     NSData * data =[NSURLConnection sendSynchronousRequest:urlRequest
                                          returningResponse:&response
                                                      error:&error];
-    NSLog(@"Console");
     if (error) {
         [self noteCreationAlert:YES];
     }
@@ -135,6 +205,47 @@
 
 }
 
+
+- (void)updateNote:(BOOL)returnAndRefresh : (NSString*)field : (NSString*)value
+{
+    
+    //create note in database
+    NSArray *keys = [NSArray arrayWithObjects:@"noteID", @"field", @"value", nil];
+    NSArray *objects = [NSArray arrayWithObjects:[NSNumber numberWithInt:self.noteID], field, value, nil];
+    
+    NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+    NSData *jsonData;
+    NSString *jsonString;
+    
+    
+    if ([NSJSONSerialization isValidJSONObject:jsonDictionary])
+    {
+        jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:nil];
+        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    }
+    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Note/"];
+    
+    NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+    [urlRequest setHTTPMethod:@"PUT"];
+    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [urlRequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-length"];
+    [urlRequest setHTTPBody:jsonData];
+    NSURLResponse * response = nil;
+    NSError * error = nil;
+    NSData * data =[NSURLConnection sendSynchronousRequest:urlRequest
+                                         returningResponse:&response
+                                                     error:&error];
+    if (error) {
+        [self noteCreationAlert:YES];
+    }
+    else if (returnAndRefresh)
+    {
+        [self.addNoteDelegate refreshNoteList];
+        [self dismissViewControllerAnimated:YES completion:Nil];
+    }
+    
+}
 
 - (IBAction)cancelButton:(id)sender {
       [self dismissViewControllerAnimated:YES completion:Nil];

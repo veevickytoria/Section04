@@ -78,8 +78,8 @@
                 [self.noteList addObject:[note objectForKey:@"noteTitle"]];
                 [self.noteIDs addObject:[note objectForKey:@"noteID"]];
             }
-            [self.noteTable reloadData];
         }
+        [self.noteTable reloadData];
     }
 }
 
@@ -103,13 +103,12 @@
     {
         [self deleteNote];
         self.selectedNote = -1;
-        [self refreshNoteList];
     }
 }
 
 -(void)deleteNote
 {
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Note/%d", self.selectedNote];
+    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Note/%d", [[self.noteIDs objectAtIndex:self.selectedNote] integerValue]];
     
     NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
     [urlRequest setHTTPMethod:@"DELETE"];
@@ -119,8 +118,11 @@
                           returningResponse:&response
                                       error:&error];
     
+    NSData * data =[NSURLConnection sendSynchronousRequest:urlRequest
+                                         returningResponse:&response
+                                                     error:&error];
+    
     [self refreshNoteList];
-    [self dismissViewControllerAnimated:YES completion:Nil];
 }
 
 -(IBAction) onCreateNewNote
