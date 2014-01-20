@@ -38,6 +38,7 @@
     self.noteField.layer.borderWidth = 0.7f;
     self.noteField.layer.cornerRadius = 15.0f;
     self.inEditMode = YES;
+    self.deleteButton.hidden = YES;
     
     // change page according to wether or not it is an existing note
     // if existing note - change out of edit mode
@@ -66,7 +67,13 @@
         self.noteField.userInteractionEnabled = YES;
         [self.titleField setBorderStyle:UITextBorderStyleRoundedRect];
         self.noteField.layer.borderWidth = 0.7f;
-        self.deleteButton.hidden = NO;
+        if (self.noteID == -1) {
+            self.deleteButton.hidden = YES;
+        }
+        else {
+            self.deleteButton.hidden = NO;
+        }
+        
         self.inEditMode = YES;
     }
 }
