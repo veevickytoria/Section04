@@ -16,6 +16,7 @@ header > h1 { display: inline-block; }
 
 var GroupArray;
 var deleteID;
+var Members = JSON.parse('{"members":[{"userID":"1","displayName":"Santa Claus"},{"userID":"2","displayName":"WasARebel"},{"userID":"3","displayName":"KemoSabe"},{"userID":"4","displayName":"CaptainKirk"},{"userID":"5","displayName":"Spock"},{"userID":"6","displayName":"Josh"},{"userID":"7","displayName":"Paul"},{"userID":"8","displayName":"David"},{"userID":"9","displayName":"William"},{"userID":"10","displayName":"Maxwell"},{"userID":"11","displayName":"Alpha"},{"userID":"12","displayName":"Dharmin"}]}');
 
 
 function hideGroupModal()
@@ -43,6 +44,8 @@ function showEditModal()
 //document.getElementById("IDE").value = GroupArray["groupID"];
 document.getElementById("titleE").value = GroupArray["groupTitle"];
 document.getElementById("typeE").value = GroupArray["groupType"];
+
+populateSelect(Members["members"], "displayName", "userID", GroupArray["members"], "membersE")
 
 $('#editGroupModal').modal('show');
 $('#viewGroupModal').modal('hide');
@@ -87,6 +90,8 @@ function showGroupModalNoID()
 GroupArray["groupTitle"] = document.getElementById("titleE").value;
 GroupArray["groupType"] = document.getElementById("typeE").value;
 
+GroupArray["members"] = returnSelectValuesAsJSON("members", "displayName", "userID", "membersE")
+
 // TODO: Put this back in when it works and change it to update info then add a pull
 // $.ajax({
 //         type: '',
@@ -102,6 +107,8 @@ GroupArray["groupType"] = document.getElementById("typeE").value;
 //document.getElementById("IDV").innerHTML = GroupArray["groupID"];
 document.getElementById("titleV").innerHTML = GroupArray["groupTitle"];
 document.getElementById("typeV").innerHTML = GroupArray["groupType"];
+
+populateTableRows(GroupArray["members"], "displayName", "TableMembersV");
 
 $('#viewGroupModal').modal('show');
 $('#editGroupModal').modal('hide');
@@ -128,25 +135,28 @@ function showViewGroupModal(ID)
 
 if (ID == 1)
 {
-  GroupArray = JSON.parse('{"groupID":"1","groupTitle":"NWA","groupType":"hardcore gangsta"}');
+  GroupArray = JSON.parse('{"groupID":"1","groupTitle":"NWA","groupType":"hardcore gangsta", "members":[{"userID":"1","displayName":"Santa Claus"},{"userID":"2","displayName":"WasARebel"},{"userID":"3","displayName":"KemoSabe"},{"userID":"4","displayName":"CaptainKirk"},{"userID":"5","displayName":"Spock"}]}');
 }
 else if (ID == 2)
 {
-  GroupArray = JSON.parse('{"groupID":"2","groupTitle":"Group? More like poop!","groupType":"lolz"}');
+  GroupArray = JSON.parse('{"groupID":"2","groupTitle":"Group? More like poop!","groupType":"lolz", "members":[{"userID":"1","displayName":"Santa Claus"},{"userID":"2","displayName":"WasARebel"},{"userID":"3","displayName":"KemoSabe"},{"userID":"4","displayName":"CaptainKirk"},{"userID":"5","displayName":"Spock"}]}');
 }
 else if (ID == 3)
 {
-  GroupArray = JSON.parse('{"groupID":"3","groupTitle":"Purgatory","groupType":"limbo"}');
+  GroupArray = JSON.parse('{"groupID":"3","groupTitle":"Purgatory","groupType":"limbo", "members":[{"userID":"1","displayName":"Santa Claus"},{"userID":"2","displayName":"WasARebel"},{"userID":"3","displayName":"KemoSabe"},{"userID":"4","displayName":"CaptainKirk"},{"userID":"5","displayName":"Spock"}]}');
 }
 else if (ID == 4)
 {
-  GroupArray = JSON.parse('{"groupID":"4","groupTitle":"Murdah Squad","groupType":"serial killer"}')
+  GroupArray = JSON.parse('{"groupID":"4","groupTitle":"Murdah Squad","groupType":"serial killer", "members":[{"userID":"1","displayName":"Santa Claus"},{"userID":"2","displayName":"WasARebel"},{"userID":"3","displayName":"KemoSabe"},{"userID":"4","displayName":"CaptainKirk"},{"userID":"5","displayName":"Spock"}]}')
 }
 
 
 //document.getElementById("IDV").innerHTML = GroupArray["groupID"];
 document.getElementById("titleV").innerHTML = GroupArray["groupTitle"];
 document.getElementById("typeV").innerHTML = GroupArray["groupType"];
+
+populateTableRows(GroupArray["members"], "displayName", "TableMembersV");
+
 
 $('#viewGroupModal').modal('show');
 $('#editGroupModal').modal('hide');
@@ -166,6 +176,70 @@ function getMembers(id){
     newMembers[i] = $( selected ).text();
   });
   return newMembers;
+}
+
+function populateTableRows(JSONArray, JSONDisplayColumn, tableID){
+  var table = document.getElementById(tableID);
+  if(table.rows.length != 0){
+
+    for(var i = table.rows.length - 1; i > -1; i--){
+      table.deleteRow(i);
+    }
+  }
+
+
+
+  for (var k in JSONArray){
+    var rowCount = table.rows.length;
+    var row = table.insertRow(rowCount);
+
+    var cell = row.insertCell(0);
+   
+    cell.innerHTML = JSONArray[k][JSONDisplayColumn];
+  }
+}
+
+function populateSelect(JSONArray, JSONDisplayColumn, JSONValueColumn, JSONSelectValues, selectID){
+  var select = document.getElementById(selectID);
+
+  if(select.options.length != 0){
+    for(var i = select.options - 1; i > -1; i--){
+      select.remove(i);
+    }
+  }
+
+  for (var k in JSONArray){
+    var el = document.createElement("option");
+    el.textContent = JSONArray[k][JSONDisplayColumn];
+    el.value = JSONArray[k][JSONValueColumn];
+    select.appendChild(el);
+  }
+
+  for (var i in JSONSelectValues){
+    for (var j in select.options){
+      if(JSONSelectValues[i][JSONValueColumn] == select.options[j].value){
+        select.options[j].selected = true;
+        break;
+      }
+    }
+  }
+}
+
+// TODO: This will probably be usless once connected to the back end
+function returnSelectValuesAsJSON(JSONtype, JSONDisplayColumn, JSONValueColumn, selectID){
+  var select = document.getElementById(selectID);
+  var newJSONString = "{" + "\"" + JSONtype + "\"" + ":[";
+  
+  for (var j in select.options){
+    if(select.options[j].selected){
+      newJSONString = newJSONString + "{" + "\"" + JSONValueColumn + "\":\"" + select.options[j].value + "\",\"" + JSONDisplayColumn + "\":\"" + select.options[j].textContent + "\"},";
+    }
+  }
+
+  newJSONString = newJSONString.substring(0, newJSONString.length - 1);
+  newJSONString = newJSONString + "]}";
+  var newJSON = JSON.parse(newJSONString);
+  return newJSON[JSONtype];
 }
 
 </script>
