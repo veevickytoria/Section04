@@ -40,7 +40,7 @@ public class TaskDatabaseAdapter  extends AbstractDatabaseAdapter{
 	protected final static String KEY_TYPE = "type";
 	
 	public static String getBaseUrl(){
-		return BASE_URL;
+		return BASE_URL + "Task";
 	}
 	public static Uri.Builder getBaseUri(){
 		return Uri.parse(getBaseUrl()).buildUpon();
@@ -51,7 +51,7 @@ public class TaskDatabaseAdapter  extends AbstractDatabaseAdapter{
 	
 	public static void getTask(Task t) throws JsonParseException, JsonMappingException, IOException{
 		//Server URL setup
-		String _url = getBaseUri().appendPath("Task").appendPath(t.getID()).build().toString();
+		String _url = getBaseUri().appendPath(t.getID()).build().toString();
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		
@@ -81,41 +81,8 @@ public class TaskDatabaseAdapter  extends AbstractDatabaseAdapter{
 		
 	}
 	
-	public static List<Task> getTasks(String userID) throws JsonParseException, JsonMappingException, IOException{
-		//Server URL setup
-		String _url = getBaseUri().appendPath("User").appendPath("Tasks").appendPath(userID).build().toString();
-		URL url = new URL(_url);
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-		
-		//add request header
-		conn.setRequestMethod("GET");
-		addRequestHeader(conn,false);
-		
-		//Get server response
-		int responseCode = conn.getResponseCode();
-		String response = getServerResponse(conn);
-		
-		//Initialize ObjectMapper
-		List<Task> taskList = new ArrayList<Task>();
-		final JsonNode taskArray = MAPPER.readTree(response).get("tasks");
-		
-		if(taskArray.isArray()){
-			for(final JsonNode taskNode : taskArray){
-				Task t = parseTasks(taskNode);
-				if(t!=null){
-					taskList.add(t);
-				}
-			}
-		}else{
-			System.out.println("bla bla bla");
-		}
-		
-		conn.disconnect();
-		return taskList;	
-	}
-	
 	public static Boolean deleteTask(String taskID) throws IOException{
-		String _url = getBaseUri().appendPath("Task").appendPath(taskID).build().toString();
+		String _url = getBaseUri().appendPath(taskID).build().toString();
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		
@@ -150,7 +117,7 @@ public class TaskDatabaseAdapter  extends AbstractDatabaseAdapter{
 	}
 	
 	private static String sendSingleEdit(String payload) throws IOException{
-		String _url = getBaseUri().appendPath("Task").build().toString();
+		String _url = getBaseUri().build().toString();
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod("PUT");

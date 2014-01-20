@@ -28,7 +28,7 @@ import java.util.Map;
 import objects.Agenda;
 import objects.Event;
 import objects.Meeting;
-import objects.ObjectMocker;
+import objects.MockObjectFactory;
 import objects.Schedule;
 import objects.Task;
 import objects.Topic;

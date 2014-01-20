@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import objects.Agenda;
+import objects.MockObjectFactory;
 import objects.Topic;
 import pl.polidea.treeview.InMemoryTreeStateManager;
 import pl.polidea.treeview.TreeBuilder;
@@ -16,7 +17,10 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.android.meetingninja.R;
@@ -31,30 +35,13 @@ public class AgendaActivity extends FragmentActivity {
 
 	private static final String TAG = AgendaActivity.class.getSimpleName();
 	private TextView mTitleView;
+	private Button mAddTopicBtn;
 	private TreeViewList treeView;
+	private TreeBuilder<Topic> treeBuilder = null;
 	private TreeStateManager<Topic> manager = null;
 	private AgendaItemAdapter mAgendaAdpt;
 	private boolean collapsible;
 	private Agenda mAgenda;
-
-	private Agenda getMockAgenda() {
-		Agenda ag = new Agenda();
-		ag.setID(404);
-		ag.setTitle("Discussing Food");
-		Topic topic1 = new Topic("Cheese Types");
-		topic1.addTopic(new Topic("Swiss"));
-		topic1.addTopic(new Topic("Mozzarella"));
-		topic1.addTopic(0, new Topic("Parmesam"));
-		Topic topic2 = new Topic("Meats");
-		Topic topic3 = new Topic("Eggs");
-		Topic subTopic3 = new Topic("Scrambled");
-		subTopic3.addTopic(new Topic("Sunny-Side-Up"));
-		topic3.addTopic(subTopic3);
-		ag.addTopic(topic1);
-		ag.addTopic(topic2);
-		ag.addTopic(topic3);
-		return ag;
-	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -62,15 +49,14 @@ public class AgendaActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		boolean newCollapsible;
 
-		mAgenda = getMockAgenda();
 		String json = "";
-		ObjectMapper mapper = new ObjectMapper();
 		try {
-			json = mapper.writeValueAsString(mAgenda);
-		} catch (JsonProcessingException e) {
+			json = MockObjectFactory.getMockAgenda();
+		} catch (IOException e1) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e1.printStackTrace();
 		}
+		ObjectMapper mapper = new ObjectMapper();
 
 		try {
 			mAgenda = mapper.readValue(json, Agenda.class);
@@ -85,9 +71,11 @@ public class AgendaActivity extends FragmentActivity {
 			e.printStackTrace();
 		}
 
+		mAgenda = new Agenda();
+
 		if (savedInstanceState == null) {
 			manager = new InMemoryTreeStateManager<Topic>();
-			final TreeBuilder<Topic> treeBuilder = new TreeBuilder<Topic>(
+			treeBuilder = new TreeBuilder<Topic>(
 					manager);
 
 			buildTree(treeBuilder);
@@ -102,15 +90,15 @@ public class AgendaActivity extends FragmentActivity {
 		}
 
 		setContentView(R.layout.activity_agenda);
-		treeView = (TreeViewList) findViewById(R.id.agendaTreeView);
-		mTitleView = (TextView) findViewById(R.id.agenda_title);
+		setupViews();
+
 		int depth = 0;
 		if (mAgenda != null) {
-			depth = mAgenda.getDepth();
 			mAgendaAdpt = new AgendaItemAdapter(this, mAgenda, manager, depth);
 			mTitleView.setText(mAgenda.getTitle());
-			checkEmpty();
-			
+			depth = mAgenda.getDepth();
+			// checkEmpty();
+
 		}
 		treeView.setAdapter(mAgendaAdpt);
 
@@ -119,12 +107,26 @@ public class AgendaActivity extends FragmentActivity {
 		registerForContextMenu(treeView);
 	}
 
-	private void checkEmpty() {
-		if (mAgenda.getTitle().isEmpty() && mAgenda.getTopics().size() <= 0) {
-			findViewById(R.id.content_frame).setVisibility(View.GONE);
-			findViewById(android.R.id.empty).setVisibility(View.VISIBLE);
-		}
+	// private void checkEmpty() {
+	// if (mAgenda.getTitle().isEmpty() || mAgenda.getTopics().size() <= 0) {
+	// findViewById(R.id.content_frame).setVisibility(View.GONE);
+	// findViewById(android.R.id.empty).setVisibility(View.VISIBLE);
+	// }
+	//
+	// }
 
+	private void setupViews() {
+		treeView = (TreeViewList) findViewById(R.id.agendaTreeView);
+		mTitleView = (TextView) findViewById(R.id.agenda_title);
+		mAddTopicBtn = (Button) findViewById(R.id.agenda_addTopicBtn);
+		mAddTopicBtn.setOnClickListener(new AddTopicListener());
+
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// TODO Auto-generated method stub
+		return super.onOptionsItemSelected(item);
 	}
 
 	private void buildTree(final TreeBuilder<Topic> builder) {
@@ -164,6 +166,23 @@ public class AgendaActivity extends FragmentActivity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.agenda, menu);
 		return true;
+	}
+	
+	private class AddTopicListener implements OnClickListener {
+		@Override
+		public void onClick(View v) {
+			switch (v.getId()) {
+			case R.id.agenda_addTopicBtn:
+				Topic t = new Topic();
+				t.setTime(120);
+				treeBuilder.addRelation(null, t);
+				break;
+
+			default:
+				break;
+			}
+			
+		}
 	}
 
 	// @Override

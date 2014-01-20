@@ -1,9 +1,6 @@
 package com.android.meetingninja.agenda;
 
-import java.util.Calendar;
-
 import com.android.meetingninja.R;
-import com.doomonafireball.betterpickers.hmspicker.HmsPicker;
 import com.doomonafireball.betterpickers.hmspicker.HmsPickerBuilder;
 import com.doomonafireball.betterpickers.hmspicker.HmsPickerDialogFragment;
 
@@ -21,7 +18,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * This is a very simple adapter that provides very basic tree view with a
@@ -86,9 +82,18 @@ public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 	// }
 
 	private String getDescription(final Topic topic) {
-		return topic.getTitle();
+		StringBuilder sb = new StringBuilder(topic.getTitle());
+		int mins = Integer.valueOf(topic.getTime()); // in minutes
+		int hrs = 0; // get hours
+		hrs = mins % 60;
+		mins -= hrs*60;
+		if (mins >= 0) {
+			sb.append(String.format(" (%dh, %2dm)", hrs, mins));
+		}
+		
+		return sb.toString();
 	}
-
+	
 	// class for caching the views in a row
 	private class ViewHolder {
 		TextView title;

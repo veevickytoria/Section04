@@ -27,7 +27,7 @@ import java.util.Map;
 
 import objects.Event;
 import objects.Meeting;
-import objects.ObjectMocker;
+import objects.MockObjectFactory;
 import objects.Schedule;
 import objects.SimpleUser;
 import objects.Task;
@@ -142,7 +142,7 @@ public class UserDatabaseAdapter extends AbstractDatabaseAdapter {
 		// TODO: Uncomment this later
 		// int responseCode = conn.getResponseCode();
 		// String response = getServerResponse(conn);
-		String response = ObjectMocker.getMockSchedule();
+		String response = MockObjectFactory.getMockSchedule();
 
 		Schedule sched = parseSchedule(MAPPER.readTree(response));
 
@@ -204,6 +204,39 @@ public class UserDatabaseAdapter extends AbstractDatabaseAdapter {
 		return result;
 
 	}
+	
+	public static List<Task> getTasks(String userID) throws JsonParseException, JsonMappingException, IOException{
+		//Server URL setup
+		String _url = getBaseUri().appendPath("Tasks").appendPath(userID).build().toString();
+		URL url = new URL(_url);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		
+		//add request header
+		conn.setRequestMethod("GET");
+		addRequestHeader(conn,false);
+		
+		//Get server response
+		int responseCode = conn.getResponseCode();
+		String response = getServerResponse(conn);
+		
+		//Initialize ObjectMapper
+		List<Task> taskList = new ArrayList<Task>();
+		final JsonNode taskArray = MAPPER.readTree(response).get("tasks");
+		
+		if(taskArray.isArray()){
+			for(final JsonNode taskNode : taskArray){
+				Task t = TaskDatabaseAdapter.parseTasks(taskNode);
+				if(t!=null){
+					taskList.add(t);
+				}
+			}
+		}else{
+			System.out.println("bla bla bla");
+		}
+		
+		conn.disconnect();
+		return taskList;	
+	}
 
 	/**
 	 * Registers a passed in User and returns that user with an assigned UserID
@@ -211,11 +244,10 @@ public class UserDatabaseAdapter extends AbstractDatabaseAdapter {
 	 * @param registerMe
 	 * @param password
 	 * @return the passed-in user with an assigned ID by the server
-	 * @throws IOException
-	 * @throws UserExistsException
+	 * @throws Exception 
 	 */
 	public static User register(User registerMe, String password)
-			throws IOException, UserExistsException {
+			throws Exception {
 		// Server URL setup
 		String _url = getBaseUri().build().toString();
 
@@ -267,7 +299,7 @@ public class UserDatabaseAdapter extends AbstractDatabaseAdapter {
 					});
 			if (!responseMap.containsKey(KEY_ID)) {
 				result = "duplicate email or username";
-				throw new UserExistsException(result);
+				throw new Exception(result);
 			} else {
 				result = responseMap.get(KEY_ID);
 				createUser.setUserID(result);

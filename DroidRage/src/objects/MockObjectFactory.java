@@ -14,7 +14,7 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public final class ObjectMocker {
+public final class MockObjectFactory {
 	private final static ObjectMapper MAPPER = new ObjectMapper();
 	private final static JsonFactory JFACT = new JsonFactory();
 
@@ -93,11 +93,27 @@ public final class ObjectMocker {
 		PrintStream ps = new PrintStream(baos);
 		JsonGenerator jgen = JFACT.createGenerator(ps, JsonEncoding.UTF8);
 
-		// TODO
+		Agenda ag = new Agenda();
+		ag.setID(404);
+		ag.setTitle("Discussing Food");
+		Topic topic1 = new Topic("Cheese Types");
+		topic1.addTopic(new Topic("Swiss"));
+		topic1.addTopic(new Topic("Mozzarella"));
+		topic1.addTopic(0, new Topic("Parmesam"));
+		Topic topic2 = new Topic("Meats");
+		Topic topic3 = new Topic("Eggs");
+		Topic subTopic3 = new Topic("Scrambled");
+		subTopic3.addTopic(new Topic("Sunny-Side-Up"));
+		topic3.addTopic(subTopic3);
+		ag.addTopic(topic1);
+		ag.addTopic(topic2);
+		ag.addTopic(topic3);
+		
 
 		jgen.flush();
 		jgen.close();
 		String json = baos.toString("UTF8");
+		json = MAPPER.writeValueAsString(ag);
 		ps.close();
 		return json;
 	}

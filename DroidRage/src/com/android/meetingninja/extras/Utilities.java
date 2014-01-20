@@ -15,6 +15,9 @@
  ******************************************************************************/
 package com.android.meetingninja.extras;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,5 +32,25 @@ public class Utilities {
 		Pattern p = Pattern.compile(".+@.+\\.[a-z]+");
 		Matcher m = p.matcher(email);
 		return m.matches();
+	}
+	
+	/**
+	 * Computes the SHA-256 of a string. 
+	 * @param input
+	 * @return
+	 * @throws NoSuchAlgorithmException
+	 * @throws UnsupportedEncodingException
+	 */
+	public String computeHash(String input) throws NoSuchAlgorithmException, UnsupportedEncodingException{
+	    MessageDigest digest = MessageDigest.getInstance("SHA-256");
+	    digest.reset();
+
+	    byte[] byteData = digest.digest(input.getBytes("UTF-8"));
+	    StringBuffer sb = new StringBuffer();
+
+	    for (int i = 0; i < byteData.length; i++){
+	      sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+	    }
+	    return sb.toString();
 	}
 }

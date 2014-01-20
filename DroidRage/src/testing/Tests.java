@@ -15,7 +15,6 @@ import objects.Topic;
 
 import com.android.meetingninja.database.AgendaDatabaseAdapter;
 import com.android.meetingninja.database.UserDatabaseAdapter;
-import com.android.meetingninja.database.UserExistsException;
 import com.android.meetingninja.extras.MyDateUtils;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -74,24 +73,5 @@ public class Tests {
 		System.out.println(testEnd);
 		System.out.println(fmt.format(new Date(testEnd)));
 	}
-
 	
-
-	private static void updateJsonFields() throws JsonProcessingException,
-			IOException {
-		String userInfo = "{" + "\"userID\":\"12345\","
-				+ "\"displayName\":\"John Jones\","
-				+ "\"email\":\"1234@gmail.com\"," + "\"phone\":\"5555555555\","
-				+ "\"company\":\"google\"," + "\"title\":\"master planner\","
-				+ "\"location\":\"Terre Haute, IN\"" + "}";
-
-		ObjectMapper objectMapper = new ObjectMapper();
-		JsonNode rootNode = objectMapper.readTree(userInfo);
-
-		((ObjectNode) rootNode).put("displayName", "Mr. Jones");
-		((ObjectNode) rootNode).put("company", "microsoft");
-		System.out.println(rootNode);
-
-	}
-
 }

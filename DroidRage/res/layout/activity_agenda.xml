@@ -1,44 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content_frame"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
     <LinearLayout
-        android:id="@+id/agenda_view"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical" >
-
-        <TextView
-            android:id="@+id/agenda_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Agenda Title"
-            android:textSize="@dimen/text_size_large" />
-
-        <pl.polidea.treeview.TreeViewList
-            android:id="@+id/agendaTreeView"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_gravity="right|center_vertical"
-            android:scrollbars="vertical"
-            android:smoothScrollbar="true" />
-    </LinearLayout>
-
-    <RelativeLayout
-        android:id="@android:id/empty"
+        android:id="@+id/agenda_outside_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" 
-        android:visibility="gone">
+        android:orientation="vertical" >
 
-        <Button
-            android:id="@+id/agenda_createBtn"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@android:id/title"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Create Agenda" />
+            android:orientation="vertical" >
 
-    </RelativeLayout>
+            <EditText
+                android:id="@+id/agenda_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="Title"
+                android:textSize="@dimen/text_size_large" >
+
+                <requestFocus />
+            </EditText>
+
+            <Button
+                android:id="@+id/agenda_addTopicBtn"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:hint="Add Topic"
+                android:minHeight="28dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/agenda_view"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <pl.polidea.treeview.TreeViewList
+                android:id="@+id/agendaTreeView"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_gravity="right|center_vertical"
+                android:divider="@color/blue"
+                android:dividerHeight="1dp"
+                android:scrollbars="vertical"
+                android:smoothScrollbar="true" />
+
+        </LinearLayout>
+    </LinearLayout>
 
 </FrameLayout>

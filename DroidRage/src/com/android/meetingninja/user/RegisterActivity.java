@@ -37,7 +37,6 @@ import android.widget.Toast;
 import com.android.meetingninja.R;
 import com.android.meetingninja.database.AsyncResponse;
 import com.android.meetingninja.database.UserDatabaseAdapter;
-import com.android.meetingninja.database.UserExistsException;
 
 public class RegisterActivity extends Activity implements AsyncResponse<User> {
 
@@ -246,7 +245,7 @@ public class RegisterActivity extends Activity implements AsyncResponse<User> {
 			} catch (IOException e) {
 				Log.e("DB Adapter", "Error: Register failed");
 				Log.e("REGISTER_ERR", e.toString());
-			} catch (UserExistsException e) {
+			} catch (Exception e) {
 				Log.e("REGISTER_ERR", e.toString());
 			}
 			return null;

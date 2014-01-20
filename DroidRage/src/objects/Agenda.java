@@ -32,7 +32,6 @@ public class Agenda implements IJSONObject {
 
 	public Agenda() {
 		// Required empty constructor
-		this("New Agenda");
 	}
 
 	public Agenda(String title) {
