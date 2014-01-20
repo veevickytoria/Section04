@@ -247,31 +247,39 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 ){
 		echo "FALSE node not found";
 	}
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'DELETE')==0){
-	//deleteMeeting
-	//$postContent = json_decode(@file_get_contents('php://input'));
-	//$taskNode=$client->getNode($_DELETE['id']);
-	//$taskNode=$client->getNode($_GET['id']);
-	//$taskNode=$client->getNode($postContent->taskID);
-	preg_match("#(\d+)#", $_SERVER['REQUEST_URI'], $id);
-	$projectNode = $client->getNode($id[0]);
-	if ($projectNode != null){
-		//only delete the node if it's a project
-		//$task = $taskIndex->findOne('ID', ''.$id[0]);
-		//if($task != null) {
-
-			//delete relationships
-			$relationArray = $projectNode->getRelationships();
-			foreach($relationArray as $rel){
+	//delete project DELETE
+	//get the id
+	$id=$_GET['id'];
+        
+	//get the node
+	$node = $client->getNode($id);
+	//make sure the node exists
+	if($node != NULL){
+		//check if node has project index
+		$project = $projectIndex->findOne('ID', ''.$id);
+						
+		//only delete the node if it's a note
+		if($project != NULL){
+			//get the relationships
+			$relations = $project->getRelationships();
+			foreach($relations as $rel){
+				//remove all relationships
 				$rel->delete();
 			}
-			//delete the node
-			$projectNode->delete();
-			echo json_encode(array('valid'=>'true'));
-		//} else {
-		//	echo json_encode(array('errorID'=>'7', 'errorMessage'=>'TaskDelete: Specified node is not a task.'));
-		//}	
+			
+			//delete node and return true
+			$project->delete();
+			$array = array('valid'=>'true');
+			echo json_encode($array);
+		} else {
+			//return an error otherwise
+			$errorarray = array('errorID' => '4', 'errorMessage'=>'Given node ID is not a project node');
+			echo json_encode($errorarray);
+		}
 	} else {
-		echo json_encode(array('errorID'=>'8', 'errorMessage'=>'ProjectDelete: Specified node does not exist.'));
+		//return an error if ID doesn't point to a node
+		$errorarray = array('errorID' => '5', 'errorMessage'=>'Given node ID is not recognized in database');
+		echo json_encode($errorarray);
 	}
 }
 ?>

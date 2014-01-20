@@ -40,7 +40,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 ){
 	
 	//sets the relationships on the node
 	$UserAssigned = $client->getNode($postContent-> assignedTo );
-	$assignedTo = $taskNode->relateTo( $UserAssigned,  "ASSIGNED_TO" )->save();
+	$assignedTo = $UserAssigned->relateTo( $taskNode,  "ASSIGNED_TO" )->save();
 	$Assigner = $client->getNode($postContent-> assignedFrom );
 	$assignedFrom = $taskNode->relateTo( $Assigner, "ASSIGNED_FROM" )->save();
 	$Creator = $client->getNode($postContent-> createdBy );

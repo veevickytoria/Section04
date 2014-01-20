@@ -103,8 +103,8 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
 			//get the relationships
 			$relations = $note->getRelationships();
 			foreach($relations as $rel){
-					//remove all relationships
-					$rel->delete();
+				//remove all relationships
+				$rel->delete();
 			}
 			
 			//delete node and return true

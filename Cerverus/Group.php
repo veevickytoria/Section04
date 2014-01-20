@@ -157,31 +157,39 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 ){
 		echo "FALSE node not found";
 	}
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'DELETE')==0){
-	//deleteGroup
-	//$postContent = json_decode(@file_get_contents('php://input'));
-	//$taskNode=$client->getNode($_DELETE['id']);
-	//$taskNode=$client->getNode($_GET['id']);
-	//$taskNode=$client->getNode($postContent->taskID);
-	preg_match("#(\d+)#", $_SERVER['REQUEST_URI'], $id);
-	$groupNode = $client->getNode($id[0]);
-	if ($groupNode != null){
-		//only delete the node if it's a group
-		//$task = $taskIndex->findOne('ID', ''.$id[0]);
-		//if($task != null) {
-
-			//delete relationships
-			$relationArray = $groupNode->getRelationships();
-			foreach($relationArray as $rel){
+	//delete group DELETE
+	//get the id
+	$id=$_GET['id'];
+        
+	//get the node
+	$node = $client->getNode($id);
+	//make sure the node exists
+	if($node != NULL){
+		//check if node has group index
+		$group = $groupIndex->findOne('ID', ''.$id);
+						
+		//only delete the node if it's a note
+		if($group != NULL){
+			//get the relationships
+			$relations = $group->getRelationships();
+			foreach($relations as $rel){
+				//remove all relationships
 				$rel->delete();
 			}
-			//delete the node
-			$groupNode->delete();
-			echo json_encode(array('valid'=>'true'));
-		//} else {
-		//	echo json_encode(array('errorID'=>'7', 'errorMessage'=>'TaskDelete: Specified node is not a task.'));
-		//}	
+			
+			//delete node and return true
+			$group->delete();
+			$array = array('valid'=>'true');
+			echo json_encode($array);
+		} else {
+			//return an error otherwise
+			$errorarray = array('errorID' => '4', 'errorMessage'=>'Given node ID is not a group node');
+			echo json_encode($errorarray);
+		}
 	} else {
-		echo json_encode(array('errorID'=>'8', 'errorMessage'=>'groupDelete: Specified node does not exist.'));
+		//return an error if ID doesn't point to a node
+		$errorarray = array('errorID' => '5', 'errorMessage'=>'Given node ID is not recognized in database');
+		echo json_encode($errorarray);
 	}
 }
 ?>

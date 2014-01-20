@@ -36,13 +36,13 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
         
         //create a relation to the user who made the meeting
         $user = $client->getNode($postContent->userID);
-        $meetingRel = $meetingNode->relateTo($user, 'MADE_MEETING')
+        $meetingRel = $user->relateTo($meetingNode, 'MADE_MEETING')
                 ->save();
         
         $attendeeArray = $postContent->attendance;
         foreach($attendeeArray as $attendee){
                 $user = $client->getNode($attendee->userID);
-                $attRel = $meetingNode->relateTo($user, 'ATTEND_MEETING')->save();//->setProperty('ATTENDANCE', $attendee->{$key}[0])
+                $attRel = $user->relateTo($meetingNode, 'ATTEND_MEETING')->save();//->setProperty('ATTENDANCE', $attendee->{$key}[0])
         }
         
         //add the index        
@@ -126,40 +126,37 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
         }
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'DELETE') == 0){      
 	//delete meeting DELETE
-        //get the id
-        preg_match("#(\d+)#", $_SERVER['REQUEST_URI'], $id);
+	//get the id
+	$id=$_GET['id'];
         
-        //get the node
-        $node = $client->getNode($id[0]);
-        //make sure the node exists
-        if($node != NULL){
-                //check if node has meeting index
-                $meeting = $meetingIndex->findOne('ID', ''.$id[0]);
-                                
-                //only delete the node if it's a meeting
-                if($meeting != NULL){
-                        //get the relationships
-                        $relations = $meeting->getRelationships();
-                        foreach($relations as $rel){
-                                //remove all relationships
-                                $rel->delete();
-                        }                
-                        
-                        //delete node and return true
-                        $meeting->delete();
-                       $array = array('valid'=>'true');
- 			echo json_encode($array);
-                } else {
-                        //return an error otherwise
-                        $errorarray = array('errorID' => '4', 'errorMessage'=>'Given node ID is not a meeting node');
-			 //return an error otherwise
-			echo '"errorID":"4", "errorMessage":"Given node ID is not a meeting node"}';
- 		}
-		echo json_encode($errorarray);
+	//get the node
+	$node = $client->getNode($id);
+	//make sure the node exists
+	if($node != NULL){
+		//check if node has meeting index
+		$meeting = $meetingIndex->findOne('ID', ''.$id);
+						
+		//only delete the node if it's a note
+		if($meeting != NULL){
+			//get the relationships
+			$relations = $meeting->getRelationships();
+			foreach($relations as $rel){
+				//remove all relationships
+				$rel->delete();
+			}
+			
+			//delete node and return true
+			$meeting->delete();
+			$array = array('valid'=>'true');
+			echo json_encode($array);
+		} else {
+			//return an error otherwise
+			$errorarray = array('errorID' => '4', 'errorMessage'=>'Given node ID is not a meeting node');
+			echo json_encode($errorarray);
+		}
 	} else {
-      //return an error if ID doesn't point to a node
-		echo '{"errorID":"5", "errorMessage":"Given node ID is not recognized in database"}';
-		$errorarray = array('errorID' => '5', 'errorMessage'=>'Given node ID is not recognized in databas');
+		//return an error if ID doesn't point to a node
+		$errorarray = array('errorID' => '5', 'errorMessage'=>'Given node ID is not recognized in database');
 		echo json_encode($errorarray);
 	}
 }else{

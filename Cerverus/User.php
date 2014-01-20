@@ -73,7 +73,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'schedule')==0){
         //GET getUserSchedule
         $userNode=$client->getNode($_GET['id']);
-        $relationArray = $userNode->getRelationships(array());
+        $relationArray = $userNode->getRelationships(array('ASSIGNED_TO', 'MADE_MEETING'), Relationship::DirectionOut);
         $fullarray=array();
         foreach($relationArray as $rel){
 				$booleanFound=0;
@@ -269,25 +269,39 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 		echo json_encode(array('errorID'=>'10', 'errorMessage'=>$postContent->userID.'is an unrecognized node ID in the database'));
 	}
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'DELETE')==0){
-	preg_match("#(\d+)#", $_SERVER['REQUEST_URI'], $id);
-	$node = $client->getNode($id[0]);
-	//check if node is a node
-	if ($node != null){
-			//check if node has user index
-			$userNode = $userIndex->findOne('email', $node->getProperty('email'));
-			//check if it is a user
-			if($userNode != NULL){
-			//delete relationships
-			$relationArray = $userNode->getRelationships();
-			foreach($relationArray as $rel){
+	//delete user DELETE
+	//get the id
+	$id=$_GET['id'];
+        
+	//get the node
+	$node = $client->getNode($id);
+	//make sure the node exists
+	if($node != NULL){
+		//check if node has user index
+		$user = $userIndex->findOne('ID', ''.$id);
+						
+		//only delete the node if it's a note
+		if($user != NULL){
+			//get the relationships
+			$relations = $user->getRelationships();
+			foreach($relations as $rel){
+				//remove all relationships
 				$rel->delete();
 			}
-			//delete the node
-			$userNode->delete();
-			echo json_encode(array('valid'=>'true'));
-			}
+			
+			//delete node and return true
+			$user->delete();
+			$array = array('valid'=>'true');
+			echo json_encode($array);
+		} else {
+			//return an error otherwise
+			$errorarray = array('errorID' => '4', 'errorMessage'=>'Given node ID is not a user node');
+			echo json_encode($errorarray);
+		}
 	} else {
-		echo json_encode(array('errorID'=>'8', 'errorMessage'=>'TaskDelete: Specified node does not exist.'));
+		//return an error if ID doesn't point to a node
+		$errorarray = array('errorID' => '5', 'errorMessage'=>'Given node ID is not recognized in database');
+		echo json_encode($errorarray);
 	}
 }else{
 	echo $_SERVER['REQUEST_METHOD'] ." request method not found";
