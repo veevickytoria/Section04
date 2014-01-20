@@ -113,7 +113,8 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 		$tempArray=$node->getProperties();
 		$array=array();
 		$array['noteID']=$node->getId();
-		$array['noteTitle']=$tempArray['noteTitle'];
+		$array['noteTitle']=$tempArray['title'];
+		array_push($fullarray,$array);
 	}
 	$lastarray=array('notes'=>$fullarray);
 	echo json_encode($lastarray);
