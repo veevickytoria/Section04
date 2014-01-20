@@ -27,7 +27,7 @@ alert(JSON.stringify({"userID":"5454", "field":"name", "value":"weinerweiner"}))
     $.ajax({
             type: "PUT",
             url: "http://csse371-04.csse.rose-hulman.edu/User/",
-            data: JSON.stringify({"userID":"479", "field":"name", "value":"weinerweiner"}),
+            data: JSON.stringify({"userID":"5454", "field":"name", "value":"weinerweiner"}),
       		success:function(data){
         		alert(data);
         	}

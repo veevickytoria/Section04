@@ -79,7 +79,7 @@ function getCookie(c_name){
       <li><a href="/login/index"><i class='fa fa-sign-out fa-lg' onclick='logout()'></i></a></li>
     </ul>
   </div>
-</nav>
+
   
   <!-- End -->
 
