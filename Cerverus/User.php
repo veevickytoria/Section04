@@ -106,10 +106,10 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
         echo json_encode($lastarray);
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'Notes')==0){
 	$userNode=$client->getNode($_GET['id']);
-	$relationArray = $userNode->getRelationships(array('CREATED'));
+	$relationArray = $userNode->getRelationships(array('CREATED', Relationship::DirectionOut));
 	$fullarray=array();
 	foreach($relationArray as $rel){
-		$node = $rel->getStartNode();
+		$node = $rel->getEndNode();
 		$tempArray=$node->getProperties();
 		$array=array();
 		$array['noteID']=$node->getId();
