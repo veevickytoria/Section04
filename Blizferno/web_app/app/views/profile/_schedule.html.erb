@@ -4,6 +4,61 @@
 
 <script type="text/javascript" charset="utf-8">
 
+	function convertToDBDate(scheduleDate){
+		var dbMonth = scheduleDate.substr(4,3);
+		var dbDay = scheduleDate.substr(8,2);
+		var dbYear = scheduleDate.substr(11,4);
+		var dbTime = scheduleDate.substr(16,5);
+
+		var dbMonthNumber;
+		switch(dbMonth)
+			{
+			case 'Jan':
+			  dbMonthNumber = '01';
+			  break;
+			case 'Feb':
+			  dbMonthNumber = '02';
+			  break;
+			case 'Mar':
+			  dbMonthNumber = '03';
+			  break;
+			case 'Apr':
+			  dbMonthNumber = '04';
+			  break;
+			case 'May':
+			  dbMonthNumber = '05';
+			  break;
+			case 'Jun':
+			  dbMonthNumber = '06';
+			  break;
+			case 'Jul':
+			  dbMonthNumber = '07';
+			  break;
+			case 'Aug':
+			  dbMonthNumber = '08';
+			  break;
+			case 'Sep':
+			  dbMonthNumber = '09';
+			  break;
+			case 'Oct':
+			  dbMonthNumber = '10';
+			  break;
+			case 'Nov':
+			  dbMonthNumber = '11';
+			  break;
+			case 'Dec':
+			  dbMonthNumber = '12';
+			  break;
+			default:
+			  alert("Error: Scheduler dateMonth parsed incorrectly");
+			}
+
+
+		var dbDate = dbMonthNumber+"/"+dbDay+"/"+dbYear+" "+dbTime;
+
+		return dbDate;
+	}
+
 	function getSchedule() {
 		var userId = <%= cookies[:userID] %>;
 
@@ -55,23 +110,25 @@ scheduler.attachEvent("onEventSave",function(id,data){
 	var postId = userId;
 	var postTitle = data.text;
 	var postLocation = "testlocation";
-	var postDateTimeBegin = "01/21/2014 00:05";
-	var postDateTimeEnd = "01/22/2014 10:02";
+	var postDateTimeBegin = convertToDBDate(data.start_date.toString());
+	var postDateTimeEnd = convertToDBDate(data.end_date.toString());
 	var postDescription = data.text;
-	var postAttendance = new Array();
+	var postAttendance = "[]";
 
 
-	var postData = "{userID:\'"+postId+"\', title:\'"+ postTitle+"\', location:\'"+postLocation+"\', datetime:\'"+postDateTimeBegin+"\',endDatetime:\'"+postDateTimeEnd+"\',description:\'"+postDescription+"\', attendance:"+postAttendance+"}";
-
+	var postData = JSON.stringify({"userID":postId,"title":postTitle,"location":postLocation,"datetime":postDateTimeBegin,"endDatetime":postDateTimeEnd,"description":postDescription,"attendance":postAttendance});
 
 
 	$.ajax({
 		type: "POST",
 		url: "http://csse371-04.csse.rose-hulman.edu/Meeting/",
-		data: postData
+		data: postData,
+		success:function(data){
+			alert("Success:");		
+		}
 	});
 
-//alert("Save");
+
     return true;
 });
 

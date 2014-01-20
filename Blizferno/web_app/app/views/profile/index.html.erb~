@@ -24,7 +24,7 @@
 function submitEdit(){
 
 alert("test");
-alert(JSON.stringify({"userID":"5454", "field":"name", "value":"weinerweiner"}));
+alert("stringify""+JSON.stringify({"userID":"5454", "field":"name", "value":"weinerweiner"}));
 
     $.ajax({
             type: "PUT",
@@ -54,7 +54,6 @@ for (var i=0, max=all.length; i < max; i++) {
 		var editValue = all[i].value;
 
 		if(editValue != userInfoArray[normalId]){
-			//alert("value:"+editValue);
 			alert("{\'userID\':\'"+userID+"\',\'field\':\'"+normalId+"\',\'value\':\'"+editValue+"\'}");
 		}
 	}
