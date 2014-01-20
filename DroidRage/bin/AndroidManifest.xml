@@ -65,6 +65,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.android.meetingninja.MainActivity" />
         </activity>
+            <activity
+            android:name="com.android.meetingninja.tasks.CreateTasksActivity"
+            android:label="@string/title_activity_tasks"
+            android:parentActivityName="com.android.meetingninja.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.android.meetingninja.MainActivity" />
+        </activity>
         <activity
             android:name="com.android.meetingninja.notes.CreateNoteActivity"
             android:label="@string/title_activity_edit_note" >

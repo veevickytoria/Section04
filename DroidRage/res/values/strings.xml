@@ -62,5 +62,6 @@
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="title_activity_view_task">ViewTaskActivity</string>
     <string name="title_activity_edit_task">EditTaskActivity</string>
+    <string name="title_activity_tasks">CreateTaskActivity</string>
 
 </resources>
