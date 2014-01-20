@@ -25,11 +25,20 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
 	
 	//sets the property on the node
 	$agendaNode->setProperty('title', $postContent->title)
-		->setProperty('meeting', $postContent->meeting)
-		->setProperty('content', $postContent->content);
-		
+		->setProperty('meeting', $postContent->meeting);
 	//actually add the node in the db
 	$agendaNode->save();
+	
+	foreach($postContent->content as $topic){
+		//pass the topic to Topic.php's create Topic method
+		$request = new HttpRequest('http://csse371-04.csse.rose-hulman.edu/Topic/', HttpRequest:METH_POST);
+		$request->addPostFields(array('title' => $topic->title, 'time' => $topic->time, 'suptopic' => $topic->subtopic));
+		$result = $request->send();
+		$topicNode = $client->getNode($result);
+		//make a relation to the topic 'HAS_TOPIC'
+		$topicRel = $agendaNode->relateTo($topicNode, 'HAS_TOPIC')
+			->save();
+	}
 	
 	//relate agenda to meeting
 	$meeting = $client->getNode($postContent->meeting);
@@ -69,6 +78,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
 			$array = $agenda->getProperties();
 			echo json_encode($array);
 		}else if(strcasecmp($postContent->field, 'content') ==0){
+			//delete all the topics and replace them with the new topics in content. TODO
 			$agenda->setProperty('content', $postContent->value);
 			$agenda->save();
 			$array = $agenda->getProperties();
@@ -94,6 +104,15 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
                                 
                 //only delete the node if it's an agenda
                 if($agenda != NULL){
+                		//get the relationships which are 'HAS_TOPIC'
+                		$relations2 = $agenda->getRelationships(array('HAS_TOPIC'));
+                		foreach($relations2 as $rel){
+                			//remove the relation and delete the topic it's associated with
+                			//delete Topic
+                			$request = new HttpRequest('http://csse371-04.csse.rose-hulman.edu/Topic/', HttpRequest:METH_DELETE);
+                			$result = $request->send();
+                			$rel->delete();
+                		}
                         //get the relationships
                         $relations = $agenda->getRelationships();
                         foreach($relations as $rel){
