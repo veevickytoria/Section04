@@ -42,6 +42,7 @@ import com.android.meetingninja.R;
 /**
  * This is a very simple adapter that provides very basic tree view with a
  * checkboxes and simple item description.
+ * 
  * @param <T>
  * 
  */
@@ -51,8 +52,11 @@ public class AgendaItemAdapter<T> extends AbstractTreeViewAdapter<Topic> {
 	private TreeBuilder<Topic> builder;
 	private TreeStateManager<Topic> manager;
 	private static int _topics = 0;
-	private Agenda Agen = new Agenda();
-	private final HashMap<Topic,Boolean> Comparison;
+	private final HashMap<Topic, Boolean> Comparison;
+	private final HashMap<EditText, TextWatcher> TextHandlers;
+	private boolean checked;
+	private int counter;
+	private AgendaActivity activty;
 
 	// private void changeSelected(final boolean isChecked, final Long id) {
 	// if (isChecked) {
@@ -70,7 +74,10 @@ public class AgendaItemAdapter<T> extends AbstractTreeViewAdapter<Topic> {
 		this.builder = treeBuilder;
 		this.manager = treeStateManager;
 		_topics = manager.getVisibleCount();
-		Comparison = new HashMap<Topic,Boolean>();
+		Comparison = new HashMap<Topic, Boolean>();
+		TextHandlers = new HashMap<EditText, TextWatcher>();
+		checked = false;
+		counter = 0;
 	}
 
 	private Map<String, String> getDescription(final Topic topic) {
@@ -98,67 +105,56 @@ public class AgendaItemAdapter<T> extends AbstractTreeViewAdapter<Topic> {
 		final LinearLayout viewLayout = (LinearLayout) inflater.inflate(
 				R.layout.list_item_agenda, null);
 		View updated = updateView(viewLayout, treeNodeInfo);
-
 		return updated;
 	}
 
-	
-	public void addhash(Topic s){
+	public void addhash(Topic s) {
 		Comparison.put(s, true);
-		
+		checked = true;
+		counter = 0;
 	}
-	
+
+
 	@Override
 	public LinearLayout updateView(final View view,
 			final TreeNodeInfo<Topic> treeNodeInfo) {
-		
-		final LinearLayout rowView = (LinearLayout) view;
-		
-		
-//		LinearLayout rowView;
-//		LayoutInflater inflater = (LayoutInflater) mContext
-//				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//		rowView = (LinearLayout) inflater.inflate(R.layout.list_item_agenda, null, false);
+
+//		final LinearLayout rowView = (LinearLayout) view;
+
+		LayoutInflater inflater = (LayoutInflater)mContext.getSystemService
+			      (Context.LAYOUT_INFLATER_SERVICE);
+		final LinearLayout rowView = (LinearLayout) inflater.inflate(
+				R.layout.list_item_agenda, null);
+
 
 		final Topic rowTopic = treeNodeInfo.getId();
-		
-		if(rowTopic==null)
-			return rowView; 
-		
-		System.out.println("Echo: Checked"+rowTopic);
-		
-		if(Comparison.get(rowTopic)== null)
-			return rowView;
-		
-		if(Comparison.get(rowTopic).booleanValue()){
-			Comparison.put(rowTopic, false);
-			return rowView;
-			
-		}else{
-			Comparison.put(rowTopic, true);
-			
-		}
+
+		System.out.println("Echo: Checked" + rowTopic+" "+counter+" "+Comparison.size()+" "+checked);
 
 		final EditText mTitle = (EditText) rowView
 				.findViewById(R.id.agenda_edit_topic);
 
-		
 		final TextView mTime = (TextView) rowView
 				.findViewById(R.id.agenda_topic_time);
 
 		mTitle.setText(rowTopic.getTitle());
+
+		System.out.println("Echo: Here" + rowTopic.getTitle()+" "+rowView);
 		
-		System.out.println("Echo: Here"+ rowTopic+""+mTitle);
-		
-		mTitle.addTextChangedListener(new TextWatcher() {
+		if(TextHandlers.containsKey(mTitle)){
+			mTitle.removeTextChangedListener(TextHandlers.get(mTitle));
+		}
+				
+		TextWatcher c = new TextWatcher() {
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
 				String text = s.toString();
 
-				rowTopic.setTitle(text);
+//				rowTopic.setTitle(text);
 				mTitle.setTag(text);
+				rowTopic.setTitle(text);
 
 				Log.d(TAG, "Text changed" + treeNodeInfo.getLevel() + " "
 						+ treeNodeInfo.getId());
@@ -168,14 +164,18 @@ public class AgendaItemAdapter<T> extends AbstractTreeViewAdapter<Topic> {
 
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
+					int after) { 
 			}
 
 			@Override
 			public void afterTextChanged(Editable s) {
 
-			}
-		});
+			}	
+		};
+		
+		mTitle.addTextChangedListener(c);
+		TextHandlers.put(mTitle, c);
+		
 		final Button mAddTopicBtn = (Button) rowView
 				.findViewById(R.id.agenda_subtopicAddBtn);
 		final Button mTimeBtn = (Button) rowView
@@ -198,7 +198,7 @@ public class AgendaItemAdapter<T> extends AbstractTreeViewAdapter<Topic> {
 		// title = info.containsKey("title") ? info.get("title") : "";
 		// }
 		// mTitle.setText(title);
-		mTitle.setText(rowTopic.getTitle());
+//		mTitle.setText(rowTopic.getTitle());
 		String time = info.containsKey("time") ? info.get("time") : "";
 		mTime.setText(time);
 
@@ -266,18 +266,17 @@ public class AgendaItemAdapter<T> extends AbstractTreeViewAdapter<Topic> {
 		public void onClick(View v) {
 			// final Topic t = (Topic) v.getTag();
 			Topic subT = new Topic(); // TODO : Make new subtopic
-			subT.setTitle("New Topic");
-			Agen.addTopic(subT);
+			subT.setTitle(parent.getTitle()+"New Topic");
 			parent.addTopic(subT);
-			System.out.println("Echo: Created"+subT);
-			Comparison.put(subT, true);
-			if (getManager().isInTree(parent))
-				builder.addRelation(parent, subT);
-			else {
-				Log.wtf(TAG, "Topic is not in tree?");
-			}
+			System.out.println("Echo: Created" + subT+" "+parent);
+
+			activty.reconstructTree();
 			// getManager().notifyDataSetChanged();
 		}
 
+	}
+
+	public void addActivity(AgendaActivity agendaActivity) {
+		this.activty = agendaActivity;
 	}
 }
