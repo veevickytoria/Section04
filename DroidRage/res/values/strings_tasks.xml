@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="task_name">Task Name</string>
+    <string name="date_created">Date Created:</string>
+    <string name="unknown_date">Unknown</string>
+    <string name="date_assigned">Date Assigned:</string>
+    <string name="deadline">Deadline:</string>
+    
+</resources>
