@@ -1,10 +1,8 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/NotesLinearLayout"
+    android:id="@+id/notesContainer"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".NotesFragment" >
+    android:layout_height="match_parent" >
 
     <ListView
         android:id="@+id/notesList"
@@ -12,9 +10,15 @@
         android:layout_height="fill_parent" >
     </ListView>
 
-     <TextView
-        android:id="@+id/notes:empty"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:text="No notes to display." />
-</LinearLayout>
+     <ImageButton
+        android:id="@android:id/empty"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:layout_gravity="center"
+        android:background="?android:attr/selectableItemBackground"
+        android:contentDescription="@string/title_activity_edit_note"
+        android:scaleType="centerInside"
+        android:src="@drawable/new_note"
+        android:visibility="gone" />
+
+</FrameLayout>

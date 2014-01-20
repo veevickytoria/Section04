@@ -1,77 +1,136 @@
 package objects;
 
-/**
- * A basic Note class containing a note name and textual content.
- * 
- * @author moorejm
- * 
- */
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({ "noteID", "createdBy", "title", "description", "content",
+		"dateCreated" })
 public class Note {
-	private String name;
+
+	@JsonProperty("noteID")
+	private String noteID;
+	@JsonProperty("createdBy")
+	private String createdBy;
+	@JsonProperty("title")
+	private String title;
+	@JsonProperty("description")
+	private String description;
+	@JsonProperty("content")
 	private String content;
-	// Unique ID for each note
-	private static int counterID;
-	int id;
+	@JsonProperty("dateCreated")
+	private String dateCreated;
 
-	public Note() {
-		counterID++;
-		this.id = counterID;
-		this.name = String.format("Note %d", id);
-		this.content = new String();
+	@JsonProperty("noteID")
+	public String getNoteID() {
+		return noteID;
 	}
 
-	/**
-	 * Constructs a note with the given name and a unique ID
-	 * 
-	 * @param name
-	 */
-	public Note(String name) {
-		this();
-		this.name = name;
+	@JsonProperty("noteID")
+	public void setNoteID(String noteID) {
+		int testInt = Integer.valueOf(noteID);
+		setNoteID(testInt);
 	}
 
-	/**
-	 * Concatenates the given text with the current text
-	 * 
-	 * @param text
-	 */
-	public void addContent(String text) {
-		this.content += " " + text;
+	@JsonIgnore
+	private void setNoteID(int noteID) {
+		this.noteID = Integer.toString(noteID);
 	}
 
-	/**
-	 * Gets the content of this note
-	 * 
-	 * @return the content of this note
-	 */
+	@JsonProperty("createdBy")
+	public String getCreatedBy() {
+		return !(createdBy == null || createdBy.isEmpty()) ? createdBy : "";
+	}
+
+	@JsonProperty("createdBy")
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	@JsonProperty("title")
+	public String getTitle() {
+		return !(title == null || title.isEmpty()) ? title : "";
+	}
+
+	@JsonProperty("title")
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	@JsonProperty("description")
+	public String getDescription() {
+		return !(description == null || description.isEmpty()) ? description
+				: "";
+	}
+
+	@JsonProperty("description")
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	@JsonProperty("content")
 	public String getContent() {
-		return this.content;
+		return !(content == null || content.isEmpty()) ? content : "";
 	}
 
-	/**
-	 * Gets the name of this note
-	 * 
-	 * @return the name of this note
-	 */
-	public String getName() {
-		return this.name;
-	}
-
-	/**
-	 * Gets the ID of this note
-	 * 
-	 * @return the ID of this note
-	 */
-	public int getID() {
-		return this.id;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
+	@JsonProperty("content")
 	public void setContent(String content) {
 		this.content = content;
 	}
 
+	@JsonProperty("dateCreated")
+	public String getDateCreated() {
+		return !(dateCreated == null || dateCreated.isEmpty()) ? dateCreated
+				: "";
+	}
+
+	@JsonProperty("dateCreated")
+	public void setDateCreated(String dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+
+	public static class NoteBuilder {
+		private String noteID;
+		private String createdBy;
+		private String title;
+		private String description;
+		private String content;
+		private String dateCreated;
+
+		public NoteBuilder() {
+
+		}
+
+		public NoteBuilder id(String id) {
+			this.noteID = id;
+			return this;
+		}
+
+		public NoteBuilder createdBy(String userID) {
+			this.createdBy = userID;
+			return this;
+		}
+
+		public NoteBuilder title(String title) {
+			this.title = title;
+			return this;
+		}
+
+		public NoteBuilder description(String desc) {
+			this.description = desc;
+			return this;
+		}
+
+		public NoteBuilder content(String content) {
+			this.content = content;
+			return this;
+		}
+
+		public NoteBuilder dateModified(String dateTime) {
+			this.dateCreated = dateTime;
+			return this;
+		}
+	}
 }

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="action_new_note">New Note</string>
-     <string name="live_folder_name">Notes</string>
 
     <string name="title_edit_title">Note title:</string>
     <string name="title_edit">Edit: %1$s</string>
@@ -18,4 +17,5 @@
     <string name="error_title">Error</string>
     <string name="error_message">Error loading note</string>
     <string name="nothing_to_save">There is nothing to save</string>
+    <string name="noteslist_empty">No notes to display.</string>
 </resources>

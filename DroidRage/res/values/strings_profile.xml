@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="profile_phone_header">Phone</string>
+    <string name="profile_email_header">Email</string>
+    <string name="profile_schedule_header">Schedule</string>
+    <string name="profile_default_phone">18005555555</string>
+    <string name="profile_default_name">Meeting Ninja</string>
+    <string name="profile_default_title_company">Title, Company</string>
+    <string name="profile_title_company_format">%1$s, %2$s</string>
+    <string name="profile_default_email">meeting_ninja@example.com</string>
+    <string name="no_contact_selected">No contact selected</string>
+
+</resources>

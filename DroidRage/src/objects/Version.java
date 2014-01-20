@@ -3,18 +3,27 @@ package objects;
 public class Version {
 	private String date;
 	private String editor;
-	private static int counterID;
-	int id;
+	private String id;
 
 	public Version() {
-		counterID++;
-		this.id = counterID;
 	}
 
 	public Version(String date, String editor) {
-		this();
 		this.date = date;
 		this.editor = editor;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = Integer.toString(id);
+	}
+
+	public void setId(String id) {
+		int testInt = Integer.valueOf(id);
+		setId(testInt);
 	}
 
 	public String getDate() {

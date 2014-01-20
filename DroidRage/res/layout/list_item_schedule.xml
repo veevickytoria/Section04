@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <include layout="@layout/list_item_schedule_header" />
+
+    <LinearLayout
+        style="@style/ListItemContainerBase"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:id="@+id/block_time_container"
+            android:layout_width="@dimen/schedule_block_time_width"
+            android:layout_height="match_parent"
+            android:background="@drawable/transparent_background_pattern"
+            android:orientation="vertical"
+            android:padding="8dp" >
+
+            <TextView
+                android:id="@+id/block_time"
+                android:textColor="#b7b7b7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="6sp"
+                android:textSize="@dimen/text_size_small" />
+
+            <TextView
+                android:id="@+id/block_endtime"
+                android:textColor="#aeaeae"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:textSize="@dimen/text_size_small" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/list_item_middle_container"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/block_title"
+                style="@style/ListItemTitle"
+                android:textSize="@dimen/text_size_medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="?android:attr/listPreferredItemPaddingLeft"
+                android:layout_marginRight="?android:attr/listPreferredItemPaddingRight"
+                android:duplicateParentState="true"
+                android:paddingTop="8dp"
+                android:textColor="@color/list_item_title" />
+
+            <TextView
+                android:id="@+id/block_subtitle"
+                style="@style/ListItemSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="?android:attr/listPreferredItemPaddingLeft"
+                android:layout_marginRight="?android:attr/listPreferredItemPaddingRight"
+                android:duplicateParentState="true"
+                android:paddingBottom="8dp"
+                android:textColor="@color/list_item_title" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

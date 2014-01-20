@@ -1,13 +1,8 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="fill_parent"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".ViewMeetingActivity" >
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -57,7 +52,7 @@
                 android:orientation="vertical" >
 
                 <TextView
-                    android:id="@+id/header_from"
+                    android:id="@+id/profile_phone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="12dp"
@@ -82,8 +77,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:minHeight="32dip"
-                        android:text="3:30 PM" />
+                        android:hint="3:30 PM"
+                        android:minHeight="32dip" />
+
                 </LinearLayout>
             </LinearLayout>
 
@@ -119,62 +115,66 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:minHeight="32dp"
-                        android:text="4:30 PM" />
+                        android:hint="4:30 PM"
+                        android:minHeight="32dp" />
+
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
+        android:id="@+id/response_row"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="64dip"
+        android:focusable="true">
+        <TextView
+            android:id="@+id/response_label"
+            android:text="@string/view_event_response_label"
+            android:gravity="center_vertical"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/radioGroupHeader"
-                android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
+            style="@style/TextAppearance.EditEvent_LabelSmall" />
+        <RadioGroup
+            android:id="@+id/response_value"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="16dip"
+            android:layout_marginRight="8dip"
+            android:paddingTop="5dip">
+            <RadioButton
+                android:id="@+id/response_yes"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxWidth="128dip"
                 android:layout_weight="1"
-                android:hint="Attending?" />
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="1dp"
+                android:gravity="center_vertical"
+                style="@style/TextAppearance.EditEvent"
+                android:text="@string/response_yes" />
+            <RadioButton
+                android:id="@+id/response_maybe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="128dip"
                 android:layout_weight="1"
-                android:background="@android:color/darker_gray" />
-
-            <RadioGroup
-                android:id="@+id/attending_response_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                style="@style/TextAppearance.EditEvent"
+                android:text="@string/response_maybe" />
+            <RadioButton
+                android:id="@+id/response_no"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="128dip"
                 android:layout_weight="1"
-                android:orientation="horizontal" >
-
-                <RadioButton
-                    android:id="@+id/radio_attending_yes"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical|center_horizontal"
-                    android:text="Yes" />
-
-                <RadioButton
-                    android:id="@+id/radio_attending_maybe"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical|center_horizontal"
-                    android:text="Maybe" />
-
-                <RadioButton
-                    android:id="@+id/radio_attending_no"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical|center_horizontal"
-                    android:text="No" />
-            </RadioGroup>
-        </LinearLayout>
+                android:gravity="center_vertical"
+                style="@style/TextAppearance.EditEvent"
+                android:text="@string/response_no" />
+        </RadioGroup>
+        <View
+            style="@style/EditEventSeparator"/>
+    </LinearLayout>
 
         <LinearLayout
             android:id="@+id/email_guests_layout"
@@ -240,45 +240,47 @@
             </ListView>
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <!-- REMINDERS -->
+    <LinearLayout
+        android:id="@+id/reminders_row"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true">
+        <TextView
+            android:id="@+id/reminders_group_label"
+            android:text="@string/event_info_reminders_label"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/textView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="Reminders" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="3" >
-
-                <Spinner
-                    android:id="@+id/spinner1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-
-                <Spinner
-                    android:id="@+id/spinner2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-
-                <ImageButton
-                    android:id="@+id/imageButton1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/btn_transparent_holo_light"
-                    android:src="@drawable/ic_cancel" />
-            </LinearLayout>
-        </LinearLayout>
+            android:layout_width="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="0dip"
+            style="@style/TextAppearance.EditEvent_LabelSmall" />
+        <LinearLayout
+            android:id="@+id/reminder_items_container"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginTop="-8dip"
+            android:layout_marginBottom="8dip"
+            android:layout_marginRight="8dip"
+            android:orientation="vertical" />
+        <Button
+            android:id="@+id/reminder_add"
+            android:text="@string/reminders_label"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="top"
+            android:paddingBottom="12dp"
+            android:layout_marginTop="0dip"
+            android:layout_marginBottom="0dip"
+            android:textAllCaps="false"
+            android:textSize="18sp"
+            android:textColor="#FF777777"
+            android:minHeight="20dip"
+            android:background="?android:attr/selectableItemBackground"
+            android:contentDescription="@string/reminders_label"
+            style="@style/TextAppearance.EditEvent_LabelSmall" />
+    </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

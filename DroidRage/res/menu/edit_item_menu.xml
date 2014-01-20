@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/edit_item_task" android:showAsAction="ifRoom" android:title="Edit" android:orderInCategory="100" android:icon="@drawable/ic_menu_edit"></item>
+    <item android:id="@+id/delete_item_task" android:orderInCategory="200" android:title="Delete" android:icon="@drawable/ic_menu_delete" android:showAsAction="ifRoom"></item>
+    
+
+</menu>

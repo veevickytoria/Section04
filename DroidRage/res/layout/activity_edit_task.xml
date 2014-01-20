@@ -1,0 +1,283 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <EditText
+                android:id="@+id/task_edit_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:enabled="true"
+                android:gravity="center"
+                android:hint="Task Name"
+                android:textSize="25sp" />
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vertical_spacer"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:layout_weight="2"
+                        android:hint="Date Created:"
+                        android:textColor="@android:color/secondary_text_dark" />
+
+                    <TextView
+                        android:id="@+id/task_edit_date_created"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:hint="November 13, 2013"
+                        android:minHeight="16dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:layout_weight="2"
+                        android:hint="Date Assigned:"
+                        android:textColor="@android:color/secondary_text_dark" />
+
+                    <TextView
+                        android:id="@+id/task_edit_date_assigned"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:hint="November 13, 2013"
+                        android:minHeight="16dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:layout_weight="2"
+                        android:hint="Deadline:"
+                        android:textColor="@android:color/secondary_text_dark" />
+
+                    <Button
+                        android:id="@+id/task_edit_deadline"
+                        style="@style/TextAppearance.EditEvent_SpinnerButton"
+                        android:layout_width="0px"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="0dp"
+                        android:layout_weight="7"
+                        android:paddingRight="4dp"
+                        android:singleLine="true" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/vertical_spacer"
+                    android:hint="Description:"
+                    android:inputType="text" />
+
+                <EditText
+                    android:id="@+id/task_edit_desc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/vertical_spacer"
+                    android:hint="this is where the text goes"
+                    android:inputType="text" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/task_response_row"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:minHeight="64dip"
+            android:orientation="vertical"
+            android:paddingTop="8dp" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/task_comp_crit_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/vertical_spacer"
+                    android:hint="Completion Criteria:"
+                    android:inputType="text" />
+
+                <EditText
+                    android:id="@+id/task_edit_comp_crit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/vertical_spacer"
+                    android:hint="this is where the criteria goes"
+                    android:inputType="text" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/task_completed_label"
+                style="@style/TextAppearance.EditEvent_LabelSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="Completed?" />
+
+            <LinearLayout
+                android:id="@+id/task_response_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dip"
+                android:layout_marginRight="8dip"
+                android:orientation="horizontal"
+                android:paddingTop="5dip" >
+
+                <TextView
+                    android:id="@+id/task_edit_completed"
+                    style="@style/TextAppearance.EditEvent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:maxWidth="128dip"
+                    android:text="@string/response_yes" />
+
+                <Button
+                    android:id="@+id/task_complete_button"
+                    style="@style/TextAppearance.EditEvent_LabelSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginBottom="0dip"
+                    android:layout_marginTop="0dip"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:contentDescription="@string/reminders_label"
+                    android:gravity="top"
+                    android:minHeight="20dip"
+                    android:paddingBottom="12dp"
+                    android:text="Complete this now"
+                    android:textAllCaps="false"
+                    android:textColor="#FF777777"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <View style="@style/EditEventSeparator" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/task_assigned_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Assigned to" />
+
+            <TextView
+                android:id="@+id/task_assigned_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:ems="10"
+                android:text="User assigned to" >
+            </TextView>
+        </LinearLayout>
+
+        <!-- REMINDERS -->
+
+        <LinearLayout
+            android:id="@+id/task_reminders_row"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/vertical_spacer"
+            android:focusable="true"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/task_reminders_group_label"
+                style="@style/TextAppearance.EditEvent_LabelSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="0dip"
+                android:gravity="center_vertical"
+                android:text="@string/event_info_reminders_label" />
+
+            <LinearLayout
+                android:id="@+id/task_reminder_items_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dip"
+                android:layout_marginRight="8dip"
+                android:layout_marginTop="-8dip"
+                android:orientation="vertical" />
+
+            <Button
+                android:id="@+id/task_reminder_add"
+                style="@style/TextAppearance.EditEvent_LabelSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="0dip"
+                android:layout_marginTop="0dip"
+                android:background="?android:attr/selectableItemBackground"
+                android:contentDescription="@string/reminders_label"
+                android:gravity="top"
+                android:minHeight="20dip"
+                android:paddingBottom="12dp"
+                android:text="@string/reminders_label"
+                android:textAllCaps="false"
+                android:textColor="#FF777777"
+                android:textSize="18sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

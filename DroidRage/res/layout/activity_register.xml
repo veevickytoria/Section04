@@ -11,53 +11,55 @@
     tools:context=".RegisterActivity" >
 
     <TextView
-        android:id="@+id/meeting_new_image"
+        android:id="@+id/register_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Register a new account"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <ScrollView
-        android:id="@+id/scrollView1"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
 
-        <LinearLayout
+        <EditText
+            android:id="@+id/register_name"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical" >
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/prompt_name"
+            android:inputType="textPersonName" />
 
-            <EditText
-                android:id="@+id/usernameText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:ems="10"
-                android:hint="@string/prompt_username" >
+        <EditText
+            android:id="@+id/register_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:ems="10"
+            android:hint="@string/prompt_email"
+            android:imeOptions="actionNext"
+            android:inputType="textEmailAddress" />
 
-                <requestFocus />
-            </EditText>
+        <EditText
+            android:id="@+id/register_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:ems="10"
+            android:hint="@string/prompt_password"
+            android:imeOptions="actionNext"
+            android:inputType="textPassword" />
 
-            <EditText
-                android:id="@+id/passwordText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:ems="10"
-                android:hint="@string/prompt_password"
-                android:inputType="textPassword" />
-
-            <EditText
-                android:id="@+id/confirmPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:ems="10"
-                android:hint="@string/prompt_password_confirm"
-                android:inputType="textPassword" />
-
-        </LinearLayout>
-    </ScrollView>
+        <EditText
+            android:id="@+id/register_confirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:ems="10"
+            android:hint="@string/prompt_password_confirm"
+            android:imeOptions="actionDone"
+            android:inputType="textPassword" />
+    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -71,7 +73,8 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:onClick="register"
-            android:text="@string/action_register" />
+            android:text="@string/action_register"
+            tools:ignore="OnClick" />
 
     </RelativeLayout>
 

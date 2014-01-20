@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ListItemContainerBase"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:baselineAligned="false"
+    android:orientation="vertical" >
+
+    <!-- Name of Note -->
+
+    <TextView
+        android:id="@+id/noteName"
+        style="@style/ListItemTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="?android:attr/listPreferredItemPaddingLeft"
+        android:layout_marginRight="?android:attr/listPreferredItemPaddingRight"
+        android:ellipsize="marquee"
+        android:paddingTop="8dp"
+        android:singleLine="true"
+        android:text="Name"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <!-- Note Content -->
+
+    <TextView
+        android:id="@+id/noteContent"
+        style="@style/ListItemSubtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="?android:attr/listPreferredItemPaddingLeft"
+        android:layout_marginRight="?android:attr/listPreferredItemPaddingRight"
+        android:duplicateParentState="true"
+        android:paddingBottom="8dp"
+        android:singleLine="false"
+        android:text="Content"
+        android:textSize="12sp" />
+
+</LinearLayout>

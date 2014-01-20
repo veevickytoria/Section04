@@ -1,29 +1,24 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/meetings_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <include
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        layout="@layout/meetings_list_empty" />
-
-    <LinearLayout
-        android:id="@+id/meetings_list"
+    <ListView
+        android:id="@+id/meetingsList"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".MeetingsFragment" >
+        android:layout_height="match_parent" >
+    </ListView>
+    
+    <ImageButton
+        android:id="@android:id/empty"
+        android:layout_width="@dimen/imageButton_bounds"
+        android:layout_height="@dimen/imageButton_bounds"
+        android:layout_gravity="center"
+        android:background="?android:attr/selectableItemBackground"
+        android:contentDescription="@string/title_activity_meetings"
+        android:scaleType="centerInside"
+        android:src="@drawable/new_meeting"
+        android:visibility="gone" />
 
-        <ListView
-            android:id="@+id/meetingsList"
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" >
-        </ListView>
-    </LinearLayout>
-
-</RelativeLayout>
+</FrameLayout>
