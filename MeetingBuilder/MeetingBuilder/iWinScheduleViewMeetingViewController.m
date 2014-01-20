@@ -14,8 +14,6 @@
 #import "Meeting.h"
 #import "Contact.h"
 #import "Settings.h"
-#import "iWinAgendasViewController.h"
-
 
 @interface iWinScheduleViewMeetingViewController ()
 @property (nonatomic) BOOL isEditing;
@@ -549,11 +547,6 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (IBAction)viewAgendas:(id)sender {
-    iWinAgendasViewController *agendaViewController = [[iWinAgendasViewController alloc] init];
-    [self presentViewController:agendaViewController animated:YES completion:nil];
-
-}
 
 - (void)startDateClicked
 {
