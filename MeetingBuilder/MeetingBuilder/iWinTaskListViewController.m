@@ -49,6 +49,17 @@
     
 }
 
+-(void)refreshTaskList
+{
+    [self.addViewTaskViewController dismissViewControllerAnimated:YES completion:nil];
+    self.itemList = [[NSMutableArray alloc] init];
+    self.itemDetail = [[NSMutableArray alloc] init];
+    self.taskIDs = [[NSMutableArray alloc] init];
+
+    [self populateTaskList];
+    [self.taskListTable reloadData];
+}
+
 -(void)populateTaskList
 {
     NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Tasks/%d", self.userID];
@@ -159,9 +170,10 @@
 - (IBAction)onClickCreateNewTask
 {
     //[self.taskListDelegate createNewTaskClicked:NO];
-    self.addViewTaskViewController = [[iWinAddAndViewTaskViewController alloc] initWithNibName:@"iWinAddAndViewTaskViewController" bundle:nil withUserID:self.userID];
+    self.addViewTaskViewController = [[iWinAddAndViewTaskViewController alloc] initWithNibName:@"iWinAddAndViewTaskViewController" bundle:nil withUserID:self.userID withTaskID:-1];
     [self.addViewTaskViewController setModalPresentationStyle:UIModalPresentationPageSheet];
     [self.addViewTaskViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+    self.addViewTaskViewController.viewTaskDelegate = self;
     
     [self presentViewController:self.addViewTaskViewController animated:YES completion:nil];
     self.addViewTaskViewController.view.superview.bounds = CGRectMake(0,0,768,1003);
@@ -192,10 +204,11 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    self.addViewTaskViewController = [[iWinAddAndViewTaskViewController alloc] initWithNibName:@"iWinAddAndViewTaskViewController" bundle:nil withUserID:self.userID];
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    self.addViewTaskViewController = [[iWinAddAndViewTaskViewController alloc] initWithNibName:@"iWinAddAndViewTaskViewController" bundle:nil withUserID:self.userID withTaskID:[self.taskIDs[indexPath.row] integerValue]];
+    self.addViewTaskViewController.viewTaskDelegate = self;
     [self.addViewTaskViewController setModalPresentationStyle:UIModalPresentationPageSheet];
     [self.addViewTaskViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-    
     [self presentViewController:self.addViewTaskViewController animated:YES completion:nil];
     self.addViewTaskViewController.view.superview.bounds = CGRectMake(0,0,768,1003);
 }

@@ -10,6 +10,13 @@
 #import "OCCalendarViewController.h"
 #import "iWinAddUsersViewController.h"
 
+@protocol ViewTaskDelegate <NSObject>
+
+-(void)refreshTaskList;
+
+@end
+
+
 @interface iWinAddAndViewTaskViewController : UIViewController <OCCalendarDelegate, UserDelegate>
 - (IBAction)onClickCancel;
 - (IBAction)onClickSave;
@@ -26,7 +33,8 @@
 @property (weak, nonatomic) IBOutlet UISwitch *isCompleted;
 @property (weak, nonatomic) IBOutlet UILabel *endDateLabel;
 @property (weak, nonatomic) IBOutlet UILabel *endTimeLabel;
+@property (nonatomic) id<ViewTaskDelegate> viewTaskDelegate;
 - (IBAction)onClickAddAssignees;
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withUserID:(NSInteger)userID;
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withUserID:(NSInteger)userID withTaskID:(NSInteger)taskID;
 
 @end
