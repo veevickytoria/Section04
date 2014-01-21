@@ -39,7 +39,6 @@
     
     self.itemList = [[NSMutableArray alloc] init];
     self.itemDetail = [[NSMutableArray alloc] init];
-    
     self.taskIDs = [[NSMutableArray alloc] init];    
     
     self.createTaskButton.layer.cornerRadius = 7;
