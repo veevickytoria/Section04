@@ -23,8 +23,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
+import org.apache.http.HttpRequest;
+
 import android.net.Uri;
 
+import com.android.volley.Request;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -92,13 +95,20 @@ public abstract class BaseDatabaseAdapter {
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
 		// add request header
-		conn.setRequestMethod("PUT");
+		conn.setRequestMethod(IRequest.PUT);
 		addRequestHeader(conn, true);
 
 		int responseCode = sendPostPayload(conn, jsonPayload);
 		String response = getServerResponse(conn);
 		conn.disconnect();
 		return response;
+	}
+
+	protected interface IRequest {
+		String GET = "GET";
+		String POST = "POST";
+		String PUT = "PUT";
+		String DELETE = "DELETE";
 	}
 
 }

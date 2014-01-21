@@ -95,7 +95,7 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
 		// add request header
-		conn.setRequestMethod("DELETE");
+		conn.setRequestMethod(IRequest.DELETE);
 		addRequestHeader(conn, false);
 		int responseCode = conn.getResponseCode();
 		String response = getServerResponse(conn);
@@ -134,7 +134,7 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 		String _url = getBaseUri().build().toString();
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-		conn.setRequestMethod("PUT");
+		conn.setRequestMethod(IRequest.PUT);
 		addRequestHeader(conn, false);
 		sendPostPayload(conn, payload);
 		return getServerResponse(conn);

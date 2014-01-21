@@ -65,7 +65,7 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
 		// add request header
-		conn.setRequestMethod("GET");
+		conn.setRequestMethod(IRequest.GET);
 		addRequestHeader(conn, false);
 
 		// Get server response
@@ -96,7 +96,7 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-		conn.setRequestMethod("POST");
+		conn.setRequestMethod(IRequest.POST);
 		addRequestHeader(conn, true);
 
 		// prepare POST payload

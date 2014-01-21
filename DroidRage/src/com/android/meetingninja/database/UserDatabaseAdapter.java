@@ -78,7 +78,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
 		// add request header
-		conn.setRequestMethod("GET");
+		conn.setRequestMethod(IRequest.GET);
 		addRequestHeader(conn, false);
 
 		// Get server response
@@ -99,7 +99,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
 		// add request header
-		conn.setRequestMethod("GET");
+		conn.setRequestMethod(IRequest.GET);
 		addRequestHeader(conn, false);
 
 		// Get server response
@@ -129,7 +129,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
 		// add request header
-		conn.setRequestMethod("POST");
+		conn.setRequestMethod(IRequest.POST);
 		addRequestHeader(conn, true);
 
 		// prepare POST payload
@@ -186,7 +186,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
 		// add request header
-		conn.setRequestMethod("GET");
+		conn.setRequestMethod(IRequest.GET);
 		addRequestHeader(conn, false);
 
 		// Get server response
@@ -208,7 +208,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
 		// add request header
-		conn.setRequestMethod("GET");
+		conn.setRequestMethod(IRequest.GET);
 		addRequestHeader(conn, false);
 
 		// Get server response
@@ -240,7 +240,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
 		// add request header
-		conn.setRequestMethod("GET");
+		conn.setRequestMethod(IRequest.GET);
 		addRequestHeader(conn, false);
 
 		// Get server response
@@ -274,7 +274,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
 		// add request header
-		conn.setRequestMethod("GET");
+		conn.setRequestMethod(IRequest.GET);
 		addRequestHeader(conn, false);
 
 		// Get server response
@@ -308,7 +308,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
 		// add request header
-		conn.setRequestMethod("GET");
+		conn.setRequestMethod(IRequest.GET);
 		addRequestHeader(conn, false);
 
 		// Get server response
@@ -343,7 +343,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
 		// add request header
-		conn.setRequestMethod("GET");
+		conn.setRequestMethod(IRequest.GET);
 		addRequestHeader(conn, false);
 
 		// Get server response
@@ -387,7 +387,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
 		// add request header
-		conn.setRequestMethod("POST");
+		conn.setRequestMethod(IRequest.POST);
 		addRequestHeader(conn, true);
 
 		// prepare POST payload
@@ -498,7 +498,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
 		// add request header
-		conn.setRequestMethod("DELETE");
+		conn.setRequestMethod(IRequest.DELETE);
 		addRequestHeader(conn, false);
 		int responseCode = conn.getResponseCode();
 		String response = getServerResponse(conn);
