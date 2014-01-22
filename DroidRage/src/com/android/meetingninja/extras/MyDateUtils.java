@@ -27,12 +27,12 @@ public class MyDateUtils {
 	public static final DateTimeFormatter ISO8601_FMT = ISODateTimeFormat
 			.dateTime();
 	public static final DateTimeFormatter JODA_SERVER_DATE_FORMAT = DateTimeFormat
-			.forPattern("EEEE, dd-MMM-yy HH:mm:ss zzz");
+			.forPattern("EEEE, dd-MMM-yy HH:mm:ss zzz").withZoneUTC();
 	public static final DateTimeFormatter JODA_MEETING_DATE_FORMAT = DateTimeFormat
-			.forPattern("EEE, MMM dd, yyyy");
+			.forPattern("EEE, MMM dd, yyyy").withZoneUTC();
 	public static final DateTimeFormatter JODA_24_TIME_FORMAT = DateTimeFormat
-			.forPattern("HH:mm");
+			.forPattern("HH:mm").withZoneUTC();
 	public static final DateTimeFormatter JODA_12_TIME_FORMAT = DateTimeFormat
-			.forPattern("hh:mma");
+			.forPattern("hh:mma").withZoneUTC();
 	
 }
