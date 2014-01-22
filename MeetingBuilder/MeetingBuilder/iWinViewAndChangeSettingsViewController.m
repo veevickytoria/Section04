@@ -310,18 +310,19 @@
                                          returningResponse:&response
                                                      error:&error];
     
-//    jsonDictionary = [NSDictionary dictionaryWithObjects:objects1 forKeys:keys1];
-//    
-//    if ([NSJSONSerialization isValidJSONObject:jsonDictionary])
-//    {
-//        jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:nil];
-//        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-//    }
-//    [urlRequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-length"];
-//    [urlRequest setHTTPBody:jsonData];
-//    data =[NSURLConnection sendSynchronousRequest:urlRequest
-//                                returningResponse:&response
-//                                            error:&error];
+    objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.userID] stringValue], @"password", [self sha256HashFor: self.passwordTextField.text],nil];
+    jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+    
+    if ([NSJSONSerialization isValidJSONObject:jsonDictionary])
+    {
+        jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:nil];
+        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    }
+    [urlRequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-length"];
+    [urlRequest setHTTPBody:jsonData];
+    data =[NSURLConnection sendSynchronousRequest:urlRequest
+                                returningResponse:&response
+                                            error:&error];
     
     if (error) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Could not save to the server" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];

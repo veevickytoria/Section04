@@ -397,28 +397,99 @@
     }
     else
     {
-        NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Meeting" inManagedObjectContext:self.context];
-        
-        NSFetchRequest *request = [[NSFetchRequest alloc] init];
-        [request setEntity:entityDesc];
-        
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userID = %@", self.meetingID];
-        [request setPredicate:predicate];
-        
-        NSError *error;
-        NSArray *result = [self.context executeFetchRequest:request
-                                                 error:&error];
-        
-        Meeting *newMeeting = (Meeting*)[result objectAtIndex:0];
-        [newMeeting setValue:self.titleField.text forKey:@"title"];
-        [newMeeting setValue:self.placeField.text forKey:@"location"];
-        [newMeeting setValue:[NSString stringWithFormat: @"%@ %@ %@ %@", self.startDateLabel.text, self.startTimeLabel.text, self.endDateLabel.text, self.endTimeLabel.text] forKey:@"datetime"];
-        [newMeeting setValue:@"false" forKey:@"attendance"];
-        [self.context save:&error];
+//        NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Meeting" inManagedObjectContext:self.context];
+//        
+//        NSFetchRequest *request = [[NSFetchRequest alloc] init];
+//        [request setEntity:entityDesc];
+//        
+//        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userID = %@", self.meetingID];
+//        [request setPredicate:predicate];
+//        
+//        NSError *error;
+//        NSArray *result = [self.context executeFetchRequest:request
+//                                                 error:&error];
+//        
+//        Meeting *newMeeting = (Meeting*)[result objectAtIndex:0];
+//        [newMeeting setValue:self.titleField.text forKey:@"title"];
+//        [newMeeting setValue:self.placeField.text forKey:@"location"];
+//        [newMeeting setValue:[NSString stringWithFormat: @"%@ %@ %@ %@", self.startDateLabel.text, self.startTimeLabel.text, self.endDateLabel.text, self.endTimeLabel.text] forKey:@"datetime"];
+//        [newMeeting setValue:@"false" forKey:@"attendance"];
+//        [self.context save:&error];
+        [self updateMeetingInfo];
         
     }
     [self scheduleNotification];
     [self.viewMeetingDelegate refreshMeetingList];
+}
+
+-(void) updateMeetingInfo
+{
+    NSArray *keys = [NSArray arrayWithObjects:@"meetingID", @"field", @"value", nil];
+    NSArray *objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.meetingID] stringValue], @"title", self.titleField.text,nil];
+    
+    NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+    NSData *jsonData;
+    NSString *jsonString;
+    
+    if ([NSJSONSerialization isValidJSONObject:jsonDictionary])
+    {
+        jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:nil];
+        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    }
+    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Meeting/"];
+    
+    NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+    [urlRequest setHTTPMethod:@"PUT"];
+    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [urlRequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-length"];
+    [urlRequest setHTTPBody:jsonData];
+    NSURLResponse * response = nil;
+    NSError * error = nil;
+    NSData * data =[NSURLConnection sendSynchronousRequest:urlRequest
+                                         returningResponse:&response
+                                                     error:&error];
+    
+    objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.userID] stringValue], @"location", self.placeField.text,nil];
+    jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+    
+    if ([NSJSONSerialization isValidJSONObject:jsonDictionary])
+    {
+        jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:nil];
+        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    }
+    [urlRequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-length"];
+    [urlRequest setHTTPBody:jsonData];
+    data =[NSURLConnection sendSynchronousRequest:urlRequest
+                                returningResponse:&response
+                                            error:&error];
+    
+    objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.userID] stringValue], @"dateTime", [NSString stringWithFormat:@"%@ %@", self.startDateLabel.text, self.startTimeLabel.text], nil];
+    jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+    
+    if ([NSJSONSerialization isValidJSONObject:jsonDictionary])
+    {
+        jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:nil];
+        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    }
+    [urlRequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-length"];
+    [urlRequest setHTTPBody:jsonData];
+    data =[NSURLConnection sendSynchronousRequest:urlRequest
+                                returningResponse:&response
+                                            error:&error];
+    
+    objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.userID] stringValue], @"endDatetime", [NSString stringWithFormat:@"%@ %@", self.endDateLabel.text, self.endTimeLabel.text], nil];
+    jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+    
+    if ([NSJSONSerialization isValidJSONObject:jsonDictionary])
+    {
+        jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:nil];
+        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    }
+    [urlRequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-length"];
+    [urlRequest setHTTPBody:jsonData];
+    data =[NSURLConnection sendSynchronousRequest:urlRequest
+                                returningResponse:&response
+                                            error:&error];
 }
 
 -(void) scheduleNotification
