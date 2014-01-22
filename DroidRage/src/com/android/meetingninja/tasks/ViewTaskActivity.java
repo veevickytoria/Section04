@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.android.meetingninja.R;
@@ -33,6 +34,7 @@ public class ViewTaskActivity extends Activity {
 	private TextView taskName, dateCreated, dateAssigned, deadline,
 			description, completionCriteria, isCompleted, assignedLabel,
 			assignedText;
+	private Button taskCompleteButton;
 	RetUserObj fetcher = null;
 	private Task task = null;
 
@@ -108,6 +110,7 @@ public class ViewTaskActivity extends Activity {
 		isCompleted = (TextView) this.findViewById(R.id.task_completed_text);
 		assignedLabel = (TextView) this.findViewById(R.id.task_assigned_label);
 		assignedText = (TextView) this.findViewById(R.id.task_assigned_text);
+		taskCompleteButton = (Button) this.findViewById(R.id.task_complete_button);
 	}
 
 	private void setTask() {
@@ -119,8 +122,12 @@ public class ViewTaskActivity extends Activity {
 		completionCriteria.setText(task.getCompletionCriteria());
 		if (task.getIsCompleted()) {
 			isCompleted.setText("Yes"); // TODO: change this to use string xml
+			System.out.println("before");;
+			taskCompleteButton.setVisibility(View.INVISIBLE);
+			System.out.println("after");
 		} else {
 			isCompleted.setText("No"); // TODO: change this to use string xml
+			taskCompleteButton.setVisibility(View.VISIBLE);
 		}
 		fetcher = new RetUserObj();
 

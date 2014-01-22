@@ -5,5 +5,11 @@
     <string name="unknown_date">Unknown</string>
     <string name="date_assigned">Date Assigned:</string>
     <string name="deadline">Deadline:</string>
+    <string name="description">Description:</string>
+    <string name="comp_crit">Completion Criteria:</string>
+    <string name="completed">Completed?</string>
+    <string name="assigned_to">Assigned To:</string>
+    <string name="mark_as_complete">Mark As Complete</string>
+    <string name="mark_as_incomplete">Mark As Incomplete</string>
     
 </resources>

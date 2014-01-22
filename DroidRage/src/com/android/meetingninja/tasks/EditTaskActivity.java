@@ -43,21 +43,17 @@ import com.doomonafireball.betterpickers.calendardatepicker.CalendarDatePickerDi
 
 public class EditTaskActivity extends FragmentActivity implements
 		AsyncResponse<Boolean> {
-
+	final String MARK_AS_COMPLETE = "Mark As Complete";
+	final String MARK_AS_INCOMPLETE = "Mark As Incomplete";
+	
 	private EditText Description, completionCriteria, Title;
 	private TextView assignedDateLabel, createdDateLabel, isCompleted;
-	private Button tDeadline;
+	private Button tDeadline,mComplete;
 	private SimpleDateFormat dateFormat = MyDateUtils.APP_DATE_FORMAT;
 
 	private SessionManager session;
 	private Task displayTask;
 	Calendar cal = null;
-
-	/*
-	 * public static final String EXTRA_TITLE = "title"; public static final
-	 * String EXTRA_DESCRIPTION = "description"; public static final String
-	 * EXTRA_EDIT_MODE = "editing";
-	 */
 	public static final String EXTRA_TASK = "task";
 
 	private static final String TAG = EditTaskActivity.class.getSimpleName();
@@ -67,49 +63,61 @@ public class EditTaskActivity extends FragmentActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_task);
 		setupActionBar();
-		Title = (EditText) findViewById(R.id.task_edit_title);
-		Description = (EditText) findViewById(R.id.task_edit_desc);
-		completionCriteria = (EditText) findViewById(R.id.task_edit_comp_crit);
-		tDeadline = (Button) findViewById(R.id.task_edit_deadline);
-		isCompleted = (TextView) findViewById(R.id.task_edit_completed);
-		Intent i = getIntent();
 		setupView();
+		Intent i = getIntent();
 		displayTask = i.getParcelableExtra(EXTRA_TASK);
 		if (displayTask != null) {
-			Title.setText(displayTask.getTitle());
-			completionCriteria.setText(displayTask.getCompletionCriteria());
-			Description.setText(displayTask.getDescription());
-			String comp = "No";
-			if (displayTask.getIsCompleted()) {
-				comp = "Yes";
-			}
-			isCompleted.setText(comp);
+			setTask();
+			Title.setSelection(0, Title.getText().toString().length());;
 			String deadline = displayTask.getEndTime();
 			String monthdayyear[] = deadline.split("/");
 
-			// maybe for calendar
 			int month = (int) Integer.parseInt(monthdayyear[0]);
 			int year = (int) Integer.parseInt(monthdayyear[2]);
 			int day = (int) Integer.parseInt(monthdayyear[1]);
 
 			cal = Calendar.getInstance();
-			cal.set(Calendar.YEAR, year);
-			cal.set(Calendar.MONTH, month - 1);
-			cal.set(Calendar.DAY_OF_MONTH, day);
+			cal.set(Calendar.YEAR,year,Calendar.MONTH,month-1,Calendar.DAY_OF_MONTH,day);
+			//cal.set(Calendar.YEAR, year);
+			//cal.set(Calendar.MONTH, month - 1);
+			//cal.set(Calendar.DAY_OF_MONTH, day);
 
 			tDeadline.setText(deadline);
 			tDeadline.setOnClickListener(new DateClickListener(tDeadline, cal));
-			// findViewById(R.id.task_edit_deadline)
-			// createdDate =
+			
 			// findViewById(R.id.task_edit_date_created).toString();
 
 			// assignedDateLabel.setText(dateFormat.format(assignedDate));
 			// createdDateLabel.setText(dateFormat.format(createdDate));
 		}
-		// TODO: calender stuff
-
 	}
-
+	private void setTask(){
+		System.out.println("got to settask");
+		Title.setText(displayTask.getTitle());
+		completionCriteria.setText(displayTask.getCompletionCriteria());
+		Description.setText(displayTask.getDescription());
+		//TODO: use string.xml
+		if (displayTask.getIsCompleted()) {
+			isCompleted.setText("Yes");
+			mComplete.setText(MARK_AS_INCOMPLETE);
+		}else{
+			isCompleted.setText("No");
+			mComplete.setText(MARK_AS_COMPLETE);
+		}
+		//TODO: fetcher for assigned to/from
+	}
+	public void toggleCompleted(View v){
+		System.out.println("got to toggle");
+		TaskUpdater updater = new TaskUpdater();
+		displayTask.setIsCompleted(!displayTask.getIsCompleted());
+		updater.updateTask(displayTask);
+		setTask();
+	}
+	private void trimTextView() {
+		Title.setText(Title.getText().toString().trim());
+		Description.setText(Description.getText().toString().trim());
+		completionCriteria.setText(completionCriteria.getText().toString().trim());
+	}
 	private final View.OnClickListener tActionBarListener = new OnClickListener() {
 
 		@Override
@@ -160,20 +168,15 @@ public class EditTaskActivity extends FragmentActivity implements
 	}
 
 	private void setupView() {
-		// TODO: setupviews
-
+		Title = (EditText) findViewById(R.id.task_edit_title);
+		Description = (EditText) findViewById(R.id.task_edit_desc);
+		completionCriteria = (EditText) findViewById(R.id.task_edit_comp_crit);
+		tDeadline = (Button) findViewById(R.id.task_edit_deadline);
+		mComplete = (Button) findViewById (R.id.task_mark_complete_button);
+		isCompleted = (TextView) findViewById(R.id.task_edit_completed);
 	}
-
-	private void trimTextView() {
-		Title.setText(Title.getText().toString().trim());
-		Description.setText(Description.getText().toString().trim());
-		completionCriteria.setText(completionCriteria.getText().toString()
-				.trim());
-	}
-
 	@Override
 	public void processFinish(Boolean result) {
-		// TODO Auto-generated method stub
 		if (result) {
 			finish();
 		} else {
@@ -192,19 +195,12 @@ public class EditTaskActivity extends FragmentActivity implements
 		} else {
 
 			trimTextView();
-			// String title,desc,compCrit;
 			displayTask.setTitle(Title.getText().toString());
 			displayTask.setDescription(Description.getText().toString());
-			displayTask.setCompletionCriteria(completionCriteria.getText()
-					.toString());
+			displayTask.setCompletionCriteria(completionCriteria.getText().toString());
 			displayTask.setEndTime(tDeadline.getText().toString());
-			// displayTask.setEndTime(cal.get(Calendar.MONTH)-1+"/"+cal.get(Calendar.DAY_OF_MONTH)+"/"+cal.get(Calendar.YEAR));
 			TaskUpdater tUpdate = new TaskUpdater();
 			tUpdate.updateTask(displayTask);
-
-			// TODO: setup newTask
-			if (displayTask != null) {
-			}
 
 			Intent msgIntent = new Intent();
 			msgIntent.putExtra(EXTRA_TASK, displayTask);
@@ -217,17 +213,14 @@ public class EditTaskActivity extends FragmentActivity implements
 
 	private class DateClickListener implements OnClickListener,
 			OnDateSetListener {
-		Button button;
 		Calendar cal;
 
 		public DateClickListener(Button b, Calendar c) {
-			this.button = b;
 			this.cal = c;
 		}
 
 		@Override
 		public void onClick(View v) {
-			// TODO calendar stuff
 			FragmentManager fm = getSupportFragmentManager();
 			CalendarDatePickerDialog calendarDatePickerDialog = CalendarDatePickerDialog
 					.newInstance(DateClickListener.this,
@@ -257,6 +250,5 @@ public class EditTaskActivity extends FragmentActivity implements
 			}
 
 		}
-
 	}
 }

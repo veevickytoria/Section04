@@ -115,7 +115,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/vertical_spacer"
-                    android:hint="Description:"
+                    android:hint="@string/description"
                     android:inputType="text" />
 
                 <TextView
@@ -148,7 +148,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/vertical_spacer"
-                    android:hint="Completion Criteria:"
+                    android:hint="@string/comp_crit"
                     android:inputType="text" />
 
                 <TextView
@@ -166,7 +166,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:text="Completed?" />
+                android:hint="@string/completed" />
 
             <LinearLayout
                 android:id="@+id/task_response_value"
@@ -195,16 +195,17 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginBottom="0dip"
                     android:layout_marginTop="0dip"
-                    android:onClick="completeTask"
                     android:background="?android:attr/selectableItemBackground"
                     android:contentDescription="@string/reminders_label"
                     android:gravity="top"
                     android:minHeight="20dip"
+                    android:onClick="completeTask"
                     android:paddingBottom="12dp"
-                    android:text="Complete this now"
+                    android:text="@string/mark_as_complete"
                     android:textAllCaps="false"
                     android:textColor="#FF777777"
                     android:textSize="18sp" />
+
             </LinearLayout>
 
             <View style="@style/EditEventSeparator" />
@@ -221,7 +222,7 @@
                 android:id="@+id/task_assigned_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Assigned to" />
+                android:hint="@string/assigned_to" />
 
             <TextView
                 android:id="@+id/task_assigned_text"

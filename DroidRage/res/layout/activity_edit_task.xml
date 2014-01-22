@@ -20,7 +20,7 @@
                 android:ems="10"
                 android:enabled="true"
                 android:gravity="center"
-                android:hint="Task Name"
+                android:hint="@string/task_name"
                 android:textSize="25sp" />
 
             <View
@@ -44,7 +44,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="2dp"
                         android:layout_weight="2"
-                        android:hint="Date Created:"
+                        android:hint="@string/date_created"
                         android:textColor="@android:color/secondary_text_dark" />
 
                     <TextView
@@ -67,7 +67,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="2dp"
                         android:layout_weight="2"
-                        android:hint="Date Assigned:"
+                        android:hint="@string/date_assigned"
                         android:textColor="@android:color/secondary_text_dark" />
 
                     <TextView
@@ -90,7 +90,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="2dp"
                         android:layout_weight="2"
-                        android:hint="Deadline:"
+                        android:hint="@string/deadline"
                         android:textColor="@android:color/secondary_text_dark" />
 
                     <Button
@@ -115,7 +115,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/vertical_spacer"
-                    android:hint="Description:"
+                    android:hint="@string/description"
                     android:inputType="text" />
 
                 <EditText
@@ -148,7 +148,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/vertical_spacer"
-                    android:hint="Completion Criteria:"
+                    android:hint="@string/comp_crit"
                     android:inputType="text" />
 
                 <EditText
@@ -166,7 +166,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:text="Completed?" />
+                android:hint="@string/completed" />
 
             <LinearLayout
                 android:id="@+id/task_response_value"
@@ -188,7 +188,7 @@
                     android:text="@string/response_yes" />
 
                 <Button
-                    android:id="@+id/task_complete_button"
+                    android:id="@+id/task_mark_complete_button"
                     style="@style/TextAppearance.EditEvent_LabelSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -198,12 +198,14 @@
                     android:background="?android:attr/selectableItemBackground"
                     android:contentDescription="@string/reminders_label"
                     android:gravity="top"
+                    android:hint="@string/mark_as_complete"
                     android:minHeight="20dip"
+                    android:onClick="toggleCompleted"
                     android:paddingBottom="12dp"
-                    android:text="Complete this now"
                     android:textAllCaps="false"
                     android:textColor="#FF777777"
                     android:textSize="18sp" />
+
             </LinearLayout>
 
             <View style="@style/EditEventSeparator" />
@@ -220,7 +222,7 @@
                 android:id="@+id/task_assigned_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Assigned to" />
+                android:hint="@string/assigned_to" />
 
             <TextView
                 android:id="@+id/task_assigned_text"
