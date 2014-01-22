@@ -31,8 +31,10 @@ import android.util.Log;
 import com.android.meetingninja.ApplicationController;
 import com.android.volley.Request;
 import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 
 public abstract class BaseDatabaseAdapter {
 
@@ -71,6 +73,9 @@ public abstract class BaseDatabaseAdapter {
 
 	protected static int sendPostPayload(URLConnection connection,
 			String payload) throws IOException {
+		Log.d(IRequest.POST, "[URL] " + connection.getURL().toString());
+		logPrint(payload);
+
 		DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
 		wr.writeBytes(payload);
 		wr.flush();
@@ -112,15 +117,19 @@ public abstract class BaseDatabaseAdapter {
 		conn.disconnect();
 		return response;
 	}
-	
+
 	protected static String getJSONValue(JsonNode node, String key) {
 		return node.hasNonNull(key) ? node.get(key).asText() : "";
 	}
 
+	protected static void logPrint(String payload)
+			throws IOException {
+		Log.i("JSON", payload);
+	}
+
 	protected static void logError(final String tag, final JsonNode errorNode) {
-		Log.e(tag,
-				String.format("ErrorID: [%s] %s",
-						errorNode.get(Keys.ERROR_ID).asText(),
-						errorNode.get(Keys.ERROR_MESSAGE).asText()));
+		Log.e(tag, String.format("ErrorID: [%s] %s",
+				errorNode.get(Keys.ERROR_ID).asText(),
+				errorNode.get(Keys.ERROR_MESSAGE).asText()));
 	}
 }

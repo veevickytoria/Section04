@@ -52,6 +52,10 @@ import com.android.meetingninja.user.LoginActivity;
 import com.android.meetingninja.user.ProfileFragment;
 import com.android.meetingninja.user.SessionManager;
 import com.android.meetingninja.user.UserListFragment;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -428,11 +432,32 @@ public class MainActivity extends FragmentActivity {
 			logout();
 			return true;
 		case R.id.action_settings:
-			
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+
+	}
+
+	private void deleteUser(String userID) {
+		String url = UserDatabaseAdapter.getBaseUri().appendPath(userID)
+				.build().toString();
+		StringRequest dr = new StringRequest(Request.Method.DELETE, url,
+				new Response.Listener<String>() {
+					@Override
+					public void onResponse(String response) {
+						// response
+						Toast.makeText(MainActivity.this, response,
+								Toast.LENGTH_LONG).show();
+					}
+				}, new Response.ErrorListener() {
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						// error.
+
+					}
+				});
+		ApplicationController.getInstance().addToRequestQueue(dr);
 
 	}
 
