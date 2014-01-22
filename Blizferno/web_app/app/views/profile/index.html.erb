@@ -1,5 +1,28 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
 
+<!-- working on profile search
+<script>
+alert("blah");
+$(window).load(function() { 
+alert("test");
+    jQuery('#searchProfileForm').bind('submit', function(event){
+        event.preventDefault();
+/*
+        $.ajax({
+            type: 'GET',
+            url: 'http://csse371-04.csse.rose-hulman.edu/User/'+document.getElementByName("profileSearch").value,
+            success:function(data){
+                alert("data:"+data);
+            }
+        });
+*/
+alert("here");
+        return true;
+    });
+</script>
+
+-->
+
 <div style="padding:0 15px;"><!-- offset row negative padding -->
 
 <div class="row">
@@ -15,21 +38,32 @@
 </p>
 <p>
 
+<script>
+alert("userid:<%= cookies[:userID] %>");
+</script>
+
 <button onclick="submitEdit()">Testing</button>
 
 <button onclick="showEditModal()"> Edit </button>
 
+<!--part of profile search
+<form id="searchProfileForm">
+	<input name="profileSearch" type="search" placeholder="Search Profiles"/>
+<input type="submit">
+</form>
+-->
 
 <script>
+
 function submitEdit(){
 
 alert("test");
-alert("stringify:"+JSON.stringify({"userID":"5454", "field":"name", "value":"weinerweiner"}));
+alert("stringify:"+JSON.stringify({"userID":"5454", "field":"name", "value":"testSuccess"}));
 
     $.ajax({
             type: "PUT",
             url: "http://csse371-04.csse.rose-hulman.edu/User/",
-            data: JSON.stringify({"userID":"5454", "field":"name", "value":"weinerweiner"}),
+            data: JSON.stringify({"userID":"5454", "field":"name", "value":"testSuccess"}),
       		success:function(data){
         		alert(data);
         	}

@@ -56,13 +56,12 @@
 
 		var dbDate = dbMonthNumber+"/"+dbDay+"/"+dbYear+" "+dbTime;
 
-		//alert("dbDate:"+dbDate);
 		return dbDate;
 	}
 
 	function getSchedule() {
 		var userId = <%= cookies[:userID] %>;
-
+//var userId = '5467';
 //alert("userId:"+userId);
 	  $.get('http://csse371-04.csse.rose-hulman.edu/User/Schedule/'+userId,function(data){
      	//alert("Data: " + data);		
@@ -116,11 +115,6 @@ scheduler.attachEvent("onEventSave",function(id,data){
 	var postDescription = data.text;
 	var postAttendance = "[]";
 
-//alert("postDateTimeBegin:"+postDateTimeBegin+"\n postDateTimeEnd:"+postDateTimeEnd);
-
-//alert(data.start_date);
-//convertToDBDate(data.start_date.toString());
-
 
 	var postData = JSON.stringify({"userID":postId,"title":postTitle,"location":postLocation,"datetime":postDateTimeBegin,"endDatetime":postDateTimeEnd,"description":postDescription,"attendance":postAttendance});
 
@@ -138,7 +132,7 @@ scheduler.attachEvent("onEventSave",function(id,data){
     return true;
 });
 
-
+scheduler.config.max_month_events = 200;
 
 
 		scheduler.init('scheduler_here',new Date(),"month");
