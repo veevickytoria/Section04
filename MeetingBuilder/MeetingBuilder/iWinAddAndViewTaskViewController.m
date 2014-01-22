@@ -10,14 +10,15 @@
 #import "iWinAddUsersViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Contact.h"
+#import "Task.h"
+#import "iWinAppDelegate.h"
 
 @interface iWinAddAndViewTaskViewController ()
 @property (nonatomic) NSInteger taskID;
 @property (nonatomic) NSInteger userID;
+@property (strong, nonatomic) Task *task;
 @property (nonatomic) BOOL isEditing;
 @property (strong, nonatomic) iWinAddUsersViewController *userViewController;
-
-
 @property (nonatomic) NSDate *endDate;
 @property (strong, nonatomic) NSManagedObjectContext *context;
 @property (strong, nonatomic) UIPopoverController *popOverController;
@@ -30,13 +31,19 @@
 
 @implementation iWinAddAndViewTaskViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withUserID:(NSInteger)userID
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withUserID:(NSInteger)userID withTaskID:(NSInteger)taskID
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
         self.userID = userID;
+        self.taskID = taskID;
+        self.isEditing = YES;
+        if (taskID == -1){
+            self.isEditing = NO;
+        }
     }
+
     return self;
 }
 
@@ -61,18 +68,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    self.context = [appDelegate managedObjectContext];
     // Do any additional setup after loading the view from its nib.
     self.headerLabel.text = @"Add New Task";
     self.saveAndAddMoreButton.hidden = NO;
-    if (self.isEditing)
-    {
-        self.headerLabel.text = @"View Task";
-        self.saveAndAddMoreButton.hidden = YES;
-        self.titleField.text = @"Research Library";
-        self.dueField.text = @"10/23/13 9:00 PM";
-        self.descriptionField.text = @"Description about the task";
-        self.createdByField.text = @"Jim";
-    }
     self.userList = [[NSMutableArray alloc] init];
     
     self.saveAndAddMoreButton.hidden = NO;
@@ -83,11 +83,110 @@
     
     self.dateFormatter = [[NSDateFormatter alloc] init];
     [self.dateFormatter setDateFormat:@"MM/dd/yyyy"];
-    self.endDateLabel.text = [self.dateFormatter stringFromDate:[NSDate date]];
-    self.endDate = [NSDate date];
-    [self formatTime:[NSDate date]];
+    if (self.isEditing)
+    {
+        [self initForExistingTask];
+    } else {
+
+        self.endDateLabel.text = [self.dateFormatter stringFromDate:[NSDate date]];
+        self.endDate = [NSDate date];
+        [self formatTime:[NSDate date]];
+    }
 
     
+}
+
+-(void) initForExistingTask
+{
+    self.headerLabel.text = @"View Task";
+    self.saveAndAddMoreButton.hidden = YES;
+    
+    
+    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Task" inManagedObjectContext:self.context];
+    
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDesc];
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"taskID = %d", self.taskID];
+    [request setPredicate:predicate];
+    
+    NSError *error;
+    NSArray *result = [self.context executeFetchRequest:request
+                                                  error:&error];
+    self.task = (Task*)[result objectAtIndex:0];
+    
+    self.titleField.text = self.task.title;
+    self.descriptionField.text = self.task.desc;
+//    self.isCompleted.enabled = [self.task.isCompleted boolValue];
+    self.isCompleted.on = [self.task.isCompleted boolValue];
+    
+    [self initDateTimeLabels];
+    [self initAttendees];
+}
+
+-(void) initAttendees
+{
+    NSString *assignee = [self.task.assignedTo stringValue];
+    [self.userList addObject:[self getContactForID:(NSString *)assignee]];
+}
+
+-(Contact *)getContactForID:(NSString*)userID
+{
+    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/%@", userID];
+    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:30];
+    [urlRequest setHTTPMethod:@"GET"];
+    NSURLResponse * response = nil;
+    NSError * error = nil;
+    NSData * data = [NSURLConnection sendSynchronousRequest:urlRequest
+                                          returningResponse:&response
+                                                      error:&error];
+    NSArray *jsonArray;
+    if (error)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Tasks not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alert show];
+    }
+    else
+    {
+        NSError *jsonParsingError = nil;
+        jsonArray = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
+    }
+    if (jsonArray.count > 0)
+    {
+
+        
+        NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Contact" inManagedObjectContext:self.context];
+
+        NSDictionary* jsonObj = (NSDictionary*) jsonArray;
+        Contact *c = [[Contact alloc] initWithEntity:entityDesc insertIntoManagedObjectContext:self.context];
+        
+        NSNumberFormatter * f = [[NSNumberFormatter alloc] init];
+        [f setNumberStyle:NSNumberFormatterDecimalStyle];
+        NSNumber * uid = [f numberFromString:userID];
+        [c setUserID:uid];
+        
+        NSString *name = (NSString *)[jsonObj objectForKey:@"name"];
+        [c setName:name];
+        
+        NSString *email = (NSString *)[jsonObj objectForKey:@"email"];
+        [c setEmail:email];
+        
+        [self.addAssigneeButton setTitle:c.name forState:UIControlStateNormal];
+        return c;
+    }
+    return nil;
+}
+
+-(void) initDateTimeLabels
+{
+    NSArray *endDateAndTime = [self.task.deadline componentsSeparatedByString:@" "];
+    NSString *enddate = [endDateAndTime objectAtIndex:0];
+    NSString *endtime = [NSString stringWithFormat:@"%@ %@", [endDateAndTime objectAtIndex:1], [endDateAndTime objectAtIndex:2]];
+    
+    self.endDateLabel.text = enddate;
+    self.endTimeLabel.text = endtime;
+    self.endDate = [self.dateFormatter dateFromString:enddate];
 }
 
 -(void) setGestureRecognizers
@@ -117,6 +216,67 @@
 
 - (IBAction)onClickSave
 {
+    Contact *c = (Contact *) self.userList[0];
+    if (self.isEditing)
+    {
+        [self updateTask:@"title" :self.titleField.text];
+        [self updateTask:@"isCompleted" :@"False"];
+        [self updateTask:@"description" :self.descriptionField.text];
+        [self updateTask:@"deadline" :[NSString stringWithFormat:@"%@ %@", self.endDateLabel.text, self.endTimeLabel.text]];
+         [self updateTask:@"assignedTo" :[c.userID stringValue]];
+        
+    }else
+    {
+        [self saveNewTask];
+    }
+
+    
+    [self.viewTaskDelegate refreshTaskList];
+    
+}
+- (void)taskCreationAlert:(BOOL)error
+{
+    NSString *title;
+    NSString *message;
+    title = @"Error";
+    message = @"Failed to save task";
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+    [alert show];
+}
+
+- (void) updateTask: (NSString*)field : (NSString *)value{
+    NSArray *keys = [NSArray arrayWithObjects:@"taskID", @"field", @"value", nil];
+    NSArray *objects = [NSArray arrayWithObjects:[NSNumber numberWithInt:self.taskID], field, value, nil];
+    
+    NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+    NSData *jsonData;
+    NSString *jsonString;
+    
+    
+    if ([NSJSONSerialization isValidJSONObject:jsonDictionary])
+    {
+        jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:nil];
+        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    }
+    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Task/"];
+    
+    NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+    [urlRequest setHTTPMethod:@"PUT"];
+    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [urlRequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-length"];
+    [urlRequest setHTTPBody:jsonData];
+    NSURLResponse * response = nil;
+    NSError * error = nil;
+    NSData * data =[NSURLConnection sendSynchronousRequest:urlRequest
+                                         returningResponse:&response
+                                                     error:&error];
+    if (error) {
+        [self taskCreationAlert:YES];
+    }
+}
+
+- (void) saveNewTask{
     Contact *c = (Contact *) self.userList[0];
     
     NSArray *keys = [NSArray arrayWithObjects:
@@ -170,8 +330,6 @@
     NSError *jsonParsingError = nil;
     NSDictionary *deserializedDictionary = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments|NSJSONReadingMutableContainers error:&jsonParsingError];
     self.taskID = [[deserializedDictionary objectForKey:@"taskID"] integerValue];
-    [self dismissViewControllerAnimated:YES completion:nil];
-    
 }
 
 - (IBAction)onClickSaveAndAddMore

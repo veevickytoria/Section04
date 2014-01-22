@@ -68,6 +68,11 @@
 		0ACE33B117FD245B003B9C0A /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ACE33B017FD245B003B9C0A /* MobileCoreServices.framework */; };
 		0ACE33B317FD2461003B9C0A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ACE33B217FD2461003B9C0A /* Security.framework */; };
 		0ACE33B517FD246F003B9C0A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ACE33B417FD246F003B9C0A /* SystemConfiguration.framework */; };
+		5B0ADDAA188D87510013753B /* iWinGroupTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B0ADDA9188D87510013753B /* iWinGroupTest.m */; };
+		5B3B6296188CB4E900C0E53E /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B3B6295188CB4E900C0E53E /* Group.m */; };
+		5B3B629A188CBDF600C0E53E /* iWinViewAndCreateGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B3B6299188CBDF600C0E53E /* iWinViewAndCreateGroupViewController.m */; };
+		5B3B62AE188CCB7000C0E53E /* iWinViewAndCreateGroupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B3B62AD188CCB7000C0E53E /* iWinViewAndCreateGroupViewController.xib */; };
+		5BE69760188CD9E80083F71E /* OpenEars.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BE6975F188CD9E80083F71E /* OpenEars.framework */; };
 		7941FDC218278B4A00AAA92E /* iWinMergeNoteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7941FDC018278B4A00AAA92E /* iWinMergeNoteViewController.m */; };
 		7941FDC318278B4A00AAA92E /* iWinMergeNoteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7941FDC118278B4A00AAA92E /* iWinMergeNoteViewController.xib */; };
 		7941FDC81828843500AAA92E /* iWinViewAndChangeSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7941FDC61828843500AAA92E /* iWinViewAndChangeSettingsViewController.m */; };
@@ -211,7 +216,6 @@
 		79FCE0121862295E008345B3 /* UIViewController+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF931862295E008345B3 /* UIViewController+TKCategory.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		DEED1ACC1889F97B00FDAA27 /* AcousticModelEnglish.bundle in Resources */ = {isa = PBXBuildFile; fileRef = DEED1AC81889F97B00FDAA27 /* AcousticModelEnglish.bundle */; };
 		DEED1ACD1889F97B00FDAA27 /* AcousticModelSpanish.bundle in Resources */ = {isa = PBXBuildFile; fileRef = DEED1AC91889F97B00FDAA27 /* AcousticModelSpanish.bundle */; };
-		DEED1ACE1889F97B00FDAA27 /* OpenEars.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DEED1ACA1889F97B00FDAA27 /* OpenEars.framework */; };
 		DEED1ACF1889F97B00FDAA27 /* Slt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DEED1ACB1889F97B00FDAA27 /* Slt.framework */; };
 /* End PBXBuildFile section */
 
@@ -331,6 +335,14 @@
 		0ACE33B017FD245B003B9C0A /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		0ACE33B217FD2461003B9C0A /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		0ACE33B417FD246F003B9C0A /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		5B0ADDA8188D87510013753B /* iWinGroupTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinGroupTest.h; sourceTree = "<group>"; };
+		5B0ADDA9188D87510013753B /* iWinGroupTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinGroupTest.m; sourceTree = "<group>"; };
+		5B3B6294188CB4E900C0E53E /* Group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Group.h; sourceTree = "<group>"; };
+		5B3B6295188CB4E900C0E53E /* Group.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Group.m; sourceTree = "<group>"; };
+		5B3B6298188CBDF600C0E53E /* iWinViewAndCreateGroupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinViewAndCreateGroupViewController.h; sourceTree = "<group>"; };
+		5B3B6299188CBDF600C0E53E /* iWinViewAndCreateGroupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinViewAndCreateGroupViewController.m; sourceTree = "<group>"; };
+		5B3B62AD188CCB7000C0E53E /* iWinViewAndCreateGroupViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iWinViewAndCreateGroupViewController.xib; sourceTree = "<group>"; };
+		5BE6975F188CD9E80083F71E /* OpenEars.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenEars.framework; path = "../../../../../Downloads/OpenEarsDistribution 2/Framework/OpenEars.framework"; sourceTree = "<group>"; };
 		73CB9D928C6D483CAEB8FAAA /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		7941FDBF18278B4A00AAA92E /* iWinMergeNoteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinMergeNoteViewController.h; sourceTree = "<group>"; };
 		7941FDC018278B4A00AAA92E /* iWinMergeNoteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinMergeNoteViewController.m; sourceTree = "<group>"; };
@@ -490,7 +502,6 @@
 		79FCDF931862295E008345B3 /* UIViewController+TKCategory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+TKCategory.m"; path = "../tapkulibrary-master/src/TapkuLibrary/UIViewController+TKCategory.m"; sourceTree = "<group>"; };
 		DEED1AC81889F97B00FDAA27 /* AcousticModelEnglish.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AcousticModelEnglish.bundle; sourceTree = "<group>"; };
 		DEED1AC91889F97B00FDAA27 /* AcousticModelSpanish.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AcousticModelSpanish.bundle; sourceTree = "<group>"; };
-		DEED1ACA1889F97B00FDAA27 /* OpenEars.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = OpenEars.framework; sourceTree = "<group>"; };
 		DEED1ACB1889F97B00FDAA27 /* Slt.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Slt.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -505,13 +516,13 @@
 				79753AA81861095F0015098B /* MapKit.framework in Frameworks */,
 				79753AA91861095F0015098B /* QuartzCore.framework in Frameworks */,
 				0A97EDAA184169ED00160B5A /* AudioToolbox.framework in Frameworks */,
+				5BE69760188CD9E80083F71E /* OpenEars.framework in Frameworks */,
 				DEED1ACF1889F97B00FDAA27 /* Slt.framework in Frameworks */,
 				0A97EDAB184169ED00160B5A /* AVFoundation.framework in Frameworks */,
 				0ACE33B517FD246F003B9C0A /* SystemConfiguration.framework in Frameworks */,
 				0ACE33B317FD2461003B9C0A /* Security.framework in Frameworks */,
 				0ACE33B117FD245B003B9C0A /* MobileCoreServices.framework in Frameworks */,
 				0ACE33AF17FD244B003B9C0A /* CFNetwork.framework in Frameworks */,
-				DEED1ACE1889F97B00FDAA27 /* OpenEars.framework in Frameworks */,
 				0A04455A17F3825D000FF2A0 /* UIKit.framework in Frameworks */,
 				0A04455C17F3825D000FF2A0 /* Foundation.framework in Frameworks */,
 				0A04455E17F3825D000FF2A0 /* CoreGraphics.framework in Frameworks */,
@@ -583,6 +594,7 @@
 		0A04456117F3825D000FF2A0 /* MeetingBuilder */ = {
 			isa = PBXGroup;
 			children = (
+				5B3B6297188CBDBE00C0E53E /* ViewAndCreateGroup */,
 				0A7F1CDC185908550017209D /* Data Model */,
 				0AAC9E921846FE2B0073260F /* OpenEars */,
 				0A91DC911835D7AB00741349 /* OCCalendar */,
@@ -745,6 +757,7 @@
 		0A7F1CCB185637310017209D /* MeetingBuilder Tests */ = {
 			isa = PBXGroup;
 			children = (
+				5B0ADDA5188D82AA0013753B /* GroupTest */,
 				0A8F7CB61881D4CF0097C86C /* SettingsTest */,
 				0A99E1FF1862D870001D8A64 /* RegisterTest */,
 				0A96E7DF185BE6A600EAB0DC /* ViewProfileTest */,
@@ -793,6 +806,8 @@
 				0A7F1CE118611FB10017209D /* iWinPopulateDatabase.m */,
 				7969B221188B6EED00354F37 /* Task.h */,
 				7969B222188B6EED00354F37 /* Task.m */,
+				5B3B6294188CB4E900C0E53E /* Group.h */,
+				5B3B6295188CB4E900C0E53E /* Group.m */,
 			);
 			name = "Data Model";
 			sourceTree = "<group>";
@@ -844,6 +859,25 @@
 				0AAC9E941846FE6F0073260F /* iWinOpenEarsModel.m */,
 			);
 			name = OpenEars;
+			sourceTree = "<group>";
+		};
+		5B0ADDA5188D82AA0013753B /* GroupTest */ = {
+			isa = PBXGroup;
+			children = (
+				5B0ADDA8188D87510013753B /* iWinGroupTest.h */,
+				5B0ADDA9188D87510013753B /* iWinGroupTest.m */,
+			);
+			name = GroupTest;
+			sourceTree = "<group>";
+		};
+		5B3B6297188CBDBE00C0E53E /* ViewAndCreateGroup */ = {
+			isa = PBXGroup;
+			children = (
+				5B3B6298188CBDF600C0E53E /* iWinViewAndCreateGroupViewController.h */,
+				5B3B6299188CBDF600C0E53E /* iWinViewAndCreateGroupViewController.m */,
+				5B3B62AD188CCB7000C0E53E /* iWinViewAndCreateGroupViewController.xib */,
+			);
+			name = ViewAndCreateGroup;
 			sourceTree = "<group>";
 		};
 		7941FDB618278A7800AAA92E /* MergeNote */ = {
@@ -1046,9 +1080,9 @@
 		DEED1AC71889F97B00FDAA27 /* Framework */ = {
 			isa = PBXGroup;
 			children = (
+				5BE6975F188CD9E80083F71E /* OpenEars.framework */,
 				DEED1AC81889F97B00FDAA27 /* AcousticModelEnglish.bundle */,
 				DEED1AC91889F97B00FDAA27 /* AcousticModelSpanish.bundle */,
-				DEED1ACA1889F97B00FDAA27 /* OpenEars.framework */,
 				DEED1ACB1889F97B00FDAA27 /* Slt.framework */,
 			);
 			name = Framework;
@@ -1179,6 +1213,7 @@
 				0A1A72A4181A2663009A49E5 /* iWinAddAndViewTaskViewController.xib in Resources */,
 				0A04457017F3825D000FF2A0 /* Default@2x.png in Resources */,
 				DEED1ACD1889F97B00FDAA27 /* AcousticModelSpanish.bundle in Resources */,
+				5B3B62AE188CCB7000C0E53E /* iWinViewAndCreateGroupViewController.xib in Resources */,
 				0A04457217F3825D000FF2A0 /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1244,10 +1279,12 @@
 				79FCDFBE1862295E008345B3 /* TKHTTPRequest.m in Sources */,
 				79FCDFBF1862295E008345B3 /* TKImageCache.h in Sources */,
 				79FCDFC01862295E008345B3 /* TKImageCache.m in Sources */,
+				5B3B6296188CB4E900C0E53E /* Group.m in Sources */,
 				79FCDFC11862295E008345B3 /* TKKeyboardTableViewController.h in Sources */,
 				79FCDFC21862295E008345B3 /* TKKeyboardTableViewController.m in Sources */,
 				79FCDFC31862295E008345B3 /* TKLabelCell.h in Sources */,
 				79FCDFC41862295E008345B3 /* TKLabelCell.m in Sources */,
+				5B3B629A188CBDF600C0E53E /* iWinViewAndCreateGroupViewController.m in Sources */,
 				79FCDFC51862295E008345B3 /* TKLabelFieldCell.h in Sources */,
 				79FCDFC61862295E008345B3 /* TKLabelFieldCell.m in Sources */,
 				79FCDFC71862295E008345B3 /* TKLabelSwitchCell.h in Sources */,
@@ -1367,6 +1404,7 @@
 				0A8F7CB81881D4F30097C86C /* iWinSettingsTest.m in Sources */,
 				0A7F1CDB1858FD820017209D /* iWinAddUserTest.m in Sources */,
 				0A96E7E4185BE72700EAB0DC /* iWinViewProfileTest.m in Sources */,
+				5B0ADDAA188D87510013753B /* iWinGroupTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1474,6 +1512,7 @@
 					/Users/csse/Documents/Section04/MeetingBuilder/MeetingBuilder/Framework,
 					/Users/csse/Documents/CSSE371/Section04/MeetingBuilder,
 					/Users/Alpha/Documents/Section04/MeetingBuilder/MeetingBuilder/Framework,
+					"/Users/brodielockard/Downloads/OpenEarsDistribution\\ 2/Framework",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MeetingBuilder/MeetingBuilder-Prefix.pch";
@@ -1505,6 +1544,7 @@
 					/Users/csse/Documents/Section04/MeetingBuilder/MeetingBuilder/Framework,
 					/Users/csse/Documents/CSSE371/Section04/MeetingBuilder,
 					/Users/Alpha/Documents/Section04/MeetingBuilder/MeetingBuilder/Framework,
+					"/Users/brodielockard/Downloads/OpenEarsDistribution\\ 2/Framework",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MeetingBuilder/MeetingBuilder-Prefix.pch";
