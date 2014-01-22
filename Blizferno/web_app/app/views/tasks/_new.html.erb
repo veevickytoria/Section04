@@ -1,0 +1,29 @@
+<span style="font-size:28px; color:#f00;">All fields are required. </span>
+
+<form name="input" id="createTask" action ="http://csse371-04.csse.rose-hulman.edu/Task/" onsubmit="return validateForm()" method="post">
+
+	<span style="font-size:28px;"><strong><span style="font-size:18px;">Topic: </span></strong></span>
+	<br>
+	<input type="text" name="title" maxlength="50" size="25">
+	<br>
+	<input type="hidden" name="isCompleted" value="false">
+	<span style="font-size:28px;"><strong><span style="font-size:18px;">Description: </span></strong></span>
+	<br>
+	<input type="text" name="description" maxlength="1000" size="25">
+	<br>
+	<span style="font-size:28px;"><strong><span style="font-size:18px;">Deadline: (please use military time) </span></strong></span>
+	<br>
+	<input type="text" name="deadline" placeholder="mm/dd/yyyy HH:MM" maxLength="16" size="16">
+	<br>
+	<input type="hidden" name="dateCreated" value="<%= Time.now.strftime("%m/%d/%Y %H:%M") %>">
+	<input type="hidden" name="dateAssigned" value="<%= Time.now.strftime("%m/%d/%Y %H:%M") %>">
+	<span style="font-size:28px;"><strong><span style="font-size:18px;">Completion Criteria: </span></strong></span>
+	<br>
+	<input type="text" name="completionCriteria" maxLength="500" size="25">
+	<br>
+	<span style="font-size:28px;"><strong><span style="font-size:18px;">Assigned to: </span></strong></span>
+	<br>
+	<input type="text" name="assignedTo" maxLength="20" size="10">
+	<input type="hidden" name="assignedFrom" value="749"> <!-- Change this to current user -->
+	<input type="hidden" name="createdBy" value="749"> <!-- Change this to current user -->
+</form>

@@ -46,7 +46,7 @@ WebApp::Application.routes.draw do
   #     post 'toggle'
   #   end
   #   resources :posts, concerns:#gem 'sass-rails', '~> 4.0.0'
- :toggleable
+  #:toggleable
   #   resources :photos, concerns: :toggleable
 
   # Example resource route within a namespace:
@@ -56,18 +56,25 @@ WebApp::Application.routes.draw do
   #     resources :products
   #   end
 
+
+  post "login/index"
+
   get "home_page/index"
+  get "home_page/tabpage"
+
   get "login/index"
-<<<<<<< HEAD
+  get "meetings/new"
+  get "meetings/index"
   get "groups/index"
   get "groups/new"
-=======
-	get "profile/index"
-  get "create_task/index"
-
->>>>>>> 5e28493a1a86256ed9c2d418f11d670e25f017fc
+  get "profile/index"
+  get "tasks/index"
+  get "tasks/new"
+  get "tasks/list"
+  get "preferences/home"
 
   root :to => 'home_page#index'
+
 
 
 end

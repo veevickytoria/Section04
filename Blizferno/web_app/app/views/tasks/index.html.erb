@@ -1,0 +1,256 @@
+<style type="text/css">
+header > h1 { display: inline-block; }
+.modal-backdrop{
+  z-index: 999;
+}
+</style>
+
+<script type="text/javascript">
+  
+  var TaskArray;
+  var deleteID;
+
+  function hideViewModal(){
+    $('#viewTaskModal').modal('hide');
+  }
+
+  function showDeleteModal(ID){
+    deleteID = ID;
+    $('#deleteTaskModal').modal('show');
+  }
+
+  function hideDeleteModal(){
+    // TODO: Put this back in when it works and change it to the delete
+    // $.ajax({
+    //         type: 'GET',
+    //         url: 'http://csse371-04.csse.rose-hulman.edu/Tasks/' + deletelID,
+    //   success:function(data){
+    //     if(data.taskID != null){
+    //       TaskArray = JSON.parse(data);
+    //     }
+    //   }
+    // });
+    alert("The task matching id " + deleteID + " was deleted");
+
+    $('#deleteTaskModal').modal('hide');
+    // TODO: Put back in
+    //location.reload(true);
+  }
+
+  function showEditModal(){
+    $('#editTaskModal').modal('hide');
+    $('#editTaskModal').on('hidden.bs.modal', function() {
+      $(this).removeData('bs.modal');
+    });
+    // TODO: Put this back in when it works
+    // $.ajax({
+    //         type: 'GET',
+    //         url: 'http://csse371-04.csse.rose-hulman.edu/Tasks/' + ID,
+    //   success:function(data){
+    //     if(data.taskID != null){
+    //       TaskArray = JSON.parse(data);
+    //     }
+    //   }
+    // });
+
+    document.getElementById("titleE").value = TaskArray["title"];
+    document.getElementById("isCompletedE").checked = TaskArray["isCompleted"];
+    document.getElementById("descriptionE").value = TaskArray["description"];
+    document.getElementById("deadlineE").value = TaskArray["deadline"];
+    document.getElementById("completionCriteriaE").value = TaskArray["completionCriteria"];
+    document.getElementById("assignedToE").value = TaskArray["assignedTo"];
+
+    $('#editTaskModal').modal('show');
+    $('#viewTaskModal').modal('hide');
+  }
+
+  function showViewModalNoID(){
+    $('#viewTaskModal').modal('hide');
+    $('#viewTaskModal').on('hidden.bs.modal', function() {
+      $(this).removeData('bs.modal');
+    });
+
+    // Edi
+  }
+
+  function showViewModal(ID){
+    $('#viewTaskModal').modal('hide');
+    $('#viewTaskModal').on('hidden.bs.modal', function() {
+      $(this).removeData('bs.modal');
+    });
+    // TODO: Put this back in when it works
+    // $.ajax({
+    //         type: 'GET',
+    //         url: 'http://csse371-04.csse.rose-hulman.edu/Tasks/' + ID,
+    //   success:function(data){
+    //     if(data.taskID != null){
+    //       TaskArray = JSON.parse(data);
+    //     }
+    //   }
+    // });
+
+    if (ID == 1){
+      TaskArray = JSON.parse ('{"taskID":"1","title":"Delete a Task","isCompleted":"false","description":"Allows the user to delete a task","deadline":"19-Dec-13","dateCreated":"16-Dec-13","dateAssigned":"16-Dec-13","completionCriteria":"Must remove the specified task from the database and be verified by client","assignedTo":"Lindsey","assignedFrom":"Lindsey","createdBy":"Lindsey"}');
+    }else if (ID == 2){
+      TaskArray = JSON.parse('{"taskID":"2","title":"Create a Meeting","isCompleted":"false","description":"Allows the user to create a meeting","deadline":"19-Dec-13","dateCreated":"16-Dec-13","dateAssigned":"16-Dec-13","completionCriteria":"Must add the meeting information to the database and be verified by client","assignedTo":"Jonathan","assignedFrom":"Lindsey","createdBy":"Lindsey"}');
+    }else if (ID == 3){
+      TaskArray = JSON.parse('{"taskID":"3","title":"Create a Task","isCompleted":"false","description":"Allows the user to create a task","deadline":"19-Dec-13","dateCreated":"16-Dec-13","dateAssigned":"16-Dec-13","completionCriteria":"Must add the specified task to the database and be verified by client","assignedTo":"Lindsey","assignedFrom":"Lindsey","createdBy":"Lindsey"}');
+    }else if (ID == 4){
+      TaskArray = JSON.parse('{"taskID":"4","title":"View a Task","isCompleted":"false","description":"Allows the user to view a task","deadline":"19-Dec-13","dateCreated":"16-Dec-13","dateAssigned":"16-Dec-13","completionCriteria":"Must view the specified task and be verified by client","assignedTo":"Lindsey","assignedFrom":"Lindsey","createdBy":"Lindsey"}');
+    }
+
+    document.getElementById("titleV").innerHTML = TaskArray["title"];
+    document.getElementById("isCompletedV").innerHTML = TaskArray["isCompleted"];
+    document.getElementById("descriptionV").innerHTML = TaskArray["description"];
+    document.getElementById("deadlineV").innerHTML = TaskArray["deadline"];
+    document.getElementById("dateCreatedV").innerHTML = TaskArray["dateCreated"];
+    document.getElementById("dateAssignedV").innerHTML = TaskArray["dateAssigned"];
+    document.getElementById("completionCriteriaV").innerHTML = TaskArray["completionCriteria"];
+    document.getElementById("assignedToV").innerHTML = TaskArray["assignedTo"];
+    document.getElementById("assignedFromV").innerHTML = TaskArray["assignedFrom"];
+    document.getElementById("createdByV").innerHTML = TaskArray["createdBy"];
+
+    $('#viewTaskModal').modal('show');
+    $('#editTaskModal').modal('hide');
+  }
+
+  function validateForm(){
+    var title = document.forms["input"]["title"].value;
+    var description = document.forms["input"]["description"].value;
+    var deadline = document.forms["input"]["deadline"].value;
+    var completionCriteria = document.forms["input"]["completionCriteria"].value;
+    var assignedTo = document.forms["input"]["assignedTo"].value;
+
+    if(title.length == 0 || description.length == 0 || !checkDeadlineFormat(deadline) || completionCriteria.length == 0 || assignedTo.length == 0) {
+      var string = "The following fields need filled or modified: \n\n";
+      if(title.length == 0) string = string + "Title\n";
+      if(description.length == 0) string = string + "Description\n";
+      if(!checkDeadlineFormat(deadline)) string = string + "Deadline (format = 'MM/DD/YYYY_HH:MM', where the underscore is a space)\n";
+      if(completionCriteria.length == 0) string = string + "Completion Criteria\n";
+      if(assignedTo.length == 0) string = string + "Assigned To\n";
+      alert(string);
+      return false;
+    }
+    else{
+      alert("The following fields were added to the db: " + title + " " + description + " " + deadline + " " + completionCriteria + " " + assignedTo)
+      return true;
+    }
+  }
+
+  function checkDeadlineFormat(deadline){
+    if(deadline.length == 0) return false;
+    else {
+      var array = deadline.split('');
+      var date = new Date()
+      var month = parseInt(deadline.substring(0,2));
+      var day = parseInt(deadline.substring(3,5));
+      var year = parseInt(deadline.substring(6, 10));
+      var hours = parseInt(deadline.substring(11, 13));
+      var minutes = parseInt(deadline.substring(14, 16));
+      if(!(!isNaN(array[0]) && !isNaN(array[1]) && !isNaN(array[3]) && !isNaN(array[4]) && !isNaN(array[6]) && !isNaN(array[7]) && !isNaN(array[8]) && !isNaN(array[9]) && !isNaN(array[11]) && !isNaN(array[12]) && !isNaN(array[14]) && !isNaN(array[15]))) return false;
+      else if(array[2] != '/' || array[5] != '/' || array[10] != ' ' || array[13] != ':') return false;
+      else if(day > 31 || day == 0 || month > 12 || month == 0 || year < date.getFullYear() || hours > 23 || minutes > 59) return false;
+      else return true;
+    }
+  }
+</script>
+
+<h1 style='margin-left: 15%; margin-right: auto;'>Tasks</h1>
+
+<!-- Create Modal -->
+<div class="modal fade" id="newTaskModal" tabindex="-1" role="dialog" aria-labelledby="newTaskModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Create Task</h4>
+      </div>
+      <div class="modal-body">
+        <%= render "new" %>
+      </div>
+      <div class="modal-footer">
+	<input type="submit" form="createTask" class="btn btn-primary"></button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteTaskModal" tabindex="-1" role="dialog" aria-labelledby="deleteTaskModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Delete Task</h4>
+      </div>
+      <div class="modal-body">
+        <%= render "delete" %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="hideDeleteModal()">Delete</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- View Modal -->
+<div class="modal fade" id="viewTaskModal"  tabindex="-1" role="dialog" aria-labelledby="viewTaskModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">View Task</h4>
+      </div>
+      <div class="modal-body">
+        <%= render "view" %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" data-refresh="true">Close</button>
+        <button type="button" class="btn btn-primary" onclick="showEditModal()" href="#editTaskModal" data-refresh="true" data-toggle='modal'>Edit</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editTaskModal" tabindex="-1" role="dialog" aria-labelledby="editTaskModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Edit Task</h4>
+      </div>
+      <div class="modal-body">
+        <%= render "edit" %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" onclick="showViewModalNoID()" data-refresh="true" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="showViewModalNoID()" data-refresh="true" >Save Changes</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<table class='table table-hover table-striped' style='width: 70%; margin-left: 15%; margin-right: auto;'>
+  <thead>
+    <tr >
+      <th>Due</th>
+      <th>Task Name</th>
+      <th>Project</th>
+      <th></th>
+    </tr>
+  </thead>
+  <% for task in @tasks['tasks'] %>
+    <tr>
+      <td><%= task['deadline'] %></td>
+      <td><a onClick="showViewModal(<%= task['taskID'] %>)" data-refresh="true" data-toggle='modal'><%= task['title'] %></a></td>
+      <td><%= task['project'] %></td>
+      <td colspan='1' style='cursor: pointer; text-align: center' onClick="showDeleteModal(<%= task['taskID'] %>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
+    </tr>
+  <% end %>
+  <tr>
+    <td colspan='4' style='cursor: pointer; text-align: center' href='#newTaskModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
+  </tr>
+</table>

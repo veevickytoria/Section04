@@ -1,2 +1,0 @@
-class CreateTaskController < ApplicationController
-end

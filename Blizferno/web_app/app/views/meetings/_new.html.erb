@@ -1,0 +1,92 @@
+<!-- <div id = 'menu' style = 'width: 50%; float:left'> -->
+<form name="input" id = "createMeeting" onsubmit="return validateForm()" action ="http://csse371-04.csse.rose-hulman.edu/Meeting/" method = 'post'>
+		<h5>Topic</h5>
+		<input type='text' name = "title" style = "width: 100%" placeholder="Topic" />
+		
+		<h5>Description*</h5>
+		<textarea style = 'width: 100%' placeholder='Description'></textarea>
+		
+		<h5>Attendees</h5>
+		<pre></pre>
+		<!-- <table>
+			<tr>
+				<td>
+					<select id='mylist'>
+						<option>Recently Invited</option>
+						<option>-----------</option>
+						<option>Jerry</option>
+						<option>George</option>
+						<option>Elaine</option>
+					</select>
+				</td>
+				<td style='padding-left: 5px;'><input type='button' value='Search Users' /></td>
+			</tr>
+		</table> -->
+		
+		<h5>Date</h5>
+		<table>
+			<tr>
+				<td>
+					<input type='text' name = "datetime" style='width: 100%' placeholder='mm/dd/yyyy HH:MM' />
+				</td>
+			</tr>
+		</table>
+		
+		<h5>Location</h5>
+		<table>
+			<tr>
+				<td>
+					<input type='text' name ="location" style='width: 100%' placeholder='Location' />
+				</td>
+				<td style='padding-left: 5px;'>
+					<input type='button' value='Search Locations' />
+				</td>
+			</tr>
+		</table>
+		
+		<h5>Project*</h5>
+		<table>
+			<tr>
+				<td>
+					<input type='text' name = 'project' placeholder='Project' />
+				</td>
+				<td style='padding-left: 5px;'>
+					<input type='button' value='Search Projects' />
+				</td>
+			</tr>
+		</table>
+
+		<h5>Agenda</h5>
+		<table style='width: 100%;'>
+			<tr>
+				<td style='width: 70%'>
+					<input type='url' name = 'agenda' style='width: 100%' placeholder='Paste Link' />
+				</td>
+				<td style='width: 30%'>
+					<input type='button' value='Attach Google Doc' />
+				</td>
+			</tr>
+		</table>
+		
+		<!-- </div> -->
+		<!-- <div id = 'content' style = 'width: 50%; float:right'> -->
+		<h5>Tasks:</h5>
+		<input type='text' name = 'task' placeholder='Task' />
+		<select>
+			<option>Assigned User</option>
+			<option>------------</option>
+			<option>other users here</option>
+		</select>
+		<p>More tasks...</p>
+		<!-- 
+		<div class='checkboxes'>
+		<label><input type='radio' name='schedule' /><span> Accept Suggested Time</span></label>
+		<label><input type='radio' name='schedule' /><span> Go to Scheduling Assistant</span></label>
+		</div>
+		<br /><br />
+		<input type='submit' style='font-size: 16px;padding-top: 2px;' name='createMeeting' value='Create Meeting' /> -->
+	</form>
+<!-- </div> -->
+
+
+
