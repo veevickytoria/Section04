@@ -31,7 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JsonNodeRequest extends JsonRequest<JsonNode> {
 
-	ObjectMapper mMapper;
+	private ObjectMapper mMapper;
 
 	public JsonNodeRequest(String url, JsonNode jsonRequest,
 			Listener<JsonNode> listener, ErrorListener errorListener) {

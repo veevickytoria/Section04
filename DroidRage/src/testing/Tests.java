@@ -5,6 +5,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import com.android.meetingninja.extras.MyDateUtils;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -35,28 +39,22 @@ public class Tests {
 		String serverTimeStart = "Saturday, 15-Aug-15 23:59:59 UTC";
 		String serverTimeEnd = "Sunday, 16-Aug-15 23:59:59 UTC";
 
-		Date start, end;
-		start = end = new Date();
+		DateTime start, end;
+		start = end = new DateTime();
 		long testStart, testEnd;
 		testStart = testEnd = 0L;
 
-		SimpleDateFormat fmt = MyDateUtils.SERVER_DATE_FORMAT;
-		try {
-			start = fmt.parse(serverTimeStart);
-			end = fmt.parse(serverTimeEnd);
-			testStart = start.getTime();
-			testEnd = end.getTime();
-
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println(fmt.format(start));
+		DateTimeFormatter fmt = MyDateUtils.JODA_SERVER_DATE_FORMAT;
+		start = fmt.parseDateTime(serverTimeStart);
+		end = fmt.parseDateTime(serverTimeEnd);
+		testStart = start.getMillis();
+		testEnd = end.getMillis();
+		System.out.println(fmt.print(start));
 		System.out.println(testStart);
-		System.out.println(fmt.format(new Date(testStart)));
-		System.out.println(fmt.format(end));
+		System.out.println(fmt.print(new DateTime(testStart)));
+		System.out.println(fmt.print(end));
 		System.out.println(testEnd);
-		System.out.println(fmt.format(new Date(testEnd)));
+		System.out.println(fmt.print(new DateTime(testEnd)));
 	}
 
 }

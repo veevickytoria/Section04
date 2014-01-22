@@ -39,11 +39,20 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.meetingninja.ApplicationController;
 import com.android.meetingninja.MainActivity;
 import com.android.meetingninja.R;
 import com.android.meetingninja.database.AsyncResponse;
+import com.android.meetingninja.database.JsonNodeRequest;
+import com.android.meetingninja.database.Keys;
+import com.android.meetingninja.database.NotesDatabaseAdapter;
+import com.android.meetingninja.database.UserDatabaseAdapter;
 import com.android.meetingninja.database.local.SQLiteNoteAdapter;
 import com.android.meetingninja.user.SessionManager;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class NotesFragment extends Fragment implements
 		AsyncResponse<List<Note>> {
@@ -63,22 +72,23 @@ public class NotesFragment extends Fragment implements
 		super.onCreateView(inflater, container, savedInstanceState);
 		View v = inflater.inflate(R.layout.fragment_notes, container, false);
 		setHasOptionsMenu(true);
-
-		// Intent test = getActivity().getIntent();
-
-		// if (test.getStringExtra("NoteID") != null)
-		// Log.e("NOTES", test.getStringExtra("NoteID"));
+		setupViews(v);
 
 		session = SessionManager.getInstance();
-
 		mySQLiteAdapter = new SQLiteNoteAdapter(getActivity());
 
+		populateList();
+
+		return v;
+
+	}
+
+	private void setupViews(View v) {
 		// setup listview
 		ListView lv = (ListView) v.findViewById(R.id.notesList);
 		noteAdpt = new NoteItemAdapter(getActivity(), R.layout.list_item_note,
 				notes);
 		lv.setAdapter(noteAdpt);
-		populateList();
 
 		// pretty images are better than boring text
 		notesImageButton = (ImageButton) v.findViewById(android.R.id.empty);
@@ -92,39 +102,18 @@ public class NotesFragment extends Fragment implements
 			}
 		});
 
-		// Intent updateNote = null;
-		// Bundle bundle;
-		// if(savedInstanceState != null)
-		// bundle = savedInstanceState; // 1
-		// else if(getArguments() != null)
-		// bundle = getArguments(); // 2
-		// else
-		// updateNote = this.getActivity().getIntent();
-		//
-		// if(updateNote != null && updateNote.getBooleanExtra("Update",
-		// false)){
-		// Log.e("NOTES", "UPDATE");
-		// } else
-		// {
-		// Log.e("NOTES", "NO UPDATE");
-		// }
-
 		// Item click event
 		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parentAdapter, View v,
 					int position, long id) {
-				Note n = noteAdpt.getItem(position);
+				Note clickedNote = noteAdpt.getItem(position);
 
 				Intent editNote = new Intent(getActivity(),
 						ViewNoteActivity.class);
 				editNote.putExtra("listPosition", position);
-				editNote.putExtra(EditNoteActivity.EXTRA_ID, n.getNoteID());
-				editNote.putExtra(EditNoteActivity.EXTRA_TITLE, n.getTitle());
-				editNote.putExtra(EditNoteActivity.EXTRA_CONTENT,
-						n.getContent());
-				editNote.putExtra(EditNoteActivity.EXTRA_CREATOR,n.getCreatedBy());
+				editNote.putExtra(Keys.Note.PARCEL, clickedNote);
 				startActivityForResult(editNote, 1);
 
 			}
@@ -153,9 +142,6 @@ public class NotesFragment extends Fragment implements
 			}
 
 		});
-
-		return v;
-
 	}
 
 	@Override
@@ -209,26 +195,14 @@ public class NotesFragment extends Fragment implements
 			if (resultCode == Activity.RESULT_OK) {
 				if (data != null) {
 					int listPosition = data.getIntExtra("listPosition", -1);
-					String noteID = data
-							.getStringExtra(EditNoteActivity.EXTRA_ID);
-					String noteName = data
-							.getStringExtra(EditNoteActivity.EXTRA_TITLE);
-					String noteContent = data
-							.getStringExtra(EditNoteActivity.EXTRA_CONTENT);
-					String noteCreator = data
-							.getStringExtra(EditNoteActivity.EXTRA_CREATOR);
-					// StringBuilder sb = new StringBuilder();
-					// sb.append("[" + listPosition + "] ");
-					// sb.append(noteID + " ");
-					// sb.append(noteName + " ");
-					// sb.append(noteContent);
-					// Log.v(TAG, sb.toString());
-					// populateList();
-					int _id = Integer.valueOf(noteID);
+					Note editedNote = (Note) data
+							.getParcelableExtra(Keys.Note.PARCEL);
+
+					int _id = Integer.valueOf(editedNote.getID());
 					if (listPosition != -1)
-						updateNote(listPosition, _id, noteName, noteContent, noteCreator);
+						updateNote(listPosition, editedNote);
 					else
-						updateNote(_id, noteName, noteContent, noteCreator);
+						updateNote(_id, editedNote);
 				}
 			} else {
 				if (resultCode == Activity.RESULT_CANCELED) {
@@ -247,31 +221,45 @@ public class NotesFragment extends Fragment implements
 	 * Initializes the list of notes. TODO: Get the notes from the database
 	 */
 	private void fetchNotes() {
+		String _url = UserDatabaseAdapter.getBaseUri().appendPath("Notes")
+				.appendPath(session.getUserID()).build().toString();
 
+		JsonNodeRequest req = new JsonNodeRequest(_url, null,
+				new Response.Listener<JsonNode>() {
+					public void onResponse(JsonNode response) {
+						VolleyLog.v("Response:%n %s", response);
+
+						// processFinish(NotesDatabaseAdapter.parseNoteList(noteNode));
+					};
+				}, new Response.ErrorListener() {
+					public void onErrorResponse(VolleyError error) {
+						VolleyLog.e("Error:%n %s", error);
+
+					};
+				});
+
+		ApplicationController app = ApplicationController.getInstance();
+		app.addToRequestQueue(req, "JSON");
 	}
 
-	private void removeObjectWithID(int id) {
-
-		Note s = null;
-		for (int i = 0; i < noteAdpt.getCount(); i++) {
-			if (Long.toString(id).equals(noteAdpt.getItem(i).getNoteID())) {
-				s = noteAdpt.getItem(i);
-				break;
-			}
-		}
-
-		noteAdpt.remove(s);
-		mySQLiteAdapter.deleteNote(id);
-
+	private boolean updateNote(Note update) {
+		mySQLiteAdapter.updateNote(update);
+		populateList();
+		return true;
 	}
 
-	private void readLocalNotes() {
+	private boolean updateNote(int position, Note update) {
+		if (position < 0 || position >= notes.size())
+			return false;
+		notes.set(position, new Note(update));
+		mySQLiteAdapter.updateNote(update);
+		noteAdpt.notifyDataSetChanged();
+		return true;
+	}
 
+	public void populateList() {
 		List<Note> contentRead = mySQLiteAdapter.getAllNotes();
-
-		for (Note i : contentRead)
-			notes.add(i);
-
+		processFinish(contentRead);
 	}
 
 	@Override
@@ -283,45 +271,6 @@ public class NotesFragment extends Fragment implements
 		notes.clear();
 		notes.addAll(list);
 		noteAdpt.notifyDataSetChanged();
-	}
-
-	private boolean updateNote(int noteID, String noteName, String noteContent, String noteCreator) {
-		Note create = new Note();
-		create.setNoteID("" + noteID);
-		create.setTitle(noteName);
-		create.setContent(noteContent);
-		create.setCreatedBy(noteCreator);
-		mySQLiteAdapter.updateNote(create);
-		populateList();
-		return true;
-	}
-
-	private boolean updateNote(int position, int noteID, String noteName,
-			String noteContent, String noteCreator) {
-		if (position < 0 || position >= notes.size())
-			return false;
-		notes.get(position).setTitle(noteName);
-		notes.get(position).setContent(noteContent);
-		mySQLiteAdapter.updateNote(notes.get(position));
-
-		noteAdpt.notifyDataSetChanged();
-
-		return true;
-	}
-
-	public Note createBlankNote() {
-		return mySQLiteAdapter.insertNote("New Note", "", "unknown");
-	}
-
-	public void populateList() {
-		noteAdpt.clear();
-		notes.clear();
-
-		List<Note> contentRead = mySQLiteAdapter.getAllNotes();
-		notes.addAll(contentRead);
-
-		noteAdpt.notifyDataSetChanged();
-
 	}
 
 }

@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
 
 import objects.Agenda;
@@ -31,7 +30,6 @@ import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -76,9 +74,10 @@ public class AgendaDatabaseAdapter extends BaseDatabaseAdapter {
 
 		// Build JSON Object
 		jgen.writeStartObject(); // start agenda
-		jgen.writeStringField(KEY_TITLE, create.getTitle());
-		jgen.writeStringField(KEY_MEETING, create.getAttachedMeetingID());
-		jgen.writeArrayFieldStart(KEY_CONTENT); // start topics
+		jgen.writeStringField(Keys.Agenda.TITLE, create.getTitle());
+		jgen.writeStringField(Keys.Agenda.MEETING,
+				create.getAttachedMeetingID());
+		jgen.writeArrayFieldStart(Keys.Agenda.TOPIC); // start topics
 		MAPPER.writeValue(jgen, create.getTopics()); // recursively does
 														// subtopics
 		jgen.writeEndArray(); // end topics
@@ -94,11 +93,10 @@ public class AgendaDatabaseAdapter extends BaseDatabaseAdapter {
 		String response = getServerResponse(conn);
 
 		newAgenda = parseAgenda(MAPPER.readTree(response));
-
 		return newAgenda;
 	}
 
-	public static String update(String agendaID, Map<String, String> key_values)
+	public static JsonNode update(String agendaID, Map<String, String> key_values)
 			throws JsonGenerationException, IOException, InterruptedException {
 		// prepare POST payload
 		ByteArrayOutputStream json = new ByteArrayOutputStream();
@@ -111,7 +109,7 @@ public class AgendaDatabaseAdapter extends BaseDatabaseAdapter {
 			jgen.flush();
 			// Build JSON Object
 			jgen.writeStartObject();
-			jgen.writeStringField(KEY_ID, agendaID);
+			jgen.writeStringField(Keys.Agenda.ID, agendaID);
 			jgen.writeStringField("field", key);
 			jgen.writeStringField("value", key_values.get(key));
 			jgen.writeEndObject();
@@ -139,7 +137,7 @@ public class AgendaDatabaseAdapter extends BaseDatabaseAdapter {
 			t.run();
 			response = updateHelper(p);
 		}
-		return response;
+		return MAPPER.readTree(response);
 	}
 
 	public static boolean deleteAgenda(String agendaID) throws IOException {
@@ -158,23 +156,16 @@ public class AgendaDatabaseAdapter extends BaseDatabaseAdapter {
 		int responseCode = conn.getResponseCode();
 		String response = getServerResponse(conn);
 
-		/*
-		 * result should get valid={"userID":"##"}
-		 * invalid={"errorID":"##","errorMessage":"error"}
-		 */
-		HashMap<String, String> responseMap;
 		boolean result = false;
+		JsonNode tree = MAPPER.readTree(response);
 		if (!response.isEmpty()) {
-			responseMap = MAPPER.readValue(response,
-					new TypeReference<HashMap<String, String>>() {
-					});
-			if (!responseMap.containsKey("deleted")) {
+			if (!tree.has(Keys.DELETED)) {
 				result = true;
 			} else {
 				Log.e(TAG,
 						String.format("ErrorID: [%s] %s",
-								responseMap.get(ERROR_ID),
-								responseMap.get(ERROR_MESSAGE)));
+								tree.get(Keys.ERROR_ID).asText(),
+								tree.get(Keys.ERROR_MESSAGE).asText()));
 			}
 		}
 
@@ -183,7 +174,7 @@ public class AgendaDatabaseAdapter extends BaseDatabaseAdapter {
 
 	}
 
-	public static Agenda get(String agendaID) throws IOException {
+	public static Agenda getAgenda(String agendaID) throws IOException {
 		// Server URL setup
 		String _url = getBaseUri().appendPath(agendaID).build().toString();
 

@@ -34,6 +34,7 @@ import com.android.meetingninja.ApplicationController;
 import com.android.meetingninja.R;
 import com.android.meetingninja.database.AsyncResponse;
 import com.android.meetingninja.database.JsonNodeRequest;
+import com.android.meetingninja.database.Keys;
 import com.android.meetingninja.database.UserDatabaseAdapter;
 import com.android.meetingninja.database.local.SQLiteUserAdapter;
 import com.android.volley.Response;
@@ -74,7 +75,7 @@ public class UserListFragment extends ListFragment implements
 		Log.d(getTag(), "Clicked");
 		User clicked = mUserAdapter.getItem(position);
 		Intent profileIntent = new Intent(getActivity(), ProfileActivity.class);
-		profileIntent.putExtra("user", clicked);
+		profileIntent.putExtra(Keys.User.PARCEL, clicked);
 		startActivity(profileIntent);
 	}
 

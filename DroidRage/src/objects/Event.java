@@ -3,6 +3,8 @@ package objects;
 import java.text.ParseException;
 import java.util.Date;
 
+import org.joda.time.DateTime;
+
 import android.util.Log;
 
 import com.android.meetingninja.extras.MyDateUtils;
@@ -19,7 +21,7 @@ public abstract class Event implements Comparable<Event> {
 
 	public abstract String getID();
 
-	public abstract void setID(int id);
+	protected abstract void setID(int id);
 
 	public void setID(String id) {
 		int testInt = Integer.valueOf(id);
@@ -36,11 +38,11 @@ public abstract class Event implements Comparable<Event> {
 
 	public String getStartTime() {
 		return (startTime != null && !startTime.isEmpty()) ? startTime
-				: MyDateUtils.SERVER_DATE_FORMAT.format(new Date(0L));
+				: MyDateUtils.JODA_SERVER_DATE_FORMAT.print(new DateTime(0L));
 	}
 
 	public long getStartTime_Time() throws ParseException {
-		return MyDateUtils.SERVER_DATE_FORMAT.parse(startTime).getTime();
+		return MyDateUtils.JODA_SERVER_DATE_FORMAT.parseMillis(startTime);
 	}
 
 	public void setStartTime(String datetimeStart) {
@@ -48,17 +50,16 @@ public abstract class Event implements Comparable<Event> {
 	}
 
 	public void setStartTime(long msStartTime) {
-		Date start = new Date(msStartTime);
-		this.startTime = MyDateUtils.SERVER_DATE_FORMAT.format(start);
+		this.startTime = MyDateUtils.JODA_SERVER_DATE_FORMAT.print(msStartTime);
 	}
 
 	public String getEndTime() {
 		return (endTime != null && !endTime.isEmpty()) ? endTime
-				: MyDateUtils.SERVER_DATE_FORMAT.format(new Date(1L));
+				: MyDateUtils.JODA_SERVER_DATE_FORMAT.print(new DateTime(1L));
 	}
 
 	public long getEndTime_Time() throws ParseException {
-		return MyDateUtils.SERVER_DATE_FORMAT.parse(endTime).getTime();
+		return MyDateUtils.JODA_SERVER_DATE_FORMAT.parseMillis(endTime);
 	}
 
 	public void setEndTime(String datetimeEnd) {
@@ -66,8 +67,7 @@ public abstract class Event implements Comparable<Event> {
 	}
 
 	public void setEndTime(long msEndTime) {
-		Date end = new Date(msEndTime);
-		this.endTime = MyDateUtils.SERVER_DATE_FORMAT.format(end);
+		this.endTime = MyDateUtils.JODA_SERVER_DATE_FORMAT.print(msEndTime);
 	}
 
 	public String getDescription() {

@@ -10,11 +10,16 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
+@JsonDeserialize(builder = Note.NoteBuilder.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "noteID", "createdBy", "title", "description", "content",
 		"dateCreated" })
-public class Note implements Parcelable, IJSONObject {
+public class Note extends AbstractJSONObject<Note> implements Parcelable,
+		IJSONObject<Note> {
 
 	@JsonProperty("noteID")
 	private String noteID;
@@ -34,13 +39,13 @@ public class Note implements Parcelable, IJSONObject {
 	}
 
 	public Note(Note copyNote) {
-		this.noteID = copyNote.getNoteID();
+		this.noteID = copyNote.getID();
 		this.createdBy = copyNote.getCreatedBy();
 		this.title = copyNote.getTitle();
 		this.description = copyNote.getDescription();
 		this.content = copyNote.getContent();
 		this.dateCreated = copyNote.getDateCreated();
-		
+
 	}
 
 	public Note(Parcel in) {
@@ -56,20 +61,25 @@ public class Note implements Parcelable, IJSONObject {
 		this.dateCreated = noteBuilder.dateCreated;
 	}
 
+	@Override
 	@JsonProperty("noteID")
-	public String getNoteID() {
+	public String getID() {
 		return noteID;
 	}
 
+	@Override
 	@JsonProperty("noteID")
-	public void setNoteID(String noteID) {
-		int testInt = Integer.valueOf(noteID);
-		setNoteID(testInt);
+	public void setID(String id) {
+		int testInt = Integer.valueOf(id);
+		setID(testInt);
+
 	}
 
+	@Override
 	@JsonIgnore
-	private void setNoteID(int noteID) {
-		this.noteID = Integer.toString(noteID);
+	protected void setID(int id) {
+		this.noteID = Integer.toString(id);
+
 	}
 
 	@JsonProperty("createdBy")
@@ -154,7 +164,7 @@ public class Note implements Parcelable, IJSONObject {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(getNoteID());
+		dest.writeString(getID());
 		dest.writeString(getCreatedBy());
 		dest.writeString(getTitle());
 		dest.writeString(getDescription());
@@ -163,7 +173,8 @@ public class Note implements Parcelable, IJSONObject {
 
 	}
 
-	public static class NoteBuilder {
+	@JsonPOJOBuilder
+	public static class NoteBuilder extends AbstractBuilder<Note> {
 		private String noteID;
 		private String createdBy;
 		private String title;
@@ -175,44 +186,45 @@ public class Note implements Parcelable, IJSONObject {
 
 		}
 
-		public NoteBuilder id(String id) {
+		public NoteBuilder withID(String id) {
 			this.noteID = id;
 			return this;
 		}
 
-		public NoteBuilder createdBy(String userID) {
+		public NoteBuilder withCreatedBy(String userID) {
 			this.createdBy = userID;
 			return this;
 		}
 
-		public NoteBuilder title(String title) {
+		public NoteBuilder withTitle(String title) {
 			this.title = title;
 			return this;
 		}
 
-		public NoteBuilder description(String desc) {
+		public NoteBuilder withDescription(String desc) {
 			this.description = desc;
 			return this;
 		}
 
-		public NoteBuilder content(String content) {
+		public NoteBuilder withContent(String content) {
 			this.content = content;
 			return this;
 		}
 
-		public NoteBuilder dateModified(String dateTime) {
+		public NoteBuilder withDateModified(String dateTime) {
 			this.dateCreated = dateTime;
 			return this;
 		}
-		
+
 		public Note build() {
 			return new Note(this);
 		}
 	}
 
 	@Override
-	public String toJSON() throws JsonGenerationException, IOException {
+	public JsonNode toJSON() throws JsonGenerationException, IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 }

@@ -18,15 +18,21 @@ package com.android.meetingninja.extras;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
+
 public class MyDateUtils {
-	public static final SimpleDateFormat SERVER_DATE_FORMAT = new SimpleDateFormat(
-			"EEEE, dd-MMM-yy HH:mm:ss zzz", Locale.US);
-	public static final SimpleDateFormat APP_DATE_FORMAT = new SimpleDateFormat(
-			"EEE, MMM dd, yyyy", Locale.US);
-	public static final SimpleDateFormat _24_TIME_FORMAT = new SimpleDateFormat(
-			"HH:mm", Locale.US);
-	public static final SimpleDateFormat _12_TIME_FORMAT = new SimpleDateFormat(
-			"hh:mma", Locale.US);
-	public static final SimpleDateFormat DURATION = new SimpleDateFormat(
-			"hh:mm:ss", Locale.US);
+	/* JodaTime Formatter */
+	public static final DateTimeFormatter ISO8601_FMT = ISODateTimeFormat
+			.dateTime();
+	public static final DateTimeFormatter JODA_SERVER_DATE_FORMAT = DateTimeFormat
+			.forPattern("EEEE, dd-MMM-yy HH:mm:ss zzz");
+	public static final DateTimeFormatter JODA_MEETING_DATE_FORMAT = DateTimeFormat
+			.forPattern("EEE, MMM dd, yyyy");
+	public static final DateTimeFormatter JODA_24_TIME_FORMAT = DateTimeFormat
+			.forPattern("HH:mm");
+	public static final DateTimeFormatter JODA_12_TIME_FORMAT = DateTimeFormat
+			.forPattern("hh:mma");
+	
 }

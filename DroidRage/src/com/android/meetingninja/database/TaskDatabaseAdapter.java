@@ -32,21 +32,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 
 public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
-	private static final String TAG = UserDatabaseAdapter.class.getSimpleName();
-
-	protected final static String KEY_ID_LIST = "id";
-	protected final static String KEY_ID = "taskID";
-	protected final static String KEY_TITLE = "title";
-	protected final static String KEY_DESC = "description";
-	protected final static String KEY_DEADLINE = "deadline";
-	protected final static String KEY_DATECREATED = "dateCreated";
-	protected final static String KEY_DATEASSIGNED = "dateAssigned";
-	protected final static String KEY_COMPCRIT = "completionCriteria";
-	protected final static String KEY_ASSIGNEDTO = "assignedTo";
-	protected final static String KEY_ASSIGNEDFROM = "assignedFrom";
-	protected final static String KEY_CREATEDBY = "createdBy";
-	protected final static String KEY_ISCOMPLEATED = "isCompleted";
-	protected final static String KEY_TYPE = "type";
+	private static final String TAG = TaskDatabaseAdapter.class.getSimpleName();
 
 	public static String getBaseUrl() {
 		return BASE_URL + "Task";
@@ -64,7 +50,7 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
 		// add request header
-		conn.setRequestMethod("GET");
+		conn.setRequestMethod(IRequest.GET);
 		addRequestHeader(conn, false);
 
 		// Get server response
@@ -100,23 +86,34 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 		int responseCode = conn.getResponseCode();
 		String response = getServerResponse(conn);
 
-		return MAPPER.readTree(response).get("deleted").asBoolean();
+		boolean result = false;
+		JsonNode tree = MAPPER.readTree(response);
+		if (!response.isEmpty()) {
+			if (!tree.has(Keys.DELETED)) {
+				result = true;
+			} else {
+				logError(TAG, tree);
+			}
+		}
+
+		conn.disconnect();
+		return result;
 
 	}
 
 	public static Task editTask(Task task) throws IOException {
-		String titlePayload = getEditPayload(task.getID(), KEY_TITLE,
+		String titlePayload = getEditPayload(task.getID(), Keys.Task.TITLE,
 				task.getTitle());
-		String descPayload = getEditPayload(task.getID(), KEY_DESC,
+		String descPayload = getEditPayload(task.getID(), Keys.Task.DESC,
 				task.getDescription());
-		String isCompPayload = getEditPayload(task.getID(), KEY_ISCOMPLEATED,
-				Boolean.toString(task.getIsCompleted()));
-		String deadlinePayload = getEditPayload(task.getID(), KEY_DEADLINE,
-				task.getEndTime());
-		String compCritPayload = getEditPayload(task.getID(), KEY_COMPCRIT,
-				task.getCompletionCriteria());
-		String assignedToPayload = getEditPayload(task.getID(), KEY_ASSIGNEDTO,
-				task.getAssignedTo());
+		String isCompPayload = getEditPayload(task.getID(),
+				Keys.Task.COMPLETED, Boolean.toString(task.getIsCompleted()));
+		String deadlinePayload = getEditPayload(task.getID(),
+				Keys.Task.DEADLINE, task.getEndTime());
+		String compCritPayload = getEditPayload(task.getID(),
+				Keys.Task.CRITERIA, task.getCompletionCriteria());
+		String assignedToPayload = getEditPayload(task.getID(),
+				Keys.Task.ASSIGNED_TO, task.getAssignedTo());
 		// Get server response
 		System.out.println(task.getCompletionCriteria());
 		sendSingleEdit(titlePayload);
@@ -150,7 +147,7 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 		JsonGenerator jgen = JFACTORY.createGenerator(ps, JsonEncoding.UTF8);
 		// Build JSON Object for Title
 		jgen.writeStartObject();
-		jgen.writeStringField("taskID", taskID);
+		jgen.writeStringField(Keys.Task.ID, taskID);
 		jgen.writeStringField("field", field);
 		jgen.writeStringField("value", value);
 		jgen.writeEndObject();
@@ -161,7 +158,7 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 	}
 
 	public static void parseTask(JsonNode node, Task t) {
-		if (node.hasNonNull(KEY_ID)) {
+		if (node.hasNonNull(Keys.Task.ID)) {
 			parseTaskNoCheck(node, t);
 
 		} else {
@@ -172,44 +169,41 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 	public static void parseTaskNoCheck(JsonNode node, Task t) {
 		// start parsing a task
 
-		t.setDescription(node.hasNonNull(KEY_DESC) ? node.get(KEY_DESC)
+		t.setDescription(node.hasNonNull(Keys.Task.DESC) ? node.get(
+				Keys.Task.DESC).asText() : "");
+		t.setTitle(node.hasNonNull(Keys.Task.TITLE) ? node.get(Keys.Task.TITLE)
 				.asText() : "");
-		t.setTitle(node.hasNonNull(KEY_TITLE) ? node.get(KEY_TITLE).asText()
-				: "");
-		t.setEndTime(node.hasNonNull(KEY_DEADLINE) ? node.get(KEY_DEADLINE)
-				.asText() : "");
-		t.setDateCreated(node.hasNonNull(KEY_DATECREATED) ? node.get(
-				KEY_DATECREATED).asText() : "");
-		t.setDateAssigned(node.hasNonNull(KEY_DATEASSIGNED) ? node.get(
-				KEY_DATEASSIGNED).asText() : "");
-		t.setCompletionCriteria(node.hasNonNull(KEY_COMPCRIT) ? node.get(
-				KEY_COMPCRIT).asText() : "");
-		t.setAssignedTo(node.hasNonNull(KEY_ASSIGNEDTO) ? node.get(
-				KEY_ASSIGNEDTO).asText() : "");
-		t.setAssignedFrom(node.hasNonNull(KEY_ASSIGNEDFROM) ? node.get(
-				KEY_ASSIGNEDFROM).asText() : "");
-		t.setCreatedBy(node.hasNonNull(KEY_CREATEDBY) ? node.get(KEY_CREATEDBY)
-				.asText() : "");
-		t.setIsCompleted(node.hasNonNull(KEY_ISCOMPLEATED) ? node.get(
-				KEY_ISCOMPLEATED).asBoolean() : false);
+		t.setEndTime(node.hasNonNull(Keys.Task.DEADLINE) ? node.get(
+				Keys.Task.DEADLINE).asText() : "");
+		t.setDateCreated(node.hasNonNull(Keys.Task.DATE_CREATED) ? node.get(
+				Keys.Task.DATE_CREATED).asText() : "");
+		t.setDateAssigned(node.hasNonNull(Keys.Task.DATE_ASSIGNED) ? node.get(
+				Keys.Task.DATE_ASSIGNED).asText() : "");
+		t.setCompletionCriteria(node.hasNonNull(Keys.Task.CRITERIA) ? node.get(
+				Keys.Task.CRITERIA).asText() : "");
+		t.setAssignedTo(node.hasNonNull(Keys.Task.ASSIGNED_TO) ? node.get(
+				Keys.Task.ASSIGNED_TO).asText() : "");
+		t.setAssignedFrom(node.hasNonNull(Keys.Task.ASSIGNED_FROM) ? node.get(
+				Keys.Task.ASSIGNED_FROM).asText() : "");
+		t.setCreatedBy(node.hasNonNull(Keys.Task.CREATED_BY) ? node.get(
+				Keys.Task.CREATED_BY).asText() : "");
+		t.setIsCompleted(node.hasNonNull(Keys.Task.COMPLETED) ? node.get(
+				Keys.Task.COMPLETED).asBoolean() : false);
 
 	}
 
 	public static Task parseTasks(JsonNode node) {
 		Task t = new Task(); // start parsing a task
-		if (node.hasNonNull(KEY_ID_LIST)) {
-			String id = node.get(KEY_ID_LIST).asText();
+		if (node.hasNonNull(Keys._ID)) {
+			String id = node.get(Keys._ID).asText();
 			t.setID(id);
-			t.setTitle(node.hasNonNull(KEY_TITLE) ? node.get(KEY_TITLE)
-					.asText() : "");
-			t.setType(node.hasNonNull(KEY_TYPE) ? node.get(KEY_TYPE).asText()
-					: "");
+			t.setTitle(getJSONValue(node, Keys.Task.TITLE));
+			t.setType(getJSONValue(node, Keys.TYPE));
 		} else {
-			Log.w(TAG, "Parsed null");
+			Log.w(TAG, "Parsed null task");
 			return null;
 		}
 		return t;
 
 	}
-
 }

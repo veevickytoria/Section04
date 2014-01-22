@@ -25,12 +25,6 @@ import android.net.Uri;
 import com.fasterxml.jackson.databind.JsonNode;
 
 public class NotesDatabaseAdapter extends BaseDatabaseAdapter {
-	protected static final String KEY_ID = "noteID";
-	protected static final String KEY_CREATED_BY = "createdBy";
-	protected static final String KEY_TITLE = "title";
-	protected static final String KEY_DESC = "description";
-	protected static final String KEY_CONTENT = "content";
-	protected static final String KEY_UPDATED = "dateCreated";
 
 	public static String getBaseUrl() {
 		return BASE_URL + "Note";

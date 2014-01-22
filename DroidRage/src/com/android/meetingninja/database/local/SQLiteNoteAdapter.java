@@ -18,6 +18,8 @@ package com.android.meetingninja.database.local;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.android.meetingninja.database.Keys;
+
 import objects.Note;
 import android.content.ContentValues;
 import android.content.Context;
@@ -32,10 +34,10 @@ public class SQLiteNoteAdapter extends SQLiteHelper {
 	protected static final String TABLE_NAME = "notes";
 
 	// Columns
-	public static final String KEY_CREATED_BY = "createdBy";
-	public static final String KEY_TITLE = "title";
-	public static final String KEY_DESC = "description";
-	public static final String KEY_CONTENT = "content";
+	public static final String KEY_TITLE = Keys.Note.TITLE;
+	public static final String KEY_CONTENT = Keys.Note.CONTENT;
+	public static final String KEY_DESC = Keys.Note.DESC;
+	public static final String KEY_CREATED_BY = Keys.Note.CREATED_BY;
 
 	public SQLiteNoteAdapter(Context context) {
 		super(context);
@@ -60,7 +62,7 @@ public class SQLiteNoteAdapter extends SQLiteHelper {
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(KEY_TITLE, name);
 		contentValues.put(KEY_CONTENT, content);
-		//contentValues.put(KEY_CREATED_BY, creator);
+		// contentValues.put(KEY_CREATED_BY, creator);
 		long insertID = mDb.insert(TABLE_NAME, null, contentValues);
 		Cursor c = mDb.query(TABLE_NAME, new String[] { KEY_ID, KEY_TITLE,
 				KEY_CONTENT }, KEY_ID + "=" + insertID, null, null, null, null);
@@ -84,8 +86,8 @@ public class SQLiteNoteAdapter extends SQLiteHelper {
 		ContentValues data = new ContentValues();
 		data.put(KEY_TITLE, note.getTitle());
 		data.put(KEY_CONTENT, note.getContent());
-		//data.put(KEY_CREATED_BY, note.getCreatedBy());
-		mDb.update(TABLE_NAME, data, KEY_ID + "=" + note.getNoteID(), null);
+		// data.put(KEY_CREATED_BY, note.getCreatedBy());
+		mDb.update(TABLE_NAME, data, KEY_ID + "=" + note.getID(), null);
 		close();
 	}
 
@@ -102,7 +104,7 @@ public class SQLiteNoteAdapter extends SQLiteHelper {
 
 	public void deleteNote(Note note) {
 		if (note != null)
-			deleteNote(Long.parseLong(note.getNoteID()));
+			deleteNote(Long.parseLong(note.getID()));
 	}
 
 	/**
@@ -161,7 +163,7 @@ public class SQLiteNoteAdapter extends SQLiteHelper {
 			int idxID = crsr.getColumnIndex(KEY_ID);
 			int idxTITLE = crsr.getColumnIndex(KEY_TITLE);
 			int idxCONTENT = crsr.getColumnIndex(KEY_CONTENT);
-			model.setNoteID("" + crsr.getInt(idxID));
+			model.setID("" + crsr.getInt(idxID));
 			model.setTitle(crsr.getString(idxTITLE));
 			model.setContent(crsr.getString(idxCONTENT));
 			return model;

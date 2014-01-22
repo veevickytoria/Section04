@@ -19,6 +19,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import org.joda.time.format.DateTimeFormatter;
+
 import objects.Meeting;
 import android.content.Context;
 import android.content.Intent;
@@ -59,8 +61,8 @@ public class EditMeetingActivity extends FragmentActivity implements
 	private boolean is24, edit_mode;
 	private Calendar start, end;
 	private MeetingSaveTask creater = null;
-	private SimpleDateFormat timeFormat;
-	private SimpleDateFormat dateFormat = MyDateUtils.APP_DATE_FORMAT;
+	private DateTimeFormatter timeFormat;
+	private DateTimeFormatter dateFormat = MyDateUtils.JODA_MEETING_DATE_FORMAT;
 
 	private SQLiteMeetingAdapter mySQLiteAdapter;
 	private SessionManager session;
@@ -85,8 +87,8 @@ public class EditMeetingActivity extends FragmentActivity implements
 		is24 = android.text.format.DateFormat
 				.is24HourFormat(getApplicationContext());
 		session = SessionManager.getInstance();
-		timeFormat = is24 ? MyDateUtils._24_TIME_FORMAT
-				: MyDateUtils._12_TIME_FORMAT;
+		timeFormat = is24 ? MyDateUtils.JODA_24_TIME_FORMAT
+				: MyDateUtils.JODA_12_TIME_FORMAT;
 		extras = getIntent().getExtras();
 		edit_mode = extras.getBoolean(EXTRA_EDIT_MODE, true);
 		mySQLiteAdapter = new SQLiteMeetingAdapter(this);
@@ -121,16 +123,17 @@ public class EditMeetingActivity extends FragmentActivity implements
 			end.set(Calendar.MINUTE, 0);
 		}
 		mFromDate.setOnClickListener(new DateClickListener(mFromDate, start));
-		mFromDate.setText(dateFormat.format(start.getTime()));
+		
+		mFromDate.setText(dateFormat.print(start.getTimeInMillis()));
 
 		mToDate.setOnClickListener(new DateClickListener(mToDate, end));
-		mToDate.setText(dateFormat.format(end.getTime()));
+		mToDate.setText(dateFormat.print(end.getTimeInMillis()));
 
 		mFromTime.setOnClickListener(new TimeClickListener(mFromTime, start));
-		mFromTime.setText(timeFormat.format(start.getTime()));
+		mFromTime.setText(timeFormat.print(start.getTimeInMillis()));
 
 		mToTime.setOnClickListener(new TimeClickListener(mToTime, end));
-		mToTime.setText(timeFormat.format(end.getTime()));
+		mToTime.setText(timeFormat.print(end.getTimeInMillis()));
 	}
 
 	private final View.OnClickListener mActionBarListener = new OnClickListener() {
@@ -362,7 +365,7 @@ public class EditMeetingActivity extends FragmentActivity implements
 				return;
 			}
 
-			button.setText(dateFormat.format(cal.getTime()));
+			button.setText(dateFormat.print(cal.getTimeInMillis()));
 		}
 
 	}
@@ -428,7 +431,7 @@ public class EditMeetingActivity extends FragmentActivity implements
 				cal.set(Calendar.MINUTE, min);
 				return; // error message
 			}
-			button.setText(timeFormat.format(cal.getTime()));
+			button.setText(timeFormat.print(cal.getTimeInMillis()));
 		}
 
 	}

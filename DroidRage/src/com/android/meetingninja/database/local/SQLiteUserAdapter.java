@@ -18,6 +18,8 @@ package com.android.meetingninja.database.local;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.android.meetingninja.database.Keys;
+
 import objects.User;
 import android.content.ContentValues;
 import android.content.Context;
@@ -32,15 +34,15 @@ public class SQLiteUserAdapter extends SQLiteHelper {
 	protected static final String TABLE_NAME = "users";
 
 	// Columns
-	public static final String NAME = "username";
-	public static final String EMAIL = "email";
-	public static final String PHONE = "phone";
-	public static final String COMPANY = "company";
-	public static final String TITLE = "title";
-	public static final String LOCATION = "location";
+	public static final String KEY_NAME = Keys.User.NAME;
+	public static final String KEY_EMAIL = Keys.User.EMAIL;
+	public static final String KEY_PHONE = Keys.User.PHONE;
+	public static final String KEY_COMPANY = Keys.User.COMPANY;
+	public static final String KEY_TITLE = Keys.User.TITLE;
+	public static final String KEY_LOCATION = Keys.User.LOCATION;
 
-	private static final String[] allColumns = new String[] { KEY_ID, NAME,
-			EMAIL, PHONE, COMPANY, TITLE, LOCATION };
+	private static final String[] allColumns = new String[] { KEY_ID, KEY_NAME,
+			KEY_EMAIL, KEY_PHONE, KEY_COMPANY, KEY_TITLE, KEY_LOCATION };
 
 	public SQLiteUserAdapter(Context context) {
 		super(context);
@@ -56,12 +58,12 @@ public class SQLiteUserAdapter extends SQLiteHelper {
 		mDb = mDbHelper.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
-		values.put(NAME, u.getDisplayName());
-		values.put(EMAIL, u.getEmail());
-		values.put(PHONE, u.getPhone());
-		values.put(COMPANY, u.getCompany());
-		values.put(TITLE, u.getTitle());
-		values.put(LOCATION, u.getLocation());
+		values.put(KEY_NAME, u.getDisplayName());
+		values.put(KEY_EMAIL, u.getEmail());
+		values.put(KEY_PHONE, u.getPhone());
+		values.put(KEY_COMPANY, u.getCompany());
+		values.put(KEY_TITLE, u.getTitle());
+		values.put(KEY_LOCATION, u.getLocation());
 
 		long insertId = mDb.insert(TABLE_NAME, null, values);
 		Cursor c = mDb.query(TABLE_NAME, allColumns, KEY_ID + "=" + insertId,
@@ -75,7 +77,7 @@ public class SQLiteUserAdapter extends SQLiteHelper {
 
 	public void deleteUser(User u) {
 		mDb = mDbHelper.getWritableDatabase();
-		mDb.delete(TABLE_NAME, KEY_ID + "=" + u.getUserID(), null);
+		mDb.delete(TABLE_NAME, KEY_ID + "=" + u.getID(), null);
 		close();
 	}
 
@@ -83,7 +85,7 @@ public class SQLiteUserAdapter extends SQLiteHelper {
 		List<User> users = new ArrayList<User>();
 		mDb = mDbHelper.getReadableDatabase();
 		Cursor c = mDb.query(TABLE_NAME, allColumns, null, null, null, null,
-				NAME);
+				KEY_NAME);
 
 		// looping through all rows and adding to list
 		if (c.moveToFirst()) {
@@ -127,13 +129,13 @@ public class SQLiteUserAdapter extends SQLiteHelper {
 		@Override
 		public User getModel() {
 			int idxID = crsr.getColumnIndex(KEY_ID);
-			int idxUSERNAME = crsr.getColumnIndex(NAME);
-			int idxEMAIL = crsr.getColumnIndex(EMAIL);
-			int idxPHONE = crsr.getColumnIndex(PHONE);
-			int idxCOMPANY = crsr.getColumnIndex(COMPANY);
-			int idxTITLE = crsr.getColumnIndex(TITLE);
-			int idxLOCATION = crsr.getColumnIndex(LOCATION);
-			model.setUserID(crsr.getInt(idxID));
+			int idxUSERNAME = crsr.getColumnIndex(KEY_NAME);
+			int idxEMAIL = crsr.getColumnIndex(KEY_EMAIL);
+			int idxPHONE = crsr.getColumnIndex(KEY_PHONE);
+			int idxCOMPANY = crsr.getColumnIndex(KEY_COMPANY);
+			int idxTITLE = crsr.getColumnIndex(KEY_TITLE);
+			int idxLOCATION = crsr.getColumnIndex(KEY_LOCATION);
+			model.setID("" + crsr.getInt(idxID));
 			model.setDisplayName(crsr.getString(idxUSERNAME));
 			model.setEmail(crsr.getString(idxEMAIL));
 			model.setPhone(crsr.getString(idxPHONE));

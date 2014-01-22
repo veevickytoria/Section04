@@ -41,6 +41,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.meetingninja.database.AgendaDatabaseAdapter;
 import com.android.meetingninja.database.UserDatabaseAdapter;
 import com.android.meetingninja.meetings.MeetingsFragment;
 import com.android.meetingninja.notes.CreateNoteActivity;
@@ -427,7 +428,7 @@ public class MainActivity extends FragmentActivity {
 			logout();
 			return true;
 		case R.id.action_settings:
-			Toast.makeText(this, "AS", Toast.LENGTH_SHORT).show();
+			
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -465,54 +466,5 @@ public class MainActivity extends FragmentActivity {
 				long id) {
 			selectItem(position);
 		}
-	}
-
-	private static class Test {
-
-		private static Agenda createAgenda() {
-			Agenda ag = new Agenda();
-			ag.setAttachedMeetingID("");
-			ag.setTitle("Android Agenda");
-			Topic topic1 = new Topic("1");
-			topic1.addTopic(new Topic("1.1"));
-			topic1.addTopic(new Topic("1.2"));
-			topic1.addTopic(0, new Topic("1.01"));
-			Topic topic2 = new Topic("2");
-			Topic topic3 = new Topic("3");
-			Topic subTopic3 = new Topic("3.1");
-			subTopic3.addTopic(new Topic("3.1.1"));
-			topic3.addTopic(subTopic3);
-			ag.addTopic(topic1);
-			ag.addTopic(topic2);
-			ag.addTopic(topic3);
-			return ag;
-		}
-	}
-
-	class AgendaTask extends AsyncTask<Agenda, Void, Agenda> {
-
-		@Override
-		protected Agenda doInBackground(Agenda... params) {
-			Agenda create = null;
-			try {
-				ObjectMapper maper = new ObjectMapper();
-
-				System.out.println(maper.writeValueAsString(params[0]));
-
-				// create = AgendaDatabaseAdapter.createAgenda(params[0]);
-			} catch (IOException e) {
-				Log.e(TAG, e.getLocalizedMessage());
-			}
-			return create;
-		}
-
-		@Override
-		protected void onPostExecute(Agenda result) {
-			// TODO Auto-generated method stub
-			super.onPostExecute(result);
-			if (result != null)
-				Log.v(TAG, result.getID());
-		}
-
 	}
 }

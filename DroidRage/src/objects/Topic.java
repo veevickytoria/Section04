@@ -67,21 +67,19 @@ public class Topic implements Serializable {
 
 	@JsonProperty("time")
 	public String getTime() {
-		// if (this.subTopics.size() > 0)
-		// return Long.toString(getTotalSubtopicTime(this));
-		// else
-		return (time != null && !time.isEmpty()) ? time : "0";
+		if (this.subTopics.size() > 0)
+			return Long.toString(getTotalSubtopicTime(this));
+		else
+			return (time != null && !time.isEmpty()) ? time : "0";
 	}
 
 	@JsonIgnore
 	private long getTotalSubtopicTime(Topic t) {
 		int total = 0;
-		final Topic root = t;
-		final ArrayList<Topic> topicList = root.getTopics();
-		total += Integer.valueOf(root.getTime());
+		final ArrayList<Topic> topicList = t.getTopics();
 
-		for (Iterator<Topic> i = topicList.iterator(); i.hasNext();) {
-			total += getTotalSubtopicTime(i.next());
+		for (Topic sub_t : topicList) {
+			total += getTotalSubtopicTime(sub_t);
 		}
 		return total;
 	}

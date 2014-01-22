@@ -15,12 +15,16 @@
  ******************************************************************************/
 package com.android.meetingninja.notes;
 
+import org.joda.time.DateTime;
+
 import objects.Note;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
@@ -28,35 +32,27 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import com.android.meetingninja.R;
+import com.android.meetingninja.database.Keys;
 import com.android.meetingninja.database.local.SQLiteNoteAdapter;
+import com.android.meetingninja.extras.MyDateUtils;
 
 public class EditNoteActivity extends Activity {
+
+	private static final String TAG = EditNoteActivity.class.getSimpleName();
 
 	private Bundle extras;
 	private EditText mTextEditor, mNoteTitle;
 
-	private String noteID;
-	private String noteName;
-	private String noteContent;
-	private String noteCreator;
-
 	private SQLiteNoteAdapter mySQLiteAdapter;
-	private Note newNote;
+	private Note displayedNote;
 	private int listPosition;
-
-	public static final String EXTRA_ID = "NoteID";
-	public static final String EXTRA_TITLE = "NoteName";
-	public static final String EXTRA_CONTENT = "NoteContent";
-	public static final String EXTRA_CREATOR = "NoteCreator";
-
-	private static final String TAG = EditNoteActivity.class.getSimpleName();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_note);
 		// Show the Up button in the action bar.
-		setupActionBar();
+		setupActionBar(false);
 		mySQLiteAdapter = new SQLiteNoteAdapter(this);
 
 		mTextEditor = (EditText) findViewById(R.id.noteContentEditor);
@@ -65,17 +61,13 @@ public class EditNoteActivity extends Activity {
 		extras = getIntent().getExtras();
 		if (extras != null) {
 			listPosition = extras.getInt("listPosition", -1);
-			noteID = extras.getString(EXTRA_ID);
-			noteName = extras.getString(EXTRA_TITLE);
-			noteContent = extras.getString(EXTRA_CONTENT);
-			noteCreator = extras.getString(EXTRA_CREATOR);
+			displayedNote = (Note) extras.getParcelable(Keys.Note.PARCEL);
 		} else {
-			noteName = "New Note";
-			noteContent = "";
+			displayedNote = new Note();
 		}
 
-		mNoteTitle.setText(noteName);
-		mTextEditor.setText(noteContent);
+		mNoteTitle.setText(displayedNote.getTitle());
+		mTextEditor.setText(displayedNote.getContent());
 
 		// Scroll to the top of the note content
 		// https://stackoverflow.com/a/3310376
@@ -89,7 +81,6 @@ public class EditNoteActivity extends Activity {
 			}
 		});
 
-		setTitle("Edit '" + noteName.trim() + "'");
 	}
 
 	public boolean onActionBarItemSelected(View v) {
@@ -106,25 +97,27 @@ public class EditNoteActivity extends Activity {
 
 	}
 
+	@Override
+	public void onBackPressed() {
+		save();
+	}
+
 	public void save() {
-		String content = mTextEditor.getText().toString();
-		String title = mNoteTitle.getText().toString();
+		String title = mNoteTitle.getText().toString().trim();
+		String content = mTextEditor.getText().toString().trim();
+		DateTime now = DateTime.now();
+		
+		displayedNote.setTitle(title);
+		displayedNote.setContent(content);
+		displayedNote.setDateCreated(MyDateUtils.JODA_SERVER_DATE_FORMAT.print(now));
+		
 		Intent intentMessage = new Intent();
 
-		intentMessage.putExtra("Fragment", "notes");
 		intentMessage.putExtra("listPosition", listPosition);
-		intentMessage.putExtra(EXTRA_ID, noteID);
-		intentMessage.putExtra(EXTRA_TITLE, title);
-		intentMessage.putExtra(EXTRA_CONTENT, content);
-		intentMessage.putExtra(EXTRA_CREATOR, noteCreator);
+		intentMessage.putExtra(Keys.Note.PARCEL, displayedNote);
 
-		newNote = new Note();
-		newNote.setNoteID(noteID);
-		newNote.setTitle(title);
-		newNote.setContent(content);
-		newNote.setCreatedBy(noteCreator);
-
-		mySQLiteAdapter.updateNote(newNote);
+		if (!(displayedNote.getID() == null || displayedNote.getID().isEmpty()))
+			mySQLiteAdapter.updateNote(displayedNote);
 
 		setResult(RESULT_OK, intentMessage);
 		finish();
@@ -132,7 +125,6 @@ public class EditNoteActivity extends Activity {
 
 	public void cancel() {
 		Intent intentMessage = new Intent();
-		intentMessage.putExtra("Fragment", "notes");
 
 		setResult(RESULT_CANCELED, intentMessage);
 		finish();
@@ -150,29 +142,51 @@ public class EditNoteActivity extends Activity {
 	/**
 	 * Set up the {@link android.app.ActionBar}.
 	 */
-	private void setupActionBar() {
+	private void setupActionBar(boolean okCancel) {
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		// Make an Ok/Cancel ActionBar
-		View actionBarButtons = inflater.inflate(R.layout.actionbar_ok_cancel,
-				new LinearLayout(this), false);
+		getActionBar().setTitle("");
+		getActionBar().setHomeButtonEnabled(!okCancel);
+		getActionBar().setDisplayShowHomeEnabled(!okCancel);
+		getActionBar().setDisplayHomeAsUpEnabled(!okCancel);
+		getActionBar().setDisplayShowTitleEnabled(!okCancel);
 
-		View cancelActionView = actionBarButtons
-				.findViewById(R.id.action_cancel);
-		cancelActionView.setOnClickListener(mActionBarListener);
+		if (okCancel) {
+			// Make an Ok/Cancel ActionBar
+			View actionBarButtons = inflater
+					.inflate(R.layout.actionbar_ok_cancel, new LinearLayout(
+							this), false);
 
-		View doneActionView = actionBarButtons.findViewById(R.id.action_done);
-		doneActionView.setOnClickListener(mActionBarListener);
+			View cancelActionView = actionBarButtons
+					.findViewById(R.id.action_cancel);
+			cancelActionView.setOnClickListener(mActionBarListener);
 
-		getActionBar().setHomeButtonEnabled(false);
-		getActionBar().setDisplayShowHomeEnabled(false);
-		getActionBar().setDisplayHomeAsUpEnabled(false);
-		getActionBar().setDisplayShowTitleEnabled(false);
+			View doneActionView = actionBarButtons
+					.findViewById(R.id.action_done);
+			doneActionView.setOnClickListener(mActionBarListener);
 
-		getActionBar().setDisplayShowCustomEnabled(true);
-		getActionBar().setCustomView(actionBarButtons);
-		// end Ok-Cancel ActionBar
+			getActionBar().setCustomView(actionBarButtons);
+			getActionBar().setDisplayShowCustomEnabled(okCancel);
+			// end Ok-Cancel ActionBar
+		}
 
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			// This ID represents the Home or Up button. In the case of this
+			// activity, the Up button is shown. Use NavUtils to allow users
+			// to navigate up one level in the application structure. For
+			// more details, see the Navigation pattern on Android Design:
+			//
+			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
+			//
+			save();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 }

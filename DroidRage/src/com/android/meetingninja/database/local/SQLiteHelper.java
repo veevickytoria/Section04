@@ -39,27 +39,29 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 	// User table create statement
 	private static final String CREATE_TABLE_USER = "CREATE TABLE "
 			+ SQLiteUserAdapter.TABLE_NAME + "(" + KEY_ID
-			+ " INTEGER PRIMARY KEY AUTOINCREMENT," + SQLiteUserAdapter.NAME
-			+ " TEXT NOT NULL," + SQLiteUserAdapter.EMAIL + " TEXT NOT NULL,"
-			+ SQLiteUserAdapter.PHONE + " TEXT NOT NULL,"
-			+ SQLiteUserAdapter.COMPANY + " TEXT NOT NULL,"
-			+ SQLiteUserAdapter.TITLE + " TEXT NOT NULL,"
-			+ SQLiteUserAdapter.LOCATION + " TEXT NOT NULL" + ");";
+			+ " INTEGER PRIMARY KEY AUTOINCREMENT," + SQLiteUserAdapter.KEY_NAME
+			+ " TEXT NOT NULL," + SQLiteUserAdapter.KEY_EMAIL + " TEXT NOT NULL,"
+			+ SQLiteUserAdapter.KEY_PHONE + " TEXT NOT NULL,"
+			+ SQLiteUserAdapter.KEY_COMPANY + " TEXT NOT NULL,"
+			+ SQLiteUserAdapter.KEY_TITLE + " TEXT NOT NULL,"
+			+ SQLiteUserAdapter.KEY_LOCATION + " TEXT NOT NULL" + ");";
+	
 	// Notes table create statement
 	private static final String CREATE_TABLE_NOTE = "CREATE TABLE "
 			+ SQLiteNoteAdapter.TABLE_NAME + "(" + KEY_ID
 			+ " INTEGER PRIMARY KEY AUTOINCREMENT,"
 			+ SQLiteNoteAdapter.KEY_TITLE + " TEXT NOT NULL,"
 			+ SQLiteNoteAdapter.KEY_CONTENT + " TEXT NOT NULL" + ");";
+	
 	// Meeting table create statement
 	private static final String CREATE_TABLE_MEETING = "CREATE TABLE "
 			+ SQLiteMeetingAdapter.TABLE_NAME + "(" + KEY_ID
 			+ " INTEGER PRIMARY KEY AUTOINCREMENT,"
-			+ SQLiteMeetingAdapter.TITLE + " TEXT NOT NULL,"
-			+ SQLiteMeetingAdapter.LOCATION + " TEXT NOT NULL,"
-			+ SQLiteMeetingAdapter.START_TIME + " INTEGER NOT NULL,"
-			+ SQLiteMeetingAdapter.END_TIME + " INTEGER NOT NULL,"
-			+ SQLiteMeetingAdapter.DESCRIPTION + " TEXT NOT NULL"
+			+ SQLiteMeetingAdapter.KEY_TITLE + " TEXT NOT NULL,"
+			+ SQLiteMeetingAdapter.KEY_LOCATION + " TEXT NOT NULL,"
+			+ SQLiteMeetingAdapter.KEY_START_TIME + " INTEGER NOT NULL,"
+			+ SQLiteMeetingAdapter.KEY_END_TIME + " INTEGER NOT NULL,"
+			+ SQLiteMeetingAdapter.KEY_DESCRIPTION + " TEXT NOT NULL"
 			// + SQLiteMeetingAdapter.ATTENDANCE + " TEXT NOT NULL"
 			+ ");";
 

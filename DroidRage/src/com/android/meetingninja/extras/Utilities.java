@@ -42,7 +42,7 @@ public class Utilities {
 	 * @throws NoSuchAlgorithmException
 	 * @throws UnsupportedEncodingException
 	 */
-	public String computeHash(String input) throws NoSuchAlgorithmException,
+	public static String computeHash(String input) throws NoSuchAlgorithmException,
 			UnsupportedEncodingException {
 		MessageDigest digest = MessageDigest.getInstance("SHA-256");
 		digest.reset();

@@ -30,13 +30,12 @@ public class MCrypt {
 	static char[] HEX_CHARS = { '0', '1', '2', '3', '4', '5', '6', '7', '8',
 			'9', 'a', 'b', 'c', 'd', 'e', 'f' };
 
-	private String iv = "fedcba9876543210";// Dummy iv (CHANGE IT!)
+	private String iv = "993257625fb9949b";
 	private IvParameterSpec ivspec;
 	private SecretKeySpec keyspec;
 	private Cipher cipher;
 
-	private String SecretKey = "0123456789abcdef";// Dummy secretKey (CHANGE
-													// IT!)
+	private String SecretKey = "b9499bf526752399";
 
 	public MCrypt() {
 		ivspec = new IvParameterSpec(iv.getBytes());

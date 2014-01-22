@@ -15,8 +15,13 @@
  ******************************************************************************/
 package com.android.meetingninja.tasks;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
 
 import objects.Task;
 import android.content.Context;
@@ -25,6 +30,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -45,11 +51,11 @@ public class EditTaskActivity extends FragmentActivity implements
 		AsyncResponse<Boolean> {
 	final String MARK_AS_COMPLETE = "Mark As Complete";
 	final String MARK_AS_INCOMPLETE = "Mark As Incomplete";
-	
-	private EditText Description, completionCriteria, Title;
+
+	private EditText mDescription, completionCriteria, mTitle;
 	private TextView assignedDateLabel, createdDateLabel, isCompleted;
-	private Button tDeadline,mComplete;
-	private SimpleDateFormat dateFormat = MyDateUtils.APP_DATE_FORMAT;
+	private Button mDeadlineBtn, mCompleteBtn;
+	private DateTimeFormatter dateFormat = MyDateUtils.JODA_MEETING_DATE_FORMAT;
 
 	private SessionManager session;
 	private Task displayTask;
@@ -63,61 +69,72 @@ public class EditTaskActivity extends FragmentActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_task);
 		setupActionBar();
-		setupView();
-		Intent i = getIntent();
-		displayTask = i.getParcelableExtra(EXTRA_TASK);
+		setupViews();
+
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			displayTask = extras.getParcelable(EXTRA_TASK);
+		}
 		if (displayTask != null) {
 			setTask();
-			Title.setSelection(0, Title.getText().toString().length());;
-			String deadline = displayTask.getEndTime();
-			String monthdayyear[] = deadline.split("/");
+			mTitle.setSelection(0, mTitle.getText().toString().length());
 
-			int month = (int) Integer.parseInt(monthdayyear[0]);
-			int year = (int) Integer.parseInt(monthdayyear[2]);
-			int day = (int) Integer.parseInt(monthdayyear[1]);
+			String _deadline = displayTask.getEndTime();
+			DateTime deadline = MyDateUtils.JODA_SERVER_DATE_FORMAT
+					.parseDateTime(_deadline);
+
+			int month = deadline.getMonthOfYear();
+			int year = deadline.getYear();
+			int day = deadline.getDayOfMonth();
 
 			cal = Calendar.getInstance();
-			cal.set(Calendar.YEAR,year,Calendar.MONTH,month-1,Calendar.DAY_OF_MONTH,day);
-			//cal.set(Calendar.YEAR, year);
-			//cal.set(Calendar.MONTH, month - 1);
-			//cal.set(Calendar.DAY_OF_MONTH, day);
+			cal.set(Calendar.YEAR, year, Calendar.MONTH, month - 1,
+					Calendar.DAY_OF_MONTH, day);
+			// cal.set(Calendar.YEAR, year);
+			// cal.set(Calendar.MONTH, month - 1);
+			// cal.set(Calendar.DAY_OF_MONTH, day);
 
-			tDeadline.setText(deadline);
-			tDeadline.setOnClickListener(new DateClickListener(tDeadline, cal));
-			
+			mDeadlineBtn.setText(_deadline);
+			mDeadlineBtn.setOnClickListener(new DateClickListener(mDeadlineBtn, cal));
+
 			// findViewById(R.id.task_edit_date_created).toString();
 
 			// assignedDateLabel.setText(dateFormat.format(assignedDate));
 			// createdDateLabel.setText(dateFormat.format(createdDate));
 		}
 	}
-	private void setTask(){
+
+	private void setTask() {
 		System.out.println("got to settask");
-		Title.setText(displayTask.getTitle());
+		mTitle.setText(displayTask.getTitle());
 		completionCriteria.setText(displayTask.getCompletionCriteria());
-		Description.setText(displayTask.getDescription());
-		//TODO: use string.xml
+		mDescription.setText(displayTask.getDescription());
+		// TODO: use string.xml
 		if (displayTask.getIsCompleted()) {
 			isCompleted.setText("Yes");
-			mComplete.setText(MARK_AS_INCOMPLETE);
-		}else{
+			mCompleteBtn.setText(MARK_AS_INCOMPLETE);
+		} else {
 			isCompleted.setText("No");
-			mComplete.setText(MARK_AS_COMPLETE);
+			mCompleteBtn.setText(MARK_AS_COMPLETE);
 		}
-		//TODO: fetcher for assigned to/from
+		// TODO: fetcher for assigned to/from
 	}
-	public void toggleCompleted(View v){
+
+	public void toggleCompleted(View v) {
 		System.out.println("got to toggle");
 		TaskUpdater updater = new TaskUpdater();
 		displayTask.setIsCompleted(!displayTask.getIsCompleted());
 		updater.updateTask(displayTask);
 		setTask();
 	}
+
 	private void trimTextView() {
-		Title.setText(Title.getText().toString().trim());
-		Description.setText(Description.getText().toString().trim());
-		completionCriteria.setText(completionCriteria.getText().toString().trim());
+		mTitle.setText(mTitle.getText().toString().trim());
+		mDescription.setText(mDescription.getText().toString().trim());
+		completionCriteria.setText(completionCriteria.getText().toString()
+				.trim());
 	}
+
 	private final View.OnClickListener tActionBarListener = new OnClickListener() {
 
 		@Override
@@ -154,8 +171,8 @@ public class EditTaskActivity extends FragmentActivity implements
 	private boolean onActionBarItemSelected(View v) {
 		switch (v.getId()) {
 		case R.id.action_done:
-			if (Title.getText().equals(null)) {
-				Title.setText("");
+			if (mTitle.getText().equals(null)) {
+				mTitle.setText("");
 			}
 			save();
 			break;
@@ -167,14 +184,15 @@ public class EditTaskActivity extends FragmentActivity implements
 		return true;
 	}
 
-	private void setupView() {
-		Title = (EditText) findViewById(R.id.task_edit_title);
-		Description = (EditText) findViewById(R.id.task_edit_desc);
+	private void setupViews() {
+		mTitle = (EditText) findViewById(R.id.task_edit_title);
+		mDescription = (EditText) findViewById(R.id.task_edit_desc);
 		completionCriteria = (EditText) findViewById(R.id.task_edit_comp_crit);
-		tDeadline = (Button) findViewById(R.id.task_edit_deadline);
-		mComplete = (Button) findViewById (R.id.task_mark_complete_button);
+		mDeadlineBtn = (Button) findViewById(R.id.task_edit_deadline);
+		mCompleteBtn = (Button) findViewById(R.id.task_mark_complete_button);
 		isCompleted = (TextView) findViewById(R.id.task_edit_completed);
 	}
+
 	@Override
 	public void processFinish(Boolean result) {
 		if (result) {
@@ -187,18 +205,19 @@ public class EditTaskActivity extends FragmentActivity implements
 	}
 
 	private void save() {
-		if (TextUtils.isEmpty(Title.getText())) {
+		if (TextUtils.isEmpty(mTitle.getText())) {
 			Toast.makeText(this, "Empty Task not created", Toast.LENGTH_SHORT)
 					.show();
 			setResult(RESULT_CANCELED);
 			finish();
 		} else {
-
 			trimTextView();
-			displayTask.setTitle(Title.getText().toString());
-			displayTask.setDescription(Description.getText().toString());
-			displayTask.setCompletionCriteria(completionCriteria.getText().toString());
-			displayTask.setEndTime(tDeadline.getText().toString());
+			displayTask.setTitle(mTitle.getText().toString());
+			displayTask.setDescription(mDescription.getText().toString());
+			displayTask.setCompletionCriteria(completionCriteria.getText()
+					.toString());
+			displayTask.setEndTime(mDeadlineBtn.getText().toString());
+			
 			TaskUpdater tUpdate = new TaskUpdater();
 			tUpdate.updateTask(displayTask);
 
@@ -244,7 +263,7 @@ public class EditTaskActivity extends FragmentActivity implements
 				cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 				cal.set(Calendar.MONTH, monthOfYear);
 				cal.set(Calendar.YEAR, year);
-				tDeadline.setText(cal.get(Calendar.MONTH) + 1 + "/"
+				mDeadlineBtn.setText(cal.get(Calendar.MONTH) + 1 + "/"
 						+ cal.get(Calendar.DAY_OF_MONTH) + "/"
 						+ cal.get(Calendar.YEAR));
 			}

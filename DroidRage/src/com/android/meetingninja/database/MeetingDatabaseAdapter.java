@@ -28,6 +28,7 @@ import java.util.Map;
 
 import objects.Meeting;
 import android.net.Uri;
+import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -37,15 +38,8 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 
 public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
-
-	protected final static String KEY_ID = "meetingID";
-	protected final static String KEY_TITLE = "title";
-	protected final static String KEY_LOCATION = "location";
-	protected final static String KEY_DATETIME = "datetime";
-	protected final static String KEY_START = "datetimeStart";
-	protected final static String KEY_END = "datetimeEnd";
-	protected final static String KEY_DESC = "description";
-	protected final static String KEY_ATTEND = "attendance";
+	private final static String TAG = MeetingDatabaseAdapter.class
+			.getSimpleName();
 
 	public static String getBaseUrl() {
 		return BASE_URL + "Meetings";
@@ -74,8 +68,8 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 
 		// Initialize ObjectMapper
 		List<Meeting> meetingsList = new ArrayList<Meeting>();
-		final JsonNode meetingsArray = MAPPER.readTree(response)
-				.get("meetings");
+		final JsonNode meetingsArray = MAPPER.readTree(response).get(
+				Keys.Meeting.LIST);
 
 		if (meetingsArray.isArray()) {
 			for (final JsonNode meetingNode : meetingsArray) {
@@ -109,15 +103,15 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 		// Build JSON Object
 		jgen.writeStartObject();
 		jgen.writeStringField("userID", userID);
-		jgen.writeStringField(KEY_TITLE, m.getTitle());
-		jgen.writeStringField(KEY_LOCATION, m.getLocation());
-		jgen.writeStringField("datetime", m.getStartTime());
-		jgen.writeArrayFieldStart("attendance");
+		jgen.writeStringField(Keys.Meeting.TITLE, m.getTitle());
+		jgen.writeStringField(Keys.Meeting.LOCATION, m.getLocation());
+		jgen.writeStringField(Keys.Meeting.DATETIME, m.getStartTime());
+		jgen.writeArrayFieldStart(Keys.Meeting.ATTEND);
 		// TODO: Add attendees to meeting
 		for (String attendee : m.getAttendance()) {
 			// if (attendee.isAttending()) {
 			jgen.writeStartObject();
-			jgen.writeStringField("userID", attendee);
+			jgen.writeStringField(Keys.User.ID, attendee);
 			jgen.writeEndObject();
 			// }
 		}
@@ -140,7 +134,7 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 		/*
 		 * result should get valid={"meetingID":"##"}
 		 */
-		String result = new String();
+		String result = "";
 		if (!response.isEmpty()) {
 			responseMap = MAPPER.readValue(response,
 					new TypeReference<HashMap<String, String>>() {
@@ -160,21 +154,23 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 
 	public static Meeting parseMeeting(JsonNode node) {
 		Meeting m = new Meeting();
-		if (node.hasNonNull(KEY_ID)) {
-			m.setID(node.get(KEY_ID).asText());
-			m.setTitle(node.get(KEY_TITLE).asText());
-			m.setLocation(node.get(KEY_LOCATION).asText());
-			m.setStartTime(node.get(KEY_START).asText());
-			m.setEndTime(node.get(KEY_END).asText());
-			m.setDescription(node.get(KEY_DESC).asText());
-			JsonNode attendance = node.get(KEY_ATTEND);
+		if (node.hasNonNull(Keys.Meeting.ID)) {
+			m.setID(node.get(Keys.Meeting.ID).asText());
+			m.setTitle(node.get(Keys.Meeting.TITLE).asText());
+			m.setLocation(node.get(Keys.Meeting.LOCATION).asText());
+			m.setStartTime(node.get(Keys.Meeting.START).asText());
+			m.setEndTime(node.get(Keys.Meeting.END).asText());
+			m.setDescription(node.get(Keys.Meeting.DESC).asText());
+			JsonNode attendance = node.get(Keys.Meeting.ATTEND);
 			if (attendance.isArray()) {
 				for (final JsonNode attendeeNode : attendance) {
-					m.addAttendee(attendeeNode.get("userID").asText());
+					m.addAttendee(attendeeNode.get(Keys.User.ID).asText());
 				}
 			}
-		} else
+		} else {
+			Log.e(TAG, "Error: Meeting failed to parse");
 			return null;
+		}
 
 		return m;
 	}

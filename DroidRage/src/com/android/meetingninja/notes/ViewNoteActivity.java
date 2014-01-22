@@ -1,8 +1,6 @@
 package com.android.meetingninja.notes;
 
-
-
-
+import objects.Note;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -12,53 +10,59 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v4.app.NavUtils;
+
 import com.android.meetingninja.R;
 import com.android.meetingninja.R.id;
 import com.android.meetingninja.R.layout;
 import com.android.meetingninja.R.menu;
+import com.android.meetingninja.database.Keys;
 
 public class ViewNoteActivity extends Activity {
 
-	private Intent getNote;
-	private String noteContent;
+	private Bundle extras;
 	private String noteName;
-	private int noteID;
-	private String creator;
-	private String editor;
 	private TextView contentsText;
 	private TextView titleText;
-	private TextView createdText;
-	private TextView editedText;
-		
+	private TextView creatorText;
+	private TextView lastModifiedText;
+	private Note displayedNote;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_view_note);
 		// Show the Up button in the action bar.
 		setupActionBar();
+		setupViews();
 		refresh();
 	}
-	
-	protected void refresh(){
-		getNote = getIntent();
-		noteContent = getNote.getStringExtra("NoteContent");
-		noteName = getNote.getStringExtra("NoteName");
-		noteID = getNote.getIntExtra("NoteID", 0);
-		creator = getNote.getStringExtra(EditNoteActivity.EXTRA_CREATOR);
 
-		contentsText = (TextView) findViewById(R.id.contentsText);
+	private void setupViews() {
 		titleText = (TextView) findViewById(R.id.titleText);
-		createdText = (TextView) findViewById(R.id.createdText);
-		editedText = (TextView) findViewById(R.id.editedText);
+		creatorText = (TextView) findViewById(R.id.note_creator);
+		contentsText = (TextView) findViewById(R.id.contentsText);
+		lastModifiedText = (TextView) findViewById(R.id.editedText);
 
-		contentsText.setText(noteContent);
-		titleText.setText(noteName);
-		createdText.setText("Created by: " + creator);
-		editedText.setText("");
+	}
 
-		setTitle("Viewing note '" + noteName + "'");
-		
-		Log.v("VIEW_NOTE", "Content: " + noteContent);
+	protected void refresh() {
+		extras = getIntent().getExtras();
+		if (extras != null) {
+			// noteContent = extras.getString("NoteContent");
+			// noteName = extras.getString("NoteName");
+			// noteID = extras.getString("NoteID");
+			// creator = extras.getString(EditNoteActivity.EXTRA_CREATOR);
+			displayedNote = extras.getParcelable(Keys.Note.PARCEL);
+		}
+
+		if (displayedNote != null) {
+			titleText.setText(displayedNote.getTitle());
+			creatorText.setText("Created by: " + displayedNote.getCreatedBy());
+			contentsText.setText(displayedNote.getContent());
+			lastModifiedText.setText(displayedNote.getDateCreated());
+
+			setTitle(displayedNote.getTitle().trim());
+		}
 	}
 
 	/**
@@ -74,7 +78,7 @@ public class ViewNoteActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.view_note, menu);
-		
+
 		return true;
 	}
 
@@ -91,14 +95,14 @@ public class ViewNoteActivity extends Activity {
 			//
 			NavUtils.navigateUpFromSameTask(this);
 			return true;
-			
+
 		case R.id.edit_note_action_edit:
 			edit();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		setResult(resultCode, data);
@@ -106,9 +110,10 @@ public class ViewNoteActivity extends Activity {
 	}
 
 	private void edit() {
-		Intent editNote = new Intent(ViewNoteActivity.this, EditNoteActivity.class);
+		Intent editNote = new Intent(ViewNoteActivity.this,
+				EditNoteActivity.class);
 
-		editNote.putExtras(getIntent().getExtras());
+		editNote.putExtras(extras);
 		startActivityForResult(editNote, 1);
 	}
 

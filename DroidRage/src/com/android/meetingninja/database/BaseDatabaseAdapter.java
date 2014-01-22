@@ -26,9 +26,12 @@ import java.net.URLConnection;
 import org.apache.http.HttpRequest;
 
 import android.net.Uri;
+import android.util.Log;
 
+import com.android.meetingninja.ApplicationController;
 import com.android.volley.Request;
 import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class BaseDatabaseAdapter {
@@ -37,10 +40,16 @@ public abstract class BaseDatabaseAdapter {
 	protected final static String USER_AGENT = "Mozilla/5.0";
 	protected final static String CONTENT_TYPE = "application/json";
 	protected final static String ACCEPT_TYPE = "application/json";
-	protected final static JsonFactory JFACTORY = new JsonFactory();
-	protected final static ObjectMapper MAPPER = new ObjectMapper(JFACTORY);
-	protected final static String ERROR_ID = "errorID";
-	protected final static String ERROR_MESSAGE = "errorMessage";
+	protected final static ObjectMapper MAPPER = ApplicationController
+			.getInstance().getObjectMapper();
+	protected final static JsonFactory JFACTORY = MAPPER.getFactory();
+
+	protected interface IRequest {
+		final String GET = "GET";
+		final String POST = "POST";
+		final String PUT = "PUT";
+		final String DELETE = "DELETE";
+	}
 
 	public static String getBaseUrl() {
 		return BASE_URL;
@@ -103,12 +112,15 @@ public abstract class BaseDatabaseAdapter {
 		conn.disconnect();
 		return response;
 	}
-
-	protected interface IRequest {
-		String GET = "GET";
-		String POST = "POST";
-		String PUT = "PUT";
-		String DELETE = "DELETE";
+	
+	protected static String getJSONValue(JsonNode node, String key) {
+		return node.hasNonNull(key) ? node.get(key).asText() : "";
 	}
 
+	protected static void logError(final String tag, final JsonNode errorNode) {
+		Log.e(tag,
+				String.format("ErrorID: [%s] %s",
+						errorNode.get(Keys.ERROR_ID).asText(),
+						errorNode.get(Keys.ERROR_MESSAGE).asText()));
+	}
 }

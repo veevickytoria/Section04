@@ -39,8 +39,9 @@ public class UserInfoFetcher extends AsyncTask<String, Void, User> {
 		User user = null;
 
 		try {
-			// params = userID
-			user = UserDatabaseAdapter.getUserInfo(params[0]);
+			String userID = params[0];
+			user = UserDatabaseAdapter.getUserInfo(userID);
+			user.setID(userID);
 		} catch (IOException e) {
 			Log.e(TAG, "Error: Unable to get userinfo");
 			Log.e(TAG, e.getLocalizedMessage());

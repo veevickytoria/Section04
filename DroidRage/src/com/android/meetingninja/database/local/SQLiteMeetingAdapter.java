@@ -19,6 +19,8 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.android.meetingninja.database.Keys;
+
 import objects.Meeting;
 import android.content.ContentValues;
 import android.content.Context;
@@ -37,11 +39,11 @@ public class SQLiteMeetingAdapter extends SQLiteHelper {
 	protected static final String TABLE_NAME = "meetings";
 
 	// Columns
-	public static final String TITLE = "title";
-	public static final String LOCATION = "location";
-	public static final String START_TIME = "startTime";
-	public static final String END_TIME = "endTime";
-	public static final String DESCRIPTION = "description";
+	public static final String KEY_TITLE = Keys.Meeting.TITLE;
+	public static final String KEY_LOCATION = Keys.Meeting.LOCATION;
+	public static final String KEY_START_TIME = Keys.Meeting.START;
+	public static final String KEY_END_TIME = Keys.Meeting.END;
+	public static final String KEY_DESCRIPTION = Keys.Meeting.DESC;
 
 	// public static final String ATTENDANCE = "attendance";
 
@@ -64,25 +66,25 @@ public class SQLiteMeetingAdapter extends SQLiteHelper {
 	public Meeting insertMeeting(Meeting m) {
 		mDb = mDbHelper.getWritableDatabase();
 		ContentValues contentValues = new ContentValues();
-		contentValues.put(TITLE, m.getTitle());
-		contentValues.put(LOCATION, m.getLocation());
+		contentValues.put(KEY_TITLE, m.getTitle());
+		contentValues.put(KEY_LOCATION, m.getLocation());
 		try {
-			contentValues.put(START_TIME, m.getStartTime_Time());
+			contentValues.put(KEY_START_TIME, m.getStartTime_Time());
 		} catch (ParseException e) {
 			Log.e(TAG, e.getLocalizedMessage());
 			return null;
 		}
 		try {
-			contentValues.put(END_TIME, m.getEndTime_Time());
+			contentValues.put(KEY_END_TIME, m.getEndTime_Time());
 		} catch (ParseException e) {
 			Log.e(TAG, e.getLocalizedMessage());
 			return null;
 		}
-		contentValues.put(DESCRIPTION, m.getDescription());
+		contentValues.put(KEY_DESCRIPTION, m.getDescription());
 
 		long insertID = mDb.insert(TABLE_NAME, null, contentValues);
-		Cursor c = this.query(new String[] { KEY_ID, TITLE, LOCATION,
-				START_TIME, END_TIME, DESCRIPTION }, KEY_ID + "=" + insertID,
+		Cursor c = this.query(new String[] { KEY_ID, KEY_TITLE, KEY_LOCATION,
+				KEY_START_TIME, KEY_END_TIME, KEY_DESCRIPTION }, KEY_ID + "=" + insertID,
 				null, null, null, null);
 		c.moveToFirst();
 		Meeting newMeeting = new MeetingCursor(c).getModel();
@@ -93,8 +95,8 @@ public class SQLiteMeetingAdapter extends SQLiteHelper {
 
 	public List<Meeting> getAllMeetings() {
 		List<Meeting> meetings = new ArrayList<Meeting>();
-		String[] columns = new String[] { KEY_ID, TITLE, LOCATION, START_TIME,
-				END_TIME, DESCRIPTION };
+		String[] columns = new String[] { KEY_ID, KEY_TITLE, KEY_LOCATION, KEY_START_TIME,
+				KEY_END_TIME, KEY_DESCRIPTION };
 		Cursor c = this.query(columns, null, null, null, null, null);
 		Meeting meeting = null;
 		// looping through all rows and adding to list
@@ -138,21 +140,21 @@ public class SQLiteMeetingAdapter extends SQLiteHelper {
 			return;
 		}
 		ContentValues data = new ContentValues();
-		data.put(TITLE, meeting.getTitle());
-		data.put(LOCATION, meeting.getLocation());
+		data.put(KEY_TITLE, meeting.getTitle());
+		data.put(KEY_LOCATION, meeting.getLocation());
 		try {
-			data.put(START_TIME, meeting.getStartTime_Time());
+			data.put(KEY_START_TIME, meeting.getStartTime_Time());
 		} catch (ParseException e) {
 			Log.e(TAG, e.getLocalizedMessage());
 			return;
 		}
 		try {
-			data.put(END_TIME, meeting.getEndTime_Time());
+			data.put(KEY_END_TIME, meeting.getEndTime_Time());
 		} catch (ParseException e) {
 			Log.e(TAG, e.getLocalizedMessage());
 			return;
 		}
-		data.put(DESCRIPTION, meeting.getDescription());
+		data.put(KEY_DESCRIPTION, meeting.getDescription());
 
 		mDb.update(TABLE_NAME, data, KEY_ID + "=" + meeting.getID(), null);
 		close();
@@ -187,11 +189,11 @@ public class SQLiteMeetingAdapter extends SQLiteHelper {
 		@Override
 		public Meeting getModel() {
 			int idxID = crsr.getColumnIndexOrThrow(KEY_ID);
-			int idxTITLE = crsr.getColumnIndexOrThrow(TITLE);
-			int idxLOCATION = crsr.getColumnIndexOrThrow(LOCATION);
-			int idxSTART_TIME = crsr.getColumnIndexOrThrow(START_TIME);
-			int idxEND_TIME = crsr.getColumnIndexOrThrow(END_TIME);
-			int idxDESCRIPTION = crsr.getColumnIndexOrThrow(DESCRIPTION);
+			int idxTITLE = crsr.getColumnIndexOrThrow(KEY_TITLE);
+			int idxLOCATION = crsr.getColumnIndexOrThrow(KEY_LOCATION);
+			int idxSTART_TIME = crsr.getColumnIndexOrThrow(KEY_START_TIME);
+			int idxEND_TIME = crsr.getColumnIndexOrThrow(KEY_END_TIME);
+			int idxDESCRIPTION = crsr.getColumnIndexOrThrow(KEY_DESCRIPTION);
 			model.setID(crsr.getInt(idxID));
 			model.setTitle(crsr.getString(idxTITLE));
 			model.setLocation(crsr.getString(idxLOCATION));

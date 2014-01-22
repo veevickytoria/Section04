@@ -35,11 +35,13 @@ import com.android.meetingninja.ApplicationController;
 import com.android.meetingninja.R;
 import com.android.meetingninja.database.AsyncResponse;
 import com.android.meetingninja.database.JsonNodeRequest;
+import com.android.meetingninja.database.Keys;
 import com.android.meetingninja.database.UserDatabaseAdapter;
 import com.android.meetingninja.meetings.MeetingItemAdapter;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.loopj.android.image.SmartImageView;
 
@@ -70,11 +72,18 @@ public class ProfileFragment extends Fragment {
 
 		Bundle extras = getArguments();
 		displayedUser = new User();
-		if (extras != null && extras.containsKey("userID")) {
-			displayedUser.setUserID(extras.getString("userID"));
+		
+		if (extras != null && extras.containsKey(Keys.User.PARCEL)) {
+			displayedUser = (User) extras.getParcelable(Keys.User.PARCEL);
+			try {
+				System.out.println(ApplicationController.getInstance().getObjectMapper().writeValueAsString(displayedUser));
+			} catch (JsonProcessingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} else {
 			Log.v(TAG, "Displaying Current User");
-			displayedUser.setUserID(session.getUserID());
+			displayedUser.setID(session.getUserID());
 		}
 
 		// Peter Pan URL
@@ -84,7 +93,7 @@ public class ProfileFragment extends Fragment {
 		// infoFetcher = new RetUserObj();
 		// infoFetcher.execute(session.getUserID());
 
-		fetchUserInfo(displayedUser.getUserID());
+		fetchUserInfo(displayedUser.getID());
 
 		/*
 		 * meetingList = (ListView) pageView
@@ -119,11 +128,11 @@ public class ProfileFragment extends Fragment {
 
 	}
 
-	private void fetchUserInfo(String userID) {
+	private void fetchUserInfo(final String userID) {
 		displayedUser = new User();
 		// Local user is stored in SessionManager, so do not fetch
 		if (TextUtils.equals(userID, session.getUserID())) {
-			displayedUser.setUserID(session.getUserID());
+			displayedUser.setID(session.getUserID());
 			Map<String, String> details = session.getUserDetails();
 			displayedUser.setDisplayName(details.get(SessionManager.USER));
 			displayedUser.setCompany(details.get(SessionManager.COMPANY));
@@ -148,6 +157,7 @@ public class ProfileFragment extends Fragment {
 					public void onResponse(JsonNode response) {
 						VolleyLog.v("Response:%n %s", response);
 						User retUser = UserDatabaseAdapter.parseUser(response);
+						retUser.setID(userID);
 						ProfileFragment.this.setUser(retUser);
 					}
 				}, new Response.ErrorListener() {

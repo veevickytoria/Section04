@@ -26,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.android.meetingninja.R;
+import com.android.meetingninja.database.Keys;
 
 public class ProfileActivity extends FragmentActivity {
 
@@ -45,14 +46,15 @@ public class ProfileActivity extends FragmentActivity {
 
 		FragmentManager fm = getSupportFragmentManager();
 		Bundle input = getIntent().getExtras();
-		if (input != null && input.containsKey("user")) {
-			displayedUser = (User) input.getParcelable("user");
+		if (input != null && input.containsKey(Keys.User.PARCEL)) {
+			displayedUser = (User) input.getParcelable(Keys.User.PARCEL);
 		}
 		ProfileFragment profFrag = new ProfileFragment();
 		Bundle args = new Bundle();
 
 		if (displayedUser != null) {
-			args.putString("userID", displayedUser.getUserID());
+//			args.putString("userID", displayedUser.getID());
+			args.putParcelable(Keys.User.PARCEL, displayedUser);
 			profFrag.setArguments(args);
 			fm.beginTransaction().replace(R.id.profile_container, profFrag)
 					.commit();

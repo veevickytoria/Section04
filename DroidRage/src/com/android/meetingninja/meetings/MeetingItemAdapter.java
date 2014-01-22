@@ -20,6 +20,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import objects.Meeting;
 import android.content.Context;
 import android.util.Log;
@@ -102,15 +106,15 @@ public class MeetingItemAdapter extends ArrayAdapter<Meeting> {
 		StringBuilder spanBuilder = new StringBuilder();
 		boolean is24 = android.text.format.DateFormat.is24HourFormat(context
 				.getApplicationContext());
-		SimpleDateFormat timeFormat = is24 ? MyDateUtils._24_TIME_FORMAT
-				: MyDateUtils._12_TIME_FORMAT;
-		SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM dd, yyyy");
-		spanBuilder.append(dateFormat.format(new Date(start)));
+		DateTimeFormatter timeFormat = is24 ? MyDateUtils.JODA_24_TIME_FORMAT
+				: MyDateUtils.JODA_12_TIME_FORMAT;
+		DateTimeFormatter dateFormat = DateTimeFormat
+				.forPattern("MMMM dd, yyyy");
+		spanBuilder.append(dateFormat.print(start));
 		if (!allDay) {
-			spanBuilder.append(", " + timeFormat.format(new Date(start))
-					+ " - ");
-			spanBuilder.append(dateFormat.format(new Date(end)));
-			spanBuilder.append(", " + timeFormat.format(new Date(end)));
+			spanBuilder.append(", " + timeFormat.print(start) + " - ");
+			spanBuilder.append(dateFormat.print(end));
+			spanBuilder.append(", " + timeFormat.print(end));
 		}
 
 		return spanBuilder.toString();

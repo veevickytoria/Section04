@@ -81,7 +81,6 @@ public class TasksFragment extends Fragment implements
 		taskAdpt = new TaskListAdapter(getActivity(), meetingNames, taskLists);
 
 		lv.setAdapter(taskAdpt);
-		// lv.setEmptyView(v.findViewById(R.id.ta))
 		registerForContextMenu(lv);
 
 		lv.setOnChildClickListener(new OnChildClickListener() {
@@ -219,7 +218,7 @@ class TaskListAdapter extends BaseExpandableListAdapter {
 	}
 
 	@Override
-	public Object getGroup(int groupPosition) {
+	public String getGroup(int groupPosition) {
 		return this.meetingNames.get(groupPosition);
 	}
 

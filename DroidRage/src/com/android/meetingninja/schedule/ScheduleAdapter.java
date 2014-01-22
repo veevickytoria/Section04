@@ -19,6 +19,8 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
+import org.joda.time.DateTime;
+
 import objects.Event;
 import objects.Schedule;
 import android.content.Context;
@@ -88,14 +90,11 @@ public class ScheduleAdapter extends AmazingAdapter {
 			TextView lSectionTitle = (TextView) view
 					.findViewById(R.id.schedule_header);
 			String sectionTitle = getSections()[getSectionForPosition(position)];
-			Date d = new Date();
-			try {
-				d = MyDateUtils.SERVER_DATE_FORMAT.parse(sectionTitle);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			lSectionTitle.setText(MyDateUtils.APP_DATE_FORMAT.format(d));
+			DateTime dt = new DateTime();
+			dt = MyDateUtils.JODA_SERVER_DATE_FORMAT
+					.parseDateTime(sectionTitle);
+			lSectionTitle.setText(MyDateUtils.JODA_MEETING_DATE_FORMAT
+					.print(dt));
 		} else {
 			view.findViewById(R.id.schedule_header).setVisibility(View.GONE);
 		}
