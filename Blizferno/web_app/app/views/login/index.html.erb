@@ -1,5 +1,4 @@
 <!-- Javascript -->
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
 <script type="text/javascript">
   function SHA256(s){
  
@@ -231,11 +230,10 @@
   function passCheck(){
     var pass0 = document.getElementById('p0').value();
     var pass1 = document.getElementById('p1').value();
-    if(pass0 != pass1){
-      document.getElementById('p1').style.box-shadow('0 0 5px 4px red;');
-    }else{
-      document.getElementById('p1').style.box-shadow('none;');
-    }
+    if(pass0 != pass1)
+      document.getElementById('p1').style.box-shadow('0 0 5px 4px red');
+    else
+      document.getElementById('p1').style.box-shadow('none');
   }
 
   function areCookiesEnabled(){
@@ -251,15 +249,15 @@
 </script>
 
 <!-- Check for Javascript on local machine -->
-  <noscript>
-    <h1 style='margin-top: 20%; margin-bottom: auto; text-align: center; text-decoration: underline; font-weight: bolder; font-size: 2em'>YOU DO NOT HAVE JAVASCRIPT ENABLED</h1>
-    <h2 style='text-align: center; font-style: italic;'>Please Enable Javascript to Continue Using this Site.</h2>
-  </noscript>
+<noscript>
+  <h1 style='margin-top: 20%; margin-bottom: auto; text-align: center; text-decoration: underline; font-weight: bolder; font-size: 2em'>YOU DO NOT HAVE JAVASCRIPT ENABLED</h1>
+  <h2 style='text-align: center; font-style: italic;'>Please Enable Javascript to Continue Using this Site.</h2>
+</noscript>
 
 <br />
 
 <!-- JAVASCRIPT REQUIRED TO ENTER THIS AREA -->
-<div id='jsNeeded' style='display: none'>
+<div id='jsNeeded' hidden>
   <!-- Temporary Login Details -->
   <h1>**** TEMP LOGIN DETAILS ****</h1>
   <h2>Email: hi@hi.com</h2>
@@ -300,6 +298,7 @@
     </form>
   </div>
 </div>
+
 <!-- 
 <div class="container">
     <div class="flat-form">
@@ -334,12 +333,12 @@
                     <input name="company" placeholder="Company" type="text" />
                     <input name="title" placeholder="Title" type="text" />
                     <input name="location" placeholder="Location" type="text" />
-                <!-- <input id="p1" name="passConfirm" placeholder="Confirm password" type="password" onchange="passCheck();" /> 
+                <!- <input id="p1" name="passConfirm" placeholder="Confirm password" type="password" onchange="passCheck();" /> 
                 <input class="button" disabled='true' style='font-size: 14px; cursor: pointer' type="submit" value="Sign Up" />
 		</table>
             </form>
         </div>
-        <!--/#register.form-action
+        <!-/#register.form-action
     </div>
 </div>
 
@@ -378,4 +377,4 @@
             
         });
     })(jQuery);
-</script>
+</script> -->

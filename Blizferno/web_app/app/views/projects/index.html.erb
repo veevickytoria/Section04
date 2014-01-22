@@ -215,6 +215,17 @@ function returnSelectValuesAsJSON(JSONtype, JSONDisplayColumn, JSONValueColumn, 
   return newJSON[JSONtype];
 }
 
+function validateForm(){
+    var title = document.forms["input"]["projectTitle"].value;
+    var meetings = document.forms["input"]["meetings"].value;
+    var notes = document.forms["input"]["notes"].value;
+    var members = document.forms["input"]["members"].value;
+
+    alert("The following project was added to the db: " + title + " " + meetings + " " + notes + " " + members);
+
+    return true;
+  }
+
 </script>
 
 <h1 style='margin-left: 15%; margin-right: auto;'>Projects</h1>
