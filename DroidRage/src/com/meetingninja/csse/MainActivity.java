@@ -269,7 +269,7 @@ public class MainActivity extends FragmentActivity {
 		switch (clickedLabel) {
 		case MEETINGS:
 			fragment = new MeetingsFragment();
-			meetingsFrag = (MeetingsFragment) fragment;
+			meetingsFrag = (MeetingsFragment) fragment; 
 			break;
 		case NOTES:
 			fragment = new NotesFragment();
