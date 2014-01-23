@@ -286,13 +286,15 @@
     <form id="registerForm" method="post">
       <table style="width: 100%">
         <input id='regName' name="name" placeholder="Full Name" type="text" required />
-        <input id='regEmail' name="email" placeholder="Email" type="email" required />
+        <input id='regEmail' name="email" placeholder="Email" type="email" style='font-size: 18px;height: 38px' required />
+        <br />
         <input id='p0' name='password' placeholder='Password' type='password' required />
+        <input id="p1" name="passConfirm" placeholder="Confirm password" type="password" onchange="passCheck();" />
+        <br />
         <input name="phone" placeholder="Phone #" type="text" />
         <input name="company" placeholder="Company" type="text" />
         <input name="title" placeholder="Title" type="text" />
         <input name="location" placeholder="Location" type="text" />
-        <input id="p1" name="passConfirm" placeholder="Confirm password" type="password" onchange="passCheck();" />
         <input class="button" style='font-size: 14px; cursor: pointer' type="submit" value="Sign Up" />
       </table>
     </form>

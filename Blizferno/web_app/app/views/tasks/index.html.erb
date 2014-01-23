@@ -1,12 +1,11 @@
 <style type="text/css">
-header > h1 { display: inline-block; }
-.modal-backdrop{
-  z-index: 999;
-}
+  header > h1 { display: inline-block; }
+  .modal-backdrop{
+    z-index: 999;
+  }
 </style>
 
 <script type="text/javascript">
-  
   var TaskArray;
   var deleteID;
 
@@ -69,8 +68,6 @@ header > h1 { display: inline-block; }
     $('#viewTaskModal').on('hidden.bs.modal', function() {
       $(this).removeData('bs.modal');
     });
-
-    // Edi
   }
 
   function showViewModal(ID){
@@ -130,8 +127,7 @@ header > h1 { display: inline-block; }
       if(assignedTo.length == 0) string = string + "Assigned To\n";
       alert(string);
       return false;
-    }
-    else{
+    }else{
       alert("The following fields were added to the db: " + title + " " + description + " " + deadline + " " + completionCriteria + " " + assignedTo)
       return true;
     }
@@ -169,7 +165,7 @@ header > h1 { display: inline-block; }
         <%= render "new" %>
       </div>
       <div class="modal-footer">
-	<input type="submit" form="createTask" class="btn btn-primary"></button>
+        <input type="submit" form="createTask" class="btn btn-primary" />
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
     </div><!-- /.modal-content -->
