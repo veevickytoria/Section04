@@ -39,7 +39,7 @@ import android.view.accessibility.AccessibilityManager;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.FrameLayout;
 
-import com.android.meetingninja.R;
+import com.meetingninja.csse.R;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.view.ViewHelper;
@@ -128,7 +128,7 @@ public class RadialPickerLayout extends FrameLayout implements OnTouchListener {
 		preparePrefer30sMap();
 
 		mVibrator = (Vibrator) context
-				.getSystemService(Service.VIBRATOR_SERVICE);
+				.getSystemService(Context.VIBRATOR_SERVICE);
 		mLastVibrate = 0;
 		mLastValueSelected = -1;
 

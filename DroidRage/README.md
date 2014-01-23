@@ -2,13 +2,6 @@
 
 This is the Android version for the Rose-Hulman CSSE371-04 Junior Project for the 2013-2014 year. 
 
-## Features ##
-
-* Sign In
-* Register
-* Fetch Meetings
-* Tab navigation between Meetings and Notes
-
 ## Todo ##
 
 * Add more views

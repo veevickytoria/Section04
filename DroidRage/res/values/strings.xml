@@ -63,5 +63,6 @@
     <string name="title_activity_view_task">ViewTaskActivity</string>
     <string name="title_activity_edit_task">EditTaskActivity</string>
     <string name="title_activity_tasks">CreateTaskActivity</string>
+    <string name="title_activity_view_note">ViewNoteActivity</string>
 
 </resources>

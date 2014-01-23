@@ -16,7 +16,7 @@ import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 
-import com.android.meetingninja.R;
+import com.meetingninja.csse.R;
 
 /**
  * Adapter used to feed the table view.
@@ -232,7 +232,7 @@ public abstract class AbstractTreeViewAdapter<T> extends BaseAdapter implements
 		layout.setBackgroundDrawable(individualRowDrawable == null ? getDrawableOrDefaultBackground(rowBackgroundDrawable)
 				: individualRowDrawable);
 		final LinearLayout.LayoutParams indicatorLayoutParams = new LinearLayout.LayoutParams(
-				calculateIndentation(nodeInfo), LayoutParams.FILL_PARENT);
+				calculateIndentation(nodeInfo), android.view.ViewGroup.LayoutParams.FILL_PARENT);
 		final LinearLayout indicatorLayout = (LinearLayout) layout
 				.findViewById(R.id.treeview_list_item_image_layout);
 		indicatorLayout.setGravity(indicatorGravity);
@@ -252,7 +252,7 @@ public abstract class AbstractTreeViewAdapter<T> extends BaseAdapter implements
 		final FrameLayout frameLayout = (FrameLayout) layout
 				.findViewById(R.id.treeview_list_item_frame);
 		final FrameLayout.LayoutParams childParams = new FrameLayout.LayoutParams(
-				LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+				android.view.ViewGroup.LayoutParams.FILL_PARENT, android.view.ViewGroup.LayoutParams.FILL_PARENT);
 		if (newChildView) {
 			frameLayout.addView(childView, childParams);
 		}

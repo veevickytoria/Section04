@@ -13,11 +13,14 @@ import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonNode;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "userID", "displayName", "email", "phone", "company",
 		"title", "location" })
-public class User extends SimpleUser implements Parcelable, IJSONObject {
+public class User extends AbstractJSONObject<User> implements Parcelable {
+	private String userID;
+	private String displayName;
 	private String email;
 	private String phone;
 	private String company;
@@ -28,14 +31,9 @@ public class User extends SimpleUser implements Parcelable, IJSONObject {
 		// required empty constructor
 	}
 
-	public User(int userID) {
-		super.setUserID(userID);
-	}
-
 	public User(User copyUser) {
-		super.setUserID((copyUser.getUserID() != null ? copyUser.getUserID()
-				: "" + 0));
-		super.setDisplayName(copyUser.getDisplayName());
+		setID((copyUser.getID() != null ? copyUser.getID() : "" + 0));
+		setDisplayName(copyUser.getDisplayName());
 		setEmail(copyUser.getEmail());
 		setPhone(copyUser.getPhone());
 		setCompany(copyUser.getCompany());
@@ -50,23 +48,27 @@ public class User extends SimpleUser implements Parcelable, IJSONObject {
 	/* Required Fields */
 
 	@Override
-	public String getUserID() {
-		return super.getUserID();
+	public String getID() {
+		return this.userID;
 	}
 
 	@Override
-	public void setUserID(String id) {
-		super.setUserID(id);
+	public void setID(String id) {
+		int testInt = Integer.parseInt(id);
+		setID(testInt);
 	}
 
 	@Override
+	protected void setID(int id) {
+		this.userID = Integer.toString(id);
+	}
+
 	public String getDisplayName() {
 		return displayName;
 	}
 
-	@Override
 	public void setDisplayName(String displayName) {
-		super.setDisplayName(displayName);
+		this.displayName = displayName;
 	}
 
 	public String getEmail() {
@@ -111,28 +113,6 @@ public class User extends SimpleUser implements Parcelable, IJSONObject {
 		return (location != null && !location.isEmpty()) ? location : "";
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("***** User Details *****\n");
-		builder.append("getUserID()\t");
-		builder.append(getUserID() + "\n");
-		builder.append("getDisplayName()\t");
-		builder.append(getDisplayName() + "\n");
-		builder.append("getEmail()\t");
-		builder.append(getEmail() + "\n");
-		builder.append("getPhone()\t");
-		builder.append(getPhone() + "\n");
-		builder.append("getCompany()\t");
-		builder.append(getCompany() + "\n");
-		builder.append("getTitle()\t");
-		builder.append(getTitle() + "\n");
-		builder.append("getLocation()\t");
-		builder.append(getLocation() + "\n");
-		builder.append("************************");
-		return builder.toString();
-	}
-
 	public SimpleUser toSimpleUser() {
 		SimpleUser simple = new SimpleUser();
 		simple.setUserID(this.userID);
@@ -148,7 +128,7 @@ public class User extends SimpleUser implements Parcelable, IJSONObject {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(getUserID());
+		dest.writeString(getID());
 		dest.writeString(getDisplayName());
 		dest.writeString(getEmail());
 		dest.writeString(getPhone());
@@ -170,17 +150,20 @@ public class User extends SimpleUser implements Parcelable, IJSONObject {
 
 	public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
 
+		@Override
 		public User createFromParcel(Parcel in) {
 			return new User(in);
 		}
 
+		@Override
 		public User[] newArray(int size) {
 			return new User[size];
 		}
 
 	};
 
-	public String toJSON() throws JsonGenerationException, IOException {
+	@Override
+	public JsonNode toJSON() throws JsonGenerationException, IOException {
 		ByteArrayOutputStream _json = new ByteArrayOutputStream();
 		// this type of print stream allows us to get a string easily
 		PrintStream ps = new PrintStream(_json);
@@ -190,7 +173,8 @@ public class User extends SimpleUser implements Parcelable, IJSONObject {
 
 		// Build JSON Object
 		jgen.writeStartObject();
-		jgen.writeStringField("userID", getUserID());
+		if (!(getID() == null || getID().isEmpty()))
+			jgen.writeStringField("userID", getID());
 		jgen.writeStringField("displayName", getDisplayName());
 		jgen.writeStringField("email", getEmail());
 		jgen.writeStringField("phone", getPhone());
@@ -203,6 +187,9 @@ public class User extends SimpleUser implements Parcelable, IJSONObject {
 		// Get JSON Object payload from print stream
 		String json = _json.toString("UTF8");
 		ps.close();
-		return json;
+		// return json;
+
+		return MAPPER.readTree(json);
 	}
+
 }

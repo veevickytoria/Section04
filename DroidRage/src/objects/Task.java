@@ -150,10 +150,12 @@ public class Task extends Event implements Parcelable {
 	}
 
 	public static final Parcelable.Creator<Task> CREATOR = new Parcelable.Creator<Task>() {
+		@Override
 		public Task createFromParcel(Parcel in) {
 			return new Task(in);
 		}
 
+		@Override
 		public Task[] newArray(int size) {
 			return new Task[size];
 		}

@@ -30,7 +30,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 
-import com.android.meetingninja.R;
+import com.meetingninja.csse.R;
 
 /**
  * Draws a line for each page. The current page line is colored differently than
@@ -136,6 +136,7 @@ public class UnderlinePageIndicatorPicker extends View implements PageIndicator 
 		}
 	}
 
+	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
 		if (super.onTouchEvent(ev)) {
 			return true;
