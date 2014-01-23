@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "iWinAddAndViewTaskViewController.h"
 
-
-@interface iWinTaskListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface iWinTaskListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, ViewTaskDelegate>
 - (IBAction)onClickCreateNewTask;
 @property (weak, nonatomic) IBOutlet UITableView *taskListTable;
 @property (weak, nonatomic) IBOutlet UIButton *createTaskButton;

@@ -11,17 +11,22 @@
 
 @protocol ViewAddNoteDelegate <NSObject>
 
--(void)saveNoteClicked;
--(void)cancelNoteClicked;
--(void)mergeNoteClicked;
+//-(void)saveNoteClicked;
+//-(void)cancelNoteClicked;
+//-(void)mergeNoteClicked;
+-(void)refreshNoteList;
 @end
 
 
-@interface iWinViewAndAddNotesViewController : UIViewController <MergeNoteDelegate>
+@interface iWinViewAndAddNotesViewController : UIViewController <MergeNoteDelegate, UIAlertViewDelegate>
 @property (nonatomic) id<ViewAddNoteDelegate> addNoteDelegate;
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil inEditMode:(BOOL)isEditing;
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withNoteID:(NSInteger)noteID withUserID:(NSInteger)userID;
 - (IBAction)saveButton:(id)sender;
 - (IBAction)cancelButton:(id)sender;
 - (IBAction)mergeNotesButton:(id)sender;
-
+- (IBAction)confirmDeleteAlert;
+@property (weak, nonatomic) IBOutlet UITextField *titleField;
+@property (weak, nonatomic) IBOutlet UITextView *noteField;
+@property (weak, nonatomic) IBOutlet UIButton *saveButton;
+@property (weak, nonatomic) IBOutlet UIButton *deleteButton;
 @end
