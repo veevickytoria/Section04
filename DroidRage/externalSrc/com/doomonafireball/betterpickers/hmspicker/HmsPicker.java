@@ -15,7 +15,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import edu.meetingninja.rhit.R;
+import com.meetingninja.csse.R;
 
 public class HmsPicker extends LinearLayout implements Button.OnClickListener,
 		Button.OnLongClickListener {
@@ -388,10 +388,12 @@ public class HmsPicker extends LinearLayout implements Button.OnClickListener,
 		}
 
 		public static final Creator<SavedState> CREATOR = new Creator<SavedState>() {
+			@Override
 			public SavedState createFromParcel(Parcel in) {
 				return new SavedState(in);
 			}
 
+			@Override
 			public SavedState[] newArray(int size) {
 				return new SavedState[size];
 			}

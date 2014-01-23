@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import edu.meetingninja.rhit.R;
+import com.meetingninja.csse.R;
 
 /**
  * Dialog to set alarm time.

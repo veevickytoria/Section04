@@ -153,8 +153,8 @@ public class SimpleMonthAdapter extends BaseAdapter implements
 		} else {
 			v = new SimpleMonthView(mContext);
 			// Set up the new view
-			LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT,
-					LayoutParams.MATCH_PARENT);
+			LayoutParams params = new LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+					android.view.ViewGroup.LayoutParams.MATCH_PARENT);
 			v.setLayoutParams(params);
 			v.setClickable(true);
 			v.setOnDayClickListener(this);

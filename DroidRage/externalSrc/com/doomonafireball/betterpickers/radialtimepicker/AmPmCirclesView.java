@@ -27,7 +27,7 @@ import android.graphics.Typeface;
 import android.util.Log;
 import android.view.View;
 
-import edu.meetingninja.rhit.R;
+import com.meetingninja.csse.R;
 
 /**
  * Draw the two smaller AM and PM circles next to where the larger circle will

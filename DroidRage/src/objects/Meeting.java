@@ -126,16 +126,18 @@ public class Meeting extends Event implements Parcelable, IJSONObject<Meeting> {
 		startTime = in.readString();
 		endTime = in.readString();
 		description = in.readString();
-		attendance = (ArrayList<String>) in.readArrayList(String.class
+		attendance = in.readArrayList(String.class
 				.getClassLoader());
 	}
 
 	public static final Parcelable.Creator<Meeting> CREATOR = new Parcelable.Creator<Meeting>() {
 
+		@Override
 		public Meeting createFromParcel(Parcel in) {
 			return new Meeting(in);
 		}
 
+		@Override
 		public Meeting[] newArray(int size) {
 			return new Meeting[size];
 		}

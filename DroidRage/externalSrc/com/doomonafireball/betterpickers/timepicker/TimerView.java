@@ -8,8 +8,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import edu.meetingninja.rhit.R;
 import com.doomonafireball.betterpickers.widget.ZeroTopPaddingTextView;
+import com.meetingninja.csse.R;
 
 public class TimerView extends LinearLayout {
 

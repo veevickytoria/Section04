@@ -150,10 +150,12 @@ public class User extends AbstractJSONObject<User> implements Parcelable {
 
 	public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
 
+		@Override
 		public User createFromParcel(Parcel in) {
 			return new User(in);
 		}
 
+		@Override
 		public User[] newArray(int size) {
 			return new User[size];
 		}

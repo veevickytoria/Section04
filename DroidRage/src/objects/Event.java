@@ -1,12 +1,12 @@
 package objects;
 
 import java.text.ParseException;
-import java.util.Date;
 
 import org.joda.time.DateTime;
 
 import android.util.Log;
-import edu.meetingninja.rhit.extras.MyDateUtils;
+
+import com.meetingninja.csse.extras.MyDateUtils;
 
 public abstract class Event implements Comparable<Event> {
 	protected String title;
@@ -78,6 +78,7 @@ public abstract class Event implements Comparable<Event> {
 		this.description = description;
 	}
 
+	@Override
 	public int compareTo(Event another) {
 		if (another == null)
 			return 1;

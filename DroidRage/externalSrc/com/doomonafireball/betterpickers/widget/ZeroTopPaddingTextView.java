@@ -22,7 +22,7 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-import edu.meetingninja.rhit.R;
+import com.meetingninja.csse.R;
 
 /**
  * Displays text with no padding at the top.

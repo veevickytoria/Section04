@@ -38,9 +38,9 @@ import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import edu.meetingninja.rhit.R;
 import com.doomonafireball.betterpickers.Utils;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialPickerLayout.OnValueSelectedListener;
+import com.meetingninja.csse.R;
 import com.nineoldandroids.animation.ObjectAnimator;
 
 /**
@@ -263,7 +263,7 @@ public class RadialTimePickerDialog extends DialogFragment implements
 			mAmPmTextView.setVisibility(View.GONE);
 
 			RelativeLayout.LayoutParams paramsSeparator = new RelativeLayout.LayoutParams(
-					LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+					android.view.ViewGroup.LayoutParams.WRAP_CONTENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 			paramsSeparator.addRule(RelativeLayout.CENTER_IN_PARENT);
 			TextView separatorView = (TextView) view
 					.findViewById(R.id.separator);

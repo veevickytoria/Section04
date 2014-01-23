@@ -43,8 +43,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import edu.meetingninja.rhit.R;
 import com.doomonafireball.betterpickers.Utils;
+import com.meetingninja.csse.R;
 import com.nineoldandroids.animation.ObjectAnimator;
 
 /**

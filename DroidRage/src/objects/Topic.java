@@ -2,7 +2,6 @@ package objects;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
