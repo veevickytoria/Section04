@@ -25,7 +25,7 @@ import android.graphics.Typeface;
 import android.util.Log;
 import android.view.View;
 
-import com.android.meetingninja.R;
+import edu.meetingninja.rhit.R;
 import com.nineoldandroids.animation.Keyframe;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.animation.PropertyValuesHolder;

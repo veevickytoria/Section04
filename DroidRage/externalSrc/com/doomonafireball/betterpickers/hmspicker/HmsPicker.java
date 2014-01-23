@@ -15,7 +15,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.meetingninja.R;
+import edu.meetingninja.rhit.R;
 
 public class HmsPicker extends LinearLayout implements Button.OnClickListener,
 		Button.OnLongClickListener {

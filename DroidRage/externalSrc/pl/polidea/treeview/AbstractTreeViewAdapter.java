@@ -16,7 +16,7 @@ import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 
-import com.android.meetingninja.R;
+import edu.meetingninja.rhit.R;
 
 /**
  * Adapter used to feed the table view.

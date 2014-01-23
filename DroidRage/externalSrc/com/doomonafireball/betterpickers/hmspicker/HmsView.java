@@ -7,7 +7,7 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
-import com.android.meetingninja.R;
+import edu.meetingninja.rhit.R;
 import com.doomonafireball.betterpickers.widget.ZeroTopPaddingTextView;
 
 public class HmsView extends LinearLayout {

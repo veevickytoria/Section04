@@ -6,8 +6,7 @@ import java.util.Date;
 import org.joda.time.DateTime;
 
 import android.util.Log;
-
-import com.android.meetingninja.extras.MyDateUtils;
+import edu.meetingninja.rhit.extras.MyDateUtils;
 
 public abstract class Event implements Comparable<Event> {
 	protected String title;

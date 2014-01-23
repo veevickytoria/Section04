@@ -3,8 +3,7 @@ package com.android.meetingninja.test;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 
-import com.android.meetingninja.extras.MyDateUtils;
-
+import edu.meetingninja.rhit.extras.MyDateUtils;
 import junit.framework.TestCase;
 
 public class DateParsingTest extends TestCase {

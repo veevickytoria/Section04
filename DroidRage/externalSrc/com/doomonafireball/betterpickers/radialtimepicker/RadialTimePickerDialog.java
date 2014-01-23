@@ -38,7 +38,7 @@ import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.meetingninja.R;
+import edu.meetingninja.rhit.R;
 import com.doomonafireball.betterpickers.Utils;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialPickerLayout.OnValueSelectedListener;
 import com.nineoldandroids.animation.ObjectAnimator;
