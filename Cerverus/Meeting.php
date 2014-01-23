@@ -27,7 +27,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
         $meetingNode->setProperty('userID', $postContent->userID)
                 ->setProperty('title', $postContent->title)
                 ->setProperty('datetime', $postContent->datetime)
-				->setProperty('duration', $postContent->duration)
+				->setProperty('endDatetime', $postContent->endDatetime)
                 ->setProperty('description',$postContent->description)
                 ->setProperty('location', $postContent->location);
         
@@ -56,8 +56,34 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') == 0){
         //getMeetingInfo
         $meetingNode=$client->getNode($_GET['id']);
-        $array=$meetingNode->getProperties();
-        echo json_encode($array);
+		
+		if ($meetingNode != null) {
+		
+			$outputArray=$meetingNode->getProperties();
+		
+			//get relationships
+			//Arrays are three levels deep
+			// 1-outputArray: overall output array 
+			// 2-userOutputArray: all related users
+			// 3-uArray: individual users
+			$relationArray = $meetingNode->getRelationships(array(), Relationship::DirectionIn);
+			$userOutputArray = array();
+			$u=0;
+			foreach($relationArray as $rel){
+				$relType = $rel->getType();
+				if($relType == 'ATTEND_MEETING') {
+					$userNode=$rel->getStartNode();
+					$uArray = array();
+					$uArray['userID']=$userNode->getId();
+					$userOutputArray[$u++] = $uArray;
+				} 
+			}
+			$outputArray['attendance'] = $userOutputArray;
+			
+			echo json_encode($outputArray);
+		} else {
+			echo "Node not found";
+		}
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'PUT') == 0){
         //updateMeeting
         
