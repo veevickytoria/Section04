@@ -83,9 +83,10 @@
             <td colspan='1' style='cursor: pointer; text-align: center' onclick="showDeleteModal(<%= meeting['meetingID'] %>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
           </tr>
           <% end %>
+          <tfoot>
           <tr>
             <td colspan='4' style='cursor: pointer; text-align: center' href='#newMeetingModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
-          </tr>
+          </tr></tfoot>
         </table>
       </div>
     </div>
