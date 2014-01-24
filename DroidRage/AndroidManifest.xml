@@ -155,6 +155,10 @@
         </activity>
         <activity android:name="com.meetingninja.csse.tasks.EditTaskActivity" >
         </activity>
+        <activity
+            android:name="com.meetingninja.csse.group.EditGroupActivity"
+            android:label="@string/title_activity_edit_group" >
+        </activity>
     </application>
 
 </manifest>
