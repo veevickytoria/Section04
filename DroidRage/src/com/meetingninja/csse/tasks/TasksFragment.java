@@ -102,16 +102,16 @@ public class TasksFragment extends Fragment implements
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.task_fragment_menu, menu);
+		inflater.inflate(R.menu.new_and_refresh_menu, menu);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.action_refresh_task:
+		case R.id.action_refresh:
 			refreshTasks();
 			return true;
-		case R.id.action_new_task:
+		case R.id.action_new:
 			// max put your stuff here
 			return true;
 		default:

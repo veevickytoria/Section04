@@ -41,16 +41,16 @@ public class GroupsFragment extends Fragment  {
 	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.task_fragment_menu, menu);
+		inflater.inflate(R.menu.new_and_refresh_menu, menu);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.action_refresh_task:
+		case R.id.action_refresh:
 			//TODO: refresh groups db call
 			return true;
-		case R.id.action_new_task:
+		case R.id.action_new:
 			Intent i = new Intent(getActivity(), EditGroupActivity.class);
 			Group g = new Group("1234", "Testing groups edit page");
 			User u1 = new User();

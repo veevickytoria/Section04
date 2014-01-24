@@ -6,19 +6,25 @@ import objects.User;
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
+import com.meetingninja.csse.user.ProfileActivity;
 import com.meetingninja.csse.user.UserArrayAdapter;
 import com.meetingninja.csse.user.UserInfoFetcher;
 
 import android.os.Bundle;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
@@ -46,30 +52,25 @@ public class EditGroupActivity extends SwipeListViewActivity {
 
 		titleText = (EditText) findViewById(R.id.group_edit_title);
 		titleText.setText(group.getGroupTitle());
-
-
+		
+		//allows keyboard to hide when not editing text
+		findViewById(R.id.group_edit_main_container).setOnTouchListener(new OnTouchListener() {
+		    @Override
+		    public boolean onTouch(View v, MotionEvent event) {
+		        hideKeyboard();
+		        return false;
+		    }
+		});
 
 		mUserAdapter = new UserArrayAdapter(this, R.layout.line_item_user, group.getMembers());
 		View v = findViewById(R.id.group_edit_user_list);
 		l = (ListView) v.findViewById(android.R.id.list);
 		l.setAdapter(mUserAdapter);
-//		l.setOnItemClickListener(new OnItemClickListener(){
-//			@Override
-//			public void onItemClick(AdapterView<?> arg0, View view, int position,
-//					long id) {
-//				// TODO Auto-generated method stub
-//				Toast.makeText(view.getContext(),  "youve selected: " + mUserAdapter.getItem(position).getDisplayName(), Toast.LENGTH_LONG).show();
-//
-//			}
-//		});
 
 	}
 
 	@Override
 	public void getSwipeItem(boolean isRight, int position){
-		Toast.makeText(this,
-				"Swipe to " + (isRight ? "right" : "left") + " direction on: "+ mUserAdapter.getItem(position).getDisplayName(),
-				Toast.LENGTH_SHORT).show();
 		group.getMembers().remove(position);
 		mUserAdapter.notifyDataSetChanged();
 	}
@@ -79,6 +80,11 @@ public class EditGroupActivity extends SwipeListViewActivity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.edit_group, menu);
 		return true;
+	}
+	
+	private void hideKeyboard() {
+	    InputMethodManager inputMethodManager = (InputMethodManager)  getSystemService(Activity.INPUT_METHOD_SERVICE);
+	    inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
 	}
 
 	private final View.OnClickListener gActionBarListener = new OnClickListener() {
@@ -131,7 +137,7 @@ public class EditGroupActivity extends SwipeListViewActivity {
 	}
 
 	private void save(){
-		if(TextUtils.isEmpty(titleText.getText())){
+		if(titleText.getText().toString().isEmpty()){
 			Toast.makeText(this, "Cannot have an empty title", Toast.LENGTH_LONG).show();
 			return;
 		}
@@ -175,8 +181,10 @@ public class EditGroupActivity extends SwipeListViewActivity {
 
 	@Override
 	public void onItemClickListener(ListAdapter adapter, int position) {
-		Toast.makeText(this,  "youve selected: " + mUserAdapter.getItem(position).getDisplayName(), Toast.LENGTH_LONG).show();
-
+		User clicked = mUserAdapter.getItem(position);
+		Intent profileIntent = new Intent(this, ProfileActivity.class);
+		profileIntent.putExtra(Keys.User.PARCEL, clicked);
+		startActivity(profileIntent);
 	}
 	
 	final class RetUserObj implements AsyncResponse<User> {
