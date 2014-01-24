@@ -14,7 +14,8 @@
 @property (nonatomic) NSString *noteDate;
 @property (nonatomic) NSInteger userID;
 @property (nonatomic) BOOL inEditMode;
-@property (nonatomic) iWinMergeNoteViewController *mergeNoteViewController;
+@property (nonatomic) iWinAddUsersViewController *userViewController;
+
 @end
 
 @implementation iWinViewAndAddNotesViewController
@@ -39,6 +40,7 @@
     self.noteField.layer.cornerRadius = 15.0f;
     self.inEditMode = YES;
     self.deleteButton.hidden = YES;
+    
     
     // change page according to wether or not it is an existing note
     // if existing note - change out of edit mode
@@ -259,13 +261,12 @@
 }
 
 - (IBAction)mergeNotesButton:(id)sender {
-    self.mergeNoteViewController = [[iWinMergeNoteViewController alloc] initWithNibName:@"iWinMergeNoteViewController" bundle:nil inEditMode:NO];
-    self.mergeNoteViewController.mergeDelegate = self;
-    [self.mergeNoteViewController setModalPresentationStyle:UIModalPresentationFormSheet];
-    [self.mergeNoteViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-    
-    [self presentViewController:self.mergeNoteViewController animated:YES completion:nil];
-    self.mergeNoteViewController.view.superview.bounds = CGRectMake(0,0,597,200);
+    self.userViewController = [[iWinAddUsersViewController alloc] initWithNibName:@"iWinAddUsersViewController" bundle:nil withPageName:@"ShareNotes" inEditMode:self.isEditing];
+    [self.userViewController setModalPresentationStyle:UIModalPresentationPageSheet];
+    [self.userViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+    self.userViewController.userDelegate = self;
+    [self presentViewController:self.userViewController animated:YES completion:nil];
+    self.userViewController.view.superview.bounds = CGRectMake(0,0,768,1003);
 }
 
 

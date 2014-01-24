@@ -15,7 +15,7 @@
 
 @end
 
-@interface iWinLoginViewController : UIViewController <NSURLConnectionDelegate>
+@interface iWinLoginViewController : UIViewController <NSURLConnectionDelegate, UITextFieldDelegate>
 @property (strong, nonatomic) NSMutableData *responseData;
 @property (weak, nonatomic) IBOutlet UITextField *userNameField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordField;
