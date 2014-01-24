@@ -58,6 +58,7 @@ public class ViewTaskActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.edit_item_menu, menu);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 		return true;
 	}
 
@@ -75,6 +76,9 @@ public class ViewTaskActivity extends Activity {
 			deleter.deleteTask(task.getID());
 			setResult(RESULT_OK);
 			finish();
+		case android.R.id.home:
+			finish();
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
