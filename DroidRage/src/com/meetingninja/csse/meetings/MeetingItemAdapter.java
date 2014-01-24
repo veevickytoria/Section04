@@ -90,7 +90,7 @@ public class MeetingItemAdapter extends ArrayAdapter<Meeting> {
 		viewHolder.title.setText(meeting.getTitle());
 		try {
 			viewHolder.timeSpan.setText(getTimeSpan(
-					meeting.getStartTime_Time(), meeting.getEndTime_Time(),
+					meeting.getStartTimeInMillis(), meeting.getEndTimeInMillis(),
 					false));
 		} catch (ParseException e) {
 			Log.e("MeetingItemAdapter", e.getLocalizedMessage());

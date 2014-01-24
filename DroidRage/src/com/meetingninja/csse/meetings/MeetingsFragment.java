@@ -16,6 +16,8 @@
 package com.meetingninja.csse.meetings;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import objects.Meeting;
@@ -275,11 +277,17 @@ public class MeetingsFragment extends Fragment implements
 	}
 
 	@Override
-	public void processFinish(List<Meeting> output) {
+	public void processFinish(List<Meeting> result) {
 		meetings.clear();
 		meetingAdpt.clear();
+		Collections.sort(result, new Comparator<Meeting>() {
+			@Override
+			public int compare(Meeting lhs, Meeting rhs) {
+				return lhs.compareTo(lhs);
+			}
+		});
 
-		meetings.addAll(output);
+		meetings.addAll(result);
 
 		meetingAdpt.notifyDataSetChanged();
 	}

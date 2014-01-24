@@ -17,6 +17,8 @@ package com.meetingninja.csse.user;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import objects.User;
@@ -139,6 +141,12 @@ public class UserListFragment extends ListFragment implements
 		users.clear();
 		mUserAdapter.clear();
 
+		Collections.sort(result, new Comparator<User>() {
+			@Override
+			public int compare(User lhs, User rhs) {
+				return lhs.getDisplayName().compareTo(rhs.getDisplayName());
+			}
+		});
 		users.addAll(result);
 
 		mUserAdapter.notifyDataSetChanged();

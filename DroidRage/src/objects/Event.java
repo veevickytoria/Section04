@@ -40,7 +40,7 @@ public abstract class Event implements Comparable<Event> {
 				: MyDateUtils.JODA_SERVER_DATE_FORMAT.print(new DateTime(0L));
 	}
 
-	public long getStartTime_Time() throws ParseException {
+	public long getStartTimeInMillis() throws ParseException {
 		return MyDateUtils.JODA_SERVER_DATE_FORMAT.parseMillis(startTime);
 	}
 
@@ -57,7 +57,7 @@ public abstract class Event implements Comparable<Event> {
 				: MyDateUtils.JODA_SERVER_DATE_FORMAT.print(new DateTime(1L));
 	}
 
-	public long getEndTime_Time() throws ParseException {
+	public long getEndTimeInMillis() throws ParseException {
 		return MyDateUtils.JODA_SERVER_DATE_FORMAT.parseMillis(endTime);
 	}
 
@@ -83,8 +83,8 @@ public abstract class Event implements Comparable<Event> {
 		if (another == null)
 			return 1;
 		try {
-			return Long.valueOf(getStartTime_Time()).compareTo(
-					Long.valueOf(another.getStartTime_Time()));
+			return Long.valueOf(getStartTimeInMillis()).compareTo(
+					Long.valueOf(another.getStartTimeInMillis()));
 		} catch (ParseException e) {
 			Log.e("Meeting compareTo ", e.getLocalizedMessage());
 		}

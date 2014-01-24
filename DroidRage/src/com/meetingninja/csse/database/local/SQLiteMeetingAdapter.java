@@ -69,13 +69,13 @@ public class SQLiteMeetingAdapter extends SQLiteHelper {
 		contentValues.put(KEY_TITLE, m.getTitle());
 		contentValues.put(KEY_LOCATION, m.getLocation());
 		try {
-			contentValues.put(KEY_START_TIME, m.getStartTime_Time());
+			contentValues.put(KEY_START_TIME, m.getStartTimeInMillis());
 		} catch (ParseException e) {
 			Log.e(TAG, e.getLocalizedMessage());
 			return null;
 		}
 		try {
-			contentValues.put(KEY_END_TIME, m.getEndTime_Time());
+			contentValues.put(KEY_END_TIME, m.getEndTimeInMillis());
 		} catch (ParseException e) {
 			Log.e(TAG, e.getLocalizedMessage());
 			return null;
@@ -143,13 +143,13 @@ public class SQLiteMeetingAdapter extends SQLiteHelper {
 		data.put(KEY_TITLE, meeting.getTitle());
 		data.put(KEY_LOCATION, meeting.getLocation());
 		try {
-			data.put(KEY_START_TIME, meeting.getStartTime_Time());
+			data.put(KEY_START_TIME, meeting.getStartTimeInMillis());
 		} catch (ParseException e) {
 			Log.e(TAG, e.getLocalizedMessage());
 			return;
 		}
 		try {
-			data.put(KEY_END_TIME, meeting.getEndTime_Time());
+			data.put(KEY_END_TIME, meeting.getEndTimeInMillis());
 		} catch (ParseException e) {
 			Log.e(TAG, e.getLocalizedMessage());
 			return;
