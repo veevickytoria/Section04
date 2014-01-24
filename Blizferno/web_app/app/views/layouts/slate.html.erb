@@ -30,5 +30,6 @@
   <%= javascript_include_tag "slate" %>
   <%= yield(:page_javascript) if content_for?(:page_javascript) %>
   <%= javascript_include_tag "application" %>
+  <%= javascript_include_tag params[:controller] %>
 </body>
 </html>
