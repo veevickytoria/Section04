@@ -1,5 +1,6 @@
 <%= stylesheet_link_tag "/codebase/dhtmlxscheduler.css" %>
 <%= javascript_include_tag "/codebase/dhtmlxscheduler.js" %>
+<%= javascript_include_tag "/codebase/ext/dhtmlxscheduler_collision.js" %>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
 
 <script type="text/javascript" charset="utf-8">
@@ -60,13 +61,13 @@
 	}
 
 	function getSchedule() {
-		//var userId = <%= cookies[:userID] %>;
-var userId = '5467';
+		var userId = <%= cookies[:userID] %>;
+//var userId = '5467';
 //alert("userId:"+userId);
 	  $.get('http://csse371-04.csse.rose-hulman.edu/User/Schedule/'+userId,function(data){
      	//alert("Data: " + data);		
 		var schedule = JSON.parse(data);
-
+alert("schedule:"+JSON.stringify(schedule));
 		var events = new Array();
 
 		for(var value in schedule.schedule){
@@ -82,7 +83,7 @@ var userId = '5467';
 
 		events = "["+events+"]";
 
-		//alert("Events:" + events);
+		alert("Events:" + events);
 
 /*
 //working on custom lightbox

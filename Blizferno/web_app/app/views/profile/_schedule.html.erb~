@@ -66,7 +66,7 @@
 	  $.get('http://csse371-04.csse.rose-hulman.edu/User/Schedule/'+userId,function(data){
      	//alert("Data: " + data);		
 		var schedule = JSON.parse(data);
-
+alert("schedule:"+JSON.stringify(schedule));
 		var events = new Array();
 
 		for(var value in schedule.schedule){
@@ -82,7 +82,7 @@
 
 		events = "["+events+"]";
 
-		//alert("Events:" + events);
+		alert("Events:" + events);
 
 /*
 //working on custom lightbox
@@ -132,7 +132,7 @@ scheduler.attachEvent("onEventSave",function(id,data){
     return true;
 });
 
-scheduler.config.max_month_events = 200;
+
 
 
 		scheduler.init('scheduler_here',new Date(),"month");
