@@ -32,8 +32,9 @@
         <item>Notes</item>
         <item>Tasks</item>
         <item>My Profile</item>
-        <item>Contacts</item>
+        <item>My Groups</item>
         <item>My Projects</item>
+        <item>Contacts</item>
         <item>App Settings</item>
         <item>About</item>
         <item>Logout</item>
@@ -65,5 +66,7 @@
     <string name="title_activity_tasks">CreateTaskActivity</string>
     <string name="title_activity_view_note">ViewNoteActivity</string>
     <string name="title_activity_edit_group">EditGroupActivity</string>
+    <string name="title_activity_groups">Groups</string>
+    <string name="title_activity_groups_fragment">GroupsFragment</string>
 
 </resources>

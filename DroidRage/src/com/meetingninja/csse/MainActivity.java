@@ -18,8 +18,10 @@ package com.meetingninja.csse;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import objects.Group;
 import objects.Meeting;
 import objects.Schedule;
+import objects.User;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
@@ -45,7 +47,10 @@ import com.android.volley.toolbox.StringRequest;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.foound.widget.AmazingListView;
+import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
+import com.meetingninja.csse.group.EditGroupActivity;
+import com.meetingninja.csse.group.GroupsFragment;
 import com.meetingninja.csse.meetings.MeetingsFragment;
 import com.meetingninja.csse.notes.CreateNoteActivity;
 import com.meetingninja.csse.notes.NotesFragment;
@@ -85,8 +90,8 @@ public class MainActivity extends FragmentActivity {
 	private ScheduleAdapter rightDrawerAdapter;
 
 	public enum DrawerLabel {
-		MEETINGS(0), NOTES(1), TASKS(2), PROFILE(3), GROUPS(4), PROJECTS(5), SETTINGS(
-				6), ABOUT(7), LOGOUT(8);
+		MEETINGS(0), NOTES(1), TASKS(2), PROFILE(3), GROUPS(4), PROJECTS(5), CONTACTS(6), SETTINGS(
+				7), ABOUT(8), LOGOUT(9);
 
 		private int position;
 
@@ -283,15 +288,19 @@ public class MainActivity extends FragmentActivity {
 			profFrag = (ProfileFragment) fragment;
 			break;
 		case GROUPS:
-			// fragment = new DummyFragment();
-			// args.putString("Content", "TODO: Groups Page");
-			// fragment.setArguments(args);
-			fragment = new UserListFragment();
+			fragment = new GroupsFragment();
+			
 			break;
 		case PROJECTS:
 			fragment = new DummyFragment();
 			args.putString("Content", "TODO: Projects Page");
 			fragment.setArguments(args);
+			break;
+		case CONTACTS:
+			// fragment = new DummyFragment();
+			// args.putString("Content", "TODO: Groups Page");
+			// fragment.setArguments(args);
+			fragment = new UserListFragment();
 			break;
 		case SETTINGS:
 			fragment = new DummyFragment();

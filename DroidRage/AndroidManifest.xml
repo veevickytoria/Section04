@@ -159,6 +159,14 @@
             android:name="com.meetingninja.csse.group.EditGroupActivity"
             android:label="@string/title_activity_edit_group" >
         </activity>
+        <activity
+            android:name="com.meetingninja.csse.Groups"
+            android:label="@string/title_activity_groups" >
+        </activity>
+        <activity
+            android:name="com.meetingninja.csse.group.GroupsFragment"
+            android:label="@string/title_activity_groups_fragment" >
+        </activity>
     </application>
 
 </manifest>

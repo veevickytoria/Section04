@@ -16,12 +16,23 @@
         android:ems="10"
         android:enabled="true"
         android:gravity="center"
-        android:hint="@string/task_name"
+        android:hint="@string/group_name"
         android:textSize="25sp" />
-    
-    <include 
+
+    <Button
+        android:id="@+id/group_add_member"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:hint="+ Add a member"
+        android:onClick="addMember"
+        android:minHeight="28dp"
+        android:paddingTop="@dimen/activity_vertical_margin" />
+
+    <include
+        android:id="@+id/group_edit_user_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        layout = "@layout/fragment_userlist"/>
+        layout="@layout/fragment_userlist" />
 
 </LinearLayout>
