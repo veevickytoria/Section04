@@ -20,7 +20,7 @@ public class Group implements Parcelable{
 	@JsonProperty("groupTitle")
 	private String groupTitle;
 	@JsonProperty("members")
-	private List<SimpleUser> members = new ArrayList<SimpleUser>();
+	private List<User> members = new ArrayList<User>();
 
 	public Group() {
 		// Required empty constructor
@@ -62,16 +62,16 @@ public class Group implements Parcelable{
 	}
 
 	@JsonProperty("members")
-	public List<SimpleUser> getMembers() {
+	public List<User> getMembers() {
 		return members;
 	}
 
 	@JsonProperty("members")
-	public void setMembers(List<SimpleUser> members) {
+	public void setMembers(List<User> members) {
 		this.members = members;
 	}
 
-	public void addMember(SimpleUser user) {
+	public void addMember(User user) {
 		this.members.add(user);
 	}
 
