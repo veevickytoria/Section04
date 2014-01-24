@@ -1,3 +1,24 @@
 // Place all the styles related to the projects controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.viewLabel{
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.fullWidth{
+	width: 100%;
+}
+
+.centerText{
+	text-align: center;
+}
+
+header > h1 { 
+	display: inline-block; 
+}
+
+.modal-backdrop{
+	z-index: 999;
+}

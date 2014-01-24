@@ -1,24 +1,4 @@
 <!-- The tasks in the GET POST requests need to be changed to meetings. Implement a check on edit so it doesn't fuck up the backend db (db? more like dp.)-->
-
-<style type="text/css">
-  header > h1 {
-    display: inline-block;
-  }
-  .modal-backdrop {
-    z-index: 999;
-  }
-  #newMeeting { 
-    cursor: pointer; 
-    text-align: center; 
-  }
-  .modal-body{
-    width:100%;
-  }
-  .pageTitle{
-    margin-left: 15%;
-    margin-right: auto;
-  }
-</style>
 <script type = 'text/javascript'>
   
   /*
@@ -65,7 +45,6 @@
     document.getElementById("locationE").value = meetingsJSON[currentID]["location"];
     document.getElementById("datetimeE").value = meetingsJSON[currentID]["datetime"];
     // document.getElementById("attendanceE").value = TaskArray["attendance"];
-//alert("length:"+meetingsJSON.length);
 
     $('#editMeetingModal').modal('show');
     $('#viewMeetingModal').modal('hide');
@@ -149,6 +128,7 @@
     $('#editMeetingModal').modal('hide');
   }
 
+<<<<<<< HEAD
   function validateForm()
   {//QUESTION: Is this function used/planned for something?
   
@@ -157,8 +137,16 @@
   var datetime = document.forms["input"]["datetime"].value;
   var location = document.forms["input"]["location"].value;
   alert("The following fields were added to the db: " + title + " " + datetime + " " + location);
+=======
+  function validateForm(){
+    var title = document.forms["input"]["title"].value;
+    // var attendees = document.forms["input"]["attendees"].value;
+    var datetime = document.forms["input"]["datetime"].value;
+    var location = document.forms["input"]["location"].value;
+    alert("The following fields were added to the db: " + title + " " + datetime + " " + location);
+>>>>>>> fff4295fd5597be92e8a9ba36fbc287aecacc679
 
-  return true;
+    return true;
   }
 </script>
 

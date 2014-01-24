@@ -2,8 +2,14 @@
 <head>
     <%= stylesheet_link_tag    "application", :media => "all" %>
     <%= stylesheet_link_tag params[:controller] %>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
 </head>
 <body onload="areCookiesEnabled()">
     <%= yield %>
+
+   <%= javascript_include_tag "slate" %>
+  <%= yield(:page_javascript) if content_for?(:page_javascript) %>
+  <%= javascript_include_tag "application" %>
+  <%= javascript_include_tag params[:controller] %>
 </body>
 </html>

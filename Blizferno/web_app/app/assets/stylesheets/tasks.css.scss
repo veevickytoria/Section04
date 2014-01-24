@@ -6,3 +6,24 @@
 	font-size: 18px;
 	font-weight: bold;
 }
+
+.viewTitle{
+	font-size: 28px;
+	font-weight: bold;
+}
+
+.viewData{
+	font-size: 16px;
+}
+
+.centerText{
+	text-align: center;
+}
+
+header > h1 { 
+	display: inline-block; 
+}
+
+.modal-backdrop{
+	z-index: 999;
+}
