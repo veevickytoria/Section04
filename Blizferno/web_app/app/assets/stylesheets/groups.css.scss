@@ -26,3 +26,19 @@
 .viewData{
 	font-size: 16px;
 }
+
+header > h1 { 
+	display: inline-block; 
+}
+
+.modal-backdrop { 
+	z-index: 999;
+}
+
+#newGroup { 
+	cursor: pointer; text-align: center; 
+}
+
+.modal-body{
+	width:100%;
+}

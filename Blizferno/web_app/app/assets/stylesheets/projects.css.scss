@@ -14,3 +14,11 @@
 .centerText{
 	text-align: center;
 }
+
+header > h1 { 
+	display: inline-block; 
+}
+
+.modal-backdrop{
+	z-index: 999;
+}

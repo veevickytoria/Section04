@@ -14,3 +14,25 @@
 .fullWidth{
 	width: 100%;
 }
+
+header > h1 {
+	display: inline-block;
+}
+
+.modal-backdrop {
+	z-index: 999;
+}
+
+#newMeeting { 
+	cursor: pointer; 
+	text-align: center; 
+}
+
+.modal-body{
+	width:100%;
+}
+
+.pageTitle{
+	margin-left: 15%;
+	margin-right: auto;
+}
