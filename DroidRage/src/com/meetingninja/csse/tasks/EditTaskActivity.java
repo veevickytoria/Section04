@@ -117,9 +117,9 @@ AsyncResponse<Boolean> {
 	}
 
 	public void toggleCompleted(View v) {
-		TaskUpdater updater = new TaskUpdater();
+		//TaskUpdater updater = new TaskUpdater();
 		displayTask.setIsCompleted(!displayTask.getIsCompleted());
-		updater.updateTask(displayTask);
+		//updater.updateTask(displayTask);
 		setTask();
 	}
 
@@ -242,14 +242,14 @@ AsyncResponse<Boolean> {
 		@Override
 		public void onDateSet(CalendarDatePickerDialog dialog, int year,int monthOfYear, int dayOfMonth) {
 			Calendar tempcal = Calendar.getInstance();
-			//TODO: maybe the better set?
+			//TODO: maybe the better Calendarset?
 			tempcal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 			tempcal.set(Calendar.MONTH, monthOfYear);
 			tempcal.set(Calendar.YEAR, year);
 			Calendar now = null;
 			now = Calendar.getInstance();
 			now.add(Calendar.DAY_OF_MONTH, -1);
-			if (!tempcal.before(now)) {
+			if (tempcal.after(now)) {
 				cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 				cal.set(Calendar.MONTH, monthOfYear);
 				cal.set(Calendar.YEAR, year);
