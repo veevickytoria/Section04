@@ -158,6 +158,7 @@
                     android:layout_marginTop="@dimen/vertical_spacer"
                     android:hint="this is where the criteria goes"
                     android:inputType="text" />
+
             </LinearLayout>
 
             <TextView
@@ -189,13 +190,13 @@
 
                 <Button
                     android:id="@+id/task_mark_complete_button"
-                    style="@style/TextAppearance.EditEvent_LabelSmall"
+                    style="?android:attr/buttonStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginBottom="0dip"
                     android:layout_marginTop="0dip"
-                    android:background="?android:attr/selectableItemBackground"
+                    android:background="@android:drawable/btn_default_small"
                     android:contentDescription="@string/reminders_label"
                     android:gravity="top"
                     android:hint="@string/mark_as_complete"

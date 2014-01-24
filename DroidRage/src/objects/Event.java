@@ -66,7 +66,7 @@ public abstract class Event implements Comparable<Event> {
 	}
 
 	public void setEndTime(long msEndTime) {
-		this.endTime = MyDateUtils.JODA_SERVER_DATE_FORMAT.print(msEndTime);
+		this.endTime = Long.toString(msEndTime);
 	}
 
 	public String getDescription() {
