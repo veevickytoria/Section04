@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="4510" systemVersion="12F45" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="4514" systemVersion="12F37" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3742"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3747"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="iWinViewProfileViewController">
             <connections>
                 <outlet property="cancel" destination="jIF-p9-cSL" id="Bjz-fh-0rj"/>
                 <outlet property="companyTextField" destination="GcB-MD-exq" id="B3p-bi-Iwc"/>
+                <outlet property="createGroup" destination="zfa-Dy-0Yo" id="GON-Lv-RSB"/>
                 <outlet property="displayNameTextField" destination="0c7-j4-81s" id="JVe-04-Ifk"/>
                 <outlet property="editProfile" destination="Ubq-dz-p6v" id="Ppf-9f-uUr"/>
                 <outlet property="emailTextField" destination="b6Z-LQ-axq" id="KXJ-Ng-sPc"/>
@@ -141,6 +142,18 @@
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <textInputTraits key="textInputTraits"/>
                 </textField>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zfa-Dy-0Yo">
+                    <rect key="frame" x="0.0" y="898" width="773" height="39"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" red="0.24965362260000001" green="0.69000509509999997" blue="0.055084534339999998" alpha="1" colorSpace="calibratedRGB"/>
+                    <state key="normal" title="Create a Group">
+                        <color key="titleColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <color key="titleShadowColor" red="0.24965362260000001" green="0.69000509509999997" blue="0.055084534339999998" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                    <connections>
+                        <action selector="onCreateGroup:" destination="-1" eventType="touchUpInside" id="ySN-Z6-vMV"/>
+                    </connections>
+                </button>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
