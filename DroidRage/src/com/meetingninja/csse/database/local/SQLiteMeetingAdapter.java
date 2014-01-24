@@ -68,18 +68,8 @@ public class SQLiteMeetingAdapter extends SQLiteHelper {
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(KEY_TITLE, m.getTitle());
 		contentValues.put(KEY_LOCATION, m.getLocation());
-		try {
-			contentValues.put(KEY_START_TIME, m.getStartTimeInMillis());
-		} catch (ParseException e) {
-			Log.e(TAG, e.getLocalizedMessage());
-			return null;
-		}
-		try {
-			contentValues.put(KEY_END_TIME, m.getEndTimeInMillis());
-		} catch (ParseException e) {
-			Log.e(TAG, e.getLocalizedMessage());
-			return null;
-		}
+		contentValues.put(KEY_START_TIME, m.getStartTime());
+		contentValues.put(KEY_END_TIME, m.getEndTime());
 		contentValues.put(KEY_DESCRIPTION, m.getDescription());
 
 		long insertID = mDb.insert(TABLE_NAME, null, contentValues);
@@ -142,18 +132,8 @@ public class SQLiteMeetingAdapter extends SQLiteHelper {
 		ContentValues data = new ContentValues();
 		data.put(KEY_TITLE, meeting.getTitle());
 		data.put(KEY_LOCATION, meeting.getLocation());
-		try {
-			data.put(KEY_START_TIME, meeting.getStartTimeInMillis());
-		} catch (ParseException e) {
-			Log.e(TAG, e.getLocalizedMessage());
-			return;
-		}
-		try {
-			data.put(KEY_END_TIME, meeting.getEndTimeInMillis());
-		} catch (ParseException e) {
-			Log.e(TAG, e.getLocalizedMessage());
-			return;
-		}
+		data.put(KEY_START_TIME, meeting.getStartTime());
+		data.put(KEY_END_TIME, meeting.getEndTime());
 		data.put(KEY_DESCRIPTION, meeting.getDescription());
 
 		mDb.update(TABLE_NAME, data, KEY_ID + "=" + meeting.getID(), null);

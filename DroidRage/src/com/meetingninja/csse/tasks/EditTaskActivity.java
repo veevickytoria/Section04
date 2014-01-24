@@ -75,7 +75,7 @@ AsyncResponse<Boolean> {
 			mTitle.setSelection(0, mTitle.getText().toString().length());
 
 			cal = Calendar.getInstance();
-			cal.setTimeInMillis(Long.parseLong(displayTask.getEndTime()));
+			cal.setTimeInMillis(displayTask.getEndTimeInMillis());
 
 			//			int month = deadline.getMonthOfYear();
 			//			int year = deadline.getYear();
@@ -99,7 +99,7 @@ AsyncResponse<Boolean> {
 		mTitle.setText(displayTask.getTitle());
 		completionCriteria.setText(displayTask.getCompletionCriteria());
 		mDescription.setText(displayTask.getDescription());
-		String format = dateFormat.print(Long.parseLong(displayTask.getEndTime()));
+		String format = dateFormat.print(displayTask.getEndTimeInMillis());
 		mDeadlineBtn.setText(format);
 		//String format = dateFormat.print(Long.parseLong(displayTask.getDateAssigned()));
 		//assignedDateLabel.setText(format);

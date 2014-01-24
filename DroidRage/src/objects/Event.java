@@ -40,8 +40,8 @@ public abstract class Event implements Comparable<Event> {
 				: MyDateUtils.JODA_SERVER_DATE_FORMAT.print(new DateTime(0L));
 	}
 
-	public long getStartTimeInMillis() throws ParseException {
-		return MyDateUtils.JODA_SERVER_DATE_FORMAT.parseMillis(startTime);
+	public long getStartTimeInMillis() {
+		return Long.parseLong(startTime);
 	}
 
 	public void setStartTime(String datetimeStart) {
@@ -49,7 +49,7 @@ public abstract class Event implements Comparable<Event> {
 	}
 
 	public void setStartTime(long msStartTime) {
-		this.startTime = MyDateUtils.JODA_SERVER_DATE_FORMAT.print(msStartTime);
+		this.startTime = Long.toString(msStartTime);
 	}
 
 	public String getEndTime() {
@@ -57,8 +57,8 @@ public abstract class Event implements Comparable<Event> {
 				: MyDateUtils.JODA_SERVER_DATE_FORMAT.print(new DateTime(1L));
 	}
 
-	public long getEndTimeInMillis() throws ParseException {
-		return MyDateUtils.JODA_SERVER_DATE_FORMAT.parseMillis(endTime);
+	public long getEndTimeInMillis(){
+		return Long.parseLong(endTime);
 	}
 
 	public void setEndTime(String datetimeEnd) {
@@ -80,14 +80,9 @@ public abstract class Event implements Comparable<Event> {
 
 	@Override
 	public int compareTo(Event another) {
-		if (another == null)
+		if (another == null){
 			return 1;
-		try {
-			return Long.valueOf(getStartTimeInMillis()).compareTo(
-					Long.valueOf(another.getStartTimeInMillis()));
-		} catch (ParseException e) {
-			Log.e("Meeting compareTo ", e.getLocalizedMessage());
 		}
-		return 1;
+		return Long.valueOf(getStartTime()).compareTo(Long.valueOf(another.getStartTime()));
 	}
 }

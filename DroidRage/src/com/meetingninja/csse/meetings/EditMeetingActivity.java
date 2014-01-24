@@ -109,12 +109,8 @@ public class EditMeetingActivity extends FragmentActivity implements
 		start = Calendar.getInstance();
 		end = Calendar.getInstance();
 		if (displayedMeeting != null) {
-			try {
-				start.setTimeInMillis(displayedMeeting.getStartTimeInMillis());
-				end.setTimeInMillis(displayedMeeting.getEndTimeInMillis());
-			} catch (ParseException e) {
-				Log.e(TAG, e.getLocalizedMessage());
-			}
+			start.setTimeInMillis(displayedMeeting.getStartTimeInMillis());
+			end.setTimeInMillis(displayedMeeting.getEndTimeInMillis());
 		} else {
 			start.add(Calendar.HOUR_OF_DAY, 1);
 			start.set(Calendar.MINUTE, 0);
