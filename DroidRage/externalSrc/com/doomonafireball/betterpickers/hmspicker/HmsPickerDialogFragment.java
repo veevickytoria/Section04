@@ -2,6 +2,8 @@ package com.doomonafireball.betterpickers.hmspicker;
 
 import java.util.Vector;
 
+import com.meetingninja.csse.R;
+
 import android.app.Activity;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;

@@ -2,6 +2,8 @@ package com.doomonafireball.betterpickers.timepicker;
 
 import java.util.Vector;
 
+import com.meetingninja.csse.R;
+
 import android.app.Activity;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;

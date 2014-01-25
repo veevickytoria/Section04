@@ -38,6 +38,7 @@ import android.widget.Toast;
 
 import com.doomonafireball.betterpickers.calendardatepicker.CalendarDatePickerDialog;
 import com.doomonafireball.betterpickers.calendardatepicker.CalendarDatePickerDialog.OnDateSetListener;
+import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.extras.MyDateUtils;
 
@@ -73,7 +74,7 @@ public class EditTaskActivity extends FragmentActivity implements
 			mTitle.setSelection(0, mTitle.getText().toString().length());
 
 			cal = Calendar.getInstance();
-			cal.setTimeInMillis(Long.parseLong(displayTask.getEndTime()));
+			cal.setTimeInMillis(displayTask.getEndTimeInMillis());
 
 			// int month = deadline.getMonthOfYear();
 			// int year = deadline.getYear();
@@ -96,8 +97,7 @@ public class EditTaskActivity extends FragmentActivity implements
 		mTitle.setText(displayTask.getTitle());
 		completionCriteria.setText(displayTask.getCompletionCriteria());
 		mDescription.setText(displayTask.getDescription());
-		String format = dateFormat.print(Long.parseLong(displayTask
-				.getEndTime()));
+		String format = dateFormat.print(displayTask.getEndTimeInMillis());
 		mDeadlineBtn.setText(format);
 		// String format =
 		// dateFormat.print(Long.parseLong(displayTask.getDateAssigned()));
@@ -116,9 +116,9 @@ public class EditTaskActivity extends FragmentActivity implements
 	}
 
 	public void toggleCompleted(View v) {
-		TaskUpdater updater = new TaskUpdater();
+		// TaskUpdater updater = new TaskUpdater();
 		displayTask.setIsCompleted(!displayTask.getIsCompleted());
-		updater.updateTask(displayTask);
+		// updater.updateTask(displayTask);
 		setTask();
 	}
 
@@ -252,14 +252,15 @@ public class EditTaskActivity extends FragmentActivity implements
 		public void onDateSet(CalendarDatePickerDialog dialog, int year,
 				int monthOfYear, int dayOfMonth) {
 			Calendar tempcal = Calendar.getInstance();
-			// TODO: maybe the better set?
+			// TODO: maybe the better Calendarset?
+
 			tempcal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 			tempcal.set(Calendar.MONTH, monthOfYear);
 			tempcal.set(Calendar.YEAR, year);
 			Calendar now = null;
 			now = Calendar.getInstance();
 			now.add(Calendar.DAY_OF_MONTH, -1);
-			if (!tempcal.before(now)) {
+			if (tempcal.after(now)) {
 				cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 				cal.set(Calendar.MONTH, monthOfYear);
 				cal.set(Calendar.YEAR, year);

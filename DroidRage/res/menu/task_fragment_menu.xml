@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:id="@+id/action_new_task" android:orderInCategory="100" android:showAsAction="ifRoom" android:title="New Task" android:icon="@drawable/ic_action_new"></item>
-    <item android:id="@+id/action_refresh_task" android:orderInCategory="200" android:showAsAction="ifRoom" android:title="Refresh" android:icon="@drawable/ic_action_refresh"></item>
-    
-
-</menu>

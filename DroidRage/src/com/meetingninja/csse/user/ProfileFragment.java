@@ -38,6 +38,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.loopj.android.image.SmartImageView;
 import com.meetingninja.csse.ApplicationController;
+import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.JsonNodeRequest;
 import com.meetingninja.csse.database.Keys;

@@ -67,6 +67,8 @@
 
         <Button
             android:id="@+id/register_action_button"
+            style="?android:attr/buttonStyleSmall"
+			android:background="@android:drawable/btn_default_small"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

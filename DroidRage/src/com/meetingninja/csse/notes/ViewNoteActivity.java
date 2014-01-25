@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.Keys;
 
 public class ViewNoteActivity extends Activity {

@@ -19,6 +19,8 @@ package com.meetingninja.csse.extras;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.meetingninja.csse.R;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;

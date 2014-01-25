@@ -11,7 +11,7 @@
     <string name="button_ok">OK</string>
     <string name="text_title">Title:</string>
 
-    <string name="resolve_edit">Edit note</string>
+    <string name="action_edit">Edit</string>
     <string name="resolve_title">Edit title</string>
 
     <string name="error_title">Error</string>

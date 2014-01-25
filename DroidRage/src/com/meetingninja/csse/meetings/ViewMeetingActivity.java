@@ -15,6 +15,8 @@
  ******************************************************************************/
 package com.meetingninja.csse.meetings;
 
+import com.meetingninja.csse.R;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -31,6 +33,7 @@ public class ViewMeetingActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.view_meeting, menu);
+		System.out.println("makes it here?");
 		return true;
 	}
 

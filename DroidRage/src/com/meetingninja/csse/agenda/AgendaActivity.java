@@ -39,6 +39,7 @@ import android.widget.TextView;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.AgendaDatabaseAdapter;
 
 public class AgendaActivity extends FragmentActivity {

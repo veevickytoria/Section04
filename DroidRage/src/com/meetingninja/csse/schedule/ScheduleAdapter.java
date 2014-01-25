@@ -33,6 +33,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.foound.widget.AmazingAdapter;
+import com.meetingninja.csse.R;
 import com.meetingninja.csse.extras.MyDateUtils;
 
 public class ScheduleAdapter extends AmazingAdapter {
@@ -88,11 +89,12 @@ public class ScheduleAdapter extends AmazingAdapter {
 			TextView lSectionTitle = (TextView) view
 					.findViewById(R.id.schedule_header);
 			String sectionTitle = getSections()[getSectionForPosition(position)];
-			DateTime dt = new DateTime();
-			dt = MyDateUtils.JODA_SERVER_DATE_FORMAT
-					.parseDateTime(sectionTitle);
+			//DateTime dt = new DateTime();
+			//dt = Long.parseLong(sectionTitle);
+			//dt = MyDateUtils.JODA_SERVER_DATE_FORMAT
+					//.parseDateTime(sectionTitle);
 			lSectionTitle.setText(MyDateUtils.JODA_MEETING_DATE_FORMAT
-					.print(dt));
+					.print(Long.parseLong(sectionTitle)));
 		} else {
 			view.findViewById(R.id.schedule_header).setVisibility(View.GONE);
 		}

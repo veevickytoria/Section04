@@ -17,6 +17,8 @@ package com.meetingninja.csse.notes;
 
 import java.util.List;
 
+import com.meetingninja.csse.R;
+
 import objects.Note;
 import android.content.Context;
 import android.view.LayoutInflater;

@@ -18,6 +18,8 @@ package com.doomonafireball.betterpickers.radialtimepicker;
 
 import java.text.DateFormatSymbols;
 
+import com.meetingninja.csse.R;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;

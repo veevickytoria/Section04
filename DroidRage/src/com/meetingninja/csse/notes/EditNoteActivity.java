@@ -31,6 +31,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
+import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.local.SQLiteNoteAdapter;
 import com.meetingninja.csse.extras.MyDateUtils;

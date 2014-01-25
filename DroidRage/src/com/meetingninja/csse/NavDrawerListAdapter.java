@@ -41,7 +41,7 @@ class NavDrawerListAdapter extends BaseAdapter {
 		if (v == null) {
 			LayoutInflater vi = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			v = vi.inflate(R.layout.drawer_item, null);
+			v = vi.inflate(R.layout.list_drawer_item, null);
 
 		}
 		ImageView imgIcon = (ImageView) v.findViewById(R.id.icon);

@@ -43,6 +43,7 @@ import com.doomonafireball.betterpickers.calendardatepicker.CalendarDatePickerDi
 import com.doomonafireball.betterpickers.radialtimepicker.RadialPickerLayout;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog.OnTimeSetListener;
+import com.meetingninja.csse.R;
 import com.meetingninja.csse.agenda.AgendaActivity;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.MeetingDatabaseAdapter;
@@ -108,12 +109,8 @@ public class EditMeetingActivity extends FragmentActivity implements
 		start = Calendar.getInstance();
 		end = Calendar.getInstance();
 		if (displayedMeeting != null) {
-			try {
-				start.setTimeInMillis(displayedMeeting.getStartTimeInMillis());
-				end.setTimeInMillis(displayedMeeting.getEndTimeInMillis());
-			} catch (ParseException e) {
-				Log.e(TAG, e.getLocalizedMessage());
-			}
+			start.setTimeInMillis(displayedMeeting.getStartTimeInMillis());
+			end.setTimeInMillis(displayedMeeting.getEndTimeInMillis());
 		} else {
 			start.add(Calendar.HOUR_OF_DAY, 1);
 			start.set(Calendar.MINUTE, 0);
