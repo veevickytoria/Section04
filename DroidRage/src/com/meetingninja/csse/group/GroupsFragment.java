@@ -1,5 +1,8 @@
 package com.meetingninja.csse.group;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import objects.Group;
 import objects.User;
 import android.app.Activity;
@@ -12,6 +15,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.Keys;
@@ -19,6 +24,9 @@ import com.meetingninja.csse.user.SessionManager;
 
 public class GroupsFragment extends Fragment {
 	private SessionManager session;
+	private ListView groupsList;
+	private static List<Group> groups = new ArrayList<Group>();;
+	private GroupItemAdapter groupAdpt;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -30,7 +38,23 @@ public class GroupsFragment extends Fragment {
 		setHasOptionsMenu(true);
 
 		session = SessionManager.getInstance();
+		groupsList = (ListView) v.findViewById(R.id.groupsList);
+		groupAdpt = new GroupItemAdapter(getActivity(),
+				R.layout.list_item_group, groups);
+		groupsList.setAdapter(groupAdpt);
 
+		groupAdpt.notifyDataSetChanged();
+		groupsList
+				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+					@Override
+					public void onItemClick(AdapterView<?> parentAdapter,
+							View v, int position, long id) {
+						Group clicked = groupAdpt.getItem(position);
+						editGroup(clicked);
+					}
+				});
+		registerForContextMenu(groupsList);
 		return v;
 	}
 
@@ -43,7 +67,7 @@ public class GroupsFragment extends Fragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_refresh:
-			//TODO: refresh groups db call
+			// TODO: refresh groups db call
 			return true;
 		case R.id.action_new:
 			Intent i = new Intent(getActivity(), EditGroupActivity.class);
@@ -73,11 +97,22 @@ public class GroupsFragment extends Fragment {
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == 7) {
-			if (resultCode == Activity.RESULT_OK) {
-				// TODO: refresh task list
+		if (resultCode == Activity.RESULT_OK) {
+			Group g = data.getParcelableExtra(Keys.Group.PARCEL);
+			if (requestCode == 7) {
+				groups.add(g); // TODO: implement DB calls
+			} else if (requestCode == 8) {
+				// TODO: implement database calls
 			}
+			groupAdpt.notifyDataSetChanged();
+
 		}
+	}
+
+	private void editGroup(Group group) {
+		Intent i = new Intent(getActivity(), EditGroupActivity.class);
+		i.putExtra(Keys.Group.PARCEL, group);
+		startActivityForResult(i, 8);
 	}
 
 }

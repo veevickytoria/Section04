@@ -6,6 +6,7 @@ import objects.User;
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
+import com.meetingninja.csse.extras.AlertDialogUtil;
 import com.meetingninja.csse.user.ProfileActivity;
 import com.meetingninja.csse.user.UserArrayAdapter;
 import com.meetingninja.csse.user.UserInfoFetcher;
@@ -59,6 +60,16 @@ public class EditGroupActivity extends SwipeListViewActivity {
 
 		titleText = (EditText) findViewById(R.id.group_edit_title);
 		titleText.setText(group.getGroupTitle());
+
+		// allows keyboard to hide when not editing text
+		findViewById(R.id.group_edit_main_container).setOnTouchListener(
+				new OnTouchListener() {
+					@Override
+					public boolean onTouch(View v, MotionEvent event) {
+						hideKeyboard();
+						return false;
+					}
+				});
 
 		// allows keyboard to hide when not editing text
 		findViewById(R.id.group_edit_main_container).setOnTouchListener(
@@ -148,8 +159,8 @@ public class EditGroupActivity extends SwipeListViewActivity {
 
 	private void save() {
 		if (titleText.getText().toString().isEmpty()) {
-			Toast.makeText(this, "Cannot have an empty title",
-					Toast.LENGTH_LONG).show();
+			AlertDialogUtil.displayDialog(this, "Error",
+					"Cannot have an empty title", "OK");
 			return;
 		}
 
