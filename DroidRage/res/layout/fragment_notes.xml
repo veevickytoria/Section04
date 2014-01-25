@@ -10,7 +10,7 @@
         android:layout_height="fill_parent" >
     </ListView>
 
-     <ImageButton
+    <ImageButton
         android:id="@android:id/empty"
         android:layout_width="160dp"
         android:layout_height="160dp"

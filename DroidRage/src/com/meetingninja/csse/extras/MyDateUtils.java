@@ -31,5 +31,5 @@ public class MyDateUtils {
 			.forPattern("HH:mm").withZoneUTC();
 	public static final DateTimeFormatter JODA_12_TIME_FORMAT = DateTimeFormat
 			.forPattern("hh:mma").withZoneUTC();
-	
+
 }

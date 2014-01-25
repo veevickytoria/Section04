@@ -33,7 +33,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.foound.widget.AmazingAdapter;
-import com.meetingninja.csse.R;
 import com.meetingninja.csse.extras.MyDateUtils;
 
 public class ScheduleAdapter extends AmazingAdapter {

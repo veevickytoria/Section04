@@ -44,7 +44,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.doomonafireball.betterpickers.Utils;
-import com.meetingninja.csse.R;
 import com.nineoldandroids.animation.ObjectAnimator;
 
 /**

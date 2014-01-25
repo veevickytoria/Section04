@@ -198,8 +198,8 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 	public static List<Meeting> getMeetings(String userID)
 			throws JsonParseException, JsonMappingException, IOException {
 		// Server URL setup
-		String _url = getBaseUri().appendPath("Meetings")
-				.appendPath(userID).build().toString();
+		String _url = getBaseUri().appendPath("Meetings").appendPath(userID)
+				.build().toString();
 
 		// establish connection
 		URL url = new URL(_url);

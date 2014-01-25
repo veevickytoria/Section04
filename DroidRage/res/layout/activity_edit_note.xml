@@ -38,7 +38,6 @@
             android:inputType="textMultiLine"
             android:minHeight="144dp"
             android:textSize="20sp" >
-
         </EditText>
     </LinearLayout>
 

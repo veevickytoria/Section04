@@ -47,12 +47,12 @@ public class ApplicationController extends Application {
 	 * places
 	 */
 	private static ApplicationController sInstance;
-	
+
 	/**
 	 * A singleton instance of an objectmapper for JSON serialization
 	 */
 	private ObjectMapper mObjMapper;
-	
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -90,14 +90,15 @@ public class ApplicationController extends Application {
 
 		return mRequestQueue;
 	}
-	
+
 	/**
 	 * @return The ObjectMapper, mapper will be created if it is null
 	 */
 	public ObjectMapper getObjectMapper() {
 		if (mObjMapper == null) {
 			mObjMapper = new ObjectMapper();
-			mObjMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			mObjMapper.configure(
+					DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			mObjMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
 		}
 

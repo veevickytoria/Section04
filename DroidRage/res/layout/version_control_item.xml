@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
- <!--  Date of version -->
+
+    <!-- Date of version -->
 
     <TextView
         android:id="@+id/versionDate"
@@ -14,14 +14,11 @@
         android:singleLine="true"
         android:text="Date"
         android:textStyle="bold" />
+    <TextView
+        android:id="@+id/versionEditor"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:singleLine="false"
+        android:text="Editor" />
 
-    <!--  Note Content -->
-
-     <TextView
-         android:id="@+id/versionEditor"
-         android:layout_width="fill_parent"
-         android:layout_height="wrap_content"
-         android:singleLine="false"
-         android:text="Editor" />
-    
 </LinearLayout>

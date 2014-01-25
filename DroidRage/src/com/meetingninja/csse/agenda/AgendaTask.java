@@ -1,4 +1,5 @@
 package com.meetingninja.csse.agenda;
+
 import java.io.IOException;
 
 import objects.Agenda;

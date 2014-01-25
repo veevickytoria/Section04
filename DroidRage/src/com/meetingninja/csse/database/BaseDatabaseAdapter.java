@@ -117,8 +117,7 @@ public abstract class BaseDatabaseAdapter {
 		return node.hasNonNull(key) ? node.get(key).asText() : "";
 	}
 
-	protected static void logPrint(String payload)
-			throws IOException {
+	protected static void logPrint(String payload) throws IOException {
 		Log.i("JSON", payload);
 	}
 

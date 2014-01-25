@@ -31,7 +31,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.meetingninja.csse.R;
 import com.meetingninja.csse.extras.MyDateUtils;
 
 /**
@@ -90,8 +89,8 @@ public class MeetingItemAdapter extends ArrayAdapter<Meeting> {
 		viewHolder.title.setText(meeting.getTitle());
 		try {
 			viewHolder.timeSpan.setText(getTimeSpan(
-					meeting.getStartTimeInMillis(), meeting.getEndTimeInMillis(),
-					false));
+					meeting.getStartTimeInMillis(),
+					meeting.getEndTimeInMillis(), false));
 		} catch (ParseException e) {
 			Log.e("MeetingItemAdapter", e.getLocalizedMessage());
 		}

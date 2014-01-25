@@ -22,8 +22,6 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-import com.meetingninja.csse.R;
-
 /**
  * Displays text with no padding at the top.
  */

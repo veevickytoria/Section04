@@ -45,9 +45,9 @@ public class Agenda implements IJSONObject<Agenda> {
 		setAttachedMeetingID(copyAgenda.getAttachedMeetingID());
 		setTopics(copyAgenda.getTopics());
 	}
-	
+
 	public Agenda(JsonNode node) {
-		
+
 	}
 
 	@JsonProperty("agendaID")
@@ -175,5 +175,5 @@ public class Agenda implements IJSONObject<Agenda> {
 		return mapper.readTree(json);
 
 	}
-	
+
 }

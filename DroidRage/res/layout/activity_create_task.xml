@@ -80,7 +80,6 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:hint="Text here" />
-
             </LinearLayout>
         </LinearLayout>
 
@@ -113,7 +112,6 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:hint="More text" />
-
             </LinearLayout>
 
             <View style="@style/EditEventSeparator" />
@@ -145,7 +143,6 @@
                 android:layout_height="0dp"
                 android:ems="10" >
             </ListView>
-
         </LinearLayout>
 
         <!-- REMINDERS -->

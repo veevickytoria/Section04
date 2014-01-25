@@ -9,16 +9,16 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "userID", "displayName" })
-public class SimpleUser implements Parcelable{
+public class SimpleUser implements Parcelable {
 	@JsonProperty("userID")
 	protected String userID;
 	@JsonProperty("displayName")
 	protected String displayName;
-	
-	public SimpleUser(){
+
+	public SimpleUser() {
 	}
-	
-	public SimpleUser(Parcel in){
+
+	public SimpleUser(Parcel in) {
 		readFromParcel(in);
 	}
 
@@ -59,12 +59,12 @@ public class SimpleUser implements Parcelable{
 		dest.writeString(getUserID());
 		dest.writeString(getDisplayName());
 	}
-	
-	public void readFromParcel(Parcel in){
+
+	public void readFromParcel(Parcel in) {
 		setUserID(in.readString());
 		setDisplayName(in.readString());
 	}
-	
+
 	public static final Parcelable.Creator<SimpleUser> CREATOR = new Parcelable.Creator<SimpleUser>() {
 
 		@Override
@@ -76,6 +76,6 @@ public class SimpleUser implements Parcelable{
 		public SimpleUser[] newArray(int size) {
 			return new SimpleUser[size];
 		}
-		
+
 	};
 }

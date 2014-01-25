@@ -43,7 +43,6 @@ import com.doomonafireball.betterpickers.calendardatepicker.CalendarDatePickerDi
 import com.doomonafireball.betterpickers.radialtimepicker.RadialPickerLayout;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog.OnTimeSetListener;
-import com.meetingninja.csse.R;
 import com.meetingninja.csse.agenda.AgendaActivity;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.MeetingDatabaseAdapter;
@@ -123,7 +122,7 @@ public class EditMeetingActivity extends FragmentActivity implements
 			end.set(Calendar.MINUTE, 0);
 		}
 		mFromDate.setOnClickListener(new DateClickListener(mFromDate, start));
-		
+
 		mFromDate.setText(dateFormat.print(start.getTimeInMillis()));
 
 		mToDate.setOnClickListener(new DateClickListener(mToDate, end));
@@ -288,7 +287,8 @@ public class EditMeetingActivity extends FragmentActivity implements
 				// mySQLiteAdapter.updateMeeting(newMeeting);
 				msgIntent.putExtra("method", "update");
 			} else {
-				MeetingSaveTask task = new MeetingSaveTask(EditMeetingActivity.this);
+				MeetingSaveTask task = new MeetingSaveTask(
+						EditMeetingActivity.this);
 				task.execute(newMeeting);
 				msgIntent.putExtra("method", "insert");
 			}

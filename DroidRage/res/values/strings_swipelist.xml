@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+    <string name="reset_items">Reset items</string>
+    <string name="action_done">Done</string>
+    <string name="pref_undo_style">Undo Style</string>
+    <string name="pref_undo_style_title">Select Undo Style</string>
+    <string name="pref_swipe_direction">Swipe Direction</string>
+    <string name="pref_swipe_direction_title">Select Swipe Direction</string>
+    <string name="pref_general">General</string>
+    <string name="pref_swipe_to_dismiss">Swipe to Dismiss</string>
+    <string name="enable">Enabled</string>
+    <string name="list_item_background">Sticky part of list item</string>
+    <string name="pref_swipelayout">Swipe Layout</string>
+    <string name="undo">Undo</string>
+    <string name="undo_all">Undo All</string>
+    <string name="item_deleted">Item deleted</string>
+    <string name="n_items_deleted">%1$s items deleted</string>
+
+</resources>

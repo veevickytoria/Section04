@@ -10,13 +10,10 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
-import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
-
-import com.meetingninja.csse.R;
 
 /**
  * Adapter used to feed the table view.
@@ -40,12 +37,12 @@ public abstract class AbstractTreeViewAdapter<T> extends BaseAdapter implements
 	private Drawable rowBackgroundDrawable;
 
 	private final OnClickListener indicatorClickListener = new OnClickListener() {
-		@Override
 		public void onClick(final View v) {
 			@SuppressWarnings("unchecked")
 			final T id = (T) v.getTag();
 			expandCollapse(id);
 		}
+
 	};
 
 	private boolean collapsible;
@@ -232,7 +229,8 @@ public abstract class AbstractTreeViewAdapter<T> extends BaseAdapter implements
 		layout.setBackgroundDrawable(individualRowDrawable == null ? getDrawableOrDefaultBackground(rowBackgroundDrawable)
 				: individualRowDrawable);
 		final LinearLayout.LayoutParams indicatorLayoutParams = new LinearLayout.LayoutParams(
-				calculateIndentation(nodeInfo), android.view.ViewGroup.LayoutParams.FILL_PARENT);
+				calculateIndentation(nodeInfo),
+				android.view.ViewGroup.LayoutParams.FILL_PARENT);
 		final LinearLayout indicatorLayout = (LinearLayout) layout
 				.findViewById(R.id.treeview_list_item_image_layout);
 		indicatorLayout.setGravity(indicatorGravity);
@@ -252,7 +250,8 @@ public abstract class AbstractTreeViewAdapter<T> extends BaseAdapter implements
 		final FrameLayout frameLayout = (FrameLayout) layout
 				.findViewById(R.id.treeview_list_item_frame);
 		final FrameLayout.LayoutParams childParams = new FrameLayout.LayoutParams(
-				android.view.ViewGroup.LayoutParams.FILL_PARENT, android.view.ViewGroup.LayoutParams.FILL_PARENT);
+				android.view.ViewGroup.LayoutParams.FILL_PARENT,
+				android.view.ViewGroup.LayoutParams.FILL_PARENT);
 		if (newChildView) {
 			frameLayout.addView(childView, childParams);
 		}

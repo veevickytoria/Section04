@@ -25,8 +25,6 @@ import android.graphics.Paint.Style;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-import com.meetingninja.csse.R;
-
 /**
  * A text view which, when pressed or activated, displays a blue circle around
  * the text.

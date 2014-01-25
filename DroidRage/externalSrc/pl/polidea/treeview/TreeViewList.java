@@ -10,8 +10,6 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import com.meetingninja.csse.R;
-
 /**
  * Tree view, expandable multi-level.
  * 

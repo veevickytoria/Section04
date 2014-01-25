@@ -63,9 +63,9 @@ public class Meeting extends Event implements Parcelable, IJSONObject<Meeting> {
 		setDescription(copyMeeting.getDescription());
 		setAttendance(copyMeeting.getAttendance());
 	}
-	
+
 	public Meeting(JsonNode node) {
-		
+
 	}
 
 	@Override
@@ -126,8 +126,7 @@ public class Meeting extends Event implements Parcelable, IJSONObject<Meeting> {
 		startTime = in.readString();
 		endTime = in.readString();
 		description = in.readString();
-		attendance = in.readArrayList(String.class
-				.getClassLoader());
+		attendance = in.readArrayList(String.class.getClassLoader());
 	}
 
 	public static final Parcelable.Creator<Meeting> CREATOR = new Parcelable.Creator<Meeting>() {

@@ -38,7 +38,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.loopj.android.image.SmartImageView;
 import com.meetingninja.csse.ApplicationController;
-import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.JsonNodeRequest;
 import com.meetingninja.csse.database.Keys;
@@ -72,11 +71,12 @@ public class ProfileFragment extends Fragment {
 
 		Bundle extras = getArguments();
 		displayedUser = new User();
-		
+
 		if (extras != null && extras.containsKey(Keys.User.PARCEL)) {
 			displayedUser = (User) extras.getParcelable(Keys.User.PARCEL);
 			try {
-				System.out.println(ApplicationController.getInstance().getObjectMapper().writeValueAsString(displayedUser));
+				System.out.println(ApplicationController.getInstance()
+						.getObjectMapper().writeValueAsString(displayedUser));
 			} catch (JsonProcessingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

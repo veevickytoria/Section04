@@ -68,5 +68,6 @@
     <string name="title_activity_edit_group">EditGroupActivity</string>
     <string name="title_activity_groups">Groups</string>
     <string name="title_activity_groups_fragment">GroupsFragment</string>
+    <string name="title_activity_swipe_list__test">SwipeList_TestActivity</string>
 
 </resources>

@@ -39,7 +39,6 @@ import android.widget.TextView;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.AgendaDatabaseAdapter;
 
 public class AgendaActivity extends FragmentActivity {
@@ -61,7 +60,6 @@ public class AgendaActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		boolean newCollapsible;
 		ObjectMapper mapper = new ObjectMapper();
-		
 
 		// TODO : Get Agenda attached to meeting
 		String json = "";
@@ -142,10 +140,10 @@ public class AgendaActivity extends FragmentActivity {
 		}
 	}
 
-	public void reconstructTree(){
+	public void reconstructTree() {
 		manager.clear();
 		mAgendaAdpt.refresh();
-		
+
 		int depth = 0;
 		if (mAgenda != null) {
 			depth = mAgenda.getDepth();
@@ -158,7 +156,7 @@ public class AgendaActivity extends FragmentActivity {
 		treeView.setAdapter(mAgendaAdpt);
 
 	}
-	
+
 	@Override
 	protected void onSaveInstanceState(final Bundle outState) {
 		outState.putSerializable("treeManager", manager);
@@ -187,7 +185,7 @@ public class AgendaActivity extends FragmentActivity {
 				t.setTitle("new topic");
 				mAgenda.addTopic(t);
 				reconstructTree();
-				
+
 				break;
 
 			default:

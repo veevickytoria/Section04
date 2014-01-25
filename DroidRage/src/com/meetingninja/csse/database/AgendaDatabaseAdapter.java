@@ -96,8 +96,9 @@ public class AgendaDatabaseAdapter extends BaseDatabaseAdapter {
 		return newAgenda;
 	}
 
-	public static JsonNode update(String agendaID, Map<String, String> key_values)
-			throws JsonGenerationException, IOException, InterruptedException {
+	public static JsonNode update(String agendaID,
+			Map<String, String> key_values) throws JsonGenerationException,
+			IOException, InterruptedException {
 		// prepare POST payload
 		ByteArrayOutputStream json = new ByteArrayOutputStream();
 		// this type of print stream allows us to get a string easily

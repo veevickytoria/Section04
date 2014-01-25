@@ -2,39 +2,35 @@ package com.meetingninja.csse.group;
 
 import objects.Group;
 import objects.User;
-
-import com.meetingninja.csse.R;
-import com.meetingninja.csse.database.AsyncResponse;
-import com.meetingninja.csse.database.Keys;
-import com.meetingninja.csse.user.UserArrayAdapter;
-import com.meetingninja.csse.user.UserInfoFetcher;
-
-import android.os.Bundle;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class EditGroupActivity extends SwipeListViewActivity {
+import com.meetingninja.csse.database.AsyncResponse;
+import com.meetingninja.csse.database.Keys;
+import com.meetingninja.csse.user.UserArrayAdapter;
+import com.meetingninja.csse.user.UserInfoFetcher;
 
+public class EditGroupActivity extends SwipeListViewActivity {
 
 	private Group group;
 	private UserArrayAdapter mUserAdapter;
 	EditText titleText;
 	ListView l;
 	RetUserObj fetcher = null;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -47,28 +43,31 @@ public class EditGroupActivity extends SwipeListViewActivity {
 		titleText = (EditText) findViewById(R.id.group_edit_title);
 		titleText.setText(group.getGroupTitle());
 
-
-
-		mUserAdapter = new UserArrayAdapter(this, R.layout.line_item_user, group.getMembers());
+		mUserAdapter = new UserArrayAdapter(this, R.layout.line_item_user,
+				group.getMembers());
 		View v = findViewById(R.id.group_edit_user_list);
 		l = (ListView) v.findViewById(android.R.id.list);
 		l.setAdapter(mUserAdapter);
-//		l.setOnItemClickListener(new OnItemClickListener(){
-//			@Override
-//			public void onItemClick(AdapterView<?> arg0, View view, int position,
-//					long id) {
-//				// TODO Auto-generated method stub
-//				Toast.makeText(view.getContext(),  "youve selected: " + mUserAdapter.getItem(position).getDisplayName(), Toast.LENGTH_LONG).show();
-//
-//			}
-//		});
+		// l.setOnItemClickListener(new OnItemClickListener(){
+		// @Override
+		// public void onItemClick(AdapterView<?> arg0, View view, int position,
+		// long id) {
+		// // TODO Auto-generated method stub
+		// Toast.makeText(view.getContext(), "youve selected: " +
+		// mUserAdapter.getItem(position).getDisplayName(),
+		// Toast.LENGTH_LONG).show();
+		//
+		// }
+		// });
 
 	}
 
 	@Override
-	public void getSwipeItem(boolean isRight, int position){
-		Toast.makeText(this,
-				"Swipe to " + (isRight ? "right" : "left") + " direction on: "+ mUserAdapter.getItem(position).getDisplayName(),
+	public void getSwipeItem(boolean isRight, int position) {
+		Toast.makeText(
+				this,
+				"Swipe to " + (isRight ? "right" : "left") + " direction on: "
+						+ mUserAdapter.getItem(position).getDisplayName(),
 				Toast.LENGTH_SHORT).show();
 		group.getMembers().remove(position);
 		mUserAdapter.notifyDataSetChanged();
@@ -130,9 +129,10 @@ public class EditGroupActivity extends SwipeListViewActivity {
 		return true;
 	}
 
-	private void save(){
-		if(TextUtils.isEmpty(titleText.getText())){
-			Toast.makeText(this, "Cannot have an empty title", Toast.LENGTH_LONG).show();
+	private void save() {
+		if (TextUtils.isEmpty(titleText.getText())) {
+			Toast.makeText(this, "Cannot have an empty title",
+					Toast.LENGTH_LONG).show();
 			return;
 		}
 
@@ -144,30 +144,32 @@ public class EditGroupActivity extends SwipeListViewActivity {
 
 	}
 
-	public void addMember(View view){
+	public void addMember(View view) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Enter member ID");
 		final EditText input = new EditText(this);
 		builder.setView(input);
-		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() { 
+		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				loadUser(input.getText().toString());
 			}
 		});
-		builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-		    @Override
-		    public void onClick(DialogInterface dialog, int which) {
-		        dialog.cancel();
-		    }
-		});
+		builder.setNegativeButton("Cancel",
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.cancel();
+					}
+				});
 		builder.show();
 	}
-	
-	private void loadUser(String userID){
+
+	private void loadUser(String userID) {
 		fetcher = new RetUserObj();
 		fetcher.execute(userID);
 	}
+
 	@Override
 	public ListView getListView() {
 		return l;
@@ -175,10 +177,14 @@ public class EditGroupActivity extends SwipeListViewActivity {
 
 	@Override
 	public void onItemClickListener(ListAdapter adapter, int position) {
-		Toast.makeText(this,  "youve selected: " + mUserAdapter.getItem(position).getDisplayName(), Toast.LENGTH_LONG).show();
+		Toast.makeText(
+				this,
+				"youve selected: "
+						+ mUserAdapter.getItem(position).getDisplayName(),
+				Toast.LENGTH_LONG).show();
 
 	}
-	
+
 	final class RetUserObj implements AsyncResponse<User> {
 
 		private UserInfoFetcher infoFetcher;

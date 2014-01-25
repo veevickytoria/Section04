@@ -38,13 +38,11 @@ import android.widget.Toast;
 
 import com.doomonafireball.betterpickers.calendardatepicker.CalendarDatePickerDialog;
 import com.doomonafireball.betterpickers.calendardatepicker.CalendarDatePickerDialog.OnDateSetListener;
-import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.extras.MyDateUtils;
-import com.meetingninja.csse.user.SessionManager;
 
 public class EditTaskActivity extends FragmentActivity implements
-AsyncResponse<Boolean> {
+		AsyncResponse<Boolean> {
 	final String MARK_AS_COMPLETE = "Mark As Complete";
 	final String MARK_AS_INCOMPLETE = "Mark As Incomplete";
 
@@ -53,12 +51,12 @@ AsyncResponse<Boolean> {
 	private Button mDeadlineBtn, mCompleteBtn;
 	private DateTimeFormatter dateFormat = MyDateUtils.JODA_MEETING_DATE_FORMAT;
 
-	//private SessionManager session;
+	// private SessionManager session;
 	private Task displayTask;
 	Calendar cal = null;
 	public static final String EXTRA_TASK = "task";
 
-	//private static final String TAG = EditTaskActivity.class.getSimpleName();
+	// private static final String TAG = EditTaskActivity.class.getSimpleName();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -77,19 +75,18 @@ AsyncResponse<Boolean> {
 			cal = Calendar.getInstance();
 			cal.setTimeInMillis(Long.parseLong(displayTask.getEndTime()));
 
-			//			int month = deadline.getMonthOfYear();
-			//			int year = deadline.getYear();
-			//			int day = deadline.getDayOfMonth();
-			//			cal = Calendar.getInstance();
-			//			cal.set(Calendar.YEAR, year, Calendar.MONTH, month - 1,
-			//					Calendar.DAY_OF_MONTH, day);
-			//			 cal.set(Calendar.YEAR, year);
-			//			 cal.set(Calendar.MONTH, month - 1);
-			//			 cal.set(Calendar.DAY_OF_MONTH, day);
+			// int month = deadline.getMonthOfYear();
+			// int year = deadline.getYear();
+			// int day = deadline.getDayOfMonth();
+			// cal = Calendar.getInstance();
+			// cal.set(Calendar.YEAR, year, Calendar.MONTH, month - 1,
+			// Calendar.DAY_OF_MONTH, day);
+			// cal.set(Calendar.YEAR, year);
+			// cal.set(Calendar.MONTH, month - 1);
+			// cal.set(Calendar.DAY_OF_MONTH, day);
 
-
-
-			mDeadlineBtn.setOnClickListener(new DateClickListener(mDeadlineBtn, cal,this));
+			mDeadlineBtn.setOnClickListener(new DateClickListener(mDeadlineBtn,
+					cal, this));
 			// assignedDateLabel.setText(dateFormat.format(assignedDate));
 			// createdDateLabel.setText(dateFormat.format(createdDate));
 		}
@@ -99,10 +96,12 @@ AsyncResponse<Boolean> {
 		mTitle.setText(displayTask.getTitle());
 		completionCriteria.setText(displayTask.getCompletionCriteria());
 		mDescription.setText(displayTask.getDescription());
-		String format = dateFormat.print(Long.parseLong(displayTask.getEndTime()));
+		String format = dateFormat.print(Long.parseLong(displayTask
+				.getEndTime()));
 		mDeadlineBtn.setText(format);
-		//String format = dateFormat.print(Long.parseLong(displayTask.getDateAssigned()));
-		//assignedDateLabel.setText(format);
+		// String format =
+		// dateFormat.print(Long.parseLong(displayTask.getDateAssigned()));
+		// assignedDateLabel.setText(format);
 		format = dateFormat.print(Long.parseLong(displayTask.getDateCreated()));
 		createdDateLabel.setText(format);
 		// TODO: use string.xml
@@ -126,7 +125,8 @@ AsyncResponse<Boolean> {
 	private void trimTextView() {
 		mTitle.setText(mTitle.getText().toString().trim());
 		mDescription.setText(mDescription.getText().toString().trim());
-		completionCriteria.setText(completionCriteria.getText().toString().trim());
+		completionCriteria.setText(completionCriteria.getText().toString()
+				.trim());
 	}
 
 	private final View.OnClickListener tActionBarListener = new OnClickListener() {
@@ -141,9 +141,11 @@ AsyncResponse<Boolean> {
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		// Make an Ok/Cancel ActionBar
-		View actionBarButtons = inflater.inflate(R.layout.actionbar_ok_cancel, new LinearLayout(this), false);
+		View actionBarButtons = inflater.inflate(R.layout.actionbar_ok_cancel,
+				new LinearLayout(this), false);
 
-		View cancelActionView = actionBarButtons.findViewById(R.id.action_cancel);
+		View cancelActionView = actionBarButtons
+				.findViewById(R.id.action_cancel);
 		cancelActionView.setOnClickListener(tActionBarListener);
 
 		View doneActionView = actionBarButtons.findViewById(R.id.action_done);
@@ -192,25 +194,27 @@ AsyncResponse<Boolean> {
 		if (result) {
 			finish();
 		} else {
-			Toast.makeText(this, "Failed to save task", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Failed to save task", Toast.LENGTH_SHORT)
+					.show();
 
 		}
 	}
 
 	private void save() {
 		if (TextUtils.isEmpty(mTitle.getText())) {
-			Toast.makeText(this, "Empty Task not created", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Empty Task not created", Toast.LENGTH_SHORT)
+					.show();
 			setResult(RESULT_CANCELED);
 			finish();
 		} else {
 			trimTextView();
 			displayTask.setTitle(mTitle.getText().toString());
 			displayTask.setDescription(mDescription.getText().toString());
-			displayTask.setCompletionCriteria(completionCriteria.getText().toString());
+			displayTask.setCompletionCriteria(completionCriteria.getText()
+					.toString());
 			displayTask.setEndTime(cal.getTimeInMillis());
-			Toast.makeText(this,String.format("Saving Task"),Toast.LENGTH_SHORT).show();
-
-
+			Toast.makeText(this, String.format("Saving Task"),
+					Toast.LENGTH_SHORT).show();
 
 			TaskUpdater tUpdate = new TaskUpdater();
 			tUpdate.updateTask(displayTask);
@@ -224,25 +228,31 @@ AsyncResponse<Boolean> {
 		}
 	}
 
-	private class DateClickListener implements OnClickListener,	OnDateSetListener {
+	private class DateClickListener implements OnClickListener,
+			OnDateSetListener {
 		Calendar cal;
 		FragmentActivity activity;
-		public DateClickListener(Button b, Calendar c,FragmentActivity activity) {
+
+		public DateClickListener(Button b, Calendar c, FragmentActivity activity) {
 			this.cal = c;
-			this.activity=activity;
+			this.activity = activity;
 		}
 
 		@Override
 		public void onClick(View v) {
 			FragmentManager fm = getSupportFragmentManager();
-			CalendarDatePickerDialog calendarDatePickerDialog = CalendarDatePickerDialog.newInstance(DateClickListener.this,cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH));
+			CalendarDatePickerDialog calendarDatePickerDialog = CalendarDatePickerDialog
+					.newInstance(DateClickListener.this,
+							cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
+							cal.get(Calendar.DAY_OF_MONTH));
 			calendarDatePickerDialog.show(fm, "fragment_date_picker_name");
 		}
 
 		@Override
-		public void onDateSet(CalendarDatePickerDialog dialog, int year,int monthOfYear, int dayOfMonth) {
+		public void onDateSet(CalendarDatePickerDialog dialog, int year,
+				int monthOfYear, int dayOfMonth) {
 			Calendar tempcal = Calendar.getInstance();
-			//TODO: maybe the better set?
+			// TODO: maybe the better set?
 			tempcal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 			tempcal.set(Calendar.MONTH, monthOfYear);
 			tempcal.set(Calendar.YEAR, year);
@@ -255,8 +265,11 @@ AsyncResponse<Boolean> {
 				cal.set(Calendar.YEAR, year);
 				String format = dateFormat.print(cal.getTimeInMillis());
 				mDeadlineBtn.setText(format);
-			}else{
-				Toast.makeText(activity,String.format("A Deadline can not be set before today's date"),Toast.LENGTH_SHORT).show();
+			} else {
+				Toast.makeText(
+						activity,
+						String.format("A Deadline can not be set before today's date"),
+						Toast.LENGTH_SHORT).show();
 			}
 		}
 	}

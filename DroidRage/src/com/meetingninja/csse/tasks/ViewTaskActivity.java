@@ -26,7 +26,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.user.UserInfoFetcher;
 
@@ -110,7 +109,8 @@ public class ViewTaskActivity extends Activity {
 		isCompleted = (TextView) this.findViewById(R.id.task_completed_text);
 		assignedLabel = (TextView) this.findViewById(R.id.task_assigned_label);
 		assignedText = (TextView) this.findViewById(R.id.task_assigned_text);
-		taskCompleteButton = (Button) this.findViewById(R.id.task_complete_button);
+		taskCompleteButton = (Button) this
+				.findViewById(R.id.task_complete_button);
 	}
 
 	private void setTask() {
@@ -122,7 +122,8 @@ public class ViewTaskActivity extends Activity {
 		completionCriteria.setText(task.getCompletionCriteria());
 		if (task.getIsCompleted()) {
 			isCompleted.setText("Yes"); // TODO: change this to use string xml
-			System.out.println("before");;
+			System.out.println("before");
+			;
 			taskCompleteButton.setVisibility(View.INVISIBLE);
 			System.out.println("after");
 		} else {

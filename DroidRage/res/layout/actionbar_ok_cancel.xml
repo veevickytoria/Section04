@@ -3,7 +3,7 @@
     android:layout_height="match_parent"
     android:divider="?android:attr/dividerVertical"
     android:dividerPadding="12dip"
-    android:orientation="horizontal">
+    android:orientation="horizontal" >
 
     <!-- id must match corresponding menu item id -->
 
@@ -19,7 +19,7 @@
             style="@style/EditEventCustomActionButtonText"
             android:text="@string/discard_label" />
     </LinearLayout>
-    
+
     <View
         android:layout_width="1dp"
         android:layout_height="wrap_content"

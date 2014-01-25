@@ -18,23 +18,23 @@ public abstract class SwipeListViewActivity extends Activity {
 	private int REL_SWIPE_THRESHOLD_VELOCITY;
 
 	/**
-	 *
+	 * 
 	 * @return ListView
 	 */
 	public abstract ListView getListView();
 
 	/**
-	 *
+	 * 
 	 * @param isRight
-	 * Swiping direction
+	 *            Swiping direction
 	 * @param position
-	 * which item position is swiped
+	 *            which item position is swiped
 	 */
 	public abstract void getSwipeItem(boolean isRight, int position);
 
 	/**
 	 * For single tap/Click
-	 *
+	 * 
 	 * @param adapter
 	 * @param position
 	 */

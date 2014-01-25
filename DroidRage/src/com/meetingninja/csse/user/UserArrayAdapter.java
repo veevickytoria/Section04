@@ -26,7 +26,6 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.loopj.android.image.SmartImageView;
-import com.meetingninja.csse.R;
 
 public class UserArrayAdapter extends ArrayAdapter<User> {
 	private final Context context;

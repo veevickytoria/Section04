@@ -19,8 +19,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 
-import com.meetingninja.csse.R;
-
 public class ViewMeetingActivity extends Activity {
 
 	@Override

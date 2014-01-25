@@ -25,8 +25,8 @@
         android:layout_height="wrap_content"
         android:background="?android:attr/selectableItemBackground"
         android:hint="+ Add a member"
-        android:onClick="addMember"
         android:minHeight="28dp"
+        android:onClick="addMember"
         android:paddingTop="@dimen/activity_vertical_margin" />
 
     <include

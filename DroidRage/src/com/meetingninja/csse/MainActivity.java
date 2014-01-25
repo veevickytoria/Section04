@@ -18,10 +18,8 @@ package com.meetingninja.csse;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import objects.Group;
 import objects.Meeting;
 import objects.Schedule;
-import objects.User;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
@@ -47,9 +45,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.foound.widget.AmazingListView;
-import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
-import com.meetingninja.csse.group.EditGroupActivity;
+import com.meetingninja.csse.extras.SwipeList_TestActivity;
 import com.meetingninja.csse.group.GroupsFragment;
 import com.meetingninja.csse.meetings.MeetingsFragment;
 import com.meetingninja.csse.notes.CreateNoteActivity;
@@ -61,7 +58,6 @@ import com.meetingninja.csse.user.ProfileFragment;
 import com.meetingninja.csse.user.SessionManager;
 import com.meetingninja.csse.user.UserListFragment;
 import com.parse.ParseAnalytics;
-
 
 /**
  * Main Activity Window.
@@ -90,8 +86,8 @@ public class MainActivity extends FragmentActivity {
 	private ScheduleAdapter rightDrawerAdapter;
 
 	public enum DrawerLabel {
-		MEETINGS(0), NOTES(1), TASKS(2), PROFILE(3), GROUPS(4), PROJECTS(5), CONTACTS(6), SETTINGS(
-				7), ABOUT(8), LOGOUT(9);
+		MEETINGS(0), NOTES(1), TASKS(2), PROFILE(3), GROUPS(4), PROJECTS(5), CONTACTS(
+				6), SETTINGS(7), ABOUT(8), LOGOUT(9);
 
 		private int position;
 
@@ -274,7 +270,7 @@ public class MainActivity extends FragmentActivity {
 		switch (clickedLabel) {
 		case MEETINGS:
 			fragment = new MeetingsFragment();
-			meetingsFrag = (MeetingsFragment) fragment; 
+			meetingsFrag = (MeetingsFragment) fragment;
 			break;
 		case NOTES:
 			fragment = new NotesFragment();
@@ -289,7 +285,7 @@ public class MainActivity extends FragmentActivity {
 			break;
 		case GROUPS:
 			fragment = new GroupsFragment();
-			
+
 			break;
 		case PROJECTS:
 			fragment = new DummyFragment();
@@ -439,6 +435,8 @@ public class MainActivity extends FragmentActivity {
 			logout();
 			return true;
 		case R.id.action_settings:
+			Intent test = new Intent(this, SwipeList_TestActivity.class);
+			startActivity(test);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

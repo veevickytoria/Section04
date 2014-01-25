@@ -34,7 +34,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
 

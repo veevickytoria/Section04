@@ -11,9 +11,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:hint="Title"
         android:inputType="textCapSentences"
         android:padding="4dip"
-        android:hint="Title"
         android:textSize="@dimen/text_size_large" />
 
     <TextView

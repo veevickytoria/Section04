@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="?android:attr/listPreferredItemHeight" 
-    android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft">
-    
-    <!--  Name of Task -->
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft" >
+
+    <!-- Name of Task -->
 
     <TextView
         android:id="@+id/taskName"
@@ -17,16 +17,16 @@
         android:text="Name"
         android:textStyle="bold" />
 
-    <!--  Note Content -->
+    <!-- Note Content -->
 
-     <TextView
-         android:id="@+id/taskDiscription"
-         android:layout_width="fill_parent"
-         android:layout_height="wrap_content"
-         android:layout_alignParentBottom="true"
-         android:layout_alignParentRight="true"
-         android:layout_below="@id/taskName"
-         android:singleLine="false"
-         android:text="Discription" />
+    <TextView
+        android:id="@+id/taskDiscription"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/taskName"
+        android:singleLine="false"
+        android:text="Discription" />
 
 </RelativeLayout>

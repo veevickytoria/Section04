@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/action_settings"
+        android:icon="@drawable/ic_action_settings"
+        android:showAsAction="always"
+        android:title="@string/settings"/>
+    <item
+        android:id="@+id/action_done"
+        android:icon="@drawable/ic_action_done"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/action_done"/>
+
+</menu>

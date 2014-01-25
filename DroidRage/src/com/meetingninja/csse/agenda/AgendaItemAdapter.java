@@ -37,9 +37,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.meetingninja.csse.R;
-
-
 /**
  * This is a very simple adapter that provides very basic tree view with a
  * checkboxes and simple item description.
@@ -115,22 +112,21 @@ public class AgendaItemAdapter<T> extends AbstractTreeViewAdapter<Topic> {
 		counter = 0;
 	}
 
-
 	@Override
 	public LinearLayout updateView(final View view,
 			final TreeNodeInfo<Topic> treeNodeInfo) {
 
-//		final LinearLayout rowView = (LinearLayout) view;
+		// final LinearLayout rowView = (LinearLayout) view;
 
-		LayoutInflater inflater = (LayoutInflater)mContext.getSystemService
-			      (Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater inflater = (LayoutInflater) mContext
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		final LinearLayout rowView = (LinearLayout) inflater.inflate(
 				R.layout.list_item_agenda, null);
 
-
 		final Topic rowTopic = treeNodeInfo.getId();
 
-		System.out.println("Echo: Checked" + rowTopic+" "+counter+" "+Comparison.size()+" "+checked);
+		System.out.println("Echo: Checked" + rowTopic + " " + counter + " "
+				+ Comparison.size() + " " + checked);
 
 		final EditText mTitle = (EditText) rowView
 				.findViewById(R.id.agenda_edit_topic);
@@ -140,12 +136,12 @@ public class AgendaItemAdapter<T> extends AbstractTreeViewAdapter<Topic> {
 
 		mTitle.setText(rowTopic.getTitle());
 
-		System.out.println("Echo: Here" + rowTopic.getTitle()+" "+rowView);
-		
-		if(TextHandlers.containsKey(mTitle)){
+		System.out.println("Echo: Here" + rowTopic.getTitle() + " " + rowView);
+
+		if (TextHandlers.containsKey(mTitle)) {
 			mTitle.removeTextChangedListener(TextHandlers.get(mTitle));
 		}
-				
+
 		TextWatcher c = new TextWatcher() {
 
 			@Override
@@ -153,7 +149,7 @@ public class AgendaItemAdapter<T> extends AbstractTreeViewAdapter<Topic> {
 					int count) {
 				String text = s.toString();
 
-//				rowTopic.setTitle(text);
+				// rowTopic.setTitle(text);
 				mTitle.setTag(text);
 				rowTopic.setTitle(text);
 
@@ -165,18 +161,18 @@ public class AgendaItemAdapter<T> extends AbstractTreeViewAdapter<Topic> {
 
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) { 
+					int after) {
 			}
 
 			@Override
 			public void afterTextChanged(Editable s) {
 
-			}	
+			}
 		};
-		
+
 		mTitle.addTextChangedListener(c);
 		TextHandlers.put(mTitle, c);
-		
+
 		final Button mAddTopicBtn = (Button) rowView
 				.findViewById(R.id.agenda_subtopicAddBtn);
 		final Button mTimeBtn = (Button) rowView
@@ -199,7 +195,7 @@ public class AgendaItemAdapter<T> extends AbstractTreeViewAdapter<Topic> {
 		// title = info.containsKey("title") ? info.get("title") : "";
 		// }
 		// mTitle.setText(title);
-//		mTitle.setText(rowTopic.getTitle());
+		// mTitle.setText(rowTopic.getTitle());
 		String time = info.containsKey("time") ? info.get("time") : "";
 		mTime.setText(time);
 
@@ -267,9 +263,9 @@ public class AgendaItemAdapter<T> extends AbstractTreeViewAdapter<Topic> {
 		public void onClick(View v) {
 			// final Topic t = (Topic) v.getTag();
 			Topic subT = new Topic(); // TODO : Make new subtopic
-			subT.setTitle(parent.getTitle()+"New Topic");
+			subT.setTitle(parent.getTitle() + "New Topic");
 			parent.addTopic(subT);
-			System.out.println("Echo: Created" + subT+" "+parent);
+			System.out.println("Echo: Created" + subT + " " + parent);
 
 			activty.reconstructTree();
 			// getManager().notifyDataSetChanged();

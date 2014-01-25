@@ -18,8 +18,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.meetingninja.csse.R;
-
 public class TimePicker extends LinearLayout implements Button.OnClickListener,
 		Button.OnLongClickListener {
 

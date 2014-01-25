@@ -75,7 +75,6 @@
             android:onClick="register"
             android:text="@string/action_register"
             tools:ignore="OnClick" />
-
     </RelativeLayout>
 
 </LinearLayout>

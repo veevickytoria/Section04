@@ -39,20 +39,21 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 	// User table create statement
 	private static final String CREATE_TABLE_USER = "CREATE TABLE "
 			+ SQLiteUserAdapter.TABLE_NAME + "(" + KEY_ID
-			+ " INTEGER PRIMARY KEY AUTOINCREMENT," + SQLiteUserAdapter.KEY_NAME
-			+ " TEXT NOT NULL," + SQLiteUserAdapter.KEY_EMAIL + " TEXT NOT NULL,"
+			+ " INTEGER PRIMARY KEY AUTOINCREMENT,"
+			+ SQLiteUserAdapter.KEY_NAME + " TEXT NOT NULL,"
+			+ SQLiteUserAdapter.KEY_EMAIL + " TEXT NOT NULL,"
 			+ SQLiteUserAdapter.KEY_PHONE + " TEXT NOT NULL,"
 			+ SQLiteUserAdapter.KEY_COMPANY + " TEXT NOT NULL,"
 			+ SQLiteUserAdapter.KEY_TITLE + " TEXT NOT NULL,"
 			+ SQLiteUserAdapter.KEY_LOCATION + " TEXT NOT NULL" + ");";
-	
+
 	// Notes table create statement
 	private static final String CREATE_TABLE_NOTE = "CREATE TABLE "
 			+ SQLiteNoteAdapter.TABLE_NAME + "(" + KEY_ID
 			+ " INTEGER PRIMARY KEY AUTOINCREMENT,"
 			+ SQLiteNoteAdapter.KEY_TITLE + " TEXT NOT NULL,"
 			+ SQLiteNoteAdapter.KEY_CONTENT + " TEXT NOT NULL" + ");";
-	
+
 	// Meeting table create statement
 	private static final String CREATE_TABLE_MEETING = "CREATE TABLE "
 			+ SQLiteMeetingAdapter.TABLE_NAME + "(" + KEY_ID

@@ -23,7 +23,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
-import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.local.SQLiteNoteAdapter;
 
 public class CreateNoteActivity extends Activity {

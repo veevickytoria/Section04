@@ -25,7 +25,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.Keys;
 
 public class ProfileActivity extends FragmentActivity {
@@ -53,7 +52,7 @@ public class ProfileActivity extends FragmentActivity {
 		Bundle args = new Bundle();
 
 		if (displayedUser != null) {
-//			args.putString("userID", displayedUser.getID());
+			// args.putString("userID", displayedUser.getID());
 			args.putParcelable(Keys.User.PARCEL, displayedUser);
 			profFrag.setArguments(args);
 			fm.beginTransaction().replace(R.id.profile_container, profFrag)

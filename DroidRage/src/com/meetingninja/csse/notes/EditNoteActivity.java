@@ -31,7 +31,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
-import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.local.SQLiteNoteAdapter;
 import com.meetingninja.csse.extras.MyDateUtils;
@@ -106,11 +105,12 @@ public class EditNoteActivity extends Activity {
 		String title = mNoteTitle.getText().toString().trim();
 		String content = mTextEditor.getText().toString().trim();
 		DateTime now = DateTime.now();
-		
+
 		displayedNote.setTitle(title);
 		displayedNote.setContent(content);
-		displayedNote.setDateCreated(MyDateUtils.JODA_SERVER_DATE_FORMAT.print(now));
-		
+		displayedNote.setDateCreated(MyDateUtils.JODA_SERVER_DATE_FORMAT
+				.print(now));
+
 		Intent intentMessage = new Intent();
 
 		intentMessage.putExtra("listPosition", listPosition);

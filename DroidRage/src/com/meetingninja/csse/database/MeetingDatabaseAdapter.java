@@ -64,13 +64,10 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 		return parseMeeting(meetingNode, meetingID);
 	}
 
-	
-
 	public static Meeting createMeeting(String userID, Meeting m)
 			throws IOException, MalformedURLException {
 		// Server URL setup
-		String _url = getBaseUri().appendPath(userID)
-				.build().toString();
+		String _url = getBaseUri().appendPath(userID).build().toString();
 
 		// establish connection
 		URL url = new URL(_url);
@@ -152,12 +149,12 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 			m.setStartTime(node.get(Keys.Meeting.DATETIME).asText());
 			m.setEndTime(node.get("endDatetime").asText());
 			m.setDescription(node.get(Keys.Meeting.DESC).asText());
-//			JsonNode attendance = node.get(KEY_ATTEND);
-//			if (attendance.isArray()) {
-//				for (final JsonNode attendeeNode : attendance) {
-//					m.addAttendee(attendeeNode.get("userID").asText());
-//				}
-//			}
+			// JsonNode attendance = node.get(KEY_ATTEND);
+			// if (attendance.isArray()) {
+			// for (final JsonNode attendeeNode : attendance) {
+			// m.addAttendee(attendeeNode.get("userID").asText());
+			// }
+			// }
 		}
 
 		return m;

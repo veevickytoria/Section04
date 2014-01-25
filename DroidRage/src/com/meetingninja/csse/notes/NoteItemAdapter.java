@@ -25,8 +25,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.meetingninja.csse.R;
-
 /**
  * A class to display the Notes in a specific format for the items of the list.
  * This class uses the note_item XML file.

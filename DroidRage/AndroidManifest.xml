@@ -23,7 +23,7 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <uses-sdk
-        android:minSdkVersion="16"
+        android:minSdkVersion="17"
         android:targetSdkVersion="19" />
 
     <application
@@ -160,12 +160,9 @@
             android:label="@string/title_activity_edit_group" >
         </activity>
         <activity
-            android:name="com.meetingninja.csse.Groups"
-            android:label="@string/title_activity_groups" >
-        </activity>
-        <activity
-            android:name="com.meetingninja.csse.group.GroupsFragment"
-            android:label="@string/title_activity_groups_fragment" >
+            android:name="com.meetingninja.csse.extras.SwipeList_TestActivity"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+            android:label="@string/title_activity_swipe_list__test" >
         </activity>
     </application>
 

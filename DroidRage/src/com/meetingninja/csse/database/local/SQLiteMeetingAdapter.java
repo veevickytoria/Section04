@@ -84,8 +84,8 @@ public class SQLiteMeetingAdapter extends SQLiteHelper {
 
 		long insertID = mDb.insert(TABLE_NAME, null, contentValues);
 		Cursor c = this.query(new String[] { KEY_ID, KEY_TITLE, KEY_LOCATION,
-				KEY_START_TIME, KEY_END_TIME, KEY_DESCRIPTION }, KEY_ID + "=" + insertID,
-				null, null, null, null);
+				KEY_START_TIME, KEY_END_TIME, KEY_DESCRIPTION }, KEY_ID + "="
+				+ insertID, null, null, null, null);
 		c.moveToFirst();
 		Meeting newMeeting = new MeetingCursor(c).getModel();
 		c.close();
@@ -95,8 +95,8 @@ public class SQLiteMeetingAdapter extends SQLiteHelper {
 
 	public List<Meeting> getAllMeetings() {
 		List<Meeting> meetings = new ArrayList<Meeting>();
-		String[] columns = new String[] { KEY_ID, KEY_TITLE, KEY_LOCATION, KEY_START_TIME,
-				KEY_END_TIME, KEY_DESCRIPTION };
+		String[] columns = new String[] { KEY_ID, KEY_TITLE, KEY_LOCATION,
+				KEY_START_TIME, KEY_END_TIME, KEY_DESCRIPTION };
 		Cursor c = this.query(columns, null, null, null, null, null);
 		Meeting meeting = null;
 		// looping through all rows and adding to list

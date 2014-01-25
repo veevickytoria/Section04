@@ -37,7 +37,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.meetingninja.csse.MainActivity;
-import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
 import com.meetingninja.csse.extras.Utilities;
 
