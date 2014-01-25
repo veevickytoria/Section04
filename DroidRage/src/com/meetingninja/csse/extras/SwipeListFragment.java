@@ -1,150 +1,93 @@
-/*
- * Copyright 2013 Tim Roes
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.meetingninja.csse.extras;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.meetingninja.csse.R;
-
+import de.timroes.android.listview.EnhancedListView;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
-import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
-import de.timroes.android.listview.EnhancedListView;
 
-public class SwipeList_TestActivity extends ActionBarActivity {
+/**
+ * A simple {@link android.support.v4.app.Fragment} subclass. Activities that
+ * contain this fragment must implement the
+ * {@link SwipeListFragment.OnFragmentInteractionListener} interface to handle
+ * interaction events. Use the {@link SwipeListFragment#newInstance} factory
+ * method to create an instance of this fragment.
+ * 
+ */
+@SuppressLint("ValidFragment")
+public class SwipeListFragment extends Fragment {
 
-	private enum ControlGroup {
-		SWIPE_TO_DISMISS
-	}
-
+	public static int MODE_PRIVATE = FragmentActivity.MODE_PRIVATE;
 	private static final String PREF_UNDO_STYLE = "de.timroes.android.listviewdemo.UNDO_STYLE";
 	private static final String PREF_SWIPE_TO_DISMISS = "de.timroes.android.listviewdemo.SWIPE_TO_DISMISS";
 	private static final String PREF_SWIPE_DIRECTION = "de.timroes.android.listviewdemo.SWIPE_DIRECTION";
 	private static final String PREF_SWIPE_LAYOUT = "de.timroes.android.listviewdemo.SWIPE_LAYOUT";
 
-	private EnhancedListAdapter mAdapter;
+	private Bundle extras;
+	private Context mContext;
 	private EnhancedListView mListView;
-	private DrawerLayout mDrawerLayout;
+	private EnhancedListAdapter mAdapter;
 
 	private Bundle mUndoStylePref;
 	private Bundle mSwipeDirectionPref;
 
+	/**
+	 * Use this factory method to create a new instance of this fragment using
+	 * the provided parameters.
+	 * 
+	 * @return A new instance of fragment SwipeListFragment.
+	 */
+	public static SwipeListFragment newInstance(Bundle args) {
+		SwipeListFragment fragment = new SwipeListFragment();
+		fragment.setArguments(args);
+		return fragment;
+	}
+
+	public SwipeListFragment() {
+		// Required empty public constructor
+	}
+
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_swipe_list_test);
+		mContext = getActivity();
 
-		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
-		mDrawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
-			@Override
-			public void onDrawerSlide(View view, float v) {
-			}
+		// Inflate the layout for this fragment
+		View v = inflater.inflate(R.layout.fragment_swipe_list, container,
+				false);
 
-			@Override
-			public void onDrawerOpened(View view) {
-				mListView.discardUndo();
-				supportInvalidateOptionsMenu();
-			}
-
-			@Override
-			public void onDrawerClosed(View view) {
-				supportInvalidateOptionsMenu();
-				applySettings();
-			}
-
-			@Override
-			public void onDrawerStateChanged(int i) {
-			}
-
-		});
-
-		mListView = (EnhancedListView) findViewById(R.id.enhancedList);
-
+		mListView = (EnhancedListView) v.findViewById(R.id.enhancedList);
 		mAdapter = new EnhancedListAdapter();
 		mAdapter.resetItems();
 
 		mListView.setAdapter(mAdapter);
 
-		CheckBox swipeToDismiss = (CheckBox) findViewById(R.id.pref_swipetodismiss);
-		swipeToDismiss
-				.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-					@Override
-					public void onCheckedChanged(CompoundButton buttonView,
-							boolean isChecked) {
-						getPreferences(MODE_PRIVATE).edit()
-								.putBoolean(PREF_SWIPE_TO_DISMISS, isChecked)
-								.commit();
-						enableControlGroup(ControlGroup.SWIPE_TO_DISMISS,
-								isChecked);
-					}
-				});
-		swipeToDismiss.setChecked(true);
-
-		CheckBox swipeLayout = (CheckBox) findViewById(R.id.pref_swipelayout);
-		swipeLayout
-				.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-					@Override
-					public void onCheckedChanged(CompoundButton buttonView,
-							boolean isChecked) {
-						getPreferences(MODE_PRIVATE).edit()
-								.putBoolean(PREF_SWIPE_LAYOUT, isChecked)
-								.commit();
-					}
-				});
-		swipeLayout.setChecked(getPreferences(MODE_PRIVATE).getBoolean(
-				PREF_SWIPE_LAYOUT, false));
-
-		mUndoStylePref = new Bundle();
-		mUndoStylePref.putInt(DialogPicker.DIALOG_TITLE,
-				R.string.pref_undo_style_title);
-		mUndoStylePref.putInt(DialogPicker.DIALOG_ITEMS_ID, R.array.undo_style);
-		mUndoStylePref.putString(DialogPicker.DIALOG_PREF_KEY, PREF_UNDO_STYLE);
-
-		mSwipeDirectionPref = new Bundle();
-		mSwipeDirectionPref.putInt(DialogPicker.DIALOG_TITLE,
-				R.string.pref_swipe_direction_title);
-		mSwipeDirectionPref.putInt(DialogPicker.DIALOG_ITEMS_ID,
-				R.array.swipe_direction);
-		mSwipeDirectionPref.putString(DialogPicker.DIALOG_PREF_KEY,
-				PREF_SWIPE_DIRECTION);
-
-		enableControlGroup(
-				ControlGroup.SWIPE_TO_DISMISS,
-				getPreferences(MODE_PRIVATE).getBoolean(PREF_SWIPE_TO_DISMISS,
-						false));
+		// sets swipe to true
+		getActivity().getPreferences(MODE_PRIVATE).edit()
+				.putBoolean(PREF_SWIPE_TO_DISMISS, true).commit();
+		// uses the swipe layout behind the list items
+		getActivity().getPreferences(MODE_PRIVATE).edit()
+				.putBoolean(PREF_SWIPE_LAYOUT, true).commit();
+		// sets the swipe layout
+		mListView.setSwipingLayout(R.id.swiping_layout);
 
 		// Set the callback that handles dismisses.
 		mListView
@@ -186,7 +129,7 @@ public class SwipeList_TestActivity extends ActionBarActivity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				Toast.makeText(SwipeList_TestActivity.this,
+				Toast.makeText(mContext,
 						"Clicked on item " + mAdapter.getItem(position),
 						Toast.LENGTH_SHORT).show();
 			}
@@ -197,7 +140,7 @@ public class SwipeList_TestActivity extends ActionBarActivity {
 					public boolean onItemLongClick(AdapterView<?> parent,
 							View view, int position, long id) {
 						Toast.makeText(
-								SwipeList_TestActivity.this,
+								mContext,
 								"Long clicked on item "
 										+ mAdapter.getItem(position),
 								Toast.LENGTH_SHORT).show();
@@ -205,27 +148,9 @@ public class SwipeList_TestActivity extends ActionBarActivity {
 					}
 				});
 
-		mListView.setSwipingLayout(R.id.swiping_layout);
-
 		applySettings();
 
-	}
-
-	/**
-	 * Enables or disables a group of widgets in the settings drawer.
-	 * 
-	 * @param group
-	 *            The Group that should be disabled/enabled.
-	 * @param enabled
-	 *            Whether the group should be enabled or not.
-	 */
-	private void enableControlGroup(ControlGroup group, boolean enabled) {
-		switch (group) {
-		case SWIPE_TO_DISMISS:
-			findViewById(R.id.pref_swipedirection).setEnabled(enabled);
-			findViewById(R.id.pref_swipelayout).setEnabled(enabled);
-			break;
-		}
+		return v;
 	}
 
 	/**
@@ -233,7 +158,7 @@ public class SwipeList_TestActivity extends ActionBarActivity {
 	 */
 	private void applySettings() {
 
-		SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+		SharedPreferences prefs = getActivity().getPreferences(MODE_PRIVATE);
 
 		// Set the UndoStyle, the user selected.
 		EnhancedListView.UndoStyle style;
@@ -280,61 +205,38 @@ public class SwipeList_TestActivity extends ActionBarActivity {
 	}
 
 	@Override
-	protected void onStop() {
+	public void onDetach() {
 		if (mListView != null) {
 			mListView.discardUndo();
 		}
-		super.onStop();
+		super.onDetach();
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.swipe_list_test, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-
-		boolean drawer = mDrawerLayout.isDrawerVisible(Gravity.RIGHT);
-
-		menu.findItem(R.id.action_settings).setVisible(!drawer);
-		// menu.findItem(R.id.action_done).setVisible(drawer);
-
-		return super.onPrepareOptionsMenu(menu);
-
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.action_settings:
-			mDrawerLayout.openDrawer(Gravity.RIGHT);
-			return true;
-		case R.id.action_done:
-			mDrawerLayout.closeDrawers();
-			return true;
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		if (getArguments() != null) {
+			extras = getArguments();
 		}
-		return super.onOptionsItemSelected(item);
 	}
 
 	public void resetItems(View view) {
 		mListView.discardUndo();
 		mAdapter.resetItems();
-		mDrawerLayout.closeDrawers();
 	}
 
 	public void selectUndoStyle(View view) {
 		DialogPicker picker = new DialogPicker();
 		picker.setArguments(mUndoStylePref);
-		picker.show(getSupportFragmentManager(), "UNDO_STYLE_PICKER");
+		picker.show(getActivity().getSupportFragmentManager(),
+				"UNDO_STYLE_PICKER");
 	}
 
 	public void selectSwipeDirection(View view) {
 		DialogPicker picker = new DialogPicker();
 		picker.setArguments(mSwipeDirectionPref);
-		picker.show(getSupportFragmentManager(), "SWIPE_DIR_PICKER");
+		picker.show(getActivity().getSupportFragmentManager(),
+				"SWIPE_DIR_PICKER");
 	}
 
 	private class EnhancedListAdapter extends BaseAdapter {
@@ -396,6 +298,13 @@ public class SwipeList_TestActivity extends ActionBarActivity {
 			return position;
 		}
 
+		private class ViewHolder {
+			TextView mTextView;
+			int position;
+		}
+
+		ViewHolder holder;
+
 		/**
 		 * Get a View that displays the data at the specified position in the
 		 * data set. You can either create a View manually or inflate it from an
@@ -424,10 +333,9 @@ public class SwipeList_TestActivity extends ActionBarActivity {
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 
-			ViewHolder holder;
 			if (convertView == null) {
-				convertView = getLayoutInflater().inflate(
-						R.layout.slide_list_item, parent, false);
+				convertView = getActivity().getLayoutInflater().inflate(
+						R.layout.list_item_swipable, parent, false);
 				// Clicking the delete icon, will read the position of the item
 				// stored in
 				// the tag and delete it from the list. So we don't need to
@@ -458,15 +366,8 @@ public class SwipeList_TestActivity extends ActionBarActivity {
 
 			return convertView;
 		}
-
-		private class ViewHolder {
-			TextView mTextView;
-			int position;
-		}
-
 	}
 
-	@SuppressLint("ValidFragment")
 	private class DialogPicker extends DialogFragment {
 
 		final static String DIALOG_TITLE = "dialog_title";
@@ -477,16 +378,20 @@ public class SwipeList_TestActivity extends ActionBarActivity {
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
 			final Bundle args = getArguments();
 
-			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			// This is a fragment, so get the containing activity
+			final FragmentActivity container = getActivity();
+
+			AlertDialog.Builder builder = new AlertDialog.Builder(container);
 			builder.setTitle(args.getInt(DIALOG_TITLE));
 			builder.setSingleChoiceItems(
 					args.getInt(DIALOG_ITEMS_ID),
-					getPreferences(MODE_PRIVATE).getInt(
+					container.getPreferences(MODE_PRIVATE).getInt(
 							args.getString(DIALOG_PREF_KEY), 0),
 					new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+							SharedPreferences prefs = container
+									.getPreferences(MODE_PRIVATE);
 							prefs.edit()
 									.putInt(args.getString(DIALOG_PREF_KEY),
 											which).commit();

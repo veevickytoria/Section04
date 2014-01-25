@@ -46,7 +46,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.foound.widget.AmazingListView;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
-import com.meetingninja.csse.extras.SwipeList_TestActivity;
+import com.meetingninja.csse.extras.SwipeListFragment;
 import com.meetingninja.csse.group.GroupsFragment;
 import com.meetingninja.csse.meetings.MeetingsFragment;
 import com.meetingninja.csse.notes.CreateNoteActivity;
@@ -299,9 +299,9 @@ public class MainActivity extends FragmentActivity {
 			fragment = new UserListFragment();
 			break;
 		case SETTINGS:
-			fragment = new DummyFragment();
-			args.putString("Content", "TODO: Settings Page");
-			fragment.setArguments(args);
+			fragment = new SwipeListFragment();
+//			args.putString("Content", "TODO: Settings Page");
+//			fragment.setArguments(args);
 			break;
 		case ABOUT:
 			fragment = new DummyFragment();
@@ -435,8 +435,8 @@ public class MainActivity extends FragmentActivity {
 			logout();
 			return true;
 		case R.id.action_settings:
-			Intent test = new Intent(this, SwipeList_TestActivity.class);
-			startActivity(test);
+			// Intent test = new Intent(this, SwipeList_TestActivity.class);
+			// startActivity(test);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

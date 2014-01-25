@@ -159,11 +159,6 @@
             android:name="com.meetingninja.csse.group.EditGroupActivity"
             android:label="@string/title_activity_edit_group" >
         </activity>
-        <activity
-            android:name="com.meetingninja.csse.extras.SwipeList_TestActivity"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
-            android:label="@string/title_activity_swipe_list__test" >
-        </activity>
     </application>
 
 </manifest>
