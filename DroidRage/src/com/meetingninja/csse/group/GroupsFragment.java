@@ -1,5 +1,8 @@
 package com.meetingninja.csse.group;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import objects.Group;
 import objects.User;
 
@@ -20,25 +23,44 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 public class GroupsFragment extends Fragment  {
 	private SessionManager session;
+	private ListView groupsList;
+	private static List<Group> groups= new ArrayList<Group>();;
+	private GroupItemAdapter groupAdpt;
+
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);		
-		
+
 		super.onCreateView(inflater, container, savedInstanceState);
 		View v = inflater.inflate(R.layout.fragment_groups, container, false);
 		setHasOptionsMenu(true);
 
 		session = SessionManager.getInstance();
+		groupsList = (ListView) v.findViewById(R.id.groupsList);
+		groupAdpt = new GroupItemAdapter(getActivity(), R.layout.list_item_group, groups);
+		groupsList.setAdapter(groupAdpt);
+
 		
-		
+		groupAdpt.notifyDataSetChanged();
+		groupsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parentAdapter, View v, int position, long id){
+				Group clicked = groupAdpt.getItem(position);
+				editGroup(clicked);
+			}
+		});
+		registerForContextMenu(groupsList);
 		return v;
 	}
-	
+
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.new_and_refresh_menu, menu);
@@ -67,14 +89,26 @@ public class GroupsFragment extends Fragment  {
 			return super.onContextItemSelected(item);
 		}
 	}
-	
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == 7) {
-			if (resultCode == Activity.RESULT_OK) {
-				//TODO: refresh task list
+		if(resultCode == Activity.RESULT_OK){
+			Group g = data.getParcelableExtra(Keys.Group.PARCEL);
+			if (requestCode == 7) {
+				groups.add(g); //TODO: implement DB calls
+			}else if(requestCode == 8){
+				//TODO: implement database calls
 			}
+			groupAdpt.notifyDataSetChanged();
+
+
 		}
+	}
+
+	private void editGroup(Group group){
+		Intent i = new Intent(getActivity(), EditGroupActivity.class);
+		i.putExtra(Keys.Group.PARCEL, group);
+		startActivityForResult(i, 8);
 	}
 
 }

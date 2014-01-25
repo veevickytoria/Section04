@@ -6,6 +6,7 @@ import objects.User;
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
+import com.meetingninja.csse.extras.AlertDialogUtil;
 import com.meetingninja.csse.user.ProfileActivity;
 import com.meetingninja.csse.user.UserArrayAdapter;
 import com.meetingninja.csse.user.UserInfoFetcher;
@@ -52,14 +53,14 @@ public class EditGroupActivity extends SwipeListViewActivity {
 
 		titleText = (EditText) findViewById(R.id.group_edit_title);
 		titleText.setText(group.getGroupTitle());
-		
+
 		//allows keyboard to hide when not editing text
 		findViewById(R.id.group_edit_main_container).setOnTouchListener(new OnTouchListener() {
-		    @Override
-		    public boolean onTouch(View v, MotionEvent event) {
-		        hideKeyboard();
-		        return false;
-		    }
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				hideKeyboard();
+				return false;
+			}
 		});
 
 		mUserAdapter = new UserArrayAdapter(this, R.layout.line_item_user, group.getMembers());
@@ -81,10 +82,10 @@ public class EditGroupActivity extends SwipeListViewActivity {
 		getMenuInflater().inflate(R.menu.edit_group, menu);
 		return true;
 	}
-	
+
 	private void hideKeyboard() {
-	    InputMethodManager inputMethodManager = (InputMethodManager)  getSystemService(Activity.INPUT_METHOD_SERVICE);
-	    inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+		InputMethodManager inputMethodManager = (InputMethodManager)  getSystemService(Activity.INPUT_METHOD_SERVICE);
+		inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
 	}
 
 	private final View.OnClickListener gActionBarListener = new OnClickListener() {
@@ -138,7 +139,7 @@ public class EditGroupActivity extends SwipeListViewActivity {
 
 	private void save(){
 		if(titleText.getText().toString().isEmpty()){
-			Toast.makeText(this, "Cannot have an empty title", Toast.LENGTH_LONG).show();
+			AlertDialogUtil.displayDialog(this, "Error", "Cannot have an empty title", "OK");
 			return;
 		}
 
@@ -162,14 +163,14 @@ public class EditGroupActivity extends SwipeListViewActivity {
 			}
 		});
 		builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-		    @Override
-		    public void onClick(DialogInterface dialog, int which) {
-		        dialog.cancel();
-		    }
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+			}
 		});
 		builder.show();
 	}
-	
+
 	private void loadUser(String userID){
 		fetcher = new RetUserObj();
 		fetcher.execute(userID);
@@ -186,7 +187,7 @@ public class EditGroupActivity extends SwipeListViewActivity {
 		profileIntent.putExtra(Keys.User.PARCEL, clicked);
 		startActivity(profileIntent);
 	}
-	
+
 	final class RetUserObj implements AsyncResponse<User> {
 
 		private UserInfoFetcher infoFetcher;
