@@ -67,9 +67,7 @@ public class UserListFragment extends ListFragment implements
 				R.layout.list_item_user, users);
 		setListAdapter(mUserAdapter);
 
-		ApplicationController.getInstance().fetchAllUsers(this); // uses volley
-
-		// populateList(); // uses async-task
+		populateList(); // uses async-task
 
 		return v;
 	}
@@ -90,9 +88,8 @@ public class UserListFragment extends ListFragment implements
 	}
 
 	private void populateList() {
-		UserListFetcher task = new UserListFetcher(UserListFragment.this);
-		task.execute((Void) null);
-
+		// Async-Task -> processFinish()
+		UserDatabaseAdapter.fetchAllUsers(this);
 	}
 
 	@Override
@@ -103,39 +100,12 @@ public class UserListFragment extends ListFragment implements
 		Collections.sort(result, new Comparator<User>() {
 			@Override
 			public int compare(User lhs, User rhs) {
-				return lhs.getDisplayName().compareTo(rhs.getDisplayName());
+				return lhs.getDisplayName().toLowerCase().compareTo(rhs.getDisplayName().toLowerCase());
 			}
 		});
 		users.addAll(result);
 
 		mUserAdapter.notifyDataSetChanged();
-
-	}
-
-	private class UserListFetcher extends AsyncTask<Void, Void, List<User>> {
-
-		private AsyncResponse<List<User>> delegate;
-
-		public UserListFetcher(AsyncResponse<List<User>> delegate) {
-			this.delegate = delegate;
-		}
-
-		@Override
-		protected List<User> doInBackground(Void... params) {
-			try {
-				return UserDatabaseAdapter.getAllUsers();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(List<User> result) {
-			delegate.processFinish(result);
-			super.onPostExecute(result);
-		}
 
 	}
 

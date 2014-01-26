@@ -39,12 +39,16 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.meetingninja.csse.ApplicationController;
 import com.meetingninja.csse.extras.Utilities;
 import com.meetingninja.csse.user.SessionManager;
 
@@ -552,6 +556,30 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 
 		conn.disconnect();
 		return result;
+
+	}
+
+	public static void fetchAllUsers(final AsyncResponse<List<User>> delegate) {
+		String _url = getBaseUri().appendPath("Users").build().toString();
+
+		JsonNodeRequest req = new JsonNodeRequest(_url, null,
+				new Response.Listener<JsonNode>() {
+
+					@Override
+					public void onResponse(JsonNode response) {
+						// callback to UI thread
+						delegate.processFinish(parseUserList(response));
+					}
+				}, new Response.ErrorListener() {
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						VolleyLog.e("Error: ", error.getMessage());
+
+					}
+				});
+
+		// add the request object to the queue to be executed
+		ApplicationController.getInstance().addToRequestQueue(req, "JSON");
 
 	}
 

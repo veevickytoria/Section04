@@ -155,32 +155,4 @@ public class ApplicationController extends Application {
 		}
 	}
 
-	public void fetchAllUsers(final AsyncResponse<List<User>> delegate) {
-		String _url = UserDatabaseAdapter.getBaseUri().appendPath("Users")
-				.build().toString();
-
-		JsonNodeRequest req = new JsonNodeRequest(_url, null,
-				new Response.Listener<JsonNode>() {
-
-					@Override
-					public void onResponse(JsonNode response) {
-						VolleyLog.v("Response:%n %s", response);
-
-						delegate.processFinish(UserDatabaseAdapter
-								.parseUserList(response));
-
-					}
-				}, new Response.ErrorListener() {
-					@Override
-					public void onErrorResponse(VolleyError error) {
-						VolleyLog.e("Error: ", error.getMessage());
-
-					}
-				});
-
-		// add the request object to the queue to be executed
-		addToRequestQueue(req, "JSON");
-
-	}
-
 }

@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.loopj.android.image.SmartImageView;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
+import com.meetingninja.csse.database.UserDatabaseAdapter;
 import com.meetingninja.csse.extras.ParcelableUtil;
 import com.meetingninja.csse.extras.UsersCompletionView;
 import com.meetingninja.csse.extras.OnFragmentInteractionListener;
@@ -91,7 +92,7 @@ public class SearchableUserFragment extends Fragment implements
 
 		// TODO: store the users in the sqlite database
 		if (allUsers.isEmpty())
-			ApplicationController.getInstance().fetchAllUsers(this); // processFinish()
+			UserDatabaseAdapter.fetchAllUsers(this); // processFinish()
 
 		autoAdapter = new FilterUserArrayAdapter(getActivity(),
 				R.layout.chips_recipient_dropdown_item, allUsers);

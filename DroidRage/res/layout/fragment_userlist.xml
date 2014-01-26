@@ -1,22 +1,17 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/userListFrame"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="@dimen/activity_horizontal_margin" >
+    android:layout_height="match_parent" >
 
     <LinearLayout
-        android:id="@+id/LinearLayout1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".UserlistFragment" >
+        android:orientation="vertical" >
 
         <ListView
             android:id="@android:id/list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:dividerHeight="2dp" >
+            android:layout_height="wrap_content" >
         </ListView>
     </LinearLayout>
 
@@ -24,25 +19,24 @@
         android:id="@android:id/empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:visibility="gone" >
-
-        <LinearLayout
+        android:gravity="center|center_vertical" >
+        
+        <ProgressBar
+            android:id="@+id/loading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical" >
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true" />
 
-            <ProgressBar
-                android:id="@+id/progressBar1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/profile_empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/loading"
+            android:text="Getting All Users" />
 
-            <TextView
-                android:id="@+id/profile_empty"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Getting All Users" />
-        </LinearLayout>
+        
     </RelativeLayout>
 
 </FrameLayout>
