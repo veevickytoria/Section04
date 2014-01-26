@@ -4,6 +4,7 @@ import objects.Group;
 import objects.User;
 
 import com.meetingninja.csse.R;
+import de.timroes.android.listview.EnhancedListView;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.extras.AlertDialogUtil;
@@ -41,14 +42,19 @@ import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.user.UserArrayAdapter;
 import com.meetingninja.csse.user.UserInfoFetcher;
 
-public class EditGroupActivity extends SwipeListViewActivity {
+public class EditGroupActivity extends Activity {
 
 	private Group group;
 	private UserArrayAdapter mUserAdapter;
 	EditText titleText;
-	ListView l;
+	EnhancedListView l;
 	RetUserObj fetcher = null;
-
+	
+	
+//	public static EditGroupActivity newInstance(Bundle args){
+//		EditGroupActivity act = new EditGroupActivity();
+//		act.set
+//	}
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -83,16 +89,26 @@ public class EditGroupActivity extends SwipeListViewActivity {
 
 		mUserAdapter = new UserArrayAdapter(this, R.layout.line_item_user,
 				group.getMembers());
-		View v = findViewById(R.id.group_edit_user_list);
-		l = (ListView) v.findViewById(android.R.id.list);
+		l = (EnhancedListView) findViewById(R.id.group_list);
 		l.setAdapter(mUserAdapter);
+		l.setDismissCallback(new de.timroes.android.listview.EnhancedListView.OnDismissCallback() {
+			@Override
+			public EnhancedListView.Undoable onDismiss(
+					EnhancedListView listView, final int position) {
 
-	}
-
-	@Override
-	public void getSwipeItem(boolean isRight, int position) {
-		group.getMembers().remove(position);
-		mUserAdapter.notifyDataSetChanged();
+				final User item = (User) mUserAdapter.getItem(position);
+				mUserAdapter.remove(item);
+				return new EnhancedListView.Undoable() {
+					@Override
+					public void undo() {
+						mUserAdapter.insert(item, position);
+					}
+				};
+			}
+		});
+		l.enableSwipeToDismiss();
+		
+		l.setSwipeDirection(EnhancedListView.SwipeDirection.BOTH);
 	}
 
 	@Override
@@ -198,18 +214,18 @@ public class EditGroupActivity extends SwipeListViewActivity {
 		fetcher.execute(userID);
 	}
 
-	@Override
-	public ListView getListView() {
-		return l;
-	}
+//	@Override
+//	public ListView getListView() {
+//		return l;
+//	}
 
-	@Override
-	public void onItemClickListener(ListAdapter adapter, int position) {
-		User clicked = mUserAdapter.getItem(position);
-		Intent profileIntent = new Intent(this, ProfileActivity.class);
-		profileIntent.putExtra(Keys.User.PARCEL, clicked);
-		startActivity(profileIntent);
-	}
+//	@Override
+//	public void onItemClickListener(ListAdapter adapter, int position) {
+//		User clicked = mUserAdapter.getItem(position);
+//		Intent profileIntent = new Intent(this, ProfileActivity.class);
+//		profileIntent.putExtra(Keys.User.PARCEL, clicked);
+//		startActivity(profileIntent);
+//	}
 
 	final class RetUserObj implements AsyncResponse<User> {
 
