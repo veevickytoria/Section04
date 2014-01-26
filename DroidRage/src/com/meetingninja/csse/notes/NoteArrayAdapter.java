@@ -17,8 +17,6 @@ package com.meetingninja.csse.notes;
 
 import java.util.List;
 
-import com.meetingninja.csse.R;
-
 import objects.Note;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -27,6 +25,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filterable;
 import android.widget.TextView;
+
+import com.meetingninja.csse.R;
 
 /**
  * A class to display the Notes in a specific format for the items of the list.

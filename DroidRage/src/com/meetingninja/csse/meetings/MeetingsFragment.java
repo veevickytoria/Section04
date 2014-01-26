@@ -21,7 +21,6 @@ import java.util.Comparator;
 import java.util.List;
 
 import objects.Meeting;
-import objects.User;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -39,11 +38,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
-import de.timroes.android.listview.EnhancedListView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -56,8 +53,10 @@ import com.meetingninja.csse.database.local.SQLiteMeetingAdapter;
 import com.meetingninja.csse.extras.Connectivity;
 import com.meetingninja.csse.user.SessionManager;
 
+import de.timroes.android.listview.EnhancedListView;
+
 public class MeetingsFragment extends Fragment implements
-AsyncResponse<List<Meeting>> {
+		AsyncResponse<List<Meeting>> {
 
 	private static final String TAG = MeetingsFragment.class.getSimpleName();
 
@@ -106,73 +105,77 @@ AsyncResponse<List<Meeting>> {
 		// Item click event
 		// TODO: Open a window to edit the meeting here
 		meetingList
-		.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-			@Override
-			public void onItemClick(AdapterView<?> parentAdapter,
-					View v, int position, long id) {
-				Meeting clicked = meetingAdpt.getItem(position);
-				editMeeting(clicked, position);
+					@Override
+					public void onItemClick(AdapterView<?> parentAdapter,
+							View v, int position, long id) {
+						Meeting clicked = meetingAdpt.getItem(position);
+						editMeeting(clicked, position);
 
-			}
-		});
+					}
+				});
 		// Item long-click event
 		// TODO: Add additional options and click-events to these options
 		meetingList
-		.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
+				.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
 
-			@Override
-			public void onCreateContextMenu(ContextMenu menu, View v,
-					ContextMenuInfo menuInfo) {
-				AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) menuInfo;
-
-				Meeting longClicked = meetingAdpt
-						.getItem(aInfo.position);
-
-				menu.setHeaderTitle("Options for "
-						+ longClicked.getTitle());
-				menu.add(
-						MainActivity.DrawerLabel.MEETINGS.getPosition(),
-						aInfo.position, 1, "Edit");
-				menu.add(
-						MainActivity.DrawerLabel.MEETINGS.getPosition(),
-						aInfo.position, 2, "Delete");
-
-			}
-		});
-		meetingList.setDismissCallback(new de.timroes.android.listview.EnhancedListView.OnDismissCallback() {
-			@Override
-			public EnhancedListView.Undoable onDismiss(
-					EnhancedListView listView, final int position) {
-
-				final Meeting item = (Meeting) meetingAdpt.getItem(position);
-				meetingAdpt.remove(item);
-				return new EnhancedListView.Undoable() {
 					@Override
-					public void undo() {
-						meetingAdpt.insert(item, position);
+					public void onCreateContextMenu(ContextMenu menu, View v,
+							ContextMenuInfo menuInfo) {
+						AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) menuInfo;
+
+						Meeting longClicked = meetingAdpt
+								.getItem(aInfo.position);
+
+						menu.setHeaderTitle("Options for "
+								+ longClicked.getTitle());
+						menu.add(
+								MainActivity.DrawerLabel.MEETINGS.getPosition(),
+								aInfo.position, 1, "Edit");
+						menu.add(
+								MainActivity.DrawerLabel.MEETINGS.getPosition(),
+								aInfo.position, 2, "Delete");
+
 					}
+				});
+		meetingList
+				.setDismissCallback(new de.timroes.android.listview.EnhancedListView.OnDismissCallback() {
 					@Override
-					public String getTitle(){
-						return "Meeting deleted";
+					public EnhancedListView.Undoable onDismiss(
+							EnhancedListView listView, final int position) {
+
+						final Meeting item = (Meeting) meetingAdpt
+								.getItem(position);
+						meetingAdpt.remove(item);
+						return new EnhancedListView.Undoable() {
+							@Override
+							public void undo() {
+								meetingAdpt.insert(item, position);
+							}
+
+							@Override
+							public String getTitle() {
+								return "Meeting deleted";
+							}
+
+							@Override
+							public void discard() {
+								deleteMeeting(item.getID());
+								meetings.remove(item);
+								meetingAdpt.notifyDataSetChanged();
+							}
+						};
 					}
-					@Override
-					public void discard(){
-						deleteMeeting(item.getID());
-						meetings.remove(item);
-						meetingAdpt.notifyDataSetChanged();
-					}
-				};
-			}
-		});
+				});
 		meetingList.enableSwipeToDismiss();
 		meetingList.setSwipingLayout(R.id.list_meeting_item_frame_1);
 		meetingList.setSwipeDirection(EnhancedListView.SwipeDirection.BOTH);
 		return v;
 	}
-	
+
 	@Override
-	public void onStop(){
+	public void onStop() {
 		meetingList.discardUndo();
 		super.onStop();
 	}
@@ -290,19 +293,19 @@ AsyncResponse<List<Meeting>> {
 				.build().toString();
 		StringRequest dr = new StringRequest(Request.Method.DELETE, url,
 				new Response.Listener<String>() {
-			@Override
-			public void onResponse(String response) {
-				// response
-				Toast.makeText(getActivity(), response,
-						Toast.LENGTH_SHORT).show();
-			}
-		}, new Response.ErrorListener() {
-			@Override
-			public void onErrorResponse(VolleyError error) {
-				// error.
+					@Override
+					public void onResponse(String response) {
+						// response
+						Toast.makeText(getActivity(), response,
+								Toast.LENGTH_SHORT).show();
+					}
+				}, new Response.ErrorListener() {
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						// error.
 
-			}
-		});
+					}
+				});
 		ApplicationController.getInstance().addToRequestQueue(dr);
 	}
 

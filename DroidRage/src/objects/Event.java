@@ -1,10 +1,6 @@
 package objects;
 
-import java.text.ParseException;
-
 import org.joda.time.DateTime;
-
-import android.util.Log;
 
 import com.meetingninja.csse.extras.MyDateUtils;
 
@@ -57,7 +53,7 @@ public abstract class Event implements Comparable<Event> {
 				: MyDateUtils.JODA_SERVER_DATE_FORMAT.print(new DateTime(1L));
 	}
 
-	public long getEndTimeInMillis(){
+	public long getEndTimeInMillis() {
 		return Long.parseLong(endTime);
 	}
 
@@ -80,9 +76,10 @@ public abstract class Event implements Comparable<Event> {
 
 	@Override
 	public int compareTo(Event another) {
-		if (another == null){
+		if (another == null) {
 			return 1;
 		}
-		return Long.valueOf(getStartTime()).compareTo(Long.valueOf(another.getStartTime()));
+		return Long.valueOf(getStartTime()).compareTo(
+				Long.valueOf(another.getStartTime()));
 	}
 }

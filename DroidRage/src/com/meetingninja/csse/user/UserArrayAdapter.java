@@ -51,7 +51,8 @@ public class UserArrayAdapter extends ArrayAdapter<User> {
 		LayoutInflater inflater = (LayoutInflater) mContext
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		if (convertView == null) {
-			convertView = inflater.inflate(R.layout.list_item_user, parent, false);
+			convertView = inflater.inflate(R.layout.list_item_user, parent,
+					false);
 			viewHolder = new ViewHolder();
 
 			// cache the views

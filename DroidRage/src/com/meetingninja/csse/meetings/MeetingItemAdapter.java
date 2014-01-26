@@ -15,7 +15,6 @@
  ******************************************************************************/
 package com.meetingninja.csse.meetings;
 
-import java.text.ParseException;
 import java.util.List;
 
 import objects.Meeting;
@@ -24,7 +23,6 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,7 +71,8 @@ public class MeetingItemAdapter extends ArrayAdapter<Meeting> {
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		if (rowView == null) {
-			rowView = inflater.inflate(R.layout.list_item_meeting_swipable, null);
+			rowView = inflater.inflate(R.layout.list_item_meeting_swipable,
+					null);
 			viewHolder = new ViewHolder();
 
 			viewHolder.title = (TextView) rowView.findViewById(R.id.title);
@@ -88,7 +87,8 @@ public class MeetingItemAdapter extends ArrayAdapter<Meeting> {
 		Meeting meeting = meetings.get(position);
 
 		viewHolder.title.setText(meeting.getTitle());
-		viewHolder.timeSpan.setText(getTimeSpan(meeting.getStartTimeInMillis(), meeting.getEndTimeInMillis(),false));
+		viewHolder.timeSpan.setText(getTimeSpan(meeting.getStartTimeInMillis(),
+				meeting.getEndTimeInMillis(), false));
 		viewHolder.location.setText(meeting.getLocation());
 
 		return rowView;

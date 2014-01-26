@@ -16,14 +16,14 @@
 
 package com.doomonafireball.betterpickers.radialtimepicker;
 
-import com.meetingninja.csse.R;
-
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.Log;
 import android.view.View;
+
+import com.meetingninja.csse.R;
 
 /**
  * Draws a simple white circle on which the numbers will be drawn.

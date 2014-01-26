@@ -36,20 +36,19 @@ import com.foound.widget.AmazingAdapter;
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.extras.MyDateUtils;
 
-	
 public class ScheduleAdapter extends AmazingAdapter {
 	private List<Event> events;
 	private final Context mContext;
 	private AsyncTask<Integer, Void, Pair<Boolean, Schedule>> backgroundTask;
 	private DateTimeFormatter timeFormat;
 	private boolean is24;
-	
 
 	public ScheduleAdapter(Context context, Schedule schedule) {
 		this.mContext = context;
 		this.events = schedule.getEvents();
 		is24 = android.text.format.DateFormat.is24HourFormat(context);
-		timeFormat = is24 ? MyDateUtils.JODA_24_TIME_FORMAT: MyDateUtils.JODA_12_TIME_FORMAT;
+		timeFormat = is24 ? MyDateUtils.JODA_24_TIME_FORMAT
+				: MyDateUtils.JODA_12_TIME_FORMAT;
 	}
 
 	public void reset() {
@@ -95,10 +94,10 @@ public class ScheduleAdapter extends AmazingAdapter {
 			TextView lSectionTitle = (TextView) view
 					.findViewById(R.id.schedule_header);
 			String sectionTitle = getSections()[getSectionForPosition(position)];
-			//DateTime dt = new DateTime();
-			//dt = Long.parseLong(sectionTitle);
-			//dt = MyDateUtils.JODA_SERVER_DATE_FORMAT
-					//.parseDateTime(sectionTitle);
+			// DateTime dt = new DateTime();
+			// dt = Long.parseLong(sectionTitle);
+			// dt = MyDateUtils.JODA_SERVER_DATE_FORMAT
+			// .parseDateTime(sectionTitle);
 			lSectionTitle.setText(MyDateUtils.JODA_MEETING_DATE_FORMAT
 					.print(Long.parseLong(sectionTitle)));
 		} else {
@@ -215,7 +214,7 @@ public class ScheduleAdapter extends AmazingAdapter {
 	}
 
 	private String convertTime(String timeString) {
-		
+
 		// Date d = new Date();
 		// boolean is24 =
 		// android.text.format.DateFormat.is24HourFormat(mContext);

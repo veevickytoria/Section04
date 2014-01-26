@@ -15,10 +15,11 @@
  ******************************************************************************/
 package com.meetingninja.csse.tasks;
 
-import org.joda.time.format.DateTimeFormatter;
-
 import objects.Task;
 import objects.User;
+
+import org.joda.time.format.DateTimeFormatter;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -41,7 +42,6 @@ public class ViewTaskActivity extends Activity {
 	RetUserObj fetcher = null;
 	private Task task = null;
 	private DateTimeFormatter dateFormat = MyDateUtils.JODA_MEETING_DATE_FORMAT;
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +127,7 @@ public class ViewTaskActivity extends Activity {
 		taskName.setText(task.getTitle());
 		String format = dateFormat.print(Long.parseLong(task.getDateCreated()));
 		dateCreated.setText(format);
-		//TODO: change this to the real date assigned
+		// TODO: change this to the real date assigned
 		dateAssigned.setText(task.getDateAssigned());
 		format = dateFormat.print(task.getEndTimeInMillis());
 		deadline.setText(format);

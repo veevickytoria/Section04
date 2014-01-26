@@ -6,7 +6,7 @@ import android.os.Parcelable;
 /**
  * Helper class to deal with Parcel marshalling
  * [http://stackoverflow.com/a/18000094]
- *
+ * 
  */
 public class ParcelableUtil {
 

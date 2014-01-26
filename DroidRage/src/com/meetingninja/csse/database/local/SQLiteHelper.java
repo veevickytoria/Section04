@@ -50,10 +50,9 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 			+ " TEXT NOT NULL," + SQLiteUserAdapter.KEY_LOCATION
 			+ " TEXT NOT NULL" + ");";
 	private static final String CREATE_FTS_TABLE_USER = "CREATE VIRTUAL TABLE "
-			+ SQLiteUserAdapter.FTS_TABLE_NAME + "	USING fts3(" + KEY_ID
-			+ ", " + SQLiteUserAdapter.KEY_NAME + ", "
-			+ SQLiteUserAdapter.KEY_EMAIL + ", " + SQLiteUserAdapter.KEY_PHONE
-			+ ");";
+			+ SQLiteUserAdapter.FTS_TABLE_NAME + "	USING fts3(" + KEY_ID + ", "
+			+ SQLiteUserAdapter.KEY_NAME + ", " + SQLiteUserAdapter.KEY_EMAIL
+			+ ", " + SQLiteUserAdapter.KEY_PHONE + ");";
 
 	// Notes table create statement
 	private static final String CREATE_TABLE_NOTE = "CREATE TABLE "

@@ -1,7 +1,5 @@
 package pl.polidea.treeview;
 
-import com.meetingninja.csse.R;
-
 import android.app.Activity;
 import android.content.Context;
 import android.database.DataSetObserver;
@@ -16,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
+
+import com.meetingninja.csse.R;
 
 /**
  * Adapter used to feed the table view.

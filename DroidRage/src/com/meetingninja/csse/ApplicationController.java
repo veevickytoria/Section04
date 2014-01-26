@@ -15,24 +15,15 @@
  ******************************************************************************/
 package com.meetingninja.csse;
 
-import java.util.List;
-
-import objects.User;
 import android.app.Application;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.Volley;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.meetingninja.csse.database.AsyncResponse;
-import com.meetingninja.csse.database.JsonNodeRequest;
-import com.meetingninja.csse.database.UserDatabaseAdapter;
 import com.parse.Parse;
 import com.parse.ParseInstallation;
 import com.parse.PushService;

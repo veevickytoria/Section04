@@ -49,7 +49,6 @@ import com.meetingninja.csse.database.UserDatabaseAdapter;
 import com.meetingninja.csse.database.local.SQLiteHelper;
 import com.meetingninja.csse.database.local.SQLiteUserAdapter;
 import com.meetingninja.csse.extras.OnFragmentInteractionListener;
-import com.meetingninja.csse.extras.SwipeListFragment;
 import com.meetingninja.csse.group.GroupsFragment;
 import com.meetingninja.csse.meetings.MeetingsFragment;
 import com.meetingninja.csse.notes.CreateNoteActivity;

@@ -19,8 +19,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.meetingninja.csse.R;
-
 import objects.Topic;
 import pl.polidea.treeview.AbstractTreeViewAdapter;
 import pl.polidea.treeview.TreeBuilder;
@@ -38,6 +36,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.meetingninja.csse.R;
 
 /**
  * This is a very simple adapter that provides very basic tree view with a

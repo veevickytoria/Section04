@@ -1,13 +1,7 @@
 package com.meetingninja.csse.extras;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-
-import org.apache.commons.lang3.SerializationUtils;
 
 import objects.User;
 import android.app.Activity;

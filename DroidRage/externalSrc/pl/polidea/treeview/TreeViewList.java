@@ -1,7 +1,5 @@
 package pl.polidea.treeview;
 
-import com.meetingninja.csse.R;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
@@ -11,6 +9,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+
+import com.meetingninja.csse.R;
 
 /**
  * Tree view, expandable multi-level.

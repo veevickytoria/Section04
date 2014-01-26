@@ -2,9 +2,25 @@ package com.meetingninja.csse.group;
 
 import objects.Group;
 import objects.User;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.meetingninja.csse.R;
-import de.timroes.android.listview.EnhancedListView;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.extras.AlertDialogUtil;
@@ -12,24 +28,7 @@ import com.meetingninja.csse.user.ProfileActivity;
 import com.meetingninja.csse.user.UserArrayAdapter;
 import com.meetingninja.csse.user.UserInfoFetcher;
 
-import android.os.Bundle;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnClickListener;
-
-import android.view.View.OnTouchListener;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.EditText;
-import android.widget.LinearLayout;
+import de.timroes.android.listview.EnhancedListView;
 
 public class EditGroupActivity extends Activity {
 
@@ -38,12 +37,11 @@ public class EditGroupActivity extends Activity {
 	EditText titleText;
 	EnhancedListView l;
 	RetUserObj fetcher = null;
-	
-	
-//	public static EditGroupActivity newInstance(Bundle args){
-//		EditGroupActivity act = new EditGroupActivity();
-//		act.set
-//	}
+
+	// public static EditGroupActivity newInstance(Bundle args){
+	// EditGroupActivity act = new EditGroupActivity();
+	// act.set
+	// }
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -92,26 +90,28 @@ public class EditGroupActivity extends Activity {
 					public void undo() {
 						mUserAdapter.insert(item, position);
 					}
+
 					@Override
-					public String getTitle(){
+					public String getTitle() {
 						return "Member deleted";
 					}
 				};
 			}
 		});
 		l.setUndoHideDelay(5000);
-		l.setOnItemClickListener(new OnItemClickListener(){
+		l.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View v, int position,
 					long id) {
 				User clicked = mUserAdapter.getItem(position);
-				Intent profileIntent = new Intent(v.getContext(), ProfileActivity.class);
+				Intent profileIntent = new Intent(v.getContext(),
+						ProfileActivity.class);
 				profileIntent.putExtra(Keys.User.PARCEL, clicked);
 				startActivity(profileIntent);
-				
+
 			}
-			
+
 		});
 		l.enableSwipeToDismiss();
 		l.setSwipingLayout(R.id.list_group_item_frame_1);
@@ -222,18 +222,18 @@ public class EditGroupActivity extends Activity {
 		fetcher.execute(userID);
 	}
 
-//	@Override
-//	public ListView getListView() {
-//		return l;
-//	}
+	// @Override
+	// public ListView getListView() {
+	// return l;
+	// }
 
-//	@Override
-//	public void onItemClickListener(ListAdapter adapter, int position) {
-//		User clicked = mUserAdapter.getItem(position);
-//		Intent profileIntent = new Intent(this, ProfileActivity.class);
-//		profileIntent.putExtra(Keys.User.PARCEL, clicked);
-//		startActivity(profileIntent);
-//	}
+	// @Override
+	// public void onItemClickListener(ListAdapter adapter, int position) {
+	// User clicked = mUserAdapter.getItem(position);
+	// Intent profileIntent = new Intent(this, ProfileActivity.class);
+	// profileIntent.putExtra(Keys.User.PARCEL, clicked);
+	// startActivity(profileIntent);
+	// }
 
 	final class RetUserObj implements AsyncResponse<User> {
 

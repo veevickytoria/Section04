@@ -15,7 +15,6 @@
  ******************************************************************************/
 package com.meetingninja.csse.user;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -23,7 +22,6 @@ import java.util.List;
 
 import objects.User;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
@@ -32,14 +30,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.meetingninja.csse.ApplicationController;
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.AsyncResponse;
-import com.meetingninja.csse.database.JsonNodeRequest;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
 import com.meetingninja.csse.database.local.SQLiteUserAdapter;
@@ -100,7 +92,8 @@ public class UserListFragment extends ListFragment implements
 		Collections.sort(result, new Comparator<User>() {
 			@Override
 			public int compare(User lhs, User rhs) {
-				return lhs.getDisplayName().toLowerCase().compareTo(rhs.getDisplayName().toLowerCase());
+				return lhs.getDisplayName().toLowerCase()
+						.compareTo(rhs.getDisplayName().toLowerCase());
 			}
 		});
 		users.addAll(result);

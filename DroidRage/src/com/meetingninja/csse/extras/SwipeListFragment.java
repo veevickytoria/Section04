@@ -3,8 +3,6 @@ package com.meetingninja.csse.extras;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.meetingninja.csse.R;
-import de.timroes.android.listview.EnhancedListView;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -22,6 +20,10 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.meetingninja.csse.R;
+
+import de.timroes.android.listview.EnhancedListView;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass. Activities that
