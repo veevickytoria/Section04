@@ -24,14 +24,17 @@
 
     <Button
         android:id="@+id/group_add_member"
+        style="?android:attr/buttonStyleSmall"
+		android:background="@android:drawable/btn_default_small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="?android:attr/selectableItemBackground"
         android:gravity="center_vertical"
         android:hint="+ Add a member"
         android:minHeight="28dp"
         android:onClick="addMember"
-        android:paddingTop="@dimen/activity_vertical_margin" />
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:textColor="#FF777777"
+        android:textSize="18sp" />
 
     <FrameLayout
     android:id="@+id/groupListFram"

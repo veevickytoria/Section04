@@ -28,6 +28,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
+import com.meetingninja.csse.extras.AlertDialogUtil;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -42,7 +43,6 @@ import com.doomonafireball.betterpickers.calendardatepicker.CalendarDatePickerDi
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.extras.MyDateUtils;
-import com.meetingninja.csse.user.SessionManager;
 
 public class EditTaskActivity extends FragmentActivity implements
 AsyncResponse<Boolean> {
@@ -79,18 +79,6 @@ AsyncResponse<Boolean> {
 			cal.setTimeZone(TimeZone.getTimeZone("UTC"));
 			cal.setTimeInMillis(displayTask.getEndTimeInMillis());
 
-			//			int month = deadline.getMonthOfYear();
-			//			int year = deadline.getYear();
-			//			int day = deadline.getDayOfMonth();
-			//			cal = Calendar.getInstance();
-			//			cal.set(Calendar.YEAR, year, Calendar.MONTH, month - 1,
-			//					Calendar.DAY_OF_MONTH, day);
-			//			 cal.set(Calendar.YEAR, year);
-			//			 cal.set(Calendar.MONTH, month - 1);
-			//			 cal.set(Calendar.DAY_OF_MONTH, day);
-
-
-
 			mDeadlineBtn.setOnClickListener(new DateClickListener(mDeadlineBtn, cal,this));
 			// assignedDateLabel.setText(dateFormat.format(assignedDate));
 			// createdDateLabel.setText(dateFormat.format(createdDate));
@@ -119,9 +107,7 @@ AsyncResponse<Boolean> {
 	}
 
 	public void toggleCompleted(View v) {
-		//TaskUpdater updater = new TaskUpdater();
 		displayTask.setIsCompleted(!displayTask.getIsCompleted());
-		//updater.updateTask(displayTask);
 		setTask();
 	}
 
@@ -218,9 +204,7 @@ AsyncResponse<Boolean> {
 			Intent msgIntent = new Intent();
 			msgIntent.putExtra(EXTRA_TASK, displayTask);
 			setResult(RESULT_OK, msgIntent);
-
 			finish();
-
 		}
 	}
 
@@ -242,24 +226,18 @@ AsyncResponse<Boolean> {
 		@Override
 		public void onDateSet(CalendarDatePickerDialog dialog, int year,int monthOfYear, int dayOfMonth) {
 			Calendar tempcal = Calendar.getInstance();
-			//TODO: maybe the better Calendarset?
-			tempcal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-			tempcal.set(Calendar.MONTH, monthOfYear);
-			tempcal.set(Calendar.YEAR, year);
+			tempcal.set(year, monthOfYear, dayOfMonth);
 			Calendar now = null;
 			now = Calendar.getInstance();
-			//now.add(Calendar.DAY_OF_MONTH, -1);
 			now.set(Calendar.HOUR_OF_DAY, 0);
 			now.set(Calendar.MINUTE,0);
 			now.set(Calendar.SECOND,0);
 			if (tempcal.after(now)) {
-				cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-				cal.set(Calendar.MONTH, monthOfYear);
-				cal.set(Calendar.YEAR, year);
+				cal.set(year, monthOfYear, dayOfMonth);
 				String format = dateFormat.print(cal.getTimeInMillis());
 				mDeadlineBtn.setText(format);
 			}else{
-				//Toast.makeText(activity,String.format("A Deadline can not be set before today's date"),Toast.LENGTH_SHORT).show();
+				AlertDialogUtil.displayDialog(activity, "Error","A Deadline can not be set before today's date", "OK");
 			}
 		}
 	}

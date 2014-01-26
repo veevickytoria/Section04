@@ -48,6 +48,7 @@ import com.meetingninja.csse.agenda.AgendaActivity;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.MeetingDatabaseAdapter;
 import com.meetingninja.csse.database.local.SQLiteMeetingAdapter;
+import com.meetingninja.csse.extras.AlertDialogUtil;
 import com.meetingninja.csse.extras.MyDateUtils;
 import com.meetingninja.csse.user.SessionManager;
 
@@ -82,13 +83,11 @@ AsyncResponse<Boolean> {
 		setContentView(R.layout.activity_edit_event);
 		// Show the Up button in the action bar.
 		setupActionBar();
-
+		
 		// Do some initializations
-		is24 = android.text.format.DateFormat
-				.is24HourFormat(getApplicationContext());
+		is24 = android.text.format.DateFormat.is24HourFormat(getApplicationContext());
 		session = SessionManager.getInstance();
-		timeFormat = is24 ? MyDateUtils.JODA_24_TIME_FORMAT
-				: MyDateUtils.JODA_12_TIME_FORMAT;
+		timeFormat = is24 ? MyDateUtils.JODA_24_TIME_FORMAT: MyDateUtils.JODA_12_TIME_FORMAT;
 		extras = getIntent().getExtras();
 		edit_mode = extras.getBoolean(EXTRA_EDIT_MODE, true);
 		mySQLiteAdapter = new SQLiteMeetingAdapter(this);
@@ -114,13 +113,15 @@ AsyncResponse<Boolean> {
 			start.setTimeInMillis(displayedMeeting.getStartTimeInMillis());
 			//start.set(Calendar.HOUR_OF_DAY, Integer.parseInt(mFromTime.getText().toString()));
 			end.setTimeInMillis(displayedMeeting.getEndTimeInMillis());
-		} else {
-			//start.add(Calendar.HOUR_OF_DAY, 1);
-			start.set(Calendar.MINUTE, 0);
-
-			//end.add(Calendar.HOUR_OF_DAY, 2);
-			end.set(Calendar.MINUTE, 0);
+		} else{
+			System.out.println("display metting is null");
+//			start.add(Calendar.HOUR_OF_DAY, 1);
+//			start.set(Calendar.MINUTE, 0);
+//
+//			//end.add(Calendar.HOUR_OF_DAY, 2);
+//			end.set(Calendar.MINUTE, 0);
 		}
+
 		mFromDate.setOnClickListener(new DateClickListener(mFromDate, start,this,end,mToDate,true,mFromTime,mToTime));
 		mFromDate.setText(dateFormat.print(start.getTimeInMillis()));
 
@@ -307,6 +308,7 @@ AsyncResponse<Boolean> {
 		public DateClickListener(Button b, Calendar c, FragmentActivity activity,Calendar other,Button b1,Boolean start,Button timeButton,Button otherTimeButton) {
 			this.button = b;
 			this.otherButton = b1;
+			this.activity = activity;
 			this.other = other;
 			this.cal = c;
 			this.start=start;
@@ -321,38 +323,23 @@ AsyncResponse<Boolean> {
 			calendarDatePickerDialog.show(fm, "fragment_date_picker_name");
 		}
 
-
 		@Override
-		//TODO: make time also set when overlap or overlap or messing with current time
 		//TODO: make functions for setting calendars or such
 		public void onDateSet(CalendarDatePickerDialog dialog, int year,int monthOfYear, int dayOfMonth) {
 			Calendar tempcal = Calendar.getInstance();
-			//tempcal.setTimeZone(TimeZone.getDefault());
-			//TODO: maybe the better Calendarset?
-			tempcal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-			tempcal.set(Calendar.MONTH, monthOfYear);
-			tempcal.set(Calendar.YEAR, year);
-			tempcal.set(Calendar.HOUR_OF_DAY,cal.get(Calendar.HOUR_OF_DAY));
-			tempcal.set(Calendar.MINUTE, cal.get(Calendar.MINUTE));
+//			tempcal.setTimeZone(TimeZone.getDefault());
+			tempcal.set(year,monthOfYear,dayOfMonth,cal.get(Calendar.HOUR_OF_DAY),cal.get(Calendar.MINUTE));
 			Calendar now = Calendar.getInstance();
 			now.setTimeZone(TimeZone.getTimeZone("UTC"));
 			now = Calendar.getInstance();
-			//TODO: set now to getinstance again?
 			if (tempcal.after(now)) {
-				cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-				cal.set(Calendar.MONTH, monthOfYear);
-				cal.set(Calendar.YEAR, year);
+				cal.set(year,monthOfYear,dayOfMonth);
 				String format=dateFormat.print(cal.getTimeInMillis());
 				if((start&&cal.after(other))||((!start)&&cal.before(other))){
-					other.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-					other.set(Calendar.MONTH, monthOfYear);
-					other.set(Calendar.YEAR, year);      
-					other.set(Calendar.HOUR_OF_DAY, cal.get(Calendar.HOUR_OF_DAY));
-					other.set(Calendar.MINUTE,cal.get(Calendar.MINUTE));
+					other.set(year, monthOfYear, dayOfMonth, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE));
 					otherTimeButton.setText(timeFormat.print(other.getTimeInMillis()));
 					otherButton.setText(format);
 				}
-				
 				button.setText(format);
 			}else{
 				int hour,minute;
@@ -362,34 +349,20 @@ AsyncResponse<Boolean> {
 				now.set(Calendar.MINUTE,0);
 				now.set(Calendar.SECOND,0);
 				if(tempcal.after(now)){
-					cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-					cal.set(Calendar.MONTH, monthOfYear);
-					cal.set(Calendar.YEAR, year);
-					cal.set(Calendar.HOUR_OF_DAY,hour);
-					cal.set(Calendar.MINUTE, minute);
+					cal.set(year, monthOfYear, dayOfMonth, hour, minute);
 					String format=dateFormat.print(cal.getTimeInMillis());
 					if((start&&cal.after(other))||((!start)&&cal.before(other))){
-						other.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-						other.set(Calendar.MONTH, monthOfYear);
-						other.set(Calendar.YEAR, year);      
-						other.set(Calendar.HOUR_OF_DAY, hour);
-						other.set(Calendar.MINUTE,minute);
+						other.set(year,monthOfYear,dayOfMonth,hour,minute);
 						otherTimeButton.setText(timeFormat.print(other.getTimeInMillis()));
-						System.out.println("here");
 						otherButton.setText(format);
 					}
 					timeButton.setText(timeFormat.print(cal.getTimeInMillis()));
 					button.setText(format);
 				}else{
-					System.out.println(";laksdjf;lajsd;lkfja;ldsjf;lksajfadsf");
-					//TODO: alert instaed of toast
-					//Toast.makeText(activity,String.format("A Meeting can not be set to start or end before now"),Toast.LENGTH_SHORT).show();
+					AlertDialogUtil.displayDialog(activity, "Error","A Meeting can not be set to start or end before now", "OK");
 				}
 			}
-
-
 		}
-
 	}
 
 	private class TimeClickListener implements OnClickListener,OnTimeSetListener {
@@ -402,6 +375,7 @@ AsyncResponse<Boolean> {
 			this.button = b;
 			is24 = android.text.format.DateFormat.is24HourFormat(getApplicationContext());
 			this.cal = c;
+			this.activity = activity;
 			this.otherButton = b1;
 			this.other = other;
 			this.start=start;
@@ -419,12 +393,7 @@ AsyncResponse<Boolean> {
 		public void onTimeSet(RadialPickerLayout dialog, int hourOfDay,int minute) {
 			Calendar tempcal = Calendar.getInstance();
 			//tempcal.setTimeZone(TimeZone.getDefault());
-			tempcal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH));
-			tempcal.set(Calendar.MONTH, cal.get(Calendar.MONTH));
-			tempcal.set(Calendar.YEAR, cal.get(Calendar.YEAR));
-			tempcal.set(Calendar.HOUR_OF_DAY,hourOfDay);
-			tempcal.set(Calendar.MINUTE, minute);
-
+			tempcal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), hourOfDay, minute);
 			Calendar now = Calendar.getInstance();
 			now.setTimeZone(TimeZone.getTimeZone("UTC"));
 			now = Calendar.getInstance();
@@ -437,12 +406,9 @@ AsyncResponse<Boolean> {
 					other.set(Calendar.MINUTE, minute);   
 					otherButton.setText(timeFormat.print(cal.getTimeInMillis()));
 				}
-
 				button.setText(timeFormat.print(cal.getTimeInMillis()));
 			}else{
-				System.out.println("oiuqyewnfl;kansoifna");
-				//Toast.makeText(activity,String.format("A Meeting can not be set to start or end before now"),Toast.LENGTH_SHORT).show();
-
+				AlertDialogUtil.displayDialog(activity, "Error","A Meeting can not be set to start or end before now", "OK");
 			}
 		}
 
