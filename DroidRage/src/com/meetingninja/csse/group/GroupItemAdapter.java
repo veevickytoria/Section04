@@ -12,7 +12,6 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import objects.Group;
-import objects.Meeting;
 
 public class GroupItemAdapter extends ArrayAdapter<Group>{
 
@@ -39,7 +38,7 @@ public class GroupItemAdapter extends ArrayAdapter<Group>{
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		if (rowView == null) {
-			rowView = inflater.inflate(R.layout.list_item_group, null);
+			rowView = inflater.inflate(R.layout.list_item_group_swipable, null);
 			viewHolder = new ViewHolder();
 
 			viewHolder.title = (TextView) rowView.findViewById(R.id.group_item_title);

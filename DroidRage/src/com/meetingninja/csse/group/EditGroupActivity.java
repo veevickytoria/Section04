@@ -18,9 +18,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MotionEvent;
@@ -33,14 +30,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.Toast;
-
-import com.meetingninja.csse.database.AsyncResponse;
-import com.meetingninja.csse.database.Keys;
-import com.meetingninja.csse.user.UserArrayAdapter;
-import com.meetingninja.csse.user.UserInfoFetcher;
 
 public class EditGroupActivity extends Activity {
 
@@ -103,9 +92,14 @@ public class EditGroupActivity extends Activity {
 					public void undo() {
 						mUserAdapter.insert(item, position);
 					}
+					@Override
+					public String getTitle(){
+						return "Member deleted";
+					}
 				};
 			}
 		});
+		l.setUndoHideDelay(5000);
 		l.setOnItemClickListener(new OnItemClickListener(){
 
 			@Override
@@ -120,7 +114,8 @@ public class EditGroupActivity extends Activity {
 			
 		});
 		l.enableSwipeToDismiss();
-		
+		l.setSwipingLayout(R.id.list_group_item_frame_1);
+
 		l.setSwipeDirection(EnhancedListView.SwipeDirection.BOTH);
 	}
 
