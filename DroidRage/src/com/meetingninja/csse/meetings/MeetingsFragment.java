@@ -78,20 +78,17 @@ public class MeetingsFragment extends Fragment implements
 
 		session = SessionManager.getInstance();
 		mySQLiteAdapter = new SQLiteMeetingAdapter(getActivity());
-		System.out.println("1");
 		// setup listview
 		meetingList = (ListView) v.findViewById(R.id.meetingsList);
 		meetingAdpt = new MeetingItemAdapter(getActivity(),
 				R.layout.list_item_meeting, meetings);
 		meetingList.setAdapter(meetingAdpt);
-		System.out.println("2");
 		populateList();
 		// check for internet access before getting meetings from remote
 		// database
 		if (Connectivity.isConnected(getActivity()) && isAdded()) {
 			fetchMeetings();
 		}
-		System.out.println("3");
 		// pretty images are better than boring text
 		meetingImageButton = (ImageButton) v.findViewById(android.R.id.empty);
 		meetingList.setEmptyView(meetingImageButton);
@@ -101,7 +98,6 @@ public class MeetingsFragment extends Fragment implements
 				editMeeting(null);
 			}
 		});
-		System.out.println("4");
 		// make list long-pressable
 		registerForContextMenu(meetingList);
 
@@ -118,7 +114,6 @@ public class MeetingsFragment extends Fragment implements
 
 					}
 				});
-		System.out.println("5");
 		// Item long-click event
 		// TODO: Add additional options and click-events to these options
 		meetingList
@@ -143,7 +138,6 @@ public class MeetingsFragment extends Fragment implements
 
 					}
 				});
-		System.out.println("6");
 		return v;
 	}
 

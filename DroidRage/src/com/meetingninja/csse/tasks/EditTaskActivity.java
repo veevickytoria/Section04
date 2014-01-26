@@ -16,6 +16,7 @@
 package com.meetingninja.csse.tasks;
 
 import java.util.Calendar;
+import java.util.TimeZone;
 
 import objects.Task;
 
@@ -41,9 +42,10 @@ import com.doomonafireball.betterpickers.calendardatepicker.CalendarDatePickerDi
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.extras.MyDateUtils;
+import com.meetingninja.csse.user.SessionManager;
 
 public class EditTaskActivity extends FragmentActivity implements
-		AsyncResponse<Boolean> {
+AsyncResponse<Boolean> {
 	final String MARK_AS_COMPLETE = "Mark As Complete";
 	final String MARK_AS_INCOMPLETE = "Mark As Incomplete";
 
@@ -52,12 +54,12 @@ public class EditTaskActivity extends FragmentActivity implements
 	private Button mDeadlineBtn, mCompleteBtn;
 	private DateTimeFormatter dateFormat = MyDateUtils.JODA_MEETING_DATE_FORMAT;
 
-	// private SessionManager session;
+	//private SessionManager session;
 	private Task displayTask;
 	Calendar cal = null;
 	public static final String EXTRA_TASK = "task";
 
-	// private static final String TAG = EditTaskActivity.class.getSimpleName();
+	//private static final String TAG = EditTaskActivity.class.getSimpleName();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,20 +76,22 @@ public class EditTaskActivity extends FragmentActivity implements
 			mTitle.setSelection(0, mTitle.getText().toString().length());
 
 			cal = Calendar.getInstance();
+			cal.setTimeZone(TimeZone.getTimeZone("UTC"));
 			cal.setTimeInMillis(displayTask.getEndTimeInMillis());
 
-			// int month = deadline.getMonthOfYear();
-			// int year = deadline.getYear();
-			// int day = deadline.getDayOfMonth();
-			// cal = Calendar.getInstance();
-			// cal.set(Calendar.YEAR, year, Calendar.MONTH, month - 1,
-			// Calendar.DAY_OF_MONTH, day);
-			// cal.set(Calendar.YEAR, year);
-			// cal.set(Calendar.MONTH, month - 1);
-			// cal.set(Calendar.DAY_OF_MONTH, day);
+			//			int month = deadline.getMonthOfYear();
+			//			int year = deadline.getYear();
+			//			int day = deadline.getDayOfMonth();
+			//			cal = Calendar.getInstance();
+			//			cal.set(Calendar.YEAR, year, Calendar.MONTH, month - 1,
+			//					Calendar.DAY_OF_MONTH, day);
+			//			 cal.set(Calendar.YEAR, year);
+			//			 cal.set(Calendar.MONTH, month - 1);
+			//			 cal.set(Calendar.DAY_OF_MONTH, day);
 
-			mDeadlineBtn.setOnClickListener(new DateClickListener(mDeadlineBtn,
-					cal, this));
+
+
+			mDeadlineBtn.setOnClickListener(new DateClickListener(mDeadlineBtn, cal,this));
 			// assignedDateLabel.setText(dateFormat.format(assignedDate));
 			// createdDateLabel.setText(dateFormat.format(createdDate));
 		}
@@ -99,9 +103,8 @@ public class EditTaskActivity extends FragmentActivity implements
 		mDescription.setText(displayTask.getDescription());
 		String format = dateFormat.print(displayTask.getEndTimeInMillis());
 		mDeadlineBtn.setText(format);
-		// String format =
-		// dateFormat.print(Long.parseLong(displayTask.getDateAssigned()));
-		// assignedDateLabel.setText(format);
+		//String format = dateFormat.print(Long.parseLong(displayTask.getDateAssigned()));
+		//assignedDateLabel.setText(format);
 		format = dateFormat.print(Long.parseLong(displayTask.getDateCreated()));
 		createdDateLabel.setText(format);
 		// TODO: use string.xml
@@ -116,17 +119,16 @@ public class EditTaskActivity extends FragmentActivity implements
 	}
 
 	public void toggleCompleted(View v) {
-		// TaskUpdater updater = new TaskUpdater();
+		//TaskUpdater updater = new TaskUpdater();
 		displayTask.setIsCompleted(!displayTask.getIsCompleted());
-		// updater.updateTask(displayTask);
+		//updater.updateTask(displayTask);
 		setTask();
 	}
 
 	private void trimTextView() {
 		mTitle.setText(mTitle.getText().toString().trim());
 		mDescription.setText(mDescription.getText().toString().trim());
-		completionCriteria.setText(completionCriteria.getText().toString()
-				.trim());
+		completionCriteria.setText(completionCriteria.getText().toString().trim());
 	}
 
 	private final View.OnClickListener tActionBarListener = new OnClickListener() {
@@ -141,11 +143,9 @@ public class EditTaskActivity extends FragmentActivity implements
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		// Make an Ok/Cancel ActionBar
-		View actionBarButtons = inflater.inflate(R.layout.actionbar_ok_cancel,
-				new LinearLayout(this), false);
+		View actionBarButtons = inflater.inflate(R.layout.actionbar_ok_cancel, new LinearLayout(this), false);
 
-		View cancelActionView = actionBarButtons
-				.findViewById(R.id.action_cancel);
+		View cancelActionView = actionBarButtons.findViewById(R.id.action_cancel);
 		cancelActionView.setOnClickListener(tActionBarListener);
 
 		View doneActionView = actionBarButtons.findViewById(R.id.action_done);
@@ -194,27 +194,23 @@ public class EditTaskActivity extends FragmentActivity implements
 		if (result) {
 			finish();
 		} else {
-			Toast.makeText(this, "Failed to save task", Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(this, "Failed to save task", Toast.LENGTH_SHORT).show();
 
 		}
 	}
 
 	private void save() {
 		if (TextUtils.isEmpty(mTitle.getText())) {
-			Toast.makeText(this, "Empty Task not created", Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(this, "Empty Task not created", Toast.LENGTH_SHORT).show();
 			setResult(RESULT_CANCELED);
 			finish();
 		} else {
 			trimTextView();
 			displayTask.setTitle(mTitle.getText().toString());
 			displayTask.setDescription(mDescription.getText().toString());
-			displayTask.setCompletionCriteria(completionCriteria.getText()
-					.toString());
+			displayTask.setCompletionCriteria(completionCriteria.getText().toString());
 			displayTask.setEndTime(cal.getTimeInMillis());
-			Toast.makeText(this, String.format("Saving Task"),
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(this,String.format("Saving Task"),Toast.LENGTH_SHORT).show();
 
 			TaskUpdater tUpdate = new TaskUpdater();
 			tUpdate.updateTask(displayTask);
@@ -228,49 +224,42 @@ public class EditTaskActivity extends FragmentActivity implements
 		}
 	}
 
-	private class DateClickListener implements OnClickListener,
-			OnDateSetListener {
+	private class DateClickListener implements OnClickListener,	OnDateSetListener {
 		Calendar cal;
 		FragmentActivity activity;
-
-		public DateClickListener(Button b, Calendar c, FragmentActivity activity) {
+		public DateClickListener(Button b, Calendar c,FragmentActivity activity) {
 			this.cal = c;
-			this.activity = activity;
+			this.activity=activity;
 		}
 
 		@Override
 		public void onClick(View v) {
 			FragmentManager fm = getSupportFragmentManager();
-			CalendarDatePickerDialog calendarDatePickerDialog = CalendarDatePickerDialog
-					.newInstance(DateClickListener.this,
-							cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
-							cal.get(Calendar.DAY_OF_MONTH));
+			CalendarDatePickerDialog calendarDatePickerDialog = CalendarDatePickerDialog.newInstance(DateClickListener.this,cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH));
 			calendarDatePickerDialog.show(fm, "fragment_date_picker_name");
 		}
 
 		@Override
-		public void onDateSet(CalendarDatePickerDialog dialog, int year,
-				int monthOfYear, int dayOfMonth) {
+		public void onDateSet(CalendarDatePickerDialog dialog, int year,int monthOfYear, int dayOfMonth) {
 			Calendar tempcal = Calendar.getInstance();
-			// TODO: maybe the better Calendarset?
-
+			//TODO: maybe the better Calendarset?
 			tempcal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 			tempcal.set(Calendar.MONTH, monthOfYear);
 			tempcal.set(Calendar.YEAR, year);
 			Calendar now = null;
 			now = Calendar.getInstance();
-			now.add(Calendar.DAY_OF_MONTH, -1);
+			//now.add(Calendar.DAY_OF_MONTH, -1);
+			now.set(Calendar.HOUR_OF_DAY, 0);
+			now.set(Calendar.MINUTE,0);
+			now.set(Calendar.SECOND,0);
 			if (tempcal.after(now)) {
 				cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 				cal.set(Calendar.MONTH, monthOfYear);
 				cal.set(Calendar.YEAR, year);
 				String format = dateFormat.print(cal.getTimeInMillis());
 				mDeadlineBtn.setText(format);
-			} else {
-				Toast.makeText(
-						activity,
-						String.format("A Deadline can not be set before today's date"),
-						Toast.LENGTH_SHORT).show();
+			}else{
+				//Toast.makeText(activity,String.format("A Deadline can not be set before today's date"),Toast.LENGTH_SHORT).show();
 			}
 		}
 	}

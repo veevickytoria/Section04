@@ -205,6 +205,7 @@
                     android:textAllCaps="false"
                     android:textColor="#FF777777"
                     android:textSize="18sp" />
+
             </LinearLayout>
 
             <View style="@style/EditEventSeparator" />

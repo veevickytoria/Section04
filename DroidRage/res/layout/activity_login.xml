@@ -1,3 +1,4 @@
+
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".LoginActivity" >
@@ -30,8 +31,10 @@
             android:fontFamily="sans-serif-light"
             android:text="@string/login_progress_signing_in"
             android:textAppearance="?android:attr/textAppearanceMedium" />
-    </LinearLayout>
 
+    </LinearLayout>
+    
+    
     <!-- Login form -->
 
     <LinearLayout
@@ -102,18 +105,25 @@
                     android:layout_gravity="left"
                     android:layout_row="1"
                     android:background="@android:drawable/btn_default_small"
-                    android:text="@string/action_sign_in" />
+                    android:text="@string/action_sign_in"
+                    android:textColor="#FF777777"
+                    android:textSize="18sp" />
 
                 <Button
                     android:id="@+id/register_button"
                     style="?android:attr/buttonStyleSmall"
-					android:background="@android:drawable/btn_default_small"
                     android:layout_width="wrap_content"
                     android:layout_gravity="fill_horizontal"
                     android:layout_marginTop="@dimen/activity_horizontal_margin"
-                    android:text="@string/action_register" />
+                    android:background="@android:drawable/btn_default_small"
+                    android:text="@string/action_register"
+                    android:textColor="#FF777777"
+                    android:textSize="18sp" />
+
             </GridLayout>
         </RelativeLayout>
+
     </LinearLayout>
+
 
 </merge>
