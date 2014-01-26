@@ -209,13 +209,16 @@
         <Button
             android:id="@+id/add_agenda_button"
             style="?android:attr/buttonStyleSmall"
-			android:background="@android:drawable/btn_default_small"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:background="@android:drawable/btn_default_small"
             android:contentDescription="@string/accessibility_pick_time_zone"
             android:gravity="center"
-            android:text="Add Agenda" />
+            android:onClick="handleClick"
+            android:text="Add Agenda"
+            android:textColor="#FF777777"
+            android:textSize="18sp" />
 
     </LinearLayout>
 

@@ -4,11 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <ListView
+    <de.timroes.android.listview.EnhancedListView
         android:id="@+id/meetingsList"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-    </ListView>
+        android:layout_height="match_parent" />
 
     <ImageButton
         android:id="@android:id/empty"

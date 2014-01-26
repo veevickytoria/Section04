@@ -20,7 +20,7 @@ import java.util.List;
 import objects.Event;
 import objects.Schedule;
 
-import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -36,14 +36,20 @@ import com.foound.widget.AmazingAdapter;
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.extras.MyDateUtils;
 
+	
 public class ScheduleAdapter extends AmazingAdapter {
 	private List<Event> events;
 	private final Context mContext;
 	private AsyncTask<Integer, Void, Pair<Boolean, Schedule>> backgroundTask;
+	private DateTimeFormatter timeFormat;
+	private boolean is24;
+	
 
 	public ScheduleAdapter(Context context, Schedule schedule) {
 		this.mContext = context;
 		this.events = schedule.getEvents();
+		is24 = android.text.format.DateFormat.is24HourFormat(context);
+		timeFormat = is24 ? MyDateUtils.JODA_24_TIME_FORMAT: MyDateUtils.JODA_12_TIME_FORMAT;
 	}
 
 	public void reset() {
@@ -209,6 +215,7 @@ public class ScheduleAdapter extends AmazingAdapter {
 	}
 
 	private String convertTime(String timeString) {
+		
 		// Date d = new Date();
 		// boolean is24 =
 		// android.text.format.DateFormat.is24HourFormat(mContext);
@@ -219,6 +226,6 @@ public class ScheduleAdapter extends AmazingAdapter {
 		// }
 		// return is24 ? MyDateUtils._24_TIME_FORMAT.format(d)
 		// : MyDateUtils._12_TIME_FORMAT.format(d);
-		return timeString;
+		return timeFormat.print(Long.parseLong(timeString));
 	}
 }

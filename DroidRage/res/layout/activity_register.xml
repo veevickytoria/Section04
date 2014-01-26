@@ -68,15 +68,18 @@
         <Button
             android:id="@+id/register_action_button"
             style="?android:attr/buttonStyleSmall"
-			android:background="@android:drawable/btn_default_small"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:background="@android:drawable/btn_default_small"
             android:onClick="register"
             android:text="@string/action_register"
+            android:textColor="#FF777777"
+            android:textSize="18sp"
             tools:ignore="OnClick" />
+
     </RelativeLayout>
 
 </LinearLayout>

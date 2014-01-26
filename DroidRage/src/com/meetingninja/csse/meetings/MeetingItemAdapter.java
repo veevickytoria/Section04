@@ -73,7 +73,7 @@ public class MeetingItemAdapter extends ArrayAdapter<Meeting> {
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		if (rowView == null) {
-			rowView = inflater.inflate(R.layout.list_item_meeting, null);
+			rowView = inflater.inflate(R.layout.list_item_meeting_swipable, null);
 			viewHolder = new ViewHolder();
 
 			viewHolder.title = (TextView) rowView.findViewById(R.id.title);

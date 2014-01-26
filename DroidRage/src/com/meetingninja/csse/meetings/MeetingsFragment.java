@@ -21,6 +21,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import objects.Meeting;
+import objects.User;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -42,6 +43,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
+import de.timroes.android.listview.EnhancedListView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -55,11 +57,11 @@ import com.meetingninja.csse.extras.Connectivity;
 import com.meetingninja.csse.user.SessionManager;
 
 public class MeetingsFragment extends Fragment implements
-		AsyncResponse<List<Meeting>> {
+AsyncResponse<List<Meeting>> {
 
 	private static final String TAG = MeetingsFragment.class.getSimpleName();
 
-	private ListView meetingList;
+	private EnhancedListView meetingList;
 	private List<Meeting> meetings = new ArrayList<Meeting>();
 	private MeetingItemAdapter meetingAdpt;
 	private ImageButton meetingImageButton;
@@ -78,20 +80,17 @@ public class MeetingsFragment extends Fragment implements
 
 		session = SessionManager.getInstance();
 		mySQLiteAdapter = new SQLiteMeetingAdapter(getActivity());
-		System.out.println("1");
 		// setup listview
-		meetingList = (ListView) v.findViewById(R.id.meetingsList);
+		meetingList = (EnhancedListView) v.findViewById(R.id.meetingsList);
 		meetingAdpt = new MeetingItemAdapter(getActivity(),
 				R.layout.list_item_meeting, meetings);
 		meetingList.setAdapter(meetingAdpt);
-		System.out.println("2");
 		populateList();
 		// check for internet access before getting meetings from remote
 		// database
 		if (Connectivity.isConnected(getActivity()) && isAdded()) {
 			fetchMeetings();
 		}
-		System.out.println("3");
 		// pretty images are better than boring text
 		meetingImageButton = (ImageButton) v.findViewById(android.R.id.empty);
 		meetingList.setEmptyView(meetingImageButton);
@@ -101,50 +100,81 @@ public class MeetingsFragment extends Fragment implements
 				editMeeting(null);
 			}
 		});
-		System.out.println("4");
 		// make list long-pressable
 		registerForContextMenu(meetingList);
 
 		// Item click event
 		// TODO: Open a window to edit the meeting here
 		meetingList
-				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-					@Override
-					public void onItemClick(AdapterView<?> parentAdapter,
-							View v, int position, long id) {
-						Meeting clicked = meetingAdpt.getItem(position);
-						editMeeting(clicked, position);
+			@Override
+			public void onItemClick(AdapterView<?> parentAdapter,
+					View v, int position, long id) {
+				Meeting clicked = meetingAdpt.getItem(position);
+				editMeeting(clicked, position);
 
-					}
-				});
-		System.out.println("5");
+			}
+		});
 		// Item long-click event
 		// TODO: Add additional options and click-events to these options
 		meetingList
-				.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
+		.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
 
+			@Override
+			public void onCreateContextMenu(ContextMenu menu, View v,
+					ContextMenuInfo menuInfo) {
+				AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) menuInfo;
+
+				Meeting longClicked = meetingAdpt
+						.getItem(aInfo.position);
+
+				menu.setHeaderTitle("Options for "
+						+ longClicked.getTitle());
+				menu.add(
+						MainActivity.DrawerLabel.MEETINGS.getPosition(),
+						aInfo.position, 1, "Edit");
+				menu.add(
+						MainActivity.DrawerLabel.MEETINGS.getPosition(),
+						aInfo.position, 2, "Delete");
+
+			}
+		});
+		meetingList.setDismissCallback(new de.timroes.android.listview.EnhancedListView.OnDismissCallback() {
+			@Override
+			public EnhancedListView.Undoable onDismiss(
+					EnhancedListView listView, final int position) {
+
+				final Meeting item = (Meeting) meetingAdpt.getItem(position);
+				meetingAdpt.remove(item);
+				return new EnhancedListView.Undoable() {
 					@Override
-					public void onCreateContextMenu(ContextMenu menu, View v,
-							ContextMenuInfo menuInfo) {
-						AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) menuInfo;
-
-						Meeting longClicked = meetingAdpt
-								.getItem(aInfo.position);
-
-						menu.setHeaderTitle("Options for "
-								+ longClicked.getTitle());
-						menu.add(
-								MainActivity.DrawerLabel.MEETINGS.getPosition(),
-								aInfo.position, 1, "Edit");
-						menu.add(
-								MainActivity.DrawerLabel.MEETINGS.getPosition(),
-								aInfo.position, 2, "Delete");
-
+					public void undo() {
+						meetingAdpt.insert(item, position);
 					}
-				});
-		System.out.println("6");
+					@Override
+					public String getTitle(){
+						return "Meeting deleted";
+					}
+					@Override
+					public void discard(){
+						deleteMeeting(item.getID());
+						meetings.remove(item);
+						meetingAdpt.notifyDataSetChanged();
+					}
+				};
+			}
+		});
+		meetingList.enableSwipeToDismiss();
+		meetingList.setSwipingLayout(R.id.list_meeting_item_frame_1);
+		meetingList.setSwipeDirection(EnhancedListView.SwipeDirection.BOTH);
 		return v;
+	}
+	
+	@Override
+	public void onStop(){
+		meetingList.discardUndo();
+		super.onStop();
 	}
 
 	@Override
@@ -260,19 +290,19 @@ public class MeetingsFragment extends Fragment implements
 				.build().toString();
 		StringRequest dr = new StringRequest(Request.Method.DELETE, url,
 				new Response.Listener<String>() {
-					@Override
-					public void onResponse(String response) {
-						// response
-						Toast.makeText(getActivity(), response,
-								Toast.LENGTH_SHORT).show();
-					}
-				}, new Response.ErrorListener() {
-					@Override
-					public void onErrorResponse(VolleyError error) {
-						// error.
+			@Override
+			public void onResponse(String response) {
+				// response
+				Toast.makeText(getActivity(), response,
+						Toast.LENGTH_SHORT).show();
+			}
+		}, new Response.ErrorListener() {
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				// error.
 
-					}
-				});
+			}
+		});
 		ApplicationController.getInstance().addToRequestQueue(dr);
 	}
 
