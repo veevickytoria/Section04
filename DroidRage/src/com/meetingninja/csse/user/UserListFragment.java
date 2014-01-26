@@ -60,14 +60,16 @@ public class UserListFragment extends ListFragment implements
 			Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		View v = inflater.inflate(R.layout.fragment_userlist, container, false);
+
 		dbHelper = new SQLiteUserAdapter(getActivity());
+
 		mUserAdapter = new UserArrayAdapter(getActivity(),
-				R.layout.line_item_user, users);
+				R.layout.list_item_user, users);
 		setListAdapter(mUserAdapter);
 
-		fetchAllUsers();
+		ApplicationController.getInstance().fetchAllUsers(this); // uses volley
 
-		// populateList();
+		// populateList(); // uses async-task
 
 		return v;
 	}
@@ -79,49 +81,6 @@ public class UserListFragment extends ListFragment implements
 		Intent profileIntent = new Intent(getActivity(), ProfileActivity.class);
 		profileIntent.putExtra(Keys.User.PARCEL, clicked);
 		startActivity(profileIntent);
-	}
-
-	private void fetchAllUsers() {
-		String _url = UserDatabaseAdapter.getBaseUri().appendPath("Users")
-				.build().toString();
-
-		JsonNodeRequest req = new JsonNodeRequest(_url, null,
-				new Response.Listener<JsonNode>() {
-
-					@Override
-					public void onResponse(JsonNode response) {
-						VolleyLog.v("Response:%n %s", response);
-						// List<User> userList = new ArrayList<User>();
-						// final JsonNode userArray = response.get("users");
-						//
-						// if (userArray.isArray()) {
-						// for (final JsonNode userNode : userArray) {
-						// User u = UserDatabaseAdapter
-						// .parseUser(userNode);
-						// // assign and check null and do not add local
-						// // user
-						// if (u != null) {
-						// userList.add(u);
-						// // dbHelper.insertUser(u);
-						// }
-						// }
-						// }
-
-						processFinish(UserDatabaseAdapter
-								.parseUserList(response));
-					}
-				}, new Response.ErrorListener() {
-					@Override
-					public void onErrorResponse(VolleyError error) {
-						VolleyLog.e("Error: ", error.getMessage());
-
-					}
-				});
-
-		// add the request object to the queue to be executed
-		ApplicationController app = ApplicationController.getInstance();
-		app.addToRequestQueue(req, "JSON");
-
 	}
 
 	@Override

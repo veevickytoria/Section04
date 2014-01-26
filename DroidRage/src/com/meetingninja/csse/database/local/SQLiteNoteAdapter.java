@@ -32,6 +32,7 @@ public class SQLiteNoteAdapter extends SQLiteHelper {
 	private SQLiteDatabase mDb;
 
 	protected static final String TABLE_NAME = "notes";
+	public static final String FTS_TABLE_NAME = "notes_fts";
 
 	// Columns
 	public static final String KEY_TITLE = Keys.Note.TITLE;

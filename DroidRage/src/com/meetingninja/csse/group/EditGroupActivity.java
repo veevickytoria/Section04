@@ -81,7 +81,7 @@ public class EditGroupActivity extends SwipeListViewActivity {
 					}
 				});
 
-		mUserAdapter = new UserArrayAdapter(this, R.layout.line_item_user,
+		mUserAdapter = new UserArrayAdapter(this, R.layout.list_item_user,
 				group.getMembers());
 		View v = findViewById(R.id.group_edit_user_list);
 		l = (ListView) v.findViewById(android.R.id.list);

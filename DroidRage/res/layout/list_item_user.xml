@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="?android:attr/listPreferredItemHeightSmall" >
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:padding="5dp" >
 
     <TextView
-        android:id="@+id/txtUsername"
+        android:id="@+id/user_list_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:textSize="16sp" />
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <com.loopj.android.image.SmartImageView
-        android:id="@+id/user_list_item_image"
+        android:id="@+id/user_list_image"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
@@ -23,12 +24,13 @@
         android:src="@drawable/ic_contact_picture" />
 
     <TextView
-        android:id="@+id/txtEmail"
+        android:id="@+id/user_list_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/txtUsername"
-        android:layout_below="@+id/txtUsername"
+        android:layout_alignLeft="@+id/user_list_name"
+        android:layout_below="@+id/user_list_name"
         android:paddingLeft="10dp"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@android:color/secondary_text_dark" />
 
 </RelativeLayout>

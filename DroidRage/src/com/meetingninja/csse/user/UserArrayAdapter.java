@@ -29,12 +29,12 @@ import com.loopj.android.image.SmartImageView;
 import com.meetingninja.csse.R;
 
 public class UserArrayAdapter extends ArrayAdapter<User> {
-	private final Context context;
+	private final Context mContext;
 	private final List<User> users;
 
 	public UserArrayAdapter(Context context, int resource, List<User> users) {
 		super(context, resource, users);
-		this.context = context;
+		this.mContext = context;
 		this.users = users;
 	}
 
@@ -48,20 +48,19 @@ public class UserArrayAdapter extends ArrayAdapter<User> {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		LayoutInflater inflater = (LayoutInflater) context
+		LayoutInflater inflater = (LayoutInflater) mContext
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		if (convertView == null) {
-			convertView = inflater.inflate(R.layout.line_item_user, parent,
-					false);
+			convertView = inflater.inflate(R.layout.list_item_user, parent, false);
 			viewHolder = new ViewHolder();
 
 			// cache the views
 			viewHolder.name = (TextView) convertView
-					.findViewById(R.id.txtUsername);
+					.findViewById(R.id.user_list_name);
 			viewHolder.email = (TextView) convertView
-					.findViewById(R.id.txtEmail);
+					.findViewById(R.id.user_list_email);
 			viewHolder.photo = (SmartImageView) convertView
-					.findViewById(R.id.user_list_item_image);
+					.findViewById(R.id.user_list_image);
 
 			convertView.setTag(viewHolder);
 		} else

@@ -46,6 +46,9 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.foound.widget.AmazingListView;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
+import com.meetingninja.csse.database.local.SQLiteHelper;
+import com.meetingninja.csse.database.local.SQLiteUserAdapter;
+import com.meetingninja.csse.extras.OnFragmentInteractionListener;
 import com.meetingninja.csse.extras.SwipeListFragment;
 import com.meetingninja.csse.group.GroupsFragment;
 import com.meetingninja.csse.meetings.MeetingsFragment;
@@ -65,7 +68,8 @@ import com.parse.ParseAnalytics;
  * @author moorejm
  * 
  */
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements
+		OnFragmentInteractionListener {
 
 	private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -108,6 +112,7 @@ public class MainActivity extends FragmentActivity {
 	private static MeetingsFragment meetingsFrag;
 	private static NotesFragment notesFrag;
 	private static TasksFragment tasksFrag;
+	private SQLiteHelper sqliteHelper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -133,21 +138,23 @@ public class MainActivity extends FragmentActivity {
 			login.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 			startActivity(login);
 			finish(); // close main activity
-		} else
+		} else { // Else continue
 			Log.v(TAG, "UserID " + session.getUserID() + " is logged in");
+			setContentView(R.layout.activity_main);
+			setupActionBar();
+			setupViews();
+			setupLeftDrawer();
+			setupRightDrawer();
 
-		// Else continue
-		setContentView(R.layout.activity_main);
-		setupActionBar();
-		setupViews();
-		setupLeftDrawer();
-		// on first time display view for first nav item
-		selectItem(session.getPage());
+			// on first time display view for first nav item
+			selectItem(session.getPage());
 
-		setupRightDrawer();
+			sqliteHelper = SQLiteUserAdapter
+					.getInstance(getApplicationContext());
 
-		// Track the usage of the application with Parse SDK
-		ParseAnalytics.trackAppOpened(getIntent());
+			// Track the usage of the application with Parse SDK
+			ParseAnalytics.trackAppOpened(getIntent());
+		}
 
 	}
 
@@ -299,9 +306,9 @@ public class MainActivity extends FragmentActivity {
 			fragment = new UserListFragment();
 			break;
 		case SETTINGS:
-			fragment = new SwipeListFragment();
-//			args.putString("Content", "TODO: Settings Page");
-//			fragment.setArguments(args);
+			fragment = new SearchableUserFragment();
+			// args.putString("Content", "TODO: Settings Page");
+			// fragment.setArguments(args);
 			break;
 		case ABOUT:
 			fragment = new DummyFragment();
@@ -496,5 +503,11 @@ public class MainActivity extends FragmentActivity {
 				long id) {
 			selectItem(position);
 		}
+	}
+
+	@Override
+	public void onFragmentInteraction(String id) {
+		// TODO Auto-generated method stub
+
 	}
 }

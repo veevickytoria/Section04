@@ -3,6 +3,7 @@ package objects;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.Serializable;
 
 import android.os.Parcel;
 import android.os.Parcelable;
