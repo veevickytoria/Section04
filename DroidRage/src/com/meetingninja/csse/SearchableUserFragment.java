@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import com.loopj.android.image.SmartImageView;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.extras.ParcelableUtil;
@@ -89,9 +90,11 @@ public class SearchableUserFragment extends Fragment implements
 		// mySQLiteAdapter.close();
 
 		// TODO: store the users in the sqlite database
+		if (allUsers.isEmpty())
+			ApplicationController.getInstance().fetchAllUsers(this); // processFinish()
 
 		autoAdapter = new FilterUserArrayAdapter(getActivity(),
-				R.layout.list_item_user, allUsers);
+				R.layout.chips_recipient_dropdown_item, allUsers);
 		complete.setAdapter(autoAdapter);
 
 		addedAdapter = new UserArrayAdapter(getActivity(),
@@ -201,16 +204,19 @@ public class SearchableUserFragment extends Fragment implements
 
 				LayoutInflater l = (LayoutInflater) getContext()
 						.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-				convertView = (View) l.inflate(R.layout.list_item_user, parent,
-						false);
+				convertView = (View) l.inflate(
+						R.layout.chips_recipient_dropdown_item, parent, false);
 			}
 
 			User u = getItem(position);
-			((TextView) convertView.findViewById(R.id.user_list_name))
-					.setText(u.getDisplayName());
-			((TextView) convertView.findViewById(R.id.user_list_email))
-					.setText(u.getEmail());
-
+			((TextView) convertView.findViewById(android.R.id.title)).setText(u
+					.getDisplayName());
+			((TextView) convertView.findViewById(android.R.id.text1)).setText(u
+					.getEmail());
+			// TODO : Get url's for user images
+			SmartImageView img = (SmartImageView) convertView
+					.findViewById(android.R.id.icon);
+			img.setImageUrl("https://i.chzbgr.com/maxW500/6073452544/h4B353A81/");
 			return convertView;
 		}
 

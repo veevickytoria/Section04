@@ -1,0 +1,47 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/activatedBackgroundIndicator"
+    android:gravity="center_vertical"
+    android:minHeight="48dip"
+    android:orientation="horizontal" >
+
+    <LinearLayout
+        android:layout_width="0dip"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@android:id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:paddingLeft="8dip"
+            android:singleLine="true"
+            android:textColor="@drawable/list_item_font_primary"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@android:id/text1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-4dip"
+            android:ellipsize="end"
+            android:paddingLeft="16dip"
+            android:singleLine="true"
+            android:textColor="@drawable/list_item_font_secondary"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <com.loopj.android.image.SmartImageView
+        android:id="@android:id/icon"
+        android:layout_width="48dip"
+        android:layout_height="48dip"
+        android:layout_marginLeft="12dip"
+        android:cropToPadding="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_contact_picture" />
+
+</LinearLayout>

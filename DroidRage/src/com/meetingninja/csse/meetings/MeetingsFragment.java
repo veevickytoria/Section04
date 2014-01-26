@@ -81,7 +81,7 @@ AsyncResponse<List<Meeting>> {
 		session = SessionManager.getInstance();
 		mySQLiteAdapter = new SQLiteMeetingAdapter(getActivity());
 		// setup listview
-		meetingList = (EnhancedListView) v.findViewById(R.id.meetingsList);
+		meetingList = (EnhancedListView) v.findViewById(android.R.id.list);
 		meetingAdpt = new MeetingItemAdapter(getActivity(),
 				R.layout.list_item_meeting, meetings);
 		meetingList.setAdapter(meetingAdpt);

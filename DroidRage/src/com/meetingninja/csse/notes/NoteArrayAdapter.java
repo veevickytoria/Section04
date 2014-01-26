@@ -25,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 /**
@@ -34,7 +35,7 @@ import android.widget.TextView;
  * @author moorejm
  * 
  */
-public class NoteItemAdapter extends ArrayAdapter<Note> {
+public class NoteArrayAdapter extends ArrayAdapter<Note> implements Filterable {
 	// declaring our ArrayList of items
 	private final List<Note> notes;
 	private final Context context;
@@ -42,7 +43,7 @@ public class NoteItemAdapter extends ArrayAdapter<Note> {
 	/*
 	 * Override the constructor to initialize the list to display
 	 */
-	public NoteItemAdapter(Context context, int textViewResourceId,
+	public NoteArrayAdapter(Context context, int textViewResourceId,
 			List<Note> notes) {
 		super(context, textViewResourceId, notes);
 		this.notes = notes;

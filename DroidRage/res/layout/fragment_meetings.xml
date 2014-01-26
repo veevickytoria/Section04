@@ -2,10 +2,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/meetings_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/activity_horizontal_margin" >
 
     <de.timroes.android.listview.EnhancedListView
-        android:id="@+id/meetingsList"
+        android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

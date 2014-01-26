@@ -3,15 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="@dimen/activity_horizontal_margin"
     android:orientation="vertical">
-    
-    <com.meetingninja.csse.extras.UsersCompletionView 
+
+    <com.meetingninja.csse.extras.UsersCompletionView
         android:id="@+id/my_autocomplete"
         android:layout_width="match_parent"
-        android:padding="5dp"
         android:layout_height="wrap_content"
-        android:hint="Search"
-        />
+        android:hint="Search" />
 
     <TextView
         android:id="@+id/completed_ids"
@@ -22,12 +21,13 @@
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="fill_parent" />
 
     <TextView
         android:id="@android:id/empty"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center" />
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:visibility="gone" />
 
 </LinearLayout>

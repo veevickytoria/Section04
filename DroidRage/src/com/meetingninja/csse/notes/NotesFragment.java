@@ -59,7 +59,7 @@ public class NotesFragment extends Fragment implements
 	private static final String TAG = NotesFragment.class.getSimpleName();
 
 	private SessionManager session;
-	private NoteItemAdapter noteAdpt;
+	private NoteArrayAdapter noteAdpt;
 	private ImageButton notesImageButton;
 	private SQLiteNoteAdapter mySQLiteAdapter;
 
@@ -85,7 +85,7 @@ public class NotesFragment extends Fragment implements
 	private void setupViews(View v) {
 		// setup listview
 		ListView lv = (ListView) v.findViewById(R.id.notesList);
-		noteAdpt = new NoteItemAdapter(getActivity(), R.layout.list_item_note,
+		noteAdpt = new NoteArrayAdapter(getActivity(), R.layout.list_item_note,
 				notes);
 		lv.setAdapter(noteAdpt);
 
