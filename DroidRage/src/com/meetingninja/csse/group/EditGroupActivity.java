@@ -106,6 +106,19 @@ public class EditGroupActivity extends Activity {
 				};
 			}
 		});
+		l.setOnItemClickListener(new OnItemClickListener(){
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View v, int position,
+					long id) {
+				User clicked = mUserAdapter.getItem(position);
+				Intent profileIntent = new Intent(v.getContext(), ProfileActivity.class);
+				profileIntent.putExtra(Keys.User.PARCEL, clicked);
+				startActivity(profileIntent);
+				
+			}
+			
+		});
 		l.enableSwipeToDismiss();
 		
 		l.setSwipeDirection(EnhancedListView.SwipeDirection.BOTH);
