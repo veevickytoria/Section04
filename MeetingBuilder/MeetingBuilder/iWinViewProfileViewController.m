@@ -72,7 +72,7 @@
 }
 -(void)updateTextUI
 {
-     NSString *url = [NSString stringWithFormat:@"%@ %i", @"http://csse371-04.csse.rose-hulman.edu/User/", self.userID];
+     NSString *url = [NSString stringWithFormat: @"http://csse371-04.csse.rose-hulman.edu/User/%d", self.userID];
     //    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/"];  //////CONCATENATE userID
         url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:30];
@@ -82,7 +82,7 @@
         NSData * data = [NSURLConnection sendSynchronousRequest:urlRequest
                                               returningResponse:&response
                                                             error:&error];
-       NSArray *jsonArray;
+       NSDictionary *userInfo;
         if (error)
         {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Meetings not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
@@ -91,18 +91,18 @@
         else
         {
             NSError *jsonParsingError = nil;
-            jsonArray = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
+            userInfo = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
         }
-        if (jsonArray.count > 0)
+        if (userInfo.count > 0)
         {
-            for (NSDictionary* users in jsonArray)
-            {
-                self.displayNameTextField.text = (NSString *) [users objectForKey:@"displayName"];
-                self.emailTextField.text = (NSString *) [users objectForKey:@"email"];
-                self.phoneTextField.text = (NSString *) [users objectForKey:@"phone"];
-                self.companyTextField.text = (NSString *) [users objectForKey:@"company"];
-                self.titleTextField.text = (NSString *) [users objectForKey:@"title"];
-                self.locationTextField.text = (NSString *) [users objectForKey:@"location"];
+//            for (NSDictionary* users in jsonArray)
+//            {
+                self.displayNameTextField.text = (NSString *) [userInfo objectForKey:@"name"];
+                self.emailTextField.text = (NSString *) [userInfo objectForKey:@"email"];
+                self.phoneTextField.text = (NSString *) [userInfo objectForKey:@"phone"];
+                self.companyTextField.text = (NSString *) [userInfo objectForKey:@"company"];
+                self.titleTextField.text = (NSString *) [userInfo objectForKey:@"title"];
+                self.locationTextField.text = (NSString *) [userInfo objectForKey:@"location"];
 
     //            iWinContact *c = [[iWinContact alloc] init];
     //            c.userID = (NSInteger)[users objectForKey:@"userID"];
@@ -122,7 +122,7 @@
     //            c.location = (NSString *)[users objectForKey:@"location"];
     //            
     //            [self.userList addObject:c];
-            }
+//            }
         }
     
     
