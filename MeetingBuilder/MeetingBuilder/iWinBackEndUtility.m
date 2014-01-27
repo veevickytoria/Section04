@@ -29,12 +29,37 @@
     return deserializedDictionary;
 }
 
--(NSDictionary *) postRequestForUrl:(NSString*)url withDictionary:(NSDictionary*)dictionary
+-(NSDictionary *) postRequestForUrl:(NSString*)url withDictionary:(NSDictionary*)jsonDictionary
 {
+    NSData *jsonData;
+    NSString *jsonString;
+    
+    if ([NSJSONSerialization isValidJSONObject:jsonDictionary])
+    {
+        jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:nil];
+        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    }
+    
+    NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+    [urlRequest setHTTPMethod:@"POST"];
+    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [urlRequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-length"];
+    [urlRequest setHTTPBody:jsonData];
+    NSURLResponse * response = nil;
+    NSError * error = nil;
+    NSData * data =[NSURLConnection sendSynchronousRequest:urlRequest
+                                         returningResponse:&response
+                                                     error:&error];
+    if (!error) {
+        NSError *jsonParsingError = nil;
+        NSDictionary *deserializedDictionary = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
+        return deserializedDictionary;
+    }
     return nil;
 }
 
--(NSDictionary *) putRequestForUrl:(NSString*)url withDictionary:(NSDictionary*)dictionary
+-(NSDictionary *) putRequestForUrl:(NSString*)url withDictionary:(NSDictionary*)jsonDictionary
 {
     return nil;
 }

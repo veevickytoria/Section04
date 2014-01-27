@@ -162,7 +162,7 @@
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{    
+{
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MeetingCell"];
     if (cell == nil)
     {

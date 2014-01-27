@@ -11,8 +11,8 @@
 @interface iWinBackEndUtility : NSObject
 
 -(NSDictionary *) getRequestForUrl:(NSString*)url;
--(NSDictionary *) postRequestForUrl:(NSString*)url withDictionary:(NSDictionary*)dictionary;
--(NSDictionary *) putRequestForUrl:(NSString*)url withDictionary:(NSDictionary*)dictionary;
+-(NSDictionary *) postRequestForUrl:(NSString*)url withDictionary:(NSDictionary*)jsonDictionary;
+-(NSDictionary *) putRequestForUrl:(NSString*)url withDictionary:(NSDictionary*)jsonDictionary;
 -(NSError*) deleteRequestForUrl:(NSString*)url;
 
 @end
