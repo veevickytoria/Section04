@@ -55,6 +55,7 @@
 		0A91DC9C1835D7AB00741349 /* OCCalendarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91DC951835D7AB00741349 /* OCCalendarViewController.m */; };
 		0A91DC9D1835D7AB00741349 /* OCDaysView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91DC971835D7AB00741349 /* OCDaysView.m */; };
 		0A91DC9E1835D7AB00741349 /* OCSelectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91DC991835D7AB00741349 /* OCSelectionView.m */; };
+		0A959DD81895F6E300CF19E3 /* RememberMe.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A959DD71895F6E300CF19E3 /* RememberMe.m */; };
 		0A95D1EE188787B900749438 /* Meeting.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A95D1ED188787B900749438 /* Meeting.m */; };
 		0A96CE02188A254B00D69C63 /* Contact.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A96CE01188A254B00D69C63 /* Contact.m */; };
 		0A96CE05188A256A00D69C63 /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A96CE04188A256A00D69C63 /* Settings.m */; };
@@ -317,6 +318,8 @@
 		0A91DC981835D7AB00741349 /* OCSelectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCSelectionView.h; sourceTree = "<group>"; };
 		0A91DC991835D7AB00741349 /* OCSelectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCSelectionView.m; sourceTree = "<group>"; };
 		0A91DC9A1835D7AB00741349 /* OCTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCTypes.h; sourceTree = "<group>"; };
+		0A959DD61895F6E300CF19E3 /* RememberMe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RememberMe.h; sourceTree = "<group>"; };
+		0A959DD71895F6E300CF19E3 /* RememberMe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RememberMe.m; sourceTree = "<group>"; };
 		0A95D1EC188787B900749438 /* Meeting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Meeting.h; sourceTree = "<group>"; };
 		0A95D1ED188787B900749438 /* Meeting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Meeting.m; sourceTree = "<group>"; };
 		0A96CE00188A254B00D69C63 /* Contact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Contact.h; sourceTree = "<group>"; };
@@ -798,6 +801,8 @@
 		0A7F1CDC185908550017209D /* Data Model */ = {
 			isa = PBXGroup;
 			children = (
+				0A959DD61895F6E300CF19E3 /* RememberMe.h */,
+				0A959DD71895F6E300CF19E3 /* RememberMe.m */,
 				0A96CE03188A256A00D69C63 /* Settings.h */,
 				0A96CE04188A256A00D69C63 /* Settings.m */,
 				0A96CE00188A254B00D69C63 /* Contact.h */,
@@ -1253,6 +1258,7 @@
 				79FCDFA51862295E008345B3 /* TKButtonCell.h in Sources */,
 				79FCDFA61862295E008345B3 /* TKButtonCell.m in Sources */,
 				79FCDFA71862295E008345B3 /* TKCalendarDayEventView.h in Sources */,
+				0A959DD81895F6E300CF19E3 /* RememberMe.m in Sources */,
 				79FCDFA81862295E008345B3 /* TKCalendarDayEventView.m in Sources */,
 				79FCDFA91862295E008345B3 /* TKCalendarDayView.h in Sources */,
 				79FCDFAA1862295E008345B3 /* TKCalendarDayView.m in Sources */,

@@ -11,6 +11,7 @@
 #import "Settings.h"
 #import "Contact.h"
 #import "iWinAppDelegate.h"
+#import "RememberMe.h"
 #include <CommonCrypto/CommonDigest.h>
 
 @interface iWinLoginViewController ()
@@ -36,12 +37,24 @@
     self.appDelegate = [[UIApplication sharedApplication] delegate];
     
     self.context = [self.appDelegate managedObjectContext];
+    
+    NSArray *results = [self getRememberMeInfo];
+    
+    if ([results count] > 0)
+    {
+        RememberMe *rm = (RememberMe*)[results objectAtIndex:0];
+        self.userNameField.text = rm.email;
+        self.passwordField.text = rm.password;
+    }
 }
 
-- (void)didReceiveMemoryWarning
+-(NSArray*) getRememberMeInfo
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    NSFetchRequest *request = [[NSFetchRequest alloc]initWithEntityName:@"RememberMe"];
+    
+    NSError *error = nil;
+    
+    return [self.context executeFetchRequest:request error:&error];
 }
 
 - (IBAction)onClickLogin:(id)sender
@@ -50,16 +63,6 @@
     NSString *email = [[self.userNameField text] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     NSString *password = [self sha256HashFor:[self.passwordField text]];
 //    [self.loginDelegate login:1];
-    
-//    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/5331"];
-//    
-//    NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
-//    [urlRequest setHTTPMethod:@"DELETE"];
-//    NSURLResponse * response = nil;
-//    NSError * error = nil;
-//    [NSURLConnection sendSynchronousRequest:urlRequest
-//                          returningResponse:&response
-//                                      error:&error];
     
     if (password.length > 0 && email.length>0)
     {
@@ -103,7 +106,28 @@
             {
                 userID = [[deserializedDictionary objectForKey:@"userID"] integerValue];
                 [self createContactWithID:userID withEmail:email withPassword:password];
+                
+                if ([self.rememberSwitch isOn])
+                {
+                    if ([self getRememberMeInfo].count == 0)
+                    {
+                        NSManagedObject *newRememberMe = [NSEntityDescription insertNewObjectForEntityForName:@"RememberMe" inManagedObjectContext:self.context];
+                        NSError *error;
+                        [newRememberMe setValue:email forKey:@"email"];
+                        [newRememberMe setValue:self.passwordField.text forKey:@"password"];
+                        [self.context save:&error];
+                    }
+                }
+                else
+                {
+                    for (NSManagedObject * rm in [self getRememberMeInfo])
+                    {
+                        [self.context deleteObject:rm];
+                    }
+                }
+                
                 [self.loginDelegate login:userID];
+                
             }
             else
             {
