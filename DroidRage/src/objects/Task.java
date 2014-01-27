@@ -3,6 +3,8 @@ package objects;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -23,7 +25,7 @@ public class Task extends Event implements Parcelable {
 	private String createdBy;
 	private String type; // title, description, isCompleted, deadline,
 							// compeltion criteria, assigned to
-
+	private  List<User> members = new ArrayList<User>();
 	public Task() {
 		// Required empty constructor
 	}
@@ -66,6 +68,15 @@ public class Task extends Event implements Parcelable {
 
 	public void setDateAssigned(String dateAssigned) {
 		this.dateAssigned = dateAssigned;
+	}
+	public List<User> getMembers() {
+		return members;
+	}
+	public void setMembers(List<User> members) {
+		this.members = members;
+	}
+	public void addMember(User user){
+		this.members.add(user);
 	}
 
 	public String getCompletionCriteria() {
