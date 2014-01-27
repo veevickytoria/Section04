@@ -56,6 +56,7 @@
 		0A91DC9D1835D7AB00741349 /* OCDaysView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91DC971835D7AB00741349 /* OCDaysView.m */; };
 		0A91DC9E1835D7AB00741349 /* OCSelectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91DC991835D7AB00741349 /* OCSelectionView.m */; };
 		0A959DD81895F6E300CF19E3 /* RememberMe.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A959DD71895F6E300CF19E3 /* RememberMe.m */; };
+		0A959DDC1895F9A800CF19E3 /* iWinBackEndUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A959DDB1895F9A800CF19E3 /* iWinBackEndUtility.m */; };
 		0A95D1EE188787B900749438 /* Meeting.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A95D1ED188787B900749438 /* Meeting.m */; };
 		0A96CE02188A254B00D69C63 /* Contact.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A96CE01188A254B00D69C63 /* Contact.m */; };
 		0A96CE05188A256A00D69C63 /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A96CE04188A256A00D69C63 /* Settings.m */; };
@@ -320,6 +321,8 @@
 		0A91DC9A1835D7AB00741349 /* OCTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCTypes.h; sourceTree = "<group>"; };
 		0A959DD61895F6E300CF19E3 /* RememberMe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RememberMe.h; sourceTree = "<group>"; };
 		0A959DD71895F6E300CF19E3 /* RememberMe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RememberMe.m; sourceTree = "<group>"; };
+		0A959DDA1895F9A800CF19E3 /* iWinBackEndUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinBackEndUtility.h; sourceTree = "<group>"; };
+		0A959DDB1895F9A800CF19E3 /* iWinBackEndUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinBackEndUtility.m; sourceTree = "<group>"; };
 		0A95D1EC188787B900749438 /* Meeting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Meeting.h; sourceTree = "<group>"; };
 		0A95D1ED188787B900749438 /* Meeting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Meeting.m; sourceTree = "<group>"; };
 		0A96CE00188A254B00D69C63 /* Contact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Contact.h; sourceTree = "<group>"; };
@@ -597,6 +600,7 @@
 		0A04456117F3825D000FF2A0 /* MeetingBuilder */ = {
 			isa = PBXGroup;
 			children = (
+				0A959DD91895F97F00CF19E3 /* BackEndUtility */,
 				0A30739018921C5D00C2D5F6 /* MergeNoteController */,
 				5B3B6297188CBDBE00C0E53E /* ViewAndCreateGroup */,
 				0A7F1CDC185908550017209D /* Data Model */,
@@ -849,6 +853,15 @@
 				0A91DC9A1835D7AB00741349 /* OCTypes.h */,
 			);
 			path = OCCalendar;
+			sourceTree = "<group>";
+		};
+		0A959DD91895F97F00CF19E3 /* BackEndUtility */ = {
+			isa = PBXGroup;
+			children = (
+				0A959DDA1895F9A800CF19E3 /* iWinBackEndUtility.h */,
+				0A959DDB1895F9A800CF19E3 /* iWinBackEndUtility.m */,
+			);
+			name = BackEndUtility;
 			sourceTree = "<group>";
 		};
 		0A96E7DF185BE6A600EAB0DC /* ViewProfileTest */ = {
@@ -1296,6 +1309,7 @@
 				79FCDFC71862295E008345B3 /* TKLabelSwitchCell.h in Sources */,
 				79FCDFC81862295E008345B3 /* TKLabelSwitchCell.m in Sources */,
 				79FCDFC91862295E008345B3 /* TKLabelTextFieldCell.h in Sources */,
+				0A959DDC1895F9A800CF19E3 /* iWinBackEndUtility.m in Sources */,
 				79FCDFCA1862295E008345B3 /* TKLabelTextFieldCell.m in Sources */,
 				79FCDFCB1862295E008345B3 /* TKLabelTextViewCell.h in Sources */,
 				79FCDFCC1862295E008345B3 /* TKLabelTextViewCell.m in Sources */,
