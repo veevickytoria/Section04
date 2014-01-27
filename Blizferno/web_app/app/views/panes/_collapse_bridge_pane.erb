@@ -67,27 +67,36 @@
     <div id="collapseTwo" class="panel-collapse collapse in">
       <div class="panel-body">
         <table class='table table-hover table-striped' style='width: 70%; margin-left: 15%; margin-right: auto;'>
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Title</th>
-              <th>Where</th>
-              <th></th>
-            </tr>
-          </thead>
-          <% for meeting in @meetings['meetings'] %>
-          <tr>
-            <td><%= meeting['datetime'] %></td>
-            <td><a onClick="showViewMeetingModal(<%= meeting['meetingID'] %>)" href = '#viewMeetingModal' data-refresh = 'true' data-toggle='modal'><%= meeting['title'] %></a></td>
-            <td><%= meeting['location'] %></td>
-            <td colspan='1' style='cursor: pointer; text-align: center' onclick="showDeleteModal(<%= meeting['meetingID'] %>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
-          </tr>
-          <% end %>
-          <tfoot>
-          <tr>
-            <td colspan='4' style='cursor: pointer; text-align: center' href='#newMeetingModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
-          </tr></tfoot>
-        </table>
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Title</th>
+      <th>Where</th>
+      <th></th>
+      <!-- <th>When</th>
+      <th>Project</th>
+      <th>Agenda</th> -->
+    </tr>
+  </thead>
+  <% counter = 0 %>
+  <% for meeting in @meetingsParsed; if counter >= 5; break; end; %>
+ 
+    <tr>
+      <td><%= meeting['datetime'] %></td>
+      <td><a onClick="showViewMeetingModal(<%=@meetingsParsed.index(meeting)%>)" href = '#viewMeetingModal' data-refresh = 'true' data-toggle='modal'><%= meeting['title'] %></a></td>
+      <td><%= meeting['location'] %></td>
+      <td colspan='1' style='cursor: pointer; text-align: center' onclick="showDeleteModal(<%=@meetingsParsed.index(meeting)%>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
+    </tr>
+
+  <% counter = counter + 1 %>
+
+  <% end %>
+
+  <tr>
+    <td colspan='4' style='cursor: pointer; text-align: center' href='#newMeetingModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
+  </tr>
+</table>
+
       </div>
     </div>
   </div>
