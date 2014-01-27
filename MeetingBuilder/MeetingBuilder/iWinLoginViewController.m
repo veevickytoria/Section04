@@ -209,4 +209,11 @@
     return result;
 }
 
+-(BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [self onClickLogin:nil];
+    [textField resignFirstResponder];
+    return YES;
+}
+
 @end
