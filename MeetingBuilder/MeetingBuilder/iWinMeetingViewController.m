@@ -24,9 +24,10 @@
 @end
 
 //constants
+const int MODAL_XOFFSET = 36;
 const int MODAL_YOFFSET = 15;
 const int MODAL_HEIGHT = 1018;
-const int MODAL_WIDTH = 768;
+const int MODAL_WIDTH = 804;
 
 @implementation iWinMeetingViewController
 
@@ -163,7 +164,7 @@ const int MODAL_WIDTH = 768;
     [self.scheduleMeetingVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     
     [self presentViewController:self.scheduleMeetingVC animated:YES completion:nil];
-    self.scheduleMeetingVC.view.superview.bounds = CGRectMake(0,MODAL_YOFFSET,MODAL_WIDTH,MODAL_HEIGHT);
+    self.scheduleMeetingVC.view.superview.bounds = CGRectMake(MODAL_XOFFSET,MODAL_YOFFSET,MODAL_WIDTH,MODAL_HEIGHT);
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -193,7 +194,7 @@ const int MODAL_WIDTH = 768;
     [self.scheduleMeetingVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     
     [self presentViewController:self.scheduleMeetingVC animated:YES completion:nil];
-    self.scheduleMeetingVC.view.superview.bounds = CGRectMake(0,MODAL_YOFFSET,MODAL_WIDTH,MODAL_HEIGHT);
+    self.scheduleMeetingVC.view.superview.bounds = CGRectMake(MODAL_XOFFSET,MODAL_YOFFSET,MODAL_WIDTH,MODAL_HEIGHT);
     
 }
 
