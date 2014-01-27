@@ -53,9 +53,17 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0){
 	//getAgendaInfo
 	$agendaNode=$client->getNode($_GET['id']);
+	$result = array();
 	foreach ($agendaNode->getProperties() as $key => $value) {
-		echo "$key: $value\n";
+		$result[] = $key => $value;
 	}
+	$relations = $topic->getRelationships(array('HAS_TOPIC'));
+    foreach ($relations as $rel){ //Try 'Topic.php' in the url section //actullay, this doesn't match the pretty URL pattern in our API. How do I tell that I have the right adress? What if it changes? How do I test it locally?
+    	$request = new HttpRequest('http://csse371-04.csse.rose-hulman.edu/Topic/'.$id, HttpRequest:METH_GET);
+        $return = $request->send();
+        $result[] = 'subtopic' => json_decode($return);
+    }
+	echo json_encode($result);
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'PUT')==0){
 	//updateAgenda
 	$postContent = json_decode(@file_get_contents('php://input'));
@@ -79,8 +87,26 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
 			echo json_encode($array);
 		}else if(strcasecmp($postContent->field, 'content') ==0){
 			//delete all the topics and replace them with the new topics in content. TODO
-			$agenda->setProperty('content', $postContent->value);
-			$agenda->save();
+			
+			$relations2 = $agenda->getRelationships(array('HAS_TOPIC'));
+            foreach($relations2 as $rel){
+                //remove the relation and delete the topic it's associated with
+                //delete Topic
+               	$request = new HttpRequest('http://csse371-04.csse.rose-hulman.edu/Topic/', HttpRequest:METH_DELETE);
+            	$result = $request->send();
+            	$rel->delete();
+            }
+			
+			foreach($postContent->value as $topic){
+				//pass the topic to Topic.php's create Topic method
+				$request = new HttpRequest('http://csse371-04.csse.rose-hulman.edu/Topic/', HttpRequest:METH_POST);
+				$request->addPostFields(array('title' => $topic->title, 'time' => $topic->time, 'suptopic' => $topic->subtopic));
+				$result = $request->send();
+				$topicNode = $client->getNode($result);
+				//make a relation to the topic 'HAS_TOPIC'
+				$topicRel = $agendaNode->relateTo($topicNode, 'HAS_TOPIC')
+					->save();
+			}
 			$array = $agenda->getProperties();
 			echo json_encode($array);
 		}else{

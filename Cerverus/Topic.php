@@ -93,9 +93,17 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0){
 	//getTopicInfo
 	$topicNode=$client->getNode($_GET['id']);
+	$result = array();
 	foreach ($topicNode->getProperties() as $key => $value) {
-		echo "$key: $value\n";
+		$result[] = $key => $value;
 	}
+    $relations = $topic->getRelationships(array('HAS_TOPIC'));
+    foreach ($relations as $rel){
+    	$request = new HttpRequest('http://csse371-04.csse.rose-hulman.edu/Topic/'.$id, HttpRequest:METH_GET);
+        $return = $request->send();
+        $result[] = 'subtopic' => json_decode($return);
+    }
+	echo json_encode($result);
 }else{
         echo $_SERVER['REQUEST_METHOD'] ." request method not found in Topic";
 }
