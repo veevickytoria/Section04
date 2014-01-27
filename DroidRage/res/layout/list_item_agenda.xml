@@ -28,7 +28,10 @@
         android:layout_weight="0"
         android:minHeight="24dp"
         android:padding="4dip"
-        android:text="Add" />
+        android:text="Add"
+        android:background="@android:drawable/btn_default_small"
+        android:textColor="#FF777777"
+        android:textSize="18sp" />
 
     <Button
         android:id="@+id/agenda_topicTimeBtn"
@@ -37,6 +40,8 @@
         android:layout_weight="0"
         android:minHeight="24dp"
         android:padding="4dip"
-        android:text="Time" />
+        android:text="Time"
+        android:background="@android:drawable/btn_default_small"
+        android:textColor="@color/agenda_day_item_text_color" />
 
 </LinearLayout>
