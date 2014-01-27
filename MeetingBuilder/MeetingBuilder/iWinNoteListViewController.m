@@ -8,6 +8,7 @@
 
 #import "iWinNoteListViewController.h"
 #import "iWinViewAndAddNotesViewController.h"
+#import "iWinBackEndUtility.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface iWinNoteListViewController ()
@@ -16,7 +17,7 @@
 @property (strong, nonatomic) NSMutableArray *noteIDs;
 @property (nonatomic) NSInteger userID;
 @property (nonatomic) NSInteger selectedNote;
-
+@property (nonatomic) iWinBackEndUtility *backendUtility;
 @property (strong, nonatomic) iWinViewAndAddNotesViewController *createNoteVC;
 @end
 
@@ -35,11 +36,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.backendUtility = [[iWinBackEndUtility alloc] init];
     [self refreshNoteList];
-    
-    self.createNoteButton.layer.cornerRadius = 0;
-    self.createNoteButton.layer.borderColor = [[UIColor darkGrayColor] CGColor];
-    self.createNoteButton.layer.borderWidth = 1.0f;
 }
 
 - (void)didReceiveMemoryWarning
@@ -54,23 +52,17 @@
     
     //populate note list
     NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Notes/%d", self.userID];
+    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
-    NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
-    NSURLResponse * response = nil;
-    NSError * error = nil;
-    NSData * data =[NSURLConnection sendSynchronousRequest:urlRequest
-                                         returningResponse:&response
-                                                     error:&error];
-    if (error) {
+    NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
+    
+    if (!deserializedDictionary) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Failure" message:@"Could not load your notes" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
         [alert show];
     }
     else
     {
-        NSError *jsonParsingError = nil;
-        NSDictionary *deserializedDictionary = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
         NSArray *jsonArray = [deserializedDictionary objectForKey:@"notes"];
-        
         if (jsonArray.count > 0)
         {
             for (NSDictionary* note in jsonArray)
@@ -109,20 +101,10 @@
 -(void)deleteNote
 {
     NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Note/%d", [[self.noteIDs objectAtIndex:self.selectedNote] integerValue]];
+    NSError * error = [self.backendUtility deleteRequestForUrl:url];
     
-    NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
-    [urlRequest setHTTPMethod:@"DELETE"];
-    NSURLResponse * response = nil;
-    NSError * error = nil;
-    [NSURLConnection sendSynchronousRequest:urlRequest
-                          returningResponse:&response
-                                      error:&error];
-    
-    NSData * data =[NSURLConnection sendSynchronousRequest:urlRequest
-                                         returningResponse:&response
-                                                     error:&error];
-    
-    [self refreshNoteList];
+    if (!error)
+        [self refreshNoteList];
 }
 
 -(IBAction) onCreateNewNote
