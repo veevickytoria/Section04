@@ -23,6 +23,11 @@
 @property (strong, nonatomic) iWinBackEndUtility *backendUtility;
 @end
 
+//constants
+const int MODAL_YOFFSET = 15;
+const int MODAL_HEIGHT = 1018;
+const int MODAL_WIDTH = 768;
+
 @implementation iWinMeetingViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withID:(NSInteger)userID
@@ -158,7 +163,7 @@
     [self.scheduleMeetingVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     
     [self presentViewController:self.scheduleMeetingVC animated:YES completion:nil];
-    self.scheduleMeetingVC.view.superview.bounds = CGRectMake(0,0,768,1003);
+    self.scheduleMeetingVC.view.superview.bounds = CGRectMake(0,MODAL_YOFFSET,MODAL_WIDTH,MODAL_HEIGHT);
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -188,7 +193,7 @@
     [self.scheduleMeetingVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     
     [self presentViewController:self.scheduleMeetingVC animated:YES completion:nil];
-    self.scheduleMeetingVC.view.superview.bounds = CGRectMake(0,0,768,1003);
+    self.scheduleMeetingVC.view.superview.bounds = CGRectMake(0,MODAL_YOFFSET,MODAL_WIDTH,MODAL_HEIGHT);
     
 }
 
@@ -210,7 +215,7 @@
 {
     if (buttonIndex == 1)
     {
-        NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Meeting/%d", self.selectedMeeting];
+        NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Meeting/%d", [[self.meetingID objectAtIndex:self.selectedMeeting] integerValue]];
         NSError *error = [self.backendUtility deleteRequestForUrl:url];
         if (!error)
         {

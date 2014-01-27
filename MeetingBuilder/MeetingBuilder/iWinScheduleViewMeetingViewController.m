@@ -76,7 +76,7 @@
     self.headerLabel.text = @"Schedule a Meeting";
     [self.addAgendaButton setTitle:@"Add Agenda" forState:UIControlStateNormal];
     self.saveAndAddMoreButton.hidden = NO;
-    
+    self.deleteMeetingButton.hidden = !self.isEditing;
     self.userList = [[NSMutableArray alloc] init];
     
     self.startDateLabel.userInteractionEnabled = YES;

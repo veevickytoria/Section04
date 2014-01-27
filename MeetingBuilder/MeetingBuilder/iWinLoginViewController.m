@@ -90,10 +90,12 @@
                 }
                 else
                 {
+                    NSError *error;
                     for (NSManagedObject * rm in [self getRememberMeInfo])
                     {
                         [self.context deleteObject:rm];
                     }
+                    [self.context save:&error];
                 }
                 
                 [self.loginDelegate login:userID];

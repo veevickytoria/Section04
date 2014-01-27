@@ -42,6 +42,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *addAttendeesButton;
 @property (weak, nonatomic) IBOutlet UIButton *visitScheduleButton;
 @property (weak, nonatomic) IBOutlet UITableView *attendeeTableView;
+@property (weak, nonatomic) IBOutlet UIButton *deleteMeetingButton;
 @property (weak, nonatomic) IBOutlet UIButton *addAgendaButton;
 @property (nonatomic) BOOL isAgendaCreated;
 @end
