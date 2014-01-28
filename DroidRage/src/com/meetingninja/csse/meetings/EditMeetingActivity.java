@@ -418,13 +418,9 @@ public class EditMeetingActivity extends FragmentActivity implements
 
 		@Override
 		public void onClick(View v) {
-			is24 = android.text.format.DateFormat
-					.is24HourFormat(getApplicationContext());
+			is24 = android.text.format.DateFormat.is24HourFormat(getApplicationContext());
 			FragmentManager fm = getSupportFragmentManager();
-			RadialTimePickerDialog timePickerDialog = RadialTimePickerDialog
-					.newInstance(TimeClickListener.this,
-							cal.get(Calendar.HOUR_OF_DAY),
-							cal.get(Calendar.MINUTE), is24);
+			RadialTimePickerDialog timePickerDialog = RadialTimePickerDialog.newInstance(TimeClickListener.this,cal.get(Calendar.HOUR_OF_DAY),							cal.get(Calendar.MINUTE), is24);
 			timePickerDialog.show(fm, "fragment_time_picker_name");
 		}
 

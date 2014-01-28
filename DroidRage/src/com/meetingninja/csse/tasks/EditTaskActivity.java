@@ -56,6 +56,7 @@ import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.extras.AlertDialogUtil;
 import com.meetingninja.csse.extras.MyDateUtils;
 import com.meetingninja.csse.user.ProfileActivity;
+import com.meetingninja.csse.user.SessionManager;
 import com.meetingninja.csse.user.UserArrayAdapter;
 import com.meetingninja.csse.user.UserInfoFetcher;
 
@@ -78,7 +79,8 @@ public class EditTaskActivity extends FragmentActivity implements
 	RetUserObj fetcher = null;
 	private UserArrayAdapter mUserAdapter;
 	private EnhancedListView l;
-	// private static final String TAG = EditTaskActivity.class.getSimpleName();
+	private String userId;
+	private SessionManager session;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -87,85 +89,19 @@ public class EditTaskActivity extends FragmentActivity implements
 		setupActionBar();
 		setupViews();
 		Bundle extras = getIntent().getExtras();
+		
+		session = SessionManager.getInstance();
+		userId=session.getUserID();
+		
+		
 		if (extras != null) {
 			displayTask = extras.getParcelable(EXTRA_TASK);
 		}
 		if (displayTask != null) {
-			//TODO: when set sideways it loses all current members added
-			//TODO: make these functions not make oncreate become super messy
 			// allows keyboard to hide when not editing text
-			findViewById(R.id.edit_task_container).setOnTouchListener(
-					new OnTouchListener() {
-						@Override
-						public boolean onTouch(View v, MotionEvent event) {
-							hideKeyboard();
-							return false;
-						}
-					});
-
-			// allows keyboard to hide when not editing text
-			findViewById(R.id.edit_task_container).setOnTouchListener(
-					new OnTouchListener() {
-						@Override
-						public boolean onTouch(View v, MotionEvent event) {
-							hideKeyboard();
-							return false;
-						}
-					});
-			
-//			mUserAdapter = new UserArrayAdapter(this, R.layout.list_item_user,members);
-
-			mUserAdapter = new UserArrayAdapter(this, R.layout.list_item_user,displayTask.getMembers());
-			l = (EnhancedListView) findViewById(R.id.edit_task_members_list);
-			l.setAdapter(mUserAdapter);
-			l.setDismissCallback(new de.timroes.android.listview.EnhancedListView.OnDismissCallback() {
-				@Override
-				public EnhancedListView.Undoable onDismiss(
-						EnhancedListView listView, final int position) {
-
-					final User item = (User) mUserAdapter.getItem(position);
-					mUserAdapter.remove(item);
-					return new EnhancedListView.Undoable() {
-						@Override
-						public void undo() {
-							mUserAdapter.insert(item, position);
-						}
-
-						@Override
-						public String getTitle() {
-							return "Member deleted";
-						}
-					};
-				}
-			});
-			l.setUndoHideDelay(5000);
-			l.setOnItemClickListener(new OnItemClickListener() {
-
-				@Override
-				public void onItemClick(AdapterView<?> arg0, View v, int position,
-						long id) {
-					User clicked = mUserAdapter.getItem(position);
-					Intent profileIntent = new Intent(v.getContext(),
-							ProfileActivity.class);
-					profileIntent.putExtra(Keys.User.PARCEL, clicked);
-					startActivity(profileIntent);
-
-				}
-
-			});
-			l.enableSwipeToDismiss();
-			l.setSwipingLayout(R.id.list_group_item_frame_1); 
-
-			l.setSwipeDirection(EnhancedListView.SwipeDirection.BOTH);
-			
-			
-			
-			
-			
-			
+			setUpListView();
 			setTask();
-			//mTitle.setSelection(0, mTitle.getText().toString().length());
-		
+			
 			cal = Calendar.getInstance();
 			cal.setTimeZone(TimeZone.getTimeZone("UTC"));
 			cal.setTimeInMillis(displayTask.getEndTimeInMillis());
@@ -195,7 +131,7 @@ public class EditTaskActivity extends FragmentActivity implements
 			isCompleted.setText("No");
 			mCompleteBtn.setText(MARK_AS_COMPLETE);
 		}
-		// TODO: fetcher for assigned to/from
+		
 	}
 
 	public void toggleCompleted(View v) {
@@ -275,9 +211,7 @@ public class EditTaskActivity extends FragmentActivity implements
 		if (result) {
 			finish();
 		} else {
-			Toast.makeText(this, "Failed to save task", Toast.LENGTH_SHORT)
-					.show();
-
+			Toast.makeText(this, "Failed to save task", Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -292,9 +226,18 @@ public class EditTaskActivity extends FragmentActivity implements
 			displayTask.setDescription(mDescription.getText().toString());
 			displayTask.setCompletionCriteria(completionCriteria.getText().toString());
 			displayTask.setEndTime(cal.getTimeInMillis());
-			displayTask.setAssignedTo(displayTask.getMembers().get(0).getID());
-			Toast.makeText(this, String.format("Saving Task"),
-					Toast.LENGTH_SHORT).show();
+			displayTask.setAssignedFrom(userId);
+			//TODO: change this
+			if(!displayTask.getMembers().isEmpty()){
+				displayTask.setAssignedTo(displayTask.getMembers().get(0).getID());
+			}else{
+				displayTask.setAssignedTo(displayTask.getMembers().toString());
+			}
+			// TODO: fetcher for assigned to
+			
+			
+			
+			Toast.makeText(this, String.format("Saving Task"),Toast.LENGTH_SHORT).show();
 
 			TaskUpdater tUpdate = new TaskUpdater();
 			tUpdate.updateTask(displayTask);
@@ -305,7 +248,70 @@ public class EditTaskActivity extends FragmentActivity implements
 			finish();
 		}
 	}
-	
+	private void setUpListView(){
+		findViewById(R.id.edit_task_container).setOnTouchListener(
+				new OnTouchListener() {
+					@Override
+					public boolean onTouch(View v, MotionEvent event) {
+						hideKeyboard();
+						return false;
+					}
+				});
+
+		// allows keyboard to hide when not editing text
+		findViewById(R.id.edit_task_container).setOnTouchListener(
+				new OnTouchListener() {
+					@Override
+					public boolean onTouch(View v, MotionEvent event) {
+						hideKeyboard();
+						return false;
+					}
+				});
+
+		mUserAdapter = new UserArrayAdapter(this, R.layout.list_item_user,displayTask.getMembers());
+		l = (EnhancedListView) findViewById(R.id.edit_task_members_list);
+		l.setAdapter(mUserAdapter);
+		l.setDismissCallback(new de.timroes.android.listview.EnhancedListView.OnDismissCallback() {
+			@Override
+			public EnhancedListView.Undoable onDismiss(
+					EnhancedListView listView, final int position) {
+
+				final User item = (User) mUserAdapter.getItem(position);
+				mUserAdapter.remove(item);
+				return new EnhancedListView.Undoable() {
+					@Override
+					public void undo() {
+						mUserAdapter.insert(item, position);
+					}
+
+					@Override
+					public String getTitle() {
+						return "Member deleted";
+					}
+				};
+			}
+		});
+		l.setUndoHideDelay(5000);
+		l.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View v, int position,
+					long id) {
+				User clicked = mUserAdapter.getItem(position);
+				Intent profileIntent = new Intent(v.getContext(),
+						ProfileActivity.class);
+				profileIntent.putExtra(Keys.User.PARCEL, clicked);
+				startActivity(profileIntent);
+
+			}
+
+		});
+		l.enableSwipeToDismiss();
+		l.setSwipingLayout(R.id.list_group_item_frame_1); 
+
+		l.setSwipeDirection(EnhancedListView.SwipeDirection.BOTH);
+	}
+
 	private void hideKeyboard() {
 		InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
 		inputMethodManager.hideSoftInputFromWindow(getCurrentFocus()
@@ -321,6 +327,7 @@ public class EditTaskActivity extends FragmentActivity implements
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				loadUser(input.getText().toString());
+				//member = input.getText().toString();
 			}
 		});
 		builder.setNegativeButton("Cancel",	new DialogInterface.OnClickListener() {
@@ -389,8 +396,7 @@ public class EditTaskActivity extends FragmentActivity implements
 				String format = dateFormat.print(cal.getTimeInMillis());
 				mDeadlineBtn.setText(format);
 			} else {
-				AlertDialogUtil.displayDialog(activity, "Error",
-						"A Deadline can not be set before today's date", "OK");
+				AlertDialogUtil.displayDialog(activity, "Error","A deadline can not be set before today's date", "OK");
 			}
 		}
 	}

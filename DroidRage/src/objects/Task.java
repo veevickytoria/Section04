@@ -9,6 +9,7 @@ import java.util.List;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerationException;
@@ -26,6 +27,7 @@ public class Task extends Event implements Parcelable {
 	private String type; // title, description, isCompleted, deadline,
 							// compeltion criteria, assigned to
 	private  List<User> members = new ArrayList<User>();
+	
 	public Task() {
 		// Required empty constructor
 	}
@@ -142,6 +144,7 @@ public class Task extends Event implements Parcelable {
 		dest.writeString(getCreatedBy());
 		dest.writeString(getID());
 		dest.writeString(getType());
+		dest.writeList(getMembers());
 	}
 
 	public void readFromParcel(Parcel in) {
@@ -157,6 +160,7 @@ public class Task extends Event implements Parcelable {
 		createdBy = in.readString();
 		taskID = in.readString();
 		type = in.readString();
+		this.members = in.readArrayList(SimpleUser.class.getClassLoader());
 
 	}
 
