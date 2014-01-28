@@ -32,7 +32,7 @@ import objects.MockObjectFactory;
 import objects.Note;
 import objects.Project;
 import objects.Schedule;
-import objects.SimpleUser;
+import objects.SerializableUser;
 import objects.Task;
 import objects.User;
 import android.net.Uri;
@@ -49,8 +49,10 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.meetingninja.csse.ApplicationController;
+import com.meetingninja.csse.SessionManager;
+import com.meetingninja.csse.database.callbacks.MeetingResponse;
+import com.meetingninja.csse.extras.JsonUtils;
 import com.meetingninja.csse.extras.Utilities;
-import com.meetingninja.csse.user.SessionManager;
 
 public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 
@@ -84,8 +86,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		return parseUser(userNode);
 	}
 
-	public static List<SimpleUser> getContacts(String userID)
-			throws IOException {
+	public static List<User> getContacts(String userID) throws IOException {
 		// Server URL setup
 		String _url = getBaseUri().appendPath("Contacts").appendPath(userID)
 				.build().toString();
@@ -101,15 +102,25 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		int responseCode = conn.getResponseCode();
 		String response = getServerResponse(conn);
 
-		List<SimpleUser> contactsList = new ArrayList<SimpleUser>();
+		List<User> contactsList = new ArrayList<User>();
+		List<String> contactIds = new ArrayList<String>();
 		final JsonNode contactsArray = MAPPER.readTree(response).get(
 				Keys.User.CONTACTS);
 
 		if (contactsArray.isArray()) {
 			for (final JsonNode userNode : contactsArray) {
-				SimpleUser u = parseSimpleUser(userNode);
-				if (u != null)
-					contactsList.add(u);
+				// User u = parseSimpleUser(userNode);
+				// if (u != null)
+				contactIds.add(userNode.get(Keys.User.ID).asText());
+			}
+		}
+
+		conn.disconnect();
+
+		for (String id : contactIds) {
+			User contact = getUserInfo(id);
+			if (contact != null) {
+				contactsList.add(contact);
 			}
 		}
 
@@ -573,7 +584,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 				}, new Response.ErrorListener() {
 					@Override
 					public void onErrorResponse(VolleyError error) {
-						VolleyLog.e("Error: ", error.getMessage());
+						VolleyLog.e("Error: %s", error.getLocalizedMessage());
 
 					}
 				});
@@ -600,10 +611,10 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 				u.setEmail(email);
 
 				// check and set the optional fields
-				u.setLocation(getJSONValue(node, Keys.User.LOCATION));
-				u.setPhone(getJSONValue(node, Keys.User.PHONE));
-				u.setCompany(getJSONValue(node, Keys.User.COMPANY));
-				u.setTitle(getJSONValue(node, Keys.User.TITLE));
+				u.setLocation(JsonUtils.getJSONValue(node, Keys.User.LOCATION));
+				u.setPhone(JsonUtils.getJSONValue(node, Keys.User.PHONE));
+				u.setCompany(JsonUtils.getJSONValue(node, Keys.User.COMPANY));
+				u.setTitle(JsonUtils.getJSONValue(node, Keys.User.TITLE));
 			} else {
 				// Log.w(TAG, "Parsed null user");
 				return null;
@@ -634,17 +645,17 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		return userList;
 	}
 
-	public static SimpleUser parseSimpleUser(JsonNode node) {
-		SimpleUser u = new SimpleUser();
-		if (node.hasNonNull(Keys.User.NAME)) {
-			u.setUserID(node.get(Keys.User.ID).asText());
-			u.setDisplayName(node.get(Keys.User.NAME).asText());
-		} else {
-			Log.w(TAG, "Parsed null user");
-			return null;
-		}
-		return u;
-	}
+	// public static SimpleUser parseSimpleUser(JsonNode node) {
+	// SimpleUser u = new SimpleUser();
+	// if (node.hasNonNull(Keys.User.NAME)) {
+	// u.setUserID(node.get(Keys.User.ID).asText());
+	// u.setDisplayName(node.get(Keys.User.NAME).asText());
+	// } else {
+	// Log.w(TAG, "Parsed null user");
+	// return null;
+	// }
+	// return u;
+	// }
 
 	public static Schedule parseSchedule(JsonNode node) {
 		// Initialize ObjectMapper
@@ -658,7 +669,8 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 			for (final JsonNode meetingOrTaskNode : scheduleArray) {
 				if ((_id = meetingOrTaskNode.get(Keys._ID)) != null) {
 					// Get the type of event
-					String type = getJSONValue(meetingOrTaskNode, Keys.TYPE);
+					String type = JsonUtils.getJSONValue(meetingOrTaskNode,
+							Keys.TYPE);
 
 					if (TextUtils.equals(type, "meeting")) {
 						event = new Meeting();
@@ -667,14 +679,14 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 					}
 					if (event != null) {
 						event.setID(_id.asText());
-						event.setTitle(getJSONValue(meetingOrTaskNode,
-								Keys.Meeting.TITLE));
-						event.setDescription(getJSONValue(meetingOrTaskNode,
-								Keys.Meeting.DESC));
-						event.setStartTime(getJSONValue(meetingOrTaskNode,
-								Keys.Meeting.START));
-						event.setEndTime(getJSONValue(meetingOrTaskNode,
-								Keys.Meeting.END));
+						event.setTitle(JsonUtils.getJSONValue(
+								meetingOrTaskNode, Keys.Meeting.TITLE));
+						event.setDescription(JsonUtils.getJSONValue(
+								meetingOrTaskNode, Keys.Meeting.DESC));
+						event.setStartTime(JsonUtils.getJSONValue(
+								meetingOrTaskNode, Keys.Meeting.START));
+						event.setEndTime(JsonUtils.getJSONValue(
+								meetingOrTaskNode, Keys.Meeting.END));
 
 						// Add event to the schedule
 						if (event instanceof Meeting)

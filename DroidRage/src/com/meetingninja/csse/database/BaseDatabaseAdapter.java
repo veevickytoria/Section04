@@ -30,6 +30,7 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meetingninja.csse.ApplicationController;
+import com.meetingninja.csse.extras.JsonUtils;
 
 public abstract class BaseDatabaseAdapter {
 
@@ -37,9 +38,8 @@ public abstract class BaseDatabaseAdapter {
 	protected final static String USER_AGENT = "Mozilla/5.0";
 	protected final static String CONTENT_TYPE = "application/json";
 	protected final static String ACCEPT_TYPE = "application/json";
-	protected final static ObjectMapper MAPPER = ApplicationController
-			.getInstance().getObjectMapper();
-	protected final static JsonFactory JFACTORY = MAPPER.getFactory();
+	protected final static ObjectMapper MAPPER = JsonUtils.getObjectMapper(); 
+			protected final static JsonFactory JFACTORY = JsonUtils.getJsonFactory();
 
 	protected interface IRequest {
 		final String GET = "GET";
@@ -111,10 +111,6 @@ public abstract class BaseDatabaseAdapter {
 		String response = getServerResponse(conn);
 		conn.disconnect();
 		return response;
-	}
-
-	protected static String getJSONValue(JsonNode node, String key) {
-		return node.hasNonNull(key) ? node.get(key).asText() : "";
 	}
 
 	protected static void logPrint(String payload) throws IOException {

@@ -31,7 +31,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.meetingninja.csse.R;
-import com.meetingninja.csse.user.SessionManager;
+import com.meetingninja.csse.SessionManager;
 
 public class VersionControlActivity extends Activity {
 	private SessionManager session;

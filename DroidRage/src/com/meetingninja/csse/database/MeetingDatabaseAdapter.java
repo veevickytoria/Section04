@@ -22,15 +22,20 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import objects.Meeting;
 import android.net.Uri;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.meetingninja.csse.ApplicationController;
 
 public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 	private final static String TAG = MeetingDatabaseAdapter.class
@@ -62,6 +67,30 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 		JsonNode meetingNode = MAPPER.readTree(response);
 
 		return parseMeeting(meetingNode, meetingID);
+	}
+
+	public static void fetchMeetingInfo(final AsyncResponse<Meeting> delegate,
+			final String meetingID) {
+		String _url = getBaseUri().appendPath(meetingID).build().toString();
+
+		JsonNodeRequest req = new JsonNodeRequest(_url, null,
+				new Response.Listener<JsonNode>() {
+
+					@Override
+					public void onResponse(JsonNode response) {
+						// callback to UI thread
+						delegate.processFinish(parseMeeting(response, meetingID));
+					}
+				}, new Response.ErrorListener() {
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						VolleyLog.e("Error: %s", error.getLocalizedMessage());
+
+					}
+				});
+
+		// add the request object to the queue to be executed
+		ApplicationController.getInstance().addToRequestQueue(req, "JSON");
 	}
 
 	public static Meeting createMeeting(String userID, Meeting m)
@@ -139,6 +168,11 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 	}
 
 	public static Meeting parseMeeting(JsonNode node, String meetingID) {
+		try {
+			logPrint(node.toString());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		Meeting m = new Meeting();
 		if (meetingID != null) {
 			m.setID(meetingID);

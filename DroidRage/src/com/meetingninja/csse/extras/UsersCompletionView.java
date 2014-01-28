@@ -3,6 +3,7 @@ package com.meetingninja.csse.extras;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import objects.SerializableUser;
 import objects.User;
 import android.app.Activity;
 import android.content.Context;
@@ -18,6 +19,9 @@ import com.meetingninja.csse.R;
 import com.tokenautocomplete.TokenCompleteTextView;
 
 public class UsersCompletionView extends TokenCompleteTextView {
+
+	private final String TAG = UsersCompletionView.class.getSimpleName();
+
 	public UsersCompletionView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
@@ -25,14 +29,18 @@ public class UsersCompletionView extends TokenCompleteTextView {
 	@Override
 	public void addObject(Object object) {
 		super.addObject(object);
-		Log.d("Add", ((SerializableUser) object).getDisplayName());
+		String className = object.getClass().getSimpleName();
+		Log.d(TAG, "Added a " + className);
 	}
 
 	@Override
 	protected View getViewForObject(Object object) {
+		String className = object.getClass().getSimpleName();
+		Log.d(TAG, "Get View for " + className);
+
 		SerializableUser su = null;
 		if (object instanceof User)
-			su = new SerializableUser((User) object);
+			su = ((User) object).toSimpleUser();
 		else
 			su = (SerializableUser) object;
 
@@ -51,7 +59,7 @@ public class UsersCompletionView extends TokenCompleteTextView {
 	protected Object defaultObject(String completionText) {
 		// Stupid simple example of guessing if we have an email or not
 		int index = completionText.indexOf('@');
-		User u = new User();
+		SerializableUser u = new SerializableUser();
 		if (index == -1) {
 			u.setDisplayName(completionText);
 			u.setEmail(completionText.replace(" ", "") + "@meetingninja.com");
@@ -68,8 +76,11 @@ public class UsersCompletionView extends TokenCompleteTextView {
 		ArrayList<Object> objs = new ArrayList<Object>();
 
 		for (Serializable s : sers) {
-			Log.d("get", ((SerializableUser) s).getDisplayName());
-			objs.add(s);
+			String className = s.getClass().getSimpleName();
+			Log.d(TAG, "Converting a " + className);
+		
+			// Log.d("get", ((SerializableUser) s).getDisplayName());
+			objs.add((SerializableUser) s);
 		}
 
 		return objs;
@@ -80,59 +91,17 @@ public class UsersCompletionView extends TokenCompleteTextView {
 		ArrayList<Serializable> s = new ArrayList<Serializable>();
 
 		for (final Object obj : getObjects()) {
+			String className = obj.getClass().getSimpleName();
+			Log.d(TAG, "Serializing a " + className);
+
 			if (obj instanceof User) {
-				SerializableUser su = new SerializableUser((User) obj);
-				Log.d("build", su.getDisplayName());
+				SerializableUser su = ((User) obj).toSimpleUser();
+//				Log.d("build", su.getDisplayName());
 				s.add(su);
 			} else {
 				s.add((SerializableUser) obj);
 			}
 		}
 		return s;
-	}
-
-	private class SerializableUser implements Serializable {
-		/**
-		 * Generated Serial ID
-		 */
-		private static final long serialVersionUID = 2730681215135500775L;
-		private String userID = "";
-		private String name = "";
-		private String email = "";
-
-		public SerializableUser(User copy) {
-			this.setID(copy.getID());
-			this.setDisplayName(copy.getDisplayName());
-			this.setEmail(copy.getEmail());
-		}
-
-		public SerializableUser() {
-			this(new User());
-		}
-
-		public void setID(String id) {
-			this.userID = id;
-		}
-
-		public String getID() {
-			return this.userID;
-		}
-
-		public void setDisplayName(String displayName) {
-			this.name = displayName;
-		}
-
-		public String getDisplayName() {
-			return this.name;
-		}
-
-		public void setEmail(String email) {
-			this.email = email;
-		}
-
-		public String getEmail() {
-			return this.email;
-		}
-
 	}
 }

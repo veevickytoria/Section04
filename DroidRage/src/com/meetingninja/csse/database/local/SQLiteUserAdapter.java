@@ -84,7 +84,8 @@ public class SQLiteUserAdapter extends SQLiteHelper {
 		Cursor c = mDb.query(TABLE_NAME, allColumns, KEY_ID + "=" + _id, null,
 				null, null, null);
 		c.moveToFirst();
-		User newUser = new UserCursor(c).getModel();
+		User newUser = new User(c);
+		;
 		c.close();
 		close();
 		return newUser;
@@ -127,8 +128,7 @@ public class SQLiteUserAdapter extends SQLiteHelper {
 		// looping through all rows and adding to list
 		if (c.moveToFirst()) {
 			do {
-				User u = new UserCursor(c).getModel();
-				Log.d("Added", u.getDisplayName());
+				User u = new User(c);
 				users.add(u);
 			} while (c.moveToNext());
 		}
@@ -195,7 +195,7 @@ public class SQLiteUserAdapter extends SQLiteHelper {
 				}, new Response.ErrorListener() {
 					@Override
 					public void onErrorResponse(VolleyError error) {
-						VolleyLog.e("Error: ", error.getMessage());
+						VolleyLog.e("Error:%n %s", error.getMessage());
 
 					}
 				});
@@ -229,33 +229,5 @@ public class SQLiteUserAdapter extends SQLiteHelper {
 			Log.d("Query User FTS", "Cursor is null");
 		}
 		return cursor;
-	}
-
-	public class UserCursor extends ModelCursor<User> {
-
-		public UserCursor(Cursor c) {
-			super(c);
-			this.model = new User();
-		}
-
-		@Override
-		public User getModel() {
-			int idxID = crsr.getColumnIndex(KEY_ID);
-			int idxUSERNAME = crsr.getColumnIndex(KEY_NAME);
-			int idxEMAIL = crsr.getColumnIndex(KEY_EMAIL);
-			int idxPHONE = crsr.getColumnIndex(KEY_PHONE);
-			int idxCOMPANY = crsr.getColumnIndex(KEY_COMPANY);
-			int idxTITLE = crsr.getColumnIndex(KEY_TITLE);
-			int idxLOCATION = crsr.getColumnIndex(KEY_LOCATION);
-			model.setID("" + crsr.getInt(idxID));
-			model.setDisplayName(crsr.getString(idxUSERNAME));
-			model.setEmail(crsr.getString(idxEMAIL));
-			model.setPhone(crsr.getString(idxPHONE));
-			model.setCompany(crsr.getString(idxCOMPANY));
-			model.setTitle(crsr.getString(idxTITLE));
-			model.setLocation(crsr.getString(idxLOCATION));
-			return model;
-		}
-
 	}
 }

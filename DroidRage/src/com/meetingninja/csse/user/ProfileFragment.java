@@ -21,12 +21,15 @@ import java.util.Map;
 
 import objects.Meeting;
 import objects.User;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -39,29 +42,25 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.loopj.android.image.SmartImageView;
 import com.meetingninja.csse.ApplicationController;
 import com.meetingninja.csse.R;
+import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.JsonNodeRequest;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
+import com.meetingninja.csse.extras.JsonUtils;
 import com.meetingninja.csse.meetings.MeetingItemAdapter;
 
 public class ProfileFragment extends Fragment {
 
 	private static final String TAG = ProfileFragment.class.getSimpleName();
 
-	private ListView meetingList;
-	private List<Meeting> meetings = new ArrayList<Meeting>();
-	private MeetingItemAdapter adpt;
+	private TextView mTitleCompany, mName, mPhone, mEmail, mLocation;
+	private View pageView, informationView, emptyView;
+	private SmartImageView mUserImage;
 
 	private SessionManager session;
-	private TextView mTitleCompany, mName, mPhone, mEmail, mLocation;
-	private SmartImageView mUserImage;
 	private User displayedUser;
 
-	private RetUserObj infoFetcher = null;
-	private View pageView, informationView, emptyView;
-
-	// private GetProfBitmap bitmapFetcher = null;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -76,8 +75,8 @@ public class ProfileFragment extends Fragment {
 		if (extras != null && extras.containsKey(Keys.User.PARCEL)) {
 			displayedUser = (User) extras.getParcelable(Keys.User.PARCEL);
 			try {
-				System.out.println(ApplicationController.getInstance()
-						.getObjectMapper().writeValueAsString(displayedUser));
+				System.out.println(JsonUtils.getObjectMapper()
+						.writeValueAsString(displayedUser));
 			} catch (JsonProcessingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -87,30 +86,16 @@ public class ProfileFragment extends Fragment {
 			displayedUser.setID(session.getUserID());
 		}
 
-		// Peter Pan URL
-		// mUserImage
-		// .setImageUrl("http://www.tdnforums.com/uploads/profile/photo-27119.jpg?_r=0");
-
-		// infoFetcher = new RetUserObj();
-		// infoFetcher.execute(session.getUserID());
-
 		fetchUserInfo(displayedUser.getID());
-
-		/*
-		 * meetingList = (ListView) pageView
-		 * .findViewById(R.id.profile_meetingList); adpt = new
-		 * MeetingItemAdapter(getActivity(), R.layout.list_item_meeting,
-		 * meetings); meetingList.setAdapter(adpt);
-		 * 
-		 * MeetingFetcherTask fetcher = new MeetingFetcherTask(this);
-		 * fetcher.execute(session.getUserID());
-		 */
 
 		return pageView;
 
 	}
 
 	private void setupViews(View v) {
+		informationView = v.findViewById(R.id.profile_container);
+		emptyView = v.findViewById(android.R.id.empty);
+
 		mUserImage = (SmartImageView) v.findViewById(R.id.view_prof_pic);
 
 		mName = (TextView) v.findViewById(R.id.profile_name);
@@ -120,12 +105,11 @@ public class ProfileFragment extends Fragment {
 		mLocation.setVisibility(View.GONE);
 
 		mEmail = (TextView) v.findViewById(R.id.profile_email);
+		mEmail.setOnClickListener(new ContactListener());
 
 		mPhone = (TextView) v.findViewById(R.id.profile_phone);
 		v.findViewById(R.id.profile_phone_row).setVisibility(View.GONE);
-
-		informationView = v.findViewById(R.id.profile_container);
-		emptyView = v.findViewById(android.R.id.empty);
+		mPhone.setOnClickListener(new ContactListener());
 
 	}
 
@@ -164,7 +148,7 @@ public class ProfileFragment extends Fragment {
 				}, new Response.ErrorListener() {
 					@Override
 					public void onErrorResponse(VolleyError error) {
-						VolleyLog.e("Error: ", error.getMessage());
+						VolleyLog.e("Error:%n %s", error.getMessage());
 
 					}
 				});
@@ -172,6 +156,31 @@ public class ProfileFragment extends Fragment {
 		// add the request object to the queue to be executed
 		ApplicationController app = ApplicationController.getInstance();
 		app.addToRequestQueue(req, "JSON");
+	}
+
+	private class ContactListener implements OnClickListener {
+
+		@Override
+		public void onClick(View v) {
+			switch (v.getId()) {
+			case R.id.profile_email:
+				Intent emailIntent = new Intent(Intent.ACTION_SENDTO,
+						Uri.fromParts("mailto", mEmail.getText().toString(),
+								null));
+				startActivity(Intent
+						.createChooser(emailIntent, "Send email..."));
+				break;
+			case R.id.profile_phone:
+				Intent dialerIntent = new Intent(Intent.ACTION_DIAL);
+				dialerIntent.setData(Uri.parse("tel:"
+						+ mPhone.getText().toString()));
+				startActivity(dialerIntent);
+			default:
+				break;
+			}
+
+		}
+
 	}
 
 	private void setUser(User user) {

@@ -91,7 +91,7 @@ public class Group implements Parcelable {
 	public void readFromParcel(Parcel in) {
 		this.groupID = in.readString();
 		this.groupTitle = in.readString();
-		this.members = in.readArrayList(SimpleUser.class.getClassLoader());
+		this.members = in.readArrayList(User.class.getClassLoader());
 	}
 
 	public static final Parcelable.Creator<Group> CREATOR = new Parcelable.Creator<Group>() {

@@ -87,16 +87,24 @@
 
     <!-- DESCRIPTION -->
 
-    <Button
-        android:id="@+id/add_guests_btn"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="fill_parent"
+     <LinearLayout
+        android:id="@+id/guests_row"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="@android:drawable/btn_default_small"
-        android:text="Add Guests"
-        android:textColor="#FF777777"
-        android:textSize="18sp" />
+        android:layout_marginBottom="6dip"
+        android:focusable="true"
+        android:orientation="vertical" >
+
+        <com.meetingninja.csse.extras.UsersCompletionView
+            android:id="@+id/guests_Complete"
+            style="@style/TextAppearance.EditEvent_Value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:hint="@string/hint_attendees"
+            android:inputType="textAutoCorrect|textCapSentences|textMultiLine"
+            android:minHeight="48dip" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/description_row"

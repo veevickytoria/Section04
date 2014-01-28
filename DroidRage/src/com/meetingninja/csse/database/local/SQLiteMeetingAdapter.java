@@ -76,14 +76,14 @@ public class SQLiteMeetingAdapter extends SQLiteHelper {
 				KEY_START_TIME, KEY_END_TIME, KEY_DESCRIPTION }, KEY_ID + "="
 				+ insertID, null, null, null, null);
 		c.moveToFirst();
-		Meeting newMeeting = new MeetingCursor(c).getModel();
+		Meeting newMeeting = new Meeting(c);
 		c.close();
 		close();
 		return newMeeting;
 	}
 
 	public List<Meeting> getAllMeetings() {
-		List<Meeting> meetings = new ArrayList<Meeting>();
+		List<Meeting> meetingList = new ArrayList<Meeting>();
 		String[] columns = new String[] { KEY_ID, KEY_TITLE, KEY_LOCATION,
 				KEY_START_TIME, KEY_END_TIME, KEY_DESCRIPTION };
 		Cursor c = this.query(columns, null, null, null, null, null);
@@ -91,15 +91,14 @@ public class SQLiteMeetingAdapter extends SQLiteHelper {
 		// looping through all rows and adding to list
 		if (c.moveToFirst()) {
 			do {
-				if ((meeting = new MeetingCursor(c).getModel()) != null) {
-					meetings.add(meeting);
-					Log.d(TAG + " getAll", meeting.toString());
+				if ((meeting = new Meeting(c)) != null) {
+					meetingList.add(meeting);
 				}
 			} while (c.moveToNext());
 		}
 		c.close();
 		close();
-		return meetings;
+		return meetingList;
 	}
 
 	/**
@@ -139,49 +138,13 @@ public class SQLiteMeetingAdapter extends SQLiteHelper {
 		close();
 	}
 
-	/**
-	 * Delete meeting based off of the id provided
-	 * 
-	 * @param id
-	 */
-	public int deleteMeeting(long id) {
-		mDb = mDbHelper.getWritableDatabase();
-		int numRowsAffected = mDb.delete(TABLE_NAME, KEY_ID + "=" + id, null);
-		close();
-		return numRowsAffected;
-	}
-
 	public int deleteMeeting(Meeting meeting) {
+		mDb = mDbHelper.getWritableDatabase();
 		int numRowsAffected = 0;
 		if (meeting != null)
-			numRowsAffected = deleteMeeting(Long.parseLong(meeting.getID()));
+			numRowsAffected = mDb.delete(TABLE_NAME, KEY_ID + "=" + meeting.getID(), null);
+		close();
 		return numRowsAffected;
-	}
-
-	private class MeetingCursor extends ModelCursor<Meeting> {
-
-		public MeetingCursor(Cursor c) {
-			super(c);
-			this.model = new Meeting();
-		}
-
-		@Override
-		public Meeting getModel() {
-			int idxID = crsr.getColumnIndexOrThrow(KEY_ID);
-			int idxTITLE = crsr.getColumnIndexOrThrow(KEY_TITLE);
-			int idxLOCATION = crsr.getColumnIndexOrThrow(KEY_LOCATION);
-			int idxSTART_TIME = crsr.getColumnIndexOrThrow(KEY_START_TIME);
-			int idxEND_TIME = crsr.getColumnIndexOrThrow(KEY_END_TIME);
-			int idxDESCRIPTION = crsr.getColumnIndexOrThrow(KEY_DESCRIPTION);
-			model.setID(crsr.getInt(idxID));
-			model.setTitle(crsr.getString(idxTITLE));
-			model.setLocation(crsr.getString(idxLOCATION));
-			model.setStartTime(crsr.getLong(idxSTART_TIME));
-			model.setEndTime(crsr.getLong(idxEND_TIME));
-			model.setDescription(crsr.getString(idxDESCRIPTION));
-			return model;
-		}
-
 	}
 
 }

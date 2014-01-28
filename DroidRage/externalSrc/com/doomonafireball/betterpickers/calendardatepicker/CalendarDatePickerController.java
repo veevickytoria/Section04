@@ -17,28 +17,25 @@
 package com.doomonafireball.betterpickers.calendardatepicker;
 
 /**
- * Controller class to communicate among the various components of the date
- * picker dialog.
+ * Controller class to communicate among the various components of the date picker dialog.
  */
 interface CalendarDatePickerController {
 
-	void onYearSelected(int year);
+    void onYearSelected(int year);
 
-	void onDayOfMonthSelected(int year, int month, int day);
+    void onDayOfMonthSelected(int year, int month, int day);
 
-	void registerOnDateChangedListener(
-			CalendarDatePickerDialog.OnDateChangedListener listener);
+    void registerOnDateChangedListener(CalendarDatePickerDialog.OnDateChangedListener listener);
 
-	void unregisterOnDateChangedListener(
-			CalendarDatePickerDialog.OnDateChangedListener listener);
+    void unregisterOnDateChangedListener(CalendarDatePickerDialog.OnDateChangedListener listener);
 
-	SimpleMonthAdapter.CalendarDay getSelectedDay();
+    SimpleMonthAdapter.CalendarDay getSelectedDay();
 
-	int getFirstDayOfWeek();
+    int getFirstDayOfWeek();
 
-	int getMinYear();
+    int getMinYear();
 
-	int getMaxYear();
+    int getMaxYear();
 
-	void tryVibrate();
+    void tryVibrate();
 }

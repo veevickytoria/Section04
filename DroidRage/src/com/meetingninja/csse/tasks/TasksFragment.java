@@ -37,8 +37,8 @@ import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.TextView;
 
 import com.meetingninja.csse.R;
+import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.AsyncResponse;
-import com.meetingninja.csse.user.SessionManager;
 
 public class TasksFragment extends Fragment implements
 		AsyncResponse<List<Task>> {

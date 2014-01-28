@@ -183,8 +183,7 @@ public class EditGroupActivity extends Activity {
 
 	private void save() {
 		if (titleText.getText().toString().isEmpty()) {
-			AlertDialogUtil.displayDialog(this, "Error",
-					"Cannot have an empty title", "OK");
+			AlertDialogUtil.showErrorDialog(this, "Cannot have an empty title");
 			return;
 		}
 

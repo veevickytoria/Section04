@@ -30,6 +30,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.meetingninja.csse.extras.JsonUtils;
 
 public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 	private static final String TAG = TaskDatabaseAdapter.class.getSimpleName();
@@ -197,8 +198,8 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 		if (node.hasNonNull(Keys._ID)) {
 			String id = node.get(Keys._ID).asText();
 			t.setID(id);
-			t.setTitle(getJSONValue(node, Keys.Task.TITLE));
-			t.setType(getJSONValue(node, Keys.TYPE));
+			t.setTitle(JsonUtils.getJSONValue(node, Keys.Task.TITLE));
+			t.setType(JsonUtils.getJSONValue(node, Keys.TYPE));
 		} else {
 			Log.w(TAG, "Parsed null task");
 			return null;

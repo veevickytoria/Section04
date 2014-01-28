@@ -4,8 +4,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -14,6 +16,9 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.meetingninja.csse.database.Keys;
+import com.meetingninja.csse.extras.JsonUtils;
+import com.meetingninja.csse.extras.Utilities;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "userID", "displayName", "email", "phone", "company",
@@ -44,6 +49,49 @@ public class User extends AbstractJSONObject<User> implements Parcelable {
 	public User(Parcel in) {
 		readFromParcel(in);
 	}
+
+	public User(Cursor crsr) {
+		// get cursor columns
+		int idxID = crsr.getColumnIndex(Keys._ID);
+		int idxUSERNAME = crsr.getColumnIndex(Keys.User.NAME);
+		int idxEMAIL = crsr.getColumnIndex(Keys.User.EMAIL);
+		int idxPHONE = crsr.getColumnIndex(Keys.User.PHONE);
+		int idxCOMPANY = crsr.getColumnIndex(Keys.User.COMPANY);
+		int idxTITLE = crsr.getColumnIndex(Keys.User.TITLE);
+		int idxLOCATION = crsr.getColumnIndex(Keys.User.LOCATION);
+		// set the fields
+		setID("" + crsr.getInt(idxID));
+		setDisplayName(crsr.getString(idxUSERNAME));
+		setEmail(crsr.getString(idxEMAIL));
+		setPhone(crsr.getString(idxPHONE));
+		setCompany(crsr.getString(idxCOMPANY));
+		setTitle(crsr.getString(idxTITLE));
+		setLocation(crsr.getString(idxLOCATION));
+	}
+
+//	public User(JsonNode node) {
+//		// if they at least have an id, email, and name
+//		if (node.hasNonNull(Keys.User.EMAIL) && node.hasNonNull(Keys.User.NAME)
+//		// && node.hasNonNull(KEY_ID)
+//		) {
+//			String email = node.get(Keys.User.EMAIL).asText();
+//			// if their email is in a reasonable format
+//			if (!TextUtils.isEmpty(node.get(Keys.User.NAME).asText())
+//					&& Utilities.isValidEmailAddress(email)) {
+//				// set the required fields
+//				if (node.hasNonNull(Keys.User.ID))
+//					setID(node.get(Keys.User.ID).asText());
+//				setDisplayName(node.get(Keys.User.NAME).asText());
+//				setEmail(email);
+//
+//				// check and set the optional fields
+//				setLocation(JsonUtils.getJSONValue(node, Keys.User.LOCATION));
+//				setPhone(JsonUtils.getJSONValue(node, Keys.User.PHONE));
+//				setCompany(JsonUtils.getJSONValue(node, Keys.User.COMPANY));
+//				setTitle(JsonUtils.getJSONValue(node, Keys.User.TITLE));
+//			}
+//		}
+//	}
 
 	/* Required Fields */
 
@@ -113,10 +161,11 @@ public class User extends AbstractJSONObject<User> implements Parcelable {
 		return (location != null && !location.isEmpty()) ? location : "";
 	}
 
-	public SimpleUser toSimpleUser() {
-		SimpleUser simple = new SimpleUser();
-		simple.setUserID(this.userID);
-		simple.setDisplayName(this.displayName);
+	public SerializableUser toSimpleUser() {
+		SerializableUser simple = new SerializableUser();
+		simple.setID(this.getID());
+		simple.setDisplayName(this.getDisplayName());
+		simple.setEmail(this.getEmail());
 		return simple;
 	}
 

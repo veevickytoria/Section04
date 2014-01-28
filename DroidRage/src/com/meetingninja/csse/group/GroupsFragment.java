@@ -19,8 +19,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.meetingninja.csse.R;
+import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.Keys;
-import com.meetingninja.csse.user.SessionManager;
 
 public class GroupsFragment extends Fragment {
 	private SessionManager session;

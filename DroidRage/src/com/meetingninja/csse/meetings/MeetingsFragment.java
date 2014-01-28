@@ -47,11 +47,14 @@ import com.android.volley.toolbox.StringRequest;
 import com.meetingninja.csse.ApplicationController;
 import com.meetingninja.csse.MainActivity;
 import com.meetingninja.csse.R;
+import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.AsyncResponse;
+import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.MeetingDatabaseAdapter;
+import com.meetingninja.csse.database.UserDatabaseAdapter;
 import com.meetingninja.csse.database.local.SQLiteMeetingAdapter;
 import com.meetingninja.csse.extras.Connectivity;
-import com.meetingninja.csse.user.SessionManager;
+import com.spothero.volley.JacksonRequest;
 
 import de.timroes.android.listview.EnhancedListView;
 
@@ -140,7 +143,7 @@ public class MeetingsFragment extends Fragment implements
 					}
 				});
 		meetingList
-				.setDismissCallback(new de.timroes.android.listview.EnhancedListView.OnDismissCallback() {
+				.setDismissCallback(new EnhancedListView.OnDismissCallback() {
 					@Override
 					public EnhancedListView.Undoable onDismiss(
 							EnhancedListView listView, final int position) {
@@ -226,7 +229,7 @@ public class MeetingsFragment extends Fragment implements
 				if (data != null) {
 					int listPosition = data.getIntExtra("listPosition", -1);
 					Meeting created = data
-							.getParcelableExtra(EditMeetingActivity.EXTRA_MEETING);
+							.getParcelableExtra(Keys.Meeting.PARCEL);
 
 					if (data.getStringExtra("method").equals("update")) {
 						Log.d(TAG, "Updating Meeting #" + created.getID());
@@ -251,6 +254,7 @@ public class MeetingsFragment extends Fragment implements
 	public void fetchMeetings() {
 		fetcher = new MeetingFetcherTask(this);
 		fetcher.execute(session.getUserID()); // calls processFinish()
+		// UserDatabaseAdapter.fetchUserMeetings(this, session.getUserID());
 	}
 
 	public void editMeeting(Meeting editMe) {
@@ -261,7 +265,7 @@ public class MeetingsFragment extends Fragment implements
 		Intent editMeeting = new Intent(getActivity(),
 				EditMeetingActivity.class);
 		if (null != editMe) {
-			editMeeting.putExtra(EditMeetingActivity.EXTRA_MEETING, editMe);
+			editMeeting.putExtra(Keys.Meeting.PARCEL, editMe);
 		}
 		if (position >= 0) {
 			editMeeting.putExtra("listPosition", position);
@@ -306,6 +310,7 @@ public class MeetingsFragment extends Fragment implements
 
 					}
 				});
+
 		ApplicationController.getInstance().addToRequestQueue(dr);
 	}
 

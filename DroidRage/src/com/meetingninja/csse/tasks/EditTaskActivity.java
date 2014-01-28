@@ -20,6 +20,8 @@ import java.util.TimeZone;
 
 import objects.Task;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormatter;
 
 import android.content.Context;
@@ -41,6 +43,7 @@ import com.doomonafireball.betterpickers.calendardatepicker.CalendarDatePickerDi
 import com.doomonafireball.betterpickers.calendardatepicker.CalendarDatePickerDialog.OnDateSetListener;
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.AsyncResponse;
+import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.extras.AlertDialogUtil;
 import com.meetingninja.csse.extras.MyDateUtils;
 
@@ -56,8 +59,7 @@ public class EditTaskActivity extends FragmentActivity implements
 
 	// private SessionManager session;
 	private Task displayTask;
-	Calendar cal = null;
-	public static final String EXTRA_TASK = "task";
+	private DateTime dt;
 
 	// private static final String TAG = EditTaskActivity.class.getSimpleName();
 
@@ -69,18 +71,18 @@ public class EditTaskActivity extends FragmentActivity implements
 		setupViews();
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			displayTask = extras.getParcelable(EXTRA_TASK);
+			displayTask = extras.getParcelable(Keys.Task.PARCEL);
 		}
 		if (displayTask != null) {
 			setTask();
 			mTitle.setSelection(0, mTitle.getText().toString().length());
-
-			cal = Calendar.getInstance();
-			cal.setTimeZone(TimeZone.getTimeZone("UTC"));
-			cal.setTimeInMillis(displayTask.getEndTimeInMillis());
+			
+			dt = DateTime.now();
+			dt = dt.withZone(DateTimeZone.UTC);
+			dt = dt.withMillis(displayTask.getEndTimeInMillis());
 
 			mDeadlineBtn.setOnClickListener(new DateClickListener(mDeadlineBtn,
-					cal, this));
+					dt));
 			// assignedDateLabel.setText(dateFormat.format(assignedDate));
 			// createdDateLabel.setText(dateFormat.format(createdDate));
 		}
@@ -203,7 +205,8 @@ public class EditTaskActivity extends FragmentActivity implements
 			displayTask.setDescription(mDescription.getText().toString());
 			displayTask.setCompletionCriteria(completionCriteria.getText()
 					.toString());
-			displayTask.setEndTime(cal.getTimeInMillis());
+			displayTask.setEndTime(dt.getMillis());
+
 			Toast.makeText(this, String.format("Saving Task"),
 					Toast.LENGTH_SHORT).show();
 
@@ -211,7 +214,7 @@ public class EditTaskActivity extends FragmentActivity implements
 			tUpdate.updateTask(displayTask);
 
 			Intent msgIntent = new Intent();
-			msgIntent.putExtra(EXTRA_TASK, displayTask);
+			msgIntent.putExtra(Keys.Task.PARCEL, displayTask);
 			setResult(RESULT_OK, msgIntent);
 			finish();
 		}
@@ -219,41 +222,39 @@ public class EditTaskActivity extends FragmentActivity implements
 
 	private class DateClickListener implements OnClickListener,
 			OnDateSetListener {
-		Calendar cal;
-		FragmentActivity activity;
+		private DateTime dt;
 
-		public DateClickListener(Button b, Calendar c, FragmentActivity activity) {
-			this.cal = c;
-			this.activity = activity;
+		public DateClickListener(Button b, DateTime dt) {
+			this.dt = dt;
 		}
 
 		@Override
 		public void onClick(View v) {
 			FragmentManager fm = getSupportFragmentManager();
 			CalendarDatePickerDialog calendarDatePickerDialog = CalendarDatePickerDialog
-					.newInstance(DateClickListener.this,
-							cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
-							cal.get(Calendar.DAY_OF_MONTH));
+					.newInstance(DateClickListener.this, // callback
+							dt.getYear(), // year
+							dt.getMonthOfYear(), // month
+							dt.getDayOfMonth()); // day
 			calendarDatePickerDialog.show(fm, "fragment_date_picker_name");
 		}
 
 		@Override
 		public void onDateSet(CalendarDatePickerDialog dialog, int year,
 				int monthOfYear, int dayOfMonth) {
-			Calendar tempcal = Calendar.getInstance();
-			tempcal.set(year, monthOfYear, dayOfMonth);
-			Calendar now = null;
-			now = Calendar.getInstance();
-			now.set(Calendar.HOUR_OF_DAY, 0);
-			now.set(Calendar.MINUTE, 0);
-			now.set(Calendar.SECOND, 0);
-			if (tempcal.after(now)) {
-				cal.set(year, monthOfYear, dayOfMonth);
-				String format = dateFormat.print(cal.getTimeInMillis());
+			DateTime temp = DateTime.now();
+			temp = temp.withDate(year, monthOfYear, dayOfMonth);
+
+			DateTime now = DateTime.now();
+			DateTime today = now.withTime(0, 0, 0, 0);
+
+			if (temp.isAfter(today)) {
+				dt.withDate(year, monthOfYear, dayOfMonth);
+				String format = dateFormat.print(dt);
 				mDeadlineBtn.setText(format);
 			} else {
-				AlertDialogUtil.displayDialog(activity, "Error",
-						"A Deadline can not be set before today's date", "OK");
+				AlertDialogUtil.showErrorDialog(EditTaskActivity.this,
+						"A Deadline can not be set before today's date");
 			}
 		}
 	}

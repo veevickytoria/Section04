@@ -6,19 +6,19 @@ import objects.Agenda;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.meetingninja.csse.ApplicationController;
 import com.meetingninja.csse.database.AgendaDatabaseAdapter;
+import com.meetingninja.csse.extras.JsonUtils;
 
-public class AgendaTask extends AsyncTask<Agenda, Void, Agenda> {
+public class AgendaSaveTask extends AsyncTask<Agenda, Void, Agenda> {
 
-	private static final String TAG = AgendaTask.class.getSimpleName();
+	private static final String TAG = AgendaSaveTask.class.getSimpleName();
 
 	@Override
 	protected Agenda doInBackground(Agenda... params) {
 		Agenda create = params[0];
 		try {
-			System.out.println(ApplicationController.getInstance()
-					.getObjectMapper().writeValueAsString(create));
+			System.out.println(JsonUtils.getObjectMapper().writeValueAsString(
+					create));
 			create = AgendaDatabaseAdapter.createAgenda(create);
 		} catch (IOException e) {
 			Log.e(TAG, e.getLocalizedMessage());

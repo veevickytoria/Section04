@@ -3,11 +3,14 @@ package com.meetingninja.csse;
 import java.util.ArrayList;
 import java.util.List;
 
+import objects.Meeting;
+import objects.SerializableUser;
 import objects.User;
 import android.app.Activity;
-import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +19,16 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-import com.loopj.android.image.SmartImageView;
 import com.meetingninja.csse.database.AsyncResponse;
+import com.meetingninja.csse.database.Keys;
+import com.meetingninja.csse.database.MeetingDatabaseAdapter;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
+import com.meetingninja.csse.database.callbacks.AbstractResponse;
+import com.meetingninja.csse.database.callbacks.MeetingResponse;
 import com.meetingninja.csse.extras.UsersCompletionView;
+import com.meetingninja.csse.meetings.MeetingItemAdapter;
+import com.meetingninja.csse.user.FilteredUserArrayAdapter;
 import com.meetingninja.csse.user.UserArrayAdapter;
-import com.tokenautocomplete.FilteredArrayAdapter;
 import com.tokenautocomplete.TokenCompleteTextView.TokenListener;
 
 /**
@@ -49,12 +56,14 @@ public class SearchableUserFragment extends Fragment implements
 	 * The Adapter which will be used to populate the ListView/GridView with
 	 * Views.
 	 */
-	private FilterUserArrayAdapter autoAdapter;
+	private FilteredUserArrayAdapter autoAdapter;
 	private UserArrayAdapter addedAdapter;
-	private List<User> allUsers = new ArrayList<User>();
-	private List<User> addedUsers = new ArrayList<User>();
-	private List<String> addedIds = new ArrayList<String>();
+	private ArrayList<User> allUsers = new ArrayList<User>();
+	private ArrayList<User> addedUsers = new ArrayList<User>();
+	private ArrayList<String> addedIds = new ArrayList<String>();
 	private TextView mTxtID;
+
+	private final String TAG = SearchableUserFragment.class.getSimpleName();
 
 	// private SQLiteUserAdapter mySQLiteAdapter;
 
@@ -67,41 +76,76 @@ public class SearchableUserFragment extends Fragment implements
 	}
 
 	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		// TODO Auto-generated method stub
+		super.onConfigurationChanged(newConfig);
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		Log.d(TAG, "Saving " + allUsers.size() + " users");
+		outState.putParcelableArrayList(Keys.User.LIST + "ALL", allUsers);
+		outState.putParcelableArrayList(Keys.User.LIST + "ADDED", addedUsers);
+		outState.putStringArrayList(Keys.User.LIST + Keys.User.ID, addedIds);
+		super.onSaveInstanceState(outState);
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		Log.v(TAG, "OnCreate");
+		if (savedInstanceState == null
+				|| !savedInstanceState.containsKey(Keys.User.LIST + "ALL")) {
+			Log.w(TAG, "Not Saved");
+			UserDatabaseAdapter.fetchAllUsers(this); // processFinish()
+		} else {
+			Log.i(TAG, "Restoring");
+			allUsers = savedInstanceState.getParcelableArrayList(Keys.User.LIST
+					+ "ALL");
+			addedUsers = savedInstanceState
+					.getParcelableArrayList(Keys.User.LIST + "ADDED");
+			addedIds = savedInstanceState.getStringArrayList(Keys.User.LIST
+					+ Keys.User.ID);
+		}
+	}
+
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle icicle) {
+		Log.d(TAG, "OnCreateView");
+		super.onCreateView(inflater, container, icicle);
 		View view = inflater.inflate(R.layout.fragment_item_list, container,
 				false);
-		complete = (UsersCompletionView) view
-				.findViewById(R.id.my_autocomplete);
-		mTxtID = (TextView) view.findViewById(R.id.completed_ids);
-		mListView = (AbsListView) view.findViewById(android.R.id.list);
+		setupViews(view);
 
-		// token listener when autocompleted
-		complete.setTokenListener(this);
-
+		// TODO: store the users in the sqlite database
 		// mySQLiteAdapter = new SQLiteUserAdapter(getActivity());
-
 		// mySQLiteAdapter.loadUsers();
 		// allUsers = mySQLiteAdapter.getAllUsers();
 		// mySQLiteAdapter.close();
 
-		// TODO: store the users in the sqlite database
-		if (allUsers.isEmpty())
-			UserDatabaseAdapter.fetchAllUsers(this); // processFinish()
-
-		autoAdapter = new FilterUserArrayAdapter(getActivity(),
+		autoAdapter = new FilteredUserArrayAdapter(getActivity(),
 				R.layout.chips_recipient_dropdown_item, allUsers);
 		complete.setAdapter(autoAdapter);
 
 		addedAdapter = new UserArrayAdapter(getActivity(),
 				R.layout.list_item_user, addedUsers);
-
 		((AdapterView<ListAdapter>) mListView).setAdapter(addedAdapter);
 
 		// Set OnItemClickListener so we can be notified on item clicks
 		mListView.setOnItemClickListener(this);
 
 		return view;
+	}
+
+	private void setupViews(View view) {
+		complete = (UsersCompletionView) view
+				.findViewById(R.id.my_autocomplete);
+		// token listener when autocompleted
+		complete.setTokenListener(this);
+		mTxtID = (TextView) view.findViewById(R.id.completed_ids);
+		mListView = (AbsListView) view.findViewById(android.R.id.list);
+
 	}
 
 	@Override
@@ -140,21 +184,27 @@ public class SearchableUserFragment extends Fragment implements
 
 	@Override
 	public void onTokenAdded(Object arg0) {
-		User added;
-		if (arg0 instanceof User) {
-			added = (User) arg0;
-			addedUsers.add(added);
-			if (added.getID() != null) {
-				addedIds.add(added.getID());
-			} else {
-				addedIds.add(added.getEmail());
-			}
-			mTxtID.setText(addedIds.toString());
+		String className = arg0.getClass().getSimpleName();
+		System.out.println("Adding a " + className);
 
-			addedAdapter.notifyDataSetChanged();
-		} else {
-			System.out.println("Not added");
+		User added = (User) arg0;
+		SerializableUser serialized = null;
+		if (arg0 instanceof User)
+			serialized = added.toSimpleUser();
+		else if (arg0 instanceof SerializableUser)
+			serialized = (SerializableUser) arg0;
+
+		if (serialized != null) {
+			addedUsers.add(serialized);
+			if (serialized.getID() != null) {
+				addedIds.add(serialized.getID());
+			} else {
+				addedIds.add(serialized.getEmail());
+			}
 		}
+		addedAdapter.notifyDataSetChanged();
+
+		mTxtID.setText(addedIds.toString());
 
 	}
 
@@ -179,50 +229,9 @@ public class SearchableUserFragment extends Fragment implements
 
 	@Override
 	public void processFinish(List<User> result) {
-		if (result instanceof List) {
-			allUsers.clear();
-			allUsers.addAll(result);
-			autoAdapter.notifyDataSetChanged();
-		}
-
-	}
-
-	private class FilterUserArrayAdapter extends FilteredArrayAdapter<User> {
-
-		public FilterUserArrayAdapter(Context context, int resource,
-				List<User> users) {
-			super(context, resource, users);
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			if (convertView == null) {
-
-				LayoutInflater l = (LayoutInflater) getContext()
-						.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-				convertView = (View) l.inflate(
-						R.layout.chips_recipient_dropdown_item, parent, false);
-			}
-
-			User u = getItem(position);
-			((TextView) convertView.findViewById(android.R.id.title)).setText(u
-					.getDisplayName());
-			((TextView) convertView.findViewById(android.R.id.text1)).setText(u
-					.getEmail());
-			// TODO : Get url's for user images
-			SmartImageView img = (SmartImageView) convertView
-					.findViewById(android.R.id.icon);
-			img.setImageUrl("https://i.chzbgr.com/maxW500/6073452544/h4B353A81/");
-			return convertView;
-		}
-
-		@Override
-		protected boolean keepObject(User user, String mask) {
-			mask = mask.toLowerCase();
-			return user.getDisplayName().toLowerCase().startsWith(mask)
-					|| user.getEmail().toLowerCase().startsWith(mask);
-		}
-
+		allUsers.clear();
+		allUsers.addAll(result);
+		autoAdapter.notifyDataSetChanged();
 	}
 
 }

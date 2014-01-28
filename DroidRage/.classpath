@@ -9,11 +9,6 @@
 	</classpathentry>
 	<classpathentry excluding="EnhancedListView/src/main/java/de/timroes/android/listview/|EnhancedListView/src/main/gen/de/timroes/android/listview/" kind="src" path="externalSrc"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-	<classpathentry exported="true" kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
-		<attributes>
-			<attribute name="maven.pomderived" value="true"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>

@@ -22,7 +22,7 @@ public class Project {
 	@JsonProperty("notes")
 	private List<Note> notes = new ArrayList<Note>();
 	@JsonProperty("members")
-	private List<SimpleUser> members = new ArrayList<SimpleUser>();
+	private List<User> members = new ArrayList<User>();
 
 	@JsonProperty("projectID")
 	public String getProjectID() {
@@ -65,12 +65,12 @@ public class Project {
 	}
 
 	@JsonProperty("members")
-	public List<SimpleUser> getMembers() {
+	public List<User> getMembers() {
 		return members;
 	}
 
 	@JsonProperty("members")
-	public void setMembers(List<SimpleUser> members) {
+	public void setMembers(List<User> members) {
 		this.members = members;
 	}
 

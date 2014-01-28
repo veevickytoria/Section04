@@ -57,7 +57,6 @@ import com.meetingninja.csse.schedule.ScheduleAdapter;
 import com.meetingninja.csse.tasks.TasksFragment;
 import com.meetingninja.csse.user.LoginActivity;
 import com.meetingninja.csse.user.ProfileFragment;
-import com.meetingninja.csse.user.SessionManager;
 import com.meetingninja.csse.user.UserListFragment;
 import com.parse.ParseAnalytics;
 
@@ -358,10 +357,9 @@ public class MainActivity extends FragmentActivity implements
 	private void logout() {
 		session.logoutUser();
 		// clear local database
-		// SQLiteHelper mySQLiteHelper = SQLiteHelper
-		// .getInstance(MainActivity.this);
-		// mySQLiteHelper.onUpgrade(mySQLiteHelper.getReadableDatabase(), 1,
-		// 1);
+		SQLiteHelper mySQLiteHelper = SQLiteHelper
+				.getInstance(MainActivity.this);
+		mySQLiteHelper.onUpgrade(mySQLiteHelper.getReadableDatabase(), 1, 1);
 		finish();
 	}
 

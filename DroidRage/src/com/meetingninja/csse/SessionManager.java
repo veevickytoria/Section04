@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.meetingninja.csse.user;
+package com.meetingninja.csse;
 
 import java.util.HashMap;
+
+import com.meetingninja.csse.user.LoginActivity;
 
 import objects.User;
 import android.content.Context;

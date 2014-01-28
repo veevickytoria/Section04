@@ -68,7 +68,7 @@ public class SQLiteNoteAdapter extends SQLiteHelper {
 		Cursor c = mDb.query(TABLE_NAME, new String[] { KEY_ID, KEY_TITLE,
 				KEY_CONTENT }, KEY_ID + "=" + insertID, null, null, null, null);
 		c.moveToFirst();
-		Note newNote = new NoteCursor(c).getModel();
+		Note newNote = new Note(c);
 		c.close();
 		close();
 		return newNote;
@@ -143,32 +143,12 @@ public class SQLiteNoteAdapter extends SQLiteHelper {
 		// looping through all rows and adding to list
 		if (c.moveToFirst()) {
 			do {
-				if ((note = new NoteCursor(c).getModel()) != null)
+				if ((note = new Note(c)) != null)
 					notes.add(note);
 			} while (c.moveToNext());
 		}
 		c.close();
 		close();
 		return notes;
-	}
-
-	private class NoteCursor extends ModelCursor<Note> {
-
-		public NoteCursor(Cursor c) {
-			super(c);
-			this.model = new Note();
-		}
-
-		@Override
-		public Note getModel() {
-			int idxID = crsr.getColumnIndex(KEY_ID);
-			int idxTITLE = crsr.getColumnIndex(KEY_TITLE);
-			int idxCONTENT = crsr.getColumnIndex(KEY_CONTENT);
-			model.setID("" + crsr.getInt(idxID));
-			model.setTitle(crsr.getString(idxTITLE));
-			model.setContent(crsr.getString(idxCONTENT));
-			return model;
-		}
-
 	}
 }
