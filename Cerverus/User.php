@@ -196,10 +196,9 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 		$userNode->setProperty('title',$postContent->title);
 		$userNode->setProperty('location',$postContent->location);
 		$userNode->setProperty('name',$postContent->name);
-		
+		$userNode->setProperty('nodeType','User');
 		// actually add the node in the db
 		$userNode->save();
-		
 		$userIndex->add($userNode, 'email', $postContent->email);
 		
 		// return the id of the node
@@ -213,6 +212,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 	for($ii=0;$ii<sizeof($users);$ii++){
 		$array=$users[$ii]->getProperties();
 		$array['userID']=$users[$ii]->getId();
+		unset($array['nodeType']);
 		unset($array['password']);
 		$results[$ii]= $array;
 	}
@@ -220,11 +220,19 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 }else if( strcasecmp($_SERVER['REQUEST_METHOD'],'GET') == 0){
 	//getUserInfo
 	 $userNode=$client->getNode($_GET['id']);
+	 
+	 
 	 $array = $userNode->getProperties();
-	
+	if(array_key_exists('nodeType', $array)){
+		if(strcasecmp($array['nodeType'], 'User')!=0){
+			echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['id'].' is an not a user node.'));
+			return 1;
+		}
+	}
+	unset($array['nodeType']);
 	 //hide the password
-	 $array['password']="********";
-	
+	 unset($array['password']);
+	 unset($array['nodeType']);
 	 //return the json string
 	 echo json_encode($array);
 	
@@ -261,6 +269,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 			//get the return array
 			$array = array_merge($array, $user->getProperties());
 			unset($array['password']);
+			unset($array['nodeType']);
 			echo json_encode($array);
 		//invalid field
 		}else{
@@ -293,6 +302,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 			//delete node and return true
 			$user->delete();
 			$array = array('valid'=>'true');
+			unset($array['nodeType']);
 			echo json_encode($array);
 		} else {
 			//return an error otherwise
@@ -442,3 +452,4 @@ function pbkdf2($algorithm, $password, $salt, $count, $key_length, $raw_output =
 
 
 ?>
+
