@@ -15,19 +15,13 @@
  ******************************************************************************/
 package com.meetingninja.csse.meetings;
 
-import java.sql.Date;
-import java.util.Calendar;
-import java.util.TimeZone;
-
 import objects.Meeting;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import org.joda.time.ReadableInstant;
 import org.joda.time.format.DateTimeFormatter;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;

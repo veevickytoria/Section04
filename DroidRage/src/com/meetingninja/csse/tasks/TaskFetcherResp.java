@@ -28,30 +28,30 @@ import com.meetingninja.csse.database.TaskDatabaseAdapter;
 
 public class TaskFetcherResp implements AsyncResponse<Void> {
 
-	private Fragment frag;
+	private TasksFragment frag;
 	private TaskFetcherTask fetcher;
 	private Task task;
 
 	// private Task task;
 
-	public TaskFetcherResp(Fragment frag) {
+	public TaskFetcherResp(TasksFragment frag) {
 		this.frag = frag;
 		this.fetcher = new TaskFetcherTask(this);
 		// this.task = task;
 	}
 
-	public void openTask(Task task) {
+	public void loadTask(Task task) {
 		this.task = task;
 		this.fetcher.execute(task);
 	}
 
 	@Override
 	public void processFinish(Void result) {
-		Intent viewTask = new Intent(this.frag.getActivity(),
-				ViewTaskActivity.class);
-		viewTask.putExtra("task", this.task);
-		this.frag.startActivityForResult(viewTask, 6);// (viewTask);
-
+//		Intent viewTask = new Intent(this.frag.getActivity(),
+//				ViewTaskActivity.class);
+//		viewTask.putExtra("task", this.task);
+//		this.frag.startActivityForResult(viewTask, 6);// (viewTask);
+		this.frag.notifyAdapter();
 	}
 
 }

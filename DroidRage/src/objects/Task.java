@@ -3,10 +3,13 @@ package objects;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerationException;
@@ -23,7 +26,8 @@ public class Task extends Event implements Parcelable {
 	private String createdBy;
 	private String type; // title, description, isCompleted, deadline,
 							// compeltion criteria, assigned to
-
+	private  List<User> members = new ArrayList<User>();
+	
 	public Task() {
 		// Required empty constructor
 	}
@@ -66,6 +70,15 @@ public class Task extends Event implements Parcelable {
 
 	public void setDateAssigned(String dateAssigned) {
 		this.dateAssigned = dateAssigned;
+	}
+	public List<User> getMembers() {
+		return members;
+	}
+	public void setMembers(List<User> members) {
+		this.members = members;
+	}
+	public void addMember(User user){
+		this.members.add(user);
 	}
 
 	public String getCompletionCriteria() {
@@ -115,6 +128,15 @@ public class Task extends Event implements Parcelable {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	
+	@Override
+	public int compareTo(Event another) {
+		if (another == null) {
+			return 1;
+		}
+		return Long.valueOf(getEndTimeInMillis()).compareTo(
+				Long.valueOf(another.getEndTimeInMillis()));
+	}
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
@@ -131,6 +153,7 @@ public class Task extends Event implements Parcelable {
 		dest.writeString(getCreatedBy());
 		dest.writeString(getID());
 		dest.writeString(getType());
+		dest.writeList(getMembers());
 	}
 
 	public void readFromParcel(Parcel in) {
@@ -146,6 +169,7 @@ public class Task extends Event implements Parcelable {
 		createdBy = in.readString();
 		taskID = in.readString();
 		type = in.readString();
+		this.members = in.readArrayList(User.class.getClassLoader());
 
 	}
 
@@ -190,30 +214,4 @@ public class Task extends Event implements Parcelable {
 		return json;
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("*** Task Details ***\n");
-		builder.append("getTaskID()\t");
-		builder.append(getID() + "\n");
-		builder.append("getTitle()\t");
-		builder.append(getTitle() + "\n");
-		builder.append("getDescription()\t");
-		builder.append(getDescription() + "\n");
-		builder.append("getDateCreated()\t");
-		builder.append(getDateCreated() + "\n");
-		builder.append("getDeadline()\t");
-		builder.append(getEndTime() + "\n");
-		builder.append("getIsCompleted()\t");
-		builder.append(getIsCompleted() + "\n");
-		builder.append("getAssignedTo()\t");
-		builder.append(getAssignedTo() + "\n");
-		builder.append("getCreatedBy()\t");
-		builder.append(getCreatedBy() + "\n");
-		builder.append("getAssingedFrom()\t");
-		builder.append(getAssignedFrom() + "\n");
-		builder.append("getType()\t");
-		builder.append(getType() + "\n");
-		return builder.toString();
-	}
 }

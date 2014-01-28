@@ -16,13 +16,20 @@
 package com.meetingninja.csse.tasks;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
 import objects.Task;
+import android.app.ActionBar;
+import android.app.ActionBar.OnNavigationListener;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.DataSetObserver;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -31,21 +38,24 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListView;
-import android.widget.ExpandableListView.OnChildClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.AsyncResponse;
+import com.meetingninja.csse.extras.MyDateUtils;
 
 public class TasksFragment extends Fragment implements
-		AsyncResponse<List<Task>> {
+AsyncResponse<List<Task>> {
 
-	private List<String> meetingNames = new ArrayList<String>();
 	private HashMap<String, List<Task>> taskLists = new HashMap<String, List<Task>>();
-	private TaskListAdapter taskAdpt;
+	private TaskItemAdapter taskAdpt;
+	private TaskTypeAdapter typeAdapter;
 
 	private TaskListFetcherTask taskListfetcher = null;
 	private TaskFetcherResp taskInfoFetcher = null;
@@ -54,7 +64,8 @@ public class TasksFragment extends Fragment implements
 	private final String assignedToMe = "Assigned to me";
 	private final String iAssigned = "I assigned";
 	private final String iCreated = "I created";
-
+	
+	private int numLoading = 0;
 	// make tasks adapter
 
 	@Override
@@ -65,35 +76,53 @@ public class TasksFragment extends Fragment implements
 		setHasOptionsMenu(true);
 
 		session = SessionManager.getInstance();
+		
+
+		/*Set up the spinner selector*/
+		List<String> typeNames = new ArrayList<String>();
+		typeNames.add(assignedToMe); typeNames.add(iAssigned); typeNames.add(iCreated);
+		typeAdapter = new TaskTypeAdapter(getActivity(), typeNames);
+		getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		getActivity().getActionBar().setListNavigationCallbacks(typeAdapter, new OnNavigationListener(){
+
+			@Override
+			public boolean onNavigationItemSelected(int itemPosition,
+					long itemId) {
+
+				setTaskList(itemPosition);
+
+				return true;
+			}
+
+		});
+		
+		
+		/*Set up the task list*/
 		ArrayList<Task> l1 = new ArrayList<Task>(), l2 = new ArrayList<Task>(), l3 = new ArrayList<Task>();
 		taskLists.put(assignedToMe, l1);
 		taskLists.put(iAssigned, l2);
 		taskLists.put(iCreated, l3);
-		meetingNames.add(assignedToMe);
-		meetingNames.add(iAssigned);
-		meetingNames.add(iCreated);
-
+		
 		refreshTasks();
 
-		ExpandableListView lv = (ExpandableListView) v
-				.findViewById(R.id.tasksList);
+		ListView lv = (ListView) v
+				.findViewById(R.id.task_list);
 
-		taskAdpt = new TaskListAdapter(getActivity(), meetingNames, taskLists);
+		taskAdpt = new TaskItemAdapter(getActivity(), R.layout.list_item_task, taskLists.get(iAssigned));
 
 		lv.setAdapter(taskAdpt);
 		registerForContextMenu(lv);
-
-		lv.setOnChildClickListener(new OnChildClickListener() {
+		
+		lv.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public boolean onChildClick(ExpandableListView parent, View v,
-					int groupPosition, int childPosition, long id) {
+			public void onItemClick(AdapterView<?> parentAdapter,
+					View v, int position, long id) {
 				// Intent viewTask = new Intent(getActivity(),
 				// ViewTaskActivity.class);
 				// startActivity(viewTask);
-				Task t = (Task) taskAdpt.getChild(groupPosition, childPosition);
+				Task t = (Task) taskAdpt.getItem(position);
 				loadTask(t);
-				return false;
 			}
 		});
 
@@ -118,6 +147,16 @@ public class TasksFragment extends Fragment implements
 			return super.onContextItemSelected(item);
 		}
 	}
+	@Override
+	public void onPause(){
+		getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+		super.onPause();
+	}
+	@Override
+	public void onResume(){
+		getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		super.onResume();
+	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -129,22 +168,37 @@ public class TasksFragment extends Fragment implements
 	}
 
 	private void loadTask(Task task) {
-		this.taskInfoFetcher.openTask(task);
+		while(task.getEndTimeInMillis()==0L);
+		Intent viewTask = new Intent(getActivity(),
+				ViewTaskActivity.class);
+		viewTask.putExtra("task", task);
+		startActivityForResult(viewTask, 6);
 	}
 
 	private void refreshTasks() {
 		taskListfetcher = new TaskListFetcherTask(this);
-		System.out.println(session.getUserID());
 		taskListfetcher.execute(session.getUserID());
 		taskInfoFetcher = new TaskFetcherResp(this);
 	}
+	private void setTaskList(int type){
+		switch(type){
+		case 0: taskAdpt.setTasks(taskLists.get(assignedToMe)); break;
+		case 1: taskAdpt.setTasks(taskLists.get(iAssigned)); break;
+		case 2: taskAdpt.setTasks(taskLists.get(iCreated)); break;
+		}
 
+		taskAdpt.notifyDataSetChanged();
+
+	}
 	@Override
 	public void processFinish(List<Task> result) {
 		taskLists.get(assignedToMe).clear();
 		taskLists.get(iAssigned).clear();
 		taskLists.get(iCreated).clear();
+		Collections.sort(result);
 		for (Task task : result) {
+//			new TaskFetcherResp(this).loadTask(task);
+//			numLoading++;
 			if (task.getType().equals("ASSIGNED_TO")) {
 				taskLists.get(assignedToMe).add(task);
 			} else if (task.getType().equals("ASSIGNED_FROM")) {
@@ -153,111 +207,68 @@ public class TasksFragment extends Fragment implements
 				taskLists.get(iCreated).add(task);
 			}
 		}
+		
+
+
 		taskAdpt.notifyDataSetChanged();
+
+	}
+	public void notifyAdapter(){
+//		taskAdpt.notifyDataSetChanged();
+		numLoading--;
+		if(numLoading==0){			
+			taskAdpt.notifyDataSetChanged();
+		}
 	}
 }
 
-class TaskListAdapter extends BaseExpandableListAdapter {
+class TaskTypeAdapter implements SpinnerAdapter{
 	private Context context;
-	private List<String> meetingNames;
-	private HashMap<String, List<Task>> tasksLists;
+	private List<String> typeNames;
 
-	public TaskListAdapter(Context context, List<String> meetingNames,
-			HashMap<String, List<Task>> tasksLists) {
-		this.context = context;
-		this.meetingNames = meetingNames;
-		this.tasksLists = tasksLists;
+	public TaskTypeAdapter(Context context, List<String> typeNames){
+		this.context=context;
+		this.typeNames=typeNames;
+	}
+	@Override
+	public int getCount() {
+		return this.typeNames.size();
 	}
 
 	@Override
-	public Object getChild(int groupPos, int childPos) {
-		return this.tasksLists.get(this.meetingNames.get(groupPos)).get(
-				childPos);
+	public Object getItem(int position) {
+		return this.typeNames.get(position);
 	}
 
 	@Override
-	public long getChildId(int groupPosition, int childPosition) {
-		return childPosition;
+	public long getItemId(int position) {
+		return position;
 	}
-
-	// class for caching the views in a row
-	private class ChildViewHolder {
-		TextView taskName, taskDescription;
-	}
-
-	ChildViewHolder viewHolder;
 
 	@Override
-	public View getChildView(int groupPosition, int childPosition,
-			boolean isLastChild, View convertView, ViewGroup parent) {
-		View rowView = convertView;
-		LayoutInflater inflater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	public int getItemViewType(int position) {
+		return 0;
+	}
+
+
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		TextView rowView = (TextView) convertView;
 		if (rowView == null) {
-			rowView = inflater.inflate(R.layout.task_item, null);
-			viewHolder = new ChildViewHolder();
-			viewHolder.taskName = (TextView) rowView
-					.findViewById(R.id.taskName);
-			viewHolder.taskDescription = (TextView) rowView
-					.findViewById(R.id.taskDiscription);
+			rowView = new TextView(this.context);
+		} 
 
-			rowView.setTag(viewHolder);
-		} else
-			viewHolder = (ChildViewHolder) rowView.getTag();
 
-		Task t = (Task) getChild(groupPosition, childPosition);
+		rowView.setText(typeNames.get(position));
+		rowView.setTextColor(Color.WHITE);
 
-		viewHolder.taskName.setText(t.getTitle());
-		viewHolder.taskDescription.setText(t.getDescription());
+
 		return rowView;
 	}
 
 	@Override
-	public int getChildrenCount(int groupPosition) {
-		return this.tasksLists.get(this.meetingNames.get(groupPosition)).size();
-	}
-
-	@Override
-	public String getGroup(int groupPosition) {
-		return this.meetingNames.get(groupPosition);
-	}
-
-	@Override
-	public int getGroupCount() {
-		return this.meetingNames.size();
-	}
-
-	@Override
-	public long getGroupId(int groupPosition) {
-		return groupPosition;
-	}
-
-	private class GroupViewHolder {
-		TextView meetingName;
-	}
-
-	GroupViewHolder groupViewHolder;
-
-	@Override
-	public View getGroupView(int groupPosition, boolean isExpanded,
-			View convertView, ViewGroup parent) {
-		View groupView = convertView;
-		LayoutInflater inflater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		if (groupView == null) {
-			groupView = inflater.inflate(R.layout.task_sublist, null);
-			groupViewHolder = new GroupViewHolder();
-			groupViewHolder.meetingName = (TextView) groupView
-					.findViewById(R.id.task_group);
-
-			groupView.setTag(groupViewHolder);
-		} else
-			groupViewHolder = (GroupViewHolder) groupView.getTag();
-
-		String name = getGroup(groupPosition);
-		groupViewHolder.meetingName.setText(name);
-
-		return groupView;
+	public int getViewTypeCount() {
+		return this.typeNames.size();
 	}
 
 	@Override
@@ -266,8 +277,120 @@ class TaskListAdapter extends BaseExpandableListAdapter {
 	}
 
 	@Override
-	public boolean isChildSelectable(int groupPosition, int childPosition) {
-		return true;
+	public boolean isEmpty() {
+		return this.typeNames.isEmpty();
 	}
+
+	@Override
+	public void registerDataSetObserver(DataSetObserver observer) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void unregisterDataSetObserver(DataSetObserver observer) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public View getDropDownView(int position, View convertView, ViewGroup parent) {
+		TextView rowView = (TextView) getView(position, convertView, parent);
+		rowView.setPadding(
+				(int) this.context.getResources().getDimension(R.dimen.activity_horizontal_margin),
+				(int) this.context.getResources().getDimension(R.dimen.activity_vertical_margin)
+				, (int) this.context.getResources().getDimension(R.dimen.activity_horizontal_margin)
+				, (int) this.context.getResources().getDimension(R.dimen.activity_vertical_margin));
+		return rowView;
+	}
+
+}
+
+class TaskItemAdapter extends ArrayAdapter<Task>{
+	private List<Task> tasks;
+	private Context context;
+
+	public TaskItemAdapter(Context context, int textViewResourceId, List<Task> tasks){
+		super(context, textViewResourceId, tasks);
+		this.context=context;
+		this.tasks=tasks;
+	}
+	
+	public void setTasks(List<Task> tasks){
+		this.tasks = tasks;
+	}
+	
+	@Override
+	public void sort(Comparator<? super Task> c){
+		Collections.sort(tasks);
+	}
+	
+	@Override
+	public int getCount(){
+		return this.tasks.size();
+	}
+	
+	@Override
+	public Task getItem(int position){
+		return this.tasks.get(position);
+	}
+	
+
+	private class ViewHolder{
+		TextView title, deadline;
+		View background;
+	}
+	
+	ViewHolder viewHolder;
+
+	/*
+	 * we are overriding the getView method here - this is what defines how each
+	 * list item will look.
+	 */
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		View rowView = convertView;
+		LayoutInflater inflater = (LayoutInflater) context
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		if (rowView == null) {
+			rowView = inflater.inflate(R.layout.list_item_task, null);
+			viewHolder = new ViewHolder();
+
+			viewHolder.title = (TextView) rowView
+					.findViewById(R.id.list_task_title);
+			viewHolder.deadline = (TextView) rowView
+					.findViewById(R.id.list_task_deadline);
+			viewHolder.background = rowView.findViewById(R.id.list_task_holder);
+
+			rowView.setTag(viewHolder);
+		} else
+			viewHolder = (ViewHolder) rowView.getTag();
+
+		// Setup from the meeting_item XML file
+		Task task = tasks.get(position);
+		
+		
+		
+		viewHolder.title.setText(task.getTitle());
+		viewHolder.deadline.setText("Deadline:  "
+				+ MyDateUtils.JODA_MEETING_DATE_FORMAT.print(task.getEndTimeInMillis()));
+		
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(task.getEndTimeInMillis());
+		cal.add(Calendar.DAY_OF_MONTH, -1);
+		if(task.getEndTimeInMillis() == 0L){
+			
+		}else if(task.getIsCompleted()){
+			viewHolder.background.setBackgroundColor(Color.rgb(53, 227, 111));
+		}else if(cal.before(Calendar.getInstance())){
+			viewHolder.background.setBackgroundColor(Color.rgb(255, 51, 51));
+		}else{
+			viewHolder.background.setBackground(null);
+		}
+		
+		return rowView;
+	}
+
+
 
 }

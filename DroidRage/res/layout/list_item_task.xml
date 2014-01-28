@@ -1,32 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/list_task_holder"
     android:layout_width="fill_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
+    android:orientation="vertical"
     android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft" >
 
     <!-- Name of Task -->
 
     <TextView
-        android:id="@+id/taskName"
+        android:id="@+id/list_task_title"
         android:layout_width="wrap_content"
         android:layout_height="26dip"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
         android:ellipsize="marquee"
         android:singleLine="true"
-        android:text="Name"
+        android:hint="Title"
         android:textStyle="bold" />
 
-    <!-- Note Content -->
+    <!-- Task Deadline -->
 
     <TextView
-        android:id="@+id/taskDiscription"
+        android:id="@+id/list_task_deadline"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/taskName"
         android:singleLine="false"
-        android:text="Discription" />
+        android:hint="Discription" />
 
-</RelativeLayout>
+</LinearLayout>
