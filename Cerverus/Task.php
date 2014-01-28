@@ -92,7 +92,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 ){
 	$array = $taskNode->getProperties();
 	if(array_key_exists('nodeType', $array)){
 		if(strcasecmp($array['nodeType'], 'Task')!=0){
-			echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['id'].' is an not a task node.'));
+			echo json_encode(array('errorID'=>'11', 'errorMessage'=>$postContent->taskID.' is an not a task node.'));
 			return 1;
 		}
 	}   
