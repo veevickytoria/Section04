@@ -16,7 +16,7 @@ $client= new Client();
         $meetingIndex->save();
 
 if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
-	//create meeting POST
+        //create meeting POST
         //get the json string post content
         $postContent = json_decode(@file_get_contents('php://input'));
         
@@ -27,9 +27,10 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
         $meetingNode->setProperty('userID', $postContent->userID)
                 ->setProperty('title', $postContent->title)
                 ->setProperty('datetime', $postContent->datetime)
-				->setProperty('endDatetime', $postContent->endDatetime)
+                ->setProperty('endDatetime', $postContent->endDatetime)
                 ->setProperty('description',$postContent->description)
-                ->setProperty('location', $postContent->location);
+                ->setProperty('location', $postContent->location)
+				->setProperty('nodeType','Meeting');
         
         //actually add the node in the db
         $meetingNode->save();
@@ -56,34 +57,40 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') == 0){
         //getMeetingInfo
         $meetingNode=$client->getNode($_GET['id']);
-		
-		if ($meetingNode != null) {
-		
-			$outputArray=$meetingNode->getProperties();
-		
-			//get relationships
-			//Arrays are three levels deep
-			// 1-outputArray: overall output array 
-			// 2-userOutputArray: all related users
-			// 3-uArray: individual users
-			$relationArray = $meetingNode->getRelationships(array(), Relationship::DirectionIn);
-			$userOutputArray = array();
-			$u=0;
-			foreach($relationArray as $rel){
-				$relType = $rel->getType();
-				if($relType == 'ATTEND_MEETING') {
-					$userNode=$rel->getStartNode();
-					$uArray = array();
-					$uArray['userID']=$userNode->getId();
-					$userOutputArray[$u++] = $uArray;
-				} 
-			}
-			$outputArray['attendance'] = $userOutputArray;
-			
-			echo json_encode($outputArray);
-		} else {
-			echo "Node not found";
-		}
+                $array = $meetingNode->getProperties();
+				if(array_key_exists('nodeType', $array)){
+					if(strcasecmp($array['nodeType'], 'Meeting')!=0){
+						echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['id'].' is an not a meeting node.'));
+						return 1;
+					}
+				}            
+                if ($meetingNode != null) {
+                
+                        $outputArray=$meetingNode->getProperties();
+                
+                        //get relationships
+                        //Arrays are three levels deep
+                        // 1-outputArray: overall output array 
+                        // 2-userOutputArray: all related users
+                        // 3-uArray: individual users
+                        $relationArray = $meetingNode->getRelationships(array(), Relationship::DirectionIn);
+                        $userOutputArray = array();
+                        $u=0;
+                        foreach($relationArray as $rel){
+                                $relType = $rel->getType();
+                                if($relType == 'ATTEND_MEETING') {
+                                        $userNode=$rel->getStartNode();
+                                        $uArray = array();
+                                        $uArray['userID']=$userNode->getId();
+                                        $userOutputArray[$u++] = $uArray;
+                                } 
+                        }
+                        $outputArray['attendance'] = $userOutputArray;
+                        
+                        echo json_encode($outputArray);
+                } else {
+                        echo "Node not found";
+                }
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'PUT') == 0){
         //updateMeeting
         
@@ -92,41 +99,54 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
         
         $meeting=$client->getNode($postContent->meetingID);
         if(sizeof($meeting > 0)){
+				$array = $meeting->getProperties();
+				if(array_key_exists('nodeType', $array)){
+					if(strcasecmp($array['nodeType'], 'Meeting')!=0){
+						echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['id'].' is an not a meeting node.'));
+						return 1;
+					}
+				}
                 if(strcasecmp($postContent->field, 'user') ==0){
                         $meeting->setProperty('user', $postContent->value);
                         $meeting->save();
                         $array = $meeting->getProperties();
                         $array['meetingID']=$meeting->getId();
+						unset($array['nodeType']);
                         echo json_encode($array);
                 }else if(strcasecmp($postContent->field, 'title') ==0){
                         $meeting->setProperty('title', $postContent->value);
                         $meeting->save();
                         $array = $meeting->getProperties();
                         $array['meetingID']=$meeting->getId();
+						unset($array['nodeType']);
                         echo json_encode($array);
                 }else if(strcasecmp($postContent->field, 'datetime') ==0){
                         $meeting->setProperty('datetime', $postContent->value);
                         $meeting->save();
                         $array = $meeting->getProperties();
                         $array['meetingID']=$meeting->getId();
+						unset($array['nodeType']);
                         echo json_encode($array);
                 }else if(strcasecmp($postContent->field, 'duration') ==0){
                         $meeting->setProperty('duration', $postContent->value);
                         $meeting->save();
                         $array = $meeting->getProperties();
                         $array['meetingID']=$meeting->getId();
+						unset($array['nodeType']);
                         echo json_encode($array);
                 }else if(strcasecmp($postContent->field, 'location') ==0){
                         $meeting->setProperty('location', $postContent->value);
                         $meeting->save();
                         $array = $meeting->getProperties();
                         $array['meetingID']=$meeting->getId();
+						unset($array['nodeType']);
                         echo json_encode($array);
                 }else if(strcasecmp($postContent->field, 'description') ==0){
                         $meeting->setProperty('description', $postContent->value);
                         $meeting->save();
                         $array = $meeting->getProperties();
                         $array['meetingID']=$meeting->getId();
+						unset($array['nodeType']);
                         echo json_encode($array);
                 }else if(strcasecmp($postContent->field, 'attendance') ==0){
                         $attendeeArray = $postContent->value;
@@ -147,44 +167,51 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
                         }
                         $array = $meeting->getProperties();
                         $array['meetingID']=$meeting->getId();
+						unset($array['nodeType']);
                         echo json_encode($array);
                 }
         }
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'DELETE') == 0){      
-	//delete meeting DELETE
-	//get the id
-	$id=$_GET['id'];
+        //delete meeting DELETE
+        //get the id
+        $id=$_GET['id'];
         
-	//get the node
-	$node = $client->getNode($id);
-	//make sure the node exists
-	if($node != NULL){
-		//check if node has meeting index
-		$meeting = $meetingIndex->findOne('ID', ''.$id);
-						
-		//only delete the node if it's a note
-		if($meeting != NULL){
-			//get the relationships
-			$relations = $meeting->getRelationships();
-			foreach($relations as $rel){
-				//remove all relationships
-				$rel->delete();
-			}
-			
-			//delete node and return true
-			$meeting->delete();
-			$array = array('valid'=>'true');
-			echo json_encode($array);
-		} else {
-			//return an error otherwise
-			$errorarray = array('errorID' => '4', 'errorMessage'=>'Given node ID is not a meeting node');
-			echo json_encode($errorarray);
-		}
-	} else {
-		//return an error if ID doesn't point to a node
-		$errorarray = array('errorID' => '5', 'errorMessage'=>'Given node ID is not recognized in database');
-		echo json_encode($errorarray);
-	}
+        //get the node
+        $node = $client->getNode($id);
+        //make sure the node exists
+        if($node != NULL){
+                //check if node has meeting index
+                $meeting = $meetingIndex->findOne('ID', ''.$id);
+                $array = $meeting->getProperties();
+				if(array_key_exists('nodeType', $array)){
+					if(strcasecmp($array['nodeType'], 'Meeting')!=0){
+						echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['id'].' is an not a meeting node.'));
+						return 1;
+					}
+				}                                
+                //only delete the node if it's a note
+                if($meeting != NULL){
+                        //get the relationships
+                        $relations = $meeting->getRelationships();
+                        foreach($relations as $rel){
+                                //remove all relationships
+                                $rel->delete();
+                        }
+                        
+                        //delete node and return true
+                        $meeting->delete();
+                        $array = array('valid'=>'true');
+                        echo json_encode($array);
+                } else {
+                        //return an error otherwise
+                        $errorarray = array('errorID' => '4', 'errorMessage'=>'Given node ID is not a meeting node');
+                        echo json_encode($errorarray);
+                }
+        } else {
+                //return an error if ID doesn't point to a node
+                $errorarray = array('errorID' => '5', 'errorMessage'=>'Given node ID is not recognized in database');
+                echo json_encode($errorarray);
+        }
 }else{
         echo $_SERVER['REQUEST_METHOD'] ." request method not found in Meeting";
 }
