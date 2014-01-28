@@ -33,8 +33,8 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 ){
 		->setProperty( 'description', $postContent->description )
 		->setProperty( 'deadline', $postContent->deadline )
 		->setProperty( 'dateCreated', $postContent->dateCreated )
-		->setProperty( 'completionCriteria', $postContent->completionCriteria );
-	
+		->setProperty( 'completionCriteria', $postContent->completionCriteria )
+		->setProperty( 'nodeType', 'Task');)
 	//actually add the node in the db
 	$taskNode->save();
 	
@@ -53,7 +53,13 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 ){
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 ){
 	//viewTaskInfo
 	$taskNode=$client->getNode($_GET['id']);
-	
+	$array = $taskNode->getProperties();
+	if(array_key_exists('nodeType', $array)){
+		if(strcasecmp($array['nodeType'], 'Task')!=0){
+			echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['id'].' is an not a task node.'));
+			return 1;
+		}
+	}   
 	if ($taskNode != null){
             $array = $taskNode->getProperties();
 
@@ -83,6 +89,13 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 ){
 	//updateTask
 	$postContent = json_decode(@file_get_contents('php://input'));
 	$taskNode=$client->getNode($postContent->taskID);
+	$array = $taskNode->getProperties();
+	if(array_key_exists('nodeType', $array)){
+		if(strcasecmp($array['nodeType'], 'Task')!=0){
+			echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['id'].' is an not a task node.'));
+			return 1;
+		}
+	}   
 	$updated = 0;
 	
 	if (sizeof($taskNode) > 0){
@@ -152,6 +165,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 ){
 					$array['createdBy']=$userNode->getId();
 				} 
 			}
+			unset($array['nodeType']);
 			echo json_encode($array);
 		} else{
 			echo json_encode(array("errorID"=>"17", "errorMessage"=>$postContent->field." is an invalid field for Task."));
@@ -168,6 +182,13 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 ){
 	//$taskNode=$client->getNode($postContent->taskID);
 	preg_match("#(\d+)#", $_SERVER['REQUEST_URI'], $id);
 	$taskNode = $client->getNode($id[0]);
+	$array = $taskNode->getProperties();
+	if(array_key_exists('nodeType', $array)){
+		if(strcasecmp($array['nodeType'], 'Task')!=0){
+			echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['id'].' is an not a task node.'));
+			return 1;
+		}
+	}   
 	if ($taskNode != null){
 		//only delete the node if it's a task
 		//$task = $taskIndex->findOne('ID', ''.$id[0]);
