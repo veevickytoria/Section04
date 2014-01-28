@@ -32,25 +32,28 @@ import objects.MockObjectFactory;
 import objects.Note;
 import objects.Project;
 import objects.Schedule;
-import objects.SerializableUser;
 import objects.Task;
 import objects.User;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.StringRequest;
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.meetingninja.csse.ApplicationController;
+import com.meetingninja.csse.MainActivity;
 import com.meetingninja.csse.SessionManager;
-import com.meetingninja.csse.database.callbacks.MeetingResponse;
 import com.meetingninja.csse.extras.JsonUtils;
 import com.meetingninja.csse.extras.Utilities;
 
@@ -420,7 +423,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		}
 
 		conn.disconnect();
-		for(Task t:taskList){
+		for (Task t : taskList) {
 			TaskDatabaseAdapter.getTask(t);
 		}
 		return taskList;
@@ -547,29 +550,26 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		return parseUser(MAPPER.readTree(response));
 	}
 
-	public static boolean deleteUser(String userID) throws IOException {
-		String _url = getBaseUri().appendPath(userID).build().toString();
-		URL url = new URL(_url);
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+	private void deleteUser(String userID, final AsyncResponse<Boolean> delegate) {
+		String url = UserDatabaseAdapter.getBaseUri().appendPath(userID)
+				.build().toString();
 
-		// add request header
-		conn.setRequestMethod(IRequest.DELETE);
-		addRequestHeader(conn, false);
-		int responseCode = conn.getResponseCode();
-		String response = getServerResponse(conn);
+		JsonNodeRequest del_req = new JsonNodeRequest(Request.Method.DELETE,
+				url, null, new JsonRequestListener() {
 
-		boolean result = false;
-		JsonNode tree = MAPPER.readTree(response);
-		if (!response.isEmpty()) {
-			if (!tree.has(Keys.DELETED)) {
-				result = true;
-			} else {
-				logError(TAG, tree);
-			}
-		}
+					@Override
+					public void onResponse(JsonNode response, int statusCode,
+							VolleyError error) {
+						if (response != null) {
+							delegate.processFinish(response.get(Keys.DELETED)
+									.asBoolean(false));
+						} else {
+							error.printStackTrace();
+						}
 
-		conn.disconnect();
-		return result;
+					}
+				});
+		ApplicationController.getInstance().addToRequestQueue(del_req);
 
 	}
 
@@ -577,21 +577,19 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		String _url = getBaseUri().appendPath("Users").build().toString();
 
 		JsonNodeRequest req = new JsonNodeRequest(_url, null,
-				new Response.Listener<JsonNode>() {
+				new JsonRequestListener() {
 
 					@Override
-					public void onResponse(JsonNode response) {
-						// callback to UI thread
-						delegate.processFinish(parseUserList(response));
-					}
-				}, new Response.ErrorListener() {
-					@Override
-					public void onErrorResponse(VolleyError error) {
-						VolleyLog.e("Error: %s", error.getLocalizedMessage());
-
+					public void onResponse(JsonNode response, int statusCode,
+							VolleyError error) {
+						if (response != null) {
+							// callback to UI thread
+							delegate.processFinish(parseUserList(response));
+						} else {
+							error.printStackTrace();
+						}
 					}
 				});
-
 		// add the request object to the queue to be executed
 		ApplicationController.getInstance().addToRequestQueue(req, "JSON");
 

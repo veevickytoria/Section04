@@ -16,10 +16,12 @@
 
 package com.doomonafireball.betterpickers.calendardatepicker;
 
-import com.meetingninja.csse.R;
-import com.doomonafireball.betterpickers.TouchExplorationHelper;
-import com.doomonafireball.betterpickers.Utils;
-import com.doomonafireball.betterpickers.calendardatepicker.SimpleMonthAdapter.CalendarDay;
+import java.security.InvalidParameterException;
+import java.util.Calendar;
+import java.util.Formatter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -40,12 +42,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
 
-import java.security.InvalidParameterException;
-import java.util.Calendar;
-import java.util.Formatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
+import com.doomonafireball.betterpickers.TouchExplorationHelper;
+import com.doomonafireball.betterpickers.Utils;
+import com.doomonafireball.betterpickers.calendardatepicker.SimpleMonthAdapter.CalendarDay;
+import com.meetingninja.csse.R;
 
 /**
  * A calendar-like view displaying a specified month and the appropriate selectable day numbers within the specified

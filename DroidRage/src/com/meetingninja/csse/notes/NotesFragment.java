@@ -216,33 +216,6 @@ public class NotesFragment extends Fragment implements
 		} // end CreateNoteActivity
 	}
 
-	/**
-	 * Initializes the list of notes. TODO: Get the notes from the database
-	 */
-	private void fetchNotes() {
-		String _url = UserDatabaseAdapter.getBaseUri().appendPath("Notes")
-				.appendPath(session.getUserID()).build().toString();
-
-		JsonNodeRequest req = new JsonNodeRequest(_url, null,
-				new Response.Listener<JsonNode>() {
-					@Override
-					public void onResponse(JsonNode response) {
-						VolleyLog.v("Response:%n %s", response);
-
-						// processFinish(NotesDatabaseAdapter.parseNoteList(noteNode));
-					};
-				}, new Response.ErrorListener() {
-					@Override
-					public void onErrorResponse(VolleyError error) {
-						VolleyLog.e("Error:%n %s", error);
-
-					};
-				});
-
-		ApplicationController app = ApplicationController.getInstance();
-		app.addToRequestQueue(req, "JSON");
-	}
-
 	private boolean updateNote(Note update) {
 		mySQLiteAdapter.updateNote(update);
 		populateList();

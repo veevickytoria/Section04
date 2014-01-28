@@ -13,8 +13,7 @@ public abstract class AbstractResponse<T> implements AsyncResponse<T> {
 	}
 
 	public synchronized T getData() {
-		// if (!t.isAlive())
-		// t.start();
+		while (data == null);
 		return data;
 	}
 

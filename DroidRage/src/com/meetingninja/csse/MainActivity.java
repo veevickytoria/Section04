@@ -448,28 +448,6 @@ public class MainActivity extends FragmentActivity implements
 
 	}
 
-	private void deleteUser(String userID) {
-		String url = UserDatabaseAdapter.getBaseUri().appendPath(userID)
-				.build().toString();
-		StringRequest dr = new StringRequest(Request.Method.DELETE, url,
-				new Response.Listener<String>() {
-					@Override
-					public void onResponse(String response) {
-						// response
-						Toast.makeText(MainActivity.this, response,
-								Toast.LENGTH_LONG).show();
-					}
-				}, new Response.ErrorListener() {
-					@Override
-					public void onErrorResponse(VolleyError error) {
-						// error.
-
-					}
-				});
-		ApplicationController.getInstance().addToRequestQueue(dr);
-
-	}
-
 	/* Called whenever we call invalidateOptionsMenu() */
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {

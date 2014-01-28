@@ -7,7 +7,6 @@ import java.io.PrintStream;
 import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.text.TextUtils;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -17,8 +16,6 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.meetingninja.csse.database.Keys;
-import com.meetingninja.csse.extras.JsonUtils;
-import com.meetingninja.csse.extras.Utilities;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "userID", "displayName", "email", "phone", "company",

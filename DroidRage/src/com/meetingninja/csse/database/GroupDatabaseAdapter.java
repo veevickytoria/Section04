@@ -26,16 +26,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import objects.Group;
-import objects.Meeting;
 import objects.User;
-
 import android.net.Uri;
 
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.google.dexmaker.dx.rop.cst.CstArray.List;
 
 public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
 	

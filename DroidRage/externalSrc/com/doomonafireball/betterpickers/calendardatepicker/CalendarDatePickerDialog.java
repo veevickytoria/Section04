@@ -16,9 +16,11 @@
 
 package com.doomonafireball.betterpickers.calendardatepicker;
 
-import com.meetingninja.csse.R;
-import com.doomonafireball.betterpickers.Utils;
-import com.nineoldandroids.animation.ObjectAnimator;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.content.Context;
@@ -41,11 +43,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Locale;
+import com.doomonafireball.betterpickers.Utils;
+import com.meetingninja.csse.R;
+import com.nineoldandroids.animation.ObjectAnimator;
 
 /**
  * Dialog allowing users to select a date.

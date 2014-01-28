@@ -24,7 +24,6 @@ import objects.User;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,8 +35,7 @@ import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
 import com.meetingninja.csse.database.local.SQLiteUserAdapter;
 
-public class UserListFragment extends ListFragment implements
-		AsyncResponse<List<User>> {
+public class UserListFragment extends ListFragment {
 
 	private SQLiteUserAdapter dbHelper;
 	private UserArrayAdapter mUserAdapter;
@@ -66,7 +64,6 @@ public class UserListFragment extends ListFragment implements
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		Log.d(getTag(), "Clicked");
 		User clicked = mUserAdapter.getItem(position);
 		Intent profileIntent = new Intent(getActivity(), ProfileActivity.class);
 		profileIntent.putExtra(Keys.User.PARCEL, clicked);
@@ -80,26 +77,25 @@ public class UserListFragment extends ListFragment implements
 	}
 
 	private void populateList() {
-		// Async-Task -> processFinish()
-		UserDatabaseAdapter.fetchAllUsers(this);
-	}
-
-	@Override
-	public void processFinish(List<User> result) {
-		users.clear();
-		mUserAdapter.clear();
-
-		Collections.sort(result, new Comparator<User>() {
+		// Async-Task 
+		UserDatabaseAdapter.fetchAllUsers(new AsyncResponse<List<User>>() {
 			@Override
-			public int compare(User lhs, User rhs) {
-				return lhs.getDisplayName().toLowerCase()
-						.compareTo(rhs.getDisplayName().toLowerCase());
+			public void processFinish(List<User> result) {
+				users.clear();
+				mUserAdapter.clear();
+
+				Collections.sort(result, new Comparator<User>() {
+					@Override
+					public int compare(User lhs, User rhs) {
+						return lhs.getDisplayName().toLowerCase()
+								.compareTo(rhs.getDisplayName().toLowerCase());
+					}
+				});
+				users.addAll(result);
+
+				mUserAdapter.notifyDataSetChanged();
+
 			}
 		});
-		users.addAll(result);
-
-		mUserAdapter.notifyDataSetChanged();
-
 	}
-
 }

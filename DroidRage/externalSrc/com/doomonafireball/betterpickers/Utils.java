@@ -16,17 +16,17 @@
 
 package com.doomonafireball.betterpickers;
 
-import com.nineoldandroids.animation.Keyframe;
-import com.nineoldandroids.animation.ObjectAnimator;
-import com.nineoldandroids.animation.PropertyValuesHolder;
-import com.nineoldandroids.view.animation.AnimatorProxy;
+import java.util.Calendar;
 
 import android.annotation.SuppressLint;
 import android.os.Build;
 import android.text.format.Time;
 import android.view.View;
 
-import java.util.Calendar;
+import com.nineoldandroids.animation.Keyframe;
+import com.nineoldandroids.animation.ObjectAnimator;
+import com.nineoldandroids.animation.PropertyValuesHolder;
+import com.nineoldandroids.view.animation.AnimatorProxy;
 
 /**
  * Utility helper functions for time and date pickers.

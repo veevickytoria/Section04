@@ -3,7 +3,6 @@ package com.meetingninja.csse;
 import java.util.ArrayList;
 import java.util.List;
 
-import objects.Meeting;
 import objects.SerializableUser;
 import objects.User;
 import android.app.Activity;
@@ -21,12 +20,8 @@ import android.widget.TextView;
 
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
-import com.meetingninja.csse.database.MeetingDatabaseAdapter;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
-import com.meetingninja.csse.database.callbacks.AbstractResponse;
-import com.meetingninja.csse.database.callbacks.MeetingResponse;
 import com.meetingninja.csse.extras.UsersCompletionView;
-import com.meetingninja.csse.meetings.MeetingItemAdapter;
 import com.meetingninja.csse.user.FilteredUserArrayAdapter;
 import com.meetingninja.csse.user.UserArrayAdapter;
 import com.tokenautocomplete.TokenCompleteTextView.TokenListener;

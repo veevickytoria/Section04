@@ -1,6 +1,6 @@
 package com.doomonafireball.betterpickers.timepicker;
 
-import com.meetingninja.csse.R;
+import java.text.DateFormatSymbols;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -18,7 +18,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.text.DateFormatSymbols;
+import com.meetingninja.csse.R;
 
 public class TimePicker extends LinearLayout implements Button.OnClickListener, Button.OnLongClickListener {
 

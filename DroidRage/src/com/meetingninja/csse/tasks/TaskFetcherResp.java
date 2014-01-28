@@ -18,9 +18,7 @@ package com.meetingninja.csse.tasks;
 import java.io.IOException;
 
 import objects.Task;
-import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import com.meetingninja.csse.database.AsyncResponse;

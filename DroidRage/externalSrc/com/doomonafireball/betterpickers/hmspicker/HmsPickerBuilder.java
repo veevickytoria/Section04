@@ -1,13 +1,13 @@
 package com.doomonafireball.betterpickers.hmspicker;
 
-import com.doomonafireball.betterpickers.hmspicker.HmsPickerDialogFragment.HmsPickerDialogHandler;
+import java.util.Vector;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
-import java.util.Vector;
+import com.doomonafireball.betterpickers.hmspicker.HmsPickerDialogFragment.HmsPickerDialogHandler;
 
 /**
  * User: derek Date: 5/2/13 Time: 7:55 PM

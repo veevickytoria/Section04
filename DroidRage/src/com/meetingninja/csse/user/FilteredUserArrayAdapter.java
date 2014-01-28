@@ -1,9 +1,7 @@
 package com.meetingninja.csse.user;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import objects.SerializableUser;
 import objects.User;
 import android.content.Context;
 import android.view.LayoutInflater;

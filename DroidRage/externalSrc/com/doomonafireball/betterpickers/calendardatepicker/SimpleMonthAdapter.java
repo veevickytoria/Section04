@@ -16,6 +16,9 @@
 
 package com.doomonafireball.betterpickers.calendardatepicker;
 
+import java.util.Calendar;
+import java.util.HashMap;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
@@ -23,9 +26,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView.LayoutParams;
 import android.widget.BaseAdapter;
-
-import java.util.Calendar;
-import java.util.HashMap;
 
 /**
  * An adapter for a list of {@link SimpleMonthView} items.

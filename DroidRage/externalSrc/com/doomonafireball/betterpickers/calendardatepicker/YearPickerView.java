@@ -16,8 +16,8 @@
 
 package com.doomonafireball.betterpickers.calendardatepicker;
 
-import com.doomonafireball.betterpickers.calendardatepicker.CalendarDatePickerDialog.OnDateChangedListener;
-import com.meetingninja.csse.R;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -31,8 +31,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.doomonafireball.betterpickers.calendardatepicker.CalendarDatePickerDialog.OnDateChangedListener;
+import com.meetingninja.csse.R;
 
 /**
  * Displays a selectable list of years.

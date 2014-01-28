@@ -22,7 +22,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import objects.Meeting;
@@ -34,8 +33,10 @@ import com.android.volley.VolleyLog;
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.meetingninja.csse.ApplicationController;
+import com.spothero.volley.JacksonRequestListener;
 
 public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 	private final static String TAG = MeetingDatabaseAdapter.class
@@ -69,24 +70,26 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 		return parseMeeting(meetingNode, meetingID);
 	}
 
-	public static void fetchMeetingInfo(final AsyncResponse<Meeting> delegate,
-			final String meetingID) {
+	public static void fetchMeetingInfo(final String meetingID,
+			final AsyncResponse<Meeting> delegate) {
 		String _url = getBaseUri().appendPath(meetingID).build().toString();
 
 		JsonNodeRequest req = new JsonNodeRequest(_url, null,
-				new Response.Listener<JsonNode>() {
+				new JsonRequestListener() {
 
 					@Override
-					public void onResponse(JsonNode response) {
-						// callback to UI thread
-						delegate.processFinish(parseMeeting(response, meetingID));
-					}
-				}, new Response.ErrorListener() {
-					@Override
-					public void onErrorResponse(VolleyError error) {
-						VolleyLog.e("Error: %s", error.getLocalizedMessage());
+					public void onResponse(JsonNode response, int statusCode,
+							VolleyError error) {
+						if (response != null) {
+							delegate.processFinish(parseMeeting(response,
+									meetingID));
+						} else {
+
+							error.printStackTrace();
+						}
 
 					}
+
 				});
 
 		// add the request object to the queue to be executed

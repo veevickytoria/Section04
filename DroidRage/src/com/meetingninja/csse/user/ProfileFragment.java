@@ -15,11 +15,8 @@
  ******************************************************************************/
 package com.meetingninja.csse.user;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
-import objects.Meeting;
 import objects.User;
 import android.content.Intent;
 import android.net.Uri;
@@ -31,7 +28,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -45,10 +41,10 @@ import com.meetingninja.csse.R;
 import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.JsonNodeRequest;
+import com.meetingninja.csse.database.JsonRequestListener;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
 import com.meetingninja.csse.extras.JsonUtils;
-import com.meetingninja.csse.meetings.MeetingItemAdapter;
 
 public class ProfileFragment extends Fragment {
 
@@ -137,19 +133,20 @@ public class ProfileFragment extends Fragment {
 		informationView.setVisibility(View.GONE);
 
 		JsonNodeRequest req = new JsonNodeRequest(_url, null,
-				new Response.Listener<JsonNode>() {
-					@Override
-					public void onResponse(JsonNode response) {
-						VolleyLog.v("Response:%n %s", response);
-						User retUser = UserDatabaseAdapter.parseUser(response);
-						retUser.setID(userID);
-						ProfileFragment.this.setUser(retUser);
-					}
-				}, new Response.ErrorListener() {
-					@Override
-					public void onErrorResponse(VolleyError error) {
-						VolleyLog.e("Error:%n %s", error.getMessage());
+				new JsonRequestListener() {
 
+					@Override
+					public void onResponse(JsonNode response, int statusCode,
+							VolleyError error) {
+						if (response != null) {
+							VolleyLog.v("Response:%n %s", response);
+							User retUser = UserDatabaseAdapter
+									.parseUser(response);
+							retUser.setID(userID);
+							ProfileFragment.this.setUser(retUser);
+						} else {
+							error.printStackTrace();
+						}
 					}
 				});
 

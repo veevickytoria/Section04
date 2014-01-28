@@ -16,10 +16,9 @@
 
 package com.doomonafireball.betterpickers.radialtimepicker;
 
-import com.meetingninja.csse.R;
-import com.doomonafireball.betterpickers.Utils;
-import com.doomonafireball.betterpickers.radialtimepicker.RadialPickerLayout.OnValueSelectedListener;
-import com.nineoldandroids.animation.ObjectAnimator;
+import java.text.DateFormatSymbols;
+import java.util.ArrayList;
+import java.util.Locale;
 
 import android.app.ActionBar.LayoutParams;
 import android.content.Context;
@@ -39,9 +38,10 @@ import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.text.DateFormatSymbols;
-import java.util.ArrayList;
-import java.util.Locale;
+import com.doomonafireball.betterpickers.Utils;
+import com.doomonafireball.betterpickers.radialtimepicker.RadialPickerLayout.OnValueSelectedListener;
+import com.meetingninja.csse.R;
+import com.nineoldandroids.animation.ObjectAnimator;
 
 /**
  * Dialog to set a time.

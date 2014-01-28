@@ -17,13 +17,13 @@ package com.meetingninja.csse;
 
 import java.util.HashMap;
 
-import com.meetingninja.csse.user.LoginActivity;
-
 import objects.User;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+
+import com.meetingninja.csse.user.LoginActivity;
 
 // http://stackoverflow.com/a/19613702
 public class SessionManager {

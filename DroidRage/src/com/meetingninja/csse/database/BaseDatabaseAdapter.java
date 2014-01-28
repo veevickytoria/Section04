@@ -29,7 +29,6 @@ import android.util.Log;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.meetingninja.csse.ApplicationController;
 import com.meetingninja.csse.extras.JsonUtils;
 
 public abstract class BaseDatabaseAdapter {

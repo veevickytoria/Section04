@@ -16,7 +16,7 @@
 
 package com.doomonafireball.betterpickers.radialtimepicker;
 
-import com.meetingninja.csse.R;
+import java.text.DateFormatSymbols;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -27,7 +27,7 @@ import android.graphics.Typeface;
 import android.util.Log;
 import android.view.View;
 
-import java.text.DateFormatSymbols;
+import com.meetingninja.csse.R;
 
 /**
  * Draw the two smaller AM and PM circles next to where the larger circle will be.

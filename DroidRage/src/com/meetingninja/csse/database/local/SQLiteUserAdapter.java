@@ -34,6 +34,7 @@ import com.android.volley.VolleyLog;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.meetingninja.csse.ApplicationController;
 import com.meetingninja.csse.database.JsonNodeRequest;
+import com.meetingninja.csse.database.JsonRequestListener;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
 
@@ -178,25 +179,23 @@ public class SQLiteUserAdapter extends SQLiteHelper {
 				.build().toString();
 
 		JsonNodeRequest req = new JsonNodeRequest(_url, null,
-				new Response.Listener<JsonNode>() {
-
+				new JsonRequestListener() {
 					@Override
-					public void onResponse(JsonNode response) {
+					public void onResponse(JsonNode response, int statusCode,
+							VolleyError error) {
 						VolleyLog.v("Response:%n %s", response);
 
-						try {
-							bulkInsertUsers(
-									UserDatabaseAdapter.parseUserList(response),
-									isVirtual);
-						} catch (Exception e) {
-							Log.e("DB Cache Users", e.getLocalizedMessage());
-						}
-					}
-				}, new Response.ErrorListener() {
-					@Override
-					public void onErrorResponse(VolleyError error) {
-						VolleyLog.e("Error:%n %s", error.getMessage());
+						if (response != null) {
+							try {
+								bulkInsertUsers(UserDatabaseAdapter
+										.parseUserList(response), isVirtual);
+							} catch (Exception e) {
+								Log.e("DB Cache Users", e.getLocalizedMessage());
+							}
+						} else {
+							error.printStackTrace();
 
+						}
 					}
 				});
 

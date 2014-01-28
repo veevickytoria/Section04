@@ -51,10 +51,8 @@ import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.MeetingDatabaseAdapter;
-import com.meetingninja.csse.database.UserDatabaseAdapter;
 import com.meetingninja.csse.database.local.SQLiteMeetingAdapter;
 import com.meetingninja.csse.extras.Connectivity;
-import com.spothero.volley.JacksonRequest;
 
 import de.timroes.android.listview.EnhancedListView;
 
