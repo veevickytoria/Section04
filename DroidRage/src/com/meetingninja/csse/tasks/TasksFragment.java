@@ -17,9 +17,12 @@ package com.meetingninja.csse.tasks;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
+import objects.Meeting;
 import objects.Task;
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
@@ -62,7 +65,8 @@ AsyncResponse<List<Task>> {
 	private final String assignedToMe = "Assigned to me";
 	private final String iAssigned = "I assigned";
 	private final String iCreated = "I created";
-
+	
+	private int numLoading = 0;
 	// make tasks adapter
 
 	@Override
@@ -165,6 +169,7 @@ AsyncResponse<List<Task>> {
 	}
 
 	private void loadTask(Task task) {
+		while(task.getEndTimeInMillis()==0L);
 		Intent viewTask = new Intent(getActivity(),
 				ViewTaskActivity.class);
 		viewTask.putExtra("task", task);
@@ -173,26 +178,28 @@ AsyncResponse<List<Task>> {
 
 	private void refreshTasks() {
 		taskListfetcher = new TaskListFetcherTask(this);
-		System.out.println(session.getUserID());
 		taskListfetcher.execute(session.getUserID());
 		taskInfoFetcher = new TaskFetcherResp(this);
 	}
 	private void setTaskList(int type){
-		System.out.println("inside settasklist   " + type);
 		switch(type){
 		case 0: taskAdpt.setTasks(taskLists.get(assignedToMe)); break;
 		case 1: taskAdpt.setTasks(taskLists.get(iAssigned)); break;
 		case 2: taskAdpt.setTasks(taskLists.get(iCreated)); break;
 		}
+
 		taskAdpt.notifyDataSetChanged();
+
 	}
 	@Override
 	public void processFinish(List<Task> result) {
 		taskLists.get(assignedToMe).clear();
 		taskLists.get(iAssigned).clear();
 		taskLists.get(iCreated).clear();
+		Collections.sort(result);
 		for (Task task : result) {
-			new TaskFetcherResp(this).loadTask(task);
+//			new TaskFetcherResp(this).loadTask(task);
+//			numLoading++;
 			if (task.getType().equals("ASSIGNED_TO")) {
 				taskLists.get(assignedToMe).add(task);
 			} else if (task.getType().equals("ASSIGNED_FROM")) {
@@ -201,17 +208,24 @@ AsyncResponse<List<Task>> {
 				taskLists.get(iCreated).add(task);
 			}
 		}
+		
+
+
 		taskAdpt.notifyDataSetChanged();
+
 	}
 	public void notifyAdapter(){
-		taskAdpt.notifyDataSetChanged();
+//		taskAdpt.notifyDataSetChanged();
+		numLoading--;
+		if(numLoading==0){			
+			taskAdpt.notifyDataSetChanged();
+		}
 	}
 }
 
 class TaskTypeAdapter implements SpinnerAdapter{
 	private Context context;
 	private List<String> typeNames;
-	private HashMap<String, List<Task>> tasksLists;
 
 	public TaskTypeAdapter(Context context, List<String> typeNames){
 		this.context=context;
@@ -308,6 +322,11 @@ class TaskItemAdapter extends ArrayAdapter<Task>{
 	}
 	
 	@Override
+	public void sort(Comparator<? super Task> c){
+		Collections.sort(tasks);
+	}
+	
+	@Override
 	public int getCount(){
 		return this.tasks.size();
 	}
@@ -376,118 +395,3 @@ class TaskItemAdapter extends ArrayAdapter<Task>{
 
 
 }
-
-//class TaskListAdapter extends BaseExpandableListAdapter {
-//	private Context context;
-//	private List<String> meetingNames;
-//	private HashMap<String, List<Task>> tasksLists;
-//
-//	public TaskListAdapter(Context context, List<String> meetingNames,
-//			HashMap<String, List<Task>> tasksLists) {
-//		this.context = context;
-//		this.meetingNames = meetingNames;
-//		this.tasksLists = tasksLists;
-//	}
-//
-//	@Override
-//	public Object getChild(int groupPos, int childPos) {
-//		return this.tasksLists.get(this.meetingNames.get(groupPos)).get(
-//				childPos);
-//	}
-//
-//	@Override
-//	public long getChildId(int groupPosition, int childPosition) {
-//		return childPosition;
-//	}
-//
-//	// class for caching the views in a row
-//	private class ChildViewHolder {
-//		TextView taskName, taskDescription;
-//	}
-//
-//	ChildViewHolder viewHolder;
-//
-//	@Override
-//	public View getChildView(int groupPosition, int childPosition,
-//			boolean isLastChild, View convertView, ViewGroup parent) {
-//		View rowView = convertView;
-//		LayoutInflater inflater = (LayoutInflater) context
-//				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//		if (rowView == null) {
-//			rowView = inflater.inflate(R.layout.list_item_task, null);
-//			viewHolder = new ChildViewHolder();
-//			viewHolder.taskName = (TextView) rowView
-//					.findViewById(R.id.taskName);
-//			viewHolder.taskDescription = (TextView) rowView
-//					.findViewById(R.id.taskDiscription);
-//
-//			rowView.setTag(viewHolder);
-//		} else
-//			viewHolder = (ChildViewHolder) rowView.getTag();
-//
-//		Task t = (Task) getChild(groupPosition, childPosition);
-//
-//		viewHolder.taskName.setText(t.getTitle());
-//		viewHolder.taskDescription.setText(t.getDescription());
-//		return rowView;
-//	}
-//
-//	@Override
-//	public int getChildrenCount(int groupPosition) {
-//		return this.tasksLists.get(this.meetingNames.get(groupPosition)).size();
-//	}
-//
-//	@Override
-//	public String getGroup(int groupPosition) {
-//		return this.meetingNames.get(groupPosition);
-//	}
-//
-//	@Override
-//	public int getGroupCount() {
-//		return this.meetingNames.size();
-//	}
-//
-//	@Override
-//	public long getGroupId(int groupPosition) {
-//		return groupPosition;
-//	}
-//
-//	private class GroupViewHolder {
-//		TextView meetingName;
-//	}
-//
-//	GroupViewHolder groupViewHolder;
-//
-//	@Override
-//	public View getGroupView(int groupPosition, boolean isExpanded,
-//			View convertView, ViewGroup parent) {
-//		View groupView = convertView;
-//		LayoutInflater inflater = (LayoutInflater) context
-//				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//		if (groupView == null) {
-//			groupView = inflater.inflate(R.layout.task_sublist, null);
-//			groupViewHolder = new GroupViewHolder();
-//			groupViewHolder.meetingName = (TextView) groupView
-//					.findViewById(R.id.task_group);
-//
-//			groupView.setTag(groupViewHolder);
-//		} else
-//			groupViewHolder = (GroupViewHolder) groupView.getTag();
-//
-//		String name = getGroup(groupPosition);
-//		groupViewHolder.meetingName.setText(name);
-//
-//		return groupView;
-//	}
-//
-//	@Override
-//	public boolean hasStableIds() {
-//		return false;
-//	}
-//
-//	@Override
-//	public boolean isChildSelectable(int groupPosition, int childPosition) {
-//		return true;
-//	}
-//
-//}

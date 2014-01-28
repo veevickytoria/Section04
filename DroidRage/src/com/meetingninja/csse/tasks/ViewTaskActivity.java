@@ -169,6 +169,7 @@ public class ViewTaskActivity extends Activity {
 		}
 
 		public void execute(String userID) {
+			System.out.println("afdsafdsa     "+userID);
 			infoFetcher.execute(userID);
 		}
 

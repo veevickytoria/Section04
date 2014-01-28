@@ -128,6 +128,15 @@ public class Task extends Event implements Parcelable {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	
+	@Override
+	public int compareTo(Event another) {
+		if (another == null) {
+			return 1;
+		}
+		return Long.valueOf(getEndTimeInMillis()).compareTo(
+				Long.valueOf(another.getEndTimeInMillis()));
+	}
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {

@@ -409,6 +409,9 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		}
 
 		conn.disconnect();
+		for(Task t:taskList){
+			TaskDatabaseAdapter.getTask(t);
+		}
 		return taskList;
 	}
 
