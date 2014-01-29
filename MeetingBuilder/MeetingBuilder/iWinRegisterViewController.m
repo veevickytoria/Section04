@@ -9,11 +9,13 @@
 #import "iWinRegisterViewController.h"
 #include <CommonCrypto/CommonDigest.h>
 #import "iWinAppDelegate.h"
+#import "iWinBackEndUtility.h"
 #import "Contact.h"
 
 @interface iWinRegisterViewController ()
 @property (strong, nonatomic) iWinAppDelegate *appDelegate;
 @property (strong, nonatomic) NSManagedObjectContext *context;
+@property (strong, nonatomic) iWinBackEndUtility *backendUtility;
 @end
 
 @implementation iWinRegisterViewController
@@ -22,7 +24,6 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
     }
     return self;
 }
@@ -30,16 +31,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
     self.appDelegate = [[UIApplication sharedApplication] delegate];
     self.context = [self.appDelegate managedObjectContext];
-    
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    self.backendUtility = [[iWinBackEndUtility alloc] init];
 }
 
 - (BOOL)validatePhoneNumber
@@ -55,7 +49,7 @@
     for (NSString *stringPart in phoneParts) {
         if ([stringPart rangeOfCharacterFromSet:notDigits].location != NSNotFound)
         {
-                        return NO;
+            return NO;
         }
     }
     return YES;
@@ -95,41 +89,14 @@
     {
         NSString *email = [[self.emailField text] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
         NSString *password = [self sha256HashFor: [self.passwordField text]];
-        
+        NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/"];
         //register
         NSArray *keys = [NSArray arrayWithObjects:@"name", @"password", @"email", @"phone", @"company", @"title", @"location", nil];
         NSArray *objects = [NSArray arrayWithObjects:self.nameField.text, password, email, self.phoneNumberField.text, self.companyField.text, self.titleField.text, self.locationField.text,nil];
-        
-        NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-        NSData *jsonData;
-        NSString *jsonString;
-        
-        if ([NSJSONSerialization isValidJSONObject:jsonDictionary])
-        {
-            jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:nil];
-            jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        }
-        NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/"];
-        
-        NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
-        [urlRequest setHTTPMethod:@"POST"];
-        [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-        [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-        [urlRequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-length"];
-        [urlRequest setHTTPBody:jsonData];
-        NSURLResponse * response = nil;
-        NSError * error = nil;
-        NSData * data =[NSURLConnection sendSynchronousRequest:urlRequest
-                                              returningResponse:&response
-                                                        error:&error];
+        NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];        
+        NSDictionary *deserializedDictionary = [self.backendUtility postRequestForUrl:url withDictionary:jsonDictionary];
         NSInteger userID = -1;
-        if (error) {
-            // Handle error.
-        }
-        else
-        {
-            NSError *jsonParsingError = nil;
-            NSDictionary *deserializedDictionary = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
+        if (deserializedDictionary) {
             userID = [[deserializedDictionary objectForKey:@"userID"] integerValue];
             [self createContactWithID:userID withEmail:email withPassword:self.passwordField.text];
         }

@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "iWinAddUsersViewController.h"
 #import "iWinMergeNoteViewController.h"
 
 @protocol ViewAddNoteDelegate <NSObject>
@@ -18,7 +19,7 @@
 @end
 
 
-@interface iWinViewAndAddNotesViewController : UIViewController <MergeNoteDelegate, UIAlertViewDelegate>
+@interface iWinViewAndAddNotesViewController : UIViewController <UIAlertViewDelegate, UserDelegate>
 @property (nonatomic) id<ViewAddNoteDelegate> addNoteDelegate;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withNoteID:(NSInteger)noteID withUserID:(NSInteger)userID;
 - (IBAction)saveButton:(id)sender;

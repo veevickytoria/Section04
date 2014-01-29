@@ -341,6 +341,7 @@
     self.noteViewController.noteListDelegate = self;
     [self animateSlidingMenu:NO];
     [self updateSelectedMenu:self.notesButton];
+    [self resetSliding];
 }
 
 - (IBAction)onClickTasks

@@ -32,6 +32,8 @@
 		0A1A72A4181A2663009A49E5 /* iWinAddAndViewTaskViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A1A72A2181A2663009A49E5 /* iWinAddAndViewTaskViewController.xib */; };
 		0A1A72A8181A2C5E009A49E5 /* iWinAddUsersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A1A72A6181A2C5E009A49E5 /* iWinAddUsersViewController.m */; };
 		0A1A72A9181A2C5E009A49E5 /* iWinAddUsersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A1A72A7181A2C5E009A49E5 /* iWinAddUsersViewController.xib */; };
+		0A30739418921CB300C2D5F6 /* iWinMergeNoteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A30739218921CB300C2D5F6 /* iWinMergeNoteViewController.m */; };
+		0A30739518921CB300C2D5F6 /* iWinMergeNoteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A30739318921CB300C2D5F6 /* iWinMergeNoteViewController.xib */; };
 		0A7E515B17FBEA9700A4B8B7 /* iWinMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7E515917FBEA9700A4B8B7 /* iWinMainViewController.m */; };
 		0A7E515C17FBEA9700A4B8B7 /* iWinMainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A7E515A17FBEA9700A4B8B7 /* iWinMainViewController.xib */; };
 		0A7E516017FBEB9200A4B8B7 /* iWinLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7E515E17FBEB9200A4B8B7 /* iWinLoginViewController.m */; };
@@ -53,6 +55,8 @@
 		0A91DC9C1835D7AB00741349 /* OCCalendarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91DC951835D7AB00741349 /* OCCalendarViewController.m */; };
 		0A91DC9D1835D7AB00741349 /* OCDaysView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91DC971835D7AB00741349 /* OCDaysView.m */; };
 		0A91DC9E1835D7AB00741349 /* OCSelectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91DC991835D7AB00741349 /* OCSelectionView.m */; };
+		0A959DD81895F6E300CF19E3 /* RememberMe.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A959DD71895F6E300CF19E3 /* RememberMe.m */; };
+		0A959DDC1895F9A800CF19E3 /* iWinBackEndUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A959DDB1895F9A800CF19E3 /* iWinBackEndUtility.m */; };
 		0A95D1EE188787B900749438 /* Meeting.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A95D1ED188787B900749438 /* Meeting.m */; };
 		0A96CE02188A254B00D69C63 /* Contact.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A96CE01188A254B00D69C63 /* Contact.m */; };
 		0A96CE05188A256A00D69C63 /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A96CE04188A256A00D69C63 /* Settings.m */; };
@@ -73,8 +77,6 @@
 		5B3B629A188CBDF600C0E53E /* iWinViewAndCreateGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B3B6299188CBDF600C0E53E /* iWinViewAndCreateGroupViewController.m */; };
 		5B3B62AE188CCB7000C0E53E /* iWinViewAndCreateGroupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B3B62AD188CCB7000C0E53E /* iWinViewAndCreateGroupViewController.xib */; };
 		5BE69760188CD9E80083F71E /* OpenEars.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BE6975F188CD9E80083F71E /* OpenEars.framework */; };
-		7941FDC218278B4A00AAA92E /* iWinMergeNoteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7941FDC018278B4A00AAA92E /* iWinMergeNoteViewController.m */; };
-		7941FDC318278B4A00AAA92E /* iWinMergeNoteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7941FDC118278B4A00AAA92E /* iWinMergeNoteViewController.xib */; };
 		7941FDC81828843500AAA92E /* iWinViewAndChangeSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7941FDC61828843500AAA92E /* iWinViewAndChangeSettingsViewController.m */; };
 		7941FDC91828843500AAA92E /* iWinViewAndChangeSettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7941FDC71828843500AAA92E /* iWinViewAndChangeSettingsViewController.xib */; };
 		7941FDD5182A0DCE00AAA92E /* iWinViewProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7941FDD3182A0DCE00AAA92E /* iWinViewProfileViewController.m */; };
@@ -280,6 +282,9 @@
 		0A1A72A5181A2C5E009A49E5 /* iWinAddUsersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinAddUsersViewController.h; sourceTree = "<group>"; };
 		0A1A72A6181A2C5E009A49E5 /* iWinAddUsersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinAddUsersViewController.m; sourceTree = "<group>"; };
 		0A1A72A7181A2C5E009A49E5 /* iWinAddUsersViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iWinAddUsersViewController.xib; sourceTree = "<group>"; };
+		0A30739118921CB300C2D5F6 /* iWinMergeNoteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinMergeNoteViewController.h; sourceTree = "<group>"; };
+		0A30739218921CB300C2D5F6 /* iWinMergeNoteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinMergeNoteViewController.m; sourceTree = "<group>"; };
+		0A30739318921CB300C2D5F6 /* iWinMergeNoteViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iWinMergeNoteViewController.xib; sourceTree = "<group>"; };
 		0A7E515817FBEA9700A4B8B7 /* iWinMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinMainViewController.h; sourceTree = "<group>"; };
 		0A7E515917FBEA9700A4B8B7 /* iWinMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinMainViewController.m; sourceTree = "<group>"; };
 		0A7E515A17FBEA9700A4B8B7 /* iWinMainViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iWinMainViewController.xib; sourceTree = "<group>"; };
@@ -314,6 +319,10 @@
 		0A91DC981835D7AB00741349 /* OCSelectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCSelectionView.h; sourceTree = "<group>"; };
 		0A91DC991835D7AB00741349 /* OCSelectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCSelectionView.m; sourceTree = "<group>"; };
 		0A91DC9A1835D7AB00741349 /* OCTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCTypes.h; sourceTree = "<group>"; };
+		0A959DD61895F6E300CF19E3 /* RememberMe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RememberMe.h; sourceTree = "<group>"; };
+		0A959DD71895F6E300CF19E3 /* RememberMe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RememberMe.m; sourceTree = "<group>"; };
+		0A959DDA1895F9A800CF19E3 /* iWinBackEndUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinBackEndUtility.h; sourceTree = "<group>"; };
+		0A959DDB1895F9A800CF19E3 /* iWinBackEndUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinBackEndUtility.m; sourceTree = "<group>"; };
 		0A95D1EC188787B900749438 /* Meeting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Meeting.h; sourceTree = "<group>"; };
 		0A95D1ED188787B900749438 /* Meeting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Meeting.m; sourceTree = "<group>"; };
 		0A96CE00188A254B00D69C63 /* Contact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Contact.h; sourceTree = "<group>"; };
@@ -344,9 +353,6 @@
 		5B3B62AD188CCB7000C0E53E /* iWinViewAndCreateGroupViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iWinViewAndCreateGroupViewController.xib; sourceTree = "<group>"; };
 		5BE6975F188CD9E80083F71E /* OpenEars.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenEars.framework; path = "../../../../../Downloads/OpenEarsDistribution 2/Framework/OpenEars.framework"; sourceTree = "<group>"; };
 		73CB9D928C6D483CAEB8FAAA /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		7941FDBF18278B4A00AAA92E /* iWinMergeNoteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinMergeNoteViewController.h; sourceTree = "<group>"; };
-		7941FDC018278B4A00AAA92E /* iWinMergeNoteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinMergeNoteViewController.m; sourceTree = "<group>"; };
-		7941FDC118278B4A00AAA92E /* iWinMergeNoteViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iWinMergeNoteViewController.xib; sourceTree = "<group>"; };
 		7941FDC51828843500AAA92E /* iWinViewAndChangeSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinViewAndChangeSettingsViewController.h; sourceTree = "<group>"; };
 		7941FDC61828843500AAA92E /* iWinViewAndChangeSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinViewAndChangeSettingsViewController.m; sourceTree = "<group>"; };
 		7941FDC71828843500AAA92E /* iWinViewAndChangeSettingsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iWinViewAndChangeSettingsViewController.xib; sourceTree = "<group>"; };
@@ -594,13 +600,14 @@
 		0A04456117F3825D000FF2A0 /* MeetingBuilder */ = {
 			isa = PBXGroup;
 			children = (
+				0A959DD91895F97F00CF19E3 /* BackEndUtility */,
+				0A30739018921C5D00C2D5F6 /* MergeNoteController */,
 				5B3B6297188CBDBE00C0E53E /* ViewAndCreateGroup */,
 				0A7F1CDC185908550017209D /* Data Model */,
 				0AAC9E921846FE2B0073260F /* OpenEars */,
 				0A91DC911835D7AB00741349 /* OCCalendar */,
 				7941FDD0182A0D8E00AAA92E /* ViewProfile */,
 				7941FDC41828834A00AAA92E /* ViewAndChangeSettings */,
-				7941FDB618278A7800AAA92E /* MergeNote */,
 				79D513CC181F9F8700C79B71 /* NoteList */,
 				79D513C1181F9CC800C79B71 /* ViewAndAddNotes */,
 				0A1A729A181A2297009A49E5 /* AddAttendees */,
@@ -754,6 +761,16 @@
 			name = AddAttendees;
 			sourceTree = "<group>";
 		};
+		0A30739018921C5D00C2D5F6 /* MergeNoteController */ = {
+			isa = PBXGroup;
+			children = (
+				0A30739118921CB300C2D5F6 /* iWinMergeNoteViewController.h */,
+				0A30739218921CB300C2D5F6 /* iWinMergeNoteViewController.m */,
+				0A30739318921CB300C2D5F6 /* iWinMergeNoteViewController.xib */,
+			);
+			name = MergeNoteController;
+			sourceTree = "<group>";
+		};
 		0A7F1CCB185637310017209D /* MeetingBuilder Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -788,6 +805,8 @@
 		0A7F1CDC185908550017209D /* Data Model */ = {
 			isa = PBXGroup;
 			children = (
+				0A959DD61895F6E300CF19E3 /* RememberMe.h */,
+				0A959DD71895F6E300CF19E3 /* RememberMe.m */,
 				0A96CE03188A256A00D69C63 /* Settings.h */,
 				0A96CE04188A256A00D69C63 /* Settings.m */,
 				0A96CE00188A254B00D69C63 /* Contact.h */,
@@ -836,6 +855,15 @@
 			path = OCCalendar;
 			sourceTree = "<group>";
 		};
+		0A959DD91895F97F00CF19E3 /* BackEndUtility */ = {
+			isa = PBXGroup;
+			children = (
+				0A959DDA1895F9A800CF19E3 /* iWinBackEndUtility.h */,
+				0A959DDB1895F9A800CF19E3 /* iWinBackEndUtility.m */,
+			);
+			name = BackEndUtility;
+			sourceTree = "<group>";
+		};
 		0A96E7DF185BE6A600EAB0DC /* ViewProfileTest */ = {
 			isa = PBXGroup;
 			children = (
@@ -878,16 +906,6 @@
 				5B3B62AD188CCB7000C0E53E /* iWinViewAndCreateGroupViewController.xib */,
 			);
 			name = ViewAndCreateGroup;
-			sourceTree = "<group>";
-		};
-		7941FDB618278A7800AAA92E /* MergeNote */ = {
-			isa = PBXGroup;
-			children = (
-				7941FDBF18278B4A00AAA92E /* iWinMergeNoteViewController.h */,
-				7941FDC018278B4A00AAA92E /* iWinMergeNoteViewController.m */,
-				7941FDC118278B4A00AAA92E /* iWinMergeNoteViewController.xib */,
-			);
-			name = MergeNote;
 			sourceTree = "<group>";
 		};
 		7941FDC41828834A00AAA92E /* ViewAndChangeSettings */ = {
@@ -1203,10 +1221,10 @@
 				DEED1ACC1889F97B00FDAA27 /* AcousticModelEnglish.bundle in Resources */,
 				0A1A72911819FE48009A49E5 /* iWinViewAndAddViewController.xib in Resources */,
 				0A7E516617FBEBA200A4B8B7 /* iWinRegisterViewController.xib in Resources */,
+				0A30739518921CB300C2D5F6 /* iWinMergeNoteViewController.xib in Resources */,
 				79D513D1181F9F9E00C79B71 /* iWinNoteListViewController.xib in Resources */,
 				0A7E515C17FBEA9700A4B8B7 /* iWinMainViewController.xib in Resources */,
 				0A1A727E1819E1F5009A49E5 /* iWinHomeScreenViewController.xib in Resources */,
-				7941FDC318278B4A00AAA92E /* iWinMergeNoteViewController.xib in Resources */,
 				0A1A728B1819F590009A49E5 /* iWinScheduleViewMeetingViewController.xib in Resources */,
 				79D513CB181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.xib in Resources */,
 				79F59D0F18617690009E2C78 /* TapkuLibrary.bundle in Resources */,
@@ -1253,6 +1271,7 @@
 				79FCDFA51862295E008345B3 /* TKButtonCell.h in Sources */,
 				79FCDFA61862295E008345B3 /* TKButtonCell.m in Sources */,
 				79FCDFA71862295E008345B3 /* TKCalendarDayEventView.h in Sources */,
+				0A959DD81895F6E300CF19E3 /* RememberMe.m in Sources */,
 				79FCDFA81862295E008345B3 /* TKCalendarDayEventView.m in Sources */,
 				79FCDFA91862295E008345B3 /* TKCalendarDayView.h in Sources */,
 				79FCDFAA1862295E008345B3 /* TKCalendarDayView.m in Sources */,
@@ -1290,6 +1309,7 @@
 				79FCDFC71862295E008345B3 /* TKLabelSwitchCell.h in Sources */,
 				79FCDFC81862295E008345B3 /* TKLabelSwitchCell.m in Sources */,
 				79FCDFC91862295E008345B3 /* TKLabelTextFieldCell.h in Sources */,
+				0A959DDC1895F9A800CF19E3 /* iWinBackEndUtility.m in Sources */,
 				79FCDFCA1862295E008345B3 /* TKLabelTextFieldCell.m in Sources */,
 				79FCDFCB1862295E008345B3 /* TKLabelTextViewCell.h in Sources */,
 				79FCDFCC1862295E008345B3 /* TKLabelTextViewCell.m in Sources */,
@@ -1366,7 +1386,6 @@
 				79753A7B1860F2B70015098B /* iWinSchedule.m in Sources */,
 				0A1A727D1819E1F5009A49E5 /* iWinHomeScreenViewController.m in Sources */,
 				0A1A72A3181A2663009A49E5 /* iWinAddAndViewTaskViewController.m in Sources */,
-				7941FDC218278B4A00AAA92E /* iWinMergeNoteViewController.m in Sources */,
 				0ACE339A17FCF5F8003B9C0A /* iWinMeetingViewController.m in Sources */,
 				0A91DC9E1835D7AB00741349 /* OCSelectionView.m in Sources */,
 				0A7F1CDF185908790017209D /* iWinContact.m in Sources */,
@@ -1382,6 +1401,7 @@
 				0A91DC9D1835D7AB00741349 /* OCDaysView.m in Sources */,
 				0A04456817F3825D000FF2A0 /* main.m in Sources */,
 				0A1A72901819FE48009A49E5 /* iWinViewAndAddViewController.m in Sources */,
+				0A30739418921CB300C2D5F6 /* iWinMergeNoteViewController.m in Sources */,
 				7941FDD5182A0DCE00AAA92E /* iWinViewProfileViewController.m in Sources */,
 				0A7E516517FBEBA200A4B8B7 /* iWinRegisterViewController.m in Sources */,
 				0A91DC9C1835D7AB00741349 /* OCCalendarViewController.m in Sources */,

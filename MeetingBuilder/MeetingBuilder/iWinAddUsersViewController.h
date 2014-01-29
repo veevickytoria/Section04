@@ -27,4 +27,8 @@
 @property (strong, nonatomic) NSMutableArray *attendeeList;
 @property (strong, nonatomic) NSMutableArray *filteredList;
 -(void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope;
+@property (weak, nonatomic) IBOutlet UIButton *inviteButton;
+@property (weak, nonatomic) IBOutlet UILabel *orLabel;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+-(void)setUIFor:(NSString*)pageName;
 @end

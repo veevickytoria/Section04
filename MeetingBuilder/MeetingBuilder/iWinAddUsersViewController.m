@@ -10,6 +10,7 @@
 #import "Contact.h"
 #import <QuartzCore/QuartzCore.h>
 #import "iWinAppDelegate.h"
+#import "iWinBackEndUtility.h"
 
 @interface iWinAddUsersViewController ()
 @property (nonatomic) NSString *pageName;
@@ -17,6 +18,7 @@
 @property (nonatomic) NSUInteger rowToDelete;
 @property (nonatomic) UIAlertView *deleteAlertView;
 @property (nonatomic) UIAlertView *inviteAlertView;
+@property (nonatomic) iWinBackEndUtility *backendUtility;
 @end
 
 @implementation iWinAddUsersViewController
@@ -40,46 +42,26 @@
     self.attendeeList = [[NSMutableArray alloc] init];
     self.filteredList = [[NSMutableArray alloc] init];
     self.userList = [[NSMutableArray alloc] init];
-
+    [self setUIFor:self.pageName];
     iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    
     NSManagedObjectContext *context = [appDelegate managedObjectContext];
-    
     NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Contact" inManagedObjectContext:context];
     
-    //for local database
-//
-//    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-//    [request setEntity:entityDesc];
-//    
-//    NSError *error;
-//    NSArray *result = [context executeFetchRequest:request
-//                                              error:&error];
-//    
-//    self.userList = [[NSMutableArray alloc] initWithArray:result];
-    
-    
+    self.backendUtility = [[iWinBackEndUtility alloc] init];
+
     //for backend connection
     NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Users"];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:30];
-    [urlRequest setHTTPMethod:@"GET"];
-    NSURLResponse * response = nil;
-    NSError * error = nil;
-    NSData * data = [NSURLConnection sendSynchronousRequest:urlRequest
-                                            returningResponse:&response
-                                                        error:&error];
+    NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
+    
     NSArray *jsonArray;
-    if (error)
+    if (!deserializedDictionary)
     {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Users not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
         [alert show];
     }
     else
     {
-        NSError *jsonParsingError = nil;
-         NSDictionary *deserializedDictionary = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
-        //jsonArray = [[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError] objectAtIndex:0];
         jsonArray = [deserializedDictionary objectForKey:@"users"];
     }
     if (jsonArray.count > 0)
@@ -233,6 +215,16 @@ shouldReloadTableForSearchString:(NSString *)searchString
     {
         NSString *email = [alertView textFieldAtIndex:0].text;
         NSLog(@"%@", email);
+    }
+}
+
+-(void) setUIFor:(NSString *)pageName
+{
+    if ([pageName isEqualToString:@"ShareNotes"])
+    {
+        self.orLabel.hidden = YES;
+        self.inviteButton.hidden = YES;
+        self.titleLabel.text = @"Share With";
     }
 }
 

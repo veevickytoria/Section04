@@ -15,12 +15,13 @@
 
 @end
 
-@interface iWinLoginViewController : UIViewController <NSURLConnectionDelegate>
+@interface iWinLoginViewController : UIViewController <NSURLConnectionDelegate, UITextFieldDelegate>
 @property (strong, nonatomic) NSMutableData *responseData;
 @property (weak, nonatomic) IBOutlet UITextField *userNameField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordField;
 @property (weak, nonatomic) IBOutlet UIButton *loginButton;
 @property (weak, nonatomic) id<iWinLoginDelegate>loginDelegate;
+@property (weak, nonatomic) IBOutlet UISwitch *rememberSwitch;
 - (IBAction)onClickLogin:(id)sender;
 - (IBAction)onClickJoinUs:(id)sender;
 

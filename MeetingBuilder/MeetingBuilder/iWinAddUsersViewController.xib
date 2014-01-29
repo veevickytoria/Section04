@@ -7,8 +7,11 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="iWinAddUsersViewController">
             <connections>
                 <outlet property="cancelButton" destination="21s-sJ-Kk9" id="a9l-lb-zRs"/>
+                <outlet property="inviteButton" destination="uqA-WT-02r" id="0of-sO-ltU"/>
+                <outlet property="orLabel" destination="lic-2K-v5c" id="KzV-cd-xM6"/>
                 <outlet property="saveButton" destination="q9a-Dl-eyU" id="6e3-Yc-kMr"/>
                 <outlet property="searchDisplayController" destination="g1j-Ln-kiu" id="nIN-0X-bf1"/>
+                <outlet property="titleLabel" destination="Ex5-IZ-yxs" id="TlO-KS-lbR"/>
                 <outlet property="userListTableView" destination="yzt-qf-gyA" id="w5u-cz-RvP"/>
                 <outlet property="view" destination="2" id="3"/>
             </connections>
