@@ -36,11 +36,10 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.AgendaDatabaseAdapter;
+import com.meetingninja.csse.database.Keys;
+import com.meetingninja.csse.extras.JsonUtils;
 
 public class AgendaActivity extends FragmentActivity {
 
@@ -52,7 +51,7 @@ public class AgendaActivity extends FragmentActivity {
 
 	private TextView mTitleView;
 	private Button mAddTopicBtn;
-	private Agenda mAgenda;
+	private Agenda displayedAgenda;
 	private boolean collapsible;
 
 	@SuppressWarnings("unchecked")
@@ -60,53 +59,29 @@ public class AgendaActivity extends FragmentActivity {
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		boolean newCollapsible;
-		ObjectMapper mapper = new ObjectMapper();
-
-		// TODO : Get Agenda attached to meeting
-		String json = "";
-		try {
-			json = MockObjectFactory.getMockAgenda();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		try {
-			mAgenda = mapper.readValue(json, Agenda.class);
-		} catch (JsonParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		mAgenda = new Agenda();
-
-		// End getAgenda
+		setContentView(R.layout.activity_agenda);
 
 		if (savedInstanceState == null) {
 			manager = new InMemoryTreeStateManager<Topic>();
 			newCollapsible = false;
+			displayedAgenda = new Agenda();
 		} else {
 			manager = (TreeStateManager<Topic>) savedInstanceState
 					.getSerializable("treeManager");
 			newCollapsible = savedInstanceState.getBoolean("collapsible");
+			displayedAgenda = savedInstanceState
+					.getParcelable(Keys.Agenda.PARCEL);
 		}
 
-		setContentView(R.layout.activity_agenda);
 		setupViews();
 		treeBuilder = new TreeBuilder<Topic>(manager);
 
-		int depth = 0;
-		if (mAgenda != null) {
-			depth = mAgenda.getDepth();
+		if (displayedAgenda != null) {
+			int depth = displayedAgenda.getDepth();
 			mAgendaAdpt = new AgendaItemAdapter(this, manager, treeBuilder,
 					depth);
 			mAgendaAdpt.addActivity(this);
-			mTitleView.setText(mAgenda.getTitle());
+			mTitleView.setText(displayedAgenda.getTitle());
 			buildTree(treeBuilder);
 		}
 		treeView.setAdapter(mAgendaAdpt);
@@ -114,6 +89,16 @@ public class AgendaActivity extends FragmentActivity {
 		setCollapsible(newCollapsible);
 
 		// registerForContextMenu(treeView);
+	}
+
+	private void mockUp() {
+		try {
+			displayedAgenda = JsonUtils.getObjectMapper().readValue(
+					MockObjectFactory.getMockAgenda(), Agenda.class);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private void setupViews() {
@@ -125,7 +110,7 @@ public class AgendaActivity extends FragmentActivity {
 	}
 
 	private void buildTree(final TreeBuilder<Topic> builder) {
-		final ArrayList<Topic> topics = mAgenda.getTopics();
+		final ArrayList<Topic> topics = displayedAgenda.getTopics();
 		for (Topic t : topics) {
 			builder.addRelation(null, t);
 			buildTreeHelper(builder, t);
@@ -146,12 +131,12 @@ public class AgendaActivity extends FragmentActivity {
 		mAgendaAdpt.refresh();
 
 		int depth = 0;
-		if (mAgenda != null) {
-			depth = mAgenda.getDepth();
+		if (displayedAgenda != null) {
+			depth = displayedAgenda.getDepth();
 			mAgendaAdpt = new AgendaItemAdapter(this, manager, treeBuilder,
 					depth);
 			mAgendaAdpt.addActivity(this);
-			mTitleView.setText(mAgenda.getTitle());
+			mTitleView.setText(displayedAgenda.getTitle());
 			buildTree(treeBuilder);
 		}
 		treeView.setAdapter(mAgendaAdpt);
@@ -160,9 +145,10 @@ public class AgendaActivity extends FragmentActivity {
 
 	@Override
 	protected void onSaveInstanceState(final Bundle outState) {
+		super.onSaveInstanceState(outState);
 		outState.putSerializable("treeManager", manager);
 		outState.putBoolean("collapsible", this.collapsible);
-		super.onSaveInstanceState(outState);
+		outState.putParcelable(Keys.Agenda.PARCEL, displayedAgenda);
 	}
 
 	protected final void setCollapsible(final boolean newCollapsible) {
@@ -184,7 +170,7 @@ public class AgendaActivity extends FragmentActivity {
 			case R.id.agenda_addTopicBtn:
 				Topic t = new Topic(); // TODO : Create a Topic
 				t.setTitle("new topic");
-				mAgenda.addTopic(t);
+				displayedAgenda.addTopic(t);
 				reconstructTree();
 
 				break;

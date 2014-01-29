@@ -26,6 +26,7 @@ import pl.polidea.treeview.TreeNodeInfo;
 import pl.polidea.treeview.TreeStateManager;
 import android.app.Activity;
 import android.content.Context;
+import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -37,6 +38,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.doomonafireball.betterpickers.hmspicker.HmsPickerBuilder;
 import com.meetingninja.csse.R;
 
 /**
@@ -46,11 +48,13 @@ import com.meetingninja.csse.R;
  * @param <T>
  * 
  */
-public class AgendaItemAdapter<T> extends AbstractTreeViewAdapter<Topic> {
+public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 	private final String TAG = AgendaItemAdapter.class.getSimpleName();
+
 	private Context mContext;
 	private TreeBuilder<Topic> builder;
 	private TreeStateManager<Topic> manager;
+
 	private static int _topics = 0;
 	private final HashMap<Topic, Boolean> Comparison;
 	private final HashMap<EditText, TextWatcher> TextHandlers;
@@ -234,7 +238,6 @@ public class AgendaItemAdapter<T> extends AbstractTreeViewAdapter<Topic> {
 
 	@Override
 	public int getViewTypeCount() {
-		// TODO Auto-generated method stub
 		return 1;
 	}
 
@@ -242,11 +245,11 @@ public class AgendaItemAdapter<T> extends AbstractTreeViewAdapter<Topic> {
 
 		@Override
 		public void onClick(View v) {
-			// HmsPickerBuilder hms = new HmsPickerBuilder().setFragmentManager(
-			// ((FragmentActivity) getActivity())
-			// .getSupportFragmentManager()).setStyleResId(
-			// R.style.BetterPickersDialogFragment);
-			// hms.show();
+			HmsPickerBuilder hms = new HmsPickerBuilder().setFragmentManager(
+					((FragmentActivity) getActivity())
+							.getSupportFragmentManager()).setStyleResId(
+					R.style.BetterPickersDialogFragment);
+			hms.show();
 			Topic t = (Topic) v.getTag();
 			Map<String, String> info = getDescription(t);
 			Log.d(TAG, info.get("title"));
