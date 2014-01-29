@@ -92,9 +92,13 @@
 - (IBAction)onClickSendInvite
 {
     
-    self.inviteAlertView = [[UIAlertView alloc] initWithTitle:@"Invite User" message:@"Enter user email" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Invite", nil];
-    [self.inviteAlertView setAlertViewStyle:UIAlertViewStylePlainTextInput];
-    [self.inviteAlertView show];
+//    self.inviteAlertView = [[UIAlertView alloc] initWithTitle:@"Invite User" message:@"Enter user email" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Invite", nil];
+//    [self.inviteAlertView setAlertViewStyle:UIAlertViewStylePlainTextInput];
+//    [self.inviteAlertView show];
+    
+    
+    
+    
 }
 
 - (IBAction)onClickSave
