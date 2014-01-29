@@ -288,7 +288,8 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 	//make sure the node exists
 	if($node != NULL){
 		//check if node has user index
-		$user = $userIndex->findOne('ID', ''.$id);
+		$email=$node->getProperty('email');
+		$user = $userIndex->findOne('email', $email);
 						
 		//only delete the node if it's a note
 		if($user != NULL){
