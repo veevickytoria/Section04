@@ -2,6 +2,8 @@
 /**
  * Include the API PHP file for neo4j
  */
+namespace Everyman\Neo4j;
+require("phar://neo4jphp.phar");
 require_once 'Neo4j.php';
 
 /**
