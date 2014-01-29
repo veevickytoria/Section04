@@ -48,6 +48,7 @@ import android.widget.TextView;
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.AsyncResponse;
+import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.extras.MyDateUtils;
 
 public class TasksFragment extends Fragment implements
@@ -178,7 +179,7 @@ public class TasksFragment extends Fragment implements
 		while (task.getEndTimeInMillis() == 0L)
 			;
 		Intent viewTask = new Intent(getActivity(), ViewTaskActivity.class);
-		viewTask.putExtra("task", task);
+		viewTask.putExtra(Keys.Task.PARCEL, task);
 		startActivityForResult(viewTask, 6);
 	}
 

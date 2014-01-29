@@ -31,6 +31,7 @@ import android.widget.TextView;
 
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.AsyncResponse;
+import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.extras.MyDateUtils;
 import com.meetingninja.csse.user.UserInfoFetcher;
 
@@ -49,7 +50,7 @@ public class ViewTaskActivity extends Activity {
 		setContentView(R.layout.activity_view_task);
 		// setupActionBar();
 		Intent i = getIntent();
-		task = i.getParcelableExtra("task");
+		task = i.getParcelableExtra(Keys.Task.PARCEL);
 		setupViews();
 		setTask();
 	}
@@ -68,7 +69,7 @@ public class ViewTaskActivity extends Activity {
 		switch (item.getItemId()) {
 		case R.id.edit_item_task:
 			Intent editTask = new Intent(this, EditTaskActivity.class);
-			editTask.putExtra("task", task);
+			editTask.putExtra(Keys.Task.PARCEL, task);
 			this.startActivityForResult(editTask, 5);
 			return true;
 		case R.id.delete_item_task:
@@ -90,7 +91,7 @@ public class ViewTaskActivity extends Activity {
 		if (requestCode == 5) {
 			if (resultCode == RESULT_OK) {
 				if (data != null) {
-					task = data.getParcelableExtra("task");
+					task = data.getParcelableExtra(Keys.Task.PARCEL);
 					setTask();
 				}
 			} else if (resultCode == RESULT_CANCELED) {

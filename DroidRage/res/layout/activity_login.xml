@@ -100,8 +100,8 @@
                     android:layout_column="0"
                     android:layout_gravity="left"
                     android:layout_row="1"
-                    android:background="@android:drawable/btn_default_small"
                     android:text="@string/action_sign_in"
+                    android:background="@android:drawable/btn_default_small"
                     android:textColor="#FF777777"
                     android:textSize="18sp" />
 
