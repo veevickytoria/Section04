@@ -136,8 +136,8 @@ public class Task extends Event implements Parcelable {
 		if (another == null) {
 			return 1;
 		}
-		return Long.valueOf(getEndTimeInMillis()).compareTo(
-				Long.valueOf(another.getEndTimeInMillis()));
+		return Long.valueOf(another.getEndTimeInMillis()).compareTo(
+				Long.valueOf(getEndTimeInMillis()));
 	}
 
 	@Override
