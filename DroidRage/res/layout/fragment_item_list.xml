@@ -1,33 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/activity_horizontal_margin"
-    android:orientation="vertical">
-
-    <com.meetingninja.csse.ContactsCompletionView
-        android:id="@+id/my_autocomplete"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Search" />
-
-    <TextView
-        android:id="@+id/completed_ids"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="" />
+    tools:context=".ItemFragment" >
 
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent" />
+        android:layout_height="match_parent" />
 
     <TextView
         android:id="@android:id/empty"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:visibility="gone" />
+        android:layout_height="match_parent"
+        android:gravity="center" />
 
-</LinearLayout>
+</FrameLayout>

@@ -28,6 +28,7 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,10 +42,9 @@ import android.widget.Toast;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.foound.widget.AmazingListView;
+import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
 import com.meetingninja.csse.database.local.SQLiteHelper;
-import com.meetingninja.csse.database.local.SQLiteUserAdapter;
-import com.meetingninja.csse.extras.OnFragmentInteractionListener;
 import com.meetingninja.csse.group.GroupsFragment;
 import com.meetingninja.csse.meetings.MeetingsFragment;
 import com.meetingninja.csse.notes.CreateNoteActivity;
@@ -54,6 +54,7 @@ import com.meetingninja.csse.tasks.TasksFragment;
 import com.meetingninja.csse.user.LoginActivity;
 import com.meetingninja.csse.user.ProfileFragment;
 import com.meetingninja.csse.user.UserListFragment;
+import com.meetingninja.csse.extras.BaseFragment;
 import com.parse.ParseAnalytics;
 
 /**
@@ -63,7 +64,7 @@ import com.parse.ParseAnalytics;
  * 
  */
 public class MainActivity extends FragmentActivity implements
-		OnFragmentInteractionListener {
+		BaseFragment.TaskCallbacks {
 
 	private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -99,13 +100,25 @@ public class MainActivity extends FragmentActivity implements
 
 	}
 
+	/**
+	 * Instances of fragments contained within this activity
+	 */
+	private MeetingsFragment frag_meetings;
+	private NotesFragment frag_notes;
+	private TasksFragment frag_tasks;
+	private ProfileFragment frag_profile;
+	private GroupsFragment frag_groups;
+	// private ProjectsFragment frag_projects;
+	// private ContactsFragment frag_contacts;
+	private UserListFragment frag_contacts;
+	private SearchableUserFragment frag_settings;
+
+	/**
+	 * Fields local to this activity
+	 */
 	private Bundle icicle;
 	private CharSequence mTitle;
 	private SessionManager session;
-	private static ProfileFragment profFrag;
-	private static MeetingsFragment meetingsFrag;
-	private static NotesFragment notesFrag;
-	private static TasksFragment tasksFrag;
 	private SQLiteHelper sqliteHelper;
 
 	@Override
@@ -143,8 +156,7 @@ public class MainActivity extends FragmentActivity implements
 			// on first time display view for first nav item
 			selectItem(session.getPage());
 
-			sqliteHelper = SQLiteHelper
-					.getInstance(getApplicationContext());
+			sqliteHelper = SQLiteHelper.getInstance(getApplicationContext());
 
 			// Track the usage of the application with Parse SDK
 			ParseAnalytics.trackAppOpened(getIntent());
@@ -262,52 +274,88 @@ public class MainActivity extends FragmentActivity implements
 
 	/** Swaps fragments in the main content view */
 	private void selectItem(int position) {
-		// Create a new fragment and specify the planet to show based on
-		// position
+		if (session.getPage() == position) {
+			drawerLayout.closeDrawers();
+			return;
+		}
+
+		// Save the state of the current fragment
 		session.setPage(position);
-		Fragment fragment = null;
+		FragmentManager fm = getSupportFragmentManager();
+		final Fragment currentPage = fm.findFragmentById(R.id.content_frame);
+		// fm.putFragment(savedFragmentInstance, "saved_fragment",
+		// fm.findFragmentById(R.id.content_frame));
+		// System.out.println(fm.getFragments());
+
+		Fragment nextPage = null;
 		Bundle args = new Bundle();
+		String tag = "default";
+
 		DrawerLabel clickedLabel = DrawerLabel.values()[position];
 		switch (clickedLabel) {
 		case MEETINGS:
-			fragment = new MeetingsFragment();
-			meetingsFrag = (MeetingsFragment) fragment;
+			if ((frag_meetings = (MeetingsFragment) fm
+					.findFragmentByTag(Keys.Meeting.LIST)) == null)
+				frag_meetings = new MeetingsFragment();
+			nextPage = frag_meetings;
+			tag = Keys.Meeting.LIST;
 			break;
 		case NOTES:
-			fragment = new NotesFragment();
-			notesFrag = (NotesFragment) fragment;
+			if ((frag_notes = (NotesFragment) fm
+					.findFragmentByTag(Keys.Note.LIST)) == null)
+				frag_notes = new NotesFragment();
+			nextPage = frag_notes;
+			tag = Keys.Note.LIST;
 			break;
 		case TASKS:
-			fragment = new TasksFragment();
+			if ((frag_tasks = (TasksFragment) fm
+					.findFragmentByTag(Keys.Task.LIST)) == null)
+				frag_tasks = new TasksFragment();
+			nextPage = frag_tasks;
+			tag = Keys.Task.LIST;
 			break;
 		case PROFILE:
-			fragment = new ProfileFragment();
-			profFrag = (ProfileFragment) fragment;
+			if ((frag_profile = (ProfileFragment) fm
+					.findFragmentByTag("profile")) == null)
+				frag_profile = new ProfileFragment();
+			nextPage = frag_profile;
+			tag = "profile";
 			break;
 		case GROUPS:
-			fragment = new GroupsFragment();
-
+			if ((frag_groups = (GroupsFragment) fm
+					.findFragmentByTag(Keys.Group.LIST)) == null)
+				frag_groups = new GroupsFragment();
+			nextPage = frag_groups;
+			tag = Keys.Group.LIST;
 			break;
 		case PROJECTS:
-			fragment = new DummyFragment();
+			nextPage = new DummyFragment();
 			args.putString("Content", "TODO: Projects Page");
-			fragment.setArguments(args);
+			nextPage.setArguments(args);
 			break;
 		case CONTACTS:
 			// fragment = new DummyFragment();
 			// args.putString("Content", "TODO: Groups Page");
 			// fragment.setArguments(args);
-			fragment = new UserListFragment();
+			if ((frag_contacts = (UserListFragment) fm
+					.findFragmentByTag("contacts")) == null)
+				frag_contacts = new UserListFragment();
+			nextPage = frag_contacts;
+			tag = "contacts";
 			break;
 		case SETTINGS:
-			fragment = new SearchableUserFragment();
 			// args.putString("Content", "TODO: Settings Page");
 			// fragment.setArguments(args);
+			if ((frag_settings = (SearchableUserFragment) fm
+					.findFragmentByTag("settings")) == null)
+				frag_settings = SearchableUserFragment.getInstance();
+			nextPage = frag_settings;
+			tag = "settings";
 			break;
 		case ABOUT:
-			fragment = new DummyFragment();
+			nextPage = new DummyFragment();
 			args.putString("Content", "TODO: About Page");
-			fragment.setArguments(args);
+			nextPage.setArguments(args);
 			break;
 		case LOGOUT:
 			logout();
@@ -318,11 +366,19 @@ public class MainActivity extends FragmentActivity implements
 			break;
 		}
 
-		if (fragment != null) {
-			// Insert the fragment by replacing any existing fragment
-			FragmentManager fragmentManager = getSupportFragmentManager();
-			fragmentManager.beginTransaction()
-					.replace(R.id.content_frame, fragment).commit();
+		if (nextPage != null) {
+			FragmentTransaction ft = fm.beginTransaction();
+			// if (currentPage != null)
+			// ft.hide(currentPage);
+
+//			if (fm.findFragmentByTag(tag) == null) {
+//				ft.add(R.id.content_frame, nextPage, tag).commit();
+//			} else {
+				// ft.show(fm.findFragmentByTag(tag));
+				// Insert the fragment by replacing any existing fragment
+				fm.beginTransaction()
+						.replace(R.id.content_frame, nextPage, tag).commit();
+//			}
 
 			// Highlight the selected item, update the title, and close the
 			// drawer
@@ -345,9 +401,6 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		// if (data != null) {
-		// Log.v(TAG, "Result returned");
-		// }
 	}
 
 	private void logout() {
@@ -357,19 +410,6 @@ public class MainActivity extends FragmentActivity implements
 				.getInstance(MainActivity.this);
 		mySQLiteHelper.onUpgrade(mySQLiteHelper.getReadableDatabase(), 1, 1);
 		finish();
-	}
-
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		// TODO Auto-generated method stub
-		Log.v(TAG, "SaveInstance...");
-		super.onSaveInstanceState(outState);
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-		Log.v(TAG, "Pausing");
 	}
 
 	@Override
@@ -391,11 +431,6 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	@Override
-	public void onBackPressed() {
-		super.onBackPressed();
-	}
-
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle presses on the action bar items
 		// Pass the event to ActionBarDrawerToggle, if it returns
@@ -412,20 +447,20 @@ public class MainActivity extends FragmentActivity implements
 				Toast.makeText(this, "Refreshing Meetings", Toast.LENGTH_SHORT)
 						.show();
 				// meetingsFrag.fetchMeetings();
-				meetingsFrag.populateList();
+				frag_meetings.populateList();
 				return true;
 			case NOTES:
 				Toast.makeText(this, "Refreshing Notes", Toast.LENGTH_SHORT)
 						.show();
 				// notesFrag.fetchNotes();
-				notesFrag.populateList();
+				frag_notes.populateList();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 			}
 
 		case R.id.action_new_meeting:
-			meetingsFrag.editMeeting(null);
+			frag_meetings.editMeeting(null);
 			return true;
 		case R.id.action_new_note:
 			Intent createNote = new Intent(this, CreateNoteActivity.class);
@@ -435,8 +470,6 @@ public class MainActivity extends FragmentActivity implements
 			logout();
 			return true;
 		case R.id.action_settings:
-			// Intent test = new Intent(this, SwipeList_TestActivity.class);
-			// startActivity(test);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -467,6 +500,23 @@ public class MainActivity extends FragmentActivity implements
 		drawerToggle.onConfigurationChanged(newConfig);
 	}
 
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+	}
+
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		if (savedInstanceState != null) {
+			Fragment saved = getSupportFragmentManager().getFragment(
+					savedInstanceState, "fragment");
+			if (saved != null) {
+			
+			}
+		}
+	}
+
 	private class LeftDrawerClickListener implements
 			ListView.OnItemClickListener {
 		@Override
@@ -477,7 +527,25 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	@Override
-	public void onFragmentInteraction(String id) {
+	public void onPreExecute() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onProgressUpdate(int percent) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onCancelled() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onPostExecute() {
 		// TODO Auto-generated method stub
 
 	}

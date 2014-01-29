@@ -26,9 +26,11 @@ import java.net.URLConnection;
 import android.net.Uri;
 import android.util.Log;
 
+import com.android.volley.Request;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.meetingninja.csse.ApplicationController;
 import com.meetingninja.csse.extras.JsonUtils;
 
 public abstract class BaseDatabaseAdapter {
@@ -110,6 +112,10 @@ public abstract class BaseDatabaseAdapter {
 		String response = getServerResponse(conn);
 		conn.disconnect();
 		return response;
+	}
+	
+	protected static void addToRequestQueue(Request<?> req) {
+		ApplicationController.getInstance().addToRequestQueue(req);
 	}
 
 	protected static void logPrint(String payload) throws IOException {

@@ -39,10 +39,10 @@ import com.meetingninja.csse.ApplicationController;
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.AsyncResponse;
-import com.meetingninja.csse.database.JsonNodeRequest;
-import com.meetingninja.csse.database.JsonRequestListener;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
+import com.meetingninja.csse.database.volley.JsonNodeRequest;
+import com.meetingninja.csse.database.volley.JsonRequestListener;
 import com.meetingninja.csse.extras.JsonUtils;
 
 public class ProfileFragment extends Fragment {

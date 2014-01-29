@@ -34,6 +34,7 @@ import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
 import com.meetingninja.csse.database.local.SQLiteUserAdapter;
+import com.meetingninja.csse.database.volley.UserVolleyAdapter;
 
 public class UserListFragment extends ListFragment {
 
@@ -78,7 +79,7 @@ public class UserListFragment extends ListFragment {
 
 	private void populateList() {
 		// Async-Task
-		UserDatabaseAdapter.fetchAllUsers(new AsyncResponse<List<User>>() {
+		UserVolleyAdapter.fetchAllUsers(new AsyncResponse<List<User>>() {
 			@Override
 			public void processFinish(List<User> result) {
 				users.clear();

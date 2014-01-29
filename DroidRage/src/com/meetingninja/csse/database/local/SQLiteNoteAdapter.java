@@ -40,6 +40,9 @@ public class SQLiteNoteAdapter extends SQLiteHelper {
 	public static final String KEY_DESC = Keys.Note.DESC;
 	public static final String KEY_CREATED_BY = Keys.Note.CREATED_BY;
 
+	private final static String[] allColumns = new String[] { KEY_ID,
+			KEY_TITLE, KEY_CONTENT, KEY_DESC, KEY_CREATED_BY };
+
 	public SQLiteNoteAdapter(Context context) {
 		super(context);
 		mDbHelper = SQLiteHelper.getInstance(context);
@@ -65,8 +68,8 @@ public class SQLiteNoteAdapter extends SQLiteHelper {
 		contentValues.put(KEY_CONTENT, content);
 		// contentValues.put(KEY_CREATED_BY, creator);
 		long insertID = mDb.insert(TABLE_NAME, null, contentValues);
-		Cursor c = mDb.query(TABLE_NAME, new String[] { KEY_ID, KEY_TITLE,
-				KEY_CONTENT }, KEY_ID + "=" + insertID, null, null, null, null);
+		Cursor c = mDb.query(TABLE_NAME, allColumns, KEY_ID + "=" + insertID,
+				null, null, null, null);
 		c.moveToFirst();
 		Note newNote = new Note(c);
 		c.close();
@@ -85,9 +88,11 @@ public class SQLiteNoteAdapter extends SQLiteHelper {
 			return;
 		}
 		ContentValues data = new ContentValues();
+		data.put(KEY_ID, note.getID());
 		data.put(KEY_TITLE, note.getTitle());
 		data.put(KEY_CONTENT, note.getContent());
-		// data.put(KEY_CREATED_BY, note.getCreatedBy());
+		data.put(KEY_DESC, note.getDescription());
+		data.put(KEY_CREATED_BY, note.getCreatedBy());
 		mDb.update(TABLE_NAME, data, KEY_ID + "=" + note.getID(), null);
 		close();
 	}
@@ -104,8 +109,11 @@ public class SQLiteNoteAdapter extends SQLiteHelper {
 	}
 
 	public void deleteNote(Note note) {
-		if (note != null)
-			deleteNote(Long.parseLong(note.getID()));
+		if (note == null) {
+			close();
+			return;
+		}
+		deleteNote(Long.parseLong(note.getID()));
 	}
 
 	/**
@@ -136,15 +144,13 @@ public class SQLiteNoteAdapter extends SQLiteHelper {
 
 	public List<Note> getAllNotes() {
 		List<Note> notes = new ArrayList<Note>();
-		String[] columns = new String[] { KEY_ID, KEY_TITLE, KEY_CONTENT };
 		mDb = mDbHelper.getReadableDatabase();
-		Cursor c = mDb.query(TABLE_NAME, columns, null, null, null, null, null);
-		Note note = null;
+		Cursor c = mDb.query(TABLE_NAME, allColumns, null, null, null, null,
+				null);
 		// looping through all rows and adding to list
-		if (c.moveToFirst()) {
+		if (c!= null && c.moveToFirst()) {
 			do {
-				if ((note = new Note(c)) != null)
-					notes.add(note);
+				notes.add(new Note(c));
 			} while (c.moveToNext());
 		}
 		c.close();

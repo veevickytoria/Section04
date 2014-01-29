@@ -33,6 +33,8 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.meetingninja.csse.ApplicationController;
+import com.meetingninja.csse.database.volley.JsonNodeRequest;
+import com.meetingninja.csse.database.volley.JsonRequestListener;
 
 public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 	private final static String TAG = MeetingDatabaseAdapter.class
@@ -64,32 +66,6 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 		JsonNode meetingNode = MAPPER.readTree(response);
 
 		return parseMeeting(meetingNode, meetingID);
-	}
-
-	public static void fetchMeetingInfo(final String meetingID,
-			final AsyncResponse<Meeting> delegate) {
-		String _url = getBaseUri().appendPath(meetingID).build().toString();
-
-		JsonNodeRequest req = new JsonNodeRequest(_url, null,
-				new JsonRequestListener() {
-
-					@Override
-					public void onResponse(JsonNode response, int statusCode,
-							VolleyError error) {
-						if (response != null) {
-							delegate.processFinish(parseMeeting(response,
-									meetingID));
-						} else {
-
-							error.printStackTrace();
-						}
-
-					}
-
-				});
-
-		// add the request object to the queue to be executed
-		ApplicationController.getInstance().addToRequestQueue(req, "JSON");
 	}
 
 	public static Meeting createMeeting(String userID, Meeting m)

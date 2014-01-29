@@ -1,4 +1,4 @@
-package com.meetingninja.csse.database;
+package com.meetingninja.csse.database.volley;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;

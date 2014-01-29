@@ -37,6 +37,7 @@ import objects.User;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
+
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.fasterxml.jackson.core.JsonEncoding;
@@ -47,6 +48,8 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.meetingninja.csse.ApplicationController;
 import com.meetingninja.csse.SessionManager;
+import com.meetingninja.csse.database.volley.JsonNodeRequest;
+import com.meetingninja.csse.database.volley.JsonRequestListener;
 import com.meetingninja.csse.extras.JsonUtils;
 import com.meetingninja.csse.extras.Utilities;
 
@@ -80,28 +83,6 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		JsonNode userNode = MAPPER.readTree(response);
 
 		return parseUser(userNode);
-	}
-
-	public static void fetchUserInfo(String userID,
-			final AsyncResponse<User> delegate) {
-		String _url = getBaseUri().appendPath(userID).build().toString();
-
-		JsonNodeRequest req = new JsonNodeRequest(_url, null,
-				new JsonRequestListener() {
-
-					@Override
-					public void onResponse(JsonNode response, int statusCode,
-							VolleyError error) {
-						if (response != null) {
-							delegate.processFinish(parseUser(response));
-						} else {
-							error.printStackTrace();
-						}
-
-					}
-				});
-
-		ApplicationController.getInstance().addToRequestQueue(req, "JSON");
 	}
 
 	public static List<User> getContacts(String userID) throws IOException {
@@ -563,51 +544,6 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 			response = updateHelper(p);
 		}
 		return parseUser(MAPPER.readTree(response));
-	}
-
-	private void deleteUser(String userID, final AsyncResponse<Boolean> delegate) {
-		String url = UserDatabaseAdapter.getBaseUri().appendPath(userID)
-				.build().toString();
-
-		JsonNodeRequest del_req = new JsonNodeRequest(Request.Method.DELETE,
-				url, null, new JsonRequestListener() {
-
-					@Override
-					public void onResponse(JsonNode response, int statusCode,
-							VolleyError error) {
-						if (response != null) {
-							delegate.processFinish(response.get(Keys.DELETED)
-									.asBoolean(false));
-						} else {
-							error.printStackTrace();
-						}
-
-					}
-				});
-		ApplicationController.getInstance().addToRequestQueue(del_req);
-
-	}
-
-	public static void fetchAllUsers(final AsyncResponse<List<User>> delegate) {
-		String _url = getBaseUri().appendPath("Users").build().toString();
-
-		JsonNodeRequest req = new JsonNodeRequest(_url, null,
-				new JsonRequestListener() {
-
-					@Override
-					public void onResponse(JsonNode response, int statusCode,
-							VolleyError error) {
-						if (response != null) {
-							// callback to UI thread
-							delegate.processFinish(parseUserList(response));
-						} else {
-							error.printStackTrace();
-						}
-					}
-				});
-		// add the request object to the queue to be executed
-		ApplicationController.getInstance().addToRequestQueue(req, "JSON");
-
 	}
 
 	public static User parseUser(JsonNode node) {

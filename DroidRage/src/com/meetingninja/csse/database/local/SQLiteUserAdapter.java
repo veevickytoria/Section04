@@ -32,10 +32,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.meetingninja.csse.ApplicationController;
-import com.meetingninja.csse.database.JsonNodeRequest;
-import com.meetingninja.csse.database.JsonRequestListener;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
+import com.meetingninja.csse.database.volley.JsonNodeRequest;
+import com.meetingninja.csse.database.volley.JsonRequestListener;
 
 public class SQLiteUserAdapter extends SQLiteHelper {
 	private static final String TAG = SQLiteUserAdapter.class.getSimpleName();

@@ -5,9 +5,11 @@ import java.util.List;
 
 import objects.User;
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.util.Rfc822Tokenizer;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,9 +20,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import com.android.ex.chips.BaseRecipientAdapter;
+import com.android.ex.chips.RecipientEditTextView;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
+import com.meetingninja.csse.database.volley.UserVolleyAdapter;
 import com.meetingninja.csse.user.FilteredUserArrayAdapter;
 import com.meetingninja.csse.user.UserArrayAdapter;
 
@@ -36,8 +41,10 @@ import com.meetingninja.csse.user.UserArrayAdapter;
 public class SearchableUserFragment extends Fragment implements
 		AbsListView.OnItemClickListener, AsyncResponse<List<User>> {
 
+	private static SearchableUserFragment sInstance;
 	// private OnFragmentInteractionListener mListener;
 	private ContactsCompletionView complete;
+	private RecipientEditTextView ex_complete;
 
 	/**
 	 * The fragment's ListView/GridView.
@@ -53,7 +60,10 @@ public class SearchableUserFragment extends Fragment implements
 	private ArrayList<User> allUsers = new ArrayList<User>();
 	private ArrayList<User> addedUsers = new ArrayList<User>();
 	private ArrayList<String> addedIds = new ArrayList<String>();
-	private TextView addedIDsView;
+//	private TextView addedIDsView;
+	private Bundle savedState = null;
+	private static final String SAVED_BUNDLE_TAG = "saved_bundle";
+	private Context mContext;
 
 	private final String TAG = SearchableUserFragment.class.getSimpleName();
 
@@ -63,6 +73,8 @@ public class SearchableUserFragment extends Fragment implements
 	ArrayAdapter<SimpleUser> adapter;
 	ContactsCompletionView completionView;
 
+	private boolean createdStateInDestroyView;
+
 	/**
 	 * Mandatory empty constructor for the fragment manager to instantiate the
 	 * fragment (e.g. upon screen orientation changes).
@@ -70,44 +82,61 @@ public class SearchableUserFragment extends Fragment implements
 	public SearchableUserFragment() {
 		// empty
 	}
-
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		// TODO Auto-generated method stub
-		super.onConfigurationChanged(newConfig);
+	
+	public static SearchableUserFragment getInstance() {
+		if (sInstance == null) {
+			sInstance = new SearchableUserFragment();
+		}
+		return sInstance;
 	}
 
 	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		Log.d(TAG, "Saving " + allUsers.size() + " users");
-		outState.putParcelableArrayList(Keys.User.LIST + "ALL", allUsers);
-		outState.putParcelableArrayList(Keys.User.LIST + "ADDED", addedUsers);
-		outState.putStringArrayList(Keys.User.LIST + Keys.User.ID, addedIds);
-		super.onSaveInstanceState(outState);
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		if (savedInstanceState != null)
+			for (String s : savedInstanceState.keySet()) {
+				System.out.println(s + ": " + savedInstanceState.get(s));
+			}
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		this.setRetainInstance(true);
+
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-		View view = inflater.inflate(R.layout.fragment_item_list, container,
+		View view = inflater.inflate(R.layout.fragment_autocomplete, container,
 				false);
 		setupViews(view);
-		setRetainInstance(true);
-
-		if (savedInstanceState == null
-				|| !savedInstanceState.containsKey(Keys.User.LIST + "ALL")) {
-			Log.w(TAG, "Not Saved");
-			UserDatabaseAdapter.fetchAllUsers(this); // processFinish()
-		} else {
-			Log.i(TAG, "Restoring");
-			allUsers = savedInstanceState.getParcelableArrayList(Keys.User.LIST
-					+ "ALL");
-			addedUsers = savedInstanceState
-					.getParcelableArrayList(Keys.User.LIST + "ADDED");
-			addedIds = savedInstanceState.getStringArrayList(Keys.User.LIST
-					+ Keys.User.ID);
+		if (savedInstanceState == null) {
+			UserVolleyAdapter.fetchAllUsers(this); // processFinish()
 		}
+
+		if (savedInstanceState != null && savedState == null)
+			savedState = savedInstanceState.getBundle(SAVED_BUNDLE_TAG);
+		if (savedState != null)
+			allUsers = savedState
+					.getParcelableArrayList(Keys.User.LIST + "ALL");
+		savedState = null;
+
+		// if (savedInstanceState == null
+		// || !savedInstanceState.containsKey(Keys.User.LIST + "ALL")) {
+		// Log.w(TAG, "Not Saved");
+		// UserDatabaseAdapter.fetchAllUsers(this); // processFinish()
+		// } else {
+		// Log.i(TAG, "Restoring");
+		// allUsers = savedInstanceState.getParcelableArrayList(Keys.User.LIST
+		// + "ALL");
+		// addedUsers = savedInstanceState
+		// .getParcelableArrayList(Keys.User.LIST + "ADDED");
+		// addedIds = savedInstanceState.getStringArrayList(Keys.User.LIST
+		// + Keys.User.ID);
+		// }
 
 		people = new SimpleUser[] {
 				new SimpleUser("Marshall Weir", "marshall@example.com"),
@@ -127,6 +156,11 @@ public class SearchableUserFragment extends Fragment implements
 				android.R.layout.simple_list_item_1, people);
 
 		complete.setAdapter(adapter);
+		
+		 final RecipientEditTextView emailRetv =
+	                (RecipientEditTextView) view.findViewById(R.id.ex_autocomplete);
+	        emailRetv.setTokenizer(new Rfc822Tokenizer());
+	        emailRetv.setAdapter(new BaseRecipientAdapter(getActivity()) { });
 
 		autoAdapter = new FilteredUserArrayAdapter(getActivity(),
 				R.layout.chips_recipient_dropdown_item, allUsers);
@@ -147,20 +181,52 @@ public class SearchableUserFragment extends Fragment implements
 				.findViewById(R.id.my_autocomplete);
 		// token listener when autocompleted
 		// complete.setTokenListener(this);
-		addedIDsView = (TextView) view.findViewById(R.id.completed_ids);
+//		addedIDsView = (TextView) view.findViewById(R.id.completed_ids);
 		mListView = (AbsListView) view.findViewById(android.R.id.list);
+
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		savedState = saveState(); /* allUsers defined here for sure */
+		createdStateInDestroyView = true;
+		allUsers.clear();
+	}
+
+	private Bundle saveState() {
+		Log.d(TAG, "Save " + allUsers.size() + " users");
+		Bundle state = new Bundle();
+		state.putParcelableArrayList(Keys.User.LIST + "ALL", allUsers);
+		state.putParcelableArrayList(Keys.User.LIST + "ADDED", addedUsers);
+		state.putStringArrayList(Keys.User.LIST + Keys.User.ID, addedIds);
+		return state;
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		if (allUsers.isEmpty()) {
+			outState.putBundle(SAVED_BUNDLE_TAG, savedState);
+		} else {
+			outState.putBundle(SAVED_BUNDLE_TAG,
+					createdStateInDestroyView ? savedState : saveState());
+		}
+		createdStateInDestroyView = false;
+		super.onSaveInstanceState(outState);
 
 	}
 
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
+		mContext = activity;
 	}
 
 	@Override
 	public void onDetach() {
 		super.onDetach();
 		// mListener = null;
+		mContext = null;
 	}
 
 	@Override
@@ -235,7 +301,6 @@ public class SearchableUserFragment extends Fragment implements
 	public void processFinish(List<User> result) {
 		allUsers.clear();
 		autoAdapter.clear();
-		allUsers.addAll(result);
 		autoAdapter.notifyDataSetChanged();
 	}
 

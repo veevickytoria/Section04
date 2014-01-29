@@ -35,7 +35,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "dataStorage";
 
 	// Common column names
-	public static final String KEY_ID = BaseColumns._ID;
+	public static final String KEY_ID = "id";
 	public static final String KEY_UPDATED = "lastModified";
 
 	// Table Create Statements
@@ -57,18 +57,21 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 	// Notes table create statement
 	private static final String CREATE_TABLE_NOTE = "CREATE TABLE "
 			+ SQLiteNoteAdapter.TABLE_NAME + "(" + KEY_ID
-			+ " INTEGER PRIMARY KEY AUTOINCREMENT,"
+			+ " INTEGER PRIMARY KEY,"
 			+ SQLiteNoteAdapter.KEY_TITLE + " TEXT NOT NULL,"
-			+ SQLiteNoteAdapter.KEY_CONTENT + " TEXT NOT NULL" + ");";
+			+ SQLiteNoteAdapter.KEY_CONTENT + " TEXT NOT NULL," 
+			+ SQLiteNoteAdapter.KEY_DESC + " TEXT NOT NULL," 
+			+ SQLiteNoteAdapter.KEY_CREATED_BY + " TEXT NOT NULL" + ");";
 	private static final String CREATE_FTS_TABLE_NOTE = "CREATE VIRTUAL TABLE "
 			+ SQLiteNoteAdapter.FTS_TABLE_NAME + " USING fts3(" + KEY_ID + ", "
 			+ SQLiteNoteAdapter.KEY_TITLE + ", "
-			+ SQLiteNoteAdapter.KEY_CONTENT + ");";
+			+ SQLiteNoteAdapter.KEY_CONTENT + ", " 
+			+ SQLiteNoteAdapter.KEY_DESC + ");";
 
 	// Meeting table create statement
 	private static final String CREATE_TABLE_MEETING = "CREATE TABLE "
 			+ SQLiteMeetingAdapter.TABLE_NAME + "(" + KEY_ID
-			+ " INTEGER PRIMARY KEY AUTOINCREMENT,"
+			+ " INTEGER PRIMARY KEY,"
 			+ SQLiteMeetingAdapter.KEY_TITLE + " TEXT NOT NULL,"
 			+ SQLiteMeetingAdapter.KEY_LOCATION + " TEXT NOT NULL,"
 			+ SQLiteMeetingAdapter.KEY_START_TIME + " INTEGER NOT NULL,"

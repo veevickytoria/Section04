@@ -51,10 +51,12 @@ import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
+import com.meetingninja.csse.database.volley.UserVolleyAdapter;
 import com.meetingninja.csse.extras.AlertDialogUtil;
 import com.meetingninja.csse.extras.MyDateUtils;
 import com.meetingninja.csse.user.ProfileActivity;
 import com.meetingninja.csse.user.UserArrayAdapter;
+
 import de.timroes.android.listview.EnhancedListView;
 
 public class EditTaskActivity extends FragmentActivity implements
@@ -332,7 +334,7 @@ public class EditTaskActivity extends FragmentActivity implements
 	}
 
 	private void loadUser(String userID) {
-		UserDatabaseAdapter.fetchUserInfo(userID, new AsyncResponse<User>() {
+		UserVolleyAdapter.fetchUserInfo(userID, new AsyncResponse<User>() {
 
 			@Override
 			public void processFinish(User result) {

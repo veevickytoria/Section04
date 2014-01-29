@@ -53,10 +53,12 @@ public class Note extends AbstractJSONObject<Note> implements Parcelable,
 		int idxID = crsr.getColumnIndex(Keys._ID);
 		int idxTITLE = crsr.getColumnIndex(Keys.Note.TITLE);
 		int idxCONTENT = crsr.getColumnIndex(Keys.Note.CONTENT);
+		int idxDESC = crsr.getColumnIndex(Keys.Note.DESC);
 		int idxCREATOR = crsr.getColumnIndex(Keys.Note.CREATED_BY);
 		setID("" + crsr.getInt(idxID));
 		setTitle(crsr.getString(idxTITLE));
 		setContent(crsr.getString(idxCONTENT));
+		setDescription(crsr.getString(idxDESC));
 		setCreatedBy(crsr.getString(idxCREATOR));
 	}
 
