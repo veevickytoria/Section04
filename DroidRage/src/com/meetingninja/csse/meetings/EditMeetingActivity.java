@@ -48,6 +48,7 @@ import com.meetingninja.csse.R;
 import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.agenda.AgendaActivity;
 import com.meetingninja.csse.database.AsyncResponse;
+import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.MeetingDatabaseAdapter;
 import com.meetingninja.csse.database.local.SQLiteMeetingAdapter;
 import com.meetingninja.csse.extras.AlertDialogUtil;
@@ -74,7 +75,7 @@ public class EditMeetingActivity extends FragmentActivity implements
 	public static final String EXTRA_LOCATION = "location";
 	public static final String EXTRA_DESCRIPTION = "description";
 	public static final String EXTRA_EDIT_MODE = "editing";
-	public static final String EXTRA_MEETING = "displayedMeeting";
+	public static final String EXTRA_MEETING = Keys.Meeting.PARCEL;
 
 	private static final String TAG = EditMeetingActivity.class.getSimpleName();
 
