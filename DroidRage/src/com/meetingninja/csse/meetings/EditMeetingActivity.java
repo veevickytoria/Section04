@@ -18,7 +18,6 @@ package com.meetingninja.csse.meetings;
 import objects.Meeting;
 
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormatter;
 
 import android.content.Context;
@@ -65,7 +64,7 @@ public class EditMeetingActivity extends FragmentActivity implements
 	private Button mFromTime;
 	private boolean is24, edit_mode;
 	private DateTime joda_start, joda_end;
-	private DateTimeFormatter dateFormat = MyDateUtils.JODA_MEETING_DATE_FORMAT;
+	private DateTimeFormatter dateFormat = MyDateUtils.JODA_APP_DATE_FORMAT;
 	private DateTimeFormatter timeFormat;
 
 	private SQLiteMeetingAdapter mySQLiteAdapter;
@@ -104,14 +103,14 @@ public class EditMeetingActivity extends FragmentActivity implements
 		// init the date-time pickers
 		joda_start = DateTime.now();
 		joda_end = DateTime.now();
-		joda_start = joda_start.withZone(DateTimeZone.UTC);
-		joda_end = joda_end.withZone(DateTimeZone.UTC);
 
 		if (displayedMeeting != null) {
-			joda_start = joda_start.withMillis(displayedMeeting.getStartTimeInMillis());
+			joda_start = joda_start.withMillis(displayedMeeting
+					.getStartTimeInMillis());
 			// start.set(Calendar.HOUR_OF_DAY,
 			// Integer.parseInt(mFromTime.getText().toString()));
-			joda_end = joda_end.withMillis(displayedMeeting.getEndTimeInMillis());
+			joda_end = joda_end.withMillis(displayedMeeting
+					.getEndTimeInMillis());
 		} else {
 			System.out.println("display metting is null");
 			// start.add(Calendar.HOUR_OF_DAY, 1);
@@ -290,7 +289,7 @@ public class EditMeetingActivity extends FragmentActivity implements
 
 			newMeeting.setTitle(title);
 			newMeeting.setLocation(location);
-			
+
 			newMeeting.setStartTime(joda_start.getMillis());
 			newMeeting.setEndTime(joda_end.getMillis());
 			newMeeting.setDescription(desc);
@@ -340,7 +339,7 @@ public class EditMeetingActivity extends FragmentActivity implements
 			CalendarDatePickerDialog calendarDatePickerDialog = CalendarDatePickerDialog
 					.newInstance(this, // callback
 							dt.getYear(), // year
-							dt.getMonthOfYear(), // month
+							dt.getMonthOfYear() - 1, // month
 							dt.getDayOfMonth()); // day
 			calendarDatePickerDialog.show(fm, "fragment_date_picker_name");
 		}
@@ -350,11 +349,9 @@ public class EditMeetingActivity extends FragmentActivity implements
 		public void onDateSet(CalendarDatePickerDialog dialog, int year,
 				int monthOfYear, int dayOfMonth) {
 
+			DateTime now = DateTime.now();
 			DateTime temp = DateTime.now();
 			temp = temp.withDate(year, monthOfYear, dayOfMonth);
-			DateTime now = DateTime.now();
-			now = now.withZone(DateTimeZone.UTC);
-			now = DateTime.now();
 
 			if (temp.isAfter(now)) {
 				dt = dt.withDate(year, monthOfYear, dayOfMonth);
@@ -378,7 +375,8 @@ public class EditMeetingActivity extends FragmentActivity implements
 
 					if ((isStartDate && dt.isAfter(otherDT))
 							|| ((!isStartDate) && dt.isBefore(otherDT))) {
-						otherDT = otherDT.withDate(year, monthOfYear, dayOfMonth);
+						otherDT = otherDT.withDate(year, monthOfYear,
+								dayOfMonth);
 						otherDT = otherDT.withTime(hour, minute, 0, 0);
 						timeButton2.setText(timeFormat.print(otherDT));
 						button2.setText(format);
@@ -415,7 +413,7 @@ public class EditMeetingActivity extends FragmentActivity implements
 		public void onClick(View v) {
 			is24 = android.text.format.DateFormat
 					.is24HourFormat(getApplicationContext());
-		
+
 			FragmentManager fm = getSupportFragmentManager();
 			RadialTimePickerDialog timePickerDialog = RadialTimePickerDialog
 					.newInstance(TimeClickListener.this, // callback
@@ -428,10 +426,10 @@ public class EditMeetingActivity extends FragmentActivity implements
 		@Override
 		public void onTimeSet(RadialPickerLayout dialog, int hourOfDay,
 				int minute) {
+			DateTime now = DateTime.now();
+
 			DateTime temp = DateTime.now();
 			temp = temp.withTime(hourOfDay, minute, 0, 0);
-
-			DateTime now = DateTime.now().withZone(DateTimeZone.UTC);
 
 			if (temp.isAfter(now)) {
 				dt = dt.withHourOfDay(hourOfDay);

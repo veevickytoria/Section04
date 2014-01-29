@@ -146,7 +146,7 @@ public class MeetingsFragment extends Fragment implements
 					public EnhancedListView.Undoable onDismiss(
 							EnhancedListView listView, final int position) {
 
-						final Meeting item = (Meeting) meetingAdpt
+						final Meeting item = meetingAdpt
 								.getItem(position);
 						meetingAdpt.remove(item);
 						return new EnhancedListView.Undoable() {

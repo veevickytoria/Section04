@@ -63,6 +63,7 @@ public abstract class SwipeListViewActivity extends Activity {
 				new MyGestureDetector());
 
 		View.OnTouchListener gestureListener = new View.OnTouchListener() {
+			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				return gestureDetector.onTouchEvent(event);
 			}

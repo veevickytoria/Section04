@@ -25,7 +25,7 @@ public class MyDateUtils {
 			.dateTime();
 	public static final DateTimeFormatter JODA_SERVER_DATE_FORMAT = DateTimeFormat
 			.forPattern("EEEE, dd-MMM-yy HH:mm:ss zzz").withZoneUTC();
-	public static final DateTimeFormatter JODA_MEETING_DATE_FORMAT = DateTimeFormat
+	public static final DateTimeFormatter JODA_APP_DATE_FORMAT = DateTimeFormat
 			.forPattern("EEE, MMM dd, yyyy").withZoneUTC();
 	public static final DateTimeFormatter JODA_24_TIME_FORMAT = DateTimeFormat
 			.forPattern("HH:mm").withZoneUTC();

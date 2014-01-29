@@ -37,8 +37,8 @@ public abstract class Event implements Comparable<Event> {
 	}
 
 	public long getStartTimeInMillis() {
-		return (startTime != null && !startTime.isEmpty()) ? Long.parseLong(startTime)
-				: 0L;
+		return (startTime != null && !startTime.isEmpty()) ? Long
+				.parseLong(startTime) : 0L;
 	}
 
 	public void setStartTime(String datetimeStart) {
@@ -55,8 +55,8 @@ public abstract class Event implements Comparable<Event> {
 	}
 
 	public long getEndTimeInMillis() {
-		return (endTime != null && !endTime.isEmpty()) ? Long.parseLong(endTime)
-				: 0L;
+		return (endTime != null && !endTime.isEmpty()) ? Long
+				.parseLong(endTime) : 0L;
 	}
 
 	public void setEndTime(String datetimeEnd) {

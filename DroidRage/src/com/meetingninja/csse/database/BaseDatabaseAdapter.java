@@ -37,8 +37,8 @@ public abstract class BaseDatabaseAdapter {
 	protected final static String USER_AGENT = "Mozilla/5.0";
 	protected final static String CONTENT_TYPE = "application/json";
 	protected final static String ACCEPT_TYPE = "application/json";
-	protected final static ObjectMapper MAPPER = JsonUtils.getObjectMapper(); 
-			protected final static JsonFactory JFACTORY = JsonUtils.getJsonFactory();
+	protected final static ObjectMapper MAPPER = JsonUtils.getObjectMapper();
+	protected final static JsonFactory JFACTORY = JsonUtils.getJsonFactory();
 
 	protected interface IRequest {
 		final String GET = "GET";

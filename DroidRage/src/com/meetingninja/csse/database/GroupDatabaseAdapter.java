@@ -35,7 +35,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 
 public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
-	
+
 	public static String getBaseUrl() {
 		return BASE_URL + "Group";
 	}
@@ -89,7 +89,7 @@ public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
 		jgen.writeArrayFieldStart(Keys.Group.MEMBERS);
 		jgen.writeStartObject();
 		for (String id : userID) {
-		jgen.writeStringField(Keys.User.ID, id);
+			jgen.writeStringField(Keys.User.ID, id);
 		}
 		jgen.writeEndObject();
 		jgen.writeEndArray();

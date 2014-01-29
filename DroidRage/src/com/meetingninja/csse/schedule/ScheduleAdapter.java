@@ -98,8 +98,8 @@ public class ScheduleAdapter extends AmazingAdapter {
 			// dt = Long.parseLong(sectionTitle);
 			// dt = MyDateUtils.JODA_SERVER_DATE_FORMAT
 			// .parseDateTime(sectionTitle);
-			lSectionTitle.setText(MyDateUtils.JODA_MEETING_DATE_FORMAT
-					.print(Long.parseLong(sectionTitle)));
+			lSectionTitle.setText(MyDateUtils.JODA_APP_DATE_FORMAT.print(Long
+					.parseLong(sectionTitle)));
 		} else {
 			view.findViewById(R.id.schedule_header).setVisibility(View.GONE);
 		}

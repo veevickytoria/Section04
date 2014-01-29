@@ -45,7 +45,7 @@ public class UsersCompletionView extends TokenCompleteTextView {
 			su = (SerializableUser) object;
 
 		LayoutInflater inflater = (LayoutInflater) getContext()
-				.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		LinearLayout view = (LinearLayout) inflater.inflate(
 				R.layout.contact_token,
 				(ViewGroup) UsersCompletionView.this.getParent(), false);
@@ -78,9 +78,9 @@ public class UsersCompletionView extends TokenCompleteTextView {
 		for (Serializable s : sers) {
 			String className = s.getClass().getSimpleName();
 			Log.d(TAG, "Converting a " + className);
-		
+
 			// Log.d("get", ((SerializableUser) s).getDisplayName());
-			objs.add((SerializableUser) s);
+			objs.add(s);
 		}
 
 		return objs;
@@ -96,7 +96,7 @@ public class UsersCompletionView extends TokenCompleteTextView {
 
 			if (obj instanceof User) {
 				SerializableUser su = ((User) obj).toSimpleUser();
-//				Log.d("build", su.getDisplayName());
+				// Log.d("build", su.getDisplayName());
 				s.add(su);
 			} else {
 				s.add((SerializableUser) obj);

@@ -34,8 +34,7 @@ public class AlertDialogUtil {
 		alertDialog.show();
 	}
 
-	public static void showErrorDialog(Context context,
-			String message) {
+	public static void showErrorDialog(Context context, String message) {
 		displayDialog(context, "Error", message, "OK",
 				new DialogInterface.OnClickListener() {
 					@Override

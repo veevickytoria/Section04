@@ -39,6 +39,7 @@ public abstract class AbstractTreeViewAdapter<T> extends BaseAdapter implements
 	private Drawable rowBackgroundDrawable;
 
 	private final OnClickListener indicatorClickListener = new OnClickListener() {
+		@Override
 		public void onClick(final View v) {
 			@SuppressWarnings("unchecked")
 			final T id = (T) v.getTag();

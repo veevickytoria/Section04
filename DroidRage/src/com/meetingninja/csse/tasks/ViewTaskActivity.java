@@ -41,7 +41,7 @@ public class ViewTaskActivity extends Activity {
 	private Button taskCompleteButton;
 	RetUserObj fetcher = null;
 	private Task task = null;
-	private DateTimeFormatter dateFormat = MyDateUtils.JODA_MEETING_DATE_FORMAT;
+	private DateTimeFormatter dateFormat = MyDateUtils.JODA_APP_DATE_FORMAT;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -169,7 +169,7 @@ public class ViewTaskActivity extends Activity {
 		}
 
 		public void execute(String userID) {
-			System.out.println("afdsafdsa     "+userID);
+			System.out.println("afdsafdsa     " + userID);
 			infoFetcher.execute(userID);
 		}
 

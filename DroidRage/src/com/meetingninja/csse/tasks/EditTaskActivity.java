@@ -19,7 +19,6 @@ import objects.Task;
 import objects.User;
 
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormatter;
 
 import android.app.Activity;
@@ -51,12 +50,11 @@ import com.meetingninja.csse.R;
 import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
+import com.meetingninja.csse.database.UserDatabaseAdapter;
 import com.meetingninja.csse.extras.AlertDialogUtil;
 import com.meetingninja.csse.extras.MyDateUtils;
 import com.meetingninja.csse.user.ProfileActivity;
 import com.meetingninja.csse.user.UserArrayAdapter;
-import com.meetingninja.csse.user.UserInfoFetcher;
-
 import de.timroes.android.listview.EnhancedListView;
 
 public class EditTaskActivity extends FragmentActivity implements
@@ -64,19 +62,17 @@ public class EditTaskActivity extends FragmentActivity implements
 	final String MARK_AS_COMPLETE = "Mark As Complete";
 	final String MARK_AS_INCOMPLETE = "Mark As Incomplete";
 
-	private EnhancedListView l;
+	private EnhancedListView mListView;
 	private EditText mDescription, completionCriteria, mTitle;
 	private TextView assignedDateLabel, createdDateLabel, isCompleted;
 	private Button mDeadlineBtn, mCompleteBtn;
-	private DateTimeFormatter dateFormat = MyDateUtils.JODA_MEETING_DATE_FORMAT;
+	private DateTimeFormatter dateFormat = MyDateUtils.JODA_APP_DATE_FORMAT;
 
 	private Task displayTask;
 	private DateTime dt;
 
 	public static final String EXTRA_TASK = "task";
-	RetUserObj fetcher = null;
 	private UserArrayAdapter mUserAdapter;
-	private String userId;
 	private SessionManager session;
 
 	@Override
@@ -88,7 +84,6 @@ public class EditTaskActivity extends FragmentActivity implements
 		Bundle extras = getIntent().getExtras();
 
 		session = SessionManager.getInstance();
-		userId = session.getUserID();
 
 		if (extras != null) {
 			displayTask = extras.getParcelable(Keys.Task.PARCEL);
@@ -100,9 +95,7 @@ public class EditTaskActivity extends FragmentActivity implements
 
 			mTitle.setSelection(0, mTitle.getText().toString().length());
 
-			dt = DateTime.now();
-			dt = dt.withZone(DateTimeZone.UTC);
-			dt = dt.withMillis(displayTask.getEndTimeInMillis());
+			dt = new DateTime(displayTask.getEndTimeInMillis());
 
 			mDeadlineBtn.setOnClickListener(new DateClickListener(mDeadlineBtn,
 					dt));
@@ -203,6 +196,7 @@ public class EditTaskActivity extends FragmentActivity implements
 		isCompleted = (TextView) findViewById(R.id.task_edit_completed);
 		assignedDateLabel = (TextView) findViewById(R.id.task_edit_date_assigned);
 		createdDateLabel = (TextView) findViewById(R.id.task_edit_date_created);
+		mListView = (EnhancedListView) findViewById(R.id.edit_task_members_list);
 	}
 
 	@Override
@@ -230,7 +224,7 @@ public class EditTaskActivity extends FragmentActivity implements
 					.toString());
 			displayTask.setEndTime(dt.getMillis());
 
-			displayTask.setAssignedFrom(userId);
+			displayTask.setAssignedFrom(session.getUserID());
 			// TODO: change this
 			if (!displayTask.getMembers().isEmpty()) {
 				displayTask.setAssignedTo(displayTask.getMembers().get(0)
@@ -254,15 +248,6 @@ public class EditTaskActivity extends FragmentActivity implements
 	}
 
 	private void setUpListView() {
-		findViewById(R.id.edit_task_container).setOnTouchListener(
-				new OnTouchListener() {
-					@Override
-					public boolean onTouch(View v, MotionEvent event) {
-						hideKeyboard();
-						return false;
-					}
-				});
-
 		// allows keyboard to hide when not editing text
 		findViewById(R.id.edit_task_container).setOnTouchListener(
 				new OnTouchListener() {
@@ -275,14 +260,14 @@ public class EditTaskActivity extends FragmentActivity implements
 
 		mUserAdapter = new UserArrayAdapter(this, R.layout.list_item_user,
 				displayTask.getMembers());
-		l = (EnhancedListView) findViewById(R.id.edit_task_members_list);
-		l.setAdapter(mUserAdapter);
-		l.setDismissCallback(new de.timroes.android.listview.EnhancedListView.OnDismissCallback() {
+
+		mListView.setAdapter(mUserAdapter);
+		mListView.setDismissCallback(new EnhancedListView.OnDismissCallback() {
 			@Override
 			public EnhancedListView.Undoable onDismiss(
 					EnhancedListView listView, final int position) {
 
-				final User item = (User) mUserAdapter.getItem(position);
+				final User item = mUserAdapter.getItem(position);
 				mUserAdapter.remove(item);
 				return new EnhancedListView.Undoable() {
 					@Override
@@ -297,8 +282,8 @@ public class EditTaskActivity extends FragmentActivity implements
 				};
 			}
 		});
-		l.setUndoHideDelay(5000);
-		l.setOnItemClickListener(new OnItemClickListener() {
+		mListView.setUndoHideDelay(5000);
+		mListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View v, int position,
@@ -312,14 +297,14 @@ public class EditTaskActivity extends FragmentActivity implements
 			}
 
 		});
-		l.enableSwipeToDismiss();
-		l.setSwipingLayout(R.id.list_group_item_frame_1);
+		mListView.enableSwipeToDismiss();
+		mListView.setSwipingLayout(R.id.list_group_item_frame_1);
 
-		l.setSwipeDirection(EnhancedListView.SwipeDirection.BOTH);
+		mListView.setSwipeDirection(EnhancedListView.SwipeDirection.BOTH);
 	}
 
 	private void hideKeyboard() {
-		InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+		InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		inputMethodManager.hideSoftInputFromWindow(getCurrentFocus()
 				.getWindowToken(), 0);
 	}
@@ -347,27 +332,15 @@ public class EditTaskActivity extends FragmentActivity implements
 	}
 
 	private void loadUser(String userID) {
-		fetcher = new RetUserObj();
-		fetcher.execute(userID);
-	}
+		UserDatabaseAdapter.fetchUserInfo(userID, new AsyncResponse<User>() {
 
-	final class RetUserObj implements AsyncResponse<User> {
+			@Override
+			public void processFinish(User result) {
+				displayTask.addMember(result);
+				mUserAdapter.notifyDataSetChanged();
 
-		private UserInfoFetcher infoFetcher;
-
-		public RetUserObj() {
-			infoFetcher = new UserInfoFetcher(this);
-		}
-
-		public void execute(String userID) {
-			infoFetcher.execute(userID);
-		}
-
-		@Override
-		public void processFinish(User result) {
-			displayTask.addMember(result);
-			mUserAdapter.notifyDataSetChanged();
-		}
+			}
+		});
 	}
 
 	private class DateClickListener implements OnClickListener,
@@ -384,7 +357,7 @@ public class EditTaskActivity extends FragmentActivity implements
 			CalendarDatePickerDialog calendarDatePickerDialog = CalendarDatePickerDialog
 					.newInstance(DateClickListener.this, // callback
 							dt.getYear(), // year
-							dt.getMonthOfYear(), // month
+							dt.getMonthOfYear() - 1, // month
 							dt.getDayOfMonth()); // day
 			calendarDatePickerDialog.show(fm, "fragment_date_picker_name");
 		}
@@ -392,11 +365,11 @@ public class EditTaskActivity extends FragmentActivity implements
 		@Override
 		public void onDateSet(CalendarDatePickerDialog dialog, int year,
 				int monthOfYear, int dayOfMonth) {
-			DateTime temp = DateTime.now();
-			temp = temp.withDate(year, monthOfYear, dayOfMonth);
-
 			DateTime now = DateTime.now();
 			DateTime today = now.withTime(0, 0, 0, 0);
+
+			DateTime temp = DateTime.now();
+			temp = temp.withDate(year, monthOfYear, dayOfMonth);
 
 			if (temp.isAfter(today)) {
 				dt.withDate(year, monthOfYear, dayOfMonth);

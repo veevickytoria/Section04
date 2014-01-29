@@ -51,7 +51,7 @@ import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.extras.MyDateUtils;
 
 public class TasksFragment extends Fragment implements
-AsyncResponse<List<Task>> {
+		AsyncResponse<List<Task>> {
 
 	private HashMap<String, List<Task>> taskLists = new HashMap<String, List<Task>>();
 	private TaskItemAdapter taskAdpt;
@@ -64,8 +64,9 @@ AsyncResponse<List<Task>> {
 	private final String assignedToMe = "Assigned to me";
 	private final String iAssigned = "I assigned";
 	private final String iCreated = "I created";
-	
+
 	private int numLoading = 0;
+
 	// make tasks adapter
 
 	@Override
@@ -76,52 +77,54 @@ AsyncResponse<List<Task>> {
 		setHasOptionsMenu(true);
 
 		session = SessionManager.getInstance();
-		
 
-		/*Set up the spinner selector*/
+		/* Set up the spinner selector */
 		List<String> typeNames = new ArrayList<String>();
-		typeNames.add(assignedToMe); typeNames.add(iAssigned); typeNames.add(iCreated);
+		typeNames.add(assignedToMe);
+		typeNames.add(iAssigned);
+		typeNames.add(iCreated);
 		typeAdapter = new TaskTypeAdapter(getActivity(), typeNames);
-		getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-		getActivity().getActionBar().setListNavigationCallbacks(typeAdapter, new OnNavigationListener(){
+		getActivity().getActionBar().setNavigationMode(
+				ActionBar.NAVIGATION_MODE_LIST);
+		getActivity().getActionBar().setListNavigationCallbacks(typeAdapter,
+				new OnNavigationListener() {
 
-			@Override
-			public boolean onNavigationItemSelected(int itemPosition,
-					long itemId) {
+					@Override
+					public boolean onNavigationItemSelected(int itemPosition,
+							long itemId) {
 
-				setTaskList(itemPosition);
+						setTaskList(itemPosition);
 
-				return true;
-			}
+						return true;
+					}
 
-		});
-		
-		
-		/*Set up the task list*/
+				});
+
+		/* Set up the task list */
 		ArrayList<Task> l1 = new ArrayList<Task>(), l2 = new ArrayList<Task>(), l3 = new ArrayList<Task>();
 		taskLists.put(assignedToMe, l1);
 		taskLists.put(iAssigned, l2);
 		taskLists.put(iCreated, l3);
-		
+
 		refreshTasks();
 
-		ListView lv = (ListView) v
-				.findViewById(R.id.task_list);
+		ListView lv = (ListView) v.findViewById(R.id.task_list);
 
-		taskAdpt = new TaskItemAdapter(getActivity(), R.layout.list_item_task, taskLists.get(iAssigned));
+		taskAdpt = new TaskItemAdapter(getActivity(), R.layout.list_item_task,
+				taskLists.get(iAssigned));
 
 		lv.setAdapter(taskAdpt);
 		registerForContextMenu(lv);
-		
+
 		lv.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parentAdapter,
-					View v, int position, long id) {
+			public void onItemClick(AdapterView<?> parentAdapter, View v,
+					int position, long id) {
 				// Intent viewTask = new Intent(getActivity(),
 				// ViewTaskActivity.class);
 				// startActivity(viewTask);
-				Task t = (Task) taskAdpt.getItem(position);
+				Task t = taskAdpt.getItem(position);
 				loadTask(t);
 			}
 		});
@@ -147,14 +150,18 @@ AsyncResponse<List<Task>> {
 			return super.onContextItemSelected(item);
 		}
 	}
+
 	@Override
-	public void onPause(){
-		getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+	public void onPause() {
+		getActivity().getActionBar().setNavigationMode(
+				ActionBar.NAVIGATION_MODE_STANDARD);
 		super.onPause();
 	}
+
 	@Override
-	public void onResume(){
-		getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+	public void onResume() {
+		getActivity().getActionBar().setNavigationMode(
+				ActionBar.NAVIGATION_MODE_LIST);
 		super.onResume();
 	}
 
@@ -168,9 +175,9 @@ AsyncResponse<List<Task>> {
 	}
 
 	private void loadTask(Task task) {
-		while(task.getEndTimeInMillis()==0L);
-		Intent viewTask = new Intent(getActivity(),
-				ViewTaskActivity.class);
+		while (task.getEndTimeInMillis() == 0L)
+			;
+		Intent viewTask = new Intent(getActivity(), ViewTaskActivity.class);
 		viewTask.putExtra("task", task);
 		startActivityForResult(viewTask, 6);
 	}
@@ -180,16 +187,24 @@ AsyncResponse<List<Task>> {
 		taskListfetcher.execute(session.getUserID());
 		taskInfoFetcher = new TaskFetcherResp(this);
 	}
-	private void setTaskList(int type){
-		switch(type){
-		case 0: taskAdpt.setTasks(taskLists.get(assignedToMe)); break;
-		case 1: taskAdpt.setTasks(taskLists.get(iAssigned)); break;
-		case 2: taskAdpt.setTasks(taskLists.get(iCreated)); break;
+
+	private void setTaskList(int type) {
+		switch (type) {
+		case 0:
+			taskAdpt.setTasks(taskLists.get(assignedToMe));
+			break;
+		case 1:
+			taskAdpt.setTasks(taskLists.get(iAssigned));
+			break;
+		case 2:
+			taskAdpt.setTasks(taskLists.get(iCreated));
+			break;
 		}
 
 		taskAdpt.notifyDataSetChanged();
 
 	}
+
 	@Override
 	public void processFinish(List<Task> result) {
 		taskLists.get(assignedToMe).clear();
@@ -197,8 +212,8 @@ AsyncResponse<List<Task>> {
 		taskLists.get(iCreated).clear();
 		Collections.sort(result);
 		for (Task task : result) {
-//			new TaskFetcherResp(this).loadTask(task);
-//			numLoading++;
+			// new TaskFetcherResp(this).loadTask(task);
+			// numLoading++;
 			if (task.getType().equals("ASSIGNED_TO")) {
 				taskLists.get(assignedToMe).add(task);
 			} else if (task.getType().equals("ASSIGNED_FROM")) {
@@ -207,29 +222,29 @@ AsyncResponse<List<Task>> {
 				taskLists.get(iCreated).add(task);
 			}
 		}
-		
-
 
 		taskAdpt.notifyDataSetChanged();
 
 	}
-	public void notifyAdapter(){
-//		taskAdpt.notifyDataSetChanged();
+
+	public void notifyAdapter() {
+		// taskAdpt.notifyDataSetChanged();
 		numLoading--;
-		if(numLoading==0){			
+		if (numLoading == 0) {
 			taskAdpt.notifyDataSetChanged();
 		}
 	}
 }
 
-class TaskTypeAdapter implements SpinnerAdapter{
+class TaskTypeAdapter implements SpinnerAdapter {
 	private Context context;
 	private List<String> typeNames;
 
-	public TaskTypeAdapter(Context context, List<String> typeNames){
-		this.context=context;
-		this.typeNames=typeNames;
+	public TaskTypeAdapter(Context context, List<String> typeNames) {
+		this.context = context;
+		this.typeNames = typeNames;
 	}
+
 	@Override
 	public int getCount() {
 		return this.typeNames.size();
@@ -250,18 +265,15 @@ class TaskTypeAdapter implements SpinnerAdapter{
 		return 0;
 	}
 
-
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		TextView rowView = (TextView) convertView;
 		if (rowView == null) {
 			rowView = new TextView(this.context);
-		} 
-
+		}
 
 		rowView.setText(typeNames.get(position));
 		rowView.setTextColor(Color.WHITE);
-
 
 		return rowView;
 	}
@@ -297,50 +309,54 @@ class TaskTypeAdapter implements SpinnerAdapter{
 	public View getDropDownView(int position, View convertView, ViewGroup parent) {
 		TextView rowView = (TextView) getView(position, convertView, parent);
 		rowView.setPadding(
-				(int) this.context.getResources().getDimension(R.dimen.activity_horizontal_margin),
-				(int) this.context.getResources().getDimension(R.dimen.activity_vertical_margin)
-				, (int) this.context.getResources().getDimension(R.dimen.activity_horizontal_margin)
-				, (int) this.context.getResources().getDimension(R.dimen.activity_vertical_margin));
+				(int) this.context.getResources().getDimension(
+						R.dimen.activity_horizontal_margin),
+				(int) this.context.getResources().getDimension(
+						R.dimen.activity_vertical_margin),
+				(int) this.context.getResources().getDimension(
+						R.dimen.activity_horizontal_margin),
+				(int) this.context.getResources().getDimension(
+						R.dimen.activity_vertical_margin));
 		return rowView;
 	}
 
 }
 
-class TaskItemAdapter extends ArrayAdapter<Task>{
+class TaskItemAdapter extends ArrayAdapter<Task> {
 	private List<Task> tasks;
 	private Context context;
 
-	public TaskItemAdapter(Context context, int textViewResourceId, List<Task> tasks){
+	public TaskItemAdapter(Context context, int textViewResourceId,
+			List<Task> tasks) {
 		super(context, textViewResourceId, tasks);
-		this.context=context;
-		this.tasks=tasks;
-	}
-	
-	public void setTasks(List<Task> tasks){
+		this.context = context;
 		this.tasks = tasks;
 	}
-	
+
+	public void setTasks(List<Task> tasks) {
+		this.tasks = tasks;
+	}
+
 	@Override
-	public void sort(Comparator<? super Task> c){
+	public void sort(Comparator<? super Task> c) {
 		Collections.sort(tasks);
 	}
-	
+
 	@Override
-	public int getCount(){
+	public int getCount() {
 		return this.tasks.size();
 	}
-	
+
 	@Override
-	public Task getItem(int position){
+	public Task getItem(int position) {
 		return this.tasks.get(position);
 	}
-	
 
-	private class ViewHolder{
+	private class ViewHolder {
 		TextView title, deadline;
 		View background;
 	}
-	
+
 	ViewHolder viewHolder;
 
 	/*
@@ -368,29 +384,26 @@ class TaskItemAdapter extends ArrayAdapter<Task>{
 
 		// Setup from the meeting_item XML file
 		Task task = tasks.get(position);
-		
-		
-		
+
 		viewHolder.title.setText(task.getTitle());
 		viewHolder.deadline.setText("Deadline:  "
-				+ MyDateUtils.JODA_MEETING_DATE_FORMAT.print(task.getEndTimeInMillis()));
-		
+				+ MyDateUtils.JODA_APP_DATE_FORMAT.print(task
+						.getEndTimeInMillis()));
+
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(task.getEndTimeInMillis());
 		cal.add(Calendar.DAY_OF_MONTH, -1);
-		if(task.getEndTimeInMillis() == 0L){
-			
-		}else if(task.getIsCompleted()){
+		if (task.getEndTimeInMillis() == 0L) {
+
+		} else if (task.getIsCompleted()) {
 			viewHolder.background.setBackgroundColor(Color.rgb(53, 227, 111));
-		}else if(cal.before(Calendar.getInstance())){
+		} else if (cal.before(Calendar.getInstance())) {
 			viewHolder.background.setBackgroundColor(Color.rgb(255, 51, 51));
-		}else{
+		} else {
 			viewHolder.background.setBackground(null);
 		}
-		
+
 		return rowView;
 	}
-
-
 
 }

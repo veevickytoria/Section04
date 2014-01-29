@@ -38,10 +38,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.foound.widget.AmazingListView;
@@ -147,7 +143,7 @@ public class MainActivity extends FragmentActivity implements
 			// on first time display view for first nav item
 			selectItem(session.getPage());
 
-			sqliteHelper = SQLiteUserAdapter
+			sqliteHelper = SQLiteHelper
 					.getInstance(getApplicationContext());
 
 			// Track the usage of the application with Parse SDK

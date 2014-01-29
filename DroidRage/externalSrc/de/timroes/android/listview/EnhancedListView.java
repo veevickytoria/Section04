@@ -37,6 +37,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.PopupWindow;
@@ -809,7 +810,7 @@ public class EnhancedListView extends ListView {
 			mDownX = 0;
 			mSwipeDownView = null;
 			mSwipeDownChild = null;
-			mDownPosition = AbsListView.INVALID_POSITION;
+			mDownPosition = AdapterView.INVALID_POSITION;
 			mSwiping = false;
 			break;
 		}

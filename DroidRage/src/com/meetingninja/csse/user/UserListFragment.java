@@ -77,7 +77,7 @@ public class UserListFragment extends ListFragment {
 	}
 
 	private void populateList() {
-		// Async-Task 
+		// Async-Task
 		UserDatabaseAdapter.fetchAllUsers(new AsyncResponse<List<User>>() {
 			@Override
 			public void processFinish(List<User> result) {

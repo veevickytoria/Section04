@@ -45,8 +45,6 @@ public class ApplicationController extends Application {
 	 */
 	private static ApplicationController sInstance;
 
-
-
 	@Override
 	public void onCreate() {
 		super.onCreate();

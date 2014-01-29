@@ -25,8 +25,8 @@ public class Task extends Event implements Parcelable {
 	private String createdBy;
 	private String type; // title, description, isCompleted, deadline,
 							// compeltion criteria, assigned to
-	private  List<User> members = new ArrayList<User>();
-	
+	private List<User> members = new ArrayList<User>();
+
 	public Task() {
 		// Required empty constructor
 	}
@@ -70,13 +70,16 @@ public class Task extends Event implements Parcelable {
 	public void setDateAssigned(String dateAssigned) {
 		this.dateAssigned = dateAssigned;
 	}
+
 	public List<User> getMembers() {
 		return members;
 	}
+
 	public void setMembers(List<User> members) {
 		this.members = members;
 	}
-	public void addMember(User user){
+
+	public void addMember(User user) {
 		this.members.add(user);
 	}
 
@@ -127,7 +130,7 @@ public class Task extends Event implements Parcelable {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-	
+
 	@Override
 	public int compareTo(Event another) {
 		if (another == null) {

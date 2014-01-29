@@ -83,21 +83,21 @@ public class Meeting extends Event implements Parcelable, IJSONObject<Meeting> {
 		this.description = crsr.getString(idxDESCRIPTION);
 	}
 
-//	public Meeting(JsonNode node) {
-//		this.meetingID = node.get(Keys.Meeting.ID).asText();
-//		this.title = node.get(Keys.Meeting.TITLE).asText();
-//		this.location = node.get(Keys.Meeting.LOCATION).asText();
-//		this.startTime = node.get(Keys.Meeting.START).asText();
-//		this.endTime = node.get(Keys.Meeting.END).asText();
-//		this.description = node.get(Keys.Meeting.DESC).asText();
-//		JsonNode attendees = node.get(Keys.Meeting.ATTEND);
-//		attendance.clear();
-//		if (attendees.isArray()) {
-//			for (final JsonNode attendee : attendees) {
-//				attendance.add(attendee.get(Keys.User.ID).asText());
-//			}
-//		}
-//	}
+	// public Meeting(JsonNode node) {
+	// this.meetingID = node.get(Keys.Meeting.ID).asText();
+	// this.title = node.get(Keys.Meeting.TITLE).asText();
+	// this.location = node.get(Keys.Meeting.LOCATION).asText();
+	// this.startTime = node.get(Keys.Meeting.START).asText();
+	// this.endTime = node.get(Keys.Meeting.END).asText();
+	// this.description = node.get(Keys.Meeting.DESC).asText();
+	// JsonNode attendees = node.get(Keys.Meeting.ATTEND);
+	// attendance.clear();
+	// if (attendees.isArray()) {
+	// for (final JsonNode attendee : attendees) {
+	// attendance.add(attendee.get(Keys.User.ID).asText());
+	// }
+	// }
+	// }
 
 	@Override
 	public String getID() {

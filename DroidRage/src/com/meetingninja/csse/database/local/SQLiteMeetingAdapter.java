@@ -141,7 +141,8 @@ public class SQLiteMeetingAdapter extends SQLiteHelper {
 		mDb = mDbHelper.getWritableDatabase();
 		int numRowsAffected = 0;
 		if (meeting != null)
-			numRowsAffected = mDb.delete(TABLE_NAME, KEY_ID + "=" + meeting.getID(), null);
+			numRowsAffected = mDb.delete(TABLE_NAME,
+					KEY_ID + "=" + meeting.getID(), null);
 		close();
 		return numRowsAffected;
 	}

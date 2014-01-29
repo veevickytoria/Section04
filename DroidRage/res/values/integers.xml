@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <integer-array name="pref_syncConnectionTypes_values">
         <item>30000</item>
         <item>3600000</item>
@@ -7,4 +8,5 @@
         <item>10800000</item>
         <item>0</item>
     </integer-array>
+
 </resources>

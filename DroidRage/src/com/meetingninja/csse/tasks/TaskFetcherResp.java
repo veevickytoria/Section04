@@ -45,10 +45,10 @@ public class TaskFetcherResp implements AsyncResponse<Void> {
 
 	@Override
 	public void processFinish(Void result) {
-//		Intent viewTask = new Intent(this.frag.getActivity(),
-//				ViewTaskActivity.class);
-//		viewTask.putExtra("task", this.task);
-//		this.frag.startActivityForResult(viewTask, 6);// (viewTask);
+		// Intent viewTask = new Intent(this.frag.getActivity(),
+		// ViewTaskActivity.class);
+		// viewTask.putExtra("task", this.task);
+		// this.frag.startActivityForResult(viewTask, 6);// (viewTask);
 		this.frag.notifyAdapter();
 	}
 

@@ -66,29 +66,29 @@ public class User extends AbstractJSONObject<User> implements Parcelable {
 		setLocation(crsr.getString(idxLOCATION));
 	}
 
-//	public User(JsonNode node) {
-//		// if they at least have an id, email, and name
-//		if (node.hasNonNull(Keys.User.EMAIL) && node.hasNonNull(Keys.User.NAME)
-//		// && node.hasNonNull(KEY_ID)
-//		) {
-//			String email = node.get(Keys.User.EMAIL).asText();
-//			// if their email is in a reasonable format
-//			if (!TextUtils.isEmpty(node.get(Keys.User.NAME).asText())
-//					&& Utilities.isValidEmailAddress(email)) {
-//				// set the required fields
-//				if (node.hasNonNull(Keys.User.ID))
-//					setID(node.get(Keys.User.ID).asText());
-//				setDisplayName(node.get(Keys.User.NAME).asText());
-//				setEmail(email);
-//
-//				// check and set the optional fields
-//				setLocation(JsonUtils.getJSONValue(node, Keys.User.LOCATION));
-//				setPhone(JsonUtils.getJSONValue(node, Keys.User.PHONE));
-//				setCompany(JsonUtils.getJSONValue(node, Keys.User.COMPANY));
-//				setTitle(JsonUtils.getJSONValue(node, Keys.User.TITLE));
-//			}
-//		}
-//	}
+	// public User(JsonNode node) {
+	// // if they at least have an id, email, and name
+	// if (node.hasNonNull(Keys.User.EMAIL) && node.hasNonNull(Keys.User.NAME)
+	// // && node.hasNonNull(KEY_ID)
+	// ) {
+	// String email = node.get(Keys.User.EMAIL).asText();
+	// // if their email is in a reasonable format
+	// if (!TextUtils.isEmpty(node.get(Keys.User.NAME).asText())
+	// && Utilities.isValidEmailAddress(email)) {
+	// // set the required fields
+	// if (node.hasNonNull(Keys.User.ID))
+	// setID(node.get(Keys.User.ID).asText());
+	// setDisplayName(node.get(Keys.User.NAME).asText());
+	// setEmail(email);
+	//
+	// // check and set the optional fields
+	// setLocation(JsonUtils.getJSONValue(node, Keys.User.LOCATION));
+	// setPhone(JsonUtils.getJSONValue(node, Keys.User.PHONE));
+	// setCompany(JsonUtils.getJSONValue(node, Keys.User.COMPANY));
+	// setTitle(JsonUtils.getJSONValue(node, Keys.User.TITLE));
+	// }
+	// }
+	// }
 
 	/* Required Fields */
 

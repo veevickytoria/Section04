@@ -19,9 +19,10 @@ public abstract class JsonRequestListener extends
 	 * @param error
 	 *            The error that occurred, or null if successful
 	 */
+	@Override
 	public abstract void onResponse(JsonNode response, int statusCode,
 			VolleyError error);
-	
+
 	@Override
 	public JavaType getReturnType() {
 		return SimpleType.construct(JsonNode.class);
@@ -31,6 +32,7 @@ public abstract class JsonRequestListener extends
 	 * Optional method that is called on the networking thread used to further
 	 * process responses before delivering them to the UI thread.
 	 */
+	@Override
 	public Response<JsonNode> onParseResponseComplete(
 			Response<JsonNode> response) {
 		return response;

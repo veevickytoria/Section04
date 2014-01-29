@@ -37,22 +37,15 @@ import objects.User;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Toast;
-
 import com.android.volley.Request;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.StringRequest;
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.meetingninja.csse.ApplicationController;
-import com.meetingninja.csse.MainActivity;
 import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.extras.JsonUtils;
 import com.meetingninja.csse.extras.Utilities;
@@ -87,6 +80,28 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		JsonNode userNode = MAPPER.readTree(response);
 
 		return parseUser(userNode);
+	}
+
+	public static void fetchUserInfo(String userID,
+			final AsyncResponse<User> delegate) {
+		String _url = getBaseUri().appendPath(userID).build().toString();
+
+		JsonNodeRequest req = new JsonNodeRequest(_url, null,
+				new JsonRequestListener() {
+
+					@Override
+					public void onResponse(JsonNode response, int statusCode,
+							VolleyError error) {
+						if (response != null) {
+							delegate.processFinish(parseUser(response));
+						} else {
+							error.printStackTrace();
+						}
+
+					}
+				});
+
+		ApplicationController.getInstance().addToRequestQueue(req, "JSON");
 	}
 
 	public static List<User> getContacts(String userID) throws IOException {

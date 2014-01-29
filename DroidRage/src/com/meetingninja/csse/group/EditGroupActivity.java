@@ -83,7 +83,7 @@ public class EditGroupActivity extends Activity {
 			public EnhancedListView.Undoable onDismiss(
 					EnhancedListView listView, final int position) {
 
-				final User item = (User) mUserAdapter.getItem(position);
+				final User item = mUserAdapter.getItem(position);
 				mUserAdapter.remove(item);
 				return new EnhancedListView.Undoable() {
 					@Override
@@ -127,7 +127,7 @@ public class EditGroupActivity extends Activity {
 	}
 
 	private void hideKeyboard() {
-		InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+		InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		inputMethodManager.hideSoftInputFromWindow(getCurrentFocus()
 				.getWindowToken(), 0);
 	}
