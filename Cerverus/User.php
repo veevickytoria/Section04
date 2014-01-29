@@ -73,12 +73,25 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'schedule')==0){
         //GET getUserSchedule
         $userNode=$client->getNode($_GET['id']);
+        $array = $userNode->getProperties();
+        if(array_key_exists('nodeType', $array)){
+                if(strcasecmp($array['nodeType'], 'User')!=0){
+                        echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['id'].' is an not a user node.'));
+                        return 1;
+                }
+        }
         $relationArray = $userNode->getRelationships(array('ASSIGNED_TO', 'MADE_MEETING'), Relationship::DirectionOut);
         $fullarray=array();
         foreach($relationArray as $rel){
-				$booleanFound=0;
+		$booleanFound=0;
                 $node = $rel->getEndNode();
                 $tempArray=$node->getProperties();
+	        if(array_key_exists('nodeType', $tempArray)){
+                	if(strcasecmp($tempArray['nodeType'], 'Meeting')!=0 || strcasecmp($tempArray['nodeType'], 'Task')!=0){
+                        	echo json_encode(array('errorID'=>'11', 'errorMessage'=>$node->getId().' is an not a Meeting or Task node.'));
+                		return 1;
+        	    	}
+	        }
                 $array=array();
                 $array['id']=$node->getId();
                 $array['title']=$tempArray['title'];
@@ -105,7 +118,15 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
         $lastarray=array('schedule'=>$fullarray);
         echo json_encode($lastarray);
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'Notes')==0){
+	//GET userNotes
 	$userNode=$client->getNode($_GET['id']);
+	$array = $userNode->getProperties();
+        if(array_key_exists('nodeType', $array)){
+                if(strcasecmp($array['nodeType'], 'User')!=0){
+                        echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['id'].' is an not a user node.'));
+                        return 1;
+                }
+        }
 	$relationArray = $userNode->getRelationships(array('CREATED', Relationship::DirectionOut));
 	$fullarray=array();
 	foreach($relationArray as $rel){
@@ -121,11 +142,24 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'tasks')==0){
 	//GET getUserTasks
 	$userNode=$client->getNode($_GET['id']);
+	$array = $userNode->getProperties();
+        if(array_key_exists('nodeType', $array)){
+                if(strcasecmp($array['nodeType'], 'User')!=0){
+                        echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['id'].' is an not a user node.'));
+                        return 1;
+                }
+        }
 	$relationArray = $userNode->getRelationships(array('ASSIGNED_TO', 'ASSIGNED_FROM'));
 	$fullarray=array();
 	foreach($relationArray as $rel){
 		$node = $rel->getEndNode();
 		$tempArray=$node->getProperties();
+		if(array_key_exists('nodeType', $tempArray)){
+                	if(strcasecmp($tempArray['nodeType'], 'Meeting')!=0 || strcasecmp($tempArray['nodeType'], 'Task')!=0){
+                        	echo json_encode(array('errorID'=>'11', 'errorMessage'=>$node->getId().' is an not a Meeting or Task node.'));
+                		return 1;
+        	    	}
+	        }
 		$array=array();
 		$array['id']=$node->getId();
 		$array['title']=$tempArray['title'];
@@ -144,6 +178,12 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 	foreach($relationArray as $rel){
 		$node = $rel->getEndNode();
 		$tempArray=$node->getProperties();
+		if(array_key_exists('nodeType', $tempArray)){
+                	if(strcasecmp($tempArray['nodeType'], 'Meeting')!=0 || strcasecmp($tempArray['nodeType'], 'Task')!=0){
+                        	echo json_encode(array('errorID'=>'11', 'errorMessage'=>$node->getId().' is an not a Meeting or Task node.'));
+                		return 1;
+        	    	}
+	        }
 		$array=array();
 		$array['id']=$node->getId();
 		$array['title']=$tempArray['title'];
@@ -155,9 +195,16 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 	$lastarray=array('meetings'=>$fullarray);
 	echo json_encode($lastarray);
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') == 0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'comments') == 0){
-	//get the ID
+	//GET userComments
 	$id=$_GET['id'];
 	$object = $client->getNode($id);
+	$array = $object->getProperties();
+        if(array_key_exists('nodeType', $array)){
+                if(strcasecmp($array['nodeType'], 'User')!=0){
+                        echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['id'].' is an not a user node.'));
+                        return 1;
+                }
+        }
 	$allCommentRels = $object->getRelationships(array('COMMENTED'), Relationship::DirectionOut);
 	
 	$return = array();
@@ -229,7 +276,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 			return 1;
 		}
 	}
-	unset($array['nodeType']);
+	 unset($array['nodeType']);
 	 //hide the password
 	 unset($array['password']);
 	 unset($array['nodeType']);
@@ -285,6 +332,13 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
         
 	//get the node
 	$node = $client->getNode($id);
+	$array = $userNode->getProperties();
+        if(array_key_exists('nodeType', $array)){
+                if(strcasecmp($array['nodeType'], 'User')!=0){
+                        echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['id'].' is an not a user node.'));
+                        return 1;
+                }
+        }
 	//make sure the node exists
 	if($node != NULL){
 		//check if node has user index
