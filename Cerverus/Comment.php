@@ -21,7 +21,8 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
 	//create the node and add the properties and index
 	$commentNode = $client->makeNode();
 	$commentNode->setProperty('content', $postContent->content)
-				->setProperty('datePosted', $postContent->datePosted);
+				->setProperty('datePosted', $postContent->datePosted)
+				->setProperty('nodeType','Comment');
     $commentNode->save();
 	$response = $commentIndex->add($commentNode, 'ID', $commentNode->getID());
 	
@@ -48,9 +49,16 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
 	//basic get info
 	//break up the url
     $id = $_GET['id'];
+  
 	//get comment properties
 	$comment = $client->getNode($id);
 	$props = $comment->getProperties();
+		if(array_key_exists('nodeType', $props)){
+			if(strcasecmp($props['nodeType'], 'Comment')!=0){
+				echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['id'].' is an not a comment node.'));
+				return 1;
+			}
+		} 
 	
 	//find the user who posted the comment
 	$postedByRel = $comment->getRelationships(array('COMMENTED'), Relationship::DirectionIn);
@@ -98,6 +106,13 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
 	
 	//get the node
 	$node = $client->getNode($id);
+	$props = $node->getProperties();
+	if(array_key_exists('nodeType', $props)){
+		if(strcasecmp($props['nodeType'], 'Comment')!=0){
+			echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['id'].' is an not a comment node.'));
+			return 1;
+		}
+	} 
 	//make sure the node exists
 	if($node != NULL){
 		//check if node has comment index
