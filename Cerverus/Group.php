@@ -29,6 +29,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 ){
 	
 	//sets the property on the node
 	$groupNode->setProperty( 'groupTitle', $postContent->groupTitle );
+	$groupNode->setProperty('nodeType','Group');
 	
 	//add the node in the db
 	$groupNode->save();
@@ -37,6 +38,13 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 ){
 	$userArray = $postContent->members;
     foreach($userArray as $item){
 		$user = $client->getNode($item->userID);
+		$array=$user->getProperties();
+		if(array_key_exists('nodeType', $array)){
+			if(strcasecmp($array['nodeType'], 'User')!=0){
+				echo json_encode(array('errorID'=>'11', 'errorMessage'=>$item->userID.' is an not a user node.'));
+				return 1;
+			}
+		} 
         $attRel = $groupNode->relateTo($user, 'MEMBER_OF_GROUP')->save();
     }	
 		
@@ -66,7 +74,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 ){
 		} 
 	}
 	$outputArray['members'] = $userOutputArray;
-	
+	unset($outputArray['nodeType']);
 	echo json_encode($outputArray);
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 ){
 	//get groupInfo
@@ -76,6 +84,12 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 ){
 	
 		//return info on specified groupNode
 		$outputArray=$groupNode->getProperties();
+		if(array_key_exists('nodeType', $outputArray)){
+			if(strcasecmp($outputArray['nodeType'], 'Group')!=0){
+				echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['id'].' is an not a group node.'));
+				return 1;
+			}
+		} 
 		$outputArray['groupID']=$groupNode->getId();
 		
 		//get relationships
@@ -92,6 +106,13 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 ){
 				$userNode=$rel->getEndNode();
 				$uArray = array();
 				$uArray['userID']=$userNode->getId();
+				$array = $userNode->getProperties();
+				if(array_key_exists('nodeType', $array)){
+					if(strcasecmp($array['nodeType'], 'User')!=0){
+						echo json_encode(array('errorID'=>'11', 'errorMessage'=>$userNode->getId().' is an not a user node.'));
+						return 1;
+					}
+				} 
 				$userOutputArray[$u++] = $uArray;
 			} 
 		}
@@ -106,7 +127,13 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 ){
 	$postContent = json_decode(@file_get_contents('php://input'));
 	$groupNode=$client->getNode($postContent->groupID);
 	$updated = 0;
-	
+	$array=$groupNode->getProperties();
+		if(array_key_exists('nodeType', $array)){
+			if(strcasecmp($array['nodeType'], 'Group')!=0){
+				echo json_encode(array('errorID'=>'11', 'errorMessage'=>$postContent->groupID.' is an not a group node.'));
+				return 1;
+			}
+		} 
 	if (sizeof($groupNode) > 0){
 		if(strcasecmp($postContent->field, 'groupTitle')==0){
 			$groupNode->setProperty('groupTitle', $postContent->value);
@@ -163,6 +190,13 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 ){
         
 	//get the node
 	$node = $client->getNode($id);
+	$array=$node->getProperties();
+		if(array_key_exists('nodeType', $array)){
+			if(strcasecmp($array['nodeType'], 'Group')!=0){
+				echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['id'].' is an not a group node.'));
+				return 1;
+			}
+		} 
 	//make sure the node exists
 	if($node != NULL){
 		//check if node has group index
