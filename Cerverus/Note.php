@@ -28,6 +28,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
                 ->setProperty('description', $postContent->description)
                 ->setProperty('dateCreated', $postContent->dateCreated)
                 ->setProperty('content', $postContent->content)
+                -setProperty('nodeType','Note')
                 ->save();
         
         //relate the Note to the user who created it
@@ -38,14 +39,17 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
         //TODO make this relate to a group, project, or meeting
         
         //get properties on the node
-        $noteProps= $noteNode->getProperties();        
+        $noteProps= $noteNode->getProperties();
+        unset($noteProps['nodeType']);
         echo json_encode(array_merge(array("noteID"=>$noteNode->getID()), $noteProps));
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0){
         //getNoteInfo
         $noteNode=$client->getNode($_GET['noteID']);                        
         $createdByRel = $noteNode->getRelationships(array('CREATED'), Relationship::DirectionIn);
-        $createdBy = $createdByRel[0]->getStartNode();        
-        echo json_encode(array_merge(array("noteID"=>$noteNode->getId()), $noteNode->getProperties()));
+        $createdBy = $createdByRel[0]->getStartNode(); 
+        $tempArray=$noteNode->getProperties();
+      	unset($tempArray['nodeType']);
+        echo json_encode(array_merge(array("noteID"=>$noteNode->getId()), $tempArray));
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'PUT')==0){
         //updateNote
         $postContent = json_decode(@file_get_contents('php://input'));
@@ -53,6 +57,13 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
         $note=$client->getNode($postContent->noteID);
 
         if(sizeof($note) >0){
+        	$array = $note->getProperties();
+		if(array_key_exists('nodeType', $array)){
+			if(strcasecmp($array['nodeType'], 'Note')!=0){
+				echo json_encode(array('errorID'=>'11', 'errorMessage'=>$postContent->noteID.' is an not a note node.'));
+				return 1;
+			}
+		} 
                 //get userID of who created the node
                 $createdByRel = $note->getRelationships(array('CREATED'), Relationship::DirectionIn);
                 $createdBy = $createdByRel[0]->getStartNode();        
@@ -62,17 +73,23 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
                 if (strcasecmp($postContent->field, 'title') ==0){
                         $note->setProperty('title', $postContent->value);
                         $note->save();
-                        echo json_encode(array_merge($array, $note->getProperties()));
+                        $tempArray=$note->getProperties();
+                        unset($tempArray['nodeType']);
+                        echo json_encode(array_merge($array, $tempArray));
                 //edit the title property
                 }else if(strcasecmp($postContent->field, 'description') ==0){
                         $note->setProperty('description', $postContent->value);
                         $note->save();
-                        echo json_encode(array_merge($array, $note->getProperties()));
+                        $tempArray=$note->getProperties();
+                        unset($tempArray['nodeType']);
+                        echo json_encode(array_merge($array, $tempArray));
                 //edit the title property
                 }else if(strcasecmp($postContent->field, 'content') ==0){
                         $note->setProperty('content', $postContent->value);
                         $note->save();
-                        echo json_encode(array_merge($array, $note->getProperties()));
+                        $tempArray=$note->getProperties();
+                        unset($tempArray['nodeType']);
+                        echo json_encode(array_merge($array, $tempArray));
                 //tell the user they can't change the person who created the note
                 }else if(strcasecmp($postContent->field, 'createdBy') ==0){
                         echo json_encode(array("errorID"=>"8", "errorMessage"=>"createdBy field is immutable."));
@@ -96,6 +113,13 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
         $node = $client->getNode($id);
         //make sure the node exists
         if($node != NULL){
+        	$array = $note->getProperties();
+		if(array_key_exists('nodeType', $array)){
+			if(strcasecmp($array['nodeType'], 'Note')!=0){
+				echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['noteID'].' is an not a note node.'));
+				return 1;
+			}
+		} 
                 //check if node has note index
                 $note = $noteIndex->findOne('ID', ''.$id);
                                                 
