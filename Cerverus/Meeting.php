@@ -37,12 +37,26 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
         
         //create a relation to the user who made the meeting
         $user = $client->getNode($postContent->userID);
+        $array = $user->getProperties();
+		if(array_key_exists('nodeType', $array)){
+			if(strcasecmp($array['nodeType'], 'User')!=0){
+				echo json_encode(array('errorID'=>'11', 'errorMessage'=>$postContent->userID.' is an not a user node.'));
+				return 1;
+			}
+		} 
         $meetingRel = $user->relateTo($meetingNode, 'MADE_MEETING')
                 ->save();
         
         $attendeeArray = $postContent->attendance;
         foreach($attendeeArray as $attendee){
                 $user = $client->getNode($attendee->userID);
+                $array = $user->getProperties();
+		if(array_key_exists('nodeType', $array)){
+			if(strcasecmp($array['nodeType'], 'User')!=0){
+				echo json_encode(array('errorID'=>'11', 'errorMessage'=>$attendee->userID.' is an not a user node.'));
+				return 1;
+			}
+		} 
                 $attRel = $user->relateTo($meetingNode, 'ATTEND_MEETING')->save();//->setProperty('ATTENDANCE', $attendee->{$key}[0])
         }
         
@@ -99,13 +113,13 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
         
         $meeting=$client->getNode($postContent->meetingID);
         if(sizeof($meeting > 0)){
-				$array = $meeting->getProperties();
-				if(array_key_exists('nodeType', $array)){
-					if(strcasecmp($array['nodeType'], 'Meeting')!=0){
-						echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['id'].' is an not a meeting node.'));
-						return 1;
-					}
-				}
+		$array = $meeting->getProperties();
+		if(array_key_exists('nodeType', $array)){
+			if(strcasecmp($array['nodeType'], 'Meeting')!=0){
+				echo json_encode(array('errorID'=>'11', 'errorMessage'=>$postContent->meetingID.' is an not a meeting node.'));
+				return 1;
+			}
+		}
                 if(strcasecmp($postContent->field, 'user') ==0){
                         $meeting->setProperty('user', $postContent->value);
                         $meeting->save();
@@ -183,12 +197,12 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
                 //check if node has meeting index
                 $meeting = $meetingIndex->findOne('ID', ''.$id);
                 $array = $meeting->getProperties();
-				if(array_key_exists('nodeType', $array)){
-					if(strcasecmp($array['nodeType'], 'Meeting')!=0){
-						echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['id'].' is an not a meeting node.'));
-						return 1;
-					}
-				}                                
+		if(array_key_exists('nodeType', $array)){
+			if(strcasecmp($array['nodeType'], 'Meeting')!=0){
+				echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['id'].' is an not a meeting node.'));
+				return 1;
+			}
+		}                                
                 //only delete the node if it's a note
                 if($meeting != NULL){
                         //get the relationships
