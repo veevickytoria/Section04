@@ -95,9 +95,10 @@
 //    self.inviteAlertView = [[UIAlertView alloc] initWithTitle:@"Invite User" message:@"Enter user email" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Invite", nil];
 //    [self.inviteAlertView setAlertViewStyle:UIAlertViewStylePlainTextInput];
 //    [self.inviteAlertView show];
-    NSString *emailTitle = @"Test Email";
-    NSString *messageBody = @"ios programming is so fun!";
-    NSArray *toRecipents = [NSArray arrayWithObject:@"support@appcoda.com"];
+    
+    NSString *emailTitle = @"Invitation to join Meeting Ninja";
+    NSString *messageBody = @"Hello! \n \nYou have been invited to join the Meeting Ninja community. Meeting Ninja as an iPad application that simplfies the management of meetings, tasks, & projects. \n\nTo accept the invitation and install the Meeting Ninja application, please visit: www.apple.com/appStore/Downloads/MeetingNinja\n\nAndroid and Web versions of Meeting Ninja are also available.";
+    NSArray *toRecipents = [NSArray arrayWithObject:@"[Enter Invitee Email Here!]"];
     MFMailComposeViewController *mc = [[MFMailComposeViewController alloc] init];
     mc.mailComposeDelegate = self;
     [mc setSubject:emailTitle];
