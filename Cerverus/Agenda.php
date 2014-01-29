@@ -25,7 +25,8 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
 	
 	//sets the property on the node
 	$agendaNode->setProperty('title', $postContent->title)
-		->setProperty('meeting', $postContent->meeting);
+		->setProperty('meeting', $postContent->meeting)
+		->setProperty('noteType','Agenda');
 	//actually add the node in the db
 	$agendaNode->save();
 	
@@ -53,6 +54,13 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0){
 	//getAgendaInfo
 	$agendaNode=$client->getNode($_GET['id']);
+	$array = $agendaNode->getProperties();
+	if(array_key_exists('nodeType', $array)){
+		if(strcasecmp($array['nodeType'], 'Agenda')!=0){
+			echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['id'].' is an not a agenda node.'));
+			return 1;
+		}
+	} 
 	$result = array();
 	foreach ($agendaNode->getProperties() as $key => $value) {
 		$result[] = $key => $value;
@@ -69,8 +77,14 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
 	$postContent = json_decode(@file_get_contents('php://input'));
 	
 	$agenda=$client->getNode($postContent->agendaID);
-
 	if(sizeof($note) >0){
+		$array = $agenda->getProperties();
+		if(array_key_exists('nodeType', $array)){
+			if(strcasecmp($array['nodeType'], 'Agenda')!=0){
+				echo json_encode(array('errorID'=>'11', 'errorMessage'=>$postContent->agendaID.' is an not a agenda node.'));
+				return 1;
+			}
+		} 
 		if(strcasecmp($postContent->field, 'title') ==0){
 			$agenda->setProperty('title', $postContent->value);
 			$agenda->save();
@@ -125,6 +139,13 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
         $node = $client->getNode($id[0]);
         //make sure the node exists
         if($node != NULL){
+        	$array = $node->getProperties();
+		if(array_key_exists('nodeType', $array)){
+			if(strcasecmp($array['nodeType'], 'Agenda')!=0){
+				echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['id'].' is an not a agenda node.'));
+				return 1;
+			}
+		} 
                 //check if node has agenda index
                 $agenda = $agendaIndex->findOne('ID', ''.$id[0]);
                                 
