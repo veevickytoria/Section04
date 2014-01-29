@@ -10,6 +10,7 @@
 #import "iWinAddAndViewTaskViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "iWinAppDelegate.h"
+#import "iWinBackEndUtility.h"
 
 @interface iWinTaskListViewController ()
 @property (strong, nonatomic) NSMutableArray *itemList;
@@ -18,6 +19,7 @@
 @property (strong, nonatomic) iWinAddAndViewTaskViewController *addViewTaskViewController;
 @property (nonatomic) NSInteger selectedTask;
 @property (strong, nonatomic) NSMutableArray *taskIDs;
+@property (nonatomic) iWinBackEndUtility *backendUtility;
 @end
 
 @implementation iWinTaskListViewController
@@ -39,7 +41,8 @@
     
     self.itemList = [[NSMutableArray alloc] init];
     self.itemDetail = [[NSMutableArray alloc] init];
-    self.taskIDs = [[NSMutableArray alloc] init];    
+    self.taskIDs = [[NSMutableArray alloc] init];
+    self.backendUtility = [[iWinBackEndUtility alloc] init];
     
     self.createTaskButton.layer.cornerRadius = 7;
     self.createTaskButton.layer.borderColor = [[UIColor darkGrayColor] CGColor];
@@ -210,5 +213,33 @@
     [self.addViewTaskViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     [self presentViewController:self.addViewTaskViewController animated:YES completion:nil];
     self.addViewTaskViewController.view.superview.bounds = CGRectMake(0,0,768,1003);
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;
+}
+
+// Override to support editing the table view.
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        //add code here for when you hit delete
+        self.selectedTask = indexPath.row;
+        UIAlertView *deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this task?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
+        [deleteAlertView show];
+    }
+}
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1)
+    {
+        NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Task/%d", [[self.taskIDs objectAtIndex:self.selectedTask] integerValue]];
+        NSError *error = [self.backendUtility deleteRequestForUrl:url];
+        if (!error)
+        {
+            self.selectedTask = -1;
+            [self refreshTaskList];
+        }
+    }
 }
 @end
