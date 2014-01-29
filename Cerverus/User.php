@@ -333,14 +333,14 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 	//get the node
 	$node = $client->getNode($id);
 	$array = $userNode->getProperties();
-        if(array_key_exists('nodeType', $array)){
-                if(strcasecmp($array['nodeType'], 'User')!=0){
-                        echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['id'].' is an not a user node.'));
-                        return 1;
-                }
-        }
 	//make sure the node exists
 	if($node != NULL){
+		if(array_key_exists('nodeType', $array)){
+                	if(strcasecmp($array['nodeType'], 'User')!=0){
+        	                echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['id'].' is an not a user node.'));
+                        	return 1;
+                	}
+        	}
 		//check if node has user index
 		$email=$node->getProperty('email');
 		$user = $userIndex->findOne('email', $email);
