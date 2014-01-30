@@ -117,6 +117,57 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
         }
         $lastarray=array('schedule'=>$fullarray);
         echo json_encode($lastarray);
+}else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'schedules')==0){
+        //GET Multiple Schedules
+		$postContent = json_decode(@file_get_contents('php://input'));
+		$users=$postContent->users;
+		$everything=array();
+		foreach($users as $user){
+			$userID=$user->userID;
+			$userNode=$client->getNode($userID);
+			if(sizeof($userNode)==0){
+			echo json_encode(array('errorID' => '5', 'errorMessage'=>$userID.' node ID is not recognized in database'));
+			return 1;
+			}
+			$tempArray = $userNode->getProperties();
+			if(array_key_exists('nodeType', $tempArray)){
+					if(strcasecmp($tempArray['nodeType'], 'User')!=0){
+							echo json_encode(array('errorID'=>'11', 'errorMessage'=>$userID.' is an not a user node.'));
+							return 1;
+					}
+			}
+			$relationArray = $userNode->getRelationships(array('ASSIGNED_TO', 'MADE_MEETING'), Relationship::DirectionOut);
+			$fullarray=array();
+			foreach($relationArray as $rel){
+					$booleanFound=0;
+					$node = $rel->getEndNode();
+					$tempArray=$node->getProperties();
+					$array=array();
+					$array['id']=$node->getId();
+					$array['title']=$tempArray['title'];
+					$array['description']=$tempArray['description'];
+					if(strcasecmp($rel->getType(),'ASSIGNED_TO')==0 || strcasecmp($rel->getType(),'ASSIGNED_FROM')==0 ||strcasecmp($rel->getType(),'CREATED_BY')==0){
+							$array['datetimeEnd']=$tempArray['deadline'];
+							$array['datetimeStart']=$tempArray['dateCreated'];
+							$array['type']='task';
+					}else if(strcasecmp($rel->getType(),'MADE_MEETING')==0 ||strcasecmp($rel->getType(),'ATTEND_MEETING')==0){
+							$array['datetimeStart']=$tempArray['datetime'];
+							$array['datetimeEnd']=$tempArray['endDatetime'];
+							$array['type']='meeting';
+					}
+					foreach($fullarray as $checkArray){
+						if($checkArray['id']==$node->getId()){
+							$booleanFound=1;
+						}
+					}
+					if($booleanFound==0){
+						array_push($fullarray,$array);
+					}
+			}
+			$lastarray=array('schedule'=>$fullarray,'userID'=>$userID);
+			array_push($everything,$lastarray);
+		}
+        echo json_encode(array('schedules'=>$everything));
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'Notes')==0){
 	//GET userNotes
 	$userNode=$client->getNode($_GET['id']);
