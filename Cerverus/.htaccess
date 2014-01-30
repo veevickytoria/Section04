@@ -51,3 +51,4 @@ RewriteRule ^Group/([0-9]+)/?$ Group.php?id=$1 [NC,L]
 
 RewriteRule ^Contact/?$ Contact.php [NC,L]
 RewriteRule ^Contact/([0-9]+)/?$ Contact.php?id=$1 [NC,L]
+RewriteRule ^Contact/Relations/([0-9]+)/?$ Contact.php?cat=relations&id=$1 [NC,L]

@@ -12,8 +12,31 @@ $client = new Client();
 	//get the User index
 	$userIndex = new Index\NodeIndex($client, 'Users');
 	$userIndex->save();
-
-if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') == 0){
+if(strcasecmp($_SERVER['REQUEST_METHOD'], 'DELETE')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'relations') == 0){		
+	/*============================
+	Delete Specific Contact Method
+	==============================*/
+	if (!isset($_GET['id'])) {
+		echo json_encode(array('errorID'=>'XX', 'errorMessage'=>'ID was not set.'));
+	} else {
+		$id = $_GET['id'];
+		$contactRelationship = $client->getRelationship($_GET['id']);
+	
+		if ($contactRelationship == null) {
+			echo json_encode(array('errorID'=>'XX', 'errorMessage'=>$id. ' is an unrecognized relationship ID in the database'));
+		} else {
+			$contactRelationship->delete();
+		
+			$contactRelationship = $client->getRelationship($_GET['id']);
+			if ($contactRelationship == null) {
+				$outputArray['valid'] = 'true';
+				echo json_encode($outputArray);
+			} else {
+				echo json_encode(array('errorID'=>'XX', 'errorMessage'=>'Relationship was not deleted.'));
+			}
+		}
+	}
+} else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') == 0){
 	/*=================
 	Get Contacts Method 
 	==================*/
@@ -36,6 +59,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') == 0){
 					$contactNode=$rel->getEndNode();
 					$uArray = array();
 					$uArray['contactID']=$contactNode->getId();
+					$uArray['relationID']=$rel->getId();
 					$contactOutputArray[$u++] = $uArray;
 				} 
 			}
@@ -94,6 +118,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') == 0){
 					$contactNode=$rel->getEndNode();
 					$uArray = array();
 					$uArray['contactID']=$contactNode->getId();
+					$uArray['relationID']=$rel->getId();
 					$contactOutputArray[$u++] = $uArray;
 				} 
 			}
@@ -142,6 +167,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') == 0){
 					$contactNode=$rel->getEndNode();
 					$uArray = array();
 					$uArray['contactID']=$contactNode->getId();
+					$uArray['relationID']=$rel->getId();
 					$contactOutputArray[$u++] = $uArray;
 				} 
 			}
@@ -180,6 +206,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') == 0){
 					$contactNode=$rel->getEndNode();
 					$uArray = array();
 					$uArray['contactID']=$contactNode->getId();
+					$uArray['relationID']=$rel->getId();
 					$contactOutputArray[$u++] = $uArray;
 				} 
 			}
@@ -188,6 +215,6 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') == 0){
 			echo json_encode($outputArray);		
 		}
 	}
-}
+} 
 
 ?>
