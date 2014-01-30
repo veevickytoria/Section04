@@ -60,10 +60,10 @@
 	}
 
 	function getSchedule() {
-		//var userId = <%= cookies[:userID] %>;
- 		var userId = '5467';
-		//alert("userId:"+userId);
-	  	$.get('http://csse371-04.csse.rose-hulman.edu/User/Schedule/'+userId,function(data){
+	var userId = <%= cookies[:userID] %>;
+//var userId = '5467';
+//alert("userId:"+userId);
+	  $.get('http://csse371-04.csse.rose-hulman.edu/User/Schedule/'+userId,function(data){
      	//alert("Data: " + data);		
 		var schedule = JSON.parse(data);
 

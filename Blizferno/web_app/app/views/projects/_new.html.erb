@@ -1,18 +1,22 @@
-<span style="color:#f00;">* Indicates required fields.</span>
+<span>* Indicates required fields.</span>
 <!--
 ADD THIS BACK IN WHEN BACKEND HAS PROJECT IMPLEMENTED
 <form name="input" id="createProject" action="http://csse371-04.csse.rose-hulman.edu/Project/" onsubmit="return validateForm()" method="post">
 -->
 <form name="input" id="createProject" onsubmit="return validateForm()">
 	<h5>Project Title:*</h5>
-	<input type="text" name="projectTitle" maxlength="50" size="25">
-	<br /><br />
+	<input type="text" name="projectTitle" maxlength="50" class='form-control'>
 	<h5>Associated Meetings:*</h5>
-	<input type="text" name="meetings" maxlength="50" size="25">
-	<br /><br />
+	<input type="text" name="meetings" maxlength="50" class='form-control'>
 	<h5>Associated Notes:*</h5>
-	<input type="text" name="notes" maxlength="50" size="25">
-	<br /><br />
+	<input type="text" name="notes" maxlength="50" class='form-control'>
 	<h5>Members:*</h5>
-	<input type="text" name="members" maxlength="50" size="25">
+	<select multiple id='members' size='6' class='form-control'>
+		<option disabled>Select multiple by holding Ctrl/CMD</option>
+		<option value='1'>Santa Claus</option>
+		<option value='2'>WasARebel</option>
+		<option value='3'>KemoSabe</option>
+		<option value='4'>CaptainKirk</option>
+		<option value='5'>Spock</option>
+	</select>
 </form>

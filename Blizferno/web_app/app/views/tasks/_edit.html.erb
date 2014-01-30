@@ -1,22 +1,24 @@
 <h5>Topic: </h5>
-<input id="titleE" name="title" type="text" maxlength="50" size="25">
+<input id="titleE" name="title" type="text" maxlength="50" class='form-control'>
 
-<br />
 <h5>Deadline: </h5>
-<input id="deadlineE" name="deadline" type="text" placeholder="mm/dd/yyyy HH:MM" maxLength="17" size="17">
+<input id="deadlineE" name="deadline" type="text" placeholder="mm/dd/yyyy HH:MM" maxLength="17" class='form-control'>
 
-<br />
 <h5>Assigned To: </h5>
-<input id="assignedToE" name="assignee" type="text" maxLength="20" size="10" >
+<select multiple id='grpMemSlct' size='6' class='form-control'>
+		<option disabled>Select multiple by holding Ctrl/CMD</option>
+		<option value='1'>Santa Claus</option>
+		<option value='2'>WasARebel</option>
+		<option value='3'>KemoSabe</option>
+		<option value='4'>CaptainKirk</option>
+		<option value='5'>Spock</option>
+</select>
 
-<br />
 <h5>Description: </h5>
-<input id="descriptionE" name="description" type="text" maxlength="1000" size="25" >
+<input id="descriptionE" name="description" type="text" maxlength="1000" class='form-control'>
 
-<br />
 <h5>Completion Criteria: </h5>
-<input id="completionCriteriaE" name="completionCriteria" type="text" maxLength="500" size="25" >
+<input id="completionCriteriaE" name="completionCriteria" type="text" maxLength="500" class='form-control' >
 
-<br />
 <h5>Complete: </h5>
-<input id="isCompletedE" name="isCompleted" type="checkbox">
+<input id="isCompletedE" name="isCompleted" type="checkbox" class='form-control'>
