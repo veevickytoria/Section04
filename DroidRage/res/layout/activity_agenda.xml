@@ -25,7 +25,7 @@
             android:id="@+id/agenda_addTopicBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@android:drawable/btn_default_small"
+			android:background="@drawable/button_selector"
             android:hint="+ Add Topic"
             android:minHeight="28dp"
             android:textColor="#FF777777" />

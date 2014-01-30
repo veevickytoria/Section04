@@ -28,7 +28,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="0dip"
-        android:background="@android:drawable/btn_default_small"
+        android:background="@drawable/button_selector"
         android:hint="+ Add a member"
         android:minHeight="28dp"
         android:onClick="addMember"        
