@@ -53,7 +53,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
             continue;
         }
         //user not user
-        $checker = checkIfIndex($userIndex, 'ID', $user->getId());
+        $checker = checkIfIndex($userIndex, 'email', $user->getProperty('email'));
         if(!$checker['valid']){            
             array_push($errors, $checker['message']);
             continue;
@@ -93,7 +93,7 @@ else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'DELETE')==0) {
         echo json_encode($checker['message']);
         return;
     }
-    $checker = checkIfIndex($userIndex, 'ID', $user->getId());
+    $checker = checkIfIndex($userIndex, 'email', $user->getProperty('email'));
     if(!$checker['valid']){
         echo json_encode($checker['message']);
         return;
@@ -119,7 +119,7 @@ else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0){
         echo json_encode($checker['message']);
         return;
     }
-    $checker = checkIfIndex($userIndex, 'ID', $user->getId());
+    $checker = checkIfIndex($userIndex, 'email', $user->getProperty('email'));
     if(!$checker['valid']){
         echo json_encode($checker['message']);
         return;
