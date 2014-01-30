@@ -51,7 +51,6 @@ public class ViewTaskActivity extends Activity {
 		// setupActionBar();
 		Bundle extras = getIntent().getExtras();
 		if (extras != null)
-			displayedTask = extras.getParcelable(Keys.Task.PARCEL);
 		setupViews();
 		setTask();
 	}
