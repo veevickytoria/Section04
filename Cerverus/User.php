@@ -87,7 +87,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
                 $node = $rel->getEndNode();
                 $tempArray=$node->getProperties();
 	        if(array_key_exists('nodeType', $tempArray)){
-                	if(strcasecmp($tempArray['nodeType'], 'Meeting')!=0 || strcasecmp($tempArray['nodeType'], 'Task')!=0){
+                	if(strcasecmp($tempArray['nodeType'], 'Meeting')==0 || strcasecmp($tempArray['nodeType'], 'Task')==0){
                         	echo json_encode(array('errorID'=>'11', 'errorMessage'=>$node->getId().' is an not a Meeting or Task node.'));
                 		return 1;
         	    	}
@@ -206,7 +206,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 		$node = $rel->getEndNode();
 		$tempArray=$node->getProperties();
 		if(array_key_exists('nodeType', $tempArray)){
-                	if(strcasecmp($tempArray['nodeType'], 'Meeting')!=0 || strcasecmp($tempArray['nodeType'], 'Task')!=0){
+                	if(strcasecmp($tempArray['nodeType'], 'Meeting')==0 || strcasecmp($tempArray['nodeType'], 'Task')==0){
                         	echo json_encode(array('errorID'=>'11', 'errorMessage'=>$node->getId().' is an not a Meeting or Task node.'));
                 		return 1;
         	    	}
@@ -230,7 +230,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 		$node = $rel->getEndNode();
 		$tempArray=$node->getProperties();
 		if(array_key_exists('nodeType', $tempArray)){
-                	if(strcasecmp($tempArray['nodeType'], 'Meeting')!=0 || strcasecmp($tempArray['nodeType'], 'Task')!=0){
+                	if(strcasecmp($tempArray['nodeType'], 'Meeting')==0 || strcasecmp($tempArray['nodeType'], 'Task')==0){
                         	echo json_encode(array('errorID'=>'11', 'errorMessage'=>$node->getId().' is an not a Meeting or Task node.'));
                 		return 1;
         	    	}
