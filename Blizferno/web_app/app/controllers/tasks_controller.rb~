@@ -1,7 +1,4 @@
 class TasksController < ApplicationController
-
-	before_filter :getTasks
-
 	def index
 		if (cookies[:userID].blank?)
 			redirect_to '/login/index'
@@ -34,7 +31,9 @@ class TasksController < ApplicationController
 
 			@tasks.push(@taskString)
 			@tasksParsed.push(JSON.parse(@taskString))
-		end	
+		end
+
+		
 	end
 
 	def list
@@ -43,4 +42,4 @@ class TasksController < ApplicationController
 	def new
 	end
 	layout 'slate'
-end
+e

@@ -12,6 +12,7 @@
 //
 //= require turbolinks
 //= require json2.js
+//= require variable
 
 function SHA256(s){
  
