@@ -283,6 +283,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 
 	public static List<Group> getGroups(String userID) throws IOException {
 		// Server URL setup
+		System.out.println(userID);
 		String _url = getBaseUri().appendPath("Groups").appendPath(userID)
 				.build().toString();
 		URL url = new URL(_url);
@@ -295,24 +296,30 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		// Get server response
 		int responseCode = conn.getResponseCode();
 		String response = getServerResponse(conn);
+		
+		System.out.println("yes");
 
 		// Initialize ObjectMapper
 		List<Group> groupList = new ArrayList<Group>();
+		List<String> groupIDList = new ArrayList<String>();
+		System.out.println("maybe");
 		final JsonNode groupArray = MAPPER.readTree(response).get(
 				Keys.Group.LIST);
+		System.out.println("no");
 
 		if (groupArray.isArray()) {
 			for (final JsonNode groupNode : groupArray) {
-				Group g = GroupDatabaseAdapter.parseGroup(groupNode);
-				if (g != null) {
-					groupList.add(g);
-				}
+				String _id = groupNode.get(Keys._ID).asText();
+				System.out.println(_id);
+				groupIDList.add(_id);
 			}
-		} else {
-			Log.e(TAG, "Error parsing user's group list");
 		}
-
 		conn.disconnect();
+		
+		for (String id : groupIDList) {
+			groupList.add(GroupDatabaseAdapter.getGroup(id));
+		}
+		
 		return groupList;
 	}
 
