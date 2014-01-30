@@ -35,41 +35,41 @@ define("HASH_PBKDF2_INDEX", 3);
         exit(0);
     }
 /**
- *	Create a graphDb connection 
+ *        Create a graphDb connection 
  */
 $client= new Client();
 
 //get the index
 $userIndex = new Index\NodeIndex($client, 'Users');
 $userIndex->save();
-	
+        
 if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'Login')==0){
-	// login method
-	$postContent = json_decode(@file_get_contents('php://input'));
-	$email=$userIndex->findOne('email',$postContent->email);
-	if (sizeof($email)!=0){ //check if there is a node with the given email.
-		//get the properties
-		$properties = $email->getProperties();
-		//check given password vs stored password
-		if(strcasecmp($postContent->password, $properties['password']) == 0){
-			echo json_encode(array("userID"=>$email->getId()));
-		}else{
-			echo json_encode(array("errorID"=>1, "errorMessage"=>"pass invalid email or password"));
-		}
-	}else{
-		echo json_encode(array("errorID"=>2, "errorMessage"=>"email invalid email or password"));
-	}	
+        // login method
+        $postContent = json_decode(@file_get_contents('php://input'));
+        $email=$userIndex->findOne('email',$postContent->email);
+        if (sizeof($email)!=0){ //check if there is a node with the given email.
+                //get the properties
+                $properties = $email->getProperties();
+                //check given password vs stored password
+                if(strcasecmp($postContent->password, $properties['password']) == 0){
+                        echo json_encode(array("userID"=>$email->getId()));
+                }else{
+                        echo json_encode(array("errorID"=>1, "errorMessage"=>"pass invalid email or password"));
+                }
+        }else{
+                echo json_encode(array("errorID"=>2, "errorMessage"=>"email invalid email or password"));
+        }        
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'test')==0){
-	//testing method to check if mailing is working correctly
-	$to = 'rujirasl@rose-hulman.edu';
-	$subject = 'the subject';
-	$message = 'hello';
-	$headers = 'From: webmaster@meetingNinja.com' . "\r\n" .
+        //testing method to check if mailing is working correctly
+        $to = 'rujirasl@rose-hulman.edu';
+        $subject = 'the subject';
+        $message = 'hello';
+        $headers = 'From: webmaster@meetingNinja.com' . "\r\n" .
     'Reply-To: webmaster@meetingNinja.com' . "\r\n" .
     'X-Mailer: PHP/' . phpversion();
 
-	mail($to, $subject, $message, $headers);
-	
+        mail($to, $subject, $message, $headers);
+        
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'schedule')==0){
         //GET getUserSchedule
         $userNode=$client->getNode($_GET['id']);
@@ -83,345 +83,345 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
         $relationArray = $userNode->getRelationships(array('ASSIGNED_TO', 'MADE_MEETING'), Relationship::DirectionOut);
         $fullarray=array();
         foreach($relationArray as $rel){
-		$booleanFound=0;
+                $booleanFound=0;
                 $node = $rel->getEndNode();
                 $tempArray=$node->getProperties();
-	        if(array_key_exists('nodeType', $tempArray)){
-                	if(strcasecmp($tempArray['nodeType'], 'Meeting')==0 || strcasecmp($tempArray['nodeType'], 'Task')==0){
-                        	echo json_encode(array('errorID'=>'11', 'errorMessage'=>$node->getId().' is an not a Meeting or Task node.'));
-                		return 1;
-        	    	}
-	        }
+                if(array_key_exists('nodeType', $tempArray)){
+                        if(strcasecmp($tempArray['nodeType'], 'Meeting')!=0 || strcasecmp($tempArray['nodeType'], 'Task')!=0){
+                                echo json_encode(array('errorID'=>'11', 'errorMessage'=>$node->getId().' is an not a Meeting or Task node.'));
+                                return 1;
+                            }
+                }
                 $array=array();
                 $array['id']=$node->getId();
                 $array['title']=$tempArray['title'];
-				$array['description']=$tempArray['description'];
+                                $array['description']=$tempArray['description'];
                 //$array['relation']=$rel->getType();
                 if(strcasecmp($rel->getType(),'ASSIGNED_TO')==0 || strcasecmp($rel->getType(),'ASSIGNED_FROM')==0 ||strcasecmp($rel->getType(),'CREATED_BY')==0){
                         $array['datetimeEnd']=$tempArray['deadline'];
-						$array['datetimeStart']=$tempArray['dateCreated'];
-						$array['type']='task';
+                                                $array['datetimeStart']=$tempArray['dateCreated'];
+                                                $array['type']='task';
                 }else if(strcasecmp($rel->getType(),'MADE_MEETING')==0 ||strcasecmp($rel->getType(),'ATTEND_MEETING')==0){
-						$array['datetimeStart']=$tempArray['datetime'];
-						$array['datetimeEnd']=$tempArray['endDatetime'];
-						$array['type']='meeting';
-				}
-				foreach($fullarray as $checkArray){
-					if($checkArray['id']==$node->getId()){
-						$booleanFound=1;
-					}
-				}
-				if($booleanFound==0){
-					array_push($fullarray,$array);
-				}
+                                                $array['datetimeStart']=$tempArray['datetime'];
+                                                $array['datetimeEnd']=$tempArray['endDatetime'];
+                                                $array['type']='meeting';
+                                }
+                                foreach($fullarray as $checkArray){
+                                        if($checkArray['id']==$node->getId()){
+                                                $booleanFound=1;
+                                        }
+                                }
+                                if($booleanFound==0){
+                                        array_push($fullarray,$array);
+                                }
         }
         $lastarray=array('schedule'=>$fullarray);
         echo json_encode($lastarray);
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'schedules')==0){
         //GET Multiple Schedules
-		$postContent = json_decode(@file_get_contents('php://input'));
-		$users=$postContent->users;
-		$everything=array();
-		foreach($users as $user){
-			$userID=$user->userID;
-			$userNode=$client->getNode($userID);
-			if(sizeof($userNode)==0){
-			echo json_encode(array('errorID' => '5', 'errorMessage'=>$userID.' node ID is not recognized in database'));
-			return 1;
-			}
-			$tempArray = $userNode->getProperties();
-			if(array_key_exists('nodeType', $tempArray)){
-					if(strcasecmp($tempArray['nodeType'], 'User')!=0){
-							echo json_encode(array('errorID'=>'11', 'errorMessage'=>$userID.' is an not a user node.'));
-							return 1;
-					}
-			}
-			$relationArray = $userNode->getRelationships(array('ASSIGNED_TO', 'MADE_MEETING'), Relationship::DirectionOut);
-			$fullarray=array();
-			foreach($relationArray as $rel){
-					$booleanFound=0;
-					$node = $rel->getEndNode();
-					$tempArray=$node->getProperties();
-					$array=array();
-					$array['id']=$node->getId();
-					$array['title']=$tempArray['title'];
-					$array['description']=$tempArray['description'];
-					if(strcasecmp($rel->getType(),'ASSIGNED_TO')==0 || strcasecmp($rel->getType(),'ASSIGNED_FROM')==0 ||strcasecmp($rel->getType(),'CREATED_BY')==0){
-							$array['datetimeEnd']=$tempArray['deadline'];
-							$array['datetimeStart']=$tempArray['dateCreated'];
-							$array['type']='task';
-					}else if(strcasecmp($rel->getType(),'MADE_MEETING')==0 ||strcasecmp($rel->getType(),'ATTEND_MEETING')==0){
-							$array['datetimeStart']=$tempArray['datetime'];
-							$array['datetimeEnd']=$tempArray['endDatetime'];
-							$array['type']='meeting';
-					}
-					foreach($fullarray as $checkArray){
-						if($checkArray['id']==$node->getId()){
-							$booleanFound=1;
-						}
-					}
-					if($booleanFound==0){
-						array_push($fullarray,$array);
-					}
-			}
-			$lastarray=array('schedule'=>$fullarray,'userID'=>$userID);
-			array_push($everything,$lastarray);
-		}
+                $postContent = json_decode(@file_get_contents('php://input'));
+                $users=$postContent->users;
+                $everything=array();
+                foreach($users as $user){
+                        $userID=$user->userID;
+                        $userNode=$client->getNode($userID);
+                        if(sizeof($userNode)==0){
+                        echo json_encode(array('errorID' => '5', 'errorMessage'=>$userID.' node ID is not recognized in database'));
+                        return 1;
+                        }
+                        $tempArray = $userNode->getProperties();
+                        if(array_key_exists('nodeType', $tempArray)){
+                                        if(strcasecmp($tempArray['nodeType'], 'User')!=0){
+                                                        echo json_encode(array('errorID'=>'11', 'errorMessage'=>$userID.' is an not a user node.'));
+                                                        return 1;
+                                        }
+                        }
+                        $relationArray = $userNode->getRelationships(array('ASSIGNED_TO', 'MADE_MEETING'), Relationship::DirectionOut);
+                        $fullarray=array();
+                        foreach($relationArray as $rel){
+                                        $booleanFound=0;
+                                        $node = $rel->getEndNode();
+                                        $tempArray=$node->getProperties();
+                                        $array=array();
+                                        $array['id']=$node->getId();
+                                        $array['title']=$tempArray['title'];
+                                        $array['description']=$tempArray['description'];
+                                        if(strcasecmp($rel->getType(),'ASSIGNED_TO')==0 || strcasecmp($rel->getType(),'ASSIGNED_FROM')==0 ||strcasecmp($rel->getType(),'CREATED_BY')==0){
+                                                        $array['datetimeEnd']=$tempArray['deadline'];
+                                                        $array['datetimeStart']=$tempArray['dateCreated'];
+                                                        $array['type']='task';
+                                        }else if(strcasecmp($rel->getType(),'MADE_MEETING')==0 ||strcasecmp($rel->getType(),'ATTEND_MEETING')==0){
+                                                        $array['datetimeStart']=$tempArray['datetime'];
+                                                        $array['datetimeEnd']=$tempArray['endDatetime'];
+                                                        $array['type']='meeting';
+                                        }
+                                        foreach($fullarray as $checkArray){
+                                                if($checkArray['id']==$node->getId()){
+                                                        $booleanFound=1;
+                                                }
+                                        }
+                                        if($booleanFound==0){
+                                                array_push($fullarray,$array);
+                                        }
+                        }
+                        $lastarray=array('schedule'=>$fullarray,'userID'=>$userID);
+                        array_push($everything,$lastarray);
+                }
         echo json_encode(array('schedules'=>$everything));
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'Notes')==0){
-	//GET userNotes
-	$userNode=$client->getNode($_GET['id']);
-	$array = $userNode->getProperties();
+        //GET userNotes
+        $userNode=$client->getNode($_GET['id']);
+        $array = $userNode->getProperties();
         if(array_key_exists('nodeType', $array)){
                 if(strcasecmp($array['nodeType'], 'User')!=0){
                         echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['id'].' is an not a user node.'));
                         return 1;
                 }
         }
-	$relationArray = $userNode->getRelationships(array('CREATED', Relationship::DirectionOut));
-	$fullarray=array();
-	foreach($relationArray as $rel){
-		$node = $rel->getEndNode();
-		$tempArray=$node->getProperties();
-		$array=array();
-		$array['noteID']=$node->getId();
-		$array['noteTitle']=$tempArray['title'];
-		array_push($fullarray,$array);
-	}
-	$lastarray=array('notes'=>$fullarray);
-	echo json_encode($lastarray);
+        $relationArray = $userNode->getRelationships(array('CREATED', Relationship::DirectionOut));
+        $fullarray=array();
+        foreach($relationArray as $rel){
+                $node = $rel->getEndNode();
+                $tempArray=$node->getProperties();
+                $array=array();
+                $array['noteID']=$node->getId();
+                $array['noteTitle']=$tempArray['title'];
+                array_push($fullarray,$array);
+        }
+        $lastarray=array('notes'=>$fullarray);
+        echo json_encode($lastarray);
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'tasks')==0){
-	//GET getUserTasks
-	$userNode=$client->getNode($_GET['id']);
-	$array = $userNode->getProperties();
+        //GET getUserTasks
+        $userNode=$client->getNode($_GET['id']);
+        $array = $userNode->getProperties();
         if(array_key_exists('nodeType', $array)){
                 if(strcasecmp($array['nodeType'], 'User')!=0){
                         echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['id'].' is an not a user node.'));
                         return 1;
                 }
         }
-	$relationArray = $userNode->getRelationships(array('ASSIGNED_TO', 'ASSIGNED_FROM'));
-	$fullarray=array();
-	foreach($relationArray as $rel){
-		$node = $rel->getEndNode();
-		$tempArray=$node->getProperties();
-		if(array_key_exists('nodeType', $tempArray)){
-                	if(strcasecmp($tempArray['nodeType'], 'Meeting')==0 || strcasecmp($tempArray['nodeType'], 'Task')==0){
-                        	echo json_encode(array('errorID'=>'11', 'errorMessage'=>$node->getId().' is an not a Meeting or Task node.'));
-                		return 1;
-        	    	}
-	        }
-		$array=array();
-		$array['id']=$node->getId();
-		$array['title']=$tempArray['title'];
-		$array['type']=$rel->getType();
-		if(strcasecmp($rel->getType(),'ASSIGNED_TO')==0 || strcasecmp($rel->getType(),'ASSIGNED_FROM')==0 ||strcasecmp($rel->getType(),'CREATED_BY')==0){
-			array_push($fullarray,$array);	
-		}
-	}
-	$lastarray=array('tasks'=>$fullarray);
-	echo json_encode($lastarray);
+        $relationArray = $userNode->getRelationships(array('ASSIGNED_TO', 'ASSIGNED_FROM'));
+        $fullarray=array();
+        foreach($relationArray as $rel){
+                $node = $rel->getEndNode();
+                $tempArray=$node->getProperties();
+                if(array_key_exists('nodeType', $tempArray)){
+                        if(strcasecmp($tempArray['nodeType'], 'Meeting')!=0 || strcasecmp($tempArray['nodeType'], 'Task')!=0){
+                                echo json_encode(array('errorID'=>'11', 'errorMessage'=>$node->getId().' is an not a Meeting or Task node.'));
+                                return 1;
+                            }
+                }
+                $array=array();
+                $array['id']=$node->getId();
+                $array['title']=$tempArray['title'];
+                $array['type']=$rel->getType();
+                if(strcasecmp($rel->getType(),'ASSIGNED_TO')==0 || strcasecmp($rel->getType(),'ASSIGNED_FROM')==0 ||strcasecmp($rel->getType(),'CREATED_BY')==0){
+                        array_push($fullarray,$array);        
+                }
+        }
+        $lastarray=array('tasks'=>$fullarray);
+        echo json_encode($lastarray);
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'meetings')==0){
-	//GET getUserMeetings
-	$userNode=$client->getNode($_GET['id']);
-	$relationArray = $userNode->getRelationships(array('MADE_MEETING','ATTEND_MEETING'));
-	$fullarray=array();
-	foreach($relationArray as $rel){
-		$node = $rel->getEndNode();
-		$tempArray=$node->getProperties();
-		if(array_key_exists('nodeType', $tempArray)){
-                	if(strcasecmp($tempArray['nodeType'], 'Meeting')==0 || strcasecmp($tempArray['nodeType'], 'Task')==0){
-                        	echo json_encode(array('errorID'=>'11', 'errorMessage'=>$node->getId().' is an not a Meeting or Task node.'));
-                		return 1;
-        	    	}
-	        }
-		$array=array();
-		$array['id']=$node->getId();
-		$array['title']=$tempArray['title'];
-		$array['type']=$rel->getType();
-		if(strcasecmp($rel->getType(),'MADE_MEETING')==0 ||strcasecmp($rel->getType(),'ATTEND_MEETING')==0){
-			array_push($fullarray,$array);	
-		}
-	}
-	$lastarray=array('meetings'=>$fullarray);
-	echo json_encode($lastarray);
+        //GET getUserMeetings
+        $userNode=$client->getNode($_GET['id']);
+        $relationArray = $userNode->getRelationships(array('MADE_MEETING','ATTEND_MEETING'));
+        $fullarray=array();
+        foreach($relationArray as $rel){
+                $node = $rel->getEndNode();
+                $tempArray=$node->getProperties();
+                if(array_key_exists('nodeType', $tempArray)){
+                        if(strcasecmp($tempArray['nodeType'], 'Meeting')!=0 || strcasecmp($tempArray['nodeType'], 'Task')!=0){
+                                echo json_encode(array('errorID'=>'11', 'errorMessage'=>$node->getId().' is an not a Meeting or Task node.'));
+                                return 1;
+                            }
+                }
+                $array=array();
+                $array['id']=$node->getId();
+                $array['title']=$tempArray['title'];
+                $array['type']=$rel->getType();
+                if(strcasecmp($rel->getType(),'MADE_MEETING')==0 ||strcasecmp($rel->getType(),'ATTEND_MEETING')==0){
+                        array_push($fullarray,$array);        
+                }
+        }
+        $lastarray=array('meetings'=>$fullarray);
+        echo json_encode($lastarray);
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') == 0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'comments') == 0){
-	//GET userComments
-	$id=$_GET['id'];
-	$object = $client->getNode($id);
-	$array = $object->getProperties();
+        //GET userComments
+        $id=$_GET['id'];
+        $object = $client->getNode($id);
+        $array = $object->getProperties();
         if(array_key_exists('nodeType', $array)){
                 if(strcasecmp($array['nodeType'], 'User')!=0){
                         echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['id'].' is an not a user node.'));
                         return 1;
                 }
         }
-	$allCommentRels = $object->getRelationships(array('COMMENTED'), Relationship::DirectionOut);
-	
-	$return = array();
-	
-	foreach($allCommentRels as $rel){
-		//get the comment and it's properties
-		$comment = $rel->getEndNode();
-		//get the user who posted it
-		$postedByRel = $comment->getRelationships(array('COMMENTED_ON'), Relationship::DirectionOut);
-		$postedTo = $postedByRel[0]->getStartNode();
-		$commentInfo = array("commentID" => $comment->getId(),
-							"commentBy" => $id,
-							"postedTo" => $postedTo->getId());
-		//get the json
-		$return[] = array_merge($commentInfo, $comment->getProperties());
-		
-	}
-	echo json_encode(array("comments" => $return));	
-}else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
-	// register method
-    
-	// get the json string post content
-	$postContent = json_decode(@file_get_contents('php://input'));
-	
-	$email=$userIndex->findOne('email',$postContent->email);	
-	if($email == NULL){ //make sure no nodes already exist with the given email
-		
-		// create the node
-		$userNode= $client->makeNode();
-		
-		// sets the property on the node
-		$userNode->setProperty('email', $postContent->email);
-		$userNode->setProperty('password',$postContent->password);
-		$userNode->setProperty('phone',$postContent->phone);
-		$userNode->setProperty('company',$postContent->company);
-		$userNode->setProperty('title',$postContent->title);
-		$userNode->setProperty('location',$postContent->location);
-		$userNode->setProperty('name',$postContent->name);
-		$userNode->setProperty('nodeType','User');
-		// actually add the node in the db
-		$userNode->save();
-		$userIndex->add($userNode, 'email', $postContent->email);
-		
-		// return the id of the node
-		echo json_encode(array("userID"=>$userNode->getId()));
-	}else{
-		echo json_encode(array("errorID"=>2, "errorMessage"=>"duplicate email"));
-	}
-}else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'Users')==0){
-	//GET all users
-	$users= $userIndex->query('email:*');
-	for($ii=0;$ii<sizeof($users);$ii++){
-		$array=$users[$ii]->getProperties();
-		$array['userID']=$users[$ii]->getId();
-		unset($array['nodeType']);
-		unset($array['password']);
-		$results[$ii]= $array;
-	}
-	echo json_encode(array("users"=>$results));
-}else if( strcasecmp($_SERVER['REQUEST_METHOD'],'GET') == 0){
-	//getUserInfo
-	 $userNode=$client->getNode($_GET['id']);
-	 
-	 
-	 $array = $userNode->getProperties();
-	if(array_key_exists('nodeType', $array)){
-		if(strcasecmp($array['nodeType'], 'User')!=0){
-			echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['id'].' is an not a user node.'));
-			return 1;
-		}
-	}
-	 unset($array['nodeType']);
-	 //hide the password
-	 unset($array['password']);
-	 unset($array['nodeType']);
-	 //return the json string
-	 echo json_encode($array);
-	
-}else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'PUT')==0){
-	//update user
-	$postContent = json_decode(@file_get_contents('php://input'));
-	
-	$user=$client->getNode($postContent->userID);
-	$field = $postContent->field;
-	$value = $postContent->value;
-	$array = array('userID'=>$user->getId());
-
-	if(sizeof($user) >0){	
-		//all fields
-		if(array_key_exists($field, $user->getProperties())){
-			//check if the field is the email
-			if(strcasecmp($field, 'email') == 0){
-				//check if email already exists
-				if($userIndex->findOne('email', $value) == NULL){
-					//remove index on this email
-					$old = $user->getProperty('email');
-					$userIndex->remove($user);
-					//add the new index
-					$userIndex->add($user, 'email', $value);
-				} else {
-					//return error if email exists
-					echo json_encode(array('errorID'=>'11', 'errorMessage'=>'Email already linked to another account'));
-					return;
-				}
-			}
-			//change the field
-			$user->setProperty($field, $value);
-			$user->save();
-			//get the return array
-			$array = array_merge($array, $user->getProperties());
-			unset($array['password']);
-			unset($array['nodeType']);
-			echo json_encode($array);
-		//invalid field
-		}else{
-			echo json_encode(array('errorID'=>'9', 'errorMessage'=>$field.'is an unknown field for User'));
-		}
-	}else{
-		echo json_encode(array('errorID'=>'10', 'errorMessage'=>$postContent->userID.'is an unrecognized node ID in the database'));
-	}
-}else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'DELETE')==0){
-	//delete user DELETE
-	//get the id
-	$id=$_GET['id'];
+        $allCommentRels = $object->getRelationships(array('COMMENTED'), Relationship::DirectionOut);
         
-	//get the node
-	$node = $client->getNode($id);
-	$array = $userNode->getProperties();
-	//make sure the node exists
-	if($node != NULL){
-		if(array_key_exists('nodeType', $array)){
-                	if(strcasecmp($array['nodeType'], 'User')!=0){
-        	                echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['id'].' is an not a user node.'));
-                        	return 1;
-                	}
-        	}
-		//check if node has user index
-		$email=$node->getProperty('email');
-		$user = $userIndex->findOne('email', $email);
-						
-		//only delete the node if it's a note
-		if($user != NULL){
-			//get the relationships
-			$relations = $user->getRelationships();
-			foreach($relations as $rel){
-				//remove all relationships
-				$rel->delete();
-			}
-			
-			//delete node and return true
-			$user->delete();
-			$array = array('valid'=>'true');
-			unset($array['nodeType']);
-			echo json_encode($array);
-		} else {
-			//return an error otherwise
-			$errorarray = array('errorID' => '4', 'errorMessage'=>'Given node ID is not a user node');
-			echo json_encode($errorarray);
-		}
-	} else {
-		//return an error if ID doesn't point to a node
-		$errorarray = array('errorID' => '5', 'errorMessage'=>'Given node ID is not recognized in database');
-		echo json_encode($errorarray);
-	}
+        $return = array();
+        
+        foreach($allCommentRels as $rel){
+                //get the comment and it's properties
+                $comment = $rel->getEndNode();
+                //get the user who posted it
+                $postedByRel = $comment->getRelationships(array('COMMENTED_ON'), Relationship::DirectionOut);
+                $postedTo = $postedByRel[0]->getStartNode();
+                $commentInfo = array("commentID" => $comment->getId(),
+                                                        "commentBy" => $id,
+                                                        "postedTo" => $postedTo->getId());
+                //get the json
+                $return[] = array_merge($commentInfo, $comment->getProperties());
+                
+        }
+        echo json_encode(array("comments" => $return));        
+}else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
+        // register method
+    
+        // get the json string post content
+        $postContent = json_decode(@file_get_contents('php://input'));
+        
+        $email=$userIndex->findOne('email',$postContent->email);        
+        if($email == NULL){ //make sure no nodes already exist with the given email
+                
+                // create the node
+                $userNode= $client->makeNode();
+                
+                // sets the property on the node
+                $userNode->setProperty('email', $postContent->email);
+                $userNode->setProperty('password',$postContent->password);
+                $userNode->setProperty('phone',$postContent->phone);
+                $userNode->setProperty('company',$postContent->company);
+                $userNode->setProperty('title',$postContent->title);
+                $userNode->setProperty('location',$postContent->location);
+                $userNode->setProperty('name',$postContent->name);
+                $userNode->setProperty('nodeType','User');
+                // actually add the node in the db
+                $userNode->save();
+                $userIndex->add($userNode, 'email', $postContent->email);
+                
+                // return the id of the node
+                echo json_encode(array("userID"=>$userNode->getId()));
+        }else{
+                echo json_encode(array("errorID"=>2, "errorMessage"=>"duplicate email"));
+        }
+}else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'Users')==0){
+        //GET all users
+        $users= $userIndex->query('email:*');
+        for($ii=0;$ii<sizeof($users);$ii++){
+                $array=$users[$ii]->getProperties();
+                $array['userID']=$users[$ii]->getId();
+                unset($array['nodeType']);
+                unset($array['password']);
+                $results[$ii]= $array;
+        }
+        echo json_encode(array("users"=>$results));
+}else if( strcasecmp($_SERVER['REQUEST_METHOD'],'GET') == 0){
+        //getUserInfo
+         $userNode=$client->getNode($_GET['id']);
+         
+         
+         $array = $userNode->getProperties();
+        if(array_key_exists('nodeType', $array)){
+                if(strcasecmp($array['nodeType'], 'User')!=0){
+                        echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['id'].' is an not a user node.'));
+                        return 1;
+                }
+        }
+         unset($array['nodeType']);
+         //hide the password
+         unset($array['password']);
+         unset($array['nodeType']);
+         //return the json string
+         echo json_encode($array);
+        
+}else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'PUT')==0){
+        //update user
+        $postContent = json_decode(@file_get_contents('php://input'));
+        
+        $user=$client->getNode($postContent->userID);
+        $field = $postContent->field;
+        $value = $postContent->value;
+        $array = array('userID'=>$user->getId());
+
+        if(sizeof($user) >0){        
+                //all fields
+                if(array_key_exists($field, $user->getProperties())){
+                        //check if the field is the email
+                        if(strcasecmp($field, 'email') == 0){
+                                //check if email already exists
+                                if($userIndex->findOne('email', $value) == NULL){
+                                        //remove index on this email
+                                        $old = $user->getProperty('email');
+                                        $userIndex->remove($user);
+                                        //add the new index
+                                        $userIndex->add($user, 'email', $value);
+                                } else {
+                                        //return error if email exists
+                                        echo json_encode(array('errorID'=>'11', 'errorMessage'=>'Email already linked to another account'));
+                                        return;
+                                }
+                        }
+                        //change the field
+                        $user->setProperty($field, $value);
+                        $user->save();
+                        //get the return array
+                        $array = array_merge($array, $user->getProperties());
+                        unset($array['password']);
+                        unset($array['nodeType']);
+                        echo json_encode($array);
+                //invalid field
+                }else{
+                        echo json_encode(array('errorID'=>'9', 'errorMessage'=>$field.'is an unknown field for User'));
+                }
+        }else{
+                echo json_encode(array('errorID'=>'10', 'errorMessage'=>$postContent->userID.'is an unrecognized node ID in the database'));
+        }
+}else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'DELETE')==0){
+        //delete user DELETE
+        //get the id
+        $id=$_GET['id'];
+        
+        //get the node
+        $node = $client->getNode($id);
+        $array = $userNode->getProperties();
+        //make sure the node exists
+        if($node != NULL){
+                if(array_key_exists('nodeType', $array)){
+                        if(strcasecmp($array['nodeType'], 'User')!=0){
+                                echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['id'].' is an not a user node.'));
+                                return 1;
+                        }
+                }
+                //check if node has user index
+                $email=$node->getProperty('email');
+                $user = $userIndex->findOne('email', $email);
+                                                
+                //only delete the node if it's a note
+                if($user != NULL){
+                        //get the relationships
+                        $relations = $user->getRelationships();
+                        foreach($relations as $rel){
+                                //remove all relationships
+                                $rel->delete();
+                        }
+                        
+                        //delete node and return true
+                        $user->delete();
+                        $array = array('valid'=>'true');
+                        unset($array['nodeType']);
+                        echo json_encode($array);
+                } else {
+                        //return an error otherwise
+                        $errorarray = array('errorID' => '4', 'errorMessage'=>'Given node ID is not a user node');
+                        echo json_encode($errorarray);
+                }
+        } else {
+                //return an error if ID doesn't point to a node
+                $errorarray = array('errorID' => '5', 'errorMessage'=>'Given node ID is not recognized in database');
+                echo json_encode($errorarray);
+        }
 }else{
-	echo $_SERVER['REQUEST_METHOD'] ." request method not found";
+        echo $_SERVER['REQUEST_METHOD'] ." request method not found";
 }
 
 
@@ -558,4 +558,3 @@ function pbkdf2($algorithm, $password, $salt, $count, $key_length, $raw_output =
 
 
 ?>
-
