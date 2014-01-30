@@ -4,7 +4,7 @@
  */
 namespace Everyman\Neo4j;
 require("phar://neo4jphp.phar");
-require_once(Topic.php);
+require_once("Topic.php");
 
 /**
  *	Create a graphDb connection 
