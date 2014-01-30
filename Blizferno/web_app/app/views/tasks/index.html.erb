@@ -1,70 +1,4 @@
 <!-- PLACE JAVASCRIPT IN app/assets/javascripts/tasks.js -->
-<script src="http://code.jquery.com/jquery-latest.min.js"
-        type="text/javascript">
-
-<%= render "tasksJS.js.erb" %>
-
-
-$(window).load(function() {
-	jQuery('#createTask').bind('submit', function(event){
-		event.preventDefault();
-alert("here");
-
-		var form = this;
-		var formJSON = new ConvertFormToJSON(form);
-
-		var postTitle = formJSON.title;
-		var postIsCompleted = "false";
-		var postDescription = formJSON.description;
-		var postDeadline = "":
-		var postDateCreated = "";
-		var postDateAssigned = "";
-		var postCompletionCriteria = "";
-		var postAssignedTo = "";
-		var postAssignedFrom = "";
-		var createdBy = "";
-
-
-	var postData = JSON.stringify({
-			"title":postTitle,
-			"isCompleted":postIsCompleted,
-			"description":postDescription,
-			"deadline":postDeadline,
-			"dateCreated":postDateCreated,
-			"dateAssigned":postDateAssigned,
-			"completionCriteria":postCompletionCriteria,
-			"assignedTo":postAssignedTo,
-			"assignedFrom":postAssignedFrom,
-			"createdBy":postCreatedBy
-		});
-
-alert("posting:"+postData);
-		$.ajax({
-			type: 'POST',
-			url: 'http://csse371-04.csse.rose-hulman.edu/Task/',
-			data: postData,
-			dataType: 'json',
-			success:function(data){
-				alert("created new task");
-			}
-		});
-
-		return true;
-	});
-});
-
-function ConvertFormToJSON(form){
-	var array = jQuery(form).serializeArray();
-	var json = {};
-
-	jQuery.each(array, function() {
-		json[this.name] = this.value || '';
-	});
-
-	return json;
-}
-</script>
-
 
 <h1 style='margin-left: 15%; margin-right: auto;'>Tasks</h1>
 
@@ -80,8 +14,8 @@ function ConvertFormToJSON(form){
         <%= render "new" %>
       </div>
       <div class="modal-footer">
+        <input type="submit" form="createTask" class="btn btn-primary" />
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary" form="createTask">Submit</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -153,7 +87,7 @@ function ConvertFormToJSON(form){
       <th></th>
     </tr>
   </thead>
-  <% for task in @tasksParsed %>
+  <% for task in @tasks['tasks'] %>
     <tr>
       <td><%= task['deadline'] %></td>
       <td><a onClick="showViewModal(<%= task['taskID'] %>)" data-refresh="true" data-toggle='modal'><%= task['title'] %></a></td>

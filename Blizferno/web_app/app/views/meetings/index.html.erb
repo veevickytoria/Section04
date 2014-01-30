@@ -1,57 +1,6 @@
 <!-- The tasks in the GET POST requests need to be changed to meetings. Implement a check on edit so it doesn't fuck up the backend db (db? more like dp.)-->
 
 <!-- PLACE JAVASCRIPT IN app/assets/javascripts/meetings.js -->
-<script src="http://code.jquery.com/jquery-latest.min.js"
-        type="text/javascript">
-
-<%= render "meetingsJS.js.erb" %>
-
-
-$(window).load(function() {
-	jQuery('#createMeeting').bind('submit', function(event){
-		event.preventDefault();
-alert("here");
-
-		var form = this;
-		var formJSON = new ConvertFormToJSON(form);
-
-		var postId = <%=@userID%>;
-		var postTitle = formJSON.title;
-		var postLocation = formJSON.location;
-		var postDateTimeBegin = formJSON.datetimeStart;
-		var postDateTimeEnd = formJSON.datetimeEnd;
-		var postDescription = formJSON.description;
-		var postAttendance = "[]";
-
-
-	var postData = JSON.stringify({"userID":postId,"title":postTitle,"location":postLocation,"datetime":postDateTimeBegin,"endDatetime":postDateTimeEnd,"description":postDescription,"attendance":postAttendance});
-
-alert("posting:"+postData);
-		$.ajax({
-			type: 'POST',
-			url: 'http://csse371-04.csse.rose-hulman.edu/Meeting/',
-			data: postData,
-			dataType: 'json',
-			success:function(data){
-				alert("created new meeting");
-			}
-		});
-
-		return true;
-	});
-});
-
-function ConvertFormToJSON(form){
-	var array = jQuery(form).serializeArray();
-	var json = {};
-
-	jQuery.each(array, function() {
-		json[this.name] = this.value || '';
-	});
-
-	return json;
-}
-</script>
 
 <!-- Create Modal -->
 <div class="modal fade" id="newMeetingModal" tabindex="-1" role="dialog" aria-labelledby="newMeetingModalLabel" aria-hidden="true">
@@ -146,7 +95,7 @@ function ConvertFormToJSON(form){
   <% for meeting in @meetingsParsed %>
     <tr>
       <td><%= meeting['datetime'] %></td>
-      <td><a onclick="showViewMeetingModal(<%=@meetingsParsed.index(meeting)%>)" href = '#viewMeetingModal' data-refresh = 'true' data-toggle='modal'><%= meeting['title'] %></a></td>
+      <td><a onClick="showViewMeetingModal(<%=@meetingsParsed.index(meeting)%>)" href = '#viewMeetingModal' data-refresh = 'true' data-toggle='modal'><%= meeting['title'] %></a></td>
       <td><%= meeting['location'] %></td>
       <td colspan='1' style='cursor: pointer; text-align: center' onclick="showDeleteModal(<%=@meetingsParsed.index(meeting)%>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
     </tr>

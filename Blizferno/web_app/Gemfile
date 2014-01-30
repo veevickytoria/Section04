@@ -52,5 +52,3 @@ gem 'twitter-bootswatch-rails-helpers'
 gem "therubyracer"
 gem "less-rails"
 
-gem 'client_variable'
-

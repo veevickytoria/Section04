@@ -38,6 +38,9 @@ alert("here");
 </p>
 <p>
 
+<script>
+alert("userid:<%= cookies[:userID] %>");
+</script>
 
 <button onclick="submitEdit()">Testing</button>
 
@@ -54,12 +57,15 @@ alert("here");
 
 function submitEdit(){
 
+alert("test");
+alert("stringify:"+JSON.stringify({"userID":"5454", "field":"name", "value":"testSuccess"}));
 
     $.ajax({
             type: "PUT",
             url: "http://csse371-04.csse.rose-hulman.edu/User/",
             data: JSON.stringify({"userID":"5454", "field":"name", "value":"testSuccess"}),
       		success:function(data){
+        		alert(data);
         	}
     });
 

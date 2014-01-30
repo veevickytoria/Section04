@@ -1,40 +1,22 @@
 class TasksController < ApplicationController
-
-	before_filter :getTasks
-
 	def index
 		if (cookies[:userID].blank?)
 			redirect_to '/login/index'
 			return
 		end
-	end
-
-	def getTasks
 		require 'net/http'
-		url = URI.parse('http://csse371-04.csse.rose-hulman.edu/User/Tasks/' + @userID)
+		@UserID = '717'
+		url = URI.parse('http://csse371-04.csse.rose-hulman.edu/User/Tasks/' + @UserID)
 		req = Net::HTTP::Get.new(url.path)
 		res = Net::HTTP.start(url.host, url.port) {|http|
 			http.request(req)
 		}
-		getUserTasks = JSON.parse(res.body)
-		@tasks = Array.new
-		@tasksParsed = Array.new
-		@taskString = ''
+		#@tasks = JSON.parse(res.body)
+		@tasks = JSON.parse('{"tasks":[{"taskID":"1","title":"Delete Task","project":"Meeting Ninja","deadline":"19-Dec-13"},
+			{"taskID":"2","title":"Create a Meeting","project":"Meeting Ninja","deadline":"19-Dec-13"},
+			{"taskID":"3","title":"Create a Task","project":"Meeting Ninja","deadline":"19-Dec-13"},
+			{"taskID":"4","title":"View a Task","project":"Meeting Ninja","deadline":"19-Dec-13"}]}')
 
-		getUserTasks['tasks'].each do |task|
-			url = URI.parse('http://csse371-04.csse.rose-hulman.edu/Tasks/' + task['id'].to_s)
-			req = Net::HTTP::Get.new(url.path)
-			res = Net::HTTP.start(url.host, url.port) {|http|
-				http.request(req)
-			}
-			@taskString = res.body
-			taskIdString = ',"taskID":"'+task['id'].to_s+'"}';
-
-			@taskString = @taskString[0..-2] + taskIdString;
-
-			@tasks.push(@taskString)
-			@tasksParsed.push(JSON.parse(@taskString))
-		end	
 	end
 
 	def list

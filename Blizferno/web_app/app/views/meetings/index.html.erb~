@@ -1,58 +1,153 @@
 <!-- The tasks in the GET POST requests need to be changed to meetings. Implement a check on edit so it doesn't fuck up the backend db (db? more like dp.)-->
+<script type = 'text/javascript'>
+  
+  /*
+    function hideViewModal(){
+     $('#viewMeetingModel').modal('hide');
+    }
+    function showViewModal2(){
+     $('#viewMeetingModal').modal('show');
+     $('#editMeetingModal').modal('hide');
+    }
+    function showViewModal(ID){
+      $('#viewMeetingModal').modal('show');
+    }
+  */
 
-<!-- PLACE JAVASCRIPT IN app/assets/javascripts/meetings.js -->
-<script src="http://code.jquery.com/jquery-latest.min.js"
-        type="text/javascript">
+  var currentID;
+  var deleteID;
+  var meetingsJSON = <%= raw @meetings %>;
+	meetingsJSON = JSON.parse("["+meetingsJSON.toString()+"]");
 
-<%= render "meetingsJS.js.erb" %>
+  function hideMeetingModal(){
+    $('#viewMeetingModal').modal('hide');
+  }
 
+  function showEditModal(){
+    $('#editMeetingModal').modal('hide');
+    $('#editMeetingModal').on('hidden.bs.modal', function() {
+      $(this).removeData('bs.modal');
+    });
+    
+    // TODO: Put this back in when it works
+    // $.ajax({
+    //         type: 'GET',
+    //         url: 'http://csse371-04.csse.rose-hulman.edu/Tasks/' + ID,
+    //   success:function(data){
+    //     if(data.taskID != null){
+    //       TaskArray = JSON.parse(data);
+    //     }
+    //   }
+    // });
 
-$(window).load(function() {
-	jQuery('#createMeeting').bind('submit', function(event){
-		event.preventDefault();
-alert("here");
+    document.getElementById("titleE").value = meetingsJSON[currentID]["title"];
+	document.getElementById("descriptionE").value = meetingsJSON[currentID]["description"];
+    document.getElementById("locationE").value = meetingsJSON[currentID]["location"];
+    document.getElementById("datetimeE").value = meetingsJSON[currentID]["datetime"];
+    // document.getElementById("attendanceE").value = TaskArray["attendance"];
 
-		var form = this;
-		var formJSON = new ConvertFormToJSON(form);
+    $('#editMeetingModal').modal('show');
+    $('#viewMeetingModal').modal('hide');
+  }
 
-		var postId = formJSON.userID;
-		var postTitle = formJSON.title;
-		var postLocation = formJSON.location;
-		var postDateTimeBegin = formJSON.datetimeStart;
-		var postDateTimeEnd = formJSON.datetimeEnd;
-		var postDescription = formJSON.description;
-		var postAttendance = "[]";
-
-
-	var postData = JSON.stringify({"userID":postId,"title":postTitle,"location":postLocation,"datetime":postDateTimeBegin,"endDatetime":postDateTimeEnd,"description":postDescription,"attendance":postAttendance});
-
-alert("posting:"+postData);
-		$.ajax({
-			type: 'POST',
-			url: 'http://csse371-04.csse.rose-hulman.edu/Meeting/',
-			data: postData,
-			dataType: 'json',
-			success:function(data){
-				alert("created new meeting");
-			}
-		});
-
-		return true;
-	});
-});
-
-function ConvertFormToJSON(form){
-	var array = jQuery(form).serializeArray();
-	var json = {};
+  function updateEditedValues(){
 	
-	json['userID'] = <%=@userID%>;
+  }
 
-	jQuery.each(array, function() {
-		json[this.name] = this.value || '';
-	});
+  function showDeleteModal(ID){
+    deleteID = ID;
+    $('#deleteMeetingModal').modal('show');
+  }
 
-	return json;
-}
+  function hideDeleteModal(){
+    // TODO: Put this back in when it works and change it to the delete
+     $.ajax({
+             type: 'DELETE',
+             url: 'http://csse371-04.csse.rose-hulman.edu/Meeting/' + meetingsJSON[deleteID]['meetingID'],
+       success:function(data){
+         if(data.deleted == true){
+			delete meetingsJSON[deleteID];
+         }
+       }
+     });
+    //alert("The task matching id " + deleteID + " was deleted");
+
+    $('#deleteMeetingModal').modal('hide');
+    // TODO: Put back in
+    //location.reload(true);
+  }
+
+  function showMeetingModalNoID(){
+    $('#viewMeetingModal').modal('hide');
+    $('#viewMeetingModal').on('hidden.bs.modal', function() {
+      $(this).removeData('bs.modal');
+    });
+
+    // Edit info
+    meetingsJSON[currentID]["title"] = document.getElementById("titleE").value;
+	meetingsJSON[currentID]["description"] = document.getElementById("descriptionE").value;
+    meetingsJSON[currentID]["location"] = document.getElementById("locationE").value;
+    meetingsJSON[currentID]["datetime"] = document.getElementById("datetimeE").value;
+
+    // TODO: Put this back in when it works and change it to update info then add a pull
+    // $.ajax({
+    //         type: '',
+    //         url: 'http://csse371-04.csse.rose-hulman.edu/Tasks/' + ID,
+    //   success:function(data){
+    //     if(data.taskID != null){
+    //       TaskArray = JSON.parse(data);
+    //     }
+    //   }
+    // });
+
+    // Update view info
+    document.getElementById("titleV").innerHTML = meetingsJSON[currentID]["title"];
+	document.getElementyById("descriptionV").innerHTML = meetingsJSON[currentID]["description"];
+    document.getElementById("locationV").innerHTML = meetingsJSON[currentID]["location"];
+    document.getElementById("datetimeV").innerHTML = meetingsJSON[currentID]["datetime"];
+    // document.getElementById("attendanceV").innerHTML = TaskArray["attendance"];
+
+    $('#viewMeetingModal').modal('show');
+    $('#editMeetingModal').modal('hide');
+  }
+
+  function showViewMeetingModal(ID){
+    $('#viewMeetingModal').modal('hide');
+    $('#viewMeetingModal').on('hidden.bs.modal', function() {
+      $(this).removeData('bs.modal');
+    });
+
+	currentID = ID;
+
+    document.getElementById("titleV").innerHTML = meetingsJSON[currentID]["title"];
+	document.getElementById("descriptionV").innerHTML = meetingsJSON[currentID]["description"];
+    document.getElementById("locationV").innerHTML = meetingsJSON[currentID]["location"];
+    document.getElementById("datetimeV").innerHTML = meetingsJSON[currentID]["datetime"];
+
+    $('#viewMeetingModal').modal('show');
+    $('#editMeetingModal').modal('hide');
+  }
+
+<<<<<<< HEAD
+  function validateForm()
+  {//QUESTION: Is this function used/planned for something?
+  
+  var title = document.forms["input"]["title"].value;
+  // var attendees = document.forms["input"]["attendees"].value;
+  var datetime = document.forms["input"]["datetime"].value;
+  var location = document.forms["input"]["location"].value;
+  alert("The following fields were added to the db: " + title + " " + datetime + " " + location);
+=======
+  function validateForm(){
+    var title = document.forms["input"]["title"].value;
+    // var attendees = document.forms["input"]["attendees"].value;
+    var datetime = document.forms["input"]["datetime"].value;
+    var location = document.forms["input"]["location"].value;
+    alert("The following fields were added to the db: " + title + " " + datetime + " " + location);
+>>>>>>> fff4295fd5597be92e8a9ba36fbc287aecacc679
+
+    return true;
+  }
 </script>
 
 <!-- Create Modal -->
@@ -148,7 +243,7 @@ function ConvertFormToJSON(form){
   <% for meeting in @meetingsParsed %>
     <tr>
       <td><%= meeting['datetime'] %></td>
-      <td><a onclick="showViewMeetingModal(<%=@meetingsParsed.index(meeting)%>)" href = '#viewMeetingModal' data-refresh = 'true' data-toggle='modal'><%= meeting['title'] %></a></td>
+      <td><a onClick="showViewMeetingModal(<%=@meetingsParsed.index(meeting)%>)" href = '#viewMeetingModal' data-refresh = 'true' data-toggle='modal'><%= meeting['title'] %></a></td>
       <td><%= meeting['location'] %></td>
       <td colspan='1' style='cursor: pointer; text-align: center' onclick="showDeleteModal(<%=@meetingsParsed.index(meeting)%>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
     </tr>

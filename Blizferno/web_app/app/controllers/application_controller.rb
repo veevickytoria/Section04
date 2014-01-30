@@ -22,57 +22,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  before_filter :getNotifications
-
-  def getNotifications
-  	if(!cookies[:userID].blank?)
-  		require 'net/http'
-  		@userID = cookies[:userID]
-  		url = URI.parse('http://csse371-04.csse.rose-hulman.edu/Notification/' + @userID)
-  		req = Net::HTTP::Get.new(url.path)
-  		res = Net::HTTP.start(url.host, url.port) {|http|
-  			http.request(req)
-  		}
-  		# TODO: Put back in when database actually adds and deletes notifications
-  		# @Notifications = JSON.parse(res.body)
-  		@Notifications = JSON.parse('{"totalAmount":"6","userID":"0","notifications":[{"datetime":"","type":"Meeting","nodeID":"","description":""},{"datetime":"","type":"Task","nodeID":"","description":""},{"datetime":"","type":"Project","nodeID":"","description":""},{"datetime":"","type":"Task","nodeID":"","description":""},{"datetime":"","type":"Group","nodeID":"","description":""},{"datetime":"","type":"Meeting","nodeID":"","description":""},{"datetime":"","type":"Project","nodeID":"","description":""},{"datetime":"","type":"Task","nodeID":"","description":""},{"datetime":"","type":"Meeting","nodeID":"","description":""},{"datetime":"","type":"Project","nodeID":"","description":""},{"datetime":"","type":"Meeting","nodeID":"","description":""},{"datetime":"","type":"Task","nodeID":"","description":""},{"datetime":"","type":"Task","nodeID":"","description":""}]}')
-  		@Noti = @Notifications["notifications"]
-  		@Meeting = 0
-  		@Task = 0
-  		@Project = 0
-  		@Group = 0	
-
-  		@Noti.each do |i|
-  			case i["type"]
-  			 when "Meeting"
-  			 	@Meeting+=1
-  			when "Task"
-  				@Task+=1
-  			when "Project"
-  				@Project+=1
-  			when "Group"
-  				@Group+=1
-  			end
-  		end
-
-  		if (@Meeting == 0)
-  			@Meeting = ""
-  		end
-
-  		if(@Task == 0)
-  			@Task = ""
-  		end
-
-  		if (@Project == 0)
-  			@Project = ""
-  		end
-
-  		if (@Group == 0)
-  			@Group = ""
-  		end
-  	end
-  end
-
   #before_filter :protect
 
   #def protect

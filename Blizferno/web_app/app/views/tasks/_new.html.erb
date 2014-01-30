@@ -1,33 +1,23 @@
-<span>* Indicates required fields.</span>
+<span style="color:#f00;">* Indicates required fields.</span>
 
 <form name="input" id="createTask" action ="http://csse371-04.csse.rose-hulman.edu/Task/" onsubmit="return validateForm()" method="post">
 	<h5>Topic:*</h5>
-	<input type="text" name="title" maxlength="50" class="form-control"/>
-
-	<input type="hidden" name="isCompleted" value="false" class="form-control"/>
-
+	<input type="text" name="title" maxlength="50" size="25" />
+	<br />
+	<input type="hidden" name="isCompleted" value="false" />
 	<h5>Description:*</h5>
-	<input type="text" name="description" maxlength="1000" class="form-control"/>
-	
+	<input type="text" name="description" maxlength="1000" size="25" />
+	<br />
 	<h5>Deadline:* (please use military time)</h5>
-	<input type="text" name="deadline" placeholder="mm/dd/yyyy HH:MM" maxLength="16" class="form-control"/>
-
+	<input type="text" name="deadline" placeholder="mm/dd/yyyy HH:MM" maxLength="16" size="16" />
 	<input type="hidden" name="dateCreated" value="<%= Time.now.strftime("%m/%d/%Y %H:%M") %>" />
 	<input type="hidden" name="dateAssigned" value="<%= Time.now.strftime("%m/%d/%Y %H:%M") %>" />
-
+	<br />
 	<h5>Completion Criteria:*</h5>
-	<input type="text" name="completionCriteria" maxLength="500" class="form-control"/>
-
+	<input type="text" name="completionCriteria" maxLength="500" size="25" />
+	<br />
 	<h5>Assigned to:*</h5>
-	<select multiple id="assigned" size='6' class="form-control">
-  		<option disabled>Select multiple by holding Ctrl/CMD</option>
-  		<option value='1'>Santa Claus</option>
-  		<option value='2'>WasARebel</option>
-  		<option value='3'>KemoSabe</option>
-  		<option value='4'>CaptainKirk</option>
-  		<option value='5'>Spock</option>
-	</select>
-
+	<input type="text" name="assignedTo" maxLength="20" size="10" />
 	<input type="hidden" name="assignedFrom" value="749" /> <!-- Change this to current user -->
 	<input type="hidden" name="createdBy" value="749" /> <!-- Change this to current user -->
 </form>

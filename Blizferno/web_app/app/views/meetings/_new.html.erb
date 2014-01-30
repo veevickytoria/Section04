@@ -1,25 +1,13 @@
 <!-- <div id = 'menu' style = 'width: 50%; float:left'> -->
-
-<span>* Indicates required fields.</span>
-
 <form name="input" id = "createMeeting" onsubmit="return validateForm()" action ="http://csse371-04.csse.rose-hulman.edu/Meeting/" method = 'post'>
-		
 		<h5>Topic</h5>
-		<input type='text' name = "title" class='form-control'/>
+		<input type='text' name = "title" class='fullWidth' placeholder="Topic" />
 		
 		<h5>Description*</h5>
-
-		<textarea class='form-control' name="description"></textarea>
-
+		<textarea class='fullWidth' placeholder='Description'></textarea>
+		
 		<h5>Attendees</h5>
-		<select multiple id='attendees' size='6' class='form-control'>
-			<option disabled>Select multiple by holding Ctrl/CMD</option>
-			<option value='1'>Santa Claus</option>
-			<option value='2'>WasARebel</option>
-			<option value='3'>KemoSabe</option>
-			<option value='4'>CaptainKirk</option>
-			<option value='5'>Spock</option>
-		</select>
+		<pre></pre>
 		<!-- <table>
 			<tr>
 				<td>
@@ -36,18 +24,22 @@
 		</table> -->
 		
 		<h5>Date</h5>
-		
-		<input type='text' name = "datetime" placeholder='mm/dd/yyyy HH:MM' class='form-control' />
-		<input type='text' name = "datetimeEnd" placeholder='mm/dd/yyy HH:MM' class='form-control' />
+		<table>
+			<tr>
+				<td>
+					<input type='text' name = "datetime" class='fullWidth' placeholder='mm/dd/yyyy HH:MM' />
+				</td>
+			</tr>
+		</table>
 		
 		<h5>Location</h5>
 		<table>
 			<tr>
 				<td>
-					<input type='text' name ="location" placeholder='Location' class='form-control'/>
+					<input type='text' name ="location" class='fullWidth' placeholder='Location' />
 				</td>
 				<td style='padding-left: 5px;'>
-					<input type='button' value='Search Locations' class='form-control'/>
+					<input type='button' value='Search Locations' />
 				</td>
 			</tr>
 		</table>
@@ -56,10 +48,10 @@
 		<table>
 			<tr>
 				<td>
-					<input type='text' name = 'project' placeholder='Project' class='form-control'/>
+					<input type='text' name = 'project' placeholder='Project' />
 				</td>
 				<td style='padding-left: 5px;'>
-					<input type='button' value='Search Projects' class='form-control'/>
+					<input type='button' value='Search Projects' />
 				</td>
 			</tr>
 		</table>
@@ -68,10 +60,10 @@
 		<table class='fullWidth'>
 			<tr>
 				<td style='width: 70%'>
-					<input type='url' name = 'agenda' class='fullWidth' placeholder='Agenda Title' />
+					<input type='url' name = 'agenda' class='fullWidth' placeholder='Paste Link' />
 				</td>
 				<td style='width: 30%'>
-					<input type='button' value='Search Agendas' />
+					<input type='button' value='Attach Google Doc' />
 				</td>
 			</tr>
 		</table>
@@ -79,7 +71,7 @@
 		<!-- </div> -->
 		<!-- <div id = 'content' style = 'width: 50%; float:right'> -->
 		<h5>Tasks:</h5>
-		<input type='text' name = 'task' placeholder='Task' class='form-control'/>
+		<input type='text' name = 'task' placeholder='Task' />
 		<select>
 			<option>Assigned User</option>
 			<option>------------</option>

@@ -1,16 +1,8 @@
-<script type="text/javascript" src="assets/javascripts/home_page.js"></script>
+<!-- 
+~~~~ NOTES ~~~~
++ row height = 38px
 
-<!-- <div class="preload">
-<img src="http://i.imgur.com/KUJoe.gif">
-</div>
-
-<div class="content">
-I would like to display a loading bar before the entire page is loaded. 
-</div> -->
-
-
-
-
+-->
 <script type="text/javascript" src = "/web_app/app/assets/javascripts/groups.js"></script>
 <script type="text/javascript" src = "/web_app/app/assets/javascripts/projects.js"></script>
 <script type="text/javascript" src = "/web_app/app/assets/javascripts/tasks.js"></script>
@@ -24,7 +16,6 @@ I would like to display a loading bar before the entire page is loaded.
 
 <!-- <%= render "panes/test_pane" %> -->
 
-<!-- GROUPS -->
 <!-- Create Modal -->
 <div class="modal fade" id="newGroupModal" tabindex="-1" role="dialog" aria-labelledby="newGroupModalLabel" aria-hidden="true" style: 'width: 75%'>
   <div class="modal-dialog">
@@ -104,7 +95,6 @@ I would like to display a loading bar before the entire page is loaded.
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<!-- MEETINGS -->
 <!-- Create Modal -->
 <div class="modal fade" id="newMeetingModal" tabindex="-1" role="dialog" aria-labelledby="newMeetingModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -181,7 +171,6 @@ I would like to display a loading bar before the entire page is loaded.
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<!-- PROJECTS -->
 <!-- Create Modal -->
 <div class="modal fade" id="newProjectModal" tabindex="-1" role="dialog" aria-labelledby="newProjectModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -194,8 +183,8 @@ I would like to display a loading bar before the entire page is loaded.
         <%= render "projects/new" %>
       </div>
       <div class="modal-footer">
+        <input type="submit" form="createProject" class="btn btn-primary"></button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary" form="createProject">Submit</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -258,7 +247,6 @@ I would like to display a loading bar before the entire page is loaded.
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<!-- TASKS -->
 <!-- Create Modal -->
 <div class="modal fade" id="newTaskModal" tabindex="-1" role="dialog" aria-labelledby="newTaskModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -271,8 +259,8 @@ I would like to display a loading bar before the entire page is loaded.
         <%= render "tasks/new" %>
       </div>
       <div class="modal-footer">
+        <input type="submit" form="createTask" class="btn btn-primary" />
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary" form="createTask">Submit</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
