@@ -70,7 +70,7 @@ function deleteTopic($id){
                         	$toDelID = $rel->getEndNode()->getID();
                         	deleteTopic($toDelID);
                         	$rel->delete();
-                        {
+                        }
                         $relations = $topic->getRelationships();
                         foreach($relations as $rel){
                                 //remove all relationships
