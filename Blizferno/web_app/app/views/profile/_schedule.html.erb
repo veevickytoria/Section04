@@ -67,7 +67,6 @@
 	  $.get('http://csse371-04.csse.rose-hulman.edu/User/Schedule/'+userId,function(data){
      	//alert("Data: " + data);		
 		var schedule = JSON.parse(data);
-alert("schedule:"+JSON.stringify(schedule));
 		var events = new Array();
 
 		for(var value in schedule.schedule){
@@ -82,8 +81,6 @@ alert("schedule:"+JSON.stringify(schedule));
 
 
 		events = "["+events+"]";
-
-		alert("Events:" + events);
 
 /*
 //working on custom lightbox
