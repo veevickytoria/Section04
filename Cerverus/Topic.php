@@ -103,13 +103,13 @@ function getTopicInfo($id){
 	$topicNode=$client->getNode($id);
 	$result = array();
 	foreach ($topicNode->getProperties() as $key => $value) {
-		$result[] = $key => $value;
+		$result[$key] = $value;
 	}
     $relations = $topic->getRelationships(array('HAS_TOPIC'));
     foreach ($relations as $rel){
     	$toGetID = $rel->getEndNode()->getID();
     	$ret = getTopicInfo($toGetID);
-        $result[] = 'subtopic' => $ret;
+        $result['subtopic'] = $ret;
     }
 	echo json_encode($result);
 	return $result
