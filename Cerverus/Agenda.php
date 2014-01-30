@@ -4,7 +4,7 @@
  */
 namespace Everyman\Neo4j;
 require("phar://neo4jphp.phar");
-
+require_once(Topic.php);
 
 /**
  *	Create a graphDb connection 
@@ -31,10 +31,8 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
 	
 	foreach($postContent->content as $topic){
 		//pass the topic to Topic.php's create Topic method
-		$request = new HttpRequest('http://csse371-04.csse.rose-hulman.edu/Topic/', HttpRequest:METH_POST);
-		$request->addPostFields(array('title' => $topic->title, 'time' => $topic->time, 'suptopic' => $topic->subtopic));
-		$result = $request->send();
-		$topicNode = $client->getNode($result);
+		$creTopNode = createTopic($topic->title, $topic->time, $topic->subtopic);
+		$topicNode = $client->getNode($creTopNode);
 		//make a relation to the topic 'HAS_TOPIC'
 		$topicRel = $agendaNode->relateTo($topicNode, 'HAS_TOPIC')
 			->save();
@@ -49,7 +47,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
 	$agendaProps= $agendaNode->getProperties();
 	
 	$response= $agendaIndex->add($agendaNode, 'user', $agendaProps['user']);
-	echo $response;
+	echo json_encode($response);
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0){
 	//getAgendaInfo
 	$agendaNode=$client->getNode($_GET['id']);
@@ -58,10 +56,9 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
 		$result[] = $key => $value;
 	}
 	$relations = $topic->getRelationships(array('HAS_TOPIC'));
-    foreach ($relations as $rel){ //Try 'Topic.php' in the url section //actullay, this doesn't match the pretty URL pattern in our API. How do I tell that I have the right adress? What if it changes? How do I test it locally?
-    	$request = new HttpRequest('http://csse371-04.csse.rose-hulman.edu/Topic/'.$id, HttpRequest:METH_GET);
-        $return = $request->send();
-        $result[] = 'subtopic' => json_decode($return);
+    foreach ($relations as $rel){
+    	$info = getTopicInfo($rel->getEndNode()->getID());
+        $result[] = 'subtopic' => $info;
     }
 	echo json_encode($result);
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'PUT')==0){
@@ -92,17 +89,14 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
             foreach($relations2 as $rel){
                 //remove the relation and delete the topic it's associated with
                 //delete Topic
-               	$request = new HttpRequest('http://csse371-04.csse.rose-hulman.edu/Topic/', HttpRequest:METH_DELETE);
-            	$result = $request->send();
+                $ret = deleteTopic($rel->getEndNode()->getID());
             	$rel->delete();
             }
 			
 			foreach($postContent->value as $topic){
 				//pass the topic to Topic.php's create Topic method
-				$request = new HttpRequest('http://csse371-04.csse.rose-hulman.edu/Topic/', HttpRequest:METH_POST);
-				$request->addPostFields(array('title' => $topic->title, 'time' => $topic->time, 'suptopic' => $topic->subtopic));
-				$result = $request->send();
-				$topicNode = $client->getNode($result);
+				$ret = createTopic($topic->title, $topic->time, $topic->subtopic);
+				$topicNode = $client->getNode($ret);
 				//make a relation to the topic 'HAS_TOPIC'
 				$topicRel = $agendaNode->relateTo($topicNode, 'HAS_TOPIC')
 					->save();
@@ -135,8 +129,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
                 		foreach($relations2 as $rel){
                 			//remove the relation and delete the topic it's associated with
                 			//delete Topic
-                			$request = new HttpRequest('http://csse371-04.csse.rose-hulman.edu/Topic/', HttpRequest:METH_DELETE);
-                			$result = $request->send();
+                			$ret = deleteTopic($rel->getEndNode()->getID());
                 			$rel->delete();
                 		}
                         //get the relationships
