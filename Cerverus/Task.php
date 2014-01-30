@@ -33,54 +33,69 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 ){
 		->setProperty( 'description', $postContent->description )
 		->setProperty( 'deadline', $postContent->deadline )
 		->setProperty( 'dateCreated', $postContent->dateCreated )
-		->setProperty( 'completionCriteria', $postContent->completionCriteria );
-	
+		->setProperty( 'completionCriteria', $postContent->completionCriteria )
+		->setProperty( 'nodeType', 'Task');)
 	//actually add the node in the db
 	$taskNode->save();
 	
 	//sets the relationships on the node
 	$UserAssigned = $client->getNode($postContent-> assignedTo );
 	$assignedTo = $UserAssigned->relateTo( $taskNode,  "ASSIGNED_TO" )->save();
+        
 	$Assigner = $client->getNode($postContent-> assignedFrom );
-	$assignedFrom = $taskNode->relateTo( $Assigner, "ASSIGNED_FROM" )->save();
+	$assignedFrom = $Assigner->relateTo( $taskNode, "ASSIGNED_FROM" )->save();
+        
 	$Creator = $client->getNode($postContent-> createdBy );
-	$createdBy = $taskNode->relateTo( $Creator, "CREATED_BY" )->save();
+	$createdBy = $Creator->relateTo( $taskNode, "CREATED_BY" )->save();
 	
 	//get node id
 	echo json_encode(array("taskID"=>$taskNode->getId())); //output was revised?
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 ){
 	//viewTaskInfo
 	$taskNode=$client->getNode($_GET['id']);
-	
-	if ($taskNode != null){
 	$array = $taskNode->getProperties();
-	
-	//display relationships
-	$relationArray = $taskNode->getRelationships(array(), Relationship::DirectionOut);
-	foreach($relationArray as $rel){
-		$relType = $rel->getType();
-		$userNode = $rel->getEndNode();
-		if ($relType == 'ASSIGNED_TO') {
-			$userNode=$rel->getEndNode();
-			$array['assignedTo']=$userNode->getId();
-		} else if ($relType == 'ASSIGNED_FROM') {
-			$userNode=$rel->getEndNode();
-			$array['assignedFrom']=$userNode->getId();
-		} else if($relType == 'CREATED_BY') {
-			$userNode=$rel->getEndNode();
-			$array['createdBy']=$userNode->getId();
-		} 
-	}
-	
-	$array['taskID']=$taskNode->getId();
-	echo json_encode($array);
+	if(array_key_exists('nodeType', $array)){
+		if(strcasecmp($array['nodeType'], 'Task')!=0){
+			echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['id'].' is an not a task node.'));
+			return 1;
+		}
+	}   
+	if ($taskNode != null){
+            $array = $taskNode->getProperties();
+
+            //display relationships
+            $relationArray = $taskNode->getRelationships(array(), Relationship::DirectionIn);
+            foreach($relationArray as $rel){
+                    $relType = $rel->getType();
+                    $userNode = $rel->getStartNode();
+                    if ($relType == 'ASSIGNED_TO') {
+                            $userNode=$rel->getStartNode();
+                            $array['assignedTo']=$userNode->getId();
+                    } else if ($relType == 'ASSIGNED_FROM') {
+                            $userNode=$rel->getStartNode();
+                            $array['assignedFrom']=$userNode->getId();
+                    } else if($relType == 'CREATED_BY') {
+                            $userNode=$rel->getStartNode();
+                            $array['createdBy']=$userNode->getId();
+                    } 
+            }
+
+            $array['taskID']=$taskNode->getId();
+            echo json_encode($array);
 	} else {
-		echo "Node not found.";
+            echo "Node not found.";
 	}
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'PUT')==0){
 	//updateTask
 	$postContent = json_decode(@file_get_contents('php://input'));
 	$taskNode=$client->getNode($postContent->taskID);
+	$array = $taskNode->getProperties();
+	if(array_key_exists('nodeType', $array)){
+		if(strcasecmp($array['nodeType'], 'Task')!=0){
+			echo json_encode(array('errorID'=>'11', 'errorMessage'=>$postContent->taskID.' is an not a task node.'));
+			return 1;
+		}
+	}   
 	$updated = 0;
 	
 	if (sizeof($taskNode) > 0){
@@ -113,29 +128,24 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 ){
 			$taskNode->save();
 			$updated = 1;
 		}else if (strcasecmp($postContent->field, 'assignedTo')==0){
-			$relationArray = $taskNode->getRelationships(array('ASSIGNED_TO'), Relationship::DirectionOut);
+			$relationArray = $taskNode->getRelationships(array('ASSIGNED_TO'), Relationship::DirectionIn);
 			foreach($relationArray as $rel) {
 				$rel->delete();
 			}
 			$UserAssigned = $client->getNode($postContent-> value );
-			$assignedTo = $taskNode->relateTo( $UserAssigned,  "ASSIGNED_TO" )->save();
+			$assignedTo = $UserAssigned->relateTo( $taskNode,  "ASSIGNED_TO" )->save();
 			$updated = 1;
 		}else if (strcasecmp($postContent->field, 'assignedFrom')==0){
-			$relationArray = $taskNode->getRelationships(array('ASSIGNED_FROM'), Relationship::DirectionOut);
+			$relationArray = $taskNode->getRelationships(array('ASSIGNED_FROM'), Relationship::DirectionIn);
 			foreach($relationArray as $rel) {
 				$rel->delete();
 			}
 			$Assigner = $client->getNode($postContent-> value );
-			$assignedFrom = $taskNode->relateTo( $Assigner, "ASSIGNED_FROM" )->save();
+			$assignedFrom = $Assigner->relateTo( $taskNode, "ASSIGNED_FROM" )->save();
 			$updated = 1;
 		}else if (strcasecmp($postContent->field, 'createdBy')==0){
-			$relationArray = $taskNode->getRelationships(array('CREATED_BY'), Relationship::DirectionOut);
-			foreach($relationArray as $rel) {
-				$rel->delete();
-			}
-			$Creator = $client->getNode($postContent-> value );
-			$createdBy = $taskNode->relateTo( $Creator, "CREATED_BY" )->save();
-			$updated = 1;
+			echo json_encode(array("errorID"=>"16", "errorMessage"=>"A Task's createdBy field cannot be modified."));
+                        return;
 		}
 		
 		if ($updated==1){
@@ -143,24 +153,26 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 ){
 			$relationArray = $taskNode->getRelationships(array(), Relationship::DirectionOut);
 			foreach($relationArray as $rel){
 				$relType = $rel->getType();
-				$userNode = $rel->getEndNode();
+				$userNode = $rel->getStartNode();
 				if ($relType == 'ASSIGNED_TO') {
-					$userNode=$rel->getEndNode();
+					$userNode=$rel->getStartNode();
 					$array['assignedTo']=$userNode->getId();
 				} else if ($relType == 'ASSIGNED_FROM') {
-					$userNode=$rel->getEndNode();
+					$userNode=$rel->getStartNode();
 					$array['assignedFrom']=$userNode->getId();
 				} else if($relType == 'CREATED_BY') {
-					$userNode=$rel->getEndNode();
+					$userNode=$rel->getStartNode();
 					$array['createdBy']=$userNode->getId();
 				} 
 			}
+			unset($array['nodeType']);
 			echo json_encode($array);
 		} else{
-			echo "No node updated";
+			echo json_encode(array("errorID"=>"17", "errorMessage"=>$postContent->field." is an invalid field for Task."));
+                        return;
 		}
 	}else{
-		echo "FALSE node not found";
+		echo json_encode(array("errorID"=>"18", "errorMessage"=>$postContent->taskID." is not recognized in the database"));
 	}
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'DELETE')==0){
 	//deleteTask
@@ -170,6 +182,13 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 ){
 	//$taskNode=$client->getNode($postContent->taskID);
 	preg_match("#(\d+)#", $_SERVER['REQUEST_URI'], $id);
 	$taskNode = $client->getNode($id[0]);
+	$array = $taskNode->getProperties();
+	if(array_key_exists('nodeType', $array)){
+		if(strcasecmp($array['nodeType'], 'Task')!=0){
+			echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['id'].' is an not a task node.'));
+			return 1;
+		}
+	}   
 	if ($taskNode != null){
 		//only delete the node if it's a task
 		//$task = $taskIndex->findOne('ID', ''.$id[0]);
