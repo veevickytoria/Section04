@@ -61,12 +61,12 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
 	} 
 	$result = array();
 	foreach ($agendaNode->getProperties() as $key => $value) {
-		$result[] = $key => $value;
+		$result[] = ''.$key => ''.$value;
 	}
 	$relations = $topic->getRelationships(array('HAS_TOPIC'));
     foreach ($relations as $rel){
     	$info = getTopicInfo($rel->getEndNode()->getID());
-        $result[] = 'subtopic' => $info;
+        $result[] = 'subtopic' => ''.$info;
     }
 	echo json_encode($result);
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'PUT')==0){
