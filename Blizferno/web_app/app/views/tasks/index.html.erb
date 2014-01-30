@@ -153,7 +153,7 @@ function ConvertFormToJSON(form){
       <th></th>
     </tr>
   </thead>
-  <% for task in @tasks['tasks'] %>
+  <% for task in @tasksParsed %>
     <tr>
       <td><%= task['deadline'] %></td>
       <td><a onClick="showViewModal(<%= task['taskID'] %>)" data-refresh="true" data-toggle='modal'><%= task['title'] %></a></td>
