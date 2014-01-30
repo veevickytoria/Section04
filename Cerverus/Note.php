@@ -28,7 +28,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
                 ->setProperty('description', $postContent->description)
                 ->setProperty('dateCreated', $postContent->dateCreated)
                 ->setProperty('content', $postContent->content)
-                -setProperty('nodeType','Note')
+                ->setProperty('nodeType','Note')
                 ->save();
         
         //relate the Note to the user who created it
