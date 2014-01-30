@@ -8,6 +8,7 @@
             <connections>
                 <outlet property="addAssigneeButton" destination="aD7-la-KjE" id="wMl-bK-fxp"/>
                 <outlet property="cancelButton" destination="xjn-G3-MC5" id="WTh-Ge-4M7"/>
+                <outlet property="deleteBtn" destination="Brb-lZ-Obj" id="0wb-kT-T6E"/>
                 <outlet property="descriptionField" destination="Jzm-S0-SVo" id="xw9-JC-Ve1"/>
                 <outlet property="endDateLabel" destination="mdc-ta-qjf" id="Myo-Eg-rvr"/>
                 <outlet property="endTimeLabel" destination="7fW-R1-pKp" id="xgG-zl-gRR"/>
@@ -150,6 +151,17 @@
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Brb-lZ-Obj">
+                    <rect key="frame" x="0.0" y="995" width="804" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <state key="normal" title="Delete Task">
+                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                    <connections>
+                        <action selector="onDeleteTask" destination="-1" eventType="touchUpInside" id="wLv-I9-jBl"/>
+                    </connections>
+                </button>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>

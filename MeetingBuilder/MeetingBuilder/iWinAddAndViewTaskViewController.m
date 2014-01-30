@@ -12,6 +12,7 @@
 #import "Contact.h"
 #import "Task.h"
 #import "iWinAppDelegate.h"
+#import "iWinBackEndUtility.h"
 
 @interface iWinAddAndViewTaskViewController ()
 @property (nonatomic) NSInteger taskID;
@@ -26,6 +27,8 @@
 @property (strong, nonatomic) UIDatePicker *enddatePicker;
 @property (strong, nonatomic) NSDateFormatter *dateFormatter;
 @property (strong, nonatomic) NSMutableArray *userList;
+@property (nonatomic) iWinBackEndUtility *backendUtility;
+@property (nonatomic) UIAlertView *deleteAlertView;
 
 @end
 
@@ -45,6 +48,9 @@
     }
 
     return self;
+}
+
+- (IBAction)onDeleteTask:(id)sender {
 }
 
 - (IBAction)onClickAddAssignees
@@ -68,6 +74,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.backendUtility = [[iWinBackEndUtility alloc] init];
     iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     self.context = [appDelegate managedObjectContext];
     // Do any additional setup after loading the view from its nib.
@@ -78,6 +85,7 @@
     self.saveAndAddMoreButton.hidden = NO;
     self.endDateLabel.userInteractionEnabled = YES;
     self.endTimeLabel.userInteractionEnabled = YES;
+    self.deleteBtn.hidden = !self.isEditing;
     
     [self setGestureRecognizers];
     
@@ -98,7 +106,7 @@
 
 -(void) initForExistingTask
 {
-    self.headerLabel.text = @"View Task";
+    self.headerLabel.text = @"View/Modify Task";
     self.saveAndAddMoreButton.hidden = YES;
     
     
@@ -115,13 +123,36 @@
                                                   error:&error];
     self.task = (Task*)[result objectAtIndex:0];
     
-    self.titleField.text = self.task.title;
-    self.descriptionField.text = self.task.desc;
-//    self.isCompleted.enabled = [self.task.isCompleted boolValue];
-    self.isCompleted.on = [self.task.isCompleted boolValue];
+    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Task/%d", self.taskID];
+    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
     
-    [self initDateTimeLabels];
-    [self initAttendees];
+    if (!deserializedDictionary) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Failure" message:@"Could not load your task" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alert show];
+    }
+    else
+    {
+        self.titleField.text = [deserializedDictionary objectForKey:@"title"];
+        self.descriptionField.text = [deserializedDictionary objectForKey:@"description"];
+        self.isCompleted.on = [[deserializedDictionary objectForKey:@"isCompleted"] boolValue];
+        NSArray *endDateAndTime = [[deserializedDictionary objectForKey:@"deadline"]  componentsSeparatedByString:@" "];
+        NSString *enddate = [endDateAndTime objectAtIndex:0];
+        NSString *endtime = [NSString stringWithFormat:@"%@ %@", [endDateAndTime objectAtIndex:1], [endDateAndTime objectAtIndex:2]];
+        self.endDateLabel.text = enddate;
+        self.endTimeLabel.text = endtime;
+        self.endDate = [self.dateFormatter dateFromString:enddate];
+        NSString *assignee = [[deserializedDictionary objectForKey:@"assignedTo"] stringValue];
+        [self.userList addObject:[self getContactForID:(NSString *)assignee]];
+    }
+    
+//    self.titleField.text = self.task.title;
+//    self.descriptionField.text = self.task.desc;
+//    self.isCompleted.enabled = [self.task.isCompleted boolValue];
+//    self.isCompleted.on = [self.task.isCompleted boolValue];
+    
+//    [self initDateTimeLabels];
+//    [self initAttendees];
 }
 
 -(void) initAttendees
@@ -223,7 +254,7 @@
         [self updateTask:@"isCompleted" :@"False"];
         [self updateTask:@"description" :self.descriptionField.text];
         [self updateTask:@"deadline" :[NSString stringWithFormat:@"%@ %@", self.endDateLabel.text, self.endTimeLabel.text]];
-         [self updateTask:@"assignedTo" :[c.userID stringValue]];
+        [self updateTask:@"assignedTo" :[c.userID stringValue]];
         
     }else
     {
@@ -334,6 +365,7 @@
 
 - (IBAction)onClickSaveAndAddMore
 {
+    [self saveNewTask];
     //save and clear textfields
     self.headerLabel.text = @"Add New Task";
     self.saveAndAddMoreButton.hidden = NO;
@@ -410,6 +442,26 @@
 -(void)completedWithNoSelection
 {
     [self.ocCalVC.view removeFromSuperview];
+}
+
+- (IBAction)onDeleteTask
+{
+    self.deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this task?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
+    [self.deleteAlertView show];
+}
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1)
+    {
+        //Perform deletion
+        NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Task/%d", self.taskID];
+        NSError * error = [self.backendUtility deleteRequestForUrl:url];
+        if (!error)
+        {
+            [self.viewTaskDelegate refreshTaskList];
+        }
+    }
 }
 
 @end
