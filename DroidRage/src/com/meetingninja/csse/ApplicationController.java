@@ -21,6 +21,8 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.Volley;
+import com.meetingninja.csse.database.local.SQLiteNoteAdapter;
+import com.meetingninja.csse.database.local.SQLiteUserAdapter;
 import com.parse.Parse;
 import com.parse.ParseInstallation;
 import com.parse.PushService;
@@ -71,6 +73,25 @@ public class ApplicationController extends Application {
 	}
 
 	/**
+	 * Load All Users into the SQLiteDatabase
+	 */
+	public void loadUsers() {
+		SQLiteUserAdapter sqlite = new SQLiteUserAdapter(getApplicationContext());
+		sqlite.cacheUsers();
+		sqlite.close();
+	}
+	
+	/**
+	 * Load All Notes into the SQLiteDatabase
+	 */
+	public void loadNotes() {
+		SQLiteNoteAdapter sqlite = new SQLiteNoteAdapter(getApplicationContext());
+//		sqlite.cacheNotes(false);
+//		sqlite.cacheNotes(true);
+		sqlite.close();
+	}
+
+	/**
 	 * @return The Volley Request queue, the queue will be created if it is null
 	 */
 	public RequestQueue getRequestQueue() {
@@ -118,7 +139,7 @@ public class ApplicationController extends Application {
 	 * 
 	 * @param tag
 	 */
-	public void cancelPendingRequests(Object tag) {
+	public void cancelPendingRequests(String tag) {
 		if (mRequestQueue != null) {
 			mRequestQueue.cancelAll(tag);
 		}

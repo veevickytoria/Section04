@@ -61,24 +61,21 @@ public class SQLiteNoteAdapter extends SQLiteHelper {
 	 * @param content
 	 * @return The inserted note with an id assigned
 	 */
-	public Note insertNote(String name, String content, String creator) {
+	public void insertNote(Note note) {
 		mDb = mDbHelper.getWritableDatabase();
-		ContentValues contentValues = new ContentValues();
-		contentValues.put(KEY_TITLE, name);
-		contentValues.put(KEY_CONTENT, content);
-		// contentValues.put(KEY_CREATED_BY, creator);
-		long insertID = mDb.insert(TABLE_NAME, null, contentValues);
+		ContentValues cv = new ContentValues();
+		cv.put(KEY_ID, note.getID());
+		cv.put(KEY_TITLE, note.getTitle());
+		cv.put(KEY_CONTENT, note.getContent());
+		cv.put(KEY_DESC, note.getDescription());
+		cv.put(KEY_CREATED_BY, note.getCreatedBy());
+		
+		long insertID = mDb.insert(TABLE_NAME, null, cv);
 		Cursor c = mDb.query(TABLE_NAME, allColumns, KEY_ID + "=" + insertID,
 				null, null, null, null);
 		c.moveToFirst();
-		Note newNote = new Note(c);
 		c.close();
 		close();
-		return newNote;
-	}
-
-	public Note insertNote(Note n) {
-		return insertNote(n.getTitle(), n.getContent(), n.getCreatedBy());
 	}
 
 	public void updateNote(Note note) {
@@ -148,7 +145,7 @@ public class SQLiteNoteAdapter extends SQLiteHelper {
 		Cursor c = mDb.query(TABLE_NAME, allColumns, null, null, null, null,
 				null);
 		// looping through all rows and adding to list
-		if (c!= null && c.moveToFirst()) {
+		if (c != null && c.moveToFirst()) {
 			do {
 				notes.add(new Note(c));
 			} while (c.moveToNext());

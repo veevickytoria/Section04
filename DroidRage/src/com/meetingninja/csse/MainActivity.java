@@ -119,19 +119,15 @@ public class MainActivity extends FragmentActivity implements
 	private Bundle icicle;
 	private CharSequence mTitle;
 	private SessionManager session;
-	private SQLiteHelper sqliteHelper;
+	private boolean isDataCached;
+	private static final String KEY_SQL_CACHE = "SQL_DATA_CACHE";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		icicle = new Bundle();
-		if (savedInstanceState != null)
-			this.icicle.putAll(savedInstanceState);
 
 		SessionManager.getInstance().init(MainActivity.this);
 		session = SessionManager.getInstance();
-
-		// session.createLoginSession("749");
 
 		// Check if logged in
 		if (!session.isLoggedIn()) {
@@ -156,7 +152,15 @@ public class MainActivity extends FragmentActivity implements
 			// on first time display view for first nav item
 			selectItem(session.getPage());
 
-			sqliteHelper = SQLiteHelper.getInstance(getApplicationContext());
+			// Check to see if data has been cached in the local database
+			if (savedInstanceState != null) {
+				isDataCached = savedInstanceState.getBoolean(KEY_SQL_CACHE,
+						false);
+			}
+			if (!isDataCached) {
+				ApplicationController.getInstance().loadUsers();
+				isDataCached = true;
+			}
 
 			// Track the usage of the application with Parse SDK
 			ParseAnalytics.trackAppOpened(getIntent());
@@ -274,18 +278,10 @@ public class MainActivity extends FragmentActivity implements
 
 	/** Swaps fragments in the main content view */
 	private void selectItem(int position) {
-		if (session.getPage() == position) {
-			drawerLayout.closeDrawers();
-			return;
-		}
-
 		// Save the state of the current fragment
 		session.setPage(position);
 		FragmentManager fm = getSupportFragmentManager();
 		final Fragment currentPage = fm.findFragmentById(R.id.content_frame);
-		// fm.putFragment(savedFragmentInstance, "saved_fragment",
-		// fm.findFragmentById(R.id.content_frame));
-		// System.out.println(fm.getFragments());
 
 		Fragment nextPage = null;
 		Bundle args = new Bundle();
@@ -294,39 +290,24 @@ public class MainActivity extends FragmentActivity implements
 		DrawerLabel clickedLabel = DrawerLabel.values()[position];
 		switch (clickedLabel) {
 		case MEETINGS:
-			if ((frag_meetings = (MeetingsFragment) fm
-					.findFragmentByTag(Keys.Meeting.LIST)) == null)
-				frag_meetings = new MeetingsFragment();
-			nextPage = frag_meetings;
-			tag = Keys.Meeting.LIST;
+			nextPage = new MeetingsFragment();
+			frag_meetings = (MeetingsFragment) nextPage;
 			break;
 		case NOTES:
-			if ((frag_notes = (NotesFragment) fm
-					.findFragmentByTag(Keys.Note.LIST)) == null)
-				frag_notes = new NotesFragment();
-			nextPage = frag_notes;
-			tag = Keys.Note.LIST;
+			nextPage = new NotesFragment();
+			frag_notes = (NotesFragment) nextPage;
 			break;
 		case TASKS:
-			if ((frag_tasks = (TasksFragment) fm
-					.findFragmentByTag(Keys.Task.LIST)) == null)
-				frag_tasks = new TasksFragment();
-			nextPage = frag_tasks;
-			tag = Keys.Task.LIST;
+			nextPage = new TasksFragment();
+			frag_tasks = new TasksFragment();
 			break;
 		case PROFILE:
-			if ((frag_profile = (ProfileFragment) fm
-					.findFragmentByTag("profile")) == null)
-				frag_profile = new ProfileFragment();
-			nextPage = frag_profile;
-			tag = "profile";
+			nextPage = new ProfileFragment();
+			frag_profile = (ProfileFragment) nextPage;
 			break;
 		case GROUPS:
-			if ((frag_groups = (GroupsFragment) fm
-					.findFragmentByTag(Keys.Group.LIST)) == null)
-				frag_groups = new GroupsFragment();
-			nextPage = frag_groups;
-			tag = Keys.Group.LIST;
+			nextPage = new GroupsFragment();
+			frag_groups = (GroupsFragment) nextPage;
 			break;
 		case PROJECTS:
 			nextPage = new DummyFragment();
@@ -337,20 +318,12 @@ public class MainActivity extends FragmentActivity implements
 			// fragment = new DummyFragment();
 			// args.putString("Content", "TODO: Groups Page");
 			// fragment.setArguments(args);
-			if ((frag_contacts = (UserListFragment) fm
-					.findFragmentByTag("contacts")) == null)
-				frag_contacts = new UserListFragment();
-			nextPage = frag_contacts;
-			tag = "contacts";
+			nextPage = new UserListFragment();
 			break;
 		case SETTINGS:
+			nextPage = SearchableUserFragment.getInstance();
 			// args.putString("Content", "TODO: Settings Page");
 			// fragment.setArguments(args);
-			if ((frag_settings = (SearchableUserFragment) fm
-					.findFragmentByTag("settings")) == null)
-				frag_settings = SearchableUserFragment.getInstance();
-			nextPage = frag_settings;
-			tag = "settings";
 			break;
 		case ABOUT:
 			nextPage = new DummyFragment();
@@ -371,14 +344,13 @@ public class MainActivity extends FragmentActivity implements
 			// if (currentPage != null)
 			// ft.hide(currentPage);
 
-//			if (fm.findFragmentByTag(tag) == null) {
-//				ft.add(R.id.content_frame, nextPage, tag).commit();
-//			} else {
-				// ft.show(fm.findFragmentByTag(tag));
-				// Insert the fragment by replacing any existing fragment
-				fm.beginTransaction()
-						.replace(R.id.content_frame, nextPage, tag).commit();
-//			}
+			// if (fm.findFragmentByTag(tag) == null) {
+			// ft.add(R.id.content_frame, nextPage, tag).commit();
+			// } else {
+			// ft.show(fm.findFragmentByTag(tag));
+			// Insert the fragment by replacing any existing fragment
+			ft.replace(R.id.content_frame, nextPage).commit();
+			// }
 
 			// Highlight the selected item, update the title, and close the
 			// drawer
@@ -426,7 +398,7 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
+		getMenuInflater().inflate(R.menu.menu_main, menu);
 		return true;
 	}
 
@@ -503,18 +475,7 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-	}
-
-	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-		super.onRestoreInstanceState(savedInstanceState);
-		if (savedInstanceState != null) {
-			Fragment saved = getSupportFragmentManager().getFragment(
-					savedInstanceState, "fragment");
-			if (saved != null) {
-			
-			}
-		}
+		outState.putBoolean(KEY_SQL_CACHE, isDataCached);
 	}
 
 	private class LeftDrawerClickListener implements

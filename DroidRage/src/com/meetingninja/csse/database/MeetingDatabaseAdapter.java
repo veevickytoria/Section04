@@ -143,11 +143,6 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 	}
 
 	public static Meeting parseMeeting(JsonNode node, String meetingID) {
-		try {
-			logPrint(node.toString());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		Meeting m = new Meeting();
 		if (meetingID != null) {
 			m.setID(meetingID);

@@ -39,10 +39,10 @@ public class UsersCompletionView extends TokenCompleteTextView {
 		Log.d(TAG, "Get View for " + className);
 
 		SerializableUser su = null;
-		if (object instanceof User)
-			su = ((User) object).toSimpleUser();
-		else
+		if (object instanceof SerializableUser)
 			su = (SerializableUser) object;
+		else
+			su = new SerializableUser((User) object);
 
 		LayoutInflater inflater = (LayoutInflater) getContext()
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -59,7 +59,7 @@ public class UsersCompletionView extends TokenCompleteTextView {
 	protected Object defaultObject(String completionText) {
 		// Stupid simple example of guessing if we have an email or not
 		int index = completionText.indexOf('@');
-		SerializableUser u = new SerializableUser();
+		User u = new User();
 		if (index == -1) {
 			u.setDisplayName(completionText);
 			u.setEmail(completionText.replace(" ", "") + "@meetingninja.com");
@@ -80,7 +80,7 @@ public class UsersCompletionView extends TokenCompleteTextView {
 			Log.d(TAG, "Converting a " + className);
 
 			// Log.d("get", ((SerializableUser) s).getDisplayName());
-			objs.add(s);
+			objs.add((SerializableUser) s);
 		}
 
 		return objs;
@@ -94,13 +94,12 @@ public class UsersCompletionView extends TokenCompleteTextView {
 			String className = obj.getClass().getSimpleName();
 			Log.d(TAG, "Serializing a " + className);
 
-			if (obj instanceof User) {
-				SerializableUser su = ((User) obj).toSimpleUser();
-				// Log.d("build", su.getDisplayName());
-				s.add(su);
-			} else {
-				s.add((SerializableUser) obj);
-			}
+			SerializableUser su = null;
+			if (obj instanceof SerializableUser)
+				su = (SerializableUser) obj;
+			else
+				su = new SerializableUser((User) obj);
+			s.add(su);
 		}
 		return s;
 	}

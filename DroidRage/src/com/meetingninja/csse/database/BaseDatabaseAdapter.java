@@ -115,10 +115,10 @@ public abstract class BaseDatabaseAdapter {
 	}
 	
 	protected static void addToRequestQueue(Request<?> req) {
-		ApplicationController.getInstance().addToRequestQueue(req);
+		ApplicationController.getInstance().addToRequestQueue(req, "JSON");
 	}
 
-	protected static void logPrint(String payload) throws IOException {
+	protected static void logPrint(String payload) {
 		Log.i("JSON", payload);
 	}
 

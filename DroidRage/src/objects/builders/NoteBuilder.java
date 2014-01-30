@@ -5,7 +5,7 @@ import objects.Note;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
 @JsonPOJOBuilder
-public class NoteBuilder extends AbstractBuilder<Note> {
+public class NoteBuilder implements IBuilder<Note> {
 	public String noteID;
 	public String createdBy;
 	public String title;

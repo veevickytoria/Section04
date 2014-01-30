@@ -15,6 +15,10 @@
  ******************************************************************************/
 package com.meetingninja.csse.notes;
 
+import org.joda.time.DateTime;
+
+import objects.Note;
+import objects.builders.NoteBuilder;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,17 +28,15 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.meetingninja.csse.R;
+import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.local.SQLiteNoteAdapter;
 
 public class CreateNoteActivity extends Activity {
 
 	private static final String TAG = CreateNoteActivity.class.getSimpleName();
 
-	private Bundle extras;
-	private String noteContent;
-	private String noteName;
 	private String noteCreator;
-	private EditText textEditor, creatorText;
+	private EditText titleView, creatorView;
 	private SQLiteNoteAdapter sqliteAdapter;
 
 	@Override
@@ -44,23 +46,26 @@ public class CreateNoteActivity extends Activity {
 		// Show the Up button in the action bar.
 		setupActionBar();
 
-		extras = getIntent().getExtras();
 		sqliteAdapter = new SQLiteNoteAdapter(this);
 
-		textEditor = (EditText) findViewById(R.id.nameText);
-		creatorText = (EditText) findViewById(R.id.CreatorTest);
-
-		textEditor.setText(noteContent);
+		titleView = (EditText) findViewById(R.id.nameText);
+		creatorView = (EditText) findViewById(R.id.CreatorTest);
 
 		setTitle("New Note");
 	}
 
 	public void createNewNote(View view) {
 		Intent msgIntent = new Intent();
-		String s = textEditor.getText().toString();
-		noteCreator = creatorText.getText().toString();
+		String s = titleView.getText().toString();
+		noteCreator = creatorView.getText().toString();
 
-		sqliteAdapter.insertNote(s, "", noteCreator);
+		Note newNote = new NoteBuilder().withTitle(s)
+				.withCreatedBy(SessionManager.getInstance().getUserID())
+				.withDateModified("" + DateTime.now().getMillis())
+				.withDescription("").withContent("").build();
+		// TODO Actually create notes
+		newNote.setID("" + 404);
+		sqliteAdapter.insertNote(newNote);
 
 		msgIntent.putExtra("TypeL", "Create");
 		msgIntent.putExtra("Update", true);
@@ -76,22 +81,13 @@ public class CreateNoteActivity extends Activity {
 	 * Set up the {@link android.app.ActionBar}.
 	 */
 	private void setupActionBar() {
-
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			// This ID represents the Home or Up button. In the case of this
-			// activity, the Up button is shown. Use NavUtils to allow users
-			// to navigate up one level in the application structure. For
-			// more details, see the Navigation pattern on Android Design:
-			//
-			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
-			//
 			NavUtils.navigateUpFromSameTask(this);
 			return true;
 		}

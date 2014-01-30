@@ -20,9 +20,14 @@ import java.util.Map;
 
 import objects.Comment;
 import objects.Note;
+import objects.builders.NoteBuilder;
 import android.net.Uri;
 
+import com.android.volley.VolleyError;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.meetingninja.csse.database.volley.JsonNodeRequest;
+import com.meetingninja.csse.database.volley.JsonRequestListener;
+import com.meetingninja.csse.extras.JsonUtils;
 
 public class NotesDatabaseAdapter extends BaseDatabaseAdapter {
 
@@ -34,9 +39,22 @@ public class NotesDatabaseAdapter extends BaseDatabaseAdapter {
 		return Uri.parse(getBaseUrl()).buildUpon();
 	}
 
-	public static void getNote(String noteID) throws Exception {
-		// TODO Implement this method
-		throw new Exception("getNote: Unimplemented");
+	public static void getNote(final String noteID, final AsyncResponse<Note> delegate)
+			throws Exception {
+		String _url = getBaseUri().appendPath(noteID).build().toString();
+
+		JsonNodeRequest req = new JsonNodeRequest(_url, null,
+				new JsonRequestListener() {
+					@Override
+					public void onResponse(JsonNode response, int statusCode,
+							VolleyError error) {
+						if (response != null) {
+							delegate.processFinish(parseNote(response, noteID));
+						} else {
+							error.printStackTrace();
+						}
+					}
+				});
 	}
 
 	public static void createNote(String user, Note n) throws Exception {
@@ -55,8 +73,14 @@ public class NotesDatabaseAdapter extends BaseDatabaseAdapter {
 		throw new Exception("getComments: Unimplemented");
 	}
 
-	public static Note parseNote(JsonNode noteNode) {
-		// TODO Auto-generated method stub
-		return null;
+	public static Note parseNote(JsonNode node, String noteID) {
+		Note n = new Note();
+		n.setID(JsonUtils.getJSONValue(node, Keys.Note.ID));
+		n.setTitle(JsonUtils.getJSONValue(node, Keys.Note.TITLE));
+		n.setContent(JsonUtils.getJSONValue(node, Keys.Note.CONTENT));
+		n.setDescription(JsonUtils.getJSONValue(node, Keys.Note.DESC));
+		n.setCreatedBy(JsonUtils.getJSONValue(node, Keys.Note.CREATED_BY));
+		n.setDateCreated(JsonUtils.getJSONValue(node, Keys.Note.UPDATED));
+		return n;
 	}
 }

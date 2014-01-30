@@ -25,7 +25,7 @@ public class Task extends Event implements Parcelable {
 	private String createdBy;
 	private String type; // title, description, isCompleted, deadline,
 							// compeltion criteria, assigned to
-	private List<User> members = new ArrayList<User>();
+	private ArrayList<User> members = new ArrayList<User>();
 
 	public Task() {
 		// Required empty constructor
@@ -71,11 +71,11 @@ public class Task extends Event implements Parcelable {
 		this.dateAssigned = dateAssigned;
 	}
 
-	public List<User> getMembers() {
+	public ArrayList<User>getMembers () {
 		return members;
 	}
 
-	public void setMembers(List<User> members) {
+	public void setMembers(ArrayList<User> members) {
 		this.members = members;
 	}
 

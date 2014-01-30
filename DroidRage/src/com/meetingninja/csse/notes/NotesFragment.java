@@ -45,6 +45,7 @@ import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.local.SQLiteNoteAdapter;
+import com.meetingninja.csse.meetings.MeetingsFragment;
 
 public class NotesFragment extends Fragment implements
 		AsyncResponse<List<Note>> {
@@ -57,6 +58,19 @@ public class NotesFragment extends Fragment implements
 	private SQLiteNoteAdapter mySQLiteAdapter;
 
 	private static List<Note> notes = new ArrayList<Note>();
+	
+	public NotesFragment() {
+		// Empty
+	}
+	
+	private static NotesFragment sInstance;
+
+	public static NotesFragment getInstance() {
+		if (sInstance == null) {
+			sInstance = new NotesFragment();
+		}
+		return sInstance;
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -138,7 +152,7 @@ public class NotesFragment extends Fragment implements
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.notes_fragment, menu);
+		inflater.inflate(R.menu.menu_notes_fragment, menu);
 	}
 
 	@Override

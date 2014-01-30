@@ -3,6 +3,7 @@ package com.meetingninja.csse;
 import java.util.ArrayList;
 import java.util.List;
 
+import objects.SerializableUser;
 import objects.User;
 import android.app.Activity;
 import android.content.Context;
@@ -26,8 +27,12 @@ import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
 import com.meetingninja.csse.database.volley.UserVolleyAdapter;
-import com.meetingninja.csse.user.FilteredUserArrayAdapter;
+import com.meetingninja.csse.extras.BaseFragment;
+import com.meetingninja.csse.extras.UsersCompletionView;
+import com.meetingninja.csse.user.AutoCompleteAdapter;
+import com.meetingninja.csse.user.AutoCompleteAdapter;
 import com.meetingninja.csse.user.UserArrayAdapter;
+import com.tokenautocomplete.TokenCompleteTextView.TokenListener;
 
 /**
  * A fragment representing a list of Items.
@@ -38,40 +43,33 @@ import com.meetingninja.csse.user.UserArrayAdapter;
  * Activities containing this fragment MUST implement the {@link Callbacks}
  * interface.
  */
-public class SearchableUserFragment extends Fragment implements
-		AbsListView.OnItemClickListener, AsyncResponse<List<User>> {
+public class SearchableUserFragment extends BaseFragment implements
+		AbsListView.OnItemClickListener, AsyncResponse<List<User>>,
+		TokenListener {
 
-	private static SearchableUserFragment sInstance;
 	// private OnFragmentInteractionListener mListener;
-	private ContactsCompletionView complete;
-	private RecipientEditTextView ex_complete;
-
 	/**
 	 * The fragment's ListView/GridView.
 	 */
 	private AbsListView mListView;
 
-	/**
-	 * The Adapter which will be used to populate the ListView/GridView with
-	 * Views.
-	 */
-	private FilteredUserArrayAdapter autoAdapter;
+	private Context mContext;
+
+	private UsersCompletionView complete;
+	private AutoCompleteAdapter autoAdapter;
+	private TextView addedIDsView;
 	private UserArrayAdapter addedAdapter;
-	private ArrayList<User> allUsers = new ArrayList<User>();
+
+	private List<SerializableUser> allUsers = new ArrayList<SerializableUser>();
 	private ArrayList<User> addedUsers = new ArrayList<User>();
 	private ArrayList<String> addedIds = new ArrayList<String>();
-//	private TextView addedIDsView;
+
 	private Bundle savedState = null;
 	private static final String SAVED_BUNDLE_TAG = "saved_bundle";
-	private Context mContext;
 
 	private final String TAG = SearchableUserFragment.class.getSimpleName();
 
 	// private SQLiteUserAdapter mySQLiteAdapter;
-
-	SimpleUser[] people;
-	ArrayAdapter<SimpleUser> adapter;
-	ContactsCompletionView completionView;
 
 	private boolean createdStateInDestroyView;
 
@@ -82,7 +80,9 @@ public class SearchableUserFragment extends Fragment implements
 	public SearchableUserFragment() {
 		// empty
 	}
-	
+
+	private static SearchableUserFragment sInstance;
+
 	public static SearchableUserFragment getInstance() {
 		if (sInstance == null) {
 			sInstance = new SearchableUserFragment();
@@ -91,18 +91,12 @@ public class SearchableUserFragment extends Fragment implements
 	}
 
 	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		if (savedInstanceState != null)
 			for (String s : savedInstanceState.keySet()) {
 				System.out.println(s + ": " + savedInstanceState.get(s));
 			}
-	}
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		this.setRetainInstance(true);
 
 	}
 
@@ -113,16 +107,17 @@ public class SearchableUserFragment extends Fragment implements
 		View view = inflater.inflate(R.layout.fragment_autocomplete, container,
 				false);
 		setupViews(view);
-		if (savedInstanceState == null) {
-			UserVolleyAdapter.fetchAllUsers(this); // processFinish()
-		}
 
-		if (savedInstanceState != null && savedState == null)
-			savedState = savedInstanceState.getBundle(SAVED_BUNDLE_TAG);
-		if (savedState != null)
-			allUsers = savedState
-					.getParcelableArrayList(Keys.User.LIST + "ALL");
-		savedState = null;
+		// if (savedInstanceState != null && savedState == null) {
+		// savedState = savedInstanceState.getBundle(SAVED_BUNDLE_TAG);
+		// for (String s : savedInstanceState.keySet()) {
+		// System.out.println(s + ": " + savedInstanceState.get(s));
+		// }
+		// }
+		// if (savedState != null)
+		// allUsers = savedState
+		// .getParcelableArrayList(Keys.User.LIST + "ALL");
+		// savedState = null;
 
 		// if (savedInstanceState == null
 		// || !savedInstanceState.containsKey(Keys.User.LIST + "ALL")) {
@@ -138,33 +133,17 @@ public class SearchableUserFragment extends Fragment implements
 		// + Keys.User.ID);
 		// }
 
-		people = new SimpleUser[] {
-				new SimpleUser("Marshall Weir", "marshall@example.com"),
-				new SimpleUser("Margaret Smith", "margaret@example.com"),
-				new SimpleUser("Max Jordan", "max@example.com"),
-				new SimpleUser("Meg Peterson", "meg@example.com"),
-				new SimpleUser("Amanda Johnson", "amanda@example.com"),
-				new SimpleUser("Terry Anderson", "terry@example.com") };
-
 		// TODO: store the users in the sqlite database
 		// mySQLiteAdapter = new SQLiteUserAdapter(getActivity());
 		// mySQLiteAdapter.loadUsers();
 		// allUsers = mySQLiteAdapter.getAllUsers();
 		// mySQLiteAdapter.close();
 
-		adapter = new ArrayAdapter<SimpleUser>(getActivity(),
-				android.R.layout.simple_list_item_1, people);
+		UserVolleyAdapter.fetchAllUsers(this);
 
-		complete.setAdapter(adapter);
-		
-		 final RecipientEditTextView emailRetv =
-	                (RecipientEditTextView) view.findViewById(R.id.ex_autocomplete);
-	        emailRetv.setTokenizer(new Rfc822Tokenizer());
-	        emailRetv.setAdapter(new BaseRecipientAdapter(getActivity()) { });
-
-		autoAdapter = new FilteredUserArrayAdapter(getActivity(),
+		autoAdapter = new AutoCompleteAdapter(getActivity(),
 				R.layout.chips_recipient_dropdown_item, allUsers);
-		// complete.setAdapter(autoAdapter);
+		complete.setAdapter(autoAdapter);
 
 		addedAdapter = new UserArrayAdapter(getActivity(),
 				R.layout.list_item_user, addedUsers);
@@ -177,11 +156,11 @@ public class SearchableUserFragment extends Fragment implements
 	}
 
 	private void setupViews(View view) {
-		complete = (ContactsCompletionView) view
+		complete = (UsersCompletionView) view
 				.findViewById(R.id.my_autocomplete);
 		// token listener when autocompleted
-		// complete.setTokenListener(this);
-//		addedIDsView = (TextView) view.findViewById(R.id.completed_ids);
+		complete.setTokenListener(this);
+		addedIDsView = (TextView) view.findViewById(R.id.completed_ids);
 		mListView = (AbsListView) view.findViewById(android.R.id.list);
 
 	}
@@ -197,7 +176,7 @@ public class SearchableUserFragment extends Fragment implements
 	private Bundle saveState() {
 		Log.d(TAG, "Save " + allUsers.size() + " users");
 		Bundle state = new Bundle();
-		state.putParcelableArrayList(Keys.User.LIST + "ALL", allUsers);
+		// state.putParcelableArrayList(Keys.User.LIST + "ALL", allUsers);
 		state.putParcelableArrayList(Keys.User.LIST + "ADDED", addedUsers);
 		state.putStringArrayList(Keys.User.LIST + Keys.User.ID, addedIds);
 		return state;
@@ -252,55 +231,57 @@ public class SearchableUserFragment extends Fragment implements
 		}
 	}
 
-	// @Override
-	// public void onTokenAdded(Object arg0) {
-	// String className = arg0.getClass().getSimpleName();
-	// System.out.println("Adding a " + className);
-	//
-	// User added = (User) arg0;
-	// SerializableUser serialized = null;
-	// if (arg0 instanceof User)
-	// serialized = added.toSimpleUser();
-	// else if (arg0 instanceof SerializableUser)
-	// serialized = (SerializableUser) arg0;
-	//
-	// if (serialized != null) {
-	// addedUsers.add(serialized);
-	// if (serialized.getID() != null) {
-	// addedIds.add(serialized.getID());
-	// } else {
-	// addedIds.add(serialized.getEmail());
-	// }
-	// }
-	// addedAdapter.notifyDataSetChanged();
-	//
-	// mTxtID.setText(addedIds.toString());
-	//
-	// }
-	//
-	// @Override
-	// public void onTokenRemoved(Object arg0) {
-	// User removed;
-	// if (arg0 instanceof User) {
-	// removed = (User) arg0;
-	// if (removed.getID() != null) {
-	// addedIds.remove(removed.getID());
-	// } else {
-	// addedIds.remove(removed.getEmail());
-	// }
-	// addedUsers.remove(removed);
-	// mTxtID.setText(addedIds.toString());
-	// addedAdapter.notifyDataSetChanged();
-	// } else {
-	// System.out.println("Not removed");
-	// }
-	//
-	// }
+	@Override
+	public void onTokenAdded(Object arg0) {
+		String className = arg0.getClass().getSimpleName();
+		System.out.println("Adding a " + className);
+
+		SerializableUser serialized = null;
+		if (arg0 instanceof SerializableUser)
+			serialized = (SerializableUser) arg0;
+		else if (arg0 instanceof User)
+			serialized = new SerializableUser((User) arg0);
+
+		if (serialized != null) {
+			addedUsers.add(serialized);
+			if (serialized.getID() != null) {
+				addedIds.add(serialized.getID());
+			} else {
+				addedIds.add(serialized.getEmail());
+			}
+		}
+		addedAdapter.notifyDataSetChanged();
+
+		addedIDsView.setText(addedIds.toString());
+
+	}
+
+	@Override
+	public void onTokenRemoved(Object arg0) {
+		User removed;
+		if (arg0 instanceof User) {
+			removed = (User) arg0;
+			if (removed.getID() != null) {
+				addedIds.remove(removed.getID());
+			} else {
+				addedIds.remove(removed.getEmail());
+			}
+			addedUsers.remove(removed);
+			addedIDsView.setText(addedIds.toString());
+			addedAdapter.notifyDataSetChanged();
+		} else {
+			System.out.println("Not removed");
+		}
+
+	}
 
 	@Override
 	public void processFinish(List<User> result) {
 		allUsers.clear();
 		autoAdapter.clear();
+		for (User user : result) {
+			allUsers.add(new SerializableUser(user));
+		}
 		autoAdapter.notifyDataSetChanged();
 	}
 

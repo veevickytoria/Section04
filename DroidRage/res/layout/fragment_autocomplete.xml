@@ -5,16 +5,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <com.meetingninja.csse.ContactsCompletionView
+    <com.meetingninja.csse.extras.UsersCompletionView
         android:id="@+id/my_autocomplete"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10" />
 
-    <com.android.ex.chips.RecipientEditTextView
-        android:id="@+id/ex_autocomplete"
+    <TextView android:id="@+id/completed_ids"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"/>
 
     <ListView
         android:id="@android:id/list"

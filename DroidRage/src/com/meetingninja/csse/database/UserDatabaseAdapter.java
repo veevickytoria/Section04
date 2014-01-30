@@ -32,6 +32,7 @@ import objects.MockObjectFactory;
 import objects.Note;
 import objects.Project;
 import objects.Schedule;
+import objects.SerializableUser;
 import objects.Task;
 import objects.User;
 import android.net.Uri;
@@ -230,16 +231,18 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		// Initialize ObjectMapper
 		List<Meeting> meetingsList = new ArrayList<Meeting>();
 		List<String> meetingIDList = new ArrayList<String>();
-		final JsonNode meetingsArray = MAPPER.readTree(response).get(
-				Keys.Meeting.LIST);
+		JsonNode responseNode = MAPPER.readTree(response);
+		final JsonNode meetingsArray = responseNode.get(Keys.Meeting.LIST);
 
-		if (meetingsArray.isArray()) {
+		if (meetingsArray != null && meetingsArray.isArray()) {
 			for (final JsonNode meetingNode : meetingsArray) {
 				String _id = meetingNode.get(Keys._ID).asText();
 				if (!meetingNode.get("type").asText().equals("MADE_MEETING")) {
 					meetingIDList.add(_id);
 				}
 			}
+		} else {
+			logError(TAG, responseNode);
 		}
 
 		conn.disconnect();
@@ -368,18 +371,20 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 
 		// Initialize ObjectMapper
 		List<Note> noteList = new ArrayList<Note>();
+		List<String> noteIds = new ArrayList<String>();
 		final JsonNode noteArray = MAPPER.readTree(response)
 				.get(Keys.Note.LIST);
 
 		if (noteArray.isArray()) {
 			for (final JsonNode noteNode : noteArray) {
-				Note n = NotesDatabaseAdapter.parseNote(noteNode);
-				if (n != null) {
-					noteList.add(n);
-				}
+				// Note n = NotesDatabaseAdapter.parseNote(noteNode);
+				// if (n != null) {
+				// noteList.add(n);
+				// }
+				noteIds.add(noteNode.get(Keys.Note.ID).asText());
 			}
 		} else {
-			Log.e(TAG, "Error parsing user's project list");
+			Log.e(TAG, "Error parsing user's notes list");
 		}
 
 		conn.disconnect();
@@ -546,8 +551,8 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		return parseUser(MAPPER.readTree(response));
 	}
 
-	public static User parseUser(JsonNode node) {
-		User u = new User(); // start parsing a user
+	public static SerializableUser parseUser(JsonNode node) {
+		SerializableUser u = new SerializableUser(); // start parsing a user
 		// if they at least have an id, email, and name
 		if (node.hasNonNull(Keys.User.EMAIL) && node.hasNonNull(Keys.User.NAME)
 		// && node.hasNonNull(KEY_ID)
@@ -582,7 +587,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		List<User> userList = new ArrayList<User>();
 		final JsonNode userArray = node.get(Keys.User.LIST);
 
-		if (userArray.isArray()) {
+		if (userArray != null && userArray.isArray()) {
 			for (final JsonNode userNode : userArray) {
 				User u = parseUser(userNode);
 				// assign and check null and do not add local user
@@ -592,6 +597,8 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 					userList.add(u);
 				}
 			}
+		} else {
+			logError("Parse Users", node);
 		}
 
 		return userList;

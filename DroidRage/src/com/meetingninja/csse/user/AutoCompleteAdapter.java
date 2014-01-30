@@ -1,7 +1,9 @@
 package com.meetingninja.csse.user;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import objects.SerializableUser;
 import objects.User;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,17 +14,18 @@ import android.widget.TextView;
 import com.loopj.android.image.SmartImageView;
 import com.tokenautocomplete.FilteredArrayAdapter;
 
-public class FilteredUserArrayAdapter extends FilteredArrayAdapter<User> {
+public class AutoCompleteAdapter extends FilteredArrayAdapter<User> {
 
 	private int mLayoutId;
-
 	private final LayoutInflater mLayoutInflater;
+	private final List<SerializableUser> userList;
 
-	public FilteredUserArrayAdapter(Context context, int resourceId,
-			ArrayList<User> allUsers) {
-		super(context, resourceId, new ArrayList<User>(allUsers));
+	public AutoCompleteAdapter(Context context, int resourceId,
+			List<SerializableUser> users) {
+		super(context, resourceId, new ArrayList<User>(users));
 		mLayoutInflater = LayoutInflater.from(context);
 		mLayoutId = resourceId;
+		userList = users;
 	}
 
 	@Override

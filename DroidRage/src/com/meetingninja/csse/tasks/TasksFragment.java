@@ -48,7 +48,9 @@ import android.widget.TextView;
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.AsyncResponse;
+import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.extras.MyDateUtils;
+import com.meetingninja.csse.meetings.MeetingsFragment;
 
 public class TasksFragment extends Fragment implements
 		AsyncResponse<List<Task>> {
@@ -67,7 +69,18 @@ public class TasksFragment extends Fragment implements
 
 	private int numLoading = 0;
 
-	// make tasks adapter
+	public TasksFragment() {
+		// Empty
+	}
+
+	private static TasksFragment sInstance;
+
+	public static TasksFragment getInstance() {
+		if (sInstance == null) {
+			sInstance = new TasksFragment();
+		}
+		return sInstance;
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -134,7 +147,7 @@ public class TasksFragment extends Fragment implements
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.new_and_refresh_menu, menu);
+		inflater.inflate(R.menu.menu_new_and_refresh, menu);
 	}
 
 	@Override
@@ -178,7 +191,7 @@ public class TasksFragment extends Fragment implements
 		while (task.getEndTimeInMillis() == 0L)
 			;
 		Intent viewTask = new Intent(getActivity(), ViewTaskActivity.class);
-		viewTask.putExtra("task", task);
+		viewTask.putExtra(Keys.Task.PARCEL, task);
 		startActivityForResult(viewTask, 6);
 	}
 

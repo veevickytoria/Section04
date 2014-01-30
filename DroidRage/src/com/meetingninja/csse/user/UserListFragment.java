@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import objects.SerializableUser;
 import objects.User;
 import android.content.Intent;
 import android.os.Bundle;
@@ -36,7 +37,24 @@ import com.meetingninja.csse.database.UserDatabaseAdapter;
 import com.meetingninja.csse.database.local.SQLiteUserAdapter;
 import com.meetingninja.csse.database.volley.UserVolleyAdapter;
 
-public class UserListFragment extends ListFragment {
+import objects.User;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.ListFragment;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
+
+import com.meetingninja.csse.R;
+import com.meetingninja.csse.database.AsyncResponse;
+import com.meetingninja.csse.database.Keys;
+import com.meetingninja.csse.database.UserDatabaseAdapter;
+import com.meetingninja.csse.database.local.SQLiteUserAdapter;
+
+public class UserListFragment extends ListFragment implements
+		AsyncResponse<List<User>> {
 
 	private SQLiteUserAdapter dbHelper;
 	private UserArrayAdapter mUserAdapter;
@@ -65,6 +83,7 @@ public class UserListFragment extends ListFragment {
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
+		Log.d(getTag(), "Clicked");
 		User clicked = mUserAdapter.getItem(position);
 		Intent profileIntent = new Intent(getActivity(), ProfileActivity.class);
 		profileIntent.putExtra(Keys.User.PARCEL, clicked);
@@ -78,25 +97,26 @@ public class UserListFragment extends ListFragment {
 	}
 
 	private void populateList() {
-		// Async-Task
-		UserVolleyAdapter.fetchAllUsers(new AsyncResponse<List<User>>() {
+		// Async-Task -> processFinish()
+		UserVolleyAdapter.fetchAllUsers(this);
+	}
+
+	@Override
+	public void processFinish(List<User> result) {
+		users.clear();
+		mUserAdapter.clear();
+
+		Collections.sort(result, new Comparator<User>() {
 			@Override
-			public void processFinish(List<User> result) {
-				users.clear();
-				mUserAdapter.clear();
-
-				Collections.sort(result, new Comparator<User>() {
-					@Override
-					public int compare(User lhs, User rhs) {
-						return lhs.getDisplayName().toLowerCase()
-								.compareTo(rhs.getDisplayName().toLowerCase());
-					}
-				});
-				users.addAll(result);
-
-				mUserAdapter.notifyDataSetChanged();
-
+			public int compare(User lhs, User rhs) {
+				return lhs.getDisplayName().toLowerCase()
+						.compareTo(rhs.getDisplayName().toLowerCase());
 			}
 		});
+		users.addAll(result);
+
+		mUserAdapter.notifyDataSetChanged();
+
 	}
+
 }

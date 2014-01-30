@@ -55,6 +55,7 @@ import com.meetingninja.csse.database.volley.UserVolleyAdapter;
 import com.meetingninja.csse.extras.AlertDialogUtil;
 import com.meetingninja.csse.extras.MyDateUtils;
 import com.meetingninja.csse.user.ProfileActivity;
+import com.meetingninja.csse.user.AutoCompleteAdapter;
 import com.meetingninja.csse.user.UserArrayAdapter;
 
 import de.timroes.android.listview.EnhancedListView;
@@ -367,6 +368,8 @@ public class EditTaskActivity extends FragmentActivity implements
 		@Override
 		public void onDateSet(CalendarDatePickerDialog dialog, int year,
 				int monthOfYear, int dayOfMonth) {
+			
+			System.out.println(monthOfYear + " " + dayOfMonth);
 			DateTime now = DateTime.now();
 			DateTime today = now.withTime(0, 0, 0, 0);
 

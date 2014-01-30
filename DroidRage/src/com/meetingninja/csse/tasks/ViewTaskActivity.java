@@ -31,6 +31,7 @@ import android.widget.TextView;
 
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.AsyncResponse;
+import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.extras.MyDateUtils;
 import com.meetingninja.csse.user.UserInfoFetcher;
 
@@ -39,8 +40,8 @@ public class ViewTaskActivity extends Activity {
 			description, completionCriteria, isCompleted, assignedLabel,
 			assignedText;
 	private Button taskCompleteButton;
-	RetUserObj fetcher = null;
-	private Task task = null;
+	RetUserObj fetcher;
+	private Task displayedTask;
 	private DateTimeFormatter dateFormat = MyDateUtils.JODA_APP_DATE_FORMAT;
 
 	@Override
@@ -48,8 +49,9 @@ public class ViewTaskActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_view_task);
 		// setupActionBar();
-		Intent i = getIntent();
-		task = i.getParcelableExtra("task");
+		Bundle extras = getIntent().getExtras();
+		if (extras != null)
+			displayedTask = extras.getParcelable(Keys.Task.PARCEL);
 		setupViews();
 		setTask();
 	}
@@ -57,7 +59,7 @@ public class ViewTaskActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.edit_item_menu, menu);
+		getMenuInflater().inflate(R.menu.menu_edit_item, menu);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		return true;
 	}
@@ -68,12 +70,12 @@ public class ViewTaskActivity extends Activity {
 		switch (item.getItemId()) {
 		case R.id.edit_item_task:
 			Intent editTask = new Intent(this, EditTaskActivity.class);
-			editTask.putExtra("task", task);
+			editTask.putExtra(Keys.Task.PARCEL, displayedTask);
 			this.startActivityForResult(editTask, 5);
 			return true;
 		case R.id.delete_item_task:
 			TaskDeleter deleter = new TaskDeleter();
-			deleter.deleteTask(task.getID());
+			deleter.deleteTask(displayedTask.getID());
 			setResult(RESULT_OK);
 			finish();
 		case android.R.id.home:
@@ -90,7 +92,7 @@ public class ViewTaskActivity extends Activity {
 		if (requestCode == 5) {
 			if (resultCode == RESULT_OK) {
 				if (data != null) {
-					task = data.getParcelableExtra("task");
+					displayedTask = data.getParcelableExtra(Keys.Task.PARCEL);
 					setTask();
 				}
 			} else if (resultCode == RESULT_CANCELED) {
@@ -101,8 +103,8 @@ public class ViewTaskActivity extends Activity {
 
 	public void completeTask(View v) {
 		TaskUpdater updater = new TaskUpdater();
-		task.setIsCompleted(true);
-		updater.updateTask(task);
+		displayedTask.setIsCompleted(true);
+		updater.updateTask(displayedTask);
 		setTask();
 
 	}
@@ -124,16 +126,16 @@ public class ViewTaskActivity extends Activity {
 	}
 
 	private void setTask() {
-		taskName.setText(task.getTitle());
-		String format = dateFormat.print(Long.parseLong(task.getDateCreated()));
+		taskName.setText(displayedTask.getTitle());
+		String format = dateFormat.print(Long.parseLong(displayedTask.getDateCreated()));
 		dateCreated.setText(format);
 		// TODO: change this to the real date assigned
-		dateAssigned.setText(task.getDateAssigned());
-		format = dateFormat.print(task.getEndTimeInMillis());
+		dateAssigned.setText(displayedTask.getDateAssigned());
+		format = dateFormat.print(displayedTask.getEndTimeInMillis());
 		deadline.setText(format);
-		description.setText(task.getDescription());
-		completionCriteria.setText(task.getCompletionCriteria());
-		if (task.getIsCompleted()) {
+		description.setText(displayedTask.getDescription());
+		completionCriteria.setText(displayedTask.getCompletionCriteria());
+		if (displayedTask.getIsCompleted()) {
 			isCompleted.setText("Yes"); // TODO: change this to use string xml
 			System.out.println("before");
 			;
@@ -145,14 +147,14 @@ public class ViewTaskActivity extends Activity {
 		}
 		fetcher = new RetUserObj();
 
-		if (task.getType().equals("ASSIGNED_TO")) {
+		if (displayedTask.getType().equals("ASSIGNED_TO")) {
 			assignedLabel.setText("Assigned From:");
 			// assignedText.setText(task.getAssignedFrom());
-			fetcher.execute(task.getAssignedFrom());
+			fetcher.execute(displayedTask.getAssignedFrom());
 		} else {
 			assignedLabel.setText("Assigned To:");
 			// assignedText.setText(task.getAssignedTo());
-			fetcher.execute(task.getAssignedTo());
+			fetcher.execute(displayedTask.getAssignedTo());
 		}
 	}
 

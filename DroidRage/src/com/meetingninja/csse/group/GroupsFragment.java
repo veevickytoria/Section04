@@ -19,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.meetingninja.csse.R;
+import com.meetingninja.csse.SearchableUserFragment;
 import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.Keys;
 
@@ -27,6 +28,19 @@ public class GroupsFragment extends Fragment {
 	private ListView groupsList;
 	private static List<Group> groups = new ArrayList<Group>();;
 	private GroupItemAdapter groupAdpt;
+
+	public GroupsFragment() {
+		// Empty 
+	}
+
+	private static GroupsFragment sInstance;
+
+	public static GroupsFragment getInstance() {
+		if (sInstance == null) {
+			sInstance = new GroupsFragment();
+		}
+		return sInstance;
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,7 +74,7 @@ public class GroupsFragment extends Fragment {
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.new_and_refresh_menu, menu);
+		inflater.inflate(R.menu.menu_new_and_refresh, menu);
 	}
 
 	@Override

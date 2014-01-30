@@ -25,6 +25,7 @@ import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.extras.AlertDialogUtil;
 import com.meetingninja.csse.user.ProfileActivity;
+import com.meetingninja.csse.user.AutoCompleteAdapter;
 import com.meetingninja.csse.user.UserArrayAdapter;
 import com.meetingninja.csse.user.UserInfoFetcher;
 
@@ -122,7 +123,7 @@ public class EditGroupActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.edit_group, menu);
+		getMenuInflater().inflate(R.menu.menu_edit_group, menu);
 		return true;
 	}
 

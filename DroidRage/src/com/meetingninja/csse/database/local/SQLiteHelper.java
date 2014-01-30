@@ -57,7 +57,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 	// Notes table create statement
 	private static final String CREATE_TABLE_NOTE = "CREATE TABLE "
 			+ SQLiteNoteAdapter.TABLE_NAME + "(" + KEY_ID
-			+ " INTEGER PRIMARY KEY,"
+			+ " INTEGER NOT NULL,"
 			+ SQLiteNoteAdapter.KEY_TITLE + " TEXT NOT NULL,"
 			+ SQLiteNoteAdapter.KEY_CONTENT + " TEXT NOT NULL," 
 			+ SQLiteNoteAdapter.KEY_DESC + " TEXT NOT NULL," 
@@ -97,16 +97,10 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 		// create required tables
 		db.execSQL(CREATE_TABLE_USER);
 		db.execSQL(CREATE_FTS_TABLE_USER);
-		loadUsers();
 		db.execSQL(CREATE_TABLE_NOTE);
 		db.execSQL(CREATE_FTS_TABLE_NOTE);
 		db.execSQL(CREATE_TABLE_MEETING);
 
-	}
-
-	public void loadUsers() {
-		SQLiteUserAdapter userAdpt = new SQLiteUserAdapter(mContext);
-		userAdpt.loadUsers(false);
 	}
 
 	@Override

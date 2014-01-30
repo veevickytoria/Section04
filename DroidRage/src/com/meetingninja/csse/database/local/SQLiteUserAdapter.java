@@ -18,6 +18,7 @@ package com.meetingninja.csse.database.local;
 import java.util.ArrayList;
 import java.util.List;
 
+import objects.SerializableUser;
 import objects.User;
 import android.content.ContentValues;
 import android.content.Context;
@@ -28,6 +29,7 @@ import android.database.sqlite.SQLiteStatement;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.android.volley.ParseError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -65,36 +67,6 @@ public class SQLiteUserAdapter extends SQLiteHelper {
 	@Override
 	public void close() {
 		this.mDbHelper.close();
-	}
-
-	public User insert(User u) {
-		mDb = mDbHelper.getWritableDatabase();
-
-		ContentValues values = new ContentValues();
-		String _id = u.getID();
-		values.put(KEY_ID, _id);
-		values.put(KEY_NAME, u.getDisplayName());
-		values.put(KEY_EMAIL, u.getEmail());
-		values.put(KEY_PHONE, u.getPhone());
-		values.put(KEY_COMPANY, u.getCompany());
-		values.put(KEY_TITLE, u.getTitle());
-		values.put(KEY_LOCATION, u.getLocation());
-
-		mDb.insert(TABLE_NAME, null, values);
-		Cursor c = mDb.query(TABLE_NAME, allColumns, KEY_ID + "=" + _id, null,
-				null, null, null);
-		c.moveToFirst();
-		User newUser = new User(c);
-		;
-		c.close();
-		close();
-		return newUser;
-	}
-
-	public void delete(User u) {
-		mDb = mDbHelper.getWritableDatabase();
-		mDb.delete(TABLE_NAME, KEY_ID + "=" + u.getID(), null);
-		close();
 	}
 
 	/**
@@ -137,43 +109,50 @@ public class SQLiteUserAdapter extends SQLiteHelper {
 		return users;
 	}
 
-	private void bulkInsertUsers(List<User> users, boolean isVirtual)
-			throws Exception {
+	private void bulkInsertUsers(List<User> userList) throws Exception {
+		String sql = "INSERT INTO " + TABLE_NAME
+				+ " VALUES (?, ?, ?, ?, ?, ?, ?);";
+		String fts_sql = "INSERT INTO " + FTS_TABLE_NAME
+				+ " VALUES (?, ?, ?, ?);";
+
 		mDb = mDbHelper.getWritableDatabase();
 		mDb.beginTransaction();
-		String sql = "";
-		if (!isVirtual)
-			sql = "INSERT INTO " + TABLE_NAME
-					+ " VALUES (?, ?, ?, ?, ?, ?, ?);";
-		else
-			sql = "INSERT INTO " + FTS_TABLE_NAME + " VALUES (?, ?, ?, ?);";
 		SQLiteStatement statement = mDb.compileStatement(sql);
+		SQLiteStatement fts_statement = mDb.compileStatement(fts_sql);
 		try {
-			for (User user : users) {
+			for (User user : userList) {
 				statement.clearBindings();
-				if (!(user.getID() == null || user.getID().isEmpty()))
+				fts_statement.clearBindings();
+				if (!(user.getID() == null || user.getID().isEmpty())) {
 					statement.bindLong(1, Long.parseLong(user.getID()));
+					fts_statement.bindLong(1, Long.parseLong(user.getID()));
+				}
 				statement.bindString(2, user.getDisplayName());
 				statement.bindString(3, user.getEmail());
 				statement.bindString(4, user.getPhone());
-				if (!isVirtual) {
-					statement.bindString(5, user.getCompany());
-					statement.bindString(6, user.getTitle());
-					statement.bindString(7, user.getCompany());
-				}
 
+				fts_statement.bindString(2, user.getDisplayName());
+				fts_statement.bindString(3, user.getEmail());
+				fts_statement.bindString(4, user.getPhone());
+				fts_statement.executeInsert(); // done with fts data
+
+				statement.bindString(5, user.getCompany());
+				statement.bindString(6, user.getTitle());
+				statement.bindString(7, user.getCompany());
+				statement.executeInsert(); // done with all data
 			}
 			mDb.setTransactionSuccessful();
 		} catch (Exception e) {
 			mDb.endTransaction();
 			throw e;
+		} finally {
+			mDb.endTransaction();
+			close();
 		}
-
-		mDb.endTransaction();
-		close();
 	}
 
-	protected void loadUsers(final boolean isVirtual) {
+	public void cacheUsers() {
+		Log.d(TAG, "Loading users into DB");
 		String _url = UserDatabaseAdapter.getBaseUri().appendPath("Users")
 				.build().toString();
 
@@ -187,9 +166,10 @@ public class SQLiteUserAdapter extends SQLiteHelper {
 						if (response != null) {
 							try {
 								bulkInsertUsers(UserDatabaseAdapter
-										.parseUserList(response), isVirtual);
+										.parseUserList(response));
 							} catch (Exception e) {
-								Log.e("DB Cache Users", e.getLocalizedMessage());
+								VolleyLog.e("Error:%n %s",
+										e.getLocalizedMessage());
 							}
 						} else {
 							error.printStackTrace();

@@ -53,6 +53,7 @@ import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.MeetingDatabaseAdapter;
 import com.meetingninja.csse.database.local.SQLiteMeetingAdapter;
 import com.meetingninja.csse.extras.Connectivity;
+import com.meetingninja.csse.group.GroupsFragment;
 
 import de.timroes.android.listview.EnhancedListView;
 
@@ -70,6 +71,19 @@ public class MeetingsFragment extends Fragment implements
 
 	private SessionManager session;
 	private SQLiteMeetingAdapter mySQLiteAdapter;
+
+	public MeetingsFragment() {
+		// Empty
+	}
+
+	private static MeetingsFragment sInstance;
+
+	public static MeetingsFragment getInstance() {
+		if (sInstance == null) {
+			sInstance = new MeetingsFragment();
+		}
+		return sInstance;
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -146,8 +160,7 @@ public class MeetingsFragment extends Fragment implements
 					public EnhancedListView.Undoable onDismiss(
 							EnhancedListView listView, final int position) {
 
-						final Meeting item = meetingAdpt
-								.getItem(position);
+						final Meeting item = meetingAdpt.getItem(position);
 						meetingAdpt.remove(item);
 						return new EnhancedListView.Undoable() {
 							@Override
@@ -183,7 +196,7 @@ public class MeetingsFragment extends Fragment implements
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.meetings_fragment, menu);
+		inflater.inflate(R.menu.menu_meetings_fragment, menu);
 	}
 
 	@Override
