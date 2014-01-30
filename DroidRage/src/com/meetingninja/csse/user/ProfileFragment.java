@@ -139,8 +139,7 @@ public class ProfileFragment extends Fragment {
 							VolleyError error) {
 						if (response != null) {
 							VolleyLog.v("Response:%n %s", response);
-							User retUser = UserDatabaseAdapter
-									.parseUser(response);
+							User retUser = UserDatabaseAdapter.parseUser(response);
 							retUser.setID(userID);
 							ProfileFragment.this.setUser(retUser);
 						} else {
@@ -160,21 +159,23 @@ public class ProfileFragment extends Fragment {
 		public void onClick(View v) {
 			switch (v.getId()) {
 			case R.id.profile_email:
-				Intent emailIntent = new Intent(Intent.ACTION_SENDTO,
-						Uri.fromParts("mailto", mEmail.getText().toString(),
-								null));
-				startActivity(Intent
-						.createChooser(emailIntent, "Send email..."));
+				Intent emailIntent = new Intent(Intent.ACTION_SENDTO,Uri.fromParts("mailto", mEmail.getText().toString(),null));
+				startActivity(Intent.createChooser(emailIntent, "Send email..."));
 				break;
 			case R.id.profile_phone:
+
 				Intent dialerIntent = new Intent(Intent.ACTION_DIAL);
-				dialerIntent.setData(Uri.parse("tel:"
-						+ mPhone.getText().toString()));
-				startActivity(dialerIntent);
+				dialerIntent.setData(Uri.parse("tel:"+ mPhone.getText().toString()));
+				try{
+					startActivity(dialerIntent);
+				}
+				catch(Exception e){
+						System.out.println("it didn't work!");
+				}
+				
 			default:
 				break;
 			}
-
 		}
 
 	}
