@@ -135,7 +135,7 @@ else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0){
         for($pos = 0; $pos < count($response); $pos++){
             //user exists in response, so update it
             if($response[$pos]['userID'] == $user->getId()){
-                array_push($response[$pos]['notes'], array("noteID"=>"".$note->getId()));
+                array_push($response[$pos]['notes'], array("noteID"=>"".$note->getId(), "noteTitle"=>$note->getProperty('title')));
                 $foundUser = TRUE;
                 break;
             }
@@ -143,8 +143,8 @@ else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0){
         //  {"users": [{"userID":"12", "notes":["1", "2"]}, {"userID":"11", "notes":[]}
         //user wasn't found in the response, so add it
         if(!$foundUser){
-            $notes = array(array("noteID"=>"".$note->getId()));
-            $userNotes = array("userID"=>"".$user->getId(), "notes"=>$notes);
+            $notes = array(array("noteID"=>"".$note->getId(), "noteTitle"=>$note->getProperty('title')));
+            $userNotes = array("userID"=>"".$user->getId(), "userName"=>$user->getProperty('name'), "notes"=>$notes);
             array_push($response, $userNotes);
         }  
     }
