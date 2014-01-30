@@ -5,6 +5,8 @@
 namespace Everyman\Neo4j;
 require("phar://neo4jphp.phar");
 
+//Make each if-else here a function. Then require Topic.php in Agenda and call the functions from there.
+
 
 /**
  *	Create a graphDb connection 
@@ -14,31 +16,30 @@ $client= new Client();
 	//get the index
 	$topicIndex = new Index\NodeIndex($client, 'agendas');
 	$topicIndex->save();
-if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
+
+function createTopic($title, $time, $subtopic){
 	//createTopic method
-	//title, time, subtopics
+	//paramas: title, time, subtopics
 	
-	//get the json string post content
-	$postContent = json_decode(@file_get_contents('php://input'));
+	/*get the json string post content
+	$postContent = json_decode(@file_get_contents('php://input'));*/
 	
 	//create the node
 	$topicNode= $client->makeNode();
 	
 	//sets the property on the node
-	$topicNode->setProperty('title', $postContent->title)
-		->setProperty('time', $postContent->time);
+	$topicNode->setProperty('title', $title)
+		->setProperty('time', $time);
 		//and calls to create more topics to create the subtopics
 		
 	$topicNode->save();
 	
-	foreach($postContent->subtopic as $topic){
+	foreach($subtopic as $topic){
 		//pass the topic to Topic.php's create Topic method
-		$request = new HttpRequest('http://csse371-04.csse.rose-hulman.edu/Topic/', HttpRequest:METH_POST);
-		$request->addPostFields(array('title' => $topic->title, 'time' => $topic->time, 'suptopic' => $topic->subtopic));
-		$result = $request->send();
-		$topicNode = $client->getNode($result);
+		$subtopicID = createTopic($topic->title, $topic->time, $topic->subtopic);
+		$node = $client->getNode($subtopicID);
 		//make a relation to the topic 'HAS_TOPIC'
-		$topicRel = $agendaNode->relateTo($topicNode, 'HAS_TOPIC')
+		$topicRel = $agendaNode->relateTo($node, 'HAS_TOPIC') // actually should get node associated with $topNode
 			->save();
 	}
 	
@@ -46,27 +47,28 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
 	$topicProps= $topicNode->getProperties();
 	
 	$response= $topicIndex->add($topicNode, 'user', $topicProps['user']);
-	echo $topicNode->getID();
-}else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'DELETE')==0){
+	echo $response;
+	return $topicNode->getID();
+}
+
+function deleteTopic($id){
 	//deleteTopic
-	//get the id
-        preg_match("#(\d+)#", $_SERVER['REQUEST_URI'], $id);
+	//parmas: id
         
         //get the node
-        $node = $client->getNode($id[0]);
+        $node = $client->getNode($id);
         //make sure the node exists
         if($node != NULL){
                 //check if node has topic index
-                $topic = $topicIndex->findOne('ID', ''.$id[0]);
+                $topic = $topicIndex->findOne('ID', ''.$id);
                                 
                 //only delete the node if it's a topic
                 if($topic != NULL){
                         //get the relationships
                         $relations2 = $topic->getRelationships(array('HAS_TOPIC'));
                         foreach($relations2 as $rel){
-                        	$id = $rel->getEndNode()->getID();
-                        	$request = new HttpRequest('http://csse371-04.csse.rose-hulman.edu/Topic/'.$id, HttpRequest:METH_DELETE);
-                			$result = $request->send();
+                        	$toDelID = $rel->getEndNode()->getID();
+                        	deleteTopic($toDelID);
                         	$rel->delete();
                         {
                         $relations = $topic->getRelationships();
@@ -79,9 +81,11 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
                         $topic->delete();
                   	    $array = array('valid'=>'true');
  						echo json_encode($array);
+ 						return 'true';
                 } else {
                         //return an error otherwise
                         $errorarray = array('errorID' => '4', 'errorMessage'=>'Given node ID is not a topic node');
+                        return 4;
  				}
 		echo json_encode($errorarray);
 		} else {
@@ -89,22 +93,25 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
 		echo '{"errorID":"5", "errorMessage":"Given node ID is not recognized in database"}';
 		$errorarray = array('errorID' => '5', 'errorMessage'=>'Given node ID is not recognized in database');
 		echo json_encode($errorarray);
+		return 5;
 	}
-}else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0){
+}
+
+function getTopicInfo($id){
 	//getTopicInfo
-	$topicNode=$client->getNode($_GET['id']);
+	//params: id
+	$topicNode=$client->getNode($id);
 	$result = array();
 	foreach ($topicNode->getProperties() as $key => $value) {
 		$result[] = $key => $value;
 	}
     $relations = $topic->getRelationships(array('HAS_TOPIC'));
     foreach ($relations as $rel){
-    	$request = new HttpRequest('http://csse371-04.csse.rose-hulman.edu/Topic/'.$id, HttpRequest:METH_GET);
-        $return = $request->send();
-        $result[] = 'subtopic' => json_decode($return);
+    	$toGetID = $rel->getEndNode()->getID();
+    	$ret = getTopicInfo($toGetID);
+        $result[] = 'subtopic' => $ret;
     }
 	echo json_encode($result);
-}else{
-        echo $_SERVER['REQUEST_METHOD'] ." request method not found in Topic";
+	return $result
 }
 ?>
