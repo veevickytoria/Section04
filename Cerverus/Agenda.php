@@ -61,7 +61,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
 	} 
 	$result = array();
 	foreach ($agendaNode->getProperties() as $key => $value) {
-		$result[] = ''.$key => ''.$value;
+		$result[] = ''.$key; // => ''.$value
 	}
 	$relations = $topic->getRelationships(array('HAS_TOPIC'));
     foreach ($relations as $rel){
