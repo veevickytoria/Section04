@@ -1,10 +1,10 @@
 <!-- <div id = 'menu' style = 'width: 50%; float:left'> -->
-<form name="input" id = "createMeeting" onsubmit="return validateForm()" action ="http://csse371-04.csse.rose-hulman.edu/Meeting/" method = 'post'>
+<form name="input" id = "createMeeting">
 		<h5>Topic</h5>
 		<input type='text' name = "title" class='fullWidth' placeholder="Topic" />
 		
 		<h5>Description*</h5>
-		<textarea class='fullWidth' placeholder='Description'></textarea>
+		<textarea class='fullWidth' name="description" placeholder='Description'></textarea>
 		
 		<h5>Attendees</h5>
 		<pre></pre>
@@ -27,7 +27,14 @@
 		<table>
 			<tr>
 				<td>
-					<input type='text' name = "datetime" class='fullWidth' placeholder='mm/dd/yyyy HH:MM' />
+				Start
+					<input type='text' name = "datetimeStart" class='fullWidth' placeholder='mm/dd/yyyy HH:MM' />
+				</td>
+			
+			
+				<td>
+				End
+					<input type='text' name = "datetimeEnd" class='fullWidth' placeholder='mm/dd/yyyy HH:MM' />
 				</td>
 			</tr>
 		</table>
