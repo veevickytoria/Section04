@@ -273,7 +273,75 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
                 $return[] = array_merge($commentInfo, $comment->getProperties());
                 
         }
-        echo json_encode(array("comments" => $return));        
+        echo json_encode(array("comments" => $return));
+}else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') == 0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'groups') == 0){
+	/*=============
+	Get User Groups
+	===============*/
+	
+	if (!isset($_GET['id'])) {
+		echo json_encode(array('errorID'=>'XX', 'errorMessage'=>'ID was not set.'));
+	 } else {
+	
+		$userNode = $client->getNode($_GET['id']);
+		
+		if ($userNode != NULL) {
+			//output new contact list
+			//$outputArray['userID']=$userNode->getId();
+			$relationArray = $userNode->getRelationships(array(), Relationship::DirectionIn);
+			$groupArray = array();
+			$g=0;
+			foreach($relationArray as $rel){
+				$relType = $rel->getType();
+				if($relType == 'MEMBER_OF_GROUP') {
+					$groupNode=$rel->getStartNode();
+					$gArray = array();
+					$gArray['groupID']=$groupNode->getId();
+					$groupArray[$g++] = $gArray;
+				} 
+			}
+			$outputArray['groups'] = $groupArray;
+			
+			echo json_encode($outputArray);
+			
+		} else {
+		echo json_encode(array('errorID'=>'XX', 'errorMessage'=>$_GET['id']. ' is an unrecognized node ID in the database'));
+		}
+	}	
+}else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') == 0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'projects') == 0){
+	/*===============
+	Get User Projects
+	================*/
+	
+	if (!isset($_GET['id'])) {
+		echo json_encode(array('errorID'=>'XX', 'errorMessage'=>'ID was not set.'));
+	 } else {
+	
+		$userNode = $client->getNode($_GET['id']);
+		
+		if ($userNode != NULL) {
+			//output new contact list
+			//$outputArray['userID']=$userNode->getId();
+			$relationArray = $userNode->getRelationships(array(), Relationship::DirectionIn);
+			$projectArray = array();
+			$p=0;
+			foreach($relationArray as $rel){
+				$relType = $rel->getType();
+				if($relType == 'WORKS_ON_PROJECT') {
+					$projectNode=$rel->getStartNode();
+					$pArray = array();
+					$pArray['projectID']=$projectNode->getId();
+					$projectArray[$p++] = $pArray;
+				} 
+			}
+			$outputArray['projects'] = $projectArray;
+			
+			echo json_encode($outputArray);
+			
+		} else {
+		echo json_encode(array('errorID'=>'XX', 'errorMessage'=>$_GET['id']. ' is an unrecognized node ID in the database'));
+		}
+	}	
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
         // register method
     
