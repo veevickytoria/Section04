@@ -59,15 +59,13 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
 			return 1;
 		}
 	} 
-	$result = array();
-	foreach ($agendaNode->getProperties() as $key => $value) {
-		$result[$key] = $value;
-	}
+	$result = $agendaNode->getProperties();
+	
 	$relations = $topic->getRelationships(array('HAS_TOPIC'));
     foreach ($relations as $rel){
     	$info = getTopicInfo($rel->getEndNode()->getID());
-        $result['subtopic'] = $info;
-    }
+        $result['subtopic'] = $info; //so I got rid of the => error, but I need to check if this actually works
+    } //find out how to get this code form github to the server so you can test this properly
 	echo json_encode($result);
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'PUT')==0){
 	//updateAgenda

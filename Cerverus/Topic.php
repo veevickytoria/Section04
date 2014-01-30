@@ -101,10 +101,8 @@ function getTopicInfo($id){
 	//getTopicInfo
 	//params: id
 	$topicNode=$client->getNode($id);
-	$result = array();
-	foreach ($topicNode->getProperties() as $key => $value) {
-		$result[$key] = $value;
-	}
+	$result = $topicNode->getProperties();
+	
     $relations = $topic->getRelationships(array('HAS_TOPIC'));
     foreach ($relations as $rel){
     	$toGetID = $rel->getEndNode()->getID();
