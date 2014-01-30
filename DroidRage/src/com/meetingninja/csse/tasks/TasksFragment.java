@@ -113,6 +113,9 @@ public class TasksFragment extends Fragment implements
 
 				});
 
+		
+		
+		
 		/* Set up the task list */
 		ArrayList<Task> l1 = new ArrayList<Task>(), l2 = new ArrayList<Task>(), l3 = new ArrayList<Task>();
 		taskLists.put(assignedToMe, l1);
@@ -122,7 +125,7 @@ public class TasksFragment extends Fragment implements
 		refreshTasks();
 
 		ListView lv = (ListView) v.findViewById(R.id.task_list);
-
+		lv.setEmptyView(v.findViewById(android.R.id.empty));
 		taskAdpt = new TaskItemAdapter(getActivity(), R.layout.list_item_task,
 				taskLists.get(iAssigned));
 
