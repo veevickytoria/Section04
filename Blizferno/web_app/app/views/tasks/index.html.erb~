@@ -56,6 +56,8 @@ alert("posting:"+postData);
 function ConvertFormToJSON(form){
 	var array = jQuery(form).serializeArray();
 	var json = {};
+	
+	json['userID'] = <%=@userID%>;
 
 	jQuery.each(array, function() {
 		json[this.name] = this.value || '';
@@ -80,8 +82,8 @@ function ConvertFormToJSON(form){
         <%= render "new" %>
       </div>
       <div class="modal-footer">
+        <input type="submit" form="createTask" class="btn btn-primary" />
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary" form="createTask">Submit</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
