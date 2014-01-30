@@ -65,14 +65,27 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') == 0){
 		
 		//add new contact relationships
 		$contactArray = $postContent->contacts;
+		
+		$badNode = false;
 		foreach($contactArray as $item){
 			$user = $client->getNode($item->contactID);
-			$attRel = $userNode->relateTo($user, 'CONTACT')->save();
+			if ($user == null) {
+				$badNode = $item->contactID;
+			}
 		}
 		
-		//output new contact list
-		$outputArray['userID']=$userNode->getId();
-		$relationArray = $userNode->getRelationships(array(), Relationship::DirectionOut);
+		if ($badNode){
+			echo json_encode(array('errorID'=>'XX', 'errorMessage'=>$badNode. ' is an unrecognized node ID in the database'));
+		} else {
+		
+			foreach($contactArray as $item){
+				$user = $client->getNode($item->contactID);
+				$attRel = $userNode->relateTo($user, 'CONTACT')->save();
+			}
+			
+			//output new contact list
+			$outputArray['userID']=$userNode->getId();
+			$relationArray = $userNode->getRelationships(array(), Relationship::DirectionOut);
 			$contactOutputArray = array();
 			$u=0;
 			foreach($relationArray as $rel){
@@ -87,6 +100,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') == 0){
 			$outputArray['contacts'] = $contactOutputArray;
 		
 			echo json_encode($outputArray);
+		}
 	}
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'PUT')==0){		
 	/*====================
@@ -99,28 +113,42 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') == 0){
 	} else {
 		//add new contact relationships
 		$contactArray = $postContent->contacts;
+		
+		$badNode = false;
 		foreach($contactArray as $item){
 			$user = $client->getNode($item->contactID);
-			$attRel = $userNode->relateTo($user, 'CONTACT')->save();
+			if ($user == null) {
+				$badNode = $item->contactID;
+			}
 		}
 		
-		//output new contact list
-		$outputArray['userID']=$userNode->getId();
-		$relationArray = $userNode->getRelationships(array(), Relationship::DirectionOut);
-		$contactOutputArray = array();
-		$u=0;
-		foreach($relationArray as $rel){
-			$relType = $rel->getType();
-			if($relType == 'CONTACT') {
-				$contactNode=$rel->getEndNode();
-				$uArray = array();
-				$uArray['contactID']=$contactNode->getId();
-				$contactOutputArray[$u++] = $uArray;
-			} 
+		if ($badNode){
+			echo json_encode(array('errorID'=>'XX', 'errorMessage'=>$badNode. ' is an unrecognized node ID in the database'));
+		} else {
+		
+			foreach($contactArray as $item){
+				$user = $client->getNode($item->contactID);
+				$attRel = $userNode->relateTo($user, 'CONTACT')->save();
+			}
+			
+			//output new contact list
+			$outputArray['userID']=$userNode->getId();
+			$relationArray = $userNode->getRelationships(array(), Relationship::DirectionOut);
+			$contactOutputArray = array();
+			$u=0;
+			foreach($relationArray as $rel){
+				$relType = $rel->getType();
+				if($relType == 'CONTACT') {
+					$contactNode=$rel->getEndNode();
+					$uArray = array();
+					$uArray['contactID']=$contactNode->getId();
+					$contactOutputArray[$u++] = $uArray;
+				} 
+			}
+			$outputArray['contacts'] = $contactOutputArray;
+		
+			echo json_encode($outputArray);		
 		}
-		$outputArray['contacts'] = $contactOutputArray;
-	
-		echo json_encode($outputArray);		
 	}
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'DELETE')==0){		
 	/*====================
