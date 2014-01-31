@@ -136,10 +136,27 @@ public class Task extends Event implements Parcelable {
 		if (another == null) {
 			return 1;
 		}
-		return Long.valueOf(another.getEndTimeInMillis()).compareTo(
-				Long.valueOf(getEndTimeInMillis()));
+		if(another instanceof Task){
+			return compareTo((Task) another);
+		}
+		return Long.valueOf(getEndTimeInMillis()).compareTo(
+				Long.valueOf(another.getEndTimeInMillis()));
 	}
-
+	
+	public int compareTo(Task another) {
+		if (another == null) {
+			return 1;
+		}
+		if(another.getIsCompleted() && !getIsCompleted()){
+			return -1;
+		}else if(!another.getIsCompleted() && getIsCompleted()){
+			return 1;
+		}else{
+			return Long.valueOf(getEndTimeInMillis()).compareTo(
+					Long.valueOf(another.getEndTimeInMillis()));
+		}
+	}
+	
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		// TODO Auto-generated method stub

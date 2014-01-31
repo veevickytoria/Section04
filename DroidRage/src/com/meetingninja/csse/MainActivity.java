@@ -298,7 +298,8 @@ public class MainActivity extends FragmentActivity implements
 			frag_notes = (NotesFragment) nextPage;
 			break;
 		case TASKS:
-			nextPage = new TasksFragment();
+			//nextPage = new TasksFragment();
+			nextPage = TasksFragment.getInstance();
 			frag_tasks = new TasksFragment();
 			break;
 		case PROFILE:

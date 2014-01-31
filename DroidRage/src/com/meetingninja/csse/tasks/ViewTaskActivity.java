@@ -43,6 +43,7 @@ public class ViewTaskActivity extends Activity {
 	RetUserObj fetcher;
 	private Task displayedTask;
 	private DateTimeFormatter dateFormat = MyDateUtils.JODA_APP_DATE_FORMAT;
+	private int resultCode = Activity.RESULT_CANCELED;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +52,7 @@ public class ViewTaskActivity extends Activity {
 		// setupActionBar();
 		Bundle extras = getIntent().getExtras();
 		if (extras != null)
+			displayedTask = extras.getParcelable(Keys.Task.PARCEL);
 		setupViews();
 		setTask();
 	}
@@ -78,6 +80,7 @@ public class ViewTaskActivity extends Activity {
 			setResult(RESULT_OK);
 			finish();
 		case android.R.id.home:
+			setResult(resultCode);
 			finish();
 			return true;
 		default:
@@ -93,6 +96,7 @@ public class ViewTaskActivity extends Activity {
 				if (data != null) {
 					displayedTask = data.getParcelableExtra(Keys.Task.PARCEL);
 					setTask();
+					this.resultCode = resultCode;
 				}
 			} else if (resultCode == RESULT_CANCELED) {
 				// do nothing here
@@ -105,6 +109,7 @@ public class ViewTaskActivity extends Activity {
 		displayedTask.setIsCompleted(true);
 		updater.updateTask(displayedTask);
 		setTask();
+		resultCode = Activity.RESULT_OK;
 
 	}
 
