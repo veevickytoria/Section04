@@ -107,6 +107,6 @@ function getTopicInfo($id){
         $result['subtopic'] = $ret;
     }
 	echo json_encode($result);
-	return $result
+	return $result;
 }
 ?>
