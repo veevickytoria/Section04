@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MessageUI/MessageUI.h>
 
 @protocol UserDelegate <NSObject>
 
@@ -14,10 +15,10 @@
 
 @end
 
-@interface iWinAddUsersViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate>
+@interface iWinAddUsersViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate,MFMailComposeViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *userListTableView;
 @property (nonatomic) id<UserDelegate> userDelegate;
-- (IBAction)onClickSendInvite;
+- (IBAction)onClickSendInvite:(id)sender;
 - (IBAction)onClickSave;
 - (IBAction)onClickCancel;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withPageName:(NSString *)pageName inEditMode:(BOOL)isEditing;
