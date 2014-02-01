@@ -65,6 +65,13 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 	public static Uri.Builder getBaseUri() {
 		return Uri.parse(getBaseUrl()).buildUpon();
 	}
+	public static String getBaseContactUrl() {
+		return BASE_URL +"Contact";
+	}
+
+	public static Uri.Builder getBaseContactUri() {
+		return Uri.parse(getBaseContactUrl()).buildUpon();
+	}
 
 	public static User getUserInfo(String userID) throws IOException {
 		// Server URL setup
@@ -88,42 +95,37 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 
 	public static List<User> getContacts(String userID) throws IOException {
 		// Server URL setup
-		String _url = getBaseUri().appendPath("Contacts").appendPath(userID)
-				.build().toString();
+		String _url = getBaseContactUri().appendPath(userID).build().toString();
 		// Establish connection
+		System.out.println(_url);
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
 		// add request header
+		
 		conn.setRequestMethod(IRequest.GET);
 		addRequestHeader(conn, false);
-
 		// Get server response
 		int responseCode = conn.getResponseCode();
 		String response = getServerResponse(conn);
-
 		List<User> contactsList = new ArrayList<User>();
 		List<String> contactIds = new ArrayList<String>();
-		final JsonNode contactsArray = MAPPER.readTree(response).get(
-				Keys.User.CONTACTS);
-
+		final JsonNode contactsArray = MAPPER.readTree(response).get(Keys.User.CONTACTS);
 		if (contactsArray.isArray()) {
 			for (final JsonNode userNode : contactsArray) {
-				// User u = parseSimpleUser(userNode);
-				// if (u != null)
-				contactIds.add(userNode.get(Keys.User.ID).asText());
+				System.out.println(userNode);
+				contactIds.add(userNode.get(Keys.User.CONTACT).asText());
 			}
 		}
-
+		
 		conn.disconnect();
-
+		System.out.println("got past:    "+contactIds);
 		for (String id : contactIds) {
 			User contact = getUserInfo(id);
 			if (contact != null) {
 				contactsList.add(contact);
 			}
 		}
-
+		System.out.println("finally");
 		return contactsList;
 	}
 

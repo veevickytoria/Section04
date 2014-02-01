@@ -20,6 +20,7 @@ public interface Keys {
 		public final String LOCATION = "location";
 		public final String CONTACTS = "contacts";
 		public final String SCHEDULE = "schedule";
+		public final String CONTACT = "contactID";
 	}
 
 	public interface Note {

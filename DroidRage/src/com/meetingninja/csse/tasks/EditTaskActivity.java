@@ -31,7 +31,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.service.textservice.SpellCheckerService.Session;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
@@ -64,8 +63,7 @@ import com.meetingninja.csse.user.UserInfoFetcher;
 
 import de.timroes.android.listview.EnhancedListView;
 
-public class EditTaskActivity extends FragmentActivity implements
-		AsyncResponse<Boolean> {
+public class EditTaskActivity extends FragmentActivity implements AsyncResponse<Boolean> {
 	final String MARK_AS_COMPLETE = "Mark As Complete";
 	final String MARK_AS_INCOMPLETE = "Mark As Incomplete";
 
@@ -163,8 +161,7 @@ public class EditTaskActivity extends FragmentActivity implements
 		View actionBarButtons = inflater.inflate(R.layout.actionbar_ok_cancel,
 				new LinearLayout(this), false);
 
-		View cancelActionView = actionBarButtons
-				.findViewById(R.id.action_cancel);
+		View cancelActionView = actionBarButtons.findViewById(R.id.action_cancel);
 		cancelActionView.setOnClickListener(tActionBarListener);
 
 		View doneActionView = actionBarButtons.findViewById(R.id.action_done);
@@ -275,8 +272,7 @@ public class EditTaskActivity extends FragmentActivity implements
 		l.setAdapter(mUserAdapter);
 		l.setDismissCallback(new de.timroes.android.listview.EnhancedListView.OnDismissCallback() {
 			@Override
-			public EnhancedListView.Undoable onDismiss(
-					EnhancedListView listView, final int position) {
+			public EnhancedListView.Undoable onDismiss(EnhancedListView listView, final int position) {
 
 				final User item = (User) mUserAdapter.getItem(position);
 				mUserAdapter.remove(item);
@@ -297,8 +293,7 @@ public class EditTaskActivity extends FragmentActivity implements
 		l.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View v, int position,
-					long id) {
+			public void onItemClick(AdapterView<?> arg0, View v, int position,long id) {
 				User clicked = mUserAdapter.getItem(position);
 				Intent profileIntent = new Intent(v.getContext(),
 						ProfileActivity.class);
@@ -326,8 +321,7 @@ public class EditTaskActivity extends FragmentActivity implements
 
 	private void hideKeyboard() {
 		InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-		inputMethodManager.hideSoftInputFromWindow(getCurrentFocus()
-				.getWindowToken(), 0);
+		inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
 	}
 	
 	public void addMember(View view) {

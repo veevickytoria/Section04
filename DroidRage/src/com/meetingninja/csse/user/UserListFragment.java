@@ -15,6 +15,7 @@
  ******************************************************************************/
 package com.meetingninja.csse.user;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -31,6 +32,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.meetingninja.csse.R;
+import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
@@ -53,13 +55,12 @@ import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
 import com.meetingninja.csse.database.local.SQLiteUserAdapter;
 
-public class UserListFragment extends ListFragment implements
-		AsyncResponse<List<User>> {
-
+public class UserListFragment extends ListFragment implements AsyncResponse<List<User>> {
+	
 	private SQLiteUserAdapter dbHelper;
 	private UserArrayAdapter mUserAdapter;
 	private List<User> users = new ArrayList<User>();
-
+	RetContactsObj fetcher = null;
 	public UserListFragment() {
 		// Required empty public constructor
 	}
@@ -72,8 +73,7 @@ public class UserListFragment extends ListFragment implements
 
 		dbHelper = new SQLiteUserAdapter(getActivity());
 
-		mUserAdapter = new UserArrayAdapter(getActivity(),
-				R.layout.list_item_user, users);
+		mUserAdapter = new UserArrayAdapter(getActivity(),R.layout.list_item_user, users);
 		setListAdapter(mUserAdapter);
 
 		populateList(); // uses async-task
@@ -83,8 +83,9 @@ public class UserListFragment extends ListFragment implements
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		Log.d(getTag(), "Clicked");
+		Log.d(getTag(), "Clicked this one");
 		User clicked = mUserAdapter.getItem(position);
+//		Intent profileIntent = new Intent(v.getContext(), ProfileActivity.class);
 		Intent profileIntent = new Intent(getActivity(), ProfileActivity.class);
 		profileIntent.putExtra(Keys.User.PARCEL, clicked);
 		startActivity(profileIntent);
@@ -96,9 +97,31 @@ public class UserListFragment extends ListFragment implements
 		super.onPause();
 	}
 
-	private void populateList() {
-		// Async-Task -> processFinish()
-		UserVolleyAdapter.fetchAllUsers(this);
+	private void populateList(){
+//		UserVolleyAdapter.fetchAllUsers(this);
+		SessionManager session = SessionManager.getInstance();
+		fetcher = new RetContactsObj();
+		fetcher.execute(session.getUserID());
+	}
+	final class RetContactsObj implements AsyncResponse<List<User>> {
+
+		private ContactsFetcher contactsFetcher;
+
+		public RetContactsObj() {
+			contactsFetcher = new ContactsFetcher(this);
+		}
+
+		public void execute(String userID) {
+			contactsFetcher.execute(userID);
+		}
+
+		@Override
+		public void processFinish(List<User> result) {
+			//displayTask.addMember(result);
+			System.out.println("output:   "+result);
+			users.addAll(result);
+			mUserAdapter.notifyDataSetChanged();
+		}
 	}
 
 	@Override
