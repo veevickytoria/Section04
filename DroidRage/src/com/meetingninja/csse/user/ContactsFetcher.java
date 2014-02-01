@@ -41,7 +41,6 @@ public class ContactsFetcher extends AsyncTask<String, Void, List<User>> {
 		List<User> contacts = new ArrayList<User>();
 
 		try {
-			System.out.println("param sent:  "+params[0]);
 			String userID = params[0];
 			contacts = UserDatabaseAdapter.getContacts(userID);
 			//user.setID(userID);

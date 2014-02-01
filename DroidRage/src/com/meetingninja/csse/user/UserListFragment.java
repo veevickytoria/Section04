@@ -73,7 +73,7 @@ public class UserListFragment extends ListFragment implements AsyncResponse<List
 
 		dbHelper = new SQLiteUserAdapter(getActivity());
 
-		mUserAdapter = new UserArrayAdapter(getActivity(),R.layout.list_item_user, users);
+		mUserAdapter = new UserArrayAdapter(getActivity(),R.layout.list_item_contact, users);
 		setListAdapter(mUserAdapter);
 
 		populateList(); // uses async-task
@@ -118,7 +118,6 @@ public class UserListFragment extends ListFragment implements AsyncResponse<List
 		@Override
 		public void processFinish(List<User> result) {
 			//displayTask.addMember(result);
-			System.out.println("output:   "+result);
 			users.addAll(result);
 			mUserAdapter.notifyDataSetChanged();
 		}

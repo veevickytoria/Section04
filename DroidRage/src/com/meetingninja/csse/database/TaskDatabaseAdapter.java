@@ -110,7 +110,6 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 		String compCritPayload = getEditPayload(task.getID(),Keys.Task.CRITERIA, task.getCompletionCriteria());
 		String assignedToPayload = getEditPayload(task.getID(),	Keys.Task.ASSIGNED_TO, task.getAssignedTo());
 		// Get server response
-		System.out.println(task.getCompletionCriteria());
 		sendSingleEdit(titlePayload);
 		sendSingleEdit(descPayload);
 		sendSingleEdit(isCompPayload);

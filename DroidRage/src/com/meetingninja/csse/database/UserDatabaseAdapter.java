@@ -90,14 +90,15 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		String response = getServerResponse(conn);
 		JsonNode userNode = MAPPER.readTree(response);
 
-		return parseUser(userNode);
+		User ret = parseUser(userNode);
+		ret.setID(userID);
+		return ret;
 	}
 
 	public static List<User> getContacts(String userID) throws IOException {
 		// Server URL setup
 		String _url = getBaseContactUri().appendPath(userID).build().toString();
 		// Establish connection
-		System.out.println(_url);
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		// add request header
@@ -112,20 +113,17 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		final JsonNode contactsArray = MAPPER.readTree(response).get(Keys.User.CONTACTS);
 		if (contactsArray.isArray()) {
 			for (final JsonNode userNode : contactsArray) {
-				System.out.println(userNode);
 				contactIds.add(userNode.get(Keys.User.CONTACT).asText());
 			}
 		}
 		
 		conn.disconnect();
-		System.out.println("got past:    "+contactIds);
 		for (String id : contactIds) {
 			User contact = getUserInfo(id);
 			if (contact != null) {
 				contactsList.add(contact);
 			}
 		}
-		System.out.println("finally");
 		return contactsList;
 	}
 
