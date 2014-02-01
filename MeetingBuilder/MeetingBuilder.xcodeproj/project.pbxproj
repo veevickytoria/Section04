@@ -66,6 +66,16 @@
 		0A97EDAA184169ED00160B5A /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A97EDA8184169ED00160B5A /* AudioToolbox.framework */; };
 		0A97EDAB184169ED00160B5A /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A97EDA9184169ED00160B5A /* AVFoundation.framework */; };
 		0A99E2021862D8A2001D8A64 /* iWinRegisterTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A99E2011862D8A2001D8A64 /* iWinRegisterTest.m */; };
+		0A9C04E2189D9A3800C4BCE9 /* CustomSubtitledCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A9C04E1189D9A3800C4BCE9 /* CustomSubtitledCell.m */; };
+		0A9C04E4189D9BAD00C4BCE9 /* CustomSubtitledCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A9C04E3189D9BAD00C4BCE9 /* CustomSubtitledCell.xib */; };
+		0A9C04E9189DA6D600C4BCE9 /* SmallDefaultCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A9C04E8189DA6D600C4BCE9 /* SmallDefaultCell.m */; };
+		0A9C04ED189DA87200C4BCE9 /* SmallDefaultCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A9C04EC189DA87200C4BCE9 /* SmallDefaultCell.xib */; };
+		0A9C04F1189DAA1300C4BCE9 /* LargeDefaultCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A9C04F0189DAA1300C4BCE9 /* LargeDefaultCell.m */; };
+		0A9C04F5189DAACE00C4BCE9 /* LargeDefaultCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A9C04F4189DAACE00C4BCE9 /* LargeDefaultCell.xib */; };
+		0AA36E3E189CC27100C81557 /* AcousticModelEnglish.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0AA36E3A189CC27100C81557 /* AcousticModelEnglish.bundle */; };
+		0AA36E3F189CC27100C81557 /* AcousticModelSpanish.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0AA36E3B189CC27100C81557 /* AcousticModelSpanish.bundle */; };
+		0AA36E40189CC27100C81557 /* OpenEars.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AA36E3C189CC27100C81557 /* OpenEars.framework */; };
+		0AA36E41189CC27100C81557 /* Slt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AA36E3D189CC27100C81557 /* Slt.framework */; };
 		0AAC9E951846FE6F0073260F /* iWinOpenEarsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAC9E941846FE6F0073260F /* iWinOpenEarsModel.m */; };
 		0ACE339A17FCF5F8003B9C0A /* iWinMeetingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ACE339817FCF5F8003B9C0A /* iWinMeetingViewController.m */; };
 		0ACE339B17FCF5F8003B9C0A /* iWinMeetingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0ACE339917FCF5F8003B9C0A /* iWinMeetingViewController.xib */; };
@@ -77,7 +87,6 @@
 		5B3B6296188CB4E900C0E53E /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B3B6295188CB4E900C0E53E /* Group.m */; };
 		5B3B629A188CBDF600C0E53E /* iWinViewAndCreateGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B3B6299188CBDF600C0E53E /* iWinViewAndCreateGroupViewController.m */; };
 		5B3B62AE188CCB7000C0E53E /* iWinViewAndCreateGroupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B3B62AD188CCB7000C0E53E /* iWinViewAndCreateGroupViewController.xib */; };
-		5BE69760188CD9E80083F71E /* OpenEars.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BE6975F188CD9E80083F71E /* OpenEars.framework */; };
 		7941FDC81828843500AAA92E /* iWinViewAndChangeSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7941FDC61828843500AAA92E /* iWinViewAndChangeSettingsViewController.m */; };
 		7941FDC91828843500AAA92E /* iWinViewAndChangeSettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7941FDC71828843500AAA92E /* iWinViewAndChangeSettingsViewController.xib */; };
 		7941FDD5182A0DCE00AAA92E /* iWinViewProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7941FDD3182A0DCE00AAA92E /* iWinViewProfileViewController.m */; };
@@ -92,134 +101,131 @@
 		79D513D0181F9F9E00C79B71 /* iWinNoteListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79D513CE181F9F9E00C79B71 /* iWinNoteListViewController.m */; };
 		79D513D1181F9F9E00C79B71 /* iWinNoteListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79D513CF181F9F9E00C79B71 /* iWinNoteListViewController.xib */; };
 		79F59D0F18617690009E2C78 /* TapkuLibrary.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 79F59D0E1861768F009E2C78 /* TapkuLibrary.bundle */; };
-		79FCDF941862295E008345B3 /* NSArray+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF151862295B008345B3 /* NSArray+TKCategory.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDF951862295E008345B3 /* NSArray+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF161862295B008345B3 /* NSArray+TKCategory.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDF961862295E008345B3 /* NSDate+CalendarGrid.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF171862295B008345B3 /* NSDate+CalendarGrid.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDF971862295E008345B3 /* NSDate+CalendarGrid.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF181862295B008345B3 /* NSDate+CalendarGrid.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDF981862295E008345B3 /* NSDate+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF191862295B008345B3 /* NSDate+TKCategory.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDF991862295E008345B3 /* NSDate+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF1A1862295B008345B3 /* NSDate+TKCategory.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDF9A1862295E008345B3 /* NSMutableArray+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF1B1862295B008345B3 /* NSMutableArray+TKCategory.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDF9B1862295E008345B3 /* NSMutableArray+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF1C1862295B008345B3 /* NSMutableArray+TKCategory.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDF9C1862295E008345B3 /* NSObject+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF1D1862295B008345B3 /* NSObject+TKCategory.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDF9D1862295E008345B3 /* NSObject+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF1E1862295B008345B3 /* NSObject+TKCategory.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDF9E1862295E008345B3 /* NSString+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF1F1862295B008345B3 /* NSString+TKCategory.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDF9F1862295E008345B3 /* NSString+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF201862295B008345B3 /* NSString+TKCategory.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFA01862295E008345B3 /* TapkuLibrary.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF211862295B008345B3 /* TapkuLibrary.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFA11862295E008345B3 /* TKAlertCenter.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF221862295B008345B3 /* TKAlertCenter.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFA21862295E008345B3 /* TKAlertCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF231862295C008345B3 /* TKAlertCenter.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFA31862295E008345B3 /* TKAppDelegate.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF241862295C008345B3 /* TKAppDelegate.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFA41862295E008345B3 /* TKAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF251862295C008345B3 /* TKAppDelegate.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFA51862295E008345B3 /* TKButtonCell.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF261862295C008345B3 /* TKButtonCell.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFA61862295E008345B3 /* TKButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF271862295C008345B3 /* TKButtonCell.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFA71862295E008345B3 /* TKCalendarDayEventView.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF281862295C008345B3 /* TKCalendarDayEventView.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFA81862295E008345B3 /* TKCalendarDayEventView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF291862295C008345B3 /* TKCalendarDayEventView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFA91862295E008345B3 /* TKCalendarDayView.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF2A1862295C008345B3 /* TKCalendarDayView.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFAA1862295E008345B3 /* TKCalendarDayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF2B1862295C008345B3 /* TKCalendarDayView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFAB1862295E008345B3 /* TKCalendarDayViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF2C1862295C008345B3 /* TKCalendarDayViewController.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFAC1862295E008345B3 /* TKCalendarDayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF2D1862295C008345B3 /* TKCalendarDayViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFAD1862295E008345B3 /* TKCalendarMonthTableViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF2E1862295C008345B3 /* TKCalendarMonthTableViewController.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFAE1862295E008345B3 /* TKCalendarMonthTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF2F1862295C008345B3 /* TKCalendarMonthTableViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFAF1862295E008345B3 /* TKCalendarMonthView.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF301862295C008345B3 /* TKCalendarMonthView.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFB01862295E008345B3 /* TKCalendarMonthView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF311862295C008345B3 /* TKCalendarMonthView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFB11862295E008345B3 /* TKCalendarMonthViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF321862295C008345B3 /* TKCalendarMonthViewController.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFB21862295E008345B3 /* TKCalendarMonthViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF331862295C008345B3 /* TKCalendarMonthViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFB31862295E008345B3 /* TKCoverflowView.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF341862295C008345B3 /* TKCoverflowView.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFB41862295E008345B3 /* TKCoverflowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF351862295C008345B3 /* TKCoverflowView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFB51862295E008345B3 /* TKEmptyView.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF361862295C008345B3 /* TKEmptyView.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFB61862295E008345B3 /* TKEmptyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF371862295C008345B3 /* TKEmptyView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFB71862295E008345B3 /* TKGlobal.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF381862295C008345B3 /* TKGlobal.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFB81862295E008345B3 /* TKGlobal.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF391862295C008345B3 /* TKGlobal.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFB91862295E008345B3 /* TKGlowButton.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF3A1862295C008345B3 /* TKGlowButton.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFBA1862295E008345B3 /* TKGlowButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF3B1862295C008345B3 /* TKGlowButton.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFBB1862295E008345B3 /* TKGradientView.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF3C1862295C008345B3 /* TKGradientView.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFBC1862295E008345B3 /* TKGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF3D1862295C008345B3 /* TKGradientView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFBD1862295E008345B3 /* TKHTTPRequest.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF3E1862295C008345B3 /* TKHTTPRequest.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFBE1862295E008345B3 /* TKHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF3F1862295C008345B3 /* TKHTTPRequest.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFBF1862295E008345B3 /* TKImageCache.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF401862295C008345B3 /* TKImageCache.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFC01862295E008345B3 /* TKImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF411862295C008345B3 /* TKImageCache.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFC11862295E008345B3 /* TKKeyboardTableViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF421862295C008345B3 /* TKKeyboardTableViewController.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFC21862295E008345B3 /* TKKeyboardTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF431862295C008345B3 /* TKKeyboardTableViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFC31862295E008345B3 /* TKLabelCell.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF441862295C008345B3 /* TKLabelCell.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFC41862295E008345B3 /* TKLabelCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF451862295C008345B3 /* TKLabelCell.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFC51862295E008345B3 /* TKLabelFieldCell.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF461862295C008345B3 /* TKLabelFieldCell.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFC61862295E008345B3 /* TKLabelFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF471862295C008345B3 /* TKLabelFieldCell.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFC71862295E008345B3 /* TKLabelSwitchCell.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF481862295C008345B3 /* TKLabelSwitchCell.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFC81862295E008345B3 /* TKLabelSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF491862295C008345B3 /* TKLabelSwitchCell.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFC91862295E008345B3 /* TKLabelTextFieldCell.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF4A1862295C008345B3 /* TKLabelTextFieldCell.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFCA1862295E008345B3 /* TKLabelTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF4B1862295C008345B3 /* TKLabelTextFieldCell.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFCB1862295E008345B3 /* TKLabelTextViewCell.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF4C1862295C008345B3 /* TKLabelTextViewCell.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFCC1862295E008345B3 /* TKLabelTextViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF4D1862295C008345B3 /* TKLabelTextViewCell.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFCD1862295E008345B3 /* TKLoadingView.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF4E1862295C008345B3 /* TKLoadingView.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFCE1862295E008345B3 /* TKLoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF4F1862295C008345B3 /* TKLoadingView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFCF1862295E008345B3 /* TKNetworkQueue.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF501862295C008345B3 /* TKNetworkQueue.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFD01862295E008345B3 /* TKNetworkQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF511862295C008345B3 /* TKNetworkQueue.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFD11862295E008345B3 /* TKProgressAlertView.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF521862295D008345B3 /* TKProgressAlertView.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFD21862295E008345B3 /* TKProgressAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF531862295D008345B3 /* TKProgressAlertView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFD31862295E008345B3 /* TKProgressBarView.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF541862295D008345B3 /* TKProgressBarView.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFD41862295E008345B3 /* TKProgressBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF551862295D008345B3 /* TKProgressBarView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFD51862295E008345B3 /* TKProgressCircleView.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF561862295D008345B3 /* TKProgressCircleView.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFD61862295E008345B3 /* TKProgressCircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF571862295D008345B3 /* TKProgressCircleView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFD71862295E008345B3 /* TKReorderTableView.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF581862295D008345B3 /* TKReorderTableView.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFD81862295E008345B3 /* TKReorderTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF591862295D008345B3 /* TKReorderTableView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFD91862295E008345B3 /* TKRetroButton.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF5A1862295D008345B3 /* TKRetroButton.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFDA1862295E008345B3 /* TKRetroButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF5B1862295D008345B3 /* TKRetroButton.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFDB1862295E008345B3 /* TKShapeView.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF5C1862295D008345B3 /* TKShapeView.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFDC1862295E008345B3 /* TKShapeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF5D1862295D008345B3 /* TKShapeView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFDD1862295E008345B3 /* TKShimmerLabel.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF5E1862295D008345B3 /* TKShimmerLabel.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFDE1862295E008345B3 /* TKShimmerLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF5F1862295D008345B3 /* TKShimmerLabel.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFDF1862295E008345B3 /* TKSlideToUnlockView.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF601862295D008345B3 /* TKSlideToUnlockView.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFE01862295E008345B3 /* TKSlideToUnlockView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF611862295D008345B3 /* TKSlideToUnlockView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFE11862295E008345B3 /* TKSwitchCell.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF621862295D008345B3 /* TKSwitchCell.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFE21862295E008345B3 /* TKSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF631862295D008345B3 /* TKSwitchCell.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFE31862295E008345B3 /* TKTableViewCell.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF641862295D008345B3 /* TKTableViewCell.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFE41862295E008345B3 /* TKTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF651862295D008345B3 /* TKTableViewCell.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFE51862295E008345B3 /* TKTableViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF661862295D008345B3 /* TKTableViewController.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFE61862295E008345B3 /* TKTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF671862295D008345B3 /* TKTableViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFE71862295E008345B3 /* TKTextFieldCell.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF681862295D008345B3 /* TKTextFieldCell.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFE81862295E008345B3 /* TKTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF691862295D008345B3 /* TKTextFieldCell.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFE91862295E008345B3 /* TKTextView.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF6A1862295D008345B3 /* TKTextView.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFEA1862295E008345B3 /* TKTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF6B1862295D008345B3 /* TKTextView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFEB1862295E008345B3 /* TKTextViewCell.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF6C1862295D008345B3 /* TKTextViewCell.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFEC1862295E008345B3 /* TKTextViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF6D1862295D008345B3 /* TKTextViewCell.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFED1862295E008345B3 /* TKViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF6E1862295D008345B3 /* TKViewController.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFEE1862295E008345B3 /* TKViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF6F1862295D008345B3 /* TKViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFF11862295E008345B3 /* TKWindow.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF721862295D008345B3 /* TKWindow.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFF21862295E008345B3 /* TKWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF731862295D008345B3 /* TKWindow.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFF31862295E008345B3 /* UIActionSheet+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF741862295D008345B3 /* UIActionSheet+TKCategory.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFF41862295E008345B3 /* UIActionSheet+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF751862295D008345B3 /* UIActionSheet+TKCategory.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFF51862295E008345B3 /* UIAlertView+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF761862295D008345B3 /* UIAlertView+TKCategory.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFF61862295E008345B3 /* UIAlertView+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF771862295D008345B3 /* UIAlertView+TKCategory.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFF71862295E008345B3 /* UIBarButtonItem+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF781862295D008345B3 /* UIBarButtonItem+TKCategory.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFF81862295E008345B3 /* UIBarButtonItem+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF791862295D008345B3 /* UIBarButtonItem+TKCategory.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFF91862295E008345B3 /* UIButton+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF7A1862295D008345B3 /* UIButton+TKCategory.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFFA1862295E008345B3 /* UIButton+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF7B1862295D008345B3 /* UIButton+TKCategory.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFFB1862295E008345B3 /* UIColor+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF7C1862295D008345B3 /* UIColor+TKCategory.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFFC1862295E008345B3 /* UIColor+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF7D1862295D008345B3 /* UIColor+TKCategory.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFFD1862295E008345B3 /* UIDevice+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF7E1862295E008345B3 /* UIDevice+TKCategory.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFFE1862295E008345B3 /* UIDevice+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF7F1862295E008345B3 /* UIDevice+TKCategory.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCDFFF1862295E008345B3 /* UIFont+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF801862295E008345B3 /* UIFont+TKCategory.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCE0001862295E008345B3 /* UIFont+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF811862295E008345B3 /* UIFont+TKCategory.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCE0011862295E008345B3 /* UIGestureRecognizer+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF821862295E008345B3 /* UIGestureRecognizer+TKCategory.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCE0021862295E008345B3 /* UIGestureRecognizer+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF831862295E008345B3 /* UIGestureRecognizer+TKCategory.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCE0031862295E008345B3 /* UIImage+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF841862295E008345B3 /* UIImage+TKCategory.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCE0041862295E008345B3 /* UIImage+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF851862295E008345B3 /* UIImage+TKCategory.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCE0051862295E008345B3 /* UIImagePickerController+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF861862295E008345B3 /* UIImagePickerController+TKCategory.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCE0061862295E008345B3 /* UIImagePickerController+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF871862295E008345B3 /* UIImagePickerController+TKCategory.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCE0071862295E008345B3 /* UIImageView+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF881862295E008345B3 /* UIImageView+TKCategory.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCE0081862295E008345B3 /* UIImageView+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF891862295E008345B3 /* UIImageView+TKCategory.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCE0091862295E008345B3 /* UIScreen+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF8A1862295E008345B3 /* UIScreen+TKCategory.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCE00A1862295E008345B3 /* UIScreen+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF8B1862295E008345B3 /* UIScreen+TKCategory.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCE00B1862295E008345B3 /* UIScrollview+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF8C1862295E008345B3 /* UIScrollview+TKCategory.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCE00C1862295E008345B3 /* UIScrollview+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF8D1862295E008345B3 /* UIScrollview+TKCategory.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCE00D1862295E008345B3 /* UITextField+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF8E1862295E008345B3 /* UITextField+TKCategory.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCE00E1862295E008345B3 /* UITextField+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF8F1862295E008345B3 /* UITextField+TKCategory.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCE00F1862295E008345B3 /* UIView+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF901862295E008345B3 /* UIView+TKCategory.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCE0101862295E008345B3 /* UIView+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF911862295E008345B3 /* UIView+TKCategory.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCE0111862295E008345B3 /* UIViewController+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF921862295E008345B3 /* UIViewController+TKCategory.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		79FCE0121862295E008345B3 /* UIViewController+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF931862295E008345B3 /* UIViewController+TKCategory.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		DEED1ACC1889F97B00FDAA27 /* AcousticModelEnglish.bundle in Resources */ = {isa = PBXBuildFile; fileRef = DEED1AC81889F97B00FDAA27 /* AcousticModelEnglish.bundle */; };
-		DEED1ACD1889F97B00FDAA27 /* AcousticModelSpanish.bundle in Resources */ = {isa = PBXBuildFile; fileRef = DEED1AC91889F97B00FDAA27 /* AcousticModelSpanish.bundle */; };
-		DEED1ACF1889F97B00FDAA27 /* Slt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DEED1ACB1889F97B00FDAA27 /* Slt.framework */; };
+		79FCDF941862295E008345B3 /* NSArray+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF151862295B008345B3 /* NSArray+TKCategory.h */; };
+		79FCDF951862295E008345B3 /* NSArray+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF161862295B008345B3 /* NSArray+TKCategory.m */; };
+		79FCDF961862295E008345B3 /* NSDate+CalendarGrid.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF171862295B008345B3 /* NSDate+CalendarGrid.h */; };
+		79FCDF971862295E008345B3 /* NSDate+CalendarGrid.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF181862295B008345B3 /* NSDate+CalendarGrid.m */; };
+		79FCDF981862295E008345B3 /* NSDate+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF191862295B008345B3 /* NSDate+TKCategory.h */; };
+		79FCDF991862295E008345B3 /* NSDate+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF1A1862295B008345B3 /* NSDate+TKCategory.m */; };
+		79FCDF9A1862295E008345B3 /* NSMutableArray+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF1B1862295B008345B3 /* NSMutableArray+TKCategory.h */; };
+		79FCDF9B1862295E008345B3 /* NSMutableArray+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF1C1862295B008345B3 /* NSMutableArray+TKCategory.m */; };
+		79FCDF9C1862295E008345B3 /* NSObject+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF1D1862295B008345B3 /* NSObject+TKCategory.h */; };
+		79FCDF9D1862295E008345B3 /* NSObject+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF1E1862295B008345B3 /* NSObject+TKCategory.m */; };
+		79FCDF9E1862295E008345B3 /* NSString+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF1F1862295B008345B3 /* NSString+TKCategory.h */; };
+		79FCDF9F1862295E008345B3 /* NSString+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF201862295B008345B3 /* NSString+TKCategory.m */; };
+		79FCDFA01862295E008345B3 /* TapkuLibrary.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF211862295B008345B3 /* TapkuLibrary.h */; };
+		79FCDFA11862295E008345B3 /* TKAlertCenter.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF221862295B008345B3 /* TKAlertCenter.h */; };
+		79FCDFA21862295E008345B3 /* TKAlertCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF231862295C008345B3 /* TKAlertCenter.m */; };
+		79FCDFA31862295E008345B3 /* TKAppDelegate.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF241862295C008345B3 /* TKAppDelegate.h */; };
+		79FCDFA41862295E008345B3 /* TKAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF251862295C008345B3 /* TKAppDelegate.m */; };
+		79FCDFA51862295E008345B3 /* TKButtonCell.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF261862295C008345B3 /* TKButtonCell.h */; };
+		79FCDFA61862295E008345B3 /* TKButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF271862295C008345B3 /* TKButtonCell.m */; };
+		79FCDFA71862295E008345B3 /* TKCalendarDayEventView.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF281862295C008345B3 /* TKCalendarDayEventView.h */; };
+		79FCDFA81862295E008345B3 /* TKCalendarDayEventView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF291862295C008345B3 /* TKCalendarDayEventView.m */; };
+		79FCDFA91862295E008345B3 /* TKCalendarDayView.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF2A1862295C008345B3 /* TKCalendarDayView.h */; };
+		79FCDFAA1862295E008345B3 /* TKCalendarDayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF2B1862295C008345B3 /* TKCalendarDayView.m */; };
+		79FCDFAB1862295E008345B3 /* TKCalendarDayViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF2C1862295C008345B3 /* TKCalendarDayViewController.h */; };
+		79FCDFAC1862295E008345B3 /* TKCalendarDayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF2D1862295C008345B3 /* TKCalendarDayViewController.m */; };
+		79FCDFAD1862295E008345B3 /* TKCalendarMonthTableViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF2E1862295C008345B3 /* TKCalendarMonthTableViewController.h */; };
+		79FCDFAE1862295E008345B3 /* TKCalendarMonthTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF2F1862295C008345B3 /* TKCalendarMonthTableViewController.m */; };
+		79FCDFAF1862295E008345B3 /* TKCalendarMonthView.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF301862295C008345B3 /* TKCalendarMonthView.h */; };
+		79FCDFB01862295E008345B3 /* TKCalendarMonthView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF311862295C008345B3 /* TKCalendarMonthView.m */; };
+		79FCDFB11862295E008345B3 /* TKCalendarMonthViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF321862295C008345B3 /* TKCalendarMonthViewController.h */; };
+		79FCDFB21862295E008345B3 /* TKCalendarMonthViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF331862295C008345B3 /* TKCalendarMonthViewController.m */; };
+		79FCDFB31862295E008345B3 /* TKCoverflowView.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF341862295C008345B3 /* TKCoverflowView.h */; };
+		79FCDFB41862295E008345B3 /* TKCoverflowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF351862295C008345B3 /* TKCoverflowView.m */; };
+		79FCDFB51862295E008345B3 /* TKEmptyView.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF361862295C008345B3 /* TKEmptyView.h */; };
+		79FCDFB61862295E008345B3 /* TKEmptyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF371862295C008345B3 /* TKEmptyView.m */; };
+		79FCDFB71862295E008345B3 /* TKGlobal.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF381862295C008345B3 /* TKGlobal.h */; };
+		79FCDFB81862295E008345B3 /* TKGlobal.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF391862295C008345B3 /* TKGlobal.m */; };
+		79FCDFB91862295E008345B3 /* TKGlowButton.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF3A1862295C008345B3 /* TKGlowButton.h */; };
+		79FCDFBA1862295E008345B3 /* TKGlowButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF3B1862295C008345B3 /* TKGlowButton.m */; };
+		79FCDFBB1862295E008345B3 /* TKGradientView.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF3C1862295C008345B3 /* TKGradientView.h */; };
+		79FCDFBC1862295E008345B3 /* TKGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF3D1862295C008345B3 /* TKGradientView.m */; };
+		79FCDFBD1862295E008345B3 /* TKHTTPRequest.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF3E1862295C008345B3 /* TKHTTPRequest.h */; };
+		79FCDFBE1862295E008345B3 /* TKHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF3F1862295C008345B3 /* TKHTTPRequest.m */; };
+		79FCDFBF1862295E008345B3 /* TKImageCache.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF401862295C008345B3 /* TKImageCache.h */; };
+		79FCDFC01862295E008345B3 /* TKImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF411862295C008345B3 /* TKImageCache.m */; };
+		79FCDFC11862295E008345B3 /* TKKeyboardTableViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF421862295C008345B3 /* TKKeyboardTableViewController.h */; };
+		79FCDFC21862295E008345B3 /* TKKeyboardTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF431862295C008345B3 /* TKKeyboardTableViewController.m */; };
+		79FCDFC31862295E008345B3 /* TKLabelCell.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF441862295C008345B3 /* TKLabelCell.h */; };
+		79FCDFC41862295E008345B3 /* TKLabelCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF451862295C008345B3 /* TKLabelCell.m */; };
+		79FCDFC51862295E008345B3 /* TKLabelFieldCell.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF461862295C008345B3 /* TKLabelFieldCell.h */; };
+		79FCDFC61862295E008345B3 /* TKLabelFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF471862295C008345B3 /* TKLabelFieldCell.m */; };
+		79FCDFC71862295E008345B3 /* TKLabelSwitchCell.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF481862295C008345B3 /* TKLabelSwitchCell.h */; };
+		79FCDFC81862295E008345B3 /* TKLabelSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF491862295C008345B3 /* TKLabelSwitchCell.m */; };
+		79FCDFC91862295E008345B3 /* TKLabelTextFieldCell.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF4A1862295C008345B3 /* TKLabelTextFieldCell.h */; };
+		79FCDFCA1862295E008345B3 /* TKLabelTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF4B1862295C008345B3 /* TKLabelTextFieldCell.m */; };
+		79FCDFCB1862295E008345B3 /* TKLabelTextViewCell.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF4C1862295C008345B3 /* TKLabelTextViewCell.h */; };
+		79FCDFCC1862295E008345B3 /* TKLabelTextViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF4D1862295C008345B3 /* TKLabelTextViewCell.m */; };
+		79FCDFCD1862295E008345B3 /* TKLoadingView.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF4E1862295C008345B3 /* TKLoadingView.h */; };
+		79FCDFCE1862295E008345B3 /* TKLoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF4F1862295C008345B3 /* TKLoadingView.m */; };
+		79FCDFCF1862295E008345B3 /* TKNetworkQueue.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF501862295C008345B3 /* TKNetworkQueue.h */; };
+		79FCDFD01862295E008345B3 /* TKNetworkQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF511862295C008345B3 /* TKNetworkQueue.m */; };
+		79FCDFD11862295E008345B3 /* TKProgressAlertView.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF521862295D008345B3 /* TKProgressAlertView.h */; };
+		79FCDFD21862295E008345B3 /* TKProgressAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF531862295D008345B3 /* TKProgressAlertView.m */; };
+		79FCDFD31862295E008345B3 /* TKProgressBarView.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF541862295D008345B3 /* TKProgressBarView.h */; };
+		79FCDFD41862295E008345B3 /* TKProgressBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF551862295D008345B3 /* TKProgressBarView.m */; };
+		79FCDFD51862295E008345B3 /* TKProgressCircleView.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF561862295D008345B3 /* TKProgressCircleView.h */; };
+		79FCDFD61862295E008345B3 /* TKProgressCircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF571862295D008345B3 /* TKProgressCircleView.m */; };
+		79FCDFD71862295E008345B3 /* TKReorderTableView.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF581862295D008345B3 /* TKReorderTableView.h */; };
+		79FCDFD81862295E008345B3 /* TKReorderTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF591862295D008345B3 /* TKReorderTableView.m */; };
+		79FCDFD91862295E008345B3 /* TKRetroButton.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF5A1862295D008345B3 /* TKRetroButton.h */; };
+		79FCDFDA1862295E008345B3 /* TKRetroButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF5B1862295D008345B3 /* TKRetroButton.m */; };
+		79FCDFDB1862295E008345B3 /* TKShapeView.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF5C1862295D008345B3 /* TKShapeView.h */; };
+		79FCDFDC1862295E008345B3 /* TKShapeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF5D1862295D008345B3 /* TKShapeView.m */; };
+		79FCDFDD1862295E008345B3 /* TKShimmerLabel.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF5E1862295D008345B3 /* TKShimmerLabel.h */; };
+		79FCDFDE1862295E008345B3 /* TKShimmerLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF5F1862295D008345B3 /* TKShimmerLabel.m */; };
+		79FCDFDF1862295E008345B3 /* TKSlideToUnlockView.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF601862295D008345B3 /* TKSlideToUnlockView.h */; };
+		79FCDFE01862295E008345B3 /* TKSlideToUnlockView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF611862295D008345B3 /* TKSlideToUnlockView.m */; };
+		79FCDFE11862295E008345B3 /* TKSwitchCell.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF621862295D008345B3 /* TKSwitchCell.h */; };
+		79FCDFE21862295E008345B3 /* TKSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF631862295D008345B3 /* TKSwitchCell.m */; };
+		79FCDFE31862295E008345B3 /* TKTableViewCell.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF641862295D008345B3 /* TKTableViewCell.h */; };
+		79FCDFE41862295E008345B3 /* TKTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF651862295D008345B3 /* TKTableViewCell.m */; };
+		79FCDFE51862295E008345B3 /* TKTableViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF661862295D008345B3 /* TKTableViewController.h */; };
+		79FCDFE61862295E008345B3 /* TKTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF671862295D008345B3 /* TKTableViewController.m */; };
+		79FCDFE71862295E008345B3 /* TKTextFieldCell.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF681862295D008345B3 /* TKTextFieldCell.h */; };
+		79FCDFE81862295E008345B3 /* TKTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF691862295D008345B3 /* TKTextFieldCell.m */; };
+		79FCDFE91862295E008345B3 /* TKTextView.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF6A1862295D008345B3 /* TKTextView.h */; };
+		79FCDFEA1862295E008345B3 /* TKTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF6B1862295D008345B3 /* TKTextView.m */; };
+		79FCDFEB1862295E008345B3 /* TKTextViewCell.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF6C1862295D008345B3 /* TKTextViewCell.h */; };
+		79FCDFEC1862295E008345B3 /* TKTextViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF6D1862295D008345B3 /* TKTextViewCell.m */; };
+		79FCDFED1862295E008345B3 /* TKViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF6E1862295D008345B3 /* TKViewController.h */; };
+		79FCDFEE1862295E008345B3 /* TKViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF6F1862295D008345B3 /* TKViewController.m */; };
+		79FCDFF11862295E008345B3 /* TKWindow.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF721862295D008345B3 /* TKWindow.h */; };
+		79FCDFF21862295E008345B3 /* TKWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF731862295D008345B3 /* TKWindow.m */; };
+		79FCDFF31862295E008345B3 /* UIActionSheet+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF741862295D008345B3 /* UIActionSheet+TKCategory.h */; };
+		79FCDFF41862295E008345B3 /* UIActionSheet+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF751862295D008345B3 /* UIActionSheet+TKCategory.m */; };
+		79FCDFF51862295E008345B3 /* UIAlertView+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF761862295D008345B3 /* UIAlertView+TKCategory.h */; };
+		79FCDFF61862295E008345B3 /* UIAlertView+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF771862295D008345B3 /* UIAlertView+TKCategory.m */; };
+		79FCDFF71862295E008345B3 /* UIBarButtonItem+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF781862295D008345B3 /* UIBarButtonItem+TKCategory.h */; };
+		79FCDFF81862295E008345B3 /* UIBarButtonItem+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF791862295D008345B3 /* UIBarButtonItem+TKCategory.m */; };
+		79FCDFF91862295E008345B3 /* UIButton+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF7A1862295D008345B3 /* UIButton+TKCategory.h */; };
+		79FCDFFA1862295E008345B3 /* UIButton+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF7B1862295D008345B3 /* UIButton+TKCategory.m */; };
+		79FCDFFB1862295E008345B3 /* UIColor+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF7C1862295D008345B3 /* UIColor+TKCategory.h */; };
+		79FCDFFC1862295E008345B3 /* UIColor+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF7D1862295D008345B3 /* UIColor+TKCategory.m */; };
+		79FCDFFD1862295E008345B3 /* UIDevice+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF7E1862295E008345B3 /* UIDevice+TKCategory.h */; };
+		79FCDFFE1862295E008345B3 /* UIDevice+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF7F1862295E008345B3 /* UIDevice+TKCategory.m */; };
+		79FCDFFF1862295E008345B3 /* UIFont+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF801862295E008345B3 /* UIFont+TKCategory.h */; };
+		79FCE0001862295E008345B3 /* UIFont+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF811862295E008345B3 /* UIFont+TKCategory.m */; };
+		79FCE0011862295E008345B3 /* UIGestureRecognizer+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF821862295E008345B3 /* UIGestureRecognizer+TKCategory.h */; };
+		79FCE0021862295E008345B3 /* UIGestureRecognizer+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF831862295E008345B3 /* UIGestureRecognizer+TKCategory.m */; };
+		79FCE0031862295E008345B3 /* UIImage+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF841862295E008345B3 /* UIImage+TKCategory.h */; };
+		79FCE0041862295E008345B3 /* UIImage+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF851862295E008345B3 /* UIImage+TKCategory.m */; };
+		79FCE0051862295E008345B3 /* UIImagePickerController+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF861862295E008345B3 /* UIImagePickerController+TKCategory.h */; };
+		79FCE0061862295E008345B3 /* UIImagePickerController+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF871862295E008345B3 /* UIImagePickerController+TKCategory.m */; };
+		79FCE0071862295E008345B3 /* UIImageView+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF881862295E008345B3 /* UIImageView+TKCategory.h */; };
+		79FCE0081862295E008345B3 /* UIImageView+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF891862295E008345B3 /* UIImageView+TKCategory.m */; };
+		79FCE0091862295E008345B3 /* UIScreen+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF8A1862295E008345B3 /* UIScreen+TKCategory.h */; };
+		79FCE00A1862295E008345B3 /* UIScreen+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF8B1862295E008345B3 /* UIScreen+TKCategory.m */; };
+		79FCE00B1862295E008345B3 /* UIScrollview+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF8C1862295E008345B3 /* UIScrollview+TKCategory.h */; };
+		79FCE00C1862295E008345B3 /* UIScrollview+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF8D1862295E008345B3 /* UIScrollview+TKCategory.m */; };
+		79FCE00D1862295E008345B3 /* UITextField+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF8E1862295E008345B3 /* UITextField+TKCategory.h */; };
+		79FCE00E1862295E008345B3 /* UITextField+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF8F1862295E008345B3 /* UITextField+TKCategory.m */; };
+		79FCE00F1862295E008345B3 /* UIView+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF901862295E008345B3 /* UIView+TKCategory.h */; };
+		79FCE0101862295E008345B3 /* UIView+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF911862295E008345B3 /* UIView+TKCategory.m */; };
+		79FCE0111862295E008345B3 /* UIViewController+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF921862295E008345B3 /* UIViewController+TKCategory.h */; };
+		79FCE0121862295E008345B3 /* UIViewController+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF931862295E008345B3 /* UIViewController+TKCategory.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -337,6 +343,19 @@
 		0A97EDA8184169ED00160B5A /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		0A97EDA9184169ED00160B5A /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		0A99E2011862D8A2001D8A64 /* iWinRegisterTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinRegisterTest.m; sourceTree = "<group>"; };
+		0A9C04E0189D9A3800C4BCE9 /* CustomSubtitledCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomSubtitledCell.h; sourceTree = "<group>"; };
+		0A9C04E1189D9A3800C4BCE9 /* CustomSubtitledCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomSubtitledCell.m; sourceTree = "<group>"; };
+		0A9C04E3189D9BAD00C4BCE9 /* CustomSubtitledCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomSubtitledCell.xib; sourceTree = "<group>"; };
+		0A9C04E7189DA6D600C4BCE9 /* SmallDefaultCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmallDefaultCell.h; sourceTree = "<group>"; };
+		0A9C04E8189DA6D600C4BCE9 /* SmallDefaultCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SmallDefaultCell.m; sourceTree = "<group>"; };
+		0A9C04EC189DA87200C4BCE9 /* SmallDefaultCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SmallDefaultCell.xib; sourceTree = "<group>"; };
+		0A9C04EF189DAA1300C4BCE9 /* LargeDefaultCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LargeDefaultCell.h; sourceTree = "<group>"; };
+		0A9C04F0189DAA1300C4BCE9 /* LargeDefaultCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LargeDefaultCell.m; sourceTree = "<group>"; };
+		0A9C04F4189DAACE00C4BCE9 /* LargeDefaultCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LargeDefaultCell.xib; sourceTree = "<group>"; };
+		0AA36E3A189CC27100C81557 /* AcousticModelEnglish.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AcousticModelEnglish.bundle; sourceTree = "<group>"; };
+		0AA36E3B189CC27100C81557 /* AcousticModelSpanish.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AcousticModelSpanish.bundle; sourceTree = "<group>"; };
+		0AA36E3C189CC27100C81557 /* OpenEars.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = OpenEars.framework; sourceTree = "<group>"; };
+		0AA36E3D189CC27100C81557 /* Slt.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Slt.framework; sourceTree = "<group>"; };
 		0AAC9E931846FE6F0073260F /* iWinOpenEarsModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinOpenEarsModel.h; sourceTree = "<group>"; };
 		0AAC9E941846FE6F0073260F /* iWinOpenEarsModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinOpenEarsModel.m; sourceTree = "<group>"; };
 		0ACE339717FCF5F8003B9C0A /* iWinMeetingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinMeetingViewController.h; sourceTree = "<group>"; };
@@ -353,7 +372,6 @@
 		5B3B6298188CBDF600C0E53E /* iWinViewAndCreateGroupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinViewAndCreateGroupViewController.h; sourceTree = "<group>"; };
 		5B3B6299188CBDF600C0E53E /* iWinViewAndCreateGroupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinViewAndCreateGroupViewController.m; sourceTree = "<group>"; };
 		5B3B62AD188CCB7000C0E53E /* iWinViewAndCreateGroupViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iWinViewAndCreateGroupViewController.xib; sourceTree = "<group>"; };
-		5BE6975F188CD9E80083F71E /* OpenEars.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenEars.framework; path = "../../../../../Downloads/OpenEarsDistribution 2/Framework/OpenEars.framework"; sourceTree = "<group>"; };
 		73CB9D928C6D483CAEB8FAAA /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		7941FDC51828843500AAA92E /* iWinViewAndChangeSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinViewAndChangeSettingsViewController.h; sourceTree = "<group>"; };
 		7941FDC61828843500AAA92E /* iWinViewAndChangeSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinViewAndChangeSettingsViewController.m; sourceTree = "<group>"; };
@@ -508,9 +526,6 @@
 		79FCDF911862295E008345B3 /* UIView+TKCategory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "UIView+TKCategory.m"; path = "../tapkulibrary-master/src/TapkuLibrary/UIView+TKCategory.m"; sourceTree = "<group>"; };
 		79FCDF921862295E008345B3 /* UIViewController+TKCategory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UIViewController+TKCategory.h"; path = "../tapkulibrary-master/src/TapkuLibrary/UIViewController+TKCategory.h"; sourceTree = "<group>"; };
 		79FCDF931862295E008345B3 /* UIViewController+TKCategory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+TKCategory.m"; path = "../tapkulibrary-master/src/TapkuLibrary/UIViewController+TKCategory.m"; sourceTree = "<group>"; };
-		DEED1AC81889F97B00FDAA27 /* AcousticModelEnglish.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AcousticModelEnglish.bundle; sourceTree = "<group>"; };
-		DEED1AC91889F97B00FDAA27 /* AcousticModelSpanish.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AcousticModelSpanish.bundle; sourceTree = "<group>"; };
-		DEED1ACB1889F97B00FDAA27 /* Slt.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Slt.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -524,13 +539,13 @@
 				0A8C13A4187DEA43005A25DE /* CoreLocation.framework in Frameworks */,
 				79753AA81861095F0015098B /* MapKit.framework in Frameworks */,
 				79753AA91861095F0015098B /* QuartzCore.framework in Frameworks */,
+				0AA36E40189CC27100C81557 /* OpenEars.framework in Frameworks */,
 				0A97EDAA184169ED00160B5A /* AudioToolbox.framework in Frameworks */,
-				5BE69760188CD9E80083F71E /* OpenEars.framework in Frameworks */,
-				DEED1ACF1889F97B00FDAA27 /* Slt.framework in Frameworks */,
 				0A97EDAB184169ED00160B5A /* AVFoundation.framework in Frameworks */,
 				0ACE33B517FD246F003B9C0A /* SystemConfiguration.framework in Frameworks */,
 				0ACE33B317FD2461003B9C0A /* Security.framework in Frameworks */,
 				0ACE33B117FD245B003B9C0A /* MobileCoreServices.framework in Frameworks */,
+				0AA36E41189CC27100C81557 /* Slt.framework in Frameworks */,
 				0ACE33AF17FD244B003B9C0A /* CFNetwork.framework in Frameworks */,
 				0A04455A17F3825D000FF2A0 /* UIKit.framework in Frameworks */,
 				0A04455C17F3825D000FF2A0 /* Foundation.framework in Frameworks */,
@@ -555,7 +570,6 @@
 		0A04454D17F3825C000FF2A0 = {
 			isa = PBXGroup;
 			children = (
-				DEED1AC71889F97B00FDAA27 /* Framework */,
 				79FCE013186229A8008345B3 /* TapkuSrcFiles */,
 				79F59D0E1861768F009E2C78 /* TapkuLibrary.bundle */,
 				0A04456117F3825D000FF2A0 /* MeetingBuilder */,
@@ -604,6 +618,10 @@
 		0A04456117F3825D000FF2A0 /* MeetingBuilder */ = {
 			isa = PBXGroup;
 			children = (
+				0AA36E39189CC27100C81557 /* Framework */,
+				0A9C04EE189DA9EB00C4BCE9 /* LargeDefaultCell */,
+				0A9C04E5189DA5C100C4BCE9 /* SmallDefaultCell */,
+				0AA36E2C189CB5D400C81557 /* CustomSubtitledTableViewCell */,
 				0A959DD91895F97F00CF19E3 /* BackEndUtility */,
 				0A30739018921C5D00C2D5F6 /* MergeNoteController */,
 				5B3B6297188CBDBE00C0E53E /* ViewAndCreateGroup */,
@@ -884,6 +902,47 @@
 			name = RegisterTest;
 			sourceTree = "<group>";
 		};
+		0A9C04E5189DA5C100C4BCE9 /* SmallDefaultCell */ = {
+			isa = PBXGroup;
+			children = (
+				0A9C04E7189DA6D600C4BCE9 /* SmallDefaultCell.h */,
+				0A9C04E8189DA6D600C4BCE9 /* SmallDefaultCell.m */,
+				0A9C04EC189DA87200C4BCE9 /* SmallDefaultCell.xib */,
+			);
+			name = SmallDefaultCell;
+			sourceTree = "<group>";
+		};
+		0A9C04EE189DA9EB00C4BCE9 /* LargeDefaultCell */ = {
+			isa = PBXGroup;
+			children = (
+				0A9C04EF189DAA1300C4BCE9 /* LargeDefaultCell.h */,
+				0A9C04F0189DAA1300C4BCE9 /* LargeDefaultCell.m */,
+				0A9C04F4189DAACE00C4BCE9 /* LargeDefaultCell.xib */,
+			);
+			name = LargeDefaultCell;
+			sourceTree = "<group>";
+		};
+		0AA36E2C189CB5D400C81557 /* CustomSubtitledTableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				0A9C04E0189D9A3800C4BCE9 /* CustomSubtitledCell.h */,
+				0A9C04E1189D9A3800C4BCE9 /* CustomSubtitledCell.m */,
+				0A9C04E3189D9BAD00C4BCE9 /* CustomSubtitledCell.xib */,
+			);
+			name = CustomSubtitledTableViewCell;
+			sourceTree = "<group>";
+		};
+		0AA36E39189CC27100C81557 /* Framework */ = {
+			isa = PBXGroup;
+			children = (
+				0AA36E3A189CC27100C81557 /* AcousticModelEnglish.bundle */,
+				0AA36E3B189CC27100C81557 /* AcousticModelSpanish.bundle */,
+				0AA36E3C189CC27100C81557 /* OpenEars.framework */,
+				0AA36E3D189CC27100C81557 /* Slt.framework */,
+			);
+			path = Framework;
+			sourceTree = "<group>";
+		};
 		0AAC9E921846FE2B0073260F /* OpenEars */ = {
 			isa = PBXGroup;
 			children = (
@@ -1099,18 +1158,6 @@
 			name = TapkuSrcFiles;
 			sourceTree = "<group>";
 		};
-		DEED1AC71889F97B00FDAA27 /* Framework */ = {
-			isa = PBXGroup;
-			children = (
-				5BE6975F188CD9E80083F71E /* OpenEars.framework */,
-				DEED1AC81889F97B00FDAA27 /* AcousticModelEnglish.bundle */,
-				DEED1AC91889F97B00FDAA27 /* AcousticModelSpanish.bundle */,
-				DEED1ACB1889F97B00FDAA27 /* Slt.framework */,
-			);
-			name = Framework;
-			path = MeetingBuilder/Framework;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1214,18 +1261,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				7941FDD6182A0DCE00AAA92E /* iWinViewProfileViewController.xib in Resources */,
+				0AA36E3F189CC27100C81557 /* AcousticModelSpanish.bundle in Resources */,
 				0A04456617F3825D000FF2A0 /* InfoPlist.strings in Resources */,
 				0A7E516117FBEB9200A4B8B7 /* iWinLoginViewController.xib in Resources */,
+				0AA36E3E189CC27100C81557 /* AcousticModelEnglish.bundle in Resources */,
 				0A04456E17F3825D000FF2A0 /* Default.png in Resources */,
 				0A1A729F181A22AB009A49E5 /* iWinTaskListViewController.xib in Resources */,
 				7941FDC91828843500AAA92E /* iWinViewAndChangeSettingsViewController.xib in Resources */,
+				0A9C04ED189DA87200C4BCE9 /* SmallDefaultCell.xib in Resources */,
 				0ACE339B17FCF5F8003B9C0A /* iWinMeetingViewController.xib in Resources */,
 				0A1A7297181A1802009A49E5 /* iWinAgendaItemViewController.xib in Resources */,
 				0A1A72A9181A2C5E009A49E5 /* iWinAddUsersViewController.xib in Resources */,
-				DEED1ACC1889F97B00FDAA27 /* AcousticModelEnglish.bundle in Resources */,
 				0A1A72911819FE48009A49E5 /* iWinViewAndAddViewController.xib in Resources */,
 				0A7E516617FBEBA200A4B8B7 /* iWinRegisterViewController.xib in Resources */,
 				0A30739518921CB300C2D5F6 /* iWinMergeNoteViewController.xib in Resources */,
+				0A9C04E4189D9BAD00C4BCE9 /* CustomSubtitledCell.xib in Resources */,
+				0A9C04F5189DAACE00C4BCE9 /* LargeDefaultCell.xib in Resources */,
 				79D513D1181F9F9E00C79B71 /* iWinNoteListViewController.xib in Resources */,
 				0A7E515C17FBEA9700A4B8B7 /* iWinMainViewController.xib in Resources */,
 				0A1A727E1819E1F5009A49E5 /* iWinHomeScreenViewController.xib in Resources */,
@@ -1234,7 +1285,6 @@
 				79F59D0F18617690009E2C78 /* TapkuLibrary.bundle in Resources */,
 				0A1A72A4181A2663009A49E5 /* iWinAddAndViewTaskViewController.xib in Resources */,
 				0A04457017F3825D000FF2A0 /* Default@2x.png in Resources */,
-				DEED1ACD1889F97B00FDAA27 /* AcousticModelSpanish.bundle in Resources */,
 				5B3B62AE188CCB7000C0E53E /* iWinViewAndCreateGroupViewController.xib in Resources */,
 				0A04457217F3825D000FF2A0 /* Default-568h@2x.png in Resources */,
 			);
@@ -1260,8 +1310,10 @@
 				79FCDF961862295E008345B3 /* NSDate+CalendarGrid.h in Sources */,
 				79FCDF971862295E008345B3 /* NSDate+CalendarGrid.m in Sources */,
 				79FCDF981862295E008345B3 /* NSDate+TKCategory.h in Sources */,
+				0A9C04F1189DAA1300C4BCE9 /* LargeDefaultCell.m in Sources */,
 				79FCDF991862295E008345B3 /* NSDate+TKCategory.m in Sources */,
 				79FCDF9A1862295E008345B3 /* NSMutableArray+TKCategory.h in Sources */,
+				0A9C04E2189D9A3800C4BCE9 /* CustomSubtitledCell.m in Sources */,
 				79FCDF9B1862295E008345B3 /* NSMutableArray+TKCategory.m in Sources */,
 				79FCDF9C1862295E008345B3 /* NSObject+TKCategory.h in Sources */,
 				79FCDF9D1862295E008345B3 /* NSObject+TKCategory.m in Sources */,
@@ -1397,6 +1449,7 @@
 				79753A7E1860F3B50015098B /* iWinMeeting.m in Sources */,
 				0A1A72A8181A2C5E009A49E5 /* iWinAddUsersViewController.m in Sources */,
 				0A91DC9B1835D7AB00741349 /* OCCalendarView.m in Sources */,
+				0A9C04E9189DA6D600C4BCE9 /* SmallDefaultCell.m in Sources */,
 				79D513CA181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.m in Sources */,
 				0A7E516017FBEB9200A4B8B7 /* iWinLoginViewController.m in Sources */,
 				0A1A729E181A22AB009A49E5 /* iWinTaskListViewController.m in Sources */,
@@ -1530,13 +1583,8 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/csse/Downloads/OpenEarsDistribution/Framework,
 					/Users/csse/Documents/CSSE371/Section04/MeetingBuilder/MeetingBuilder/Framework,
-					/Users/richard/csse374_JrProject/MeetingBuilder/MeetingBuilder/Framework,
-					/Users/csse/Documents/Section04/MeetingBuilder/MeetingBuilder/Framework,
 					/Users/csse/Documents/CSSE371/Section04/MeetingBuilder,
-					/Users/Alpha/Documents/Section04/MeetingBuilder/MeetingBuilder/Framework,
-					"/Users/brodielockard/Downloads/OpenEarsDistribution\\ 2/Framework",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MeetingBuilder/MeetingBuilder-Prefix.pch";
