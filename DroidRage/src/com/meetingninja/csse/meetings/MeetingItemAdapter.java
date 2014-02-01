@@ -47,9 +47,9 @@ public class MeetingItemAdapter extends ArrayAdapter<Meeting> {
 	/*
 	 * Override the constructor to initialize the list to display
 	 */
-	public MeetingItemAdapter(Context context, int textViewResourceId,
+	public MeetingItemAdapter(Context context, int resource,
 			List<Meeting> meetings) {
-		super(context, textViewResourceId, meetings);
+		super(context, resource, meetings);
 		this.meetings = meetings;
 		this.context = context;
 	}

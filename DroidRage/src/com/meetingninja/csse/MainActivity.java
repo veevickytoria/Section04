@@ -157,9 +157,10 @@ public class MainActivity extends FragmentActivity implements
 				isDataCached = savedInstanceState.getBoolean(KEY_SQL_CACHE,
 						false);
 			}
-			if (!isDataCached) {
+			if (!isDataCached && session.needsSync()) {
 				ApplicationController.getInstance().loadUsers();
 				isDataCached = true;
+				session.setSynced();
 			}
 
 			// Track the usage of the application with Parse SDK

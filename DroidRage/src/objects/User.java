@@ -34,7 +34,7 @@ public class User extends AbstractJSONObject<User> implements Parcelable {
 	}
 
 	public User(User copyUser) {
-		setID((copyUser.getID() != null ? copyUser.getID() : "" + 0));
+		setID((copyUser.getID()));
 		setDisplayName(copyUser.getDisplayName());
 		setEmail(copyUser.getEmail());
 		setPhone(copyUser.getPhone());
@@ -99,13 +99,13 @@ public class User extends AbstractJSONObject<User> implements Parcelable {
 
 	@Override
 	public void setID(String id) {
-		int testInt = Integer.parseInt(id);
+		int testInt = (id != null) ? Integer.parseInt(id) : -1;
 		setID(testInt);
 	}
 
 	@Override
 	protected void setID(int id) {
-		this.userID = Integer.toString(id);
+		this.userID = (id != -1) ? Integer.toString(id) : "";
 	}
 
 	public String getDisplayName() {
@@ -236,6 +236,82 @@ public class User extends AbstractJSONObject<User> implements Parcelable {
 		// return json;
 
 		return MAPPER.readTree(json);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((company == null) ? 0 : company.hashCode());
+		result = prime * result
+				+ ((displayName == null) ? 0 : displayName.hashCode());
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		result = prime * result
+				+ ((location == null) ? 0 : location.hashCode());
+		result = prime * result + ((phone == null) ? 0 : phone.hashCode());
+		result = prime * result + ((title == null) ? 0 : title.hashCode());
+		result = prime * result + ((userID == null) ? 0 : userID.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof User))
+			return false;
+		User other = (User) obj;
+		if (company == null) {
+			if (other.company != null)
+				return false;
+		} else if (!company.equals(other.company))
+			return false;
+		if (displayName == null) {
+			if (other.displayName != null)
+				return false;
+		} else if (!displayName.equals(other.displayName))
+			return false;
+		if (email == null) {
+			if (other.email != null)
+				return false;
+		} else if (!email.equals(other.email))
+			return false;
+		if (location == null) {
+			if (other.location != null)
+				return false;
+		} else if (!location.equals(other.location))
+			return false;
+		if (phone == null) {
+			if (other.phone != null)
+				return false;
+		} else if (!phone.equals(other.phone))
+			return false;
+		if (title == null) {
+			if (other.title != null)
+				return false;
+		} else if (!title.equals(other.title))
+			return false;
+		if (userID == null) {
+			if (other.userID != null)
+				return false;
+		} else if (!userID.equals(other.userID))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("User [getID()=");
+		builder.append(getID());
+		builder.append(", getDisplayName()=");
+		builder.append(getDisplayName());
+		builder.append(", getEmail()=");
+		builder.append(getEmail());
+		builder.append("]");
+		return builder.toString();
 	}
 
 }

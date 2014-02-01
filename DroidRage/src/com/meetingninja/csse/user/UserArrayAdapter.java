@@ -17,9 +17,7 @@ import android.widget.TextView;
 public class UserArrayAdapter extends ArrayAdapter<User> {
 
 	private int mLayoutId;
-
 	private final LayoutInflater mLayoutInflater;
-
 	private List<User> users;
 
 	public UserArrayAdapter(Context context, int resourceId, List<User> users) {

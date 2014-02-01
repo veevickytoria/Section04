@@ -34,10 +34,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.meetingninja.csse.ApplicationController;
+import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
 import com.meetingninja.csse.database.volley.JsonNodeRequest;
 import com.meetingninja.csse.database.volley.JsonRequestListener;
+import com.meetingninja.csse.database.volley.UserVolleyAdapter;
 
 public class SQLiteUserAdapter extends SQLiteHelper {
 	private static final String TAG = SQLiteUserAdapter.class.getSimpleName();
@@ -89,27 +91,29 @@ public class SQLiteUserAdapter extends SQLiteHelper {
 				groupBy, having, orderBy);
 	}
 
-	public List<User> getAllUsers() {
-		Log.d(TAG, "Getting All Users");
-		List<User> users = new ArrayList<User>();
-		mDb = mDbHelper.getReadableDatabase();
-		Cursor c = mDb.query(TABLE_NAME, allColumns, null, null, null, null,
-				KEY_NAME + " ASC");
-		System.out.println(c.getCount());
-
-		// looping through all rows and adding to list
-		if (c.moveToFirst()) {
-			do {
-				User u = new User(c);
-				users.add(u);
-			} while (c.moveToNext());
-		}
-		c.close();
+	public void clear() {
+		Log.d(TAG, "Clearing Users Table");
+		mDb = mDbHelper.getWritableDatabase();
+		mDb.delete(TABLE_NAME, null, null);
 		close();
-		return users;
 	}
 
-	private void bulkInsertUsers(List<User> userList) throws Exception {
+	public void cacheUsers() {
+		UserVolleyAdapter.fetchAllUsers(new AsyncResponse<List<User>>() {
+
+			@Override
+			public void processFinish(List<User> result) {
+				try {
+					bulkInsertUsers(result);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	private synchronized void bulkInsertUsers(List<User> userList)
+			throws Exception {
 		String sql = "INSERT INTO " + TABLE_NAME
 				+ " VALUES (?, ?, ?, ?, ?, ?, ?);";
 		String fts_sql = "INSERT INTO " + FTS_TABLE_NAME
@@ -139,48 +143,32 @@ public class SQLiteUserAdapter extends SQLiteHelper {
 				statement.bindString(5, user.getCompany());
 				statement.bindString(6, user.getTitle());
 				statement.bindString(7, user.getCompany());
+
 				statement.executeInsert(); // done with all data
 			}
 			mDb.setTransactionSuccessful();
-		} catch (Exception e) {
 			mDb.endTransaction();
+		} catch (Exception e) {
+			mDb.endTransaction(); // may not reach end transaction
 			throw e;
 		} finally {
-			mDb.endTransaction();
-			close();
+			close(); // close db connection
 		}
 	}
 
-	public void cacheUsers() {
-		Log.d(TAG, "Loading users into DB");
-		String _url = UserDatabaseAdapter.getBaseUri().appendPath("Users")
-				.build().toString();
+	public ArrayList<User> getAllUsers() {
+		ArrayList<User> users = new ArrayList<User>();
+		Cursor c = query(allColumns, null, null, null, null, null);
 
-		JsonNodeRequest req = new JsonNodeRequest(_url, null,
-				new JsonRequestListener() {
-					@Override
-					public void onResponse(JsonNode response, int statusCode,
-							VolleyError error) {
-						VolleyLog.v("Response:%n %s", response);
-
-						if (response != null) {
-							try {
-								bulkInsertUsers(UserDatabaseAdapter
-										.parseUserList(response));
-							} catch (Exception e) {
-								VolleyLog.e("Error:%n %s",
-										e.getLocalizedMessage());
-							}
-						} else {
-							error.printStackTrace();
-
-						}
-					}
-				});
-
-		// add the request object to the queue to be executed
-		ApplicationController app = ApplicationController.getInstance();
-		app.addToRequestQueue(req, "JSON");
+		// looping through all rows and adding to list
+		if (c.moveToFirst()) {
+			do {
+				users.add(new User(c));
+			} while (c.moveToNext());
+		}
+		c.close();
+		close();
+		return users;
 	}
 
 	public Cursor getNameMatches(String query, String[] columns) {
@@ -198,8 +186,8 @@ public class SQLiteUserAdapter extends SQLiteHelper {
 		builder.setTables(FTS_TABLE_NAME);
 
 		Cursor cursor = builder.query(getReadableDatabase(), columns,
-				selection, selectionArgs, null, null, KEY_NAME + " ASC, "
-						+ KEY_EMAIL + " ASC");
+				selection, selectionArgs, null, null, KEY_NAME + ", "
+						+ KEY_EMAIL);
 
 		if (!(cursor == null || cursor.moveToFirst())) {
 			cursor.close();

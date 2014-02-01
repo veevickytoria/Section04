@@ -21,6 +21,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.Volley;
+import com.meetingninja.csse.database.local.SQLiteHelper;
 import com.meetingninja.csse.database.local.SQLiteNoteAdapter;
 import com.meetingninja.csse.database.local.SQLiteUserAdapter;
 import com.parse.Parse;
@@ -76,18 +77,21 @@ public class ApplicationController extends Application {
 	 * Load All Users into the SQLiteDatabase
 	 */
 	public void loadUsers() {
-		SQLiteUserAdapter sqlite = new SQLiteUserAdapter(getApplicationContext());
+		SQLiteUserAdapter sqlite = new SQLiteUserAdapter(
+				getApplicationContext());
+		sqlite.clear();
 		sqlite.cacheUsers();
 		sqlite.close();
 	}
-	
+
 	/**
 	 * Load All Notes into the SQLiteDatabase
 	 */
 	public void loadNotes() {
-		SQLiteNoteAdapter sqlite = new SQLiteNoteAdapter(getApplicationContext());
-//		sqlite.cacheNotes(false);
-//		sqlite.cacheNotes(true);
+		SQLiteNoteAdapter sqlite = new SQLiteNoteAdapter(
+				getApplicationContext());
+		// sqlite.cacheNotes(false);
+		// sqlite.cacheNotes(true);
 		sqlite.close();
 	}
 

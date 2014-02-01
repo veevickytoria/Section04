@@ -46,7 +46,7 @@
                   android:ellipsize="end"
                   android:layout_marginTop="-4dip" />
     </LinearLayout>
-    <ImageView
+   <com.loopj.android.image.SmartImageView
         android:id="@android:id/icon"
         android:layout_width="48dip"
         android:layout_height="48dip"

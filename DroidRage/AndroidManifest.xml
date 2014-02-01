@@ -21,8 +21,8 @@
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.READ_SYNC_STATS" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-	<uses-permission android:name="android.permission.CALL_PHONE" />
-	
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+
     <uses-sdk
         android:minSdkVersion="17"
         android:targetSdkVersion="19" />
@@ -73,7 +73,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.meetingninja.csse.MainActivity" />
         </activity>
-        
         <activity
             android:name="com.meetingninja.csse.notes.CreateNoteActivity"
             android:label="@string/title_activity_edit_note" >
@@ -148,25 +147,21 @@
 
         <activity
             android:name="com.meetingninja.csse.user.ProfileActivity"
-        
             android:parentActivityName="com.meetingninja.csse.MainActivity" >
             <intent-filter>
-            <action android:name="android.intent.action.DIAL" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="android.intent.action.DIAL" />
             </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.meetingninja.csse.MainActivity" />
         </activity>
         <activity android:name="com.meetingninja.csse.tasks.ViewTaskActivity" >
         </activity>
-        <activity android:name="com.meetingninja.csse.tasks.EditTaskActivity"
-            android:label="@string/title_activity_edit_task" 
-            android:configChanges="keyboardHidden|orientation|screenSize">
+        <activity
+            android:name="com.meetingninja.csse.tasks.EditTaskActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/title_activity_edit_task" >
         </activity>
         <activity
             android:name="com.meetingninja.csse.group.EditGroupActivity"

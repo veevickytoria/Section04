@@ -70,8 +70,10 @@ public class UserVolleyAdapter extends UserDatabaseAdapter {
 					@Override
 					public void onResponse(JsonNode response, int statusCode,
 							VolleyError error) {
-						delegate.processFinish(parseUserList(response));
-
+						if (response != null) {
+							delegate.processFinish(parseUserList(response));
+						} else
+							error.printStackTrace();
 					}
 				}, new Response.ErrorListener() {
 					@Override

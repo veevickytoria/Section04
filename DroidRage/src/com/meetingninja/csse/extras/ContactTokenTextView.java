@@ -7,6 +7,7 @@ import objects.SerializableUser;
 import objects.User;
 import android.app.Activity;
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,39 +19,38 @@ import android.widget.TextView;
 import com.meetingninja.csse.R;
 import com.tokenautocomplete.TokenCompleteTextView;
 
-public class UsersCompletionView extends TokenCompleteTextView {
+public class ContactTokenTextView extends TokenCompleteTextView {
 
-	private final String TAG = UsersCompletionView.class.getSimpleName();
+	private static final String TAG = "Test";
+	private final LayoutInflater mLayoutInflater;
 
-	public UsersCompletionView(Context context, AttributeSet attrs) {
+	public ContactTokenTextView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-	}
-
-	@Override
-	public void addObject(Object object) {
-		super.addObject(object);
-		String className = object.getClass().getSimpleName();
-		Log.d(TAG, "Added a " + className);
+		mLayoutInflater = LayoutInflater.from(context);
+		allowDuplicates(false);
+		setDeletionStyle(TokenCompleteTextView.TokenDeleteStyle.PartialCompletion);
 	}
 
 	@Override
 	protected View getViewForObject(Object object) {
-		String className = object.getClass().getSimpleName();
-		Log.d(TAG, "Get View for " + className);
+		// String className = object.getClass().getSimpleName();
+		// Log.d(TAG, "Get View for " + className);
 
 		SerializableUser su = null;
 		if (object instanceof SerializableUser)
 			su = (SerializableUser) object;
-		else
+		else if (object instanceof User)
 			su = new SerializableUser((User) object);
 
-		LayoutInflater inflater = (LayoutInflater) getContext()
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		LinearLayout view = (LinearLayout) inflater.inflate(
+		LinearLayout view = (LinearLayout) mLayoutInflater.inflate(
 				R.layout.contact_token,
-				(ViewGroup) UsersCompletionView.this.getParent(), false);
-		((TextView) view.findViewById(R.id.token_name)).setText(su
-				.getDisplayName());
+				(ViewGroup) ContactTokenTextView.this.getParent(), false);
+
+		TextView name = (TextView) view.findViewById(R.id.token_name);
+		if (!TextUtils.equals(su.getID(), ""))
+			name.setText(su.getDisplayName());
+		else
+			name.setText(su.getEmail());
 
 		return view;
 	}

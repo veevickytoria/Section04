@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.text.util.Rfc822Tokenizer;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,9 +27,10 @@ import com.android.ex.chips.RecipientEditTextView;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
+import com.meetingninja.csse.database.local.SQLiteUserAdapter;
 import com.meetingninja.csse.database.volley.UserVolleyAdapter;
 import com.meetingninja.csse.extras.BaseFragment;
-import com.meetingninja.csse.extras.UsersCompletionView;
+import com.meetingninja.csse.extras.ContactTokenTextView;
 import com.meetingninja.csse.user.AutoCompleteAdapter;
 import com.meetingninja.csse.user.AutoCompleteAdapter;
 import com.meetingninja.csse.user.UserArrayAdapter;
@@ -55,12 +57,12 @@ public class SearchableUserFragment extends BaseFragment implements
 
 	private Context mContext;
 
-	private UsersCompletionView complete;
+	private ContactTokenTextView complete;
 	private AutoCompleteAdapter autoAdapter;
 	private TextView addedIDsView;
 	private UserArrayAdapter addedAdapter;
 
-	private List<SerializableUser> allUsers = new ArrayList<SerializableUser>();
+	private ArrayList<User> allUsers = new ArrayList<User>();
 	private ArrayList<User> addedUsers = new ArrayList<User>();
 	private ArrayList<String> addedIds = new ArrayList<String>();
 
@@ -106,48 +108,30 @@ public class SearchableUserFragment extends BaseFragment implements
 		super.onCreateView(inflater, container, savedInstanceState);
 		View view = inflater.inflate(R.layout.fragment_autocomplete, container,
 				false);
-		setupViews(view);
-
-		// if (savedInstanceState != null && savedState == null) {
-		// savedState = savedInstanceState.getBundle(SAVED_BUNDLE_TAG);
-		// for (String s : savedInstanceState.keySet()) {
-		// System.out.println(s + ": " + savedInstanceState.get(s));
-		// }
-		// }
-		// if (savedState != null)
-		// allUsers = savedState
-		// .getParcelableArrayList(Keys.User.LIST + "ALL");
-		// savedState = null;
-
-		// if (savedInstanceState == null
-		// || !savedInstanceState.containsKey(Keys.User.LIST + "ALL")) {
-		// Log.w(TAG, "Not Saved");
-		// UserDatabaseAdapter.fetchAllUsers(this); // processFinish()
-		// } else {
-		// Log.i(TAG, "Restoring");
-		// allUsers = savedInstanceState.getParcelableArrayList(Keys.User.LIST
-		// + "ALL");
-		// addedUsers = savedInstanceState
-		// .getParcelableArrayList(Keys.User.LIST + "ADDED");
-		// addedIds = savedInstanceState.getStringArrayList(Keys.User.LIST
-		// + Keys.User.ID);
-		// }
-
-		// TODO: store the users in the sqlite database
-		// mySQLiteAdapter = new SQLiteUserAdapter(getActivity());
-		// mySQLiteAdapter.loadUsers();
-		// allUsers = mySQLiteAdapter.getAllUsers();
-		// mySQLiteAdapter.close();
 
 		UserVolleyAdapter.fetchAllUsers(this);
 
-		autoAdapter = new AutoCompleteAdapter(getActivity(),
-				R.layout.chips_recipient_dropdown_item, allUsers);
-		complete.setAdapter(autoAdapter);
+//		SQLiteUserAdapter sqlite = new SQLiteUserAdapter(mContext);
+//		allUsers = sqlite.getAllUsers();
+//		System.out.println(allUsers);
+//		sqlite.close();
+		
+		autoAdapter = new AutoCompleteAdapter(getActivity(), allUsers);
 
+		
+		complete = (ContactTokenTextView) view
+				.findViewById(R.id.my_autocomplete);
+		complete.setAdapter(autoAdapter);
+		complete.setTokenListener(this);
+
+		// token listener when autocompleted
+		addedIDsView = (TextView) view.findViewById(R.id.completed_ids);
+		
 		addedAdapter = new UserArrayAdapter(getActivity(),
 				R.layout.list_item_user, addedUsers);
+		mListView = (AbsListView) view.findViewById(android.R.id.list);
 		((AdapterView<ListAdapter>) mListView).setAdapter(addedAdapter);
+
 
 		// Set OnItemClickListener so we can be notified on item clicks
 		mListView.setOnItemClickListener(this);
@@ -155,28 +139,17 @@ public class SearchableUserFragment extends BaseFragment implements
 		return view;
 	}
 
-	private void setupViews(View view) {
-		complete = (UsersCompletionView) view
-				.findViewById(R.id.my_autocomplete);
-		// token listener when autocompleted
-		complete.setTokenListener(this);
-		addedIDsView = (TextView) view.findViewById(R.id.completed_ids);
-		mListView = (AbsListView) view.findViewById(android.R.id.list);
-
-	}
-
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
-		savedState = saveState(); /* allUsers defined here for sure */
+		savedState = saveState();
 		createdStateInDestroyView = true;
 		allUsers.clear();
 	}
 
 	private Bundle saveState() {
-		Log.d(TAG, "Save " + allUsers.size() + " users");
 		Bundle state = new Bundle();
-		// state.putParcelableArrayList(Keys.User.LIST + "ALL", allUsers);
+		state.putParcelableArrayList(Keys.User.LIST + "ALL", allUsers);
 		state.putParcelableArrayList(Keys.User.LIST + "ADDED", addedUsers);
 		state.putStringArrayList(Keys.User.LIST + Keys.User.ID, addedIds);
 		return state;
@@ -209,6 +182,14 @@ public class SearchableUserFragment extends BaseFragment implements
 	}
 
 	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		addedUsers.clear();
+		addedIds.clear();
+		addedAdapter.notifyDataSetChanged();
+	}
+
+	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		// if (null != mListener) {
@@ -233,21 +214,21 @@ public class SearchableUserFragment extends BaseFragment implements
 
 	@Override
 	public void onTokenAdded(Object arg0) {
-		String className = arg0.getClass().getSimpleName();
-		System.out.println("Adding a " + className);
+		// String className = arg0.getClass().getSimpleName();
+		// System.out.println("Adding a " + className);
 
-		SerializableUser serialized = null;
+		SerializableUser added = null;
 		if (arg0 instanceof SerializableUser)
-			serialized = (SerializableUser) arg0;
+			added = (SerializableUser) arg0;
 		else if (arg0 instanceof User)
-			serialized = new SerializableUser((User) arg0);
+			added = new SerializableUser((User) arg0);
 
-		if (serialized != null) {
-			addedUsers.add(serialized);
-			if (serialized.getID() != null) {
-				addedIds.add(serialized.getID());
+		if (added != null) {
+			addedUsers.add(added);
+			if (!TextUtils.equals(added.getID(), "")) {
+				addedIds.add(added.getID());
 			} else {
-				addedIds.add(serialized.getEmail());
+				addedIds.add(added.getEmail());
 			}
 		}
 		addedAdapter.notifyDataSetChanged();
@@ -258,19 +239,21 @@ public class SearchableUserFragment extends BaseFragment implements
 
 	@Override
 	public void onTokenRemoved(Object arg0) {
-		User removed;
-		if (arg0 instanceof User) {
-			removed = (User) arg0;
-			if (removed.getID() != null) {
+		SerializableUser removed = null;
+		if (arg0 instanceof SerializableUser)
+			removed = (SerializableUser) arg0;
+		else if (arg0 instanceof User)
+			removed = new SerializableUser((User) arg0);
+
+		if (removed != null) {
+			addedUsers.remove(removed);
+			if (!TextUtils.equals(removed.getID(), "")) {
 				addedIds.remove(removed.getID());
 			} else {
 				addedIds.remove(removed.getEmail());
 			}
-			addedUsers.remove(removed);
 			addedIDsView.setText(addedIds.toString());
 			addedAdapter.notifyDataSetChanged();
-		} else {
-			System.out.println("Not removed");
 		}
 
 	}
@@ -279,9 +262,7 @@ public class SearchableUserFragment extends BaseFragment implements
 	public void processFinish(List<User> result) {
 		allUsers.clear();
 		autoAdapter.clear();
-		for (User user : result) {
-			allUsers.add(new SerializableUser(user));
-		}
+		allUsers.addAll(result);
 		autoAdapter.notifyDataSetChanged();
 	}
 
