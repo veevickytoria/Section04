@@ -48,10 +48,10 @@
     [self.headers addObject:@"Task"];
     [self.headers addObject:@"Miscellaneous"];
     
-//    [self.taskFeed addObject:@"Jim has invited you to Sprint Planning."];
-//    [self.taskFeed addObject:@"12:00 - 13:00, 10/25/13"];
-//    [self.meetingFeed addObject:@"Steve has assigned you Research Libraries"];
-//    [self.meetingFeed addObject:@"Due: 12:00, 10/26/13"];
+    [self.taskFeed addObject:@"Jim has invited you to Sprint Planning."];
+    [self.taskFeed addObject:@"12:00 - 13:00, 10/25/13"];
+    [self.meetingFeed addObject:@"Steve has assigned you Research Libraries"];
+    [self.meetingFeed addObject:@"Due: 12:00, 10/26/13"];
     [self.notificationFeed addObject:@"Mary shared Meeting Minutes 9/21/13"];
     
     
@@ -103,13 +103,13 @@
     
         if (indexPath.section == 0)
         {
-            cell.detailTextLabel.text= (NSString*)[self.meetingFeed objectAtIndex:1];
-            cell.textLabel.text = (NSString*)[self.meetingFeed objectAtIndex:0];
+            cell.detailTextLabel.text= (NSString*)[self.meetingFeed objectAtIndex:(indexPath.row * 2 + 1)];
+            cell.textLabel.text = (NSString*)[self.meetingFeed objectAtIndex:(indexPath.row * 2)];
         }
         else if (indexPath.section == 1)
         {
-            cell.detailTextLabel.text= (NSString*)[self.taskFeed objectAtIndex:1];
-            cell.textLabel.text = (NSString*)[self.taskFeed objectAtIndex:0];
+            cell.detailTextLabel.text= (NSString*)[self.taskFeed objectAtIndex:(indexPath.row * 2 + 1)];
+            cell.textLabel.text = (NSString*)[self.taskFeed objectAtIndex:(indexPath.row * 2)];
         }
         else
         {
