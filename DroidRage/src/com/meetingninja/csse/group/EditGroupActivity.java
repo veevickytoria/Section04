@@ -79,6 +79,14 @@ public class EditGroupActivity extends Activity {
 				group.getMembers());
 		l = (EnhancedListView) findViewById(R.id.group_list);
 		l.setAdapter(mUserAdapter);
+		for(int k = 0; k < group.getMembers().size(); k++){
+			
+			if(group.getMembers().get(k).getDisplayName() == null || group.getMembers().get(k).getDisplayName().isEmpty()){
+				loadUser(group.getMembers().get(k).getID());
+				group.getMembers().remove(k);
+				k--;
+			}
+		}
 		l.setDismissCallback(new de.timroes.android.listview.EnhancedListView.OnDismissCallback() {
 			@Override
 			public EnhancedListView.Undoable onDismiss(
@@ -193,7 +201,6 @@ public class EditGroupActivity extends Activity {
 		i.putExtra(Keys.Group.PARCEL, group);
 		setResult(RESULT_OK, i);
 		finish();
-
 	}
 
 	public void addMember(View view) {
@@ -221,6 +228,7 @@ public class EditGroupActivity extends Activity {
 		fetcher = new RetUserObj();
 		fetcher.execute(userID);
 	}
+	
 
 	// @Override
 	// public ListView getListView() {

@@ -64,7 +64,7 @@ public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
 		return parseGroup(groupNode);
 	}
 
-	public static Group createGroup(ArrayList<String> userID, Group g)
+	public static Group createGroup(Group g)
 			throws IOException, MalformedURLException {
 		// Server URL setup
 		String _url = getBaseUri().build().toString();
@@ -87,11 +87,12 @@ public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
 		jgen.writeStartObject();
 		jgen.writeStringField(Keys.Group.TITLE, g.getGroupTitle());
 		jgen.writeArrayFieldStart(Keys.Group.MEMBERS);
-		jgen.writeStartObject();
-		for (String id : userID) {
-			jgen.writeStringField(Keys.User.ID, id);
+		for (User member : g.getMembers()) {
+			jgen.writeStartObject();
+			jgen.writeStringField(Keys.User.ID, member.getID());
+			jgen.writeEndObject();
+
 		}
-		jgen.writeEndObject();
 		jgen.writeEndArray();
 		jgen.writeEndObject();
 		jgen.close();
@@ -105,20 +106,21 @@ public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
 		String response = getServerResponse(conn);
 
 		// prepare to get the id of the created Meeting
-		Map<String, String> responseMap = new HashMap<String, String>();
+//		Map<String, String> responseMap = new HashMap<String, String>();
 
 		/*
 		 * result should get valid={"meetingID":"##"}
 		 */
 		String result = new String();
 		if (!response.isEmpty()) {
-			responseMap = MAPPER.readValue(response,
-					new TypeReference<HashMap<String, String>>() {
-					});
-			if (!responseMap.containsKey(Keys.Group.ID)) {
+//			responseMap = MAPPER.readValue(response,
+//					new TypeReference<HashMap<String, String>>() {
+//					});
+			JsonNode groupNode = MAPPER.readTree(response);
+			if (!groupNode.has(Keys.Group.ID)) {
 				result = "invalid";
 			} else
-				result = responseMap.get(Keys.Group.ID);
+				result = groupNode.get(Keys.Group.ID).asText();
 		}
 
 		if (!result.equalsIgnoreCase("invalid"))

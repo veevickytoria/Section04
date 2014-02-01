@@ -39,6 +39,7 @@ public class GroupsFragment extends Fragment implements
 	private static List<Group> groups = new ArrayList<Group>();;
 	private GroupItemAdapter groupAdpt;
 	private GroupFetcherTask fetcher;
+	private GroupCreateTask creator;
 
 	public GroupsFragment() {
 		// Empty 
@@ -61,6 +62,8 @@ public class GroupsFragment extends Fragment implements
 		super.onCreateView(inflater, container, savedInstanceState);
 		View v = inflater.inflate(R.layout.fragment_groups, container, false);
 		setHasOptionsMenu(true);
+		
+		creator = new GroupCreateTask(this);
 
 		session = SessionManager.getInstance();
 		groupsList = (ListView) v.findViewById(R.id.groupsList);
@@ -114,7 +117,9 @@ public class GroupsFragment extends Fragment implements
 		if (resultCode == Activity.RESULT_OK) {
 			Group g = data.getParcelableExtra(Keys.Group.PARCEL);
 			if (requestCode == 7) {
-				groups.add(g); // TODO: implement DB calls
+				groups.add(g);
+				creator.createGroup(g);
+				// TODO: implement DB calls
 			} else if (requestCode == 8) {
 				// TODO: implement database calls
 			}
@@ -161,15 +166,18 @@ public class GroupsFragment extends Fragment implements
 	public void processFinish(List<Group> result) {
 		groups.clear();
 		groupAdpt.clear();
-		Collections.sort(result, new Comparator<Group>() {
-			@Override
-			public int compare(Group lhs, Group rhs) {
-				return lhs.compareTo(lhs);
-			}
-		});
+//		Collections.sort(result, new Comparator<Group>() {
+//			@Override
+//			public int compare(Group lhs, Group rhs) {
+//				return lhs.compareTo(lhs);
+//			}
+//		});
 
 		groups.addAll(result);
 
+		groupAdpt.notifyDataSetChanged();
+	}
+	public void notifyAdapter(){
 		groupAdpt.notifyDataSetChanged();
 	}
 

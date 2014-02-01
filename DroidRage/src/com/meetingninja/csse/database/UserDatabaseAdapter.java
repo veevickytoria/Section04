@@ -312,7 +312,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 
 		if (groupArray.isArray()) {
 			for (final JsonNode groupNode : groupArray) {
-				String _id = groupNode.get(Keys._ID).asText();
+				String _id = groupNode.get(Keys.Group.ID).asText();
 				System.out.println(_id);
 				groupIDList.add(_id);
 			}
@@ -322,7 +322,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		for (String id : groupIDList) {
 			groupList.add(GroupDatabaseAdapter.getGroup(id));
 		}
-		
+
 		return groupList;
 	}
 
