@@ -55,6 +55,7 @@
     [self.notificationFeed addObject:@"Mary shared Meeting Minutes 9/21/13"];
     
     
+    //For meetingFeed and taskFeed
     NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Schedule/%d", self.userID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
@@ -84,6 +85,27 @@
         }
     }
     
+    
+    //For notificationFeed
+    NSString *urlNotification = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Notification/%d", self.userID];
+    urlNotification = [urlNotification stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *deserializedDictionaryNotification = [self.backendUtility getRequestForUrl:urlNotification];
+    
+    if (!deserializedDictionaryNotification)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"notification not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alert show];
+    }
+    else
+    {
+        NSArray *jsonArray = [deserializedDictionaryNotification objectForKey:@"notifications"];
+        for(int i = 0; i < [jsonArray count]; i++){
+            NSDictionary* element = [jsonArray objectAtIndex:i];
+            
+ 
+
+        }
+    }
     
 }
 
