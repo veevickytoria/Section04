@@ -1,6 +1,10 @@
 package com.meetingninja.csse.group;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import objects.Group;
+import objects.SerializableUser;
 import objects.User;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -8,6 +12,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MotionEvent;
@@ -23,21 +28,29 @@ import android.widget.LinearLayout;
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
+import com.meetingninja.csse.database.volley.UserVolleyAdapter;
 import com.meetingninja.csse.extras.AlertDialogUtil;
+import com.meetingninja.csse.extras.ContactTokenTextView;
 import com.meetingninja.csse.user.ProfileActivity;
 import com.meetingninja.csse.user.AutoCompleteAdapter;
 import com.meetingninja.csse.user.UserArrayAdapter;
 import com.meetingninja.csse.user.UserInfoFetcher;
+import com.tokenautocomplete.TokenCompleteTextView.TokenListener;
 
 import de.timroes.android.listview.EnhancedListView;
 
-public class EditGroupActivity extends Activity {
+public class EditGroupActivity extends Activity implements TokenListener{
 
 	private Group group;
 	private UserArrayAdapter mUserAdapter;
 	EditText titleText;
 	EnhancedListView l;
 	RetUserObj fetcher = null;
+	private ArrayList<User> allUsers = new ArrayList<User>();
+	private AutoCompleteAdapter autoAdapter;
+	private ArrayList<String> addedIds = new ArrayList<String>();
+	private ArrayList<User> addedUsers = new ArrayList<User>();
+
 
 	// public static EditGroupActivity newInstance(Bundle args){
 	// EditGroupActivity act = new EditGroupActivity();
@@ -126,6 +139,14 @@ public class EditGroupActivity extends Activity {
 		l.setSwipingLayout(R.id.list_group_item_frame_1);
 
 		l.setSwipeDirection(EnhancedListView.SwipeDirection.BOTH);
+		
+		UserVolleyAdapter.fetchAllUsers(new AsyncResponse<List<User>>() {
+			@Override
+			public void processFinish(List<User> result) {
+				allUsers = new ArrayList<User>(result);
+				
+			}
+		});
 	}
 
 	@Override
@@ -205,13 +226,19 @@ public class EditGroupActivity extends Activity {
 
 	public void addMember(View view) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle("Enter member ID");
-		final EditText input = new EditText(this);
-		builder.setView(input);
+		builder.setTitle("Search by name or email:");
+		View autocompleteView = this.getLayoutInflater().inflate(R.layout.fragment_autocomplete, null);
+		final ContactTokenTextView input = (ContactTokenTextView) autocompleteView.findViewById(R.id.my_autocomplete);
+		autoAdapter = new AutoCompleteAdapter(this, allUsers);
+		input.setAdapter(autoAdapter);
+		input.setTokenListener(this);
+		builder.setView(autocompleteView);
 		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				loadUser(input.getText().toString());
+				group.getMembers().addAll(addedUsers);
+				addedUsers.clear();
+				mUserAdapter.notifyDataSetChanged();
 			}
 		});
 		builder.setNegativeButton("Cancel",
@@ -229,6 +256,36 @@ public class EditGroupActivity extends Activity {
 		fetcher.execute(userID);
 	}
 	
+	@Override
+	public void onTokenAdded(Object arg0) {
+		// String className = arg0.getClass().getSimpleName();
+//		 System.out.println("Adding a " + className);
+
+		SerializableUser added = null;
+		if (arg0 instanceof SerializableUser)
+			added = (SerializableUser) arg0;
+		else if (arg0 instanceof User)
+			added = new SerializableUser((User) arg0);
+
+		if (added != null) {
+			addedUsers.add(added);
+		}
+
+	}
+
+	@Override
+	public void onTokenRemoved(Object arg0) {
+		SerializableUser removed = null;
+		if (arg0 instanceof SerializableUser)
+			removed = (SerializableUser) arg0;
+		else if (arg0 instanceof User)
+			removed = new SerializableUser((User) arg0);
+
+		if (removed != null) {
+			addedUsers.remove(removed);
+		}
+
+	}
 
 	// @Override
 	// public ListView getListView() {

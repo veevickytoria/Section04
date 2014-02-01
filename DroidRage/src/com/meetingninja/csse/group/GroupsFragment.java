@@ -103,7 +103,7 @@ public class GroupsFragment extends Fragment implements
 			return true;
 		case R.id.action_new:
 			Intent i = new Intent(getActivity(), EditGroupActivity.class);
-			Group g = new Group("1234", "Testing groups edit page");
+			Group g = new Group();
 			i.putExtra(Keys.Group.PARCEL, g);
 			startActivityForResult(i, 7);
 			return true;
