@@ -49,6 +49,7 @@ const int MODAL_WIDTH = 804;
     self.meetingLocations = [[NSMutableArray alloc] init];
     self.selectedMeeting = -1;
     self.backendUtility = [[iWinBackEndUtility alloc] init];
+    [self.projectTable registerNib:[UINib nibWithNibName:@"CustomSubtitledCell" bundle:nil] forCellReuseIdentifier:@"MeetingCell"];
     [self populateMeetingList];
 }
 
@@ -169,14 +170,16 @@ const int MODAL_WIDTH = 804;
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MeetingCell"];
+    CustomSubtitledCell *cell = (CustomSubtitledCell *)[tableView dequeueReusableCellWithIdentifier:@"MeetingCell"];
     if (cell == nil)
     {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"MeetingCell"];
+        cell = [[CustomSubtitledCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MeetingCell"];
     }
-    
-    cell.textLabel.text = (NSString *)[self.meetingList objectAtIndex:indexPath.row];
-    cell.detailTextLabel.text = (NSString *)[self.meetingDetail objectAtIndex:indexPath.row];
+    [cell initCell];
+    cell.subTitledDelegate = self;
+    [cell.titleLabel  setText:(NSString *)[self.meetingList objectAtIndex:indexPath.row]];
+    [cell.detailLabel setText:(NSString *)[self.meetingDetail objectAtIndex:indexPath.row]];
+    [cell.deleteButton setTag:indexPath.row];
     return cell;
 }
 
@@ -199,17 +202,22 @@ const int MODAL_WIDTH = 804;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    return YES;
+    return NO;
 }
 
 // Override to support editing the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         //add code here for when you hit delete
-        self.selectedMeeting = indexPath.row;
-        UIAlertView *deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this meeting?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
-        [deleteAlertView show];
+        
     }
+}
+
+-(void)deleteCell:(NSInteger)row
+{
+    self.selectedMeeting = row;
+    UIAlertView *deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this meeting?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
+    [deleteAlertView show];
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
