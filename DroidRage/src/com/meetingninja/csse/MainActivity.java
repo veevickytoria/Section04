@@ -393,7 +393,7 @@ public class MainActivity extends FragmentActivity implements
 		if (session == null) {
 			session = SessionManager.getInstance();
 		}
-		selectItem(session.getPage());
+//		selectItem(session.getPage());
 
 	}
 
