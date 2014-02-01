@@ -199,4 +199,43 @@
     [self.registerDelegate onCancel];
 }
 
+-(BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    if ([textField isEqual:self.nameField])
+    {
+        [self.emailField becomeFirstResponder];
+    }
+    else if ([textField isEqual:self.emailField])
+    {
+        [self.locationField becomeFirstResponder];
+    }
+    else if ([textField isEqual:self.locationField])
+    {
+        [self.companyField becomeFirstResponder];
+    }
+    else if ([textField isEqual:self.companyField])
+    {
+        [self.phoneNumberField becomeFirstResponder];
+    }
+    else if ([textField isEqual:self.phoneNumberField])
+    {
+        [self.titleField becomeFirstResponder];
+    }
+    else if ([textField isEqual:self.titleField])
+    {
+        [self.passwordField becomeFirstResponder];
+    }
+    else if ([textField isEqual:self.passwordField])
+    {
+        [self.confirmPasswordField becomeFirstResponder];
+    }
+    else
+    {
+        [textField resignFirstResponder];
+        [self onClickRegister:nil];
+    }
+    return YES;
+}
+
+
 @end
