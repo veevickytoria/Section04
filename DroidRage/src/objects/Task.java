@@ -26,6 +26,10 @@ public class Task extends Event implements Parcelable {
 	private String type; // title, description, isCompleted, deadline,
 							// compeltion criteria, assigned to
 	private ArrayList<User> members = new ArrayList<User>();
+	
+	public enum Type {
+		ASSIGNED_TO, ASSIGNED_FROM, I_CREATED
+	}
 
 	public Task() {
 		// Required empty constructor

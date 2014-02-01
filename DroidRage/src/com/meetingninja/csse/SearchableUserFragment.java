@@ -113,12 +113,11 @@ public class SearchableUserFragment extends BaseFragment implements
 
 //		SQLiteUserAdapter sqlite = new SQLiteUserAdapter(mContext);
 //		allUsers = sqlite.getAllUsers();
-//		System.out.println(allUsers);
+//		System.out.                                                                                                                                                                                                                              println(allUsers);
 //		sqlite.close();
 		
 		autoAdapter = new AutoCompleteAdapter(getActivity(), allUsers);
 
-		
 		complete = (ContactTokenTextView) view
 				.findViewById(R.id.my_autocomplete);
 		complete.setAdapter(autoAdapter);

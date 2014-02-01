@@ -23,6 +23,8 @@ import org.joda.time.format.DateTimeFormatter;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,15 +34,15 @@ import android.widget.TextView;
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
+import com.meetingninja.csse.database.volley.UserVolleyAdapter;
 import com.meetingninja.csse.extras.MyDateUtils;
-import com.meetingninja.csse.user.UserInfoFetcher;
 
 public class ViewTaskActivity extends Activity {
+	private static final String TAG = ViewTaskActivity.class.getSimpleName();
 	private TextView taskName, dateCreated, dateAssigned, deadline,
 			description, completionCriteria, isCompleted, assignedLabel,
 			assignedText;
 	private Button taskCompleteButton;
-	RetUserObj fetcher;
 	private Task displayedTask;
 	private DateTimeFormatter dateFormat = MyDateUtils.JODA_APP_DATE_FORMAT;
 	private int resultCode = Activity.RESULT_CANCELED;
@@ -53,6 +55,8 @@ public class ViewTaskActivity extends Activity {
 		Bundle extras = getIntent().getExtras();
 		if (extras != null)
 			displayedTask = extras.getParcelable(Keys.Task.PARCEL);
+		else
+			Log.w(TAG, "Error: Unable to find Task Parcel");
 		setupViews();
 		setTask();
 	}
@@ -131,7 +135,8 @@ public class ViewTaskActivity extends Activity {
 
 	private void setTask() {
 		taskName.setText(displayedTask.getTitle());
-		String format = dateFormat.print(Long.parseLong(displayedTask.getDateCreated()));
+		String format = dateFormat.print(Long.parseLong(displayedTask
+				.getDateCreated()));
 		dateCreated.setText(format);
 		// TODO: change this to the real date assigned
 		dateAssigned.setText(displayedTask.getDateAssigned());
@@ -149,40 +154,29 @@ public class ViewTaskActivity extends Activity {
 			isCompleted.setText("No"); // TODO: change this to use string xml
 			taskCompleteButton.setVisibility(View.VISIBLE);
 		}
-		fetcher = new RetUserObj();
 
 		if (displayedTask.getType().equals("ASSIGNED_TO")) {
 			assignedLabel.setText("Assigned From:");
 			// assignedText.setText(task.getAssignedFrom());
-			fetcher.execute(displayedTask.getAssignedFrom());
+			fetchUserName(displayedTask.getAssignedFrom());
 		} else {
 			assignedLabel.setText("Assigned To:");
 			// assignedText.setText(task.getAssignedTo());
-			fetcher.execute(displayedTask.getAssignedTo());
+			fetchUserName(displayedTask.getAssignedTo());
 		}
 	}
 
-	private void setAssigned(String name) {
-		assignedText.setText(name);
-	}
+	private void fetchUserName(String userID) {
+		if (!TextUtils.isEmpty(userID))
+			UserVolleyAdapter.fetchUserInfo(userID, new AsyncResponse<User>() {
+				@Override
+				public void processFinish(User result) {
+					assignedText.setText(result.getDisplayName());
 
-	final class RetUserObj implements AsyncResponse<User> {
-
-		private UserInfoFetcher infoFetcher;
-
-		public RetUserObj() {
-			infoFetcher = new UserInfoFetcher(this);
-		}
-
-		public void execute(String userID) {
-			System.out.println("afdsafdsa     " + userID);
-			infoFetcher.execute(userID);
-		}
-
-		@Override
-		public void processFinish(User result) {
-			setAssigned(result.getDisplayName());
-		}
+				}
+			});
+		else
+			Log.w(TAG, "[fetchUserName] userID is empty");
 	}
 
 }
