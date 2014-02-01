@@ -13,5 +13,6 @@
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withUserID:(NSInteger)userID;
 @property (weak, nonatomic) IBOutlet UITableView *feedTable;
+@property (nonatomic) NSInteger userID;
 
 @end

@@ -7,6 +7,8 @@
 //
 
 #import "iWinHomeScreenViewController.h"
+#import "iWinBackEndUtility.h"
+
 
 
 @interface iWinHomeScreenViewController ()
@@ -14,6 +16,8 @@
 @property (nonatomic) NSMutableArray *taskFeed;
 @property (nonatomic) NSMutableArray *notificationFeed;
 @property (nonatomic) NSMutableArray *meetingFeed;
+@property (strong, nonatomic) iWinBackEndUtility *backendUtility;
+
 @end
 
 @implementation iWinHomeScreenViewController
@@ -23,6 +27,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        
     }
     return self;
 }
@@ -37,16 +42,47 @@
     self.taskFeed = [[NSMutableArray alloc] init];
     self.notificationFeed = [[NSMutableArray alloc] init];
     self.meetingFeed = [[NSMutableArray alloc] init];
+    self.backendUtility = [[iWinBackEndUtility alloc] init];
     
     [self.headers addObject:@"Meeting"];
     [self.headers addObject:@"Task"];
     [self.headers addObject:@"Miscellaneous"];
     
-    [self.taskFeed addObject:@"Jim has invited you to Sprint Planning."];
-    [self.taskFeed addObject:@"12:00 - 13:00, 10/25/13"];
-    [self.meetingFeed addObject:@"Steve has assigned you Research Libraries"];
-    [self.meetingFeed addObject:@"Due: 12:00, 10/26/13"];
+//    [self.taskFeed addObject:@"Jim has invited you to Sprint Planning."];
+//    [self.taskFeed addObject:@"12:00 - 13:00, 10/25/13"];
+//    [self.meetingFeed addObject:@"Steve has assigned you Research Libraries"];
+//    [self.meetingFeed addObject:@"Due: 12:00, 10/26/13"];
     [self.notificationFeed addObject:@"Mary shared Meeting Minutes 9/21/13"];
+    
+    
+    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Schedule/%d", self.userID];
+    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
+    
+    if (!deserializedDictionary)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"schedule not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alert show];
+    }
+    else
+    {
+        NSArray *jsonArray = [deserializedDictionary objectForKey:@"schedule"];
+        for(int i = 0; i < [jsonArray count]; i++){
+            NSDictionary* element = [jsonArray objectAtIndex:i];
+            
+            if([[element objectForKey:@"type"] isEqualToString:@"meeting"]){
+                [self.meetingFeed addObject:[[element objectForKey:@"title"] stringByAppendingString:[element objectForKey:@"description"]]];
+                
+                [self.meetingFeed addObject:[  [[element objectForKey:@"datetimeStart"] stringByAppendingString:@" to "]stringByAppendingString:[element objectForKey:@"datetimeEnd"] ]];
+            }
+            
+            else {
+                [self.taskFeed addObject:[[element objectForKey:@"title"] stringByAppendingString:[element objectForKey:@"description"]]];
+                
+                [self.taskFeed addObject:[  [[element objectForKey:@"datetimeStart"] stringByAppendingString:@" to "]stringByAppendingString:[element objectForKey:@"datetimeEnd"] ]];
+            }
+        }
+    }
     
     
 }
