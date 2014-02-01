@@ -27,7 +27,10 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        
+        NSMutableDictionary *defaultDict = [[NSMutableDictionary alloc] init];
+        [defaultDict setValue:[NSString stringWithFormat:@"%d", userID] forKey:@"userID"];
+        [[NSUserDefaults standardUserDefaults] registerDefaults:defaultDict];
+        [[NSUserDefaults standardUserDefaults] synchronize];
     }
     return self;
 }
@@ -56,7 +59,7 @@
     
     
     //For meetingFeed and taskFeed
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Schedule/%d", self.userID];
+    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Schedule/%@", [[NSUserDefaults standardUserDefaults] objectForKey:@"userID"]];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
     
@@ -87,7 +90,8 @@
     
     
     //For notificationFeed
-    NSString *urlNotification = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Notification/%d", self.userID];
+    NSString *urlNotification = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Notification/%@", [[NSUserDefaults standardUserDefaults] objectForKey:@"userID"]];
+
     urlNotification = [urlNotification stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *deserializedDictionaryNotification = [self.backendUtility getRequestForUrl:urlNotification];
     
@@ -102,8 +106,7 @@
         for(int i = 0; i < [jsonArray count]; i++){
             NSDictionary* element = [jsonArray objectAtIndex:i];
             
- 
-
+            [self.notificationFeed addObject:[[element objectForKey:@"description"] stringByAppendingString:[element objectForKey:@"datetime"]]];
         }
     }
     
