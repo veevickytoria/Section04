@@ -643,4 +643,10 @@
 {
     [self.ocCalVC.view removeFromSuperview];
 }
+
+-(BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    return YES;
+}
 @end

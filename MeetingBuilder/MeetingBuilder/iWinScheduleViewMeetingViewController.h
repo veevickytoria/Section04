@@ -16,7 +16,7 @@
 
 @end
 
-@interface iWinScheduleViewMeetingViewController : UIViewController <OCCalendarDelegate, UserDelegate, UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate>
+@interface iWinScheduleViewMeetingViewController : UIViewController <OCCalendarDelegate, UserDelegate, UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate, UITextFieldDelegate>
 - (IBAction)onAddAgenda;
 - (IBAction)onAddAttendees;
 - (IBAction)onViewMySchedule;
