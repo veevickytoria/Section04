@@ -9,6 +9,7 @@
 #import "iWinHomeScreenViewController.h"
 #import "iWinBackEndUtility.h"
 #import "iWinMeetingViewController.h"
+#import "iWinAddAndViewTaskViewController.h"
 
 
 @interface iWinHomeScreenViewController ()
@@ -18,6 +19,7 @@
 @property (nonatomic) NSMutableArray *meetingFeed;
 @property (strong, nonatomic) iWinBackEndUtility *backendUtility;
 @property (strong, nonatomic) iWinScheduleViewMeetingViewController *scheduleMeetingVC;
+@property (strong, nonatomic) iWinAddAndViewTaskViewController *addViewTaskViewController;
 @end
 
 //constants
@@ -157,25 +159,30 @@
     //meeting
     if(indexPath.section == 0){
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
-        self.scheduleMeetingVC = [[iWinScheduleViewMeetingViewController alloc] initWithNibName:@"iWinScheduleViewMeetingViewController" bundle:nil withUserID:[[[NSUserDefaults standardUserDefaults] objectForKey:@"userID"]intValue ] withMeetingID:[[[self.meetingFeed objectAtIndex:indexPath.row] objectForKey:@"id"] intValue]];
+        self.scheduleMeetingVC = [[iWinScheduleViewMeetingViewController alloc] initWithNibName:@"iWinScheduleViewMeetingViewController" bundle:nil withUserID:[[[NSUserDefaults standardUserDefaults] objectForKey:@"userID"] intValue] withMeetingID:[[[self.meetingFeed objectAtIndex:indexPath.row] objectForKey:@"id"] intValue]];
         self.scheduleMeetingVC.viewMeetingDelegate = self;
         [self.scheduleMeetingVC setModalPresentationStyle:UIModalPresentationPageSheet];
         [self.scheduleMeetingVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
         
         [self presentViewController:self.scheduleMeetingVC animated:YES completion:nil];
-//        self.scheduleMeetingVC.view.superview.bounds = CGRectMake(MODAL_XOFFSET,MODAL_YOFFSET,MODAL_WIDTH,MODAL_HEIGHT);
+        //self.scheduleMeetingVC.view.superview.bounds = CGRectMake(36,15,1018,804);
         
     }
-    else if(indexPath.section == 1){ //tast
+    else if(indexPath.section == 1){ //task
+        self.addViewTaskViewController = [[iWinAddAndViewTaskViewController alloc] initWithNibName:@"iWinAddAndViewTaskViewController" bundle:nil withUserID:[[[NSUserDefaults standardUserDefaults] objectForKey:@"userID"] intValue] withTaskID: [[[self.meetingFeed objectAtIndex:indexPath.row] objectForKey:@"id"] intValue]];
+        [self.addViewTaskViewController setModalPresentationStyle:UIModalPresentationPageSheet];
+        [self.addViewTaskViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+        self.addViewTaskViewController.viewTaskDelegate = self;
         
+        [self presentViewController:self.addViewTaskViewController animated:YES completion:nil];
+        //self.addViewTaskViewController.view.superview.bounds = CGRectMake(0,0,768,1003);
+    
     }
     else{ //notification
         
+        
     }
-    
-    
-    
-    
+
 }
 
 
