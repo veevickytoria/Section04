@@ -48,6 +48,8 @@ const int DELETE_BUTTON_WIDTH = 60;
 }
 
 - (IBAction)onClickDelete {
+    [self animateSlidingButton:YES];
+    self.movedButton = !self.movedButton;
     [self.subTitledDelegate deleteCell:self.deleteButton.tag];
 }
 

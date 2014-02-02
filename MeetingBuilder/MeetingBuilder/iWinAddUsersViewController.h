@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <MessageUI/MessageUI.h>
+#import "CustomSubtitledCell.h"
 
 @protocol UserDelegate <NSObject>
 
@@ -15,7 +16,7 @@
 
 @end
 
-@interface iWinAddUsersViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate,MFMailComposeViewControllerDelegate>
+@interface iWinAddUsersViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate,MFMailComposeViewControllerDelegate, SubtitledCellDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *userListTableView;
 @property (nonatomic) id<UserDelegate> userDelegate;
 - (IBAction)onClickSendInvite:(id)sender;

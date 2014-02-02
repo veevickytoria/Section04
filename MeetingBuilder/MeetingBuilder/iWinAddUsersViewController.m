@@ -39,6 +39,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
+    [self.userListTableView registerNib:[UINib nibWithNibName:@"CustomSubtitledCell" bundle:nil] forCellReuseIdentifier:@"AttendeeCell"];
+    [self.searchDisplayController.searchResultsTableView registerNib:[UINib nibWithNibName:@"CustomSubtitledCell" bundle:nil] forCellReuseIdentifier:@"AttendeeCell"];
     self.attendeeList = [[NSMutableArray alloc] init];
     self.filteredList = [[NSMutableArray alloc] init];
     self.userList = [[NSMutableArray alloc] init];
@@ -146,24 +148,32 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"UserCell"];
+    CustomSubtitledCell *cell = (CustomSubtitledCell *)[tableView dequeueReusableCellWithIdentifier:@"AttendeeCell"];
+    if (cell == nil)
+    {
+        cell = [[CustomSubtitledCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"AttendeeCell"];
+    }
+    [cell initCell];
+    cell.subTitledDelegate = self;
     
     Contact *c = nil;
     
     if ([tableView isEqual:self.searchDisplayController.searchResultsTableView])
     {
         c = (Contact *)[self.filteredList objectAtIndex:indexPath.row];
+        cell.deleteButton.hidden = YES;
     }
     else
     {
         c = (Contact *)[self.attendeeList objectAtIndex:indexPath.row];
+        cell.deleteButton.hidden = NO;
     }
-    
-    cell.textLabel.text =  c.name;
+    cell.deleteButton.tag = indexPath.row;
+    cell.titleLabel.text =  c.name;
     if (c.name.length == 0){
-        cell.textLabel.text = c.email;
+        cell.titleLabel.text = c.email;
     }
-    cell.detailTextLabel.text = c.email;
+    cell.detailLabel.text = c.email;
     return cell;
 }
 
@@ -218,17 +228,11 @@ shouldReloadTableForSearchString:(NSString *)searchString
     }
 }
 
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    return YES;
-}
-
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        self.rowToDelete = indexPath.row;
-        self.deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this contact?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
-        [self.deleteAlertView show];
-    }
+-(void)deleteCell:(NSInteger)row
+{
+    self.rowToDelete = row;
+    self.deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this contact?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
+    [self.deleteAlertView show];
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
