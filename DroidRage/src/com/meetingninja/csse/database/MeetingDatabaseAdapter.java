@@ -26,6 +26,7 @@ import java.util.Map;
 
 import objects.Meeting;
 import android.net.Uri;
+import android.util.Log;
 
 import com.android.volley.VolleyError;
 import com.fasterxml.jackson.core.JsonEncoding;
@@ -65,7 +66,9 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 		String response = getServerResponse(conn);
 		JsonNode meetingNode = MAPPER.readTree(response);
 
-		return parseMeeting(meetingNode, meetingID);
+		Meeting ret = parseMeeting(meetingNode);
+		ret.setID(meetingID);
+		return ret;
 	}
 
 	public static Meeting createMeeting(String userID, Meeting m)
@@ -142,24 +145,23 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 		return created;
 	}
 
-	public static Meeting parseMeeting(JsonNode node, String meetingID) {
+	public static Meeting parseMeeting(JsonNode node) {
+		logPrint(node.toString());
 		Meeting m = new Meeting();
-		if (meetingID != null) {
-			m.setID(meetingID);
-			// if (m.getID().isEmpty())
-			// m.setID(node.get(KEY_ID).asText());
-			m.setTitle(node.get(Keys.Meeting.TITLE).asText());
-			m.setLocation(node.get(Keys.Meeting.LOCATION).asText());
-			m.setStartTime(node.get(Keys.Meeting.DATETIME).asText());
-			m.setEndTime(node.get("endDatetime").asText());
-			m.setDescription(node.get(Keys.Meeting.DESC).asText());
-			// JsonNode attendance = node.get(KEY_ATTEND);
-			// if (attendance.isArray()) {
-			// for (final JsonNode attendeeNode : attendance) {
-			// m.addAttendee(attendeeNode.get("userID").asText());
-			// }
-			// }
-		}
+		// if (m.getID().isEmpty())
+		// m.setID(node.get(KEY_ID).asText());
+		m.setTitle(node.get(Keys.Meeting.TITLE).asText());
+		m.setLocation(node.get(Keys.Meeting.LOCATION).asText());
+		m.setStartTime(node.get(Keys.Meeting.DATETIME).asText());
+		m.setEndTime(node.get("endDatetime").asText());
+		m.setDescription(node.get(Keys.Meeting.DESC).asText());
+		JsonNode attendance = node.get(Keys.Meeting.ATTEND);
+		if (attendance != null && attendance.isArray()) {
+			for (final JsonNode attendeeNode : attendance) {
+				String _id = attendeeNode.get("userID").asText();
+				m.addAttendee(_id);
+			}
+		} else Log.e(TAG, "Error: Unable to parse meeting attendance");
 
 		return m;
 	}

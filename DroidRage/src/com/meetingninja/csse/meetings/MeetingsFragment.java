@@ -52,6 +52,7 @@ import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.MeetingDatabaseAdapter;
 import com.meetingninja.csse.database.local.SQLiteMeetingAdapter;
+import com.meetingninja.csse.database.volley.UserVolleyAdapter;
 import com.meetingninja.csse.extras.Connectivity;
 import com.meetingninja.csse.group.GroupsFragment;
 
@@ -62,15 +63,15 @@ public class MeetingsFragment extends Fragment implements
 
 	private static final String TAG = MeetingsFragment.class.getSimpleName();
 
-	private EnhancedListView meetingList;
+	private EnhancedListView mListView;
 	private List<Meeting> meetings = new ArrayList<Meeting>();
 	private MeetingItemAdapter meetingAdpt;
 	private ImageButton meetingImageButton;
 
-	private MeetingFetcherTask fetcher = null;
-
 	private SessionManager session;
 	private SQLiteMeetingAdapter mySQLiteAdapter;
+
+	private MeetingFetcherTask fetcher;
 
 	public MeetingsFragment() {
 		// Empty
@@ -90,49 +91,55 @@ public class MeetingsFragment extends Fragment implements
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		View v = inflater.inflate(R.layout.fragment_meetings, container, false);
+		setupViews(v);
 		setHasOptionsMenu(true);
 
 		session = SessionManager.getInstance();
 		mySQLiteAdapter = new SQLiteMeetingAdapter(getActivity());
-		// setup listview
-		meetingList = (EnhancedListView) v.findViewById(android.R.id.list);
 		meetingAdpt = new MeetingItemAdapter(getActivity(),
 				R.layout.list_item_meeting, meetings);
-		meetingList.setAdapter(meetingAdpt);
-		populateList();
-		// check for internet access before getting meetings from remote
-		// database
+
+		mListView.setAdapter(meetingAdpt);
+
 		if (Connectivity.isConnected(getActivity()) && isAdded()) {
 			fetchMeetings();
 		}
-		// pretty images are better than boring text
-		meetingImageButton = (ImageButton) v.findViewById(android.R.id.empty);
-		meetingList.setEmptyView(meetingImageButton);
+
 		meetingImageButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
 				editMeeting(null);
 			}
 		});
+
+		return v;
+	}
+
+	private void setupViews(View v) {
+		mListView = (EnhancedListView) v.findViewById(android.R.id.list);
+		// pretty images are better than boring text
+		meetingImageButton = (ImageButton) v.findViewById(android.R.id.empty);
+		mListView.setEmptyView(meetingImageButton);
+
 		// make list long-pressable
-		registerForContextMenu(meetingList);
+		registerForContextMenu(mListView);
 
-		// Item click event
-		// TODO: Open a window to edit the meeting here
-		meetingList
-				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		setupSwipeList();
+	}
 
-					@Override
-					public void onItemClick(AdapterView<?> parentAdapter,
-							View v, int position, long id) {
-						Meeting clicked = meetingAdpt.getItem(position);
-						editMeeting(clicked, position);
+	private void setupSwipeList() {
+		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-					}
-				});
-		// Item long-click event
-		// TODO: Add additional options and click-events to these options
-		meetingList
+			@Override
+			public void onItemClick(AdapterView<?> parentAdapter, View v,
+					int position, long id) {
+				Meeting clicked = meetingAdpt.getItem(position);
+				editMeeting(clicked, position);
+
+			}
+		});
+
+		mListView
 				.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
 
 					@Override
@@ -154,43 +161,41 @@ public class MeetingsFragment extends Fragment implements
 
 					}
 				});
-		meetingList
-				.setDismissCallback(new EnhancedListView.OnDismissCallback() {
+		mListView.setDismissCallback(new EnhancedListView.OnDismissCallback() {
+			@Override
+			public EnhancedListView.Undoable onDismiss(
+					EnhancedListView listView, final int position) {
+
+				final Meeting item = meetingAdpt.getItem(position);
+				meetingAdpt.remove(item);
+				return new EnhancedListView.Undoable() {
 					@Override
-					public EnhancedListView.Undoable onDismiss(
-							EnhancedListView listView, final int position) {
-
-						final Meeting item = meetingAdpt.getItem(position);
-						meetingAdpt.remove(item);
-						return new EnhancedListView.Undoable() {
-							@Override
-							public void undo() {
-								meetingAdpt.insert(item, position);
-							}
-
-							@Override
-							public String getTitle() {
-								return "Meeting deleted";
-							}
-
-							@Override
-							public void discard() {
-								deleteMeeting(item.getID());
-								meetings.remove(item);
-								meetingAdpt.notifyDataSetChanged();
-							}
-						};
+					public void undo() {
+						meetingAdpt.insert(item, position);
 					}
-				});
-		meetingList.enableSwipeToDismiss();
-		meetingList.setSwipingLayout(R.id.list_meeting_item_frame_1);
-		meetingList.setSwipeDirection(EnhancedListView.SwipeDirection.BOTH);
-		return v;
+
+					@Override
+					public String getTitle() {
+						return "Meeting deleted";
+					}
+
+					@Override
+					public void discard() {
+						deleteMeeting(item.getID());
+						meetings.remove(item);
+						meetingAdpt.notifyDataSetChanged();
+					}
+				};
+			}
+		});
+		mListView.enableSwipeToDismiss();
+		mListView.setSwipingLayout(R.id.list_meeting_item_frame_1);
+		mListView.setSwipeDirection(EnhancedListView.SwipeDirection.BOTH);
 	}
 
 	@Override
 	public void onStop() {
-		meetingList.discardUndo();
+		mListView.discardUndo();
 		super.onStop();
 	}
 
@@ -249,9 +254,9 @@ public class MeetingsFragment extends Fragment implements
 						else
 							updateMeeting(created);
 					} else if (data.getStringExtra("method").equals("insert")) {
-						Log.d(TAG, "Inserting Meeting #" + created.getID());
+						Log.d(TAG, "Inserting Meeting # " + created.getID());
 						// created = mySQLiteAdapter.insertMeeting(created);
-						populateList();
+//						populateList();
 					}
 				}
 			} else {
@@ -263,9 +268,9 @@ public class MeetingsFragment extends Fragment implements
 	}
 
 	public void fetchMeetings() {
-		fetcher = new MeetingFetcherTask(this);
-		fetcher.execute(session.getUserID()); // calls processFinish()
-		// UserDatabaseAdapter.fetchUserMeetings(this, session.getUserID());
+		 fetcher = new MeetingFetcherTask(this);
+		 fetcher.execute(session.getUserID());
+		// calls processFinish()
 	}
 
 	public void editMeeting(Meeting editMe) {
@@ -288,7 +293,6 @@ public class MeetingsFragment extends Fragment implements
 
 	private boolean updateMeeting(Meeting updated) {
 		mySQLiteAdapter.updateMeeting(updated);
-		populateList();
 		return true;
 	}
 
@@ -329,21 +333,15 @@ public class MeetingsFragment extends Fragment implements
 	public void processFinish(List<Meeting> result) {
 		meetings.clear();
 		meetingAdpt.clear();
-		Collections.sort(result, new Comparator<Meeting>() {
+		meetings.addAll(result);
+
+		Collections.sort(meetings, new Comparator<Meeting>() {
 			@Override
 			public int compare(Meeting lhs, Meeting rhs) {
-				return lhs.compareTo(lhs);
+				return lhs.compareTo(rhs);
 			}
 		});
 
-		meetings.addAll(result);
-
 		meetingAdpt.notifyDataSetChanged();
 	}
-
-	public void populateList() {
-		List<Meeting> meets = new ArrayList<Meeting>();
-
-	}
-
 }

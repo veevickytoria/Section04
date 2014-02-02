@@ -137,7 +137,7 @@ public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
 			g.setID(groupID);
 			g.setGroupTitle(groupNode.get(Keys.Group.TITLE).asText());
 			JsonNode members = groupNode.get(Keys.Group.MEMBERS);
-			if (members.isArray()) {
+			if (members != null && members.isArray()) {
 				for (final JsonNode memberNode : members) {
 					User user = new User();
 					user.setID(memberNode.get(Keys.User.ID).asText());
