@@ -72,10 +72,6 @@
 		0A9C04ED189DA87200C4BCE9 /* SmallDefaultCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A9C04EC189DA87200C4BCE9 /* SmallDefaultCell.xib */; };
 		0A9C04F1189DAA1300C4BCE9 /* LargeDefaultCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A9C04F0189DAA1300C4BCE9 /* LargeDefaultCell.m */; };
 		0A9C04F5189DAACE00C4BCE9 /* LargeDefaultCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A9C04F4189DAACE00C4BCE9 /* LargeDefaultCell.xib */; };
-		0AA36E3E189CC27100C81557 /* AcousticModelEnglish.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0AA36E3A189CC27100C81557 /* AcousticModelEnglish.bundle */; };
-		0AA36E3F189CC27100C81557 /* AcousticModelSpanish.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0AA36E3B189CC27100C81557 /* AcousticModelSpanish.bundle */; };
-		0AA36E40189CC27100C81557 /* OpenEars.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AA36E3C189CC27100C81557 /* OpenEars.framework */; };
-		0AA36E41189CC27100C81557 /* Slt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AA36E3D189CC27100C81557 /* Slt.framework */; };
 		0AAC9E951846FE6F0073260F /* iWinOpenEarsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AAC9E941846FE6F0073260F /* iWinOpenEarsModel.m */; };
 		0ACE339A17FCF5F8003B9C0A /* iWinMeetingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ACE339817FCF5F8003B9C0A /* iWinMeetingViewController.m */; };
 		0ACE339B17FCF5F8003B9C0A /* iWinMeetingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0ACE339917FCF5F8003B9C0A /* iWinMeetingViewController.xib */; };
@@ -226,6 +222,10 @@
 		79FCE0101862295E008345B3 /* UIView+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF911862295E008345B3 /* UIView+TKCategory.m */; };
 		79FCE0111862295E008345B3 /* UIViewController+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF921862295E008345B3 /* UIViewController+TKCategory.h */; };
 		79FCE0121862295E008345B3 /* UIViewController+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF931862295E008345B3 /* UIViewController+TKCategory.m */; };
+		DE060733189DF13200EF0059 /* AcousticModelEnglish.bundle in Resources */ = {isa = PBXBuildFile; fileRef = DE06072F189DF13200EF0059 /* AcousticModelEnglish.bundle */; };
+		DE060734189DF13200EF0059 /* AcousticModelSpanish.bundle in Resources */ = {isa = PBXBuildFile; fileRef = DE060730189DF13200EF0059 /* AcousticModelSpanish.bundle */; };
+		DE060735189DF13200EF0059 /* OpenEars.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE060731189DF13200EF0059 /* OpenEars.framework */; };
+		DE060736189DF13200EF0059 /* Slt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE060732189DF13200EF0059 /* Slt.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -352,10 +352,6 @@
 		0A9C04EF189DAA1300C4BCE9 /* LargeDefaultCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LargeDefaultCell.h; sourceTree = "<group>"; };
 		0A9C04F0189DAA1300C4BCE9 /* LargeDefaultCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LargeDefaultCell.m; sourceTree = "<group>"; };
 		0A9C04F4189DAACE00C4BCE9 /* LargeDefaultCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LargeDefaultCell.xib; sourceTree = "<group>"; };
-		0AA36E3A189CC27100C81557 /* AcousticModelEnglish.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AcousticModelEnglish.bundle; sourceTree = "<group>"; };
-		0AA36E3B189CC27100C81557 /* AcousticModelSpanish.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AcousticModelSpanish.bundle; sourceTree = "<group>"; };
-		0AA36E3C189CC27100C81557 /* OpenEars.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = OpenEars.framework; sourceTree = "<group>"; };
-		0AA36E3D189CC27100C81557 /* Slt.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Slt.framework; sourceTree = "<group>"; };
 		0AAC9E931846FE6F0073260F /* iWinOpenEarsModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinOpenEarsModel.h; sourceTree = "<group>"; };
 		0AAC9E941846FE6F0073260F /* iWinOpenEarsModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinOpenEarsModel.m; sourceTree = "<group>"; };
 		0ACE339717FCF5F8003B9C0A /* iWinMeetingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinMeetingViewController.h; sourceTree = "<group>"; };
@@ -526,6 +522,10 @@
 		79FCDF911862295E008345B3 /* UIView+TKCategory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "UIView+TKCategory.m"; path = "../tapkulibrary-master/src/TapkuLibrary/UIView+TKCategory.m"; sourceTree = "<group>"; };
 		79FCDF921862295E008345B3 /* UIViewController+TKCategory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UIViewController+TKCategory.h"; path = "../tapkulibrary-master/src/TapkuLibrary/UIViewController+TKCategory.h"; sourceTree = "<group>"; };
 		79FCDF931862295E008345B3 /* UIViewController+TKCategory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+TKCategory.m"; path = "../tapkulibrary-master/src/TapkuLibrary/UIViewController+TKCategory.m"; sourceTree = "<group>"; };
+		DE06072F189DF13200EF0059 /* AcousticModelEnglish.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AcousticModelEnglish.bundle; sourceTree = "<group>"; };
+		DE060730189DF13200EF0059 /* AcousticModelSpanish.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AcousticModelSpanish.bundle; sourceTree = "<group>"; };
+		DE060731189DF13200EF0059 /* OpenEars.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = OpenEars.framework; sourceTree = "<group>"; };
+		DE060732189DF13200EF0059 /* Slt.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Slt.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -539,13 +539,13 @@
 				0A8C13A4187DEA43005A25DE /* CoreLocation.framework in Frameworks */,
 				79753AA81861095F0015098B /* MapKit.framework in Frameworks */,
 				79753AA91861095F0015098B /* QuartzCore.framework in Frameworks */,
-				0AA36E40189CC27100C81557 /* OpenEars.framework in Frameworks */,
+				DE060735189DF13200EF0059 /* OpenEars.framework in Frameworks */,
 				0A97EDAA184169ED00160B5A /* AudioToolbox.framework in Frameworks */,
 				0A97EDAB184169ED00160B5A /* AVFoundation.framework in Frameworks */,
 				0ACE33B517FD246F003B9C0A /* SystemConfiguration.framework in Frameworks */,
 				0ACE33B317FD2461003B9C0A /* Security.framework in Frameworks */,
 				0ACE33B117FD245B003B9C0A /* MobileCoreServices.framework in Frameworks */,
-				0AA36E41189CC27100C81557 /* Slt.framework in Frameworks */,
+				DE060736189DF13200EF0059 /* Slt.framework in Frameworks */,
 				0ACE33AF17FD244B003B9C0A /* CFNetwork.framework in Frameworks */,
 				0A04455A17F3825D000FF2A0 /* UIKit.framework in Frameworks */,
 				0A04455C17F3825D000FF2A0 /* Foundation.framework in Frameworks */,
@@ -618,7 +618,7 @@
 		0A04456117F3825D000FF2A0 /* MeetingBuilder */ = {
 			isa = PBXGroup;
 			children = (
-				0AA36E39189CC27100C81557 /* Framework */,
+				DE06072E189DF13200EF0059 /* Framework */,
 				0A9C04EE189DA9EB00C4BCE9 /* LargeDefaultCell */,
 				0A9C04E5189DA5C100C4BCE9 /* SmallDefaultCell */,
 				0AA36E2C189CB5D400C81557 /* CustomSubtitledTableViewCell */,
@@ -932,17 +932,6 @@
 			name = CustomSubtitledTableViewCell;
 			sourceTree = "<group>";
 		};
-		0AA36E39189CC27100C81557 /* Framework */ = {
-			isa = PBXGroup;
-			children = (
-				0AA36E3A189CC27100C81557 /* AcousticModelEnglish.bundle */,
-				0AA36E3B189CC27100C81557 /* AcousticModelSpanish.bundle */,
-				0AA36E3C189CC27100C81557 /* OpenEars.framework */,
-				0AA36E3D189CC27100C81557 /* Slt.framework */,
-			);
-			path = Framework;
-			sourceTree = "<group>";
-		};
 		0AAC9E921846FE2B0073260F /* OpenEars */ = {
 			isa = PBXGroup;
 			children = (
@@ -1158,6 +1147,17 @@
 			name = TapkuSrcFiles;
 			sourceTree = "<group>";
 		};
+		DE06072E189DF13200EF0059 /* Framework */ = {
+			isa = PBXGroup;
+			children = (
+				DE06072F189DF13200EF0059 /* AcousticModelEnglish.bundle */,
+				DE060730189DF13200EF0059 /* AcousticModelSpanish.bundle */,
+				DE060731189DF13200EF0059 /* OpenEars.framework */,
+				DE060732189DF13200EF0059 /* Slt.framework */,
+			);
+			path = Framework;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1261,10 +1261,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				7941FDD6182A0DCE00AAA92E /* iWinViewProfileViewController.xib in Resources */,
-				0AA36E3F189CC27100C81557 /* AcousticModelSpanish.bundle in Resources */,
 				0A04456617F3825D000FF2A0 /* InfoPlist.strings in Resources */,
 				0A7E516117FBEB9200A4B8B7 /* iWinLoginViewController.xib in Resources */,
-				0AA36E3E189CC27100C81557 /* AcousticModelEnglish.bundle in Resources */,
 				0A04456E17F3825D000FF2A0 /* Default.png in Resources */,
 				0A1A729F181A22AB009A49E5 /* iWinTaskListViewController.xib in Resources */,
 				7941FDC91828843500AAA92E /* iWinViewAndChangeSettingsViewController.xib in Resources */,
@@ -1272,9 +1270,11 @@
 				0ACE339B17FCF5F8003B9C0A /* iWinMeetingViewController.xib in Resources */,
 				0A1A7297181A1802009A49E5 /* iWinAgendaItemViewController.xib in Resources */,
 				0A1A72A9181A2C5E009A49E5 /* iWinAddUsersViewController.xib in Resources */,
+				DE060734189DF13200EF0059 /* AcousticModelSpanish.bundle in Resources */,
 				0A1A72911819FE48009A49E5 /* iWinViewAndAddViewController.xib in Resources */,
 				0A7E516617FBEBA200A4B8B7 /* iWinRegisterViewController.xib in Resources */,
 				0A30739518921CB300C2D5F6 /* iWinMergeNoteViewController.xib in Resources */,
+				DE060733189DF13200EF0059 /* AcousticModelEnglish.bundle in Resources */,
 				0A9C04E4189D9BAD00C4BCE9 /* CustomSubtitledCell.xib in Resources */,
 				0A9C04F5189DAACE00C4BCE9 /* LargeDefaultCell.xib in Resources */,
 				79D513D1181F9F9E00C79B71 /* iWinNoteListViewController.xib in Resources */,
@@ -1585,6 +1585,7 @@
 					"$(inherited)",
 					/Users/csse/Documents/CSSE371/Section04/MeetingBuilder/MeetingBuilder/Framework,
 					/Users/csse/Documents/CSSE371/Section04/MeetingBuilder,
+					/Users/Alpha/Documents/Section04/MeetingBuilder/MeetingBuilder/Framework,
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MeetingBuilder/MeetingBuilder-Prefix.pch";

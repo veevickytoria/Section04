@@ -8,7 +8,7 @@
 
 #import "iWinHomeScreenViewController.h"
 #import "iWinBackEndUtility.h"
-
+#import "iWinMeetingViewController.h"
 
 
 @interface iWinHomeScreenViewController ()
@@ -17,6 +17,7 @@
 @property (nonatomic) NSMutableArray *notificationFeed;
 @property (nonatomic) NSMutableArray *meetingFeed;
 @property (strong, nonatomic) iWinBackEndUtility *backendUtility;
+@property (strong, nonatomic) iWinScheduleViewMeetingViewController *scheduleMeetingVC;
 
 @end
 
@@ -51,11 +52,11 @@
     [self.headers addObject:@"Task"];
     [self.headers addObject:@"Miscellaneous"];
     
-    [self.taskFeed addObject:@"Jim has invited you to Sprint Planning."];
-    [self.taskFeed addObject:@"12:00 - 13:00, 10/25/13"];
-    [self.meetingFeed addObject:@"Steve has assigned you Research Libraries"];
-    [self.meetingFeed addObject:@"Due: 12:00, 10/26/13"];
-    [self.notificationFeed addObject:@"Mary shared Meeting Minutes 9/21/13"];
+//    [self.taskFeed addObject:@"Jim has invited you to Sprint Planning."];
+//    [self.taskFeed addObject:@"12:00 - 13:00, 10/25/13"];
+//    [self.meetingFeed addObject:@"Steve has assigned you Research Libraries"];
+//    [self.meetingFeed addObject:@"Due: 12:00, 10/26/13"];
+//    [self.notificationFeed addObject:@"Mary shared Meeting Minutes 9/21/13"];
     
     
     //For meetingFeed and taskFeed
@@ -75,15 +76,11 @@
             NSDictionary* element = [jsonArray objectAtIndex:i];
             
             if([[element objectForKey:@"type"] isEqualToString:@"meeting"]){
-                [self.meetingFeed addObject:[[element objectForKey:@"title"] stringByAppendingString:[element objectForKey:@"description"]]];
-                
-                [self.meetingFeed addObject:[  [[element objectForKey:@"datetimeStart"] stringByAppendingString:@" to "]stringByAppendingString:[element objectForKey:@"datetimeEnd"] ]];
+                [self.meetingFeed addObject:element];
             }
             
             else {
-                [self.taskFeed addObject:[[element objectForKey:@"title"] stringByAppendingString:[element objectForKey:@"description"]]];
-                
-                [self.taskFeed addObject:[  [[element objectForKey:@"datetimeStart"] stringByAppendingString:@" to "]stringByAppendingString:[element objectForKey:@"datetimeEnd"] ]];
+                [self.taskFeed addObject:element];
             }
         }
     }
@@ -105,8 +102,7 @@
         NSArray *jsonArray = [deserializedDictionaryNotification objectForKey:@"notifications"];
         for(int i = 0; i < [jsonArray count]; i++){
             NSDictionary* element = [jsonArray objectAtIndex:i];
-            
-            [self.notificationFeed addObject:[[element objectForKey:@"description"] stringByAppendingString:[element objectForKey:@"datetime"]]];
+            [self.notificationFeed addObject:element];
         }
     }
     
@@ -128,21 +124,58 @@
     
         if (indexPath.section == 0)
         {
-            cell.detailTextLabel.text= (NSString*)[self.meetingFeed objectAtIndex:(indexPath.row * 2 + 1)];
-            cell.textLabel.text = (NSString*)[self.meetingFeed objectAtIndex:(indexPath.row * 2)];
+            NSDictionary* meeting = (NSDictionary*)[self.meetingFeed objectAtIndex:indexPath.row];
+            
+            
+           cell.textLabel.text = (NSString*)[[meeting objectForKey:@"title"] stringByAppendingString:[meeting objectForKey:@"description"]];
+           cell.detailTextLabel.text = (NSString*)[[[meeting objectForKey:@"datetimeStart"] stringByAppendingString:@" to "] stringByAppendingString:[meeting objectForKey:@"datetimeEnd"]] ;
         }
         else if (indexPath.section == 1)
         {
-            cell.detailTextLabel.text= (NSString*)[self.taskFeed objectAtIndex:(indexPath.row * 2 + 1)];
-            cell.textLabel.text = (NSString*)[self.taskFeed objectAtIndex:(indexPath.row * 2)];
+            NSDictionary* task = (NSDictionary*)[self.taskFeed objectAtIndex:indexPath.row];
+            
+            cell.detailTextLabel.text= (NSString*)[[[task objectForKey:@"datetimeStart"] stringByAppendingString:@" to "]stringByAppendingString:[task objectForKey:@"datetimeEnd"]];
+            cell.textLabel.text = (NSString*)[[task objectForKey:@"title"] stringByAppendingString:[task objectForKey:@"description"]];
         }
         else
         {
-            cell.textLabel.text = (NSString*)[self.notificationFeed objectAtIndex:0];
+            NSDictionary* notification = (NSDictionary*) [self.notificationFeed objectAtIndex:indexPath.row];
+            cell.textLabel.text = (NSString*)[[notification objectForKey:@"description"] stringByAppendingString:[notification objectForKey:@"datetime"]];
         }
     
     return cell;
 }
+
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    //meeting
+    if(indexPath.section == 0){
+//        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+//        self.scheduleMeetingVC = [[iWinScheduleViewMeetingViewController alloc] initWithNibName:@"iWinScheduleViewMeetingViewController" bundle:nil withUserID:[[NSUserDefaults standardUserDefaults] objectForKey:@"userID"]] withMeetingID:[self.meetingID[indexPath.row] integerValue]];
+//        self.scheduleMeetingVC.viewMeetingDelegate = self;
+//        [self.scheduleMeetingVC setModalPresentationStyle:UIModalPresentationPageSheet];
+//        [self.scheduleMeetingVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+//        
+//        [self presentViewController:self.scheduleMeetingVC animated:YES completion:nil];
+//        self.scheduleMeetingVC.view.superview.bounds = CGRectMake(MODAL_XOFFSET,MODAL_YOFFSET,MODAL_WIDTH,MODAL_HEIGHT);
+        
+    }
+    else if(indexPath.section == 1){ //tast
+        
+    }
+    else{ //notification
+        
+    }
+    
+    
+    
+    
+}
+
+
+
+
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
