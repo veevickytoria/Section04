@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "iWinAddUsersViewController.h"
 
-@interface iWinViewAndCreateGroupViewController : UIViewController <UserDelegate>
+@interface iWinViewAndCreateGroupViewController : UIViewController <UserDelegate, UITableViewDelegate, UITableViewDataSource>
 - (IBAction)onClickSave:(UIButton *)sender;
 - (IBAction)onClickCancel:(UIButton *)sender;
 - (IBAction)onClickAddMembers:(UIButton *)sender;
