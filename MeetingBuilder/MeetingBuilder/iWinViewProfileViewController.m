@@ -8,6 +8,7 @@
 
 #import "iWinViewProfileViewController.h"
 #import "iWinViewAndCreateGroupViewController.h"
+#import "iWinViewAndCreateProjectViewController.h"
 #import "iWinBackEndUtility.h"
 #import "iWinAppDelegate.h"
 #import "Contact.h"
@@ -18,6 +19,7 @@
 @property (nonatomic) Contact *contact;
 @property (nonatomic) NSInteger userID;
 @property (strong, nonatomic) iWinViewAndCreateGroupViewController *createGroupVC;
+@property (strong, nonatomic) iWinViewAndCreateProjectViewController *createProjectVC;
 @property (nonatomic) iWinBackEndUtility *backEndUtility;
 @end
 
@@ -140,6 +142,16 @@
     
     [self presentViewController:self.createGroupVC animated:YES completion:nil];
     self.createGroupVC.view.superview.bounds = CGRectMake(0,0,768,1003);
+}
+
+- (IBAction)onCreateProject:(id)sender {
+    self.createProjectVC = [[iWinViewAndCreateProjectViewController alloc] initWithNibName:@"iWinViewAndCreateProjectViewController" bundle:nil withUserID:self.userID withProjectID:-1];
+    
+    [self.createProjectVC setModalPresentationStyle:UIModalPresentationPageSheet];
+    [self.createProjectVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+    
+    [self presentViewController:self.createProjectVC animated:YES completion:nil];
+    self.createProjectVC.view.superview.bounds = CGRectMake(0,0,768,1003);
 }
 
 -(IBAction)onEditProfile:(id)sender

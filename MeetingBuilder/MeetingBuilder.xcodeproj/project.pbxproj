@@ -81,6 +81,9 @@
 		0ACE33B517FD246F003B9C0A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ACE33B417FD246F003B9C0A /* SystemConfiguration.framework */; };
 		5B0ADDAA188D87510013753B /* iWinGroupTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B0ADDA9188D87510013753B /* iWinGroupTest.m */; };
 		5B2603D3189E7CB100C0A335 /* OpenEars.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B2603D2189E7CB100C0A335 /* OpenEars.framework */; };
+		5B2603D8189E7EF400C0A335 /* iWinViewAndCreateProjectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2603D6189E7EF400C0A335 /* iWinViewAndCreateProjectViewController.m */; };
+		5B2603D9189E7EF400C0A335 /* iWinViewAndCreateProjectViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B2603D7189E7EF400C0A335 /* iWinViewAndCreateProjectViewController.xib */; };
+		5B2603DC189E871100C0A335 /* Project.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2603DB189E871100C0A335 /* Project.m */; };
 		5B3B6296188CB4E900C0E53E /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B3B6295188CB4E900C0E53E /* Group.m */; };
 		5B3B629A188CBDF600C0E53E /* iWinViewAndCreateGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B3B6299188CBDF600C0E53E /* iWinViewAndCreateGroupViewController.m */; };
 		5B3B62AE188CCB7000C0E53E /* iWinViewAndCreateGroupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B3B62AD188CCB7000C0E53E /* iWinViewAndCreateGroupViewController.xib */; };
@@ -364,6 +367,11 @@
 		5B0ADDA8188D87510013753B /* iWinGroupTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinGroupTest.h; sourceTree = "<group>"; };
 		5B0ADDA9188D87510013753B /* iWinGroupTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinGroupTest.m; sourceTree = "<group>"; };
 		5B2603D2189E7CB100C0A335 /* OpenEars.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenEars.framework; path = "../../../../../Downloads/OpenEarsDistribution 2/Framework/OpenEars.framework"; sourceTree = "<group>"; };
+		5B2603D5189E7EF400C0A335 /* iWinViewAndCreateProjectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinViewAndCreateProjectViewController.h; sourceTree = "<group>"; };
+		5B2603D6189E7EF400C0A335 /* iWinViewAndCreateProjectViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinViewAndCreateProjectViewController.m; sourceTree = "<group>"; };
+		5B2603D7189E7EF400C0A335 /* iWinViewAndCreateProjectViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iWinViewAndCreateProjectViewController.xib; sourceTree = "<group>"; };
+		5B2603DA189E871100C0A335 /* Project.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Project.h; sourceTree = "<group>"; };
+		5B2603DB189E871100C0A335 /* Project.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Project.m; sourceTree = "<group>"; };
 		5B3B6294188CB4E900C0E53E /* Group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Group.h; sourceTree = "<group>"; };
 		5B3B6295188CB4E900C0E53E /* Group.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Group.m; sourceTree = "<group>"; };
 		5B3B6298188CBDF600C0E53E /* iWinViewAndCreateGroupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinViewAndCreateGroupViewController.h; sourceTree = "<group>"; };
@@ -618,6 +626,7 @@
 		0A04456117F3825D000FF2A0 /* MeetingBuilder */ = {
 			isa = PBXGroup;
 			children = (
+				5B2603D4189E7E5A00C0A335 /* ViewAndCreateProject */,
 				DE06072E189DF13200EF0059 /* Framework */,
 				0A9C04EE189DA9EB00C4BCE9 /* LargeDefaultCell */,
 				0A9C04E5189DA5C100C4BCE9 /* SmallDefaultCell */,
@@ -849,6 +858,8 @@
 				7969B222188B6EED00354F37 /* Task.m */,
 				5B3B6294188CB4E900C0E53E /* Group.h */,
 				5B3B6295188CB4E900C0E53E /* Group.m */,
+				5B2603DA189E871100C0A335 /* Project.h */,
+				5B2603DB189E871100C0A335 /* Project.m */,
 			);
 			name = "Data Model";
 			sourceTree = "<group>";
@@ -948,6 +959,16 @@
 				5B0ADDA9188D87510013753B /* iWinGroupTest.m */,
 			);
 			name = GroupTest;
+			sourceTree = "<group>";
+		};
+		5B2603D4189E7E5A00C0A335 /* ViewAndCreateProject */ = {
+			isa = PBXGroup;
+			children = (
+				5B2603D5189E7EF400C0A335 /* iWinViewAndCreateProjectViewController.h */,
+				5B2603D6189E7EF400C0A335 /* iWinViewAndCreateProjectViewController.m */,
+				5B2603D7189E7EF400C0A335 /* iWinViewAndCreateProjectViewController.xib */,
+			);
+			name = ViewAndCreateProject;
 			sourceTree = "<group>";
 		};
 		5B3B6297188CBDBE00C0E53E /* ViewAndCreateGroup */ = {
@@ -1282,6 +1303,7 @@
 				0A1A727E1819E1F5009A49E5 /* iWinHomeScreenViewController.xib in Resources */,
 				0A1A728B1819F590009A49E5 /* iWinScheduleViewMeetingViewController.xib in Resources */,
 				79D513CB181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.xib in Resources */,
+				5B2603D9189E7EF400C0A335 /* iWinViewAndCreateProjectViewController.xib in Resources */,
 				79F59D0F18617690009E2C78 /* TapkuLibrary.bundle in Resources */,
 				0A1A72A4181A2663009A49E5 /* iWinAddAndViewTaskViewController.xib in Resources */,
 				0A04457017F3825D000FF2A0 /* Default@2x.png in Resources */,
@@ -1351,6 +1373,7 @@
 				0A96CE05188A256A00D69C63 /* Settings.m in Sources */,
 				79FCDFBC1862295E008345B3 /* TKGradientView.m in Sources */,
 				79FCDFBD1862295E008345B3 /* TKHTTPRequest.h in Sources */,
+				5B2603DC189E871100C0A335 /* Project.m in Sources */,
 				79FCDFBE1862295E008345B3 /* TKHTTPRequest.m in Sources */,
 				79FCDFBF1862295E008345B3 /* TKImageCache.h in Sources */,
 				79FCDFC01862295E008345B3 /* TKImageCache.m in Sources */,
@@ -1423,6 +1446,7 @@
 				79FCE0001862295E008345B3 /* UIFont+TKCategory.m in Sources */,
 				79FCE0011862295E008345B3 /* UIGestureRecognizer+TKCategory.h in Sources */,
 				79FCE0021862295E008345B3 /* UIGestureRecognizer+TKCategory.m in Sources */,
+				5B2603D8189E7EF400C0A335 /* iWinViewAndCreateProjectViewController.m in Sources */,
 				79FCE0031862295E008345B3 /* UIImage+TKCategory.h in Sources */,
 				79FCE0041862295E008345B3 /* UIImage+TKCategory.m in Sources */,
 				79FCE0051862295E008345B3 /* UIImagePickerController+TKCategory.h in Sources */,
