@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import android.os.Parcel;
@@ -32,6 +33,10 @@ public class Task extends Event implements Parcelable {
 	}
 
 	public Task() {
+		Calendar c = Calendar.getInstance();
+		this.dateCreated = Long.toString(c.getTimeInMillis());
+		this.endTime = Long.toString(c.getTimeInMillis());
+		
 		// Required empty constructor
 	}
 

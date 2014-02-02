@@ -100,6 +100,8 @@ public class ViewTaskActivity extends Activity {
 				if (data != null) {
 					displayedTask = data.getParcelableExtra(Keys.Task.PARCEL);
 					setTask();
+					TaskUpdater tUpdate = new TaskUpdater();
+					tUpdate.updateTask(displayedTask);
 					this.resultCode = resultCode;
 				}
 			} else if (resultCode == RESULT_CANCELED) {

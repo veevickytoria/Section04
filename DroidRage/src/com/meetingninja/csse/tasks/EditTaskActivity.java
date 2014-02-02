@@ -237,8 +237,7 @@ public class EditTaskActivity extends FragmentActivity implements
 			Toast.makeText(this, String.format("Saving Task"),
 					Toast.LENGTH_SHORT).show();
 
-			TaskUpdater tUpdate = new TaskUpdater();
-			tUpdate.updateTask(displayTask);
+
 
 			Intent msgIntent = new Intent();
 			msgIntent.putExtra(EXTRA_TASK, displayTask);
