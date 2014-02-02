@@ -172,7 +172,7 @@
         
     }
     else if(indexPath.section == 1){ //task
-        self.addViewTaskViewController = [[iWinAddAndViewTaskViewController alloc] initWithNibName:@"iWinAddAndViewTaskViewController" bundle:nil withUserID:[[[NSUserDefaults standardUserDefaults] objectForKey:@"userID"] intValue] withTaskID: [[[self.meetingFeed objectAtIndex:indexPath.row] objectForKey:@"id"] intValue]];
+        self.addViewTaskViewController = [[iWinAddAndViewTaskViewController alloc] initWithNibName:@"iWinAddAndViewTaskViewController" bundle:nil withUserID:[[[NSUserDefaults standardUserDefaults] objectForKey:@"userID"] intValue] withTaskID: [[[self.taskFeed objectAtIndex:indexPath.row] objectForKey:@"id"] intValue]];
         [self.addViewTaskViewController setModalPresentationStyle:UIModalPresentationPageSheet];
         [self.addViewTaskViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
         self.addViewTaskViewController.viewTaskDelegate = self;
