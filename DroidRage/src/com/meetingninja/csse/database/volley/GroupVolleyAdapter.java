@@ -19,7 +19,7 @@ public class GroupVolleyAdapter extends GroupDatabaseAdapter {
 					public void onResponse(JsonNode response, int statusCode,
 							VolleyError error) {
 						if (response != null) {
-							Group retGroup = parseGroup(response);
+							Group retGroup = parseGroup(response, new Group());
 							retGroup.setID(groupID);
 							delegate.processFinish(retGroup);
 						} else {

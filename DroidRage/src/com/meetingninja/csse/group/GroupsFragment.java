@@ -71,9 +71,7 @@ public class GroupsFragment extends Fragment implements
 				R.layout.list_item_group, groups);
 		groupsList.setAdapter(groupAdpt);
 
-		if (Connectivity.isConnected(getActivity()) && isAdded()) {
 			fetchGroups();
-		}
 
 		groupAdpt.notifyDataSetChanged();
 		groupsList
@@ -99,7 +97,7 @@ public class GroupsFragment extends Fragment implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_refresh:
-			// TODO: refresh groups db call
+			fetchGroups();
 			return true;
 		case R.id.action_new:
 			Intent i = new Intent(getActivity(), EditGroupActivity.class);
@@ -121,7 +119,9 @@ public class GroupsFragment extends Fragment implements
 				creator.createGroup(g);
 				// TODO: implement DB calls
 			} else if (requestCode == 8) {
-				// TODO: implement database calls
+				GroupUpdater updater = new GroupUpdater();
+				updater.updateGroup(g);
+				fetchGroups();
 			}
 			groupAdpt.notifyDataSetChanged();
 
@@ -129,8 +129,11 @@ public class GroupsFragment extends Fragment implements
 	}
 
 	public void fetchGroups() {
-		fetcher = new GroupFetcherTask(this);
-		fetcher.execute(session.getUserID()); // calls processFinish()
+		if (Connectivity.isConnected(getActivity()) && isAdded()) {
+
+			fetcher = new GroupFetcherTask(this);
+			fetcher.execute(session.getUserID()); // calls processFinish()
+		}
 	}
 
 	private void editGroup(Group group) {
