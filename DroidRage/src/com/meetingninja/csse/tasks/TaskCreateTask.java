@@ -16,10 +16,10 @@ public class TaskCreateTask implements AsyncResponse<Void>{
 	
 	public TaskCreateTask(TasksFragment frag){
 		this.frag = frag;
-		this.creator = new TaskCreator(this);
 	}
 	
 	public void createTask(Task task){
+		this.creator = new TaskCreator(this);
 		this.creator.execute(task);
 	}
 
