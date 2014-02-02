@@ -27,6 +27,7 @@ import com.meetingninja.csse.ApplicationController;
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.SearchableUserFragment;
 import com.meetingninja.csse.SessionManager;
+import com.meetingninja.csse.ViewGroupActivity;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.GroupDatabaseAdapter;
 import com.meetingninja.csse.database.Keys;
@@ -81,7 +82,7 @@ public class GroupsFragment extends Fragment implements
 					public void onItemClick(AdapterView<?> parentAdapter,
 							View v, int position, long id) {
 						Group clicked = groupAdpt.getItem(position);
-						editGroup(clicked);
+						viewGroup(clicked);
 					}
 				});
 		registerForContextMenu(groupsList);
@@ -113,14 +114,13 @@ public class GroupsFragment extends Fragment implements
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == Activity.RESULT_OK) {
-			Group g = data.getParcelableExtra(Keys.Group.PARCEL);
+
 			if (requestCode == 7) {
+				Group g = data.getParcelableExtra(Keys.Group.PARCEL);
 				groups.add(g);
 				creator.createGroup(g);
 				// TODO: implement DB calls
 			} else if (requestCode == 8) {
-				GroupUpdater updater = new GroupUpdater();
-				updater.updateGroup(g);
 				fetchGroups();
 			}
 			groupAdpt.notifyDataSetChanged();
@@ -136,8 +136,8 @@ public class GroupsFragment extends Fragment implements
 		}
 	}
 
-	private void editGroup(Group group) {
-		Intent i = new Intent(getActivity(), EditGroupActivity.class);
+	private void viewGroup(Group group) {
+		Intent i = new Intent(getActivity(), ViewGroupActivity.class);
 		i.putExtra(Keys.Group.PARCEL, group);
 		startActivityForResult(i, 8);
 	}

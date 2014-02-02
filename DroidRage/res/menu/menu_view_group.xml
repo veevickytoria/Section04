@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_settings"/>
+    <item android:id="@+id/edit_item_group" android:icon="@drawable/ic_action_notes" android:orderInCategory="200" android:showAsAction="ifRoom" android:title="Edit"></item>
+    <item android:id="@+id/delete_item_group" android:orderInCategory="300" android:icon="@drawable/ic_action_discard_light" android:title="Delete" android:showAsAction="ifRoom"></item>
+
+</menu>
