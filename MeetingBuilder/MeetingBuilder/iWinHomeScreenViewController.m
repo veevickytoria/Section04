@@ -10,7 +10,7 @@
 #import "iWinBackEndUtility.h"
 #import "iWinMeetingViewController.h"
 #import "iWinAddAndViewTaskViewController.h"
-
+#import "iWinConstants.h"
 
 @interface iWinHomeScreenViewController ()
 @property (nonatomic) NSMutableArray *headers;
@@ -22,11 +22,7 @@
 @property (strong, nonatomic) iWinAddAndViewTaskViewController *addViewTaskViewController;
 @end
 
-//constants
-//const int MODAL_XOFFSET = 36;
-//const int MODAL_YOFFSET = 15;
-//const int MODAL_HEIGHT = 1018;
-//const int MODAL_WIDTH = 804;
+
 
 @implementation iWinHomeScreenViewController
 
@@ -168,7 +164,7 @@
         [self.scheduleMeetingVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
         
         [self presentViewController:self.scheduleMeetingVC animated:YES completion:nil];
-        //self.scheduleMeetingVC.view.superview.bounds = CGRectMake(36,15,1018,804);
+        self.scheduleMeetingVC.view.superview.bounds = CGRectMake(MODAL_XOFFSET,MODAL_YOFFSET,MODAL_WIDTH,MODAL_HEIGHT);
         
     }
     else if(indexPath.section == 1){ //task
@@ -178,7 +174,7 @@
         self.addViewTaskViewController.viewTaskDelegate = self;
         
         [self presentViewController:self.addViewTaskViewController animated:YES completion:nil];
-        //self.addViewTaskViewController.view.superview.bounds = CGRectMake(0,0,768,1003);
+        //self.addViewTaskViewController.view.superview.bounds = CGRectMake(MODAL_XOFFSET,MODAL_YOFFSET,MODAL_WIDTH,MODAL_HEIGHT);
     
     }
     else{ //notification

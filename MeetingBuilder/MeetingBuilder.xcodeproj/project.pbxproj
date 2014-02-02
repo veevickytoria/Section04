@@ -63,6 +63,7 @@
 		0A96CE05188A256A00D69C63 /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A96CE04188A256A00D69C63 /* Settings.m */; };
 		0A96E7E4185BE72700EAB0DC /* iWinViewProfileTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A96E7E3185BE72700EAB0DC /* iWinViewProfileTest.m */; };
 		0A96E7E7185FAA6200EAB0DC /* iWinProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A96E7E6185FAA6200EAB0DC /* iWinProfile.m */; };
+		0A97009E189EEF7100FF37D7 /* iWinConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A97009D189EEF7100FF37D7 /* iWinConstants.m */; };
 		0A97EDAA184169ED00160B5A /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A97EDA8184169ED00160B5A /* AudioToolbox.framework */; };
 		0A97EDAB184169ED00160B5A /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A97EDA9184169ED00160B5A /* AVFoundation.framework */; };
 		0A99E2021862D8A2001D8A64 /* iWinRegisterTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A99E2011862D8A2001D8A64 /* iWinRegisterTest.m */; };
@@ -343,6 +344,8 @@
 		0A96E7E3185BE72700EAB0DC /* iWinViewProfileTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinViewProfileTest.m; sourceTree = "<group>"; };
 		0A96E7E5185FAA6200EAB0DC /* iWinProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinProfile.h; sourceTree = "<group>"; };
 		0A96E7E6185FAA6200EAB0DC /* iWinProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinProfile.m; sourceTree = "<group>"; };
+		0A97009C189EEF7100FF37D7 /* iWinConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinConstants.h; sourceTree = "<group>"; };
+		0A97009D189EEF7100FF37D7 /* iWinConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinConstants.m; sourceTree = "<group>"; };
 		0A97EDA8184169ED00160B5A /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		0A97EDA9184169ED00160B5A /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		0A99E2011862D8A2001D8A64 /* iWinRegisterTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinRegisterTest.m; sourceTree = "<group>"; };
@@ -626,6 +629,7 @@
 		0A04456117F3825D000FF2A0 /* MeetingBuilder */ = {
 			isa = PBXGroup;
 			children = (
+				0A97009B189EEF4900FF37D7 /* Constants */,
 				5B2603D4189E7E5A00C0A335 /* ViewAndCreateProject */,
 				DE06072E189DF13200EF0059 /* Framework */,
 				0A9C04EE189DA9EB00C4BCE9 /* LargeDefaultCell */,
@@ -903,6 +907,15 @@
 				0A96E7E3185BE72700EAB0DC /* iWinViewProfileTest.m */,
 			);
 			name = ViewProfileTest;
+			sourceTree = "<group>";
+		};
+		0A97009B189EEF4900FF37D7 /* Constants */ = {
+			isa = PBXGroup;
+			children = (
+				0A97009C189EEF7100FF37D7 /* iWinConstants.h */,
+				0A97009D189EEF7100FF37D7 /* iWinConstants.m */,
+			);
+			name = Constants;
 			sourceTree = "<group>";
 		};
 		0A99E1FF1862D870001D8A64 /* RegisterTest */ = {
@@ -1421,6 +1434,7 @@
 				79FCDFE61862295E008345B3 /* TKTableViewController.m in Sources */,
 				79FCDFE71862295E008345B3 /* TKTextFieldCell.h in Sources */,
 				79FCDFE81862295E008345B3 /* TKTextFieldCell.m in Sources */,
+				0A97009E189EEF7100FF37D7 /* iWinConstants.m in Sources */,
 				0A96CE02188A254B00D69C63 /* Contact.m in Sources */,
 				79FCDFE91862295E008345B3 /* TKTextView.h in Sources */,
 				79FCDFEA1862295E008345B3 /* TKTextView.m in Sources */,
