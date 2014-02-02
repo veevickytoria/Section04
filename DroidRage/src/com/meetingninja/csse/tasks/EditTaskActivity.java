@@ -142,12 +142,10 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 	private void trimTextView() {
 		mTitle.setText(mTitle.getText().toString().trim());
 		mDescription.setText(mDescription.getText().toString().trim());
-		completionCriteria.setText(completionCriteria.getText().toString()
-				.trim());
+		completionCriteria.setText(completionCriteria.getText().toString().trim());
 	}
 
 	private final View.OnClickListener tActionBarListener = new OnClickListener() {
-
 		@Override
 		public void onClick(View v) {
 			onActionBarItemSelected(v);

@@ -33,13 +33,13 @@
         android:textColor="@android:color/secondary_text_dark" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/contacts_add_contact_button"
         android:layout_width="wrap_content"
-        android:focusable="false"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:background="@drawable/button_selector"
         android:layout_toLeftOf="@+id/user_list_image"
+        android:background="@drawable/button_selector"
+        android:focusable="false"
         android:minWidth="48dp"
         android:text="+" />
 
