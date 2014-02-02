@@ -8,13 +8,14 @@
 
 #import <UIKit/UIKit.h>
 #import "iWinViewAndAddNotesViewController.h"
+#import "LargeDefaultCell.h"
 
 @protocol NoteListDelegate <NSObject>
 
 -(void)addViewNoteClicked :(BOOL)isEditing;
 @end
 
-@interface iWinNoteListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate, NSURLConnectionDelegate, ViewAddNoteDelegate>
+@interface iWinNoteListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate, NSURLConnectionDelegate, ViewAddNoteDelegate, LargeCellDelegate>
 @property (strong, nonatomic) NSMutableData *responseData;
 @property (weak, nonatomic) IBOutlet UIButton *createNoteButton;
 @property (weak, nonatomic) IBOutlet UITableView *noteTable;

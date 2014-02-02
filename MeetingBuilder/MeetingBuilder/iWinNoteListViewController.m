@@ -37,6 +37,7 @@
 {
     [super viewDidLoad];
     self.backendUtility = [[iWinBackEndUtility alloc] init];
+    [self.noteTable registerNib:[UINib nibWithNibName:@"LargeDefaultCell" bundle:nil] forCellReuseIdentifier:@"NoteCell"];
     [self refreshNoteList];
 }
 
@@ -75,18 +76,11 @@
     }
 }
 
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    return YES;
-}
-
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        //add code here for when you hit delete
-        self.selectedNote = indexPath.row;
-        UIAlertView *deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this note?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
-        [deleteAlertView show];
-    }
+-(void)deleteCell:(NSInteger)row
+{
+    self.selectedNote = row;
+    UIAlertView *deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this note?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
+    [deleteAlertView show];
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -115,13 +109,15 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"NoteCell"];
+    LargeDefaultCell *cell = (LargeDefaultCell *)[tableView dequeueReusableCellWithIdentifier:@"NoteCell"];
     if (cell == nil)
     {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"NoteCell"];
+        cell = [[LargeDefaultCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"NoteCell"];
     }
-    
-    cell.textLabel.text = (NSString *)[self.noteList objectAtIndex:indexPath.row];
+    [cell initLargeCell];
+    cell.largeCellDelegate = self;
+    cell.deleteButton.tag = indexPath.row;
+    cell.titleLabel.text = (NSString *)[self.noteList objectAtIndex:indexPath.row];
     return cell;
 }
 
