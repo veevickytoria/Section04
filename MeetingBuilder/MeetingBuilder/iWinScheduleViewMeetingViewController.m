@@ -157,8 +157,7 @@
     }
     
     self.titleField.text = [self.existMeeting objectForKey:@"title"];
-    self.placeField.text = [self.existMeeting objectForKey:@"location"];
-    
+    self.placeField.text = [self.existMeeting objectForKey:@"location"];    
     
     [self initDateTimeLabels];
     [self initAttendees];
@@ -372,6 +371,7 @@
         [self updateMeetingInfo];
     }
     [self scheduleNotification];
+    NSLog(@"%@", NSStringFromClass([self.viewMeetingDelegate class]));
     [self.viewMeetingDelegate refreshMeetingList];
 }
 

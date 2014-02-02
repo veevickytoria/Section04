@@ -218,5 +218,19 @@
     return [self.headers objectAtIndex:section];
 }
 
+-(void)refreshMeetingList {
+    [self.scheduleMeetingVC dismissViewControllerAnimated:YES completion:nil];
+    [self viewDidLoad];
+    [self.feedTable reloadData];
+}
+
+-(void)refreshTaskList
+{
+    [self.addViewTaskViewController dismissViewControllerAnimated:YES completion:nil];
+    [self viewDidLoad ];
+    [self.feedTable reloadData];
+}
+
+
 
 @end
