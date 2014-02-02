@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import objects.Contact;
 import objects.Group;
 import objects.SerializableUser;
 import objects.User;
@@ -29,6 +30,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -69,26 +71,26 @@ import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
 import com.meetingninja.csse.database.local.SQLiteUserAdapter;
 import com.meetingninja.csse.extras.ContactTokenTextView;
+import com.meetingninja.csse.user.TempContactArrayAdapter.addContactObj;
 
 import de.timroes.android.listview.EnhancedListView;
 
-public class UserListFragment extends ListFragment implements AsyncResponse<List<User>>, TokenListener{
+public class UserListFragment extends Fragment implements TokenListener{
 	
 	private SQLiteUserAdapter dbHelper;
-	private UserArrayAdapter mUserAdapter;
-	private List<User> users = new ArrayList<User>();
+	private ContactArrayAdapter mContactAdapter;
 	RetContactsObj fetcher = null;
 	private EnhancedListView l;
-
+	
 	private AutoCompleteAdapter autoAdapter;
 	private ArrayList<User> allUsers = new ArrayList<User>();
-	private ArrayList<User> addedUsers = new ArrayList<User>();
+	private User addedUser;
+	private ArrayList<Contact> contacts = new ArrayList<Contact>();
 
 	public UserListFragment() {
 		// Required empty public constructor
 	}
 	//to add users. change db adapter to ContactArrayAdapter change list_item_user to list_item_contact and make it show all users not just contacts
-	//TODO: change to enhanced listview and check if user does want to eliminate contact
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,	Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
@@ -97,21 +99,12 @@ public class UserListFragment extends ListFragment implements AsyncResponse<List
 		
 		dbHelper = new SQLiteUserAdapter(getActivity());
 
-		mUserAdapter = new UserArrayAdapter(getActivity(),R.layout.list_item_user, users);
-		setListAdapter(mUserAdapter);
-
+//		mContactAdapter = new ContactArrayAdapter(getActivity(),R.layout.list_item_user, contacts);
+		setUpListView(v);
 		populateList(true); // uses async-task
-//		setUpListView();
 		return v;
 	}
-	@Override
-	public void onListItemClick(ListView l, View v, int position, long id) {
-		Log.d(getTag(), "Clicked this one");
-		User clicked = mUserAdapter.getItem(position);
-		Intent profileIntent = new Intent(getActivity(), ProfileActivity.class);
-		profileIntent.putExtra(Keys.User.PARCEL, clicked);
-		startActivity(profileIntent);
-	}
+
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.menu_new_and_refresh, menu);
@@ -130,11 +123,10 @@ public class UserListFragment extends ListFragment implements AsyncResponse<List
 			return super.onContextItemSelected(item);
 		}
 	}
-	//TODO: is addedusers even useful?
 	public void addContactsOption() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setTitle("Search by name or email:");
-		//TODO: change to users not in contacts or something of the sort
+		//TODO: only display users that aren't already a contact
 		UserVolleyAdapter.fetchAllUsers(new AsyncResponse<List<User>>() {
 			@Override
 			public void processFinish(List<User> result) {
@@ -149,12 +141,11 @@ public class UserListFragment extends ListFragment implements AsyncResponse<List
 		
 		input.setTokenListener(this);
 		builder.setView(autocompleteView);
-		builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-//				group.getMembers().addAll(addedUsers);
-				addedUsers.clear();
-				mUserAdapter.notifyDataSetChanged();
+				addContact(addedUser);
+				addedUser=null;
 			}
 		});
 		builder.setNegativeButton("Cancel",	new DialogInterface.OnClickListener() {
@@ -174,9 +165,9 @@ public class UserListFragment extends ListFragment implements AsyncResponse<List
 			added = new SerializableUser((User) arg0);
 
 		if (added != null) {
-			addedUsers.add(added);
+			addedUser = added;
+//			addedContacts.add(added);
 		}
-
 	}
 
 	@Override
@@ -188,11 +179,19 @@ public class UserListFragment extends ListFragment implements AsyncResponse<List
 			removed = new SerializableUser((User) arg0);
 
 		if (removed != null) {
-			addedUsers.remove(removed);
+			addedUser = null;
 		}
 
 	}
-
+	public void setContacts(List<Contact> tempContacts){
+		contacts.clear();
+		contacts.addAll(tempContacts);
+		mContactAdapter.notifyDataSetChanged();
+	}
+	private void addContact(User user) {
+		AddContactTask adder = new AddContactTask(this);
+		adder.addContact(user.getID());
+	}
 
 	@Override
 	public void onPause() {
@@ -207,92 +206,68 @@ public class UserListFragment extends ListFragment implements AsyncResponse<List
 		fetcher.execute(session.getUserID());
 	}
 	
+	private void setUpListView(View v){
+		mContactAdapter = new ContactArrayAdapter(getActivity(), R.layout.list_item_user,contacts);
+		l = (EnhancedListView) v.findViewById(R.id.contacts_list);
+		l.setAdapter(mContactAdapter);
+		l.setEmptyView(v.findViewById(android.R.id.empty));
+		l.setDismissCallback(new de.timroes.android.listview.EnhancedListView.OnDismissCallback() {
+			@Override
+			public EnhancedListView.Undoable onDismiss(EnhancedListView listView, final int position) {
+
+				final Contact item = (Contact) mContactAdapter.getItem(position);
+				mContactAdapter.remove(item);
+				
+				return new EnhancedListView.Undoable() {
+					@Override
+					public void undo() {
+						mContactAdapter.insert(item, position);
+					}
+
+					@Override
+					public String getTitle() {
+						return "Member deleted";
+					}
+					@Override
+						public void discard(){
+						//TODO: check if user does want to eliminate contact
+						//TODO: delete them
+					}
+				};
+			}
+		});
+		l.setUndoHideDelay(5000);
+		l.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View v, int position,long id) {
+				User clicked = mContactAdapter.getItem(position).getContact();
+				Intent profileIntent = new Intent(v.getContext(),ProfileActivity.class);
+				profileIntent.putExtra(Keys.User.PARCEL, clicked);
+				startActivity(profileIntent);
+
+			}
+
+		});
+		l.enableSwipeToDismiss();
+		l.setSwipingLayout(R.id.list_group_item_frame_1); 
+
+		l.setSwipeDirection(EnhancedListView.SwipeDirection.BOTH);
+		
+//		List<User> mems = new ArrayList<User>();
+//		mems = displayTask.getMembers();
+//		for(int i = 0;i<mems.size();i++){
+//			loadUser(mems.get(i).toString(),false);
+//		}
+//		//TODO: change to a loop when backend catches up
+//		String mem = displayTask.getAssignedTo();
+//		loadUser(mem,false);
+
+		
+		
+	}
 	
-//	  <de.timroes.android.listview.EnhancedListView
-//      android:id="@+id/contacts_list"
-//      android:layout_width="match_parent"
-//      android:layout_height="wrap_content"
-//      android:dividerHeight="2dp" >
-//  </de.timroes.android.listview.EnhancedListView>
-	
-//	private void setUpListView(){
-////		findViewById(R.id.edit_task_container).setOnTouchListener(new OnTouchListener() {
-////					@Override
-////					public boolean onTouch(View v, MotionEvent event) {
-////						hideKeyboard();
-////						return false;
-////					}
-////				});
-////
-////		// allows keyboard to hide when not editing text
-////		findViewById(R.id.edit_task_container).setOnTouchListener(new OnTouchListener() {
-////					@Override
-////					public boolean onTouch(View v, MotionEvent event) {
-////						hideKeyboard();
-////						return false;
-////					}
-////				});
-//
-//		mUserAdapter = new UserArrayAdapter(getActivity(), R.layout.list_item_user,users);
-//		l = (EnhancedListView) getActivity().findViewById(R.id.contacts_list);
-//		l.setAdapter(mUserAdapter);
-//		l.setDismissCallback(new de.timroes.android.listview.EnhancedListView.OnDismissCallback() {
-//			@Override
-//			public EnhancedListView.Undoable onDismiss(EnhancedListView listView, final int position) {
-//
-//				final User item = (User) mUserAdapter.getItem(position);
-//				mUserAdapter.remove(item);
-//				return new EnhancedListView.Undoable() {
-//					@Override
-//					public void undo() {
-//						mUserAdapter.insert(item, position);
-//					}
-//
-//					@Override
-//					public String getTitle() {
-//						return "Member deleted";
-//					}
-//				};
-//			}
-//		});
-//		l.setUndoHideDelay(5000);
-//		l.setOnItemClickListener(new OnItemClickListener() {
-//
-//			@Override
-//			public void onItemClick(AdapterView<?> arg0, View v, int position,long id) {
-//				User clicked = mUserAdapter.getItem(position);
-//				Intent profileIntent = new Intent(v.getContext(),ProfileActivity.class);
-//				profileIntent.putExtra(Keys.User.PARCEL, clicked);
-//				startActivity(profileIntent);
-//
-//			}
-//
-//		});
-//		l.enableSwipeToDismiss();
-//		l.setSwipingLayout(R.id.list_group_item_frame_1); 
-//
-//		l.setSwipeDirection(EnhancedListView.SwipeDirection.BOTH);
-//		
-////		List<User> mems = new ArrayList<User>();
-////		mems = displayTask.getMembers();
-////		for(int i = 0;i<mems.size();i++){
-////			loadUser(mems.get(i).toString(),false);
-////		}
-////		//TODO: change to a loop when backend catches up
-////		String mem = displayTask.getAssignedTo();
-////		loadUser(mem,false);
-//
-//		
-//		
-//	}
-//	private void hideKeyboard() {
-//		InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-//		inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-//	}
-	
-	
-	
-	final class RetContactsObj implements AsyncResponse<List<User>> {
+	final class RetContactsObj implements AsyncResponse<List<Contact>> {
 
 		private ContactsFetcher contactsFetcher;
 		private boolean add;
@@ -306,29 +281,28 @@ public class UserListFragment extends ListFragment implements AsyncResponse<List
 		}
 
 		@Override
-		public void processFinish(List<User> result) {
-			if(add){
-				users.addAll(result);
-			}
-			mUserAdapter.notifyDataSetChanged();
+		public void processFinish(List<Contact> result) {
+			contacts.clear();
+			contacts.addAll(result);
+			mContactAdapter.notifyDataSetChanged();
 		}
 	}
 
-	@Override
-	public void processFinish(List<User> result) {
-		users.clear();
-		mUserAdapter.clear();
-
-		Collections.sort(result, new Comparator<User>() {
-			@Override
-			public int compare(User lhs, User rhs) {
-				return lhs.getDisplayName().toLowerCase().compareTo(rhs.getDisplayName().toLowerCase());
-			}
-		});
-		users.addAll(result);
-
-		mUserAdapter.notifyDataSetChanged();
-
-	}
+//	@Override
+//	public void processFinish(List<User> result) {
+//		contacts.clear();
+//		mContactAdapter.clear();
+//
+//		Collections.sort(result, new Comparator<User>() {
+//			@Override
+//			public int compare(User lhs, User rhs) {
+//				return lhs.getDisplayName().toLowerCase().compareTo(rhs.getDisplayName().toLowerCase());
+//			}
+//		});
+//		contacts.addAll(result);
+//
+//		mContactAdapter.notifyDataSetChanged();
+//
+//	}
 
 }

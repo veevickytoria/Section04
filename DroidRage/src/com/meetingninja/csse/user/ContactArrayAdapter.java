@@ -1,33 +1,29 @@
 package com.meetingninja.csse.user;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.loopj.android.image.SmartImageView;
 import com.meetingninja.csse.R;
-import com.meetingninja.csse.database.AsyncResponse;
-import com.meetingninja.csse.database.UserDatabaseAdapter;
 
+import objects.Contact;
 import objects.User;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.TextView;
 
-public class ContactArrayAdapter extends ArrayAdapter<User> {
+public class ContactArrayAdapter extends ArrayAdapter<Contact> {
 
 	private int mLayoutId;
 	private final LayoutInflater mLayoutInflater;
-	private List<User> contacts;
-	private addContactObj fetcher;
-	public ContactArrayAdapter(Context context, int resourceId, List<User> users) {
-		super(context, resourceId, users);
-		this.contacts = users;
+	private List<Contact> contacts;
+
+	public ContactArrayAdapter(Context context, int resourceId, List<Contact> contacts) {
+		super(context, resourceId, contacts);
+		this.contacts= contacts;
 		mLayoutInflater = LayoutInflater.from(context);
 		mLayoutId = resourceId;
 	}
@@ -36,64 +32,32 @@ public class ContactArrayAdapter extends ArrayAdapter<User> {
 	private class ViewHolder {
 		SmartImageView photo;
 		TextView name, email;
-		Button button;
 	}
 
 	ViewHolder viewHolder;
 
 	@Override
-	public View getView(final int position, View convertView, ViewGroup parent) {
+	public View getView(int position, View convertView, ViewGroup parent) {
 		if (convertView == null) {
 			convertView = mLayoutInflater.inflate(mLayoutId, parent, false);
 			viewHolder = new ViewHolder();
 
 			// cache the views
-			viewHolder.name = (TextView) convertView.findViewById(R.id.user_list_name);
-			viewHolder.email = (TextView) convertView.findViewById(R.id.user_list_email);
-			viewHolder.photo = (SmartImageView) convertView.findViewById(R.id.user_list_image);
-			viewHolder.button = (Button) convertView.findViewById(R.id.contacts_add_contact_button);
+			viewHolder.name = (TextView) convertView
+					.findViewById(R.id.user_list_name);
+			viewHolder.email = (TextView) convertView
+					.findViewById(R.id.user_list_email);
+			viewHolder.photo = (SmartImageView) convertView
+					.findViewById(R.id.user_list_image);
 
 			convertView.setTag(viewHolder);
-		} else{
+		} else
 			viewHolder = (ViewHolder) convertView.getTag();
-		}
-		viewHolder.button.setOnClickListener(new OnClickListener()
-				{ 
-					@Override
-					public void onClick(View v) {
-						System.out.println("user being added"+contacts.get(position).getDisplayName());
-						addContact(contacts.get(position).getID());
-						
-						
-						
-					}
-				});  
 
-		User user = contacts.get(position);
-		viewHolder.name.setText(user.getDisplayName());
-		viewHolder.email.setText(user.getEmail());
+		Contact contact = contacts.get(position);
+		viewHolder.name.setText(contact.getContact().getDisplayName());
+		viewHolder.email.setText(contact.getContact().getEmail());
 		return convertView;
-	}
-	private void addContact(String contactID) {
-		fetcher = new addContactObj();
-		fetcher.execute(contactID);
-	}
-	final class addContactObj implements AsyncResponse<User> {
-		
-		public addContactObj() {
-		}
-
-		public void execute(String contactID) {
-			AddContactsTask adder = new AddContactsTask(fetcher);
-			
-			adder.addContact(contactID);
-
-		}
-
-		@Override
-		public void processFinish(User result) {
-			notifyDataSetChanged();
-		}
 	}
 
 }
