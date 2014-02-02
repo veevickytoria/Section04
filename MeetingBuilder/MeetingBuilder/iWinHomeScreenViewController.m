@@ -133,8 +133,10 @@
         {
             NSDictionary* meeting = (NSDictionary*)[self.meetingFeed objectAtIndex:indexPath.row];
   
-           cell.textLabel.text = (NSString*)[[[meeting objectForKey:@"title"] stringByAppendingString:@": "] stringByAppendingString:[meeting objectForKey:@"description"]];
-           cell.detailTextLabel.text = (NSString*)[[[meeting objectForKey:@"datetimeStart"] stringByAppendingString:@" to "] stringByAppendingString:[meeting objectForKey:@"datetimeEnd"]] ;
+            cell.textLabel.text = (NSString*)[meeting objectForKey:@"title"];
+                        //stringByAppendingString:@": "] stringByAppendingString:[meeting objectForKey:@"description"]];
+            cell.detailTextLabel.text = (NSString*)[meeting objectForKey:@"datetimeStart"];
+                        //stringByAppendingString:@" to "] stringByAppendingString:[meeting objectForKey:@"datetimeEnd"]] ;
         }
     
         else if (indexPath.section == 1)
