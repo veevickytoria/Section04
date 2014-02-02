@@ -7,6 +7,8 @@
 //
 
 #import "iWinHomeScreenViewController.h"
+#import "iWinBackEndUtility.h"
+
 
 
 @interface iWinHomeScreenViewController ()
@@ -14,6 +16,8 @@
 @property (nonatomic) NSMutableArray *taskFeed;
 @property (nonatomic) NSMutableArray *notificationFeed;
 @property (nonatomic) NSMutableArray *meetingFeed;
+@property (strong, nonatomic) iWinBackEndUtility *backendUtility;
+
 @end
 
 @implementation iWinHomeScreenViewController
@@ -23,6 +27,10 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        NSMutableDictionary *defaultDict = [[NSMutableDictionary alloc] init];
+        [defaultDict setValue:[NSString stringWithFormat:@"%d", userID] forKey:@"userID"];
+        [[NSUserDefaults standardUserDefaults] registerDefaults:defaultDict];
+        [[NSUserDefaults standardUserDefaults] synchronize];
     }
     return self;
 }
@@ -37,6 +45,7 @@
     self.taskFeed = [[NSMutableArray alloc] init];
     self.notificationFeed = [[NSMutableArray alloc] init];
     self.meetingFeed = [[NSMutableArray alloc] init];
+    self.backendUtility = [[iWinBackEndUtility alloc] init];
     
     [self.headers addObject:@"Meeting"];
     [self.headers addObject:@"Task"];
@@ -48,6 +57,58 @@
     [self.meetingFeed addObject:@"Due: 12:00, 10/26/13"];
     [self.notificationFeed addObject:@"Mary shared Meeting Minutes 9/21/13"];
     
+    
+    //For meetingFeed and taskFeed
+    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Schedule/%@", [[NSUserDefaults standardUserDefaults] objectForKey:@"userID"]];
+    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
+    
+    if (!deserializedDictionary)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"schedule not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alert show];
+    }
+    else
+    {
+        NSArray *jsonArray = [deserializedDictionary objectForKey:@"schedule"];
+        for(int i = 0; i < [jsonArray count]; i++){
+            NSDictionary* element = [jsonArray objectAtIndex:i];
+            
+            if([[element objectForKey:@"type"] isEqualToString:@"meeting"]){
+                [self.meetingFeed addObject:[[element objectForKey:@"title"] stringByAppendingString:[element objectForKey:@"description"]]];
+                
+                [self.meetingFeed addObject:[  [[element objectForKey:@"datetimeStart"] stringByAppendingString:@" to "]stringByAppendingString:[element objectForKey:@"datetimeEnd"] ]];
+            }
+            
+            else {
+                [self.taskFeed addObject:[[element objectForKey:@"title"] stringByAppendingString:[element objectForKey:@"description"]]];
+                
+                [self.taskFeed addObject:[  [[element objectForKey:@"datetimeStart"] stringByAppendingString:@" to "]stringByAppendingString:[element objectForKey:@"datetimeEnd"] ]];
+            }
+        }
+    }
+    
+    
+    //For notificationFeed
+    NSString *urlNotification = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Notification/%@", [[NSUserDefaults standardUserDefaults] objectForKey:@"userID"]];
+
+    urlNotification = [urlNotification stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *deserializedDictionaryNotification = [self.backendUtility getRequestForUrl:urlNotification];
+    
+    if (!deserializedDictionaryNotification)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"notification not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alert show];
+    }
+    else
+    {
+        NSArray *jsonArray = [deserializedDictionaryNotification objectForKey:@"notifications"];
+        for(int i = 0; i < [jsonArray count]; i++){
+            NSDictionary* element = [jsonArray objectAtIndex:i];
+            
+            [self.notificationFeed addObject:[[element objectForKey:@"description"] stringByAppendingString:[element objectForKey:@"datetime"]]];
+        }
+    }
     
 }
 
@@ -67,13 +128,13 @@
     
         if (indexPath.section == 0)
         {
-            cell.detailTextLabel.text= (NSString*)[self.meetingFeed objectAtIndex:1];
-            cell.textLabel.text = (NSString*)[self.meetingFeed objectAtIndex:0];
+            cell.detailTextLabel.text= (NSString*)[self.meetingFeed objectAtIndex:(indexPath.row * 2 + 1)];
+            cell.textLabel.text = (NSString*)[self.meetingFeed objectAtIndex:(indexPath.row * 2)];
         }
         else if (indexPath.section == 1)
         {
-            cell.detailTextLabel.text= (NSString*)[self.taskFeed objectAtIndex:1];
-            cell.textLabel.text = (NSString*)[self.taskFeed objectAtIndex:0];
+            cell.detailTextLabel.text= (NSString*)[self.taskFeed objectAtIndex:(indexPath.row * 2 + 1)];
+            cell.textLabel.text = (NSString*)[self.taskFeed objectAtIndex:(indexPath.row * 2)];
         }
         else
         {

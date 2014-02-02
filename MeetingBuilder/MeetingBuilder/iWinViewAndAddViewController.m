@@ -168,7 +168,7 @@
     
     self.agendaID = [[deserializedDictionary objectForKey:@"agendaID"] integerValue];
     }
-    else{
+    else{ // for editting
         
         
         
