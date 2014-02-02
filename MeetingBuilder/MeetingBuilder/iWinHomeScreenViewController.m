@@ -18,8 +18,13 @@
 @property (nonatomic) NSMutableArray *meetingFeed;
 @property (strong, nonatomic) iWinBackEndUtility *backendUtility;
 @property (strong, nonatomic) iWinScheduleViewMeetingViewController *scheduleMeetingVC;
-
 @end
+
+//constants
+//const int MODAL_XOFFSET = 36;
+//const int MODAL_YOFFSET = 15;
+//const int MODAL_HEIGHT = 1018;
+//const int MODAL_WIDTH = 804;
 
 @implementation iWinHomeScreenViewController
 
@@ -151,13 +156,13 @@
 {
     //meeting
     if(indexPath.section == 0){
-//        [tableView deselectRowAtIndexPath:indexPath animated:YES];
-//        self.scheduleMeetingVC = [[iWinScheduleViewMeetingViewController alloc] initWithNibName:@"iWinScheduleViewMeetingViewController" bundle:nil withUserID:[[NSUserDefaults standardUserDefaults] objectForKey:@"userID"]] withMeetingID:[self.meetingID[indexPath.row] integerValue]];
-//        self.scheduleMeetingVC.viewMeetingDelegate = self;
-//        [self.scheduleMeetingVC setModalPresentationStyle:UIModalPresentationPageSheet];
-//        [self.scheduleMeetingVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-//        
-//        [self presentViewController:self.scheduleMeetingVC animated:YES completion:nil];
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        self.scheduleMeetingVC = [[iWinScheduleViewMeetingViewController alloc] initWithNibName:@"iWinScheduleViewMeetingViewController" bundle:nil withUserID:[[[NSUserDefaults standardUserDefaults] objectForKey:@"userID"]intValue ] withMeetingID:[[[self.meetingFeed objectAtIndex:indexPath.row] objectForKey:@"id"] intValue]];
+        self.scheduleMeetingVC.viewMeetingDelegate = self;
+        [self.scheduleMeetingVC setModalPresentationStyle:UIModalPresentationPageSheet];
+        [self.scheduleMeetingVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+        
+        [self presentViewController:self.scheduleMeetingVC animated:YES completion:nil];
 //        self.scheduleMeetingVC.view.superview.bounds = CGRectMake(MODAL_XOFFSET,MODAL_YOFFSET,MODAL_WIDTH,MODAL_HEIGHT);
         
     }
