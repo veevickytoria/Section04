@@ -81,7 +81,6 @@
 		0ACE33B317FD2461003B9C0A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ACE33B217FD2461003B9C0A /* Security.framework */; };
 		0ACE33B517FD246F003B9C0A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ACE33B417FD246F003B9C0A /* SystemConfiguration.framework */; };
 		5B0ADDAA188D87510013753B /* iWinGroupTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B0ADDA9188D87510013753B /* iWinGroupTest.m */; };
-		5B2603D3189E7CB100C0A335 /* OpenEars.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B2603D2189E7CB100C0A335 /* OpenEars.framework */; };
 		5B2603D8189E7EF400C0A335 /* iWinViewAndCreateProjectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2603D6189E7EF400C0A335 /* iWinViewAndCreateProjectViewController.m */; };
 		5B2603D9189E7EF400C0A335 /* iWinViewAndCreateProjectViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B2603D7189E7EF400C0A335 /* iWinViewAndCreateProjectViewController.xib */; };
 		5B2603DC189E871100C0A335 /* Project.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2603DB189E871100C0A335 /* Project.m */; };
@@ -97,6 +96,7 @@
 		79753A7E1860F3B50015098B /* iWinMeeting.m in Sources */ = {isa = PBXBuildFile; fileRef = 79753A7D1860F3B50015098B /* iWinMeeting.m */; };
 		79753AA81861095F0015098B /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79753AA61861095F0015098B /* MapKit.framework */; };
 		79753AA91861095F0015098B /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79753AA71861095F0015098B /* QuartzCore.framework */; };
+		79D3D672189EF9D9000C9194 /* OpenEars.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79D3D671189EF9D9000C9194 /* OpenEars.framework */; };
 		79D513CA181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79D513C8181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.m */; };
 		79D513CB181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79D513C9181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.xib */; };
 		79D513D0181F9F9E00C79B71 /* iWinNoteListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79D513CE181F9F9E00C79B71 /* iWinNoteListViewController.m */; };
@@ -395,6 +395,7 @@
 		79753A7D1860F3B50015098B /* iWinMeeting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinMeeting.m; sourceTree = "<group>"; };
 		79753AA61861095F0015098B /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		79753AA71861095F0015098B /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		79D3D671189EF9D9000C9194 /* OpenEars.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenEars.framework; path = MeetingBuilder/Framework/OpenEars.framework; sourceTree = "<group>"; };
 		79D513C7181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinViewAndAddNotesViewController.h; sourceTree = "<group>"; };
 		79D513C8181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinViewAndAddNotesViewController.m; sourceTree = "<group>"; };
 		79D513C9181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iWinViewAndAddNotesViewController.xib; sourceTree = "<group>"; };
@@ -544,6 +545,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				79D3D672189EF9D9000C9194 /* OpenEars.framework in Frameworks */,
 				0A8F7F1818998D320071C825 /* MessageUI.framework in Frameworks */,
 				0A8C13A8187DEA65005A25DE /* StoreKit.framework in Frameworks */,
 				0A8C13A6187DEA54005A25DE /* libz.1.1.3.dylib in Frameworks */,
@@ -561,7 +563,6 @@
 				0A04455C17F3825D000FF2A0 /* Foundation.framework in Frameworks */,
 				0A04455E17F3825D000FF2A0 /* CoreGraphics.framework in Frameworks */,
 				0A04456017F3825D000FF2A0 /* CoreData.framework in Frameworks */,
-				5B2603D3189E7CB100C0A335 /* OpenEars.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -602,6 +603,7 @@
 		0A04455817F3825C000FF2A0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				79D3D671189EF9D9000C9194 /* OpenEars.framework */,
 				0A8F7F1718998D320071C825 /* MessageUI.framework */,
 				0A8C13A7187DEA65005A25DE /* StoreKit.framework */,
 				0A8C13A5187DEA53005A25DE /* libz.1.1.3.dylib */,
@@ -1625,6 +1627,7 @@
 					/Users/csse/Documents/CSSE371/Section04/MeetingBuilder,
 					/Users/Alpha/Documents/Section04/MeetingBuilder/MeetingBuilder/Framework,
 					"/Users/brodielockard/Downloads/OpenEarsDistribution\\ 2/Framework",
+					/Users/richard/csse374_JrProject/MeetingBuilder/MeetingBuilder/Framework,
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MeetingBuilder/MeetingBuilder-Prefix.pch";
