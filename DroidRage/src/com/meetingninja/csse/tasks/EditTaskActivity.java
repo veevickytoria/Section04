@@ -295,8 +295,7 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View v, int position,long id) {
 				User clicked = mUserAdapter.getItem(position);
-				Intent profileIntent = new Intent(v.getContext(),
-						ProfileActivity.class);
+				Intent profileIntent = new Intent(v.getContext(),ProfileActivity.class);
 				profileIntent.putExtra(Keys.User.PARCEL, clicked);
 				startActivity(profileIntent);
 
@@ -311,10 +310,12 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 //		List<User> mems = new ArrayList<User>();
 //		mems = displayTask.getMembers();
 //		for(int i = 0;i<mems.size();i++){
-//			loadUser(mems.get(i).toString());
+//			loadUser(mems.get(i).toString(),false);
 //		}
+		//TODO: change to a loop when backend catches up
 		String mem = displayTask.getAssignedTo();
-		loadUser(mem);
+		loadUser(mem,false);
+
 		
 		
 	}
@@ -332,7 +333,8 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				loadUser(input.getText().toString());
+				loadUser(input.getText().toString(),true);
+				//mUserAdapter.getItem(mUserAdapter.)
 				//member = input.getText().toString();
 			}
 		});
@@ -344,16 +346,17 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 		});
 		builder.show();
 	}
-	private void loadUser(String userID) {
-		fetcher = new RetUserObj();
+	private void loadUser(String userID,boolean add) {
+		fetcher = new RetUserObj(add);
 		fetcher.execute(userID);
 	}
 	final class RetUserObj implements AsyncResponse<User> {
 
 		private UserInfoFetcher infoFetcher;
-
-		public RetUserObj() {
+		private boolean add;
+		public RetUserObj(boolean add) {
 			infoFetcher = new UserInfoFetcher(this);
+			this.add = add;
 		}
 
 		public void execute(String userID) {
@@ -362,13 +365,18 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 
 		@Override
 		public void processFinish(User result) {
-			displayTask.addMember(result);
+			if(add){
+				displayTask.addMember(result);
+			}
+			//TODO: eliminate when i can change assignedto to a list. this is becuase members isn't intially being set to have what is in assigned to
+			if(displayTask.getMembers().isEmpty()){
+				displayTask.addMember(result);
+			}
 			mUserAdapter.notifyDataSetChanged();
 		}
 	}
 
-	private class DateClickListener implements OnClickListener,
-			OnDateSetListener {
+	private class DateClickListener implements OnClickListener,OnDateSetListener {
 		Calendar cal;
 		FragmentActivity activity;
 
