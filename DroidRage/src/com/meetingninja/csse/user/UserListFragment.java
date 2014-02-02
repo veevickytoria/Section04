@@ -50,6 +50,7 @@ import com.meetingninja.csse.database.UserDatabaseAdapter;
 import com.meetingninja.csse.database.local.SQLiteUserAdapter;
 import com.meetingninja.csse.database.volley.UserVolleyAdapter;
 import com.tokenautocomplete.TokenCompleteTextView.TokenListener;
+import com.meetingninja.csse.extras.AlertDialogUtil;
 import com.meetingninja.csse.extras.ContactTokenTextView;
 
 import objects.User;
@@ -144,8 +145,18 @@ public class UserListFragment extends Fragment implements TokenListener{
 		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				addContact(addedUser);
-				addedUser=null;
+				boolean contains=false;
+				for(int i=0;i<contacts.size();i++){
+					if(contacts.get(i).getContact().equals(addedUser)){
+						contains=true;
+					}
+				}
+				if(contains){
+					AlertDialogUtil.displayDialog(getActivity(), "Unable to add contact","This user is already added as a contact", "OK",null);
+				}else{
+					addContact(addedUser);
+					addedUser=null;
+				}
 			}
 		});
 		builder.setNegativeButton("Cancel",	new DialogInterface.OnClickListener() {
@@ -232,6 +243,7 @@ public class UserListFragment extends Fragment implements TokenListener{
 						public void discard(){
 						//TODO: check if user does want to eliminate contact
 						//TODO: delete them
+						
 					}
 				};
 			}
