@@ -49,6 +49,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.meetingninja.csse.ApplicationController;
 import com.meetingninja.csse.SessionManager;
+import com.meetingninja.csse.database.BaseDatabaseAdapter.IRequest;
 import com.meetingninja.csse.database.volley.JsonNodeRequest;
 import com.meetingninja.csse.database.volley.JsonRequestListener;
 import com.meetingninja.csse.extras.JsonUtils;
@@ -113,7 +114,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		final JsonNode contactsArray = MAPPER.readTree(response).get(Keys.User.CONTACTS);
 		if (contactsArray.isArray()) {
 			for (final JsonNode userNode : contactsArray) {
-				contactIds.add(userNode.get(Keys.User.CONTACT).asText());
+				contactIds.add(userNode.get(Keys.User.CONTACTID).asText());
 			}
 		}
 		
@@ -126,6 +127,53 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		}
 		return contactsList;
 	}
+	
+	public static void addContact(String contactUserID) throws IOException {
+
+		String _url = getBaseContactUri().build().toString();
+		URL url = new URL(_url);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setRequestMethod(IRequest.PUT);
+		addRequestHeader(conn, false);
+		SessionManager session = SessionManager.getInstance();
+
+		ByteArrayOutputStream json = new ByteArrayOutputStream();
+		// this type of print stream allows us to get a string easily
+		PrintStream ps = new PrintStream(json);
+		// Create a generator to build the JSON string
+		JsonGenerator jgen = JFACTORY.createGenerator(ps, JsonEncoding.UTF8);
+		// Build JSON Object for Title
+		jgen.writeStartObject();
+		jgen.writeStringField(Keys.User.ID, session.getUserID());
+		jgen.writeArrayFieldStart(Keys.User.CONTACTS);
+		jgen.writeStartObject();
+		jgen.writeStringField(Keys.User.CONTACTID, contactUserID);
+		jgen.writeEndObject();
+		jgen.writeEndArray();
+		jgen.writeEndObject();
+		jgen.close();
+		String payload = json.toString("UTF8");
+		ps.close();
+		
+		sendPostPayload(conn, payload);
+		String response = getServerResponse(conn);
+		
+		//TODO: put add useful check here
+//		String result = new String();
+//		if (!response.isEmpty()) {
+//			JsonNode contactNode = MAPPER.readTree(response);
+//			if (!contactNode.has(Keys.Group.ID)) {
+//				result = "invalid";
+//			} else
+//				result = groupNode.get(Keys.Group.ID).asText();
+//		}
+//
+//		if (!result.equalsIgnoreCase("invalid"))
+//			g.setID(result);
+
+		conn.disconnect();
+	}
+
 
 	public static String login(String email, String pass) throws IOException {
 		// Server URL setup
