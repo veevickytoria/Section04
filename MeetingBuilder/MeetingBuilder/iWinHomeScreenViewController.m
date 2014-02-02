@@ -132,22 +132,23 @@
         if (indexPath.section == 0)
         {
             NSDictionary* meeting = (NSDictionary*)[self.meetingFeed objectAtIndex:indexPath.row];
-            
-            
-           cell.textLabel.text = (NSString*)[[meeting objectForKey:@"title"] stringByAppendingString:[meeting objectForKey:@"description"]];
+  
+           cell.textLabel.text = (NSString*)[[[meeting objectForKey:@"title"] stringByAppendingString:@": "] stringByAppendingString:[meeting objectForKey:@"description"]];
            cell.detailTextLabel.text = (NSString*)[[[meeting objectForKey:@"datetimeStart"] stringByAppendingString:@" to "] stringByAppendingString:[meeting objectForKey:@"datetimeEnd"]] ;
         }
+    
         else if (indexPath.section == 1)
         {
             NSDictionary* task = (NSDictionary*)[self.taskFeed objectAtIndex:indexPath.row];
             
             cell.detailTextLabel.text= (NSString*)[[[task objectForKey:@"datetimeStart"] stringByAppendingString:@" to "]stringByAppendingString:[task objectForKey:@"datetimeEnd"]];
-            cell.textLabel.text = (NSString*)[[task objectForKey:@"title"] stringByAppendingString:[task objectForKey:@"description"]];
+            cell.textLabel.text = (NSString*)[[[task objectForKey:@"title"] stringByAppendingString:@": "] stringByAppendingString:[task objectForKey:@"description"]];
         }
+    
         else
         {
             NSDictionary* notification = (NSDictionary*) [self.notificationFeed objectAtIndex:indexPath.row];
-            cell.textLabel.text = (NSString*)[[notification objectForKey:@"description"] stringByAppendingString:[notification objectForKey:@"datetime"]];
+            cell.textLabel.text = (NSString*)[[[notification objectForKey:@"description"] stringByAppendingString:@": "]stringByAppendingString:[notification objectForKey:@"datetime"]];
         }
     
     return cell;
@@ -193,11 +194,11 @@
 {
     if (section == 0)
     {
-        return (self.meetingFeed.count)/2;
+        return self.meetingFeed.count;
     }
     if (section == 1)
     {
-        return (self.taskFeed.count)/2;
+        return self.taskFeed.count;
     }
     else
     {
