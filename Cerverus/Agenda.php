@@ -16,7 +16,7 @@ $client= new Client();
 	$agendaIndex->save();
 if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
 	//createAgenda method
-	
+	echo "r";
 	//get the json string post content
 	$postContent = json_decode(@file_get_contents('php://input'));
 	
@@ -26,7 +26,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
 	//sets the property on the node
 	$agendaNode->setProperty('title', $postContent->title)
 		->setProperty('meeting', $postContent->meeting)
-		->setProperty('noteType','Agenda');
+		->setProperty('nodeType','Agenda');
 	//actually add the node in the db
 	$agendaNode->save();
 	
