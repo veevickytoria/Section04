@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import objects.Contact;
 import objects.User;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -26,52 +27,49 @@ import android.util.Log;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
 
-public class AddContactsTask implements AsyncResponse<Void> {
+public class AddContactTask implements AsyncResponse<List<Contact>> {
 
-	private AsyncResponse delegate;
-	private static final String TAG = AddContactsTask.class.getSimpleName();
-
-	public AddContactsTask(AsyncResponse delegate) {
-		this.delegate = delegate;
-		adder = new ContactAdder(this);
-	}
-	
-	
+	private static final String TAG = AddContactTask.class.getSimpleName();
 	private ContactAdder adder;
+	private UserListFragment frag;
 	
+	public AddContactTask(UserListFragment frag) {
+		this.frag=frag;
+		adder = new ContactAdder(this);	
+	}
+
 	public void addContact(String contactID){
 		this.adder.execute(contactID);
 	}
 
 	@Override
-	public void processFinish(Void result) {
-		//TODO: anything here?
+	public void processFinish(List<Contact> contacts) {
+		frag.setContacts(contacts);
 	}
 	
-	
-	
-	private class ContactAdder extends AsyncTask<String, Void, Void>{
+	private class ContactAdder extends AsyncTask<String, Void, List<Contact>>{
 		
-		private AsyncResponse<Void> delegate;
+		private AsyncResponse<List<Contact>> delegate;
 		
-		public ContactAdder(AsyncResponse<Void> delegate){
+		public ContactAdder(AsyncResponse<List<Contact>> delegate){
 			this.delegate = delegate;
 		}
 
 		@Override
-		protected Void doInBackground(String... params) {
+		protected List<Contact> doInBackground(String... params) {
+			List<Contact> contact = null;
 			try {
-				UserDatabaseAdapter.addContact(params[0]);
+				contact = UserDatabaseAdapter.addContact(params[0]);
 			} catch (IOException e) {
 				Log.e("ContactAdder", "Error: Unable to add contact");
 				Log.e(TAG, e.getLocalizedMessage());
 			}
-			return null;
+			return contact;
 		}
 		@Override
-		protected void onPostExecute(Void v) {
-			super.onPostExecute(v);
-			delegate.processFinish(v);
+		protected void onPostExecute(List<Contact> contacts) {
+			super.onPostExecute(contacts);
+			delegate.processFinish(contacts);
 		}
 		
 	}

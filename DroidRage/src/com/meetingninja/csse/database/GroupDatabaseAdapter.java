@@ -33,6 +33,7 @@ import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.meetingninja.csse.database.BaseDatabaseAdapter.IRequest;
 
 public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
 
@@ -43,7 +44,7 @@ public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
 	public static Uri.Builder getBaseUri() {
 		return Uri.parse(getBaseUrl()).buildUpon();
 	}
-
+	
 	public static Group getGroup(String groupID) throws IOException {
 		// Server URL setup
 		String _url = getBaseUri().appendPath(groupID).build().toString();
@@ -61,7 +62,7 @@ public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
 		String response = getServerResponse(conn);
 		JsonNode groupNode = MAPPER.readTree(response);
 
-		return parseGroup(groupNode);
+		return parseGroup(groupNode, new Group());
 	}
 
 	public static Group createGroup(Group g)
@@ -130,14 +131,69 @@ public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
 		return g;
 	}
 
-	public static Group parseGroup(JsonNode groupNode) {
-		Group g = new Group();
+
+	public static Group updateGroup(Group group) throws IOException {
+		ByteArrayOutputStream json = new ByteArrayOutputStream();
+		// this type of print stream allows us to get a string easily
+		PrintStream ps = new PrintStream(json);
+		JsonGenerator jgen = JFACTORY.createGenerator(ps, JsonEncoding.UTF8);
+		// Build JSON Object for Title
+		jgen.writeStartObject();
+		jgen.writeStringField(Keys.Group.ID, group.getGroupID());
+		jgen.writeStringField("field", Keys.Group.TITLE);
+		jgen.writeStringField("value", group.getGroupTitle());
+		jgen.writeEndObject();
+		jgen.close();
+		String payloadTitle = json.toString("UTF8");
+		ps.close();
+		
+		json = new ByteArrayOutputStream();
+		// this type of print stream allows us to get a string easily
+		ps = new PrintStream(json);
+		jgen = JFACTORY.createGenerator(ps, JsonEncoding.UTF8);
+		// Build JSON Object for Group members
+		jgen.writeStartObject();
+		jgen.writeStringField(Keys.Group.ID, group.getGroupID());
+		jgen.writeStringField("field", Keys.Group.MEMBERS);
+		jgen.writeArrayFieldStart("value");
+		for (User member : group.getMembers()) {
+			jgen.writeStartObject();
+			jgen.writeStringField(Keys.User.ID, member.getID());
+			jgen.writeEndObject();
+
+		}
+		jgen.writeEndArray();
+		jgen.writeEndObject();
+		jgen.close();
+		String payloadMembers = json.toString("UTF8");
+		ps.close();
+		// Establish connection
+		sendSingleEdit(payloadTitle);
+		String response = sendSingleEdit(payloadMembers);
+		JsonNode groupNode = MAPPER.readTree(response);
+
+		return parseGroup(groupNode, new Group());
+	}
+	
+	private static String sendSingleEdit(String payload) throws IOException {
+		String _url = getBaseUri().build().toString();
+		URL url = new URL(_url);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setRequestMethod(IRequest.PUT);
+		addRequestHeader(conn, false);
+		sendPostPayload(conn, payload);
+		return getServerResponse(conn);
+
+	}
+	
+	public static Group parseGroup(JsonNode groupNode, Group g) {
+//		Group g = new Group();
 		String groupID = groupNode.get(Keys.Group.ID).asText();
 		if (groupID != null) {
 			g.setID(groupID);
 			g.setGroupTitle(groupNode.get(Keys.Group.TITLE).asText());
 			JsonNode members = groupNode.get(Keys.Group.MEMBERS);
-			if (members.isArray()) {
+			if (members != null && members.isArray()) {
 				for (final JsonNode memberNode : members) {
 					User user = new User();
 					user.setID(memberNode.get(Keys.User.ID).asText());

@@ -27,6 +27,7 @@ import com.meetingninja.csse.ApplicationController;
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.SearchableUserFragment;
 import com.meetingninja.csse.SessionManager;
+import com.meetingninja.csse.ViewGroupActivity;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.GroupDatabaseAdapter;
 import com.meetingninja.csse.database.Keys;
@@ -71,9 +72,7 @@ public class GroupsFragment extends Fragment implements
 				R.layout.list_item_group, groups);
 		groupsList.setAdapter(groupAdpt);
 
-		if (Connectivity.isConnected(getActivity()) && isAdded()) {
 			fetchGroups();
-		}
 
 		groupAdpt.notifyDataSetChanged();
 		groupsList
@@ -83,7 +82,7 @@ public class GroupsFragment extends Fragment implements
 					public void onItemClick(AdapterView<?> parentAdapter,
 							View v, int position, long id) {
 						Group clicked = groupAdpt.getItem(position);
-						editGroup(clicked);
+						viewGroup(clicked);
 					}
 				});
 		registerForContextMenu(groupsList);
@@ -99,7 +98,7 @@ public class GroupsFragment extends Fragment implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_refresh:
-			// TODO: refresh groups db call
+			fetchGroups();
 			return true;
 		case R.id.action_new:
 			Intent i = new Intent(getActivity(), EditGroupActivity.class);
@@ -115,13 +114,14 @@ public class GroupsFragment extends Fragment implements
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == Activity.RESULT_OK) {
-			Group g = data.getParcelableExtra(Keys.Group.PARCEL);
+
 			if (requestCode == 7) {
+				Group g = data.getParcelableExtra(Keys.Group.PARCEL);
 				groups.add(g);
 				creator.createGroup(g);
 				// TODO: implement DB calls
 			} else if (requestCode == 8) {
-				// TODO: implement database calls
+				fetchGroups();
 			}
 			groupAdpt.notifyDataSetChanged();
 
@@ -129,12 +129,15 @@ public class GroupsFragment extends Fragment implements
 	}
 
 	public void fetchGroups() {
-		fetcher = new GroupFetcherTask(this);
-		fetcher.execute(session.getUserID()); // calls processFinish()
+		if (Connectivity.isConnected(getActivity()) && isAdded()) {
+
+			fetcher = new GroupFetcherTask(this);
+			fetcher.execute(session.getUserID()); // calls processFinish()
+		}
 	}
 
-	private void editGroup(Group group) {
-		Intent i = new Intent(getActivity(), EditGroupActivity.class);
+	private void viewGroup(Group group) {
+		Intent i = new Intent(getActivity(), ViewGroupActivity.class);
 		i.putExtra(Keys.Group.PARCEL, group);
 		startActivityForResult(i, 8);
 	}

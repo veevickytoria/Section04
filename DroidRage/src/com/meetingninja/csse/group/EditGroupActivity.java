@@ -13,6 +13,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MotionEvent;
@@ -39,18 +40,17 @@ import com.tokenautocomplete.TokenCompleteTextView.TokenListener;
 
 import de.timroes.android.listview.EnhancedListView;
 
-public class EditGroupActivity extends Activity implements TokenListener{
+public class EditGroupActivity extends Activity implements TokenListener {
 
+	private static final String TAG = EditGroupActivity.class.getSimpleName();
 	private Group group;
 	private UserArrayAdapter mUserAdapter;
 	EditText titleText;
-	EnhancedListView l;
-	RetUserObj fetcher = null;
+	EnhancedListView mListView;
 	private ArrayList<User> allUsers = new ArrayList<User>();
 	private AutoCompleteAdapter autoAdapter;
 	private ArrayList<String> addedIds = new ArrayList<String>();
 	private ArrayList<User> addedUsers = new ArrayList<User>();
-
 
 	// public static EditGroupActivity newInstance(Bundle args){
 	// EditGroupActivity act = new EditGroupActivity();
@@ -62,8 +62,11 @@ public class EditGroupActivity extends Activity implements TokenListener{
 		setContentView(R.layout.activity_edit_group);
 		setupActionBar();
 
-		Intent i = getIntent();
-		group = i.getParcelableExtra(Keys.Group.PARCEL);
+		Bundle data = getIntent().getExtras();
+		if (data != null)
+			group = data.getParcelable(Keys.Group.PARCEL);
+		else
+			Log.e(TAG, "Error: Unable to get group from parcel");
 
 		titleText = (EditText) findViewById(R.id.group_edit_title);
 		titleText.setText(group.getGroupTitle());
@@ -78,29 +81,20 @@ public class EditGroupActivity extends Activity implements TokenListener{
 					}
 				});
 
-		// allows keyboard to hide when not editing text
-		findViewById(R.id.group_edit_main_container).setOnTouchListener(
-				new OnTouchListener() {
-					@Override
-					public boolean onTouch(View v, MotionEvent event) {
-						hideKeyboard();
-						return false;
-					}
-				});
-
 		mUserAdapter = new UserArrayAdapter(this, R.layout.list_item_user,
 				group.getMembers());
-		l = (EnhancedListView) findViewById(R.id.group_list);
-		l.setAdapter(mUserAdapter);
-		for(int k = 0; k < group.getMembers().size(); k++){
-			
-			if(group.getMembers().get(k).getDisplayName() == null || group.getMembers().get(k).getDisplayName().isEmpty()){
+		mListView = (EnhancedListView) findViewById(R.id.group_list);
+		mListView.setAdapter(mUserAdapter);
+		for (int k = 0; k < group.getMembers().size(); k++) {
+
+			if (group.getMembers().get(k).getDisplayName() == null
+					|| group.getMembers().get(k).getDisplayName().isEmpty()) {
 				loadUser(group.getMembers().get(k).getID());
 				group.getMembers().remove(k);
 				k--;
 			}
 		}
-		l.setDismissCallback(new de.timroes.android.listview.EnhancedListView.OnDismissCallback() {
+		mListView.setDismissCallback(new de.timroes.android.listview.EnhancedListView.OnDismissCallback() {
 			@Override
 			public EnhancedListView.Undoable onDismiss(
 					EnhancedListView listView, final int position) {
@@ -120,8 +114,8 @@ public class EditGroupActivity extends Activity implements TokenListener{
 				};
 			}
 		});
-		l.setUndoHideDelay(5000);
-		l.setOnItemClickListener(new OnItemClickListener() {
+		mListView.setUndoHideDelay(5000);
+		mListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View v, int position,
@@ -135,16 +129,16 @@ public class EditGroupActivity extends Activity implements TokenListener{
 			}
 
 		});
-		l.enableSwipeToDismiss();
-		l.setSwipingLayout(R.id.list_group_item_frame_1);
+		mListView.enableSwipeToDismiss();
+		mListView.setSwipingLayout(R.id.list_group_item_frame_1);
 
-		l.setSwipeDirection(EnhancedListView.SwipeDirection.BOTH);
-		
+		mListView.setSwipeDirection(EnhancedListView.SwipeDirection.BOTH);
+
 		UserVolleyAdapter.fetchAllUsers(new AsyncResponse<List<User>>() {
 			@Override
 			public void processFinish(List<User> result) {
 				allUsers = new ArrayList<User>(result);
-				
+
 			}
 		});
 	}
@@ -227,8 +221,10 @@ public class EditGroupActivity extends Activity implements TokenListener{
 	public void addMember(View view) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Search by name or email:");
-		View autocompleteView = this.getLayoutInflater().inflate(R.layout.fragment_autocomplete, null);
-		final ContactTokenTextView input = (ContactTokenTextView) autocompleteView.findViewById(R.id.my_autocomplete);
+		View autocompleteView = this.getLayoutInflater().inflate(
+				R.layout.fragment_autocomplete, null);
+		final ContactTokenTextView input = (ContactTokenTextView) autocompleteView
+				.findViewById(R.id.my_autocomplete);
 		autoAdapter = new AutoCompleteAdapter(this, allUsers);
 		input.setAdapter(autoAdapter);
 		input.setTokenListener(this);
@@ -252,14 +248,19 @@ public class EditGroupActivity extends Activity implements TokenListener{
 	}
 
 	private void loadUser(String userID) {
-		fetcher = new RetUserObj();
-		fetcher.execute(userID);
+		UserVolleyAdapter.fetchUserInfo(userID, new AsyncResponse<User>() {
+			@Override
+			public void processFinish(User result) {
+				group.addMember(result);
+				mUserAdapter.notifyDataSetChanged();
+			}
+		});
 	}
-	
+
 	@Override
 	public void onTokenAdded(Object arg0) {
 		// String className = arg0.getClass().getSimpleName();
-//		 System.out.println("Adding a " + className);
+		// System.out.println("Adding a " + className);
 
 		SerializableUser added = null;
 		if (arg0 instanceof SerializableUser)
@@ -300,22 +301,4 @@ public class EditGroupActivity extends Activity implements TokenListener{
 	// startActivity(profileIntent);
 	// }
 
-	final class RetUserObj implements AsyncResponse<User> {
-
-		private UserInfoFetcher infoFetcher;
-
-		public RetUserObj() {
-			infoFetcher = new UserInfoFetcher(this);
-		}
-
-		public void execute(String userID) {
-			infoFetcher.execute(userID);
-		}
-
-		@Override
-		public void processFinish(User result) {
-			group.addMember(result);
-			mUserAdapter.notifyDataSetChanged();
-		}
-	}
 }

@@ -19,7 +19,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import objects.Task;
 import android.net.Uri;
@@ -74,6 +77,46 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 		conn.disconnect();
 		// return void;
 
+	}
+	
+	public static Task createTask(Task t) throws IOException{
+		String _url = getBaseUri().build().toString();
+		URL url = new URL(_url);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+		// add request header
+		conn.setRequestMethod(IRequest.POST);
+		addRequestHeader(conn, false);
+		ByteArrayOutputStream json = new ByteArrayOutputStream();
+		// this type of print stream allows us to get a string easily
+		PrintStream ps = new PrintStream(json);
+		// Create a generator to build the JSON string
+		JsonGenerator jgen = JFACTORY.createGenerator(ps, JsonEncoding.UTF8);
+		// Build JSON Object for Title
+		jgen.writeStartObject();
+		jgen.writeStringField(Keys.Task.TITLE, t.getTitle());
+		jgen.writeBooleanField(Keys.Task.COMPLETED, t.getIsCompleted());
+		jgen.writeStringField(Keys.Task.DESC, t.getDescription());
+		jgen.writeNumberField(Keys.Task.DEADLINE, t.getEndTimeInMillis());
+		jgen.writeStringField(Keys.Task.DATE_CREATED, t.getDateCreated());
+		jgen.writeStringField(Keys.Task.DATE_ASSIGNED, t.getDateAssigned());
+		jgen.writeStringField(Keys.Task.CRITERIA, t.getCompletionCriteria());
+		jgen.writeStringField(Keys.Task.ASSIGNED_TO, t.getAssignedTo());
+		jgen.writeStringField(Keys.Task.ASSIGNED_FROM, t.getAssignedFrom());
+		jgen.writeStringField(Keys.Task.CREATED_BY, t.getCreatedBy());
+		jgen.writeEndObject();
+		jgen.close();
+		
+		String payload = json.toString("UTF8");
+		ps.close();
+		// Get server response
+		sendPostPayload(conn, payload);
+		String response = getServerResponse(conn);
+		Map<String, String> responseMap = new HashMap<String, String>();
+		if(responseMap.containsKey(Keys.Task.ID)){
+			t.setID(responseMap.get(Keys.Task.ID));
+		}
+		return t;
 	}
 
 	public static Boolean deleteTask(String taskID) throws IOException {

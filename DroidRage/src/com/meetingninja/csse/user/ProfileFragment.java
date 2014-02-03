@@ -43,6 +43,7 @@ import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
 import com.meetingninja.csse.database.volley.JsonNodeRequest;
 import com.meetingninja.csse.database.volley.JsonRequestListener;
+import com.meetingninja.csse.database.volley.UserVolleyAdapter;
 import com.meetingninja.csse.extras.JsonUtils;
 
 public class ProfileFragment extends Fragment {
@@ -124,33 +125,19 @@ public class ProfileFragment extends Fragment {
 			return;
 		}
 
-		String _url = UserDatabaseAdapter.getBaseUri().appendPath(userID)
-				.build().toString();
 
 		// Swap visibility while loading information
 		emptyView.setVisibility(View.VISIBLE);
 		informationView.setVisibility(View.GONE);
-
-		JsonNodeRequest req = new JsonNodeRequest(_url, null,
-				new JsonRequestListener() {
-
-					@Override
-					public void onResponse(JsonNode response, int statusCode,
-							VolleyError error) {
-						if (response != null) {
-							VolleyLog.v("Response:%n %s", response);
-							User retUser = UserDatabaseAdapter.parseUser(response);
-							retUser.setID(userID);
-							ProfileFragment.this.setUser(retUser);
-						} else {
-							error.printStackTrace();
-						}
-					}
-				});
-
-		// add the request object to the queue to be executed
-		ApplicationController app = ApplicationController.getInstance();
-		app.addToRequestQueue(req, "JSON");
+		
+		UserVolleyAdapter.fetchUserInfo(userID, new AsyncResponse<User>() {
+			@Override
+			public void processFinish(User result) {
+				if (ProfileFragment.this.isAdded())
+				ProfileFragment.this.setUser(result);
+				
+			}
+		});
 	}
 
 	private class ContactListener implements OnClickListener {
@@ -230,25 +217,6 @@ public class ProfileFragment extends Fragment {
 		// Swap visibility after loading information
 		emptyView.setVisibility(View.GONE);
 		informationView.setVisibility(View.VISIBLE);
-	}
-
-	final class RetUserObj implements AsyncResponse<User> {
-
-		private UserInfoFetcher infoFetcher;
-
-		public RetUserObj() {
-			infoFetcher = new UserInfoFetcher(this);
-		}
-
-		public void execute(String userID) {
-			infoFetcher.execute(userID);
-		}
-
-		@Override
-		public void processFinish(User result) {
-			if (isAdded())
-				setUser(result);
-		}
 	}
 
 }

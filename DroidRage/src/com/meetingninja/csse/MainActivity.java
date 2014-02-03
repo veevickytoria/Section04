@@ -409,8 +409,8 @@ public class MainActivity extends FragmentActivity implements
 			case MEETINGS:
 				Toast.makeText(this, "Refreshing Meetings", Toast.LENGTH_SHORT)
 						.show();
-				// meetingsFrag.fetchMeetings();
-				frag_meetings.populateList();
+				frag_meetings.fetchMeetings();
+//				frag_meetings.populateList();
 				return true;
 			case NOTES:
 				Toast.makeText(this, "Refreshing Notes", Toast.LENGTH_SHORT)

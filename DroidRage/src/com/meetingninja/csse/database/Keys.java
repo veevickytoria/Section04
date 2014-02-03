@@ -21,6 +21,7 @@ public interface Keys {
 		public final String CONTACTS = "contacts";
 		public final String SCHEDULE = "schedule";
 		public final String CONTACTID = "contactID";
+		public final String RELATIONID = "relationID";
 	}
 
 	public interface Note {

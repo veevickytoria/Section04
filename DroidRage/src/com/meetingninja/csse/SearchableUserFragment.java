@@ -112,8 +112,7 @@ public class SearchableUserFragment extends BaseFragment implements
 		UserVolleyAdapter.fetchAllUsers(this);
 
 //		SQLiteUserAdapter sqlite = new SQLiteUserAdapter(mContext);
-//		allUsers = sqlite.getAllUsers();
-//		System.out.                                                                                                                                                                                                                              println(allUsers);
+//		allUsers = sqlite.getAllUsers();                                                                                                                                                                                                                        println(allUsers);
 //		sqlite.close();
 		
 		autoAdapter = new AutoCompleteAdapter(getActivity(), allUsers);

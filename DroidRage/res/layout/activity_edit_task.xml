@@ -125,7 +125,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/vertical_spacer"
-                    android:hint="this is where the text goes"
+                    android:hint="Description"
                     android:inputType="text" />
             </LinearLayout>
         </LinearLayout>
@@ -158,7 +158,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/vertical_spacer"
-                    android:hint="this is where the criteria goes"
+                    android:hint="Criteria"
                     android:inputType="text" />
 
             </LinearLayout>
