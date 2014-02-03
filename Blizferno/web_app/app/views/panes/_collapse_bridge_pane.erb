@@ -16,7 +16,7 @@
             </tr>
           </thead>
  		  <% counter = 0; max = 3; %>
-          <% for task in @tasks['tasks'] if counter >= max; break; end; %>
+          <% for task in @tasks['tasks']; if counter >= max; break; end; %>
           <tr>
             <td><%= task['deadline'] %></td>
             <td><a onClick="showViewModal(<%= task['taskID'] %>)" data-refresh="true" data-toggle='modal'><%= task['title'] %></a></td>
