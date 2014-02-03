@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import objects.Contact;
 import objects.Event;
 import objects.Group;
 import objects.Meeting;
@@ -96,7 +97,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		return ret;
 	}
 
-	public static List<User> getContacts(String userID) throws IOException {
+	public static List<Contact> getContacts(String userID) throws IOException {
 		// Server URL setup
 		String _url = getBaseContactUri().appendPath(userID).build().toString();
 		// Establish connection
@@ -109,31 +110,89 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		// Get server response
 		int responseCode = conn.getResponseCode();
 		String response = getServerResponse(conn);
-		List<User> contactsList = new ArrayList<User>();
+		List<Contact> contacts = new ArrayList<Contact>();
 		List<String> contactIds = new ArrayList<String>();
+		List<String> relationIds = new ArrayList<String>();
 		final JsonNode contactsArray = MAPPER.readTree(response).get(Keys.User.CONTACTS);
 		if (contactsArray.isArray()) {
 			for (final JsonNode userNode : contactsArray) {
+				relationIds.add(userNode.get(Keys.User.RELATIONID).asText());
 				contactIds.add(userNode.get(Keys.User.CONTACTID).asText());
 			}
 		}
 		
 		conn.disconnect();
-		for (String id : contactIds) {
-			User contact = getUserInfo(id);
-			if (contact != null) {
-				contactsList.add(contact);
+		for(int i=0;i<contactIds.size();i++){
+			User contact = getUserInfo(contactIds.get(i));
+			if(contact!=null){
+				Contact oneContact = new Contact(contact,relationIds.get(i));
+				contacts.add(oneContact);
 			}
 		}
-		return contactsList;
+		return contacts;
 	}
 	
-	public static void addContact(String contactUserID) throws IOException {
+	public static List<Contact> addContact(String contactUserID) throws IOException {
 
 		String _url = getBaseContactUri().build().toString();
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod(IRequest.PUT);
+		addRequestHeader(conn, false);
+		SessionManager session = SessionManager.getInstance();
+		String userID = session.getUserID();
+		ByteArrayOutputStream json = new ByteArrayOutputStream();
+		// this type of print stream allows us to get a string easily
+		PrintStream ps = new PrintStream(json);
+		// Create a generator to build the JSON string
+		JsonGenerator jgen = JFACTORY.createGenerator(ps, JsonEncoding.UTF8);
+		// Build JSON Object for Title
+		jgen.writeStartObject();
+		jgen.writeStringField(Keys.User.ID, userID);
+		jgen.writeArrayFieldStart(Keys.User.CONTACTS);
+		jgen.writeStartObject();
+		jgen.writeStringField(Keys.User.CONTACTID, contactUserID);
+		jgen.writeEndObject();
+		jgen.writeEndArray();
+		jgen.writeEndObject();
+		jgen.close();
+		String payload = json.toString("UTF8");
+		ps.close();
+		
+		sendPostPayload(conn, payload);
+		String response = getServerResponse(conn);
+		
+		//TODO: put add useful check here
+//		User userContact=null;
+//		String relationID=null;
+//		String result = new String();
+//		if (!response.isEmpty()) {
+//			JsonNode contactNode = MAPPER.readTree(response);
+//			if (!contactNode.has(Keys.User.ID)) {
+//				result = "invalid";
+//			} else {
+//				result = contactNode.get(Keys.User.ID).asText();
+//				userContact = getUserInfo(result);
+//				relationID = contactNode.get(Keys.User.RELATIONID).asText();
+//			}
+//		}
+
+//		if (!result.equalsIgnoreCase("invalid"))
+//			g.setID(result);
+		conn.disconnect();
+		
+		
+//		Contact contact = new Contact(userContact,relationID);
+		List<Contact> contacts = new ArrayList<Contact>();
+		contacts=getContacts(userID);
+		return contacts;
+	}
+	public static void deleteContact(String contactUserID) throws IOException {
+
+		String _url = getBaseContactUri().appendPath("Relation").build().toString();
+		URL url = new URL(_url);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setRequestMethod(IRequest.DELETE);
 		addRequestHeader(conn, false);
 		SessionManager session = SessionManager.getInstance();
 

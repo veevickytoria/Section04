@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import objects.Contact;
 import objects.User;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -27,40 +26,54 @@ import android.util.Log;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
 
-public class ContactsFetcher extends AsyncTask<String, Void, List<Contact>> {
+public class DeleteContactTask implements AsyncResponse<Void> {
 
-	private AsyncResponse<List<Contact>> delegate;
-
-	private static final String TAG = ContactsFetcher.class.getSimpleName();
-
-	public ContactsFetcher(AsyncResponse<List<Contact>> delegate) {
-		this.delegate = delegate;
+	private static final String TAG = DeleteContactTask.class.getSimpleName();
+	private ContactDeleter deleter;
+	
+	public DeleteContactTask() {
+		deleter = new ContactDeleter(this);
+	}
+	
+	public void addContact(String relationID){
+		this.deleter.execute(relationID);
 	}
 
 	@Override
-	protected List<Contact> doInBackground(String... params) {
-		List<Contact> contacts = new ArrayList<Contact>();
-
-		try {
-			String userID = params[0];
-			contacts = UserDatabaseAdapter.getContacts(userID);
-		} catch (IOException e) {
-			Log.e(TAG, "Error: Unable to get contacts");
-			Log.e(TAG, e.getLocalizedMessage());
+	public void processFinish(Void result) {
+	}
+	
+	
+	private class ContactDeleter extends AsyncTask<String, Void, Void>{
+		
+		private AsyncResponse<Void> delegate;
+		
+		public ContactDeleter(AsyncResponse<Void> delegate){
+			this.delegate = delegate;
 		}
 
-		return contacts;
+		@Override
+		protected Void doInBackground(String... params) {
+			try {
+				UserDatabaseAdapter.deleteContact(params[0]);
+			} catch (IOException e) {
+				Log.e("ContactAdder", "Error: Unable to add contact");
+				Log.e(TAG, e.getLocalizedMessage());
+			}
+			return null;
+		}
+		@Override
+		protected void onPostExecute(Void v) {
+			super.onPostExecute(v);
+			delegate.processFinish(v);
+		}
+		
 	}
 
-	@Override
-	protected void onPostExecute(List<Contact> contacts) {
-		super.onPostExecute(contacts);
-		delegate.processFinish(contacts);
-	}
 
-	@Override
-	protected void onCancelled() {
-		super.onCancelled();
-	}
+//	@Override
+//	protected void onCancelled() {
+//		super.onCancelled();
+//	}
 
 }
