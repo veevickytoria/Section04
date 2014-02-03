@@ -21,14 +21,14 @@
 - (IBAction)onEditProfile:(id)sender;
 - (IBAction)onCancel:(id)sender;
 - (IBAction)onCreateGroup:(id)sender;
-- (IBAction)onCreateProject:(id)sender;
+- (IBAction)onViewProjects:(id)sender;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withID:(NSInteger) userID;
 
 @property (weak, nonatomic) IBOutlet UIButton *editProfile;
 @property (weak, nonatomic) IBOutlet UIButton *cancel;
 @property (weak, nonatomic) IBOutlet UIButton *createGroup;
-@property (weak, nonatomic) IBOutlet UIButton *createProject;
+@property (weak, nonatomic) IBOutlet UIButton *viewProjects;
 
 @property (weak, nonatomic) IBOutlet UITextField *displayNameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *companyTextField;

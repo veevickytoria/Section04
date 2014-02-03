@@ -24,21 +24,11 @@
     [super tearDown];
 }
 
-- (void)testCheckUserInfo
-{
-    
-    XCTAssertTrue([self.viewVC.groupTitleField.text isEqualToString:@"Enter Group Name"], @"Check failed");
-    
-    
-}
-
 - (void)testEditedUserInfo
 {
     self.viewVC.groupTitleField.text = @"Team iWin";
     
     XCTAssertTrue([self.viewVC.groupTitleField.text isEqualToString:@"Team iWin"], @"Check failed");
-    
-    
 }
 
 @end

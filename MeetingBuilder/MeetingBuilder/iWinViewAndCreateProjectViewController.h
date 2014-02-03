@@ -8,6 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "iWinAddUsersViewController.h"
+@protocol ViewProjectDelegate <NSObject>
+
+-(void)refreshMeetingList;
+
+@end
 
 @interface iWinViewAndCreateProjectViewController : UIViewController <UserDelegate, UITableViewDelegate, UITableViewDataSource>
 - (IBAction)onClickSave:(id)sender;

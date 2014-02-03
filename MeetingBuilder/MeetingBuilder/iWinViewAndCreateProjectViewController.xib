@@ -37,7 +37,6 @@
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                     <connections>
-                        <action selector="onCancel:" destination="-1" eventType="touchUpInside" id="kJk-ra-xa4"/>
                         <action selector="onClickCancel:" destination="-1" eventType="touchUpInside" id="rpa-1e-xTq"/>
                     </connections>
                 </button>

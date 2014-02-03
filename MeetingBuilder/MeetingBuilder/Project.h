@@ -7,12 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreData/CoreData.h>
 
-@interface Project : NSObject
+@interface Project : NSManagedObject
 
 @property (nonatomic, retain) NSNumber * projectID;
 @property (nonatomic, retain) NSString * projectTitle;
 @property (nonatomic, retain) NSString * members;
 @property (nonatomic, retain) NSString * tasks;
+@property (nonatomic, retain) NSNumber * userID;
 
 @end
