@@ -3,14 +3,7 @@
 <!-- PLACE JAVASCRIPT IN app/assets/javascript/documents.js -->
 <script type="text/javascript" src="assets/javascripts/jquery-2.1.0.js"></script>
 <script type="text/javascript">
-// $('#newDocumentModal').modal({
-//   backdrop: 'static',
-//   keyboard: false
-// })
-// $('#editDocumentModal').modal({
-//   backdrop: 'static',
-//   keyboard: false
-// })
+
 </script>
 
 <!-- Create Agenda Modal -->
@@ -70,8 +63,6 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-
-
 <!-- View Modal -->
 <div class="modal fade" id="viewDocumentModal" tabindex="-1" role="dialog" aria-labelledby="viewDocumentModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -81,6 +72,7 @@
         <h4 class="modal-title" id="myModalLabel">View Document</h4>
       </div>
       <div class="modal-body">
+        <%= render 'view' %>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -99,6 +91,7 @@
         <h4 class="modal-title" id="myModalLabel">Edit Agenda Details</h4>
       </div>
       <div class="modal-body">
+        <%= render 'editAgenda' %>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" onclick="showDocumentModalNoID()" data-refresh="true" data-dismiss="modal">Cancel</button>
@@ -117,6 +110,7 @@
         <h4 class="modal-title" id="myModalLabel">Edit Note Details</h4>
       </div>
       <div class="modal-body">
+        <%= render 'editNote' %>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" onclick="showDocumentModalNoID()" data-refresh="true" data-dismiss="modal">Cancel</button>
@@ -131,19 +125,33 @@
 <table class='table table-hover table-striped' style='width: 70%; margin-left: 15%; margin-right: auto;'>
   <thead>
     <tr>
-      <th>Agenda ID</th>
       <th>Title</th>
       <th>Initial Topic</th>
       <th>Type</th>
     </tr>
   </thead>
-  <tr>
-    <td><a onClick="" href = '#deleteDocumentModal' data-refresh = 'true' data-toggle='modal'></a></td>
-    <td colspan='1' style='cursor: pointer; text-align: center' onclick=""  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
-  </tr>
-
-  <tr>
-    <td colspan='2' style='cursor: pointer; text-align: center' href='#newAgendaModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New Agenda</span></td>
-    <td colspan='2' style='cursor: pointer; text-align: center' href='#newNoteModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New Note</span></td>
-  </tr>
+  <!-- POPULATE AGENDAS -->
+  <% for agenda in @agendas['agendas'] %>
+    <tr>
+      <td><a onClick="showViewDocumentModal(<%= agenda['agendaID'] %>, 'agenda')" href = '#viewDocumentModal' data-refresh = 'true' data-toggle='modal'><%= agenda['title'] %></a></td>
+      <td><%= agenda['content'][0]['topic'] %></td>
+      <td>Agenda</td>
+      <td colspan='1' style='cursor: pointer; text-align: center' onclick="showDeleteModal(<%= agenda['agendaID'] %>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
+    </tr>
+  <% end %>
+  <!-- POPULATE NOTES -->
+  <% for note in @notes['notes'] %>
+    <tr>
+      <td><a onClick="showViewDocumentModal(<%= note['noteID'] %>, 'note')" href = '#viewDocumentModal' data-refresh = 'true' data-toggle='modal'><%= note['title'] %></a></td>
+      <td></td>
+      <td>Note</td>
+      <td colspan='1' style='cursor: pointer; text-align: center' onclick="showDeleteModal(<%= note['noteID'] %>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
+    </tr>
+  <% end %>
+  <tfoot>
+    <tr>
+      <td colspan='2' style='cursor: pointer; text-align: center' href='#newAgendaModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New Agenda</span></td>
+      <td colspan='2' style='cursor: pointer; text-align: center' href='#newNoteModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New Note</span></td>
+    </tr>
+  </tfoot>
 </table>
