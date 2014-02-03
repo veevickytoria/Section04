@@ -17,13 +17,15 @@
 
 @implementation iWinMergeNoteViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil noteContent:(NSString *)content
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil noteContent:(NSString *)content userNames:(NSMutableArray *)names notes:(NSMutableArray *)notes
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
     }
     self.noteContent = content;
+    self.notes = notes;
+    self.names = names;
     return self;
 }
 
@@ -32,8 +34,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     self.backendUtility = [[iWinBackEndUtility alloc] init];
-    self.names = [[NSMutableArray alloc] init];
-    self.notes = [[NSMutableArray alloc] init];
+    self.notesForTable = [[NSMutableArray alloc] init];
     [self refreshNoteList];
 }
 
@@ -60,8 +61,13 @@
     }
     
     // Configure the cell.
-    cell.textLabel.text = [self.names objectAtIndex:indexPath.row];
-    
+    if ([tableView isEqual:self.userListTable])
+    {
+        cell.textLabel.text = [self.names objectAtIndex:indexPath.row];
+    }
+    else if (self.notesForTable.count > 0) {
+        cell.textLabel.text = [self.notesForTable objectAtIndex:indexPath.row];
+    }
     return cell;
 }
 
@@ -88,6 +94,7 @@
         for (NSDictionary *d in noteDictionaries) {
             [self.notesForTable addObject:[d objectForKey:@"noteTitle"]];
         }
+        [self refreshNoteList];
     }
     // otherwise perform the merge
     else {

@@ -256,14 +256,8 @@
 
 
 - (IBAction)mergeNotesButton:(id)sender {
-    
-    self.mergeViewController = [[iWinMergeNoteViewController alloc] initWithNibName:@"iWinMergeNoteViewController" bundle:nil noteContent:self.noteField.text];
-    [self.mergeViewController setModalPresentationStyle:UIModalPresentationPageSheet];
-    [self.mergeViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-    self.mergeViewController.userDelegate = self;
-    [self presentViewController:self.mergeViewController animated:YES completion:nil];
-    self.mergeViewController.view.superview.bounds = CGRectMake(0,0,768,1003);
-
+    NSMutableArray *names = [[NSMutableArray alloc] init];
+    NSMutableArray *notes = [[NSMutableArray alloc] init];
     
     NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Note/Sharing/%d", self.userID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
@@ -274,9 +268,17 @@
     for (NSDictionary *sharingUser in deserializedDictionary ) {
         [self.usersSharingWithMe addObject:sharingUser];
         // then for each user - put there userName into table view
-        [self.mergeViewController.names addObject:[sharingUser objectForKey:@"userName"]];
-        [self.mergeViewController.notes addObject:[sharingUser objectForKey:@"notes"]];
+        [names addObject:[sharingUser objectForKey:@"userName"]];
+        [notes addObject:[sharingUser objectForKey:@"notes"]];
     }
+    
+    
+    self.mergeViewController = [[iWinMergeNoteViewController alloc] initWithNibName:@"iWinMergeNoteViewController" bundle:nil noteContent:self.noteField.text userNames:names notes:notes] ;
+    [self.mergeViewController setModalPresentationStyle:UIModalPresentationPageSheet];
+    [self.mergeViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+    self.mergeViewController.userDelegate = self;
+    [self presentViewController:self.mergeViewController animated:YES completion:nil];
+    self.mergeViewController.view.superview.bounds = CGRectMake(0,0,768,1003);
 }
 
 
