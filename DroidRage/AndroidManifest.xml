@@ -168,8 +168,12 @@
             android:label="@string/title_activity_edit_group" >
         </activity>
         <activity
-            android:name="com.meetingninja.csse.ViewGroupActivity"
+            android:name="com.meetingninja.csse.group.ViewGroupActivity"
             android:label="@string/title_activity_view_group" >
+        </activity>
+        <activity
+            android:name="com.meetingninja.csse.user.EditProfileActivity"
+            android:label="@string/title_activity_edit_profile" >
         </activity>
     </application>
 

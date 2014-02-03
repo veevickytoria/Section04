@@ -54,6 +54,7 @@ public class ProfileActivity extends FragmentActivity {
 		if (displayedUser != null) {
 			// args.putString("userID", displayedUser.getID());
 			args.putParcelable(Keys.User.PARCEL, displayedUser);
+			args.putString("notMine", "yup");
 			profFrag.setArguments(args);
 			fm.beginTransaction().replace(R.id.profile_container, profFrag)
 					.commit();
@@ -63,7 +64,6 @@ public class ProfileActivity extends FragmentActivity {
 			findViewById(android.R.id.empty).setVisibility(View.VISIBLE);
 		}
 	}
-
 	/**
 	 * Set up the {@link android.app.ActionBar}.
 	 */

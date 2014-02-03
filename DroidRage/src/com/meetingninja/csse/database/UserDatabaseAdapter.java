@@ -588,21 +588,22 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		ps.close();
 		String[] payloads = payload.split("\f\\s*");
 
-		Thread t = new Thread(new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-					e.getLocalizedMessage();
-				}
-			}
-		}));
+//		Thread t = new Thread(new Thread(new Runnable() {
+//			@Override
+//			public void run() {
+//				try {
+//					Thread.sleep(500);
+//				} catch (InterruptedException e) {
+//					e.getLocalizedMessage();
+//				}
+//			}
+//		}));
 		String response = "";
 		for (String p : payloads) {
-			t.run();
-			response = updateHelper(p);
+//			t.run();
+			response = updateHelper(p, getBaseUri().build().toString());
 		}
+		System.out.println(response);
 		return parseUser(MAPPER.readTree(response));
 	}
 
@@ -715,5 +716,22 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		}
 
 		return sched;
+	}
+	protected static String updateHelper(String jsonPayload, String _url) throws IOException {
+		// Server URL setup
+//		String _url = getBaseUri().build().toString();
+
+		// Establish connection
+		URL url = new URL(_url);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+		// add request header
+		conn.setRequestMethod(IRequest.PUT);
+		addRequestHeader(conn, true);
+
+		int responseCode = sendPostPayload(conn, jsonPayload);
+		String response = getServerResponse(conn);
+		conn.disconnect();
+		return response;
 	}
 }

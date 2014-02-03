@@ -17,7 +17,9 @@ package com.meetingninja.csse.user;
 
 import java.util.Map;
 
+import objects.Task;
 import objects.User;
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,6 +27,9 @@ import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -45,6 +50,7 @@ import com.meetingninja.csse.database.volley.JsonNodeRequest;
 import com.meetingninja.csse.database.volley.JsonRequestListener;
 import com.meetingninja.csse.database.volley.UserVolleyAdapter;
 import com.meetingninja.csse.extras.JsonUtils;
+import com.meetingninja.csse.tasks.EditTaskActivity;
 
 public class ProfileFragment extends Fragment {
 
@@ -56,6 +62,7 @@ public class ProfileFragment extends Fragment {
 
 	private SessionManager session;
 	private User displayedUser;
+	private int menu;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,6 +76,7 @@ public class ProfileFragment extends Fragment {
 		displayedUser = new User();
 
 		if (extras != null && extras.containsKey(Keys.User.PARCEL)) {
+			
 			displayedUser = (User) extras.getParcelable(Keys.User.PARCEL);
 			try {
 				System.out.println(JsonUtils.getObjectMapper()
@@ -81,13 +89,49 @@ public class ProfileFragment extends Fragment {
 			Log.v(TAG, "Displaying Current User");
 			displayedUser.setID(session.getUserID());
 		}
-
+		if(extras != null && extras.containsKey("notMine")){
+			menu=R.menu.menu_profile;
+		}else{
+			menu = R.menu.menu_view_profile;
+		}
+		setHasOptionsMenu(true);
 		fetchUserInfo(displayedUser.getID());
 
 		return pageView;
 
 	}
 
+	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(this.menu, menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.edit_item_profile:
+			Intent i = new Intent(getActivity(), EditProfileActivity.class);
+			i.putExtra(Keys.User.PARCEL, displayedUser);
+			startActivityForResult(i, 7);
+			return true;
+		default:
+			return super.onContextItemSelected(item);
+		}
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode == Activity.RESULT_OK) {
+			if(requestCode==7){
+				displayedUser = data.getParcelableExtra(Keys.User.PARCEL);
+				setUser(displayedUser);
+			}
+		}
+	}
+
+
+	
 	private void setupViews(View v) {
 		informationView = v.findViewById(R.id.profile_container);
 		emptyView = v.findViewById(android.R.id.empty);

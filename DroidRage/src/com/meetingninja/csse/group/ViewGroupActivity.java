@@ -1,4 +1,4 @@
-package com.meetingninja.csse;
+package com.meetingninja.csse.group;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,11 +6,13 @@ import java.util.List;
 import objects.Group;
 import objects.User;
 
+import com.meetingninja.csse.R;
+import com.meetingninja.csse.R.id;
+import com.meetingninja.csse.R.layout;
+import com.meetingninja.csse.R.menu;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.volley.UserVolleyAdapter;
-import com.meetingninja.csse.group.EditGroupActivity;
-import com.meetingninja.csse.group.GroupUpdater;
 import com.meetingninja.csse.tasks.EditTaskActivity;
 import com.meetingninja.csse.tasks.TaskDeleter;
 import com.meetingninja.csse.user.AutoCompleteAdapter;

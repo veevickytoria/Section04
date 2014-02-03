@@ -27,7 +27,6 @@ import com.meetingninja.csse.ApplicationController;
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.SearchableUserFragment;
 import com.meetingninja.csse.SessionManager;
-import com.meetingninja.csse.ViewGroupActivity;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.GroupDatabaseAdapter;
 import com.meetingninja.csse.database.Keys;
