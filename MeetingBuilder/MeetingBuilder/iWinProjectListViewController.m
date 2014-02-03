@@ -14,14 +14,14 @@
 #import "iWinAppDelegate.h"
 
 @interface iWinProjectListViewController ()
+@property (nonatomic) NSInteger userID;
+@property (nonatomic) NSInteger selectedProject;
+@property (strong, nonatomic) NSMutableArray *projectID;
 @property (strong, nonatomic) NSMutableArray *projectList;
 @property (strong, nonatomic) NSMutableArray *projectDetail;
-@property (nonatomic) NSInteger userID;
+@property (strong, nonatomic) iWinBackEndUtility *backendUtility;
 @property (strong, nonatomic) iWinViewAndCreateProjectViewController *createProjectVC;
 @property (strong, nonatomic) iWinViewAndCreateProjectViewController *viewProjectVC;
-@property (strong, nonatomic) NSMutableArray *projectID;
-@property (nonatomic) NSInteger selectedProject;
-@property (strong, nonatomic) iWinBackEndUtility *backendUtility;
 @end
 
 //constants

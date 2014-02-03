@@ -90,6 +90,7 @@
 		5B3B6296188CB4E900C0E53E /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B3B6295188CB4E900C0E53E /* Group.m */; };
 		5B3B629A188CBDF600C0E53E /* iWinViewAndCreateGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B3B6299188CBDF600C0E53E /* iWinViewAndCreateGroupViewController.m */; };
 		5B3B62AE188CCB7000C0E53E /* iWinViewAndCreateGroupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B3B62AD188CCB7000C0E53E /* iWinViewAndCreateGroupViewController.xib */; };
+		5B904DB4189F24D200552014 /* iWinProjectTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B904DB3189F24D200552014 /* iWinProjectTest.m */; };
 		7941FDC81828843500AAA92E /* iWinViewAndChangeSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7941FDC61828843500AAA92E /* iWinViewAndChangeSettingsViewController.m */; };
 		7941FDC91828843500AAA92E /* iWinViewAndChangeSettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7941FDC71828843500AAA92E /* iWinViewAndChangeSettingsViewController.xib */; };
 		7941FDD5182A0DCE00AAA92E /* iWinViewProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7941FDD3182A0DCE00AAA92E /* iWinViewProfileViewController.m */; };
@@ -372,6 +373,7 @@
 		5B3B6298188CBDF600C0E53E /* iWinViewAndCreateGroupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinViewAndCreateGroupViewController.h; sourceTree = "<group>"; };
 		5B3B6299188CBDF600C0E53E /* iWinViewAndCreateGroupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinViewAndCreateGroupViewController.m; sourceTree = "<group>"; };
 		5B3B62AD188CCB7000C0E53E /* iWinViewAndCreateGroupViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iWinViewAndCreateGroupViewController.xib; sourceTree = "<group>"; };
+		5B904DB3189F24D200552014 /* iWinProjectTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinProjectTest.m; sourceTree = "<group>"; };
 		73CB9D928C6D483CAEB8FAAA /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		7941FDC51828843500AAA92E /* iWinViewAndChangeSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinViewAndChangeSettingsViewController.h; sourceTree = "<group>"; };
 		7941FDC61828843500AAA92E /* iWinViewAndChangeSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinViewAndChangeSettingsViewController.m; sourceTree = "<group>"; };
@@ -803,6 +805,7 @@
 		0A7F1CCB185637310017209D /* MeetingBuilder Tests */ = {
 			isa = PBXGroup;
 			children = (
+				5B904DB0189F243900552014 /* ProjectTest */,
 				5B0ADDA5188D82AA0013753B /* GroupTest */,
 				0A8F7CB61881D4CF0097C86C /* SettingsTest */,
 				0A99E1FF1862D870001D8A64 /* RegisterTest */,
@@ -996,6 +999,14 @@
 				5B3B62AD188CCB7000C0E53E /* iWinViewAndCreateGroupViewController.xib */,
 			);
 			name = ViewAndCreateGroup;
+			sourceTree = "<group>";
+		};
+		5B904DB0189F243900552014 /* ProjectTest */ = {
+			isa = PBXGroup;
+			children = (
+				5B904DB3189F24D200552014 /* iWinProjectTest.m */,
+			);
+			name = ProjectTest;
 			sourceTree = "<group>";
 		};
 		7941FDC41828834A00AAA92E /* ViewAndChangeSettings */ = {
@@ -1489,6 +1500,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5B904DB4189F24D200552014 /* iWinProjectTest.m in Sources */,
 				0A99E2021862D8A2001D8A64 /* iWinRegisterTest.m in Sources */,
 				0A8F7CB81881D4F30097C86C /* iWinSettingsTest.m in Sources */,
 				0A7F1CDB1858FD820017209D /* iWinAddUserTest.m in Sources */,
