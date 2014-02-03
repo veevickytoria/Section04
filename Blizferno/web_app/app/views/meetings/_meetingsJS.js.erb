@@ -31,7 +31,7 @@ function showEditModal(){
 function updateEditedValues(){
 
 
-	var editMeetingID = meetingsJSON[currentID]['meetingID'];
+	var editMeetingID = meetingsJSON[currentID]['meetingID'].toString();
 	var editField = "";
 	var editValue = "";
 	var editData = "";
@@ -45,14 +45,16 @@ function updateEditedValues(){
 			editField = key;
 			editValue = meetingsJSON[currentID][key];
 			editData = JSON.stringify({"meetingID":editMeetingID,"field":editField,"value":editValue});
+alert("meetingID:"+editMeetingID);
 
-/*
+alert("editData:"+editData);
+
 			$.ajax({
 				type: 'PUT',
 				url: 'http://csse371-04.csse.rose-hulman.edu/Meeting/',
 				data: editData
 			});
-*/
+
 		}
 	}
 
@@ -69,8 +71,7 @@ function hideDeleteModal(){
 	
 	$.ajax({
 		type: 'DELETE',
-		url: 'http://csse371-04.csse.rose-hulman.edu/Meeting/',
-		data: deleteData,
+		url: 'http://csse371-04.csse.rose-hulman.edu/Meeting/'+deleteData,
 		success:function(data){
 			if(data.deleted == true){
 				delete meetingsJSON[deleteID];

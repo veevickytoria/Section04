@@ -15,7 +15,7 @@ alert("here");
 		var form = this;
 		var formJSON = new ConvertFormToJSON(form);
 
-		var postId = formJSON.userID;
+		var postId = <%=@userID%>;
 		var postTitle = formJSON.title;
 		var postLocation = formJSON.location;
 		var postDateTimeBegin = formJSON.datetimeStart;
@@ -44,8 +44,6 @@ alert("posting:"+postData);
 function ConvertFormToJSON(form){
 	var array = jQuery(form).serializeArray();
 	var json = {};
-	
-	json['userID'] = <%=@userID%>;
 
 	jQuery.each(array, function() {
 		json[this.name] = this.value || '';

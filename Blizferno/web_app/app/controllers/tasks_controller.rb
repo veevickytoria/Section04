@@ -22,7 +22,7 @@ class TasksController < ApplicationController
 		@taskString = ''
 
 		getUserTasks['tasks'].each do |task|
-			url = URI.parse('http://csse371-04.csse.rose-hulman.edu/Tasks/' + task['id'].to_s)
+			url = URI.parse('http://csse371-04.csse.rose-hulman.edu/Task/' + task['id'].to_s)
 			req = Net::HTTP::Get.new(url.path)
 			res = Net::HTTP.start(url.host, url.port) {|http|
 				http.request(req)
@@ -45,4 +45,4 @@ class TasksController < ApplicationController
 	def new
 	end
 	layout 'slate'
-e
+end

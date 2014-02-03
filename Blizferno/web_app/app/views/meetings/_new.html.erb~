@@ -1,23 +1,16 @@
 <!-- <div id = 'menu' style = 'width: 50%; float:left'> -->
-<<<<<<< HEAD
-<form name="input" id = "createMeeting">
-=======
 
 <span>* Indicates required fields.</span>
 
 <form name="input" id = "createMeeting" onsubmit="return validateForm()" action ="http://csse371-04.csse.rose-hulman.edu/Meeting/" method = 'post'>
 		
->>>>>>> 849ba72c801ea1b4e6012013653b1c5933106d6a
 		<h5>Topic</h5>
 		<input type='text' name = "title" class='form-control'/>
 		
 		<h5>Description*</h5>
-<<<<<<< HEAD
-		<textarea class='fullWidth' name="description" placeholder='Description'></textarea>
-=======
-		<textarea class='form-control'></textarea>
->>>>>>> 849ba72c801ea1b4e6012013653b1c5933106d6a
-		
+
+		<textarea class='form-control' name="description"></textarea>
+
 		<h5>Attendees</h5>
 		<select multiple id='attendees' size='6' class='form-control'>
 			<option disabled>Select multiple by holding Ctrl/CMD</option>
@@ -43,26 +36,9 @@
 		</table> -->
 		
 		<h5>Date</h5>
-<<<<<<< HEAD
-		<table>
-			<tr>
-				<td>
-				Start
-					<input type='text' name = "datetimeStart" class='fullWidth' placeholder='mm/dd/yyyy HH:MM' />
-				</td>
-			
-			
-				<td>
-				End
-					<input type='text' name = "datetimeEnd" class='fullWidth' placeholder='mm/dd/yyyy HH:MM' />
-				</td>
-			</tr>
-		</table>
-=======
 		
-		<input type='text' name = "datetime" placeholder='mm/dd/yyyy HH:MM' class='form-control'/>
-			
->>>>>>> 849ba72c801ea1b4e6012013653b1c5933106d6a
+		<input type='text' name = "datetime" placeholder='mm/dd/yyyy HH:MM' class='form-control' />
+		<input type='text' name = "datetimeEnd" placeholder='mm/dd/yyy HH:MM' class='form-control' />
 		
 		<h5>Location</h5>
 		<table>

@@ -1,4 +1,7 @@
 class TasksController < ApplicationController
+
+	before_filter :getTasks
+
 	def index
 		if (cookies[:userID].blank?)
 			redirect_to '/login/index'
@@ -42,4 +45,4 @@ class TasksController < ApplicationController
 	def new
 	end
 	layout 'slate'
-e
+end
