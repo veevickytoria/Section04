@@ -11,6 +11,7 @@
 #import "iWinBackEndUtility.h"
 #import <QuartzCore/QuartzCore.h>
 #import "iWinAppDelegate.h"
+#import "iWinConstants.h"
 
 @interface iWinMeetingViewController ()
 @property (strong, nonatomic) NSMutableArray *meetingList;
@@ -24,10 +25,7 @@
 @end
 
 //constants
-const int MODAL_XOFFSET = 36;
-const int MODAL_YOFFSET = 15;
-const int MODAL_HEIGHT = 1018;
-const int MODAL_WIDTH = 804;
+
 
 @implementation iWinMeetingViewController
 

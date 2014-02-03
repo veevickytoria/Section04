@@ -102,12 +102,18 @@
     NSString *messageBody = @"Hello! \n \nYou have been invited to join the Meeting Ninja community. Meeting Ninja as an iPad application that simplfies the management of meetings, tasks, & projects. \n\nTo accept the invitation and install the Meeting Ninja application, please visit: www.apple.com/appStore/Downloads/MeetingNinja\n\nAndroid and Web versions of Meeting Ninja are also available.";
     NSArray *toRecipents = [NSArray arrayWithObject:@"[Enter Invitee Email Here!]"];
     MFMailComposeViewController *mc = [[MFMailComposeViewController alloc] init];
-    mc.mailComposeDelegate = self;
-    [mc setSubject:emailTitle];
-    [mc setMessageBody:messageBody isHTML:NO];
-    [mc setToRecipients:toRecipents];
-    
-    [self presentViewController:mc animated:YES completion:NULL];
+    if ([MFMailComposeViewController canSendMail]){
+        
+        
+        mc.mailComposeDelegate = self;
+        [mc setSubject:emailTitle];
+        [mc setMessageBody:messageBody isHTML:NO];
+        [mc setToRecipients:toRecipents];
+        
+        [self presentViewController:mc animated:YES completion:NULL];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Failure" message:@"You're device does not have email set up." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+    }
 }
 
 -(void) mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
