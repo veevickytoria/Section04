@@ -40,7 +40,6 @@
     self.attendeeList = [[NSMutableArray alloc] init];
     self.filteredList = [[NSMutableArray alloc] init];
     self.userList = [[NSMutableArray alloc] init];
-    [self setUIFor:self.pageName];
     iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     
     NSManagedObjectContext *context = [appDelegate managedObjectContext];
@@ -236,16 +235,20 @@ shouldReloadTableForSearchString:(NSString *)searchString
     }
 }
 
--(void) setUIFor:(NSString *)pageName
-{
-    if ([pageName isEqualToString:@"ShareNotes"])
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    
+    if ([self.pageName isEqualToString:@"ShareNotes"])
     {
         self.orLabel.hidden = YES;
         self.inviteButton.hidden = YES;
         self.titleLabel.text = @"Share With";
-        //width = 728;
-        //self.searchDisplayController.searchBar.frame =
+        
+        CGRect barFrame = self.searchDisplayController.searchBar.frame;
+        barFrame.size.width = 728;
+        self.searchDisplayController.searchBar.frame = barFrame;
     }
+    
 }
 
 @end

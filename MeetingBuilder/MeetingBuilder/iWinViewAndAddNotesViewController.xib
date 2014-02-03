@@ -19,18 +19,18 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cRb-A1-Oli">
-                    <rect key="frame" x="20" y="838" width="45" height="33"/>
+                    <rect key="frame" x="20" y="866" width="45" height="33"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <state key="normal" title="Share">
                         <color key="titleColor" red="0.0" green="0.1096666174" blue="0.69000509509999997" alpha="1" colorSpace="calibratedRGB"/>
                     </state>
                     <connections>
-                        <action selector="mergeNotesButton:" destination="-1" eventType="touchUpInside" id="y34-X3-8yh"/>
+                        <action selector="shareNotesButton:" destination="-1" eventType="touchUpInside" id="uoa-f5-yRW"/>
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VZp-Cd-GJO" colorLabel="IBBuiltInLabel-Blue">
-                    <rect key="frame" x="703" y="838" width="49" height="33"/>
+                    <rect key="frame" x="699" y="866" width="49" height="33"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <state key="normal" title="Merge">
@@ -38,7 +38,7 @@
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                     <connections>
-                        <action selector="mergeNotesButton:" destination="-1" eventType="touchUpInside" id="F0w-JG-mXi"/>
+                        <action selector="mergeNotesButton:" destination="-1" eventType="touchUpInside" id="dzu-ev-Jyk"/>
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0dg-Fe-Iz0">

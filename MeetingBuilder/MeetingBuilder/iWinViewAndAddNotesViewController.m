@@ -13,6 +13,7 @@
 @property (nonatomic) NSInteger noteID;
 @property (nonatomic) NSString *noteDate;
 @property (nonatomic) NSInteger userID;
+@property (nonatomic) NSArray *sharedUserIDs;
 @property (nonatomic) BOOL inEditMode;
 @property (nonatomic) iWinAddUsersViewController *userViewController;
 
@@ -256,17 +257,45 @@
     
 }
 
-- (IBAction)cancelButton:(id)sender {
+- (IBAction)cancelButton:(id)sender
+{
       [self dismissViewControllerAnimated:YES completion:Nil];
 }
 
-- (IBAction)mergeNotesButton:(id)sender {
+- (void)loadSharedUsersIntoTable
+{
+    NSArray *names = [NSArray arrayWithObjects:@"John McCormack", @"Dharmin Shah", @"Gordon Hazzard", nil];
+    self.sharedUserIDs = [NSArray arrayWithObjects:@"1", @"2", @"3", nil];
+    
+    // TO DO: parse JSON and set fille names and sharedUserIDs arrays
+    
+    // load names into list
+    for (NSString *name in names) {
+  //      self.userViewController.userListTableView
+        
+    //    [self.noteList addObject:];
+     //   [self.noteIDs addObject:];
+    }
+}
+
+
+- (IBAction)saveSharedNoteUsers:(id)sender
+{
+    
+}
+
+- (IBAction)shareNotesButton:(id)sender {
     self.userViewController = [[iWinAddUsersViewController alloc] initWithNibName:@"iWinAddUsersViewController" bundle:nil withPageName:@"ShareNotes" inEditMode:self.isEditing];
     [self.userViewController setModalPresentationStyle:UIModalPresentationPageSheet];
     [self.userViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     self.userViewController.userDelegate = self;
     [self presentViewController:self.userViewController animated:YES completion:nil];
     self.userViewController.view.superview.bounds = CGRectMake(0,0,768,1003);
+}
+
+
+- (IBAction)mergeNotesButton:(id)sender {
+    
 }
 
 

@@ -24,6 +24,7 @@
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withNoteID:(NSInteger)noteID withUserID:(NSInteger)userID;
 - (IBAction)saveButton:(id)sender;
 - (IBAction)cancelButton:(id)sender;
+- (IBAction)shareNotesButton:(id)sender;
 - (IBAction)mergeNotesButton:(id)sender;
 - (IBAction)confirmDeleteAlert;
 @property (weak, nonatomic) IBOutlet UITextField *titleField;
