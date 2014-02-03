@@ -11,16 +11,19 @@
 
 @interface iWinMergeNoteViewController ()
 @property (nonatomic) iWinBackEndUtility *backendUtility;
+@property (nonatomic) NSMutableArray *notesForTable;
+@property (nonatomic) NSString *noteContent;
 @end
 
 @implementation iWinMergeNoteViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil noteContent:(NSString *)content
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
     }
+    self.noteContent = content;
     return self;
 }
 
@@ -42,40 +45,24 @@
 
 - (void)refreshNoteList
 {
-  //  [self.userListTable reloadData];
- //   [self.noteListTable reloadData];
+    [self.userListTable reloadData];
+    [self.noteListTable reloadData];
 }
 
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//    CustomSubtitledCell *cell = (CustomSubtitledCell *)[[tableView dequeueReusableCellWithIdentifier:@"AttendeeCell"];
-//    if (cell == nil)
-//    {
-//        cell = [[CustomSubtitledCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"AttendeeCell"];
-//    }
-//    [cell initCell];
-//    cell.subTitledDelegate = self;
-//    
-//    Contact *c = nil;
-//    
-//    if ([tableView isEqual:self.searchDisplayController.searchResultsTableView])
-//    {
-//        c = (Contact *)[self.filteredList objectAtIndex:indexPath.row];
-//        cell.deleteButton.hidden = YES;
-//    }
-//    else
-//    {
-//        c = (Contact *)[self.attendeeList objectAtIndex:indexPath.row];
-//        cell.deleteButton.hidden = NO;
-//    }
-//    cell.deleteButton.tag = indexPath.row;
-//    cell.titleLabel.text =  c.name;
-//    if (c.name.length == 0){
-//        cell.titleLabel.text = c.email;
-//    }
-//    cell.detailLabel.text = c.email;
-    return nil;
+    static NSString *CellIdentifier = @"Cell";
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+    }
+    
+    // Configure the cell.
+    cell.textLabel.text = [self.names objectAtIndex:indexPath.row];
+    
+    return cell;
 }
 
 - (IBAction)onClickCancel
@@ -85,12 +72,38 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-//    if ([tableView isEqual:self.userListTable])
-//    {
-//        return self.us.count;
-//    }
-//    return self.attendeeList.count;
-    return nil;
+    if ([tableView isEqual:self.userListTable])
+    {
+        return self.names.count;
+    }
+    return self.notes.count;
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    NSMutableArray *noteDictionaries = [self.notes objectAtIndex:indexPath.row];
+    if ([tableView isEqual:self.userListTable])
+    {
+        for (NSDictionary *d in noteDictionaries) {
+            [self.notesForTable addObject:[d objectForKey:@"noteTitle"]];
+        }
+    }
+    // otherwise perform the merge
+    else {
+        NSInteger noteID = [[[noteDictionaries objectAtIndex:indexPath.row] objectForKey:@"noteID"] integerValue];
+        NSArray *keys = [NSArray arrayWithObjects:@"noteID", @"field", @"value", nil];
+        NSArray *objects = [NSArray arrayWithObjects:[NSNumber numberWithInt:noteID], @"content", self.noteContent, nil];
+        NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+        
+        NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Note/"];
+        
+        NSDictionary *deserializedDictionary = [self.backendUtility putRequestForUrl:url withDictionary:jsonDictionary];
+        
+        if (deserializedDictionary) {
+            [self dismissViewControllerAnimated:YES completion:Nil];
+        }
+    }
 }
 
 

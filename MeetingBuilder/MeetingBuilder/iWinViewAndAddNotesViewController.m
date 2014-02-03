@@ -257,7 +257,7 @@
 
 - (IBAction)mergeNotesButton:(id)sender {
     
-    self.mergeViewController = [[iWinMergeNoteViewController alloc] init];
+    self.mergeViewController = [[iWinMergeNoteViewController alloc] initWithNibName:@"iWinMergeNoteViewController" bundle:nil noteContent:self.noteField.text];
     [self.mergeViewController setModalPresentationStyle:UIModalPresentationPageSheet];
     [self.mergeViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     self.mergeViewController.userDelegate = self;
@@ -269,12 +269,13 @@
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
-    NSMutableArray *names = [[NSMutableArray alloc] init];
     
     // parse json into variables --> Array of dictionaries
-    for (NSArray *sharingUser in deserializedDictionary ) {
+    for (NSDictionary *sharingUser in deserializedDictionary ) {
         [self.usersSharingWithMe addObject:sharingUser];
-        //  [names addObject:[sharingUser object]];
+        // then for each user - put there userName into table view
+        [self.mergeViewController.names addObject:[sharingUser objectForKey:@"userName"]];
+        [self.mergeViewController.notes addObject:[sharingUser objectForKey:@"notes"]];
     }
 }
 

@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "iWinAddUsersViewController.h"
 #import "iWinMergeNoteViewController.h"
-#import "iWinMergeNoteViewController.h"
 
 @protocol ViewAddNoteDelegate <NSObject>
 
