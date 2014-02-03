@@ -7,10 +7,10 @@ function hideGroupModal(){
 }
 
 function showEditModal(){
-	$('#editGroupModal').modal('hide');
-	$('#editGroupModal').on('hidden.bs.modal', function() {
+	$('#editAgendaModal').modal('hide');
+	$('#editAgendaModal').on('hidden.bs.modal', function() {
 		$(this).removeData('bs.modal');
-	});
+	}); 
 	// TODO: Put this back in when it works
 	// $.ajax({
 	//         type: 'GET',
@@ -34,7 +34,7 @@ function showEditModal(){
 
 function showDeleteModal(ID){
 	deleteID = ID;
-	$('#deleteGroupModal').modal('show');
+	$('#deleteDocumentModal').modal('show');
 }
 
 function hideDeleteModal(){
@@ -121,20 +121,20 @@ function showViewDocumentModal(ID, type){
 		// populateTableRows(GroupArray["members"], "displayName", "TableMembersV");
 
 		$('#viewDocumentModal').modal('show');
-		$('#editGroupModal').modal('hide');
+		$('#editAgendaModal').modal('hide');
 	}else if(type == 'note'){
 		if (ID == 1){
-			GroupArray = JSON.parse('{"groupID":"1","groupTitle":"NWA","groupType":"hardcore gangsta", "members":[{"userID":"1","displayName":"Santa Claus"},{"userID":"2","displayName":"WasARebel"},{"userID":"3","displayName":"KemoSabe"},{"userID":"4","displayName":"CaptainKirk"},{"userID":"5","displayName":"Spock"}]}');
+			noteArray = JSON.parse('{"noteID":"1","title":"title1","description":"@description","content":"content1","dateCreated":"@dateCreated"}');
 		}else if (ID == 2){
-			GroupArray = JSON.parse('{"groupID":"2","groupTitle":"Group? More like poop!","groupType":"lolz", "members":[{"userID":"1","displayName":"Santa Claus"},{"userID":"2","displayName":"WasARebel"},{"userID":"3","displayName":"KemoSabe"},{"userID":"4","displayName":"CaptainKirk"},{"userID":"5","displayName":"Spock"}]}');
+			noteArray = JSON.parse('{"noteID":"2","title":"title2","description":"@description","content":"content2","dateCreated":"@dateCreated"}');
 		}else if (ID == 3){
-			GroupArray = JSON.parse('{"groupID":"3","groupTitle":"Purgatory","groupType":"limbo", "members":[{"userID":"1","displayName":"Santa Claus"},{"userID":"2","displayName":"WasARebel"},{"userID":"3","displayName":"KemoSabe"},{"userID":"4","displayName":"CaptainKirk"},{"userID":"5","displayName":"Spock"}]}');
+			noteArray = JSON.parse('{"noteID":"3","title":"title3","description":"@description","content":"content3","dateCreated":"@dateCreated"}');
 		}else if (ID == 4){
-			GroupArray = JSON.parse('{"groupID":"4","groupTitle":"Murdah Squad","groupType":"serial killer", "members":[{"userID":"1","displayName":"Santa Claus"},{"userID":"2","displayName":"WasARebel"},{"userID":"3","displayName":"KemoSabe"},{"userID":"4","displayName":"CaptainKirk"},{"userID":"5","displayName":"Spock"}]}')
+			noteArray = JSON.parse('{"noteID":"4","title":"title4","description":"@description","content":"content4","dateCreated":"@dateCreated"}');
 		}
 
-		document.getElementById("titleV").innerHTML = agendaArray["title"];
-		document.getElementById("typeV").innerHTML = GroupArray["content"];
+		document.getElementById("titleV").innerHTML = noteArray["title"];
+		document.getElementById("contentV").innerHTML = noteArray["content"];
 
 		// populateTableRows(GroupArray["members"], "displayName", "TableMembersV");
 
