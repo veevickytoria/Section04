@@ -8,7 +8,6 @@
 $(window).load(function() {
 	jQuery('#createTask').bind('submit', function(event){
 		event.preventDefault();
-alert("here");
 
 		var form = this;
 		var formJSON = new ConvertFormToJSON(form);
@@ -37,8 +36,6 @@ alert("here");
 			"assignedFrom":postAssignedFrom,
 			"createdBy":postCreatedBy
 		});
-
-alert("posting:"+postData);
 
 		$.ajax({
 			type: 'POST',

@@ -5,9 +5,6 @@
 
 <%= render "tasksJS.js.erb" %>
 
-alert("hello");
-
-
 $(window).load(function() {
 	jQuery('#createTask').bind('submit', function(event){
 		event.preventDefault();
@@ -158,7 +155,11 @@ function ConvertFormToJSON(form){
       <th></th>
     </tr>
   </thead>
+<<<<<<< HEAD
   <% for task in @tasksParsed%>
+=======
+  <% for task in @tasksParsed %>
+>>>>>>> 4ec5f760232eee49dd9f9f52eed8554303ac7ef1
     <tr>
       <td><%= task['deadline'] %></td>
       <td><a onClick="showViewTaskModal(<%= @tasksParsed.index(task) %>)" href = '#viewTaskModal' data-refresh="true" data-toggle='modal'><%= task['title'] %></a></td>

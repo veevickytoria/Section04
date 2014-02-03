@@ -34,9 +34,7 @@ class TasksController < ApplicationController
 
 			@tasks.push(@taskString)
 			@tasksParsed.push(JSON.parse(@taskString))
-		end
-
-		
+		end	
 	end
 
 	def list
