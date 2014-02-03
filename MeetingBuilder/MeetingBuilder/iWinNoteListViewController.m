@@ -8,6 +8,7 @@
 
 #import "iWinNoteListViewController.h"
 #import "iWinViewAndAddNotesViewController.h"
+#import "iWinBackEndUtility.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface iWinNoteListViewController ()
@@ -16,7 +17,7 @@
 @property (strong, nonatomic) NSMutableArray *noteIDs;
 @property (nonatomic) NSInteger userID;
 @property (nonatomic) NSInteger selectedNote;
-
+@property (nonatomic) iWinBackEndUtility *backendUtility;
 @property (strong, nonatomic) iWinViewAndAddNotesViewController *createNoteVC;
 @end
 
@@ -35,11 +36,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.backendUtility = [[iWinBackEndUtility alloc] init];
+    [self.noteTable registerNib:[UINib nibWithNibName:@"LargeDefaultCell" bundle:nil] forCellReuseIdentifier:@"NoteCell"];
     [self refreshNoteList];
-    
-    self.createNoteButton.layer.cornerRadius = 0;
-    self.createNoteButton.layer.borderColor = [[UIColor darkGrayColor] CGColor];
-    self.createNoteButton.layer.borderWidth = 1.0f;
 }
 
 - (void)didReceiveMemoryWarning
@@ -54,23 +53,17 @@
     
     //populate note list
     NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Notes/%d", self.userID];
+    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
-    NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
-    NSURLResponse * response = nil;
-    NSError * error = nil;
-    NSData * data =[NSURLConnection sendSynchronousRequest:urlRequest
-                                         returningResponse:&response
-                                                     error:&error];
-    if (error) {
+    NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
+    
+    if (!deserializedDictionary) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Failure" message:@"Could not load your notes" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
         [alert show];
     }
     else
     {
-        NSError *jsonParsingError = nil;
-        NSDictionary *deserializedDictionary = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
         NSArray *jsonArray = [deserializedDictionary objectForKey:@"notes"];
-        
         if (jsonArray.count > 0)
         {
             for (NSDictionary* note in jsonArray)
@@ -83,18 +76,11 @@
     }
 }
 
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    return YES;
-}
-
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        //add code here for when you hit delete
-        self.selectedNote = indexPath.row;
-        UIAlertView *deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this note?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
-        [deleteAlertView show];
-    }
+-(void)deleteCell:(NSInteger)row
+{
+    self.selectedNote = row;
+    UIAlertView *deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this note?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
+    [deleteAlertView show];
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -109,20 +95,10 @@
 -(void)deleteNote
 {
     NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Note/%d", [[self.noteIDs objectAtIndex:self.selectedNote] integerValue]];
+    NSError * error = [self.backendUtility deleteRequestForUrl:url];
     
-    NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
-    [urlRequest setHTTPMethod:@"DELETE"];
-    NSURLResponse * response = nil;
-    NSError * error = nil;
-    [NSURLConnection sendSynchronousRequest:urlRequest
-                          returningResponse:&response
-                                      error:&error];
-    
-    NSData * data =[NSURLConnection sendSynchronousRequest:urlRequest
-                                         returningResponse:&response
-                                                     error:&error];
-    
-    [self refreshNoteList];
+    if (!error)
+        [self refreshNoteList];
 }
 
 -(IBAction) onCreateNewNote
@@ -133,13 +109,15 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"NoteCell"];
+    LargeDefaultCell *cell = (LargeDefaultCell *)[tableView dequeueReusableCellWithIdentifier:@"NoteCell"];
     if (cell == nil)
     {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"NoteCell"];
+        cell = [[LargeDefaultCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"NoteCell"];
     }
-    
-    cell.textLabel.text = (NSString *)[self.noteList objectAtIndex:indexPath.row];
+    [cell initLargeCell];
+    cell.largeCellDelegate = self;
+    cell.deleteButton.tag = indexPath.row;
+    cell.titleLabel.text = (NSString *)[self.noteList objectAtIndex:indexPath.row];
     return cell;
 }
 

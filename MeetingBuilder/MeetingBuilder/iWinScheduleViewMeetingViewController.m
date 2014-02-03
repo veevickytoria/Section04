@@ -12,6 +12,7 @@
 #import "iWinAppDelegate.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Meeting.h"
+#import "iWinBackEndUtility.h"
 #import "Contact.h"
 #import "Settings.h"
 
@@ -29,11 +30,13 @@
 @property (strong, nonatomic) UIDatePicker *datePicker;
 @property (strong, nonatomic) UIDatePicker *enddatePicker;
 @property (nonatomic) NSInteger userID;
-@property (strong, nonatomic) Meeting *meeting;
+//@property (strong, nonatomic) Meeting *meeting;
 @property (strong, nonatomic) NSMutableArray *userList;
 @property (strong, nonatomic) NSDateFormatter *dateFormatter;
 @property (nonatomic) NSUInteger rowToDelete;
 @property (nonatomic) UIAlertView *deleteAlertView;
+@property (strong, nonatomic) iWinBackEndUtility *backendUtility;
+@property (nonatomic) NSDictionary *existMeeting;
 @end
 
 @implementation iWinScheduleViewMeetingViewController
@@ -76,9 +79,9 @@
     self.headerLabel.text = @"Schedule a Meeting";
     [self.addAgendaButton setTitle:@"Add Agenda" forState:UIControlStateNormal];
     self.saveAndAddMoreButton.hidden = NO;
-    
+    self.deleteMeetingButton.hidden = !self.isEditing;
     self.userList = [[NSMutableArray alloc] init];
-    
+    self.backendUtility = [[iWinBackEndUtility alloc] init];
     self.startDateLabel.userInteractionEnabled = YES;
     self.endDateLabel.userInteractionEnabled = YES;
     
@@ -125,22 +128,36 @@
     [self.addAgendaButton setTitle:@"Agenda 101" forState:UIControlStateNormal];
     self.saveAndAddMoreButton.hidden = YES;
     
+//    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Meeting" inManagedObjectContext:self.context];
+//    
+//    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+//    [request setEntity:entityDesc];
+//    
+//    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"meetingID = %d", self.meetingID];
+//    [request setPredicate:predicate];
+//    
+//    NSError *error;
+//    NSArray *result = [self.context executeFetchRequest:request
+//                                                  error:&error];
     
-    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Meeting" inManagedObjectContext:self.context];
     
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:entityDesc];
+    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Meeting/%d", self.meetingID];
+    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
     
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"meetingID = %d", self.meetingID];
-    [request setPredicate:predicate];
+    if (!deserializedDictionary)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Meetings not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alert show];
+    }
+    else
+    {
+        self.existMeeting  = deserializedDictionary;
+
+    }
     
-    NSError *error;
-    NSArray *result = [self.context executeFetchRequest:request
-                                                  error:&error];
-    self.meeting = (Meeting*)[result objectAtIndex:0];
-    
-    self.titleField.text = self.meeting.title;
-    self.placeField.text = self.meeting.location;
+    self.titleField.text = [self.existMeeting objectForKey:@"title"];
+    self.placeField.text = [self.existMeeting objectForKey:@"location"];    
     
     [self initDateTimeLabels];
     [self initAttendees];
@@ -148,8 +165,10 @@
 
 -(void) initDateTimeLabels
 {
-    NSArray *startDateAndTime = [self.meeting.datetime componentsSeparatedByString:@" "];
-    NSArray *endDateAndTime = [self.meeting.endDatetime componentsSeparatedByString:@" "];
+//    self.meeting.datetime =[self.existMeeting objectForKey:@"datetime"];
+//    self.meeting.endDatetime = [self.existMeeting objectForKey:@"endDatetime"];
+    NSArray *startDateAndTime = [[self.existMeeting objectForKey:@"datetime"] componentsSeparatedByString:@" "];
+    NSArray *endDateAndTime = [[self.existMeeting objectForKey:@"endDatetime"] componentsSeparatedByString:@" "];
     
     NSString *startdate = [startDateAndTime objectAtIndex:0];
     NSString *starttime = [NSString stringWithFormat:@"%@ %@", [startDateAndTime objectAtIndex:1], [startDateAndTime objectAtIndex:2]];
@@ -171,41 +190,37 @@
 {
     NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/%@", userID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:30];
-    [urlRequest setHTTPMethod:@"GET"];
-    NSURLResponse * response = nil;
-    NSError * error = nil;
-    NSData * data = [NSURLConnection sendSynchronousRequest:urlRequest
-                                          returningResponse:&response
-                                                        error:&error];
-    NSArray *jsonArray;
-    if (error)
+    NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
+    if (!deserializedDictionary)
     {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Meetings not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
             [alert show];
     }
     else
     {
-        NSError *jsonParsingError = nil;
-        jsonArray = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
-    }
-    if (jsonArray.count > 0)
-    {
-        for (NSDictionary* users in jsonArray)
+        if (deserializedDictionary.count > 0)
         {
+            
             Contact *c = [[Contact alloc] init];
-            c.userID = (NSNumber*)[users objectForKey:@"userID"];
-            c.name = (NSString *)[users objectForKey:@"name"];
-            c.email = (NSString *)[users objectForKey:@"email"];
+            c.userID = (NSNumber*)[deserializedDictionary objectForKey:@"userID"];
+            c.name = (NSString *)[deserializedDictionary objectForKey:@"name"];
+            c.email = (NSString *)[deserializedDictionary objectForKey:@"email"];
             return c;
-            }
+            
         }
+    }
+    
     return nil;
 }
 
 -(void) initAttendees
 {
-    NSArray *attendeeArray = [self.meeting.attendance componentsSeparatedByString:@","];
+    NSMutableArray *attendeeArray;
+    NSArray* attendeeFromDatabase = [self.existMeeting objectForKey:@"attendance"];
+    for(int i = 0; i < [attendeeFromDatabase count]; i++){
+        [attendeeArray addObject:[(NSDictionary*)[attendeeFromDatabase objectAtIndex:i] objectForKey:@"userID"]];
+    }
+
     for (int i=0; i<[attendeeArray count]; i++)
     {
         [self.userList addObject:[self getContactForID:(NSString *)attendeeArray[i]]];
@@ -257,16 +272,11 @@
         {
             //Perform deletion
             NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Meeting/%d", self.meetingID];
-            
-            NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
-            [urlRequest setHTTPMethod:@"DELETE"];
-            NSURLResponse * response = nil;
-            NSError * error = nil;
-            [NSURLConnection sendSynchronousRequest:urlRequest
-                                  returningResponse:&response
-                                              error:&error];
-            //TODO: Add error checking.
-            [self.viewMeetingDelegate refreshMeetingList];
+            NSError * error = [self.backendUtility deleteRequestForUrl:url];
+            if (!error)
+            {
+                [self.viewMeetingDelegate refreshMeetingList];
+            }
         }
     }
     else
@@ -344,31 +354,9 @@
     
     NSArray *keys = [NSArray arrayWithObjects:@"userID", @"title", @"location", @"datetime", @"endDatetime", @"description", @"attendance", nil];
     NSArray *objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.userID] stringValue], self.titleField.text, self.placeField.text, [NSString stringWithFormat:@"%@ %@", self.startDateLabel.text, self.startTimeLabel.text],[NSString stringWithFormat:@"%@ %@", self.endDateLabel.text, self.endTimeLabel.text], @"Test Meeting", userIDJsonDictionary, nil];
-    
     NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-    NSData *jsonData;
-    NSString *jsonString;
-    
-    if ([NSJSONSerialization isValidJSONObject:jsonDictionary])
-    {
-        jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:nil];
-        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    }
     NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Meeting/"];
-    
-    NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
-    [urlRequest setHTTPMethod:@"POST"];
-    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [urlRequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-length"];
-    [urlRequest setHTTPBody:jsonData];
-    NSURLResponse * response = nil;
-    NSError * error = nil;
-    NSData * data =[NSURLConnection sendSynchronousRequest:urlRequest
-                                         returningResponse:&response
-                                                     error:&error];
-    NSError *jsonParsingError = nil;
-    NSDictionary *deserializedDictionary = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments|NSJSONReadingMutableContainers error:&jsonParsingError];
+    NSDictionary *deserializedDictionary = [self.backendUtility postRequestForUrl:url withDictionary:jsonDictionary];
     self.meetingID = [[deserializedDictionary objectForKey:@"meetingID"] integerValue];
 }
 
@@ -376,49 +364,38 @@
 {
     if (!self.isEditing)
     {
-        
-//        NSManagedObject *newMeeting = [NSEntityDescription insertNewObjectForEntityForName:@"Meeting" inManagedObjectContext:context];
-//        NSError *error;
-//        
-//        
-//        [newMeeting setValue:self.titleField.text forKey:@"title"];
-//        [newMeeting setValue:self.placeField.text forKey:@"location"];
-//        [newMeeting setValue:[NSString stringWithFormat: @"%@ %@ %@ %@", self.startDateLabel.text, self.startTimeLabel.text, self.endDateLabel.text, self.endTimeLabel.text] forKey:@"datetime"];
-//        [newMeeting setValue:[NSNumber numberWithInt:0] forKey:@"userID"];
-//        [newMeeting setValue:@"false" forKey:@"attendance"];
-//        [context save:&error];
         [self saveNewMeeting];
-//        UILocalNotification* localNotification = [[UILocalNotificationalloc] init];
-//        localNotification.fireDate = [NSDate dateWithTimeIntervalSinceNow:60];
-//        localNotification.alertBody = @"Your alert message";
-//        localNotification.timeZone = [NSTimeZone defaultTimeZone];
-//        [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
-
     }
     else
     {
-        NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Meeting" inManagedObjectContext:self.context];
-        
-        NSFetchRequest *request = [[NSFetchRequest alloc] init];
-        [request setEntity:entityDesc];
-        
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userID = %@", self.meetingID];
-        [request setPredicate:predicate];
-        
-        NSError *error;
-        NSArray *result = [self.context executeFetchRequest:request
-                                                 error:&error];
-        
-        Meeting *newMeeting = (Meeting*)[result objectAtIndex:0];
-        [newMeeting setValue:self.titleField.text forKey:@"title"];
-        [newMeeting setValue:self.placeField.text forKey:@"location"];
-        [newMeeting setValue:[NSString stringWithFormat: @"%@ %@ %@ %@", self.startDateLabel.text, self.startTimeLabel.text, self.endDateLabel.text, self.endTimeLabel.text] forKey:@"datetime"];
-        [newMeeting setValue:@"false" forKey:@"attendance"];
-        [self.context save:&error];
-        
+        [self updateMeetingInfo];
     }
     [self scheduleNotification];
+    NSLog(@"%@", NSStringFromClass([self.viewMeetingDelegate class]));
     [self.viewMeetingDelegate refreshMeetingList];
+}
+
+-(void) updateMeetingInfo
+{
+    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Meeting/"];
+    
+    NSArray *keys = [NSArray arrayWithObjects:@"meetingID", @"field", @"value", nil];
+    NSArray *objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.meetingID] stringValue], @"title", self.titleField.text,nil];
+    NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+    [self.backendUtility putRequestForUrl:url withDictionary:jsonDictionary];
+
+    
+    objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.meetingID] stringValue], @"location", self.placeField.text,nil];
+    jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+    [self.backendUtility putRequestForUrl:url withDictionary:jsonDictionary];
+    
+    objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.meetingID] stringValue], @"dateTime", [NSString stringWithFormat:@"%@ %@", self.startDateLabel.text, self.startTimeLabel.text], nil];
+    jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+    [self.backendUtility putRequestForUrl:url withDictionary:jsonDictionary];
+    
+    objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.meetingID] stringValue], @"endDatetime", [NSString stringWithFormat:@"%@ %@", self.endDateLabel.text, self.endTimeLabel.text], nil];
+    jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+    [self.backendUtility putRequestForUrl:url withDictionary:jsonDictionary];
 }
 
 -(void) scheduleNotification
@@ -529,7 +506,6 @@
     self.titleField.text = @"";
     self.startDateLabel.text = @"";
     self.endDateLabel.text = @"";
-    //self.durationField.text = @"";
     self.placeField.text = @"";
     [self.addAgendaButton setTitle:@"Add Agenda" forState:UIControlStateNormal];
 }
@@ -543,7 +519,6 @@
 
 - (IBAction)onClickCancel
 {
-    //[self.scheduleDelegate cancelClicked];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -692,5 +667,11 @@
 -(void)completedWithNoSelection
 {
     [self.ocCalVC.view removeFromSuperview];
+}
+
+-(BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    return YES;
 }
 @end

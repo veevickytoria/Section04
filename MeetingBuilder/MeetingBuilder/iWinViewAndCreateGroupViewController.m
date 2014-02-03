@@ -47,6 +47,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    self.userList = [[NSMutableArray alloc] init];
 }
 
 - (void)didReceiveMemoryWarning
@@ -113,6 +114,43 @@
     self.userViewController.userDelegate = self;
     [self presentViewController:self.userViewController animated:YES completion:nil];
     self.userViewController.view.superview.bounds = CGRectMake(0,0,768,1003);
+}
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"AttendeeCell"];
+    if (cell == nil)
+    {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"AttendeeCell"];
+    }
+    
+    Contact *c = (Contact *)[self.userList objectAtIndex:indexPath.row];
+    
+    cell.textLabel.text =  c.name;
+    if (c.name.length == 0){
+        cell.textLabel.text = c.email;
+    }
+    cell.detailTextLabel.text = c.email;
+    return cell;
+}
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return self.userList.count;
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;
+}
+
+// Override to support editing the table view.
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        self.rowToDelete = indexPath.row;
+        UIAlertView *deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
+        [deleteAlertView show];
+    }
 }
 
 @end

@@ -10,6 +10,7 @@
 #import "iWinAppDelegate.h"
 #import "Contact.h"
 #import "Settings.h"
+#import "iWinBackEndUtility.h"
 #import <QuartzCore/QuartzCore.h>
 #include <CommonCrypto/CommonDigest.h>
 
@@ -23,6 +24,7 @@
 @property (nonatomic) NSManagedObjectContext *context;
 @property (nonatomic) UIAlertView *deleteAlertView;
 @property (nonatomic) BOOL passwordEdited;
+@property (nonatomic) iWinBackEndUtility *backEndUtility;
 @end
 
 
@@ -42,14 +44,12 @@
 {
     [super viewDidLoad];
     
-    //self.cancelButton.hidden = YES;
+    self.backEndUtility = [[iWinBackEndUtility alloc] init];
     [self showFields:NO];
     [self enableInteraction:NO];
     self.options = [[NSArray alloc] initWithObjects:@"At time of event",@"5 minutes before",@"15 minutes before", @"30 minutes before", @"1 hour before", @"2 hours before", @"1 day before",@"2 days before", nil];
     self.passwordEdited = NO;
-    //
-    //
-    //
+    
     iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     
     self.context = [appDelegate managedObjectContext];
@@ -81,10 +81,6 @@
     NSArray *result1 = [self.context executeFetchRequest:request1
                                               error:&error1];
     self.settings = (Settings*)[result1 objectAtIndex:0];
-    //
-    //
-    //
-    
     
     self.emailTextField.text = self.contact.email;
     [self.shouldNotifySwitch setOn:[self.settings.shouldNotify boolValue]];
@@ -171,16 +167,10 @@
     {
             //Perform deletion
         NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/%d", self.userID];
+        NSError * error = [self.backEndUtility deleteRequestForUrl:url];
         
-        NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
-        [urlRequest setHTTPMethod:@"DELETE"];
-        NSURLResponse * response = nil;
-        NSError * error = nil;
-        [NSURLConnection sendSynchronousRequest:urlRequest
-                                             returningResponse:&response
-                                                         error:&error];
-        //TODO: Add error checking.
-        [self.settingsDelegate onDeleteAccount];
+        if (!error)
+            [self.settingsDelegate onDeleteAccount];
     }
    
 }
@@ -259,17 +249,7 @@
 
 -(void) saveChanges
 {
-    //Push new password and email to DB only if old password matches.
-    //You must enter old password for any change to take affect.
-//    self.contact.email = self.emailTextField.text;
-//    self.settings.email = self.emailTextField.text;
-//    if ([self.confirmPasswordTextField.text isEqual: @""]){
-//        //Don't change the password because no new one was entered
-//    }else{
-//    self.settings.password = self.confirmPasswordTextField.text;
-//    }
-//    NSError *error;
-//    [self.context save:&error];
+
     [self.contact setValue:self.emailTextField.text forKey:@"email"];
     [self.settings setValue:self.emailTextField.text forKey:@"email"];
     [self.settings setValue:[self sha256HashFor:self.passwordTextField.text] forKey:@"password"];
@@ -282,55 +262,19 @@
 
 -(void)saveToServer
 {
- //   NSArray *keys = [NSArray arrayWithObjects:@"userID", @"field", @"value", nil];
- //   NSArray *objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.userID] stringValue], @"password", [self sha256HashFor: self.passwordTextField.text],nil];
-    
     NSArray *keys = [NSArray arrayWithObjects:@"userID", @"field", @"value", nil];
     NSArray *objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.userID] stringValue], @"email", self.emailTextField.text,nil];
-    
     NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-    NSData *jsonData;
-    NSString *jsonString;
-    
-    if ([NSJSONSerialization isValidJSONObject:jsonDictionary])
-    {
-        jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:nil];
-        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    }
     NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/"];
+    NSDictionary *deserializedDictionary = [self.backEndUtility putRequestForUrl:url withDictionary:jsonDictionary];
     
-    NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
-    [urlRequest setHTTPMethod:@"PUT"];
-    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [urlRequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-length"];
-    [urlRequest setHTTPBody:jsonData];
-    NSURLResponse * response = nil;
-    NSError * error = nil;
-    NSData * data =[NSURLConnection sendSynchronousRequest:urlRequest
-                                         returningResponse:&response
-                                                     error:&error];
+    objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.userID] stringValue], @"password", [self sha256HashFor: self.passwordTextField.text],nil];
+    jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+    NSDictionary *deserializedDictionary1 = [self.backEndUtility putRequestForUrl:url withDictionary:jsonDictionary];
     
-//    jsonDictionary = [NSDictionary dictionaryWithObjects:objects1 forKeys:keys1];
-//    
-//    if ([NSJSONSerialization isValidJSONObject:jsonDictionary])
-//    {
-//        jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:nil];
-//        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-//    }
-//    [urlRequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-length"];
-//    [urlRequest setHTTPBody:jsonData];
-//    data =[NSURLConnection sendSynchronousRequest:urlRequest
-//                                returningResponse:&response
-//                                            error:&error];
-    
-    if (error) {
+    if (!deserializedDictionary || !deserializedDictionary1) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Could not save to the server" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
         [alert show];
-    }
-    else
-    {
-        NSError *jsonParsingError = nil;
-        NSDictionary *deserializedDictionary = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
     }
 }
 

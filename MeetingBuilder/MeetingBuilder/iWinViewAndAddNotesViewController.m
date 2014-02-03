@@ -7,6 +7,7 @@
 //
 
 #import "iWinViewAndAddNotesViewController.h"
+#import "iWinBackEndUtility.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface iWinViewAndAddNotesViewController ()
@@ -16,7 +17,7 @@
 @property (nonatomic) NSArray *sharedUserIDs;
 @property (nonatomic) BOOL inEditMode;
 @property (nonatomic) iWinAddUsersViewController *userViewController;
-
+@property (nonatomic) iWinBackEndUtility *backendUtility;
 @end
 
 @implementation iWinViewAndAddNotesViewController
@@ -36,6 +37,7 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    self.backendUtility = [[iWinBackEndUtility alloc] init];
     self.noteField.layer.borderColor = [[UIColor blackColor] CGColor];
     self.noteField.layer.borderWidth = 0.7f;
     self.noteField.layer.cornerRadius = 15.0f;
@@ -93,21 +95,15 @@
     // retreive notes from db
     
     NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Note/%d", self.noteID];
-    NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
-    NSURLResponse * response = nil;
-    NSError * error = nil;
-    NSData * data =[NSURLConnection sendSynchronousRequest:urlRequest
-                                         returningResponse:&response
-                                                     error:&error];
-    if (error) {
+    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
+    
+    if (!deserializedDictionary) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Failure" message:@"Could not load your note" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
         [alert show];
     }
     else
     {
-        NSError *jsonParsingError = nil;
-        NSDictionary *deserializedDictionary = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments|NSJSONReadingMutableContainers error:&jsonParsingError];
-        
         self.titleField.text = [deserializedDictionary objectForKey:@"title"];
         self.noteField.text = [deserializedDictionary objectForKey:@"content"];
     }
@@ -154,17 +150,13 @@
 -(void)deleteNote
 {
     NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Note/%d", self.noteID];
-    
-    NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
-    [urlRequest setHTTPMethod:@"DELETE"];
-    NSURLResponse * response = nil;
-    NSError * error = nil;
-    [NSURLConnection sendSynchronousRequest:urlRequest
-                          returningResponse:&response
-                                      error:&error];
+    NSError * error = [self.backendUtility deleteRequestForUrl:url];
 
-    [self.addNoteDelegate refreshNoteList];
-    [self dismissViewControllerAnimated:YES completion:Nil];
+    if (!error)
+    {
+        [self.addNoteDelegate refreshNoteList];
+        [self dismissViewControllerAnimated:YES completion:Nil];
+    }
 }
 
 - (void)saveNote
@@ -180,31 +172,13 @@
     //create note in database
     NSArray *keys = [NSArray arrayWithObjects:@"createdBy", @"title", @"description", @"content", @"dateCreated", nil];
     NSArray *objects = [NSArray arrayWithObjects:[NSNumber numberWithInt:self.userID], title, @"HOLDER", content, date, nil];
-    
     NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-    NSData *jsonData;
-    NSString *jsonString;
     
-    
-    if ([NSJSONSerialization isValidJSONObject:jsonDictionary])
-    {
-        jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:nil];
-        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    }
     NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Note/"];
     
-    NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
-    [urlRequest setHTTPMethod:@"POST"];
-    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [urlRequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-length"];
-    [urlRequest setHTTPBody:jsonData];
-    NSURLResponse * response = nil;
-    NSError * error = nil;
-    NSData * data =[NSURLConnection sendSynchronousRequest:urlRequest
-                                         returningResponse:&response
-                                                     error:&error];
-    if (error) {
+    NSDictionary *deserializedDictionary = [self.backendUtility postRequestForUrl:url withDictionary:jsonDictionary];
+    
+    if (!deserializedDictionary) {
         [self noteCreationAlert:YES];
     }
     else
@@ -222,31 +196,13 @@
     //create note in database
     NSArray *keys = [NSArray arrayWithObjects:@"noteID", @"field", @"value", nil];
     NSArray *objects = [NSArray arrayWithObjects:[NSNumber numberWithInt:self.noteID], field, value, nil];
-    
     NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-    NSData *jsonData;
-    NSString *jsonString;
     
-    
-    if ([NSJSONSerialization isValidJSONObject:jsonDictionary])
-    {
-        jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:nil];
-        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    }
     NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Note/"];
     
-    NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
-    [urlRequest setHTTPMethod:@"PUT"];
-    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [urlRequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-length"];
-    [urlRequest setHTTPBody:jsonData];
-    NSURLResponse * response = nil;
-    NSError * error = nil;
-    NSData * data =[NSURLConnection sendSynchronousRequest:urlRequest
-                                         returningResponse:&response
-                                                     error:&error];
-    if (error) {
+    NSDictionary *deserializedDictionary = [self.backendUtility putRequestForUrl:url withDictionary:jsonDictionary];
+    
+    if (!deserializedDictionary) {
         [self noteCreationAlert:YES];
     }
     else if (returnAndRefresh)
@@ -323,6 +279,11 @@
     }
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
     [alert show];
+}
+
+-(void) selectedUsers:(NSMutableArray *)userList
+{
+    
 }
 
 @end

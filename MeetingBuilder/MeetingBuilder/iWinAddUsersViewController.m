@@ -10,6 +10,7 @@
 #import "Contact.h"
 #import <QuartzCore/QuartzCore.h>
 #import "iWinAppDelegate.h"
+#import "iWinBackEndUtility.h"
 
 @interface iWinAddUsersViewController ()
 @property (nonatomic) NSString *pageName;
@@ -17,6 +18,7 @@
 @property (nonatomic) NSUInteger rowToDelete;
 @property (nonatomic) UIAlertView *deleteAlertView;
 @property (nonatomic) UIAlertView *inviteAlertView;
+@property (nonatomic) iWinBackEndUtility *backendUtility;
 @end
 
 @implementation iWinAddUsersViewController
@@ -37,48 +39,30 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
+    [self.userListTableView registerNib:[UINib nibWithNibName:@"CustomSubtitledCell" bundle:nil] forCellReuseIdentifier:@"AttendeeCell"];
+    [self.searchDisplayController.searchResultsTableView registerNib:[UINib nibWithNibName:@"CustomSubtitledCell" bundle:nil] forCellReuseIdentifier:@"AttendeeCell"];
     self.attendeeList = [[NSMutableArray alloc] init];
     self.filteredList = [[NSMutableArray alloc] init];
     self.userList = [[NSMutableArray alloc] init];
     iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    
     NSManagedObjectContext *context = [appDelegate managedObjectContext];
-    
     NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Contact" inManagedObjectContext:context];
     
-    //for local database
-//
-//    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-//    [request setEntity:entityDesc];
-//    
-//    NSError *error;
-//    NSArray *result = [context executeFetchRequest:request
-//                                              error:&error];
-//    
-//    self.userList = [[NSMutableArray alloc] initWithArray:result];
-    
-    
+    self.backendUtility = [[iWinBackEndUtility alloc] init];
+
     //for backend connection
     NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Users"];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:30];
-    [urlRequest setHTTPMethod:@"GET"];
-    NSURLResponse * response = nil;
-    NSError * error = nil;
-    NSData * data = [NSURLConnection sendSynchronousRequest:urlRequest
-                                            returningResponse:&response
-                                                        error:&error];
+    NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
+    
     NSArray *jsonArray;
-    if (error)
+    if (!deserializedDictionary)
     {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Users not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
         [alert show];
     }
     else
     {
-        NSError *jsonParsingError = nil;
-         NSDictionary *deserializedDictionary = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
-        //jsonArray = [[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError] objectAtIndex:0];
         jsonArray = [deserializedDictionary objectForKey:@"users"];
     }
     if (jsonArray.count > 0)
@@ -106,13 +90,53 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (IBAction)onClickSendInvite
+- (IBAction)onClickSendInvite: (id) sender
 {
     
-    self.inviteAlertView = [[UIAlertView alloc] initWithTitle:@"Invite User" message:@"Enter user email" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Invite", nil];
-    [self.inviteAlertView setAlertViewStyle:UIAlertViewStylePlainTextInput];
-    [self.inviteAlertView show];
+//    self.inviteAlertView = [[UIAlertView alloc] initWithTitle:@"Invite User" message:@"Enter user email" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Invite", nil];
+//    [self.inviteAlertView setAlertViewStyle:UIAlertViewStylePlainTextInput];
+//    [self.inviteAlertView show];
+    
+    NSString *emailTitle = @"Invitation to join Meeting Ninja";
+    NSString *messageBody = @"Hello! \n \nYou have been invited to join the Meeting Ninja community. Meeting Ninja as an iPad application that simplfies the management of meetings, tasks, & projects. \n\nTo accept the invitation and install the Meeting Ninja application, please visit: www.apple.com/appStore/Downloads/MeetingNinja\n\nAndroid and Web versions of Meeting Ninja are also available.";
+    NSArray *toRecipents = [NSArray arrayWithObject:@"[Enter Invitee Email Here!]"];
+    MFMailComposeViewController *mc = [[MFMailComposeViewController alloc] init];
+    if ([MFMailComposeViewController canSendMail]){
+        
+        
+        mc.mailComposeDelegate = self;
+        [mc setSubject:emailTitle];
+        [mc setMessageBody:messageBody isHTML:NO];
+        [mc setToRecipients:toRecipents];
+        
+        [self presentViewController:mc animated:YES completion:NULL];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Failure" message:@"You're device does not have email set up." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+    }
 }
+
+-(void) mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
+{
+    switch(result)
+    {
+        case MFMailComposeResultCancelled:
+            NSLog(@"Mail cancelled");
+            break;
+        case MFMailComposeResultSaved:
+            NSLog(@"Mail saved");
+            break;
+        case MFMailComposeResultSent:
+            NSLog(@"Mail sent");
+            break;
+        case MFMailComposeResultFailed:
+            NSLog(@"Mail failed");
+            break;
+        default:
+            break;
+    }
+    [self dismissViewControllerAnimated:YES completion:NULL];
+}
+
 
 - (IBAction)onClickSave
 {
@@ -129,24 +153,32 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"UserCell"];
+    CustomSubtitledCell *cell = (CustomSubtitledCell *)[tableView dequeueReusableCellWithIdentifier:@"AttendeeCell"];
+    if (cell == nil)
+    {
+        cell = [[CustomSubtitledCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"AttendeeCell"];
+    }
+    [cell initCell];
+    cell.subTitledDelegate = self;
     
     Contact *c = nil;
     
     if ([tableView isEqual:self.searchDisplayController.searchResultsTableView])
     {
         c = (Contact *)[self.filteredList objectAtIndex:indexPath.row];
+        cell.deleteButton.hidden = YES;
     }
     else
     {
         c = (Contact *)[self.attendeeList objectAtIndex:indexPath.row];
+        cell.deleteButton.hidden = NO;
     }
-    
-    cell.textLabel.text =  c.name;
+    cell.deleteButton.tag = indexPath.row;
+    cell.titleLabel.text =  c.name;
     if (c.name.length == 0){
-        cell.textLabel.text = c.email;
+        cell.titleLabel.text = c.email;
     }
-    cell.detailTextLabel.text = c.email;
+    cell.detailLabel.text = c.email;
     return cell;
 }
 
@@ -201,17 +233,11 @@ shouldReloadTableForSearchString:(NSString *)searchString
     }
 }
 
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    return YES;
-}
-
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        self.rowToDelete = indexPath.row;
-        self.deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this contact?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
-        [self.deleteAlertView show];
-    }
+-(void)deleteCell:(NSInteger)row
+{
+    self.rowToDelete = row;
+    self.deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this contact?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
+    [self.deleteAlertView show];
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex

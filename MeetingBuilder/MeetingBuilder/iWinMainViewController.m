@@ -14,6 +14,7 @@
 #import "iWinPopulateDatabase.h"
 #import "NSDate+TKCategory.h"
 #import "NSDate+CalendarGrid.h"
+#import "iWinBackEndUtility.h"
 
 
 @interface iWinMainViewController ()
@@ -34,6 +35,7 @@
 @property (nonatomic) UISwipeGestureRecognizer * swiperight;
 @property (nonatomic) UISwipeGestureRecognizer * swipeleft;
 @property (nonatomic) UIButton *lastClicked;
+@property (strong, nonatomic) iWinBackEndUtility *backendUtility;
 @end
 
 @implementation iWinMainViewController
@@ -78,7 +80,7 @@
     iWinPopulateDatabase *db = [[iWinPopulateDatabase alloc] init];
     [db populateContacts];
     [db populateSettings];
-    
+    self.backendUtility = [[iWinBackEndUtility alloc] init];
     self.loginViewController = [[iWinLoginViewController alloc] initWithNibName:@"iWinLoginViewController" bundle:nil];
     self.registerViewController = [[iWinRegisterViewController alloc] initWithNibName:@"iWinRegisterViewController" bundle:nil];
     self.movedView = NO;
@@ -113,14 +115,41 @@
                   @[@"Turkey Time...... oh wait", @"Chick-fela", @14, @0, @19, @0],
                   @[@"Greet the king at the castle", @"Burger King", @19, @30, @30, @0]];
     
-    self.dayView = [[TKCalendarDayView alloc] initWithFrame:self.rightSlideView.bounds];
-	self.dayView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	self.dayView.delegate = self;
-	self.dayView.dataSource = self;
-	[self.rightSlideView addSubview:self.dayView];
+//    self.dayView = [[TKCalendarDayView alloc] initWithFrame:self.rightSlideView.bounds];
+//	self.dayView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//	self.dayView.delegate = self;
+//	self.dayView.dataSource = self;
+//	[self.rightSlideView addSubview:self.dayView];
 }
 - (void) viewDidUnload {
 	self.dayView = nil;
+}
+
+- (void) getScheduleInfo {
+    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Schedule/%ld", (long) self.userID];
+    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
+    if (!deserializedDictionary)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Meetings not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alert show];
+    }
+    else
+    {
+        if (deserializedDictionary.count > 0)
+        {
+            NSArray *sched = [deserializedDictionary objectForKey:@"schedule"];
+            for (NSDictionary *event in sched){
+            }
+            
+//            Contact *c = [[Contact alloc] init];
+//            c.userID = (NSNumber*)[deserializedDictionary objectForKey:@"userID"];
+//            c.name = (NSString *)[deserializedDictionary objectForKey:@"name"];
+//            c.email = (NSString *)[deserializedDictionary objectForKey:@"email"];
+            
+        }
+    }
+    
 }
 
 #pragma mark TKCalendarDayViewDelegate
@@ -131,28 +160,51 @@
 	NSDateComponents *info = [[NSDate date] dateComponentsWithTimeZone:calendarDayTimeline.timeZone];
 	info.second = 0;
 	NSMutableArray *ret = [NSMutableArray array];
-	
-	for(NSArray *ar in self.data){
-		
-		TKCalendarDayEventView *event = [calendarDayTimeline dequeueReusableEventView];
-		if(event == nil) event = [TKCalendarDayEventView eventView];
+    
+    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Schedule/%d", self.userID];
+    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
+    
+    if (!deserializedDictionary)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Schedule not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alert show];
+    }
+    else
+    {
+        NSArray *jsonArray = [deserializedDictionary objectForKey:@"schedule"];
+        if (jsonArray.count > 0)
+        {
+            for (NSDictionary* meetings in jsonArray)
+            {
+                
+                TKCalendarDayEventView *event = [calendarDayTimeline dequeueReusableEventView];
+                if(event == nil) event = [TKCalendarDayEventView eventView];
+                
+                event.identifier = nil;
+                event.titleLabel.text = [meetings objectForKey:@"title"];
+                event.locationLabel.text = [meetings objectForKey:@"description"];
+                
+                NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                //Set the AM and PM symbols
+                [dateFormatter setAMSymbol:@"AM"];
+                [dateFormatter setPMSymbol:@"PM"];
+                //Specify only 2 M for month, 2 d for day and 2 h for hour
+                [dateFormatter setDateFormat:@"MM/dd/yyyy hh:mm a"];
+                
+                NSDate *date = [dateFormatter dateFromString:[meetings objectForKey:@"datetimeStart"]];
+                event.startDate = date;
+                
+                date = [dateFormatter dateFromString:[meetings objectForKey:@"datetimeEnd"]];
+                event.endDate = date;
+                
+                [ret addObject:event];
+
+            }
+        }
+    }
         
-		event.identifier = nil;
-		event.titleLabel.text = ar[0];
-		event.locationLabel.text = ar[1];
-		
-		info.hour = [ar[2] intValue];
-		info.minute = [ar[3] intValue];
-		event.startDate = [NSDate dateWithDateComponents:info];
-		
-		info.hour = [ar[4] intValue];
-		info.minute = [ar[5] intValue];
-		event.endDate = [NSDate dateWithDateComponents:info];
-        
-		[ret addObject:event];
-		
-	}
-	return ret;
+		return ret;
 }
 - (void) calendarDayTimelineView:(TKCalendarDayView*)calendarDayTimeline eventViewWasSelected:(TKCalendarDayEventView *)eventView{
     
@@ -193,6 +245,13 @@
     
     [self updateSelectedMenu:self.homeButton];
     self.openEars.openEarsDelegate = self;
+    
+    self.dayView = [[TKCalendarDayView alloc] initWithFrame:self.rightSlideView.bounds];
+	self.dayView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	self.dayView.delegate = self;
+	self.dayView.dataSource = self;
+	[self.rightSlideView addSubview:self.dayView];
+
 }
 
 -(void)swipeleft:(UISwipeGestureRecognizer*)gestureRecognizer

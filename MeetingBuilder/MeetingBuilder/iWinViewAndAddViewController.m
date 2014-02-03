@@ -9,6 +9,7 @@
 #import "iWinViewAndAddViewController.h"
 #import "iWinAddUsersViewController.h"
 #import <QuartzCore/QuartzCore.h>
+#import "iWinBackEndUtility.h"
 
 @interface iWinViewAndAddViewController ()
 @property (nonatomic) NSMutableArray *itemList;
@@ -16,7 +17,10 @@
 @property (nonatomic) iWinAgendaItemViewController *agendaItemViewController;
 @property (nonatomic) iWinAddUsersViewController *userViewController;
 @property (nonatomic) NSInteger agendaID;
+@property (strong, nonatomic) iWinBackEndUtility *backendUtility;
+
 @end
+
 
 @implementation iWinViewAndAddViewController
 
@@ -132,51 +136,48 @@
 
 - (IBAction)onClickSave
 {
-    //save agenda
-    [self.delegate.addAgendaButton setTitle:self.titleTextField.text forState:UIControlStateNormal];
-    [self dismissViewControllerAnimated:YES completion:nil];
-
-    if(self.agendaID == 0){ //first time created agenda
-    NSArray *keys = [NSArray arrayWithObjects:@"title", @"meeting", @"content",nil];
-    NSArray *objects = [NSArray arrayWithObjects: self.titleTextField.text, [[NSNumber numberWithInt:self.meetingID] stringValue], self.itemList, nil];
-    
-    
-    NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-    NSData *jsonData;
-    NSString *jsonString;
-    
-    if ([NSJSONSerialization isValidJSONObject:jsonDictionary])
+    if (self.agendaID == 0)
     {
-        jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:nil];
-        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        [self saveNewMeeting];
     }
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Agenda/"];
-    
-    NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
-    [urlRequest setHTTPMethod:@"POST"];
-    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [urlRequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-length"];
-    [urlRequest setHTTPBody:jsonData];
-    NSURLResponse * response = nil;
-    NSError * error = nil;
-    NSData * data =[NSURLConnection sendSynchronousRequest:urlRequest
-                                         returningResponse:&response
-                                                     error:&error];
-    NSError *jsonParsingError = nil;
-    NSDictionary *deserializedDictionary = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments|NSJSONReadingMutableContainers error:&jsonParsingError];
-    
-    self.agendaID = [[deserializedDictionary objectForKey:@"agendaID"] integerValue];
-    }
-    else{
-        
-        
-        
-        
-        
+    else
+    {
+        [self updateMeetingInfo];
     }
 
 }
+
+-(void) updateMeetingInfo
+{
+    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Agenda/"];
+    
+    NSArray *keys = [NSArray arrayWithObjects:@"agendaID", @"field", @"value", nil];
+    NSArray *objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.agendaID] stringValue], @"title", self.titleTextField.text, nil];
+    NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+    [self.backendUtility putRequestForUrl:url withDictionary:jsonDictionary];
+    
+    
+    objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.agendaID] stringValue], @"meeting", [[NSNumber numberWithInt:self.meetingID] stringValue], nil];
+    jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+    [self.backendUtility putRequestForUrl:url withDictionary:jsonDictionary];
+    
+    objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.agendaID] stringValue], @"content", self.itemList, nil];    jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+    [self.backendUtility putRequestForUrl:url withDictionary:jsonDictionary];
+}
+
+
+-(void) saveNewMeeting
+{
+    NSArray *keys = [NSArray arrayWithObjects:@"title", @"meeting", @"content",nil];
+    NSArray *objects = [NSArray arrayWithObjects: self.titleTextField.text, [[NSNumber numberWithInt:self.meetingID] stringValue], self.itemList, nil];
+    
+    NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Agenda/"];
+    NSDictionary *deserializedDictionary = [self.backendUtility postRequestForUrl:url withDictionary:jsonDictionary];
+    self.agendaID = [[deserializedDictionary objectForKey:@"agendaID"] integerValue];
+}
+
+
 
 - (IBAction)onClickCancel
 {

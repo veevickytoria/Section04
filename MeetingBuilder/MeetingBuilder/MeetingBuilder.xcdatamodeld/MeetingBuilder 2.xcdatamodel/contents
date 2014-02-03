@@ -19,6 +19,17 @@
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="userID" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
     </entity>
+    <entity name="Project" syncable="YES">
+        <attribute name="members" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="projectID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="projectTitle" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="tasks" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="userID" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+    </entity>
+    <entity name="RememberMe" representedClassName="RememberMe" syncable="YES">
+        <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="password" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
     <entity name="Settings" representedClassName="Settings" syncable="YES">
         <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="password" optional="YES" attributeType="String" syncable="YES"/>
@@ -41,7 +52,9 @@
     <elements>
         <element name="Contact" positionX="0" positionY="0" width="0" height="0"/>
         <element name="Meeting" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="RememberMe" positionX="0" positionY="0" width="0" height="0"/>
         <element name="Settings" positionX="0" positionY="0" width="0" height="0"/>
         <element name="Task" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Project" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>
