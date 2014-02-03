@@ -13,12 +13,12 @@
 @property (nonatomic) iWinBackEndUtility *backendUtility;
 @property (nonatomic) NSMutableArray *notesForTable;
 @property (nonatomic) NSString *noteContent;
-@property (nonatomic) NSInteger *currentNoteID;
+@property (nonatomic) NSInteger currentNoteID;
 @end
 
 @implementation iWinMergeNoteViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil noteContent:(NSString *)content userNames:(NSMutableArray *)names notes:(NSMutableArray *)notes noteID:(NSInteger)noteID
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil noteContent:(NSString *)content userNames:(NSMutableArray *)names notes:(NSMutableArray *)notes noteID:(NSInteger)noteID callBack:(SEL)callBack
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
