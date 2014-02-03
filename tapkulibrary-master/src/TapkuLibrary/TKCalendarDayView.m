@@ -148,7 +148,7 @@
 
 	CGRect r = CGRectInset(CGRectMake(0, TOP_BAR_HEIGHT, self.frame.size.width, self.frame.size.height - TOP_BAR_HEIGHT), -HORIZONTAL_PAD, 0);
 	self.horizontalScrollView = [[UIScrollView alloc] initWithFrame:r];
-	self.horizontalScrollView.backgroundColor = [UIColor colorWithWhite:214/255.0 alpha:1];
+	self.horizontalScrollView.backgroundColor = [UIColor colorWithWhite:0/255.0 alpha:1];
 	self.horizontalScrollView.pagingEnabled = YES;
 	self.horizontalScrollView.delegate = self;
 	self.horizontalScrollView.contentSize = CGSizeMake(self.horizontalScrollView.frame.size.width*3.0, 0);

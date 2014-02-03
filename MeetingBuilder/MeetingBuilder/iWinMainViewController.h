@@ -40,6 +40,7 @@
 - (IBAction)onClickSchedule;
 
 - (IBAction)startListening:(id)sender;
+@property (weak, nonatomic) IBOutlet UIButton *filler;
 
 @property (weak, nonatomic) IBOutlet UIButton *scheduleButton;
 @property (weak, nonatomic) IBOutlet UIView *rightSlideView;

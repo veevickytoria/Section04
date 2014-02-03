@@ -52,8 +52,9 @@
         self.userID = userID;
         if (meetingID == -1)
         {
-            self.isEditing = NO;
+           self.isEditing = NO;
         }
+        //tracker for every hour from 8am - 5pm
     }
     return self;
 }
@@ -336,6 +337,100 @@
 {
     self.userList = userList;
     [self.attendeeTableView reloadData];
+    [self getSuggestedTime];
+}
+
+-(void)getSuggestedTime {
+    int index;
+    int times[10];
+    
+    for (int a = 0; a < 10; a++){
+        times[a] = 0;
+    }
+    
+    for (Contact *c in self.userList){
+        NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Schedule/%d", [c.userID intValue]];
+        url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
+        
+        if (!deserializedDictionary)
+        {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Schedule not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+            [alert show];
+        }
+        else
+        {
+            NSArray *jsonArray = [deserializedDictionary objectForKey:@"schedule"];
+            if (jsonArray.count > 0)
+            {
+                for (NSDictionary* meetings in jsonArray)
+                {
+                    if ([[meetings objectForKey:@"type"] isEqualToString:@"meeting"]){
+                        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                        //Set the AM and PM symbols
+                        [dateFormatter setAMSymbol:@"AM"];
+                        [dateFormatter setPMSymbol:@"PM"];
+                        //Specify only 2 M for month, 2 d for day and 2 h for hour
+                        [dateFormatter setDateFormat:@"MM/dd/yyyy hh:mm a"];
+                        
+                        NSDate *date = [dateFormatter dateFromString:[meetings objectForKey:@"datetimeStart"]];
+                        NSCalendar *calendar = [NSCalendar currentCalendar];
+                        NSDateComponents *components = [calendar components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:date];
+                        NSInteger startHour = [components hour];
+                        
+                        date = [dateFormatter dateFromString:[meetings objectForKey:@"datetimeEnd"]];
+                        components = [calendar components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:date];
+                        NSInteger endHour = [components hour];
+                        
+                        NSDateComponents *dayComp1 = [calendar components:(NSDayCalendarUnit | NSMonthCalendarUnit | NSYearCalendarUnit) fromDate:date];
+                        
+                        [dateFormatter setDateFormat:@"MM/dd/yyyy"];
+                        NSString *sdl = (NSString*) self.startDateLabel.text;
+                        date = [dateFormatter dateFromString:sdl];
+                        
+                        NSDateComponents *dayComp2 = [calendar components:(NSDayCalendarUnit | NSMonthCalendarUnit | NSYearCalendarUnit) fromDate:date];
+                        
+                        NSDate *date1 = [calendar dateFromComponents:dayComp1];
+                        NSDate *date2 = [calendar dateFromComponents:dayComp2];
+                        
+                        
+                        //currently assuming all meetings are all within 8am - 5pm on the same day.
+                        if ([date1 isEqualToDate:date2]){
+                            
+                            if (startHour >= 8 && endHour <= 17 && startHour < endHour){
+                                for (index = startHour; index <= endHour; index++) {
+                                    times[index - 8]++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    int min = 0;
+    
+    //gets the index of the lowest used time
+    for (int i = 0; i < 10; i++){
+        if (times[min] > times[i]){
+            min = i;
+        }
+    }
+    min += 8;
+    NSDateFormatter* nsdf = [[NSDateFormatter alloc] init];
+    [nsdf setDateFormat:@"HH:mm"];
+    NSString* hrStr = [NSString stringWithFormat:@"%d:00", min];
+    NSDate* stDateTime = [nsdf dateFromString:hrStr];
+    
+    [nsdf setDateFormat:@"hh:mm a"];
+    NSString* strDateTime = [nsdf stringFromDate:stDateTime];
+    
+    NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
+    [outputFormatter setDateFormat:@"hh:mm a"];
+    
+    //self.startDate = [outputFormatter dateFromString:strDateTime];
+    self.startTimeLabel.text = strDateTime;
 }
 
 -(void) saveNewMeeting

@@ -104,58 +104,15 @@
     self.openEars = [[iWinOpenEarsModel alloc] init];
     self.openEars.openEarsDelegate = self;
     [self.openEars initialize];
-    
-    
-    self.data = @[
-                  @[@"Meeting with five random dudes", @"Five Guys", @5, @0, @5, @30],
-                  @[@"Unlimited bread rolls got me sprung", @"Olive Garden", @7, @0, @12, @0],
-                  @[@"Appointment", @"Dennys", @15, @0, @18, @0],
-                  @[@"Hamburger Bliss", @"Wendys", @15, @0, @18, @0],
-                  @[@"Fishy Fishy Fishfelayyyyyyyy", @"McDonalds", @5, @30, @6, @0],
-                  @[@"Turkey Time...... oh wait", @"Chick-fela", @14, @0, @19, @0],
-                  @[@"Greet the king at the castle", @"Burger King", @19, @30, @30, @0]];
-    
-//    self.dayView = [[TKCalendarDayView alloc] initWithFrame:self.rightSlideView.bounds];
-//	self.dayView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-//	self.dayView.delegate = self;
-//	self.dayView.dataSource = self;
-//	[self.rightSlideView addSubview:self.dayView];
 }
 - (void) viewDidUnload {
 	self.dayView = nil;
 }
 
-- (void) getScheduleInfo {
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Schedule/%ld", (long) self.userID];
-    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
-    if (!deserializedDictionary)
-    {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Meetings not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
-        [alert show];
-    }
-    else
-    {
-        if (deserializedDictionary.count > 0)
-        {
-            NSArray *sched = [deserializedDictionary objectForKey:@"schedule"];
-            for (NSDictionary *event in sched){
-            }
-            
-//            Contact *c = [[Contact alloc] init];
-//            c.userID = (NSNumber*)[deserializedDictionary objectForKey:@"userID"];
-//            c.name = (NSString *)[deserializedDictionary objectForKey:@"name"];
-//            c.email = (NSString *)[deserializedDictionary objectForKey:@"email"];
-            
-        }
-    }
-    
-}
-
 #pragma mark TKCalendarDayViewDelegate
 - (NSArray *) calendarDayTimelineView:(TKCalendarDayView*)calendarDayTimeline eventsForDate:(NSDate *)eventDate{
-    if([eventDate compare:[NSDate dateWithTimeIntervalSinceNow:-24*60*60]] == NSOrderedAscending) return @[];
-	if([eventDate compare:[NSDate dateWithTimeIntervalSinceNow:24*60*60]] == NSOrderedDescending) return @[];
+    //if([eventDate compare:[NSDate dateWithTimeIntervalSinceNow:-24*60*60]] == NSOrderedAscending) return @[];
+	//if([eventDate compare:[NSDate dateWithTimeIntervalSinceNow:24*60*60]] == NSOrderedDescending) return @[];
     
 	NSDateComponents *info = [[NSDate date] dateComponentsWithTimeZone:calendarDayTimeline.timeZone];
 	info.second = 0;
@@ -177,28 +134,29 @@
         {
             for (NSDictionary* meetings in jsonArray)
             {
-                
-                TKCalendarDayEventView *event = [calendarDayTimeline dequeueReusableEventView];
-                if(event == nil) event = [TKCalendarDayEventView eventView];
-                
-                event.identifier = nil;
-                event.titleLabel.text = [meetings objectForKey:@"title"];
-                event.locationLabel.text = [meetings objectForKey:@"description"];
-                
-                NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-                //Set the AM and PM symbols
-                [dateFormatter setAMSymbol:@"AM"];
-                [dateFormatter setPMSymbol:@"PM"];
-                //Specify only 2 M for month, 2 d for day and 2 h for hour
-                [dateFormatter setDateFormat:@"MM/dd/yyyy hh:mm a"];
-                
-                NSDate *date = [dateFormatter dateFromString:[meetings objectForKey:@"datetimeStart"]];
-                event.startDate = date;
-                
-                date = [dateFormatter dateFromString:[meetings objectForKey:@"datetimeEnd"]];
-                event.endDate = date;
-                
-                [ret addObject:event];
+                if ([[meetings objectForKey:@"type"] isEqualToString:@"meeting"]){
+                    TKCalendarDayEventView *event = [calendarDayTimeline dequeueReusableEventView];
+                    if(event == nil) event = [TKCalendarDayEventView eventView];
+                    
+                    event.identifier = nil;
+                    event.titleLabel.text = [meetings objectForKey:@"title"];
+                    event.locationLabel.text = [meetings objectForKey:@"description"];
+                    
+                    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                    //Set the AM and PM symbols
+                    [dateFormatter setAMSymbol:@"AM"];
+                    [dateFormatter setPMSymbol:@"PM"];
+                    //Specify only 2 M for month, 2 d for day and 2 h for hour
+                    [dateFormatter setDateFormat:@"MM/dd/yyyy hh:mm a"];
+                    
+                    NSDate *date = [dateFormatter dateFromString:[meetings objectForKey:@"datetimeStart"]];
+                    event.startDate = date;
+                    
+                    date = [dateFormatter dateFromString:[meetings objectForKey:@"datetimeEnd"]];
+                    event.endDate = date;
+                    
+                    [ret addObject:event];
+                }
 
             }
         }
@@ -246,8 +204,11 @@
     [self updateSelectedMenu:self.homeButton];
     self.openEars.openEarsDelegate = self;
     
-    self.dayView = [[TKCalendarDayView alloc] initWithFrame:self.rightSlideView.bounds];
+    CGRect scheduleFrame = CGRectMake(self.rightSlideView.bounds.origin.x, self.rightSlideView.bounds.origin.y + 81, self.rightSlideView.bounds.size.width, self.rightSlideView.bounds.size.height - 95);
+    
+    self.dayView = [[TKCalendarDayView alloc] initWithFrame:scheduleFrame];
 	self.dayView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    self.dayView.backgroundColor = [UIColor blackColor];
 	self.dayView.delegate = self;
 	self.dayView.dataSource = self;
 	[self.rightSlideView addSubview:self.dayView];
@@ -470,16 +431,19 @@
     
     CGRect oldFrame = self.rightSlideView.frame;
     CGRect oldFrameMain = self.slideView.frame;
+    CGRect oldFiller = self.filler.frame;
     
     if (moveLeft)
     {
         self.rightSlideView.frame = CGRectMake(oldFrame.origin.x - 350, oldFrame.origin.y, oldFrame.size.width, oldFrame.size.height);
         self.slideView.frame = CGRectMake(oldFrameMain.origin.x-350,oldFrameMain.origin.y,oldFrameMain.size.width,oldFrameMain.size.height);
+        self.filler.frame = CGRectMake(oldFiller.origin.x-350,oldFiller.origin.y,oldFiller.size.width,oldFiller.size.height);
     }
     else
     {
         self.rightSlideView.frame = CGRectMake(oldFrame.origin.x + 350, oldFrame.origin.y, oldFrame.size.width, oldFrame.size.height);
         self.slideView.frame = CGRectMake(oldFrameMain.origin.x + 350,oldFrameMain.origin.y,oldFrameMain.size.width,oldFrameMain.size.height);
+        self.filler.frame = CGRectMake(oldFiller.origin.x+350,oldFiller.origin.y,oldFiller.size.width,oldFiller.size.height);
     }
     [UIView commitAnimations];
 }
