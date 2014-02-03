@@ -98,16 +98,25 @@
     }
     // otherwise perform the merge
     else {
-        NSInteger noteID = [[[noteDictionaries objectAtIndex:indexPath.row] objectForKey:@"noteID"] integerValue];
+        
+         NSInteger noteID = [[[noteDictionaries objectAtIndex:indexPath.row] objectForKey:@"noteID"] integerValue];
+        
+        // first get note content of the note to merge with
+        NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Note/%d", noteID];
+        NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
+        NSString *mergerNoteContent = [deserializedDictionary objectForKey:@"content"];
+        
+        // merge strings
+        NSString *merged = [NSString stringWithFormat:@"%@\n\n-----\n\n%@",self.noteContent, mergerNoteContent];
+        
+    
+        // next update the orignal note
         NSArray *keys = [NSArray arrayWithObjects:@"noteID", @"field", @"value", nil];
-        NSArray *objects = [NSArray arrayWithObjects:[NSNumber numberWithInt:noteID], @"content", self.noteContent, nil];
+        NSArray *objects = [NSArray arrayWithObjects:[NSNumber numberWithInt:noteID], @"content", merged, nil];
         NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
         
-        NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Note/"];
-        
-        NSDictionary *deserializedDictionary = [self.backendUtility putRequestForUrl:url withDictionary:jsonDictionary];
-        
-        if (deserializedDictionary) {
+        NSDictionary *deserializedDictionary2 = [self.backendUtility putRequestForUrl:@"http://csse371-04.csse.rose-hulman.edu/Note/" withDictionary:jsonDictionary];
+        if (deserializedDictionary2) {
             [self dismissViewControllerAnimated:YES completion:Nil];
         }
     }
