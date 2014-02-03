@@ -34,6 +34,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.meetingninja.csse.R;
@@ -103,7 +104,7 @@ public class AgendaActivity extends FragmentActivity {
 
 	private void setupViews() {
 		treeView = (TreeViewList) findViewById(R.id.agendaTreeView);
-		mTitleView = (TextView) findViewById(R.id.agenda_title);
+		mTitleView = (TextView) findViewById(R.id.agenda_title_edittext);
 		mAddTopicBtn = (Button) findViewById(R.id.agenda_addTopicBtn);
 		mAddTopicBtn.setOnClickListener(new TopicListener());
 
@@ -170,6 +171,11 @@ public class AgendaActivity extends FragmentActivity {
 			case R.id.agenda_addTopicBtn:
 				Topic t = new Topic(); // TODO : Create a Topic
 				t.setTitle("new topic");
+				final EditText mTitle = (EditText) ((View) v.getParent()).findViewById(R.id.agenda_title_edittext);
+				
+				System.out.println("FOUND:" +mTitle);
+				t.setTitle(mTitle.getText().toString());
+				
 				displayedAgenda.addTopic(t);
 				reconstructTree();
 
@@ -226,6 +232,11 @@ public class AgendaActivity extends FragmentActivity {
 			break;
 		case R.id.collapse_all_menu_item:
 			manager.collapseChildren(null);
+			break;
+		case R.id.Review:
+			Intent i = new Intent(this, ReviewAgendaActivity.class);
+			i.putExtra(Keys.Agenda.PARCEL, displayedAgenda);
+			startActivity(i);
 			break;
 		default:
 			return super.onOptionsItemSelected(item);

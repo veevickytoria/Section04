@@ -17,6 +17,7 @@ package com.meetingninja.csse.agenda;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import objects.Topic;
@@ -39,6 +40,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.doomonafireball.betterpickers.hmspicker.HmsPickerBuilder;
+import com.doomonafireball.betterpickers.hmspicker.HmsPickerDialogFragment.HmsPickerDialogHandler;
 import com.meetingninja.csse.R;
 
 /**
@@ -122,31 +124,24 @@ public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 	public LinearLayout updateView(final View view,
 			final TreeNodeInfo<Topic> treeNodeInfo) {
 
-		// final LinearLayout rowView = (LinearLayout) view;
-
-		LayoutInflater inflater = (LayoutInflater) mContext
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		final LinearLayout rowView = (LinearLayout) inflater.inflate(
-				R.layout.list_item_agenda, null);
+		 final LinearLayout rowView = (LinearLayout) view;
 
 		final Topic rowTopic = treeNodeInfo.getId();
 
-		System.out.println("Echo: Checked" + rowTopic + " " + counter + " "
-				+ Comparison.size() + " " + checked);
+//		System.out.println("Echo: Checked" + rowTopic + " " + counter + " "
+//				+ Comparison.size() + " " + checked);
 
 		final EditText mTitle = (EditText) rowView
 				.findViewById(R.id.agenda_edit_topic);
 
 		final TextView mTime = (TextView) rowView
 				.findViewById(R.id.agenda_topic_time);
-
-		mTitle.setText(rowTopic.getTitle());
-
-		System.out.println("Echo: Here" + rowTopic.getTitle() + " " + rowView);
-
-		if (TextHandlers.containsKey(mTitle)) {
+		if(TextHandlers.containsKey(mTitle)){
 			mTitle.removeTextChangedListener(TextHandlers.get(mTitle));
 		}
+		mTitle.setText(rowTopic.getTitle());
+
+//		System.out.println("Echo: Here" + rowTopic.getTitle() + " " + rowView);
 
 		TextWatcher c = new TextWatcher() {
 
@@ -159,9 +154,11 @@ public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 				mTitle.setTag(text);
 				rowTopic.setTitle(text);
 
+
 				Log.d(TAG, "Text changed" + treeNodeInfo.getLevel() + " "
 						+ treeNodeInfo.getId());
 				manager.getChildren(treeNodeInfo.getId());
+				
 
 			}
 
@@ -183,6 +180,7 @@ public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 				.findViewById(R.id.agenda_subtopicAddBtn);
 		final Button mTimeBtn = (Button) rowView
 				.findViewById(R.id.agenda_topicTimeBtn);
+		System.out.println();
 
 		// Add SubTopic Button
 		// mAddTopicBtn.setTag(rowTopic);
@@ -190,31 +188,26 @@ public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 
 		// Set Time Button
 		mTimeBtn.setTag(rowTopic);
-		mTimeBtn.setOnClickListener(new OnTimeBtnClick());
+		mTimeBtn.setOnClickListener(new OnTimeBtnClick(rowTopic,mTime));
 
 		Map<String, String> info = getDescription(rowTopic);
-		// String title = "";
-		// if (mTitle.getTag() != null) {
-		// title = (String) mTitle.getTag();
-		// Log.d(TAG + "using title >>", title);
-		// } else {
-		// title = info.containsKey("title") ? info.get("title") : "";
-		// }
-		// mTitle.setText(title);
-		// mTitle.setText(rowTopic.getTitle());
+
 		String time = info.containsKey("time") ? info.get("time") : "";
+		time = "("+rowTopic.getTime()+"m)";
 		mTime.setText(time);
 
 		// If a topic has subTopics, then its time is determined by the sum of
 		// the subTopics
-		if (treeNodeInfo.isWithChildren()) {
+		if (getManager().getChildren(rowTopic).size()!=0){
 			// mTimeBtn.setVisibility(View.GONE);
 			mTime.setVisibility(View.GONE);
+			mTimeBtn.setVisibility(View.GONE);
 		} else {
+			mTime.setVisibility(View.VISIBLE);
 			mTimeBtn.setVisibility(View.VISIBLE);
 			// timeBtn.setChecked(selected.contains(treeNodeInfo.getId()));
 		}
-
+		getManager().notifyDataSetChanged();
 		return rowView;
 	}
 
@@ -230,6 +223,7 @@ public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 	// }
 	// }
 
+	
 	@Override
 	public long getItemId(final int position) {
 
@@ -242,18 +236,36 @@ public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 	}
 
 	private class OnTimeBtnClick implements OnClickListener {
-
+		private final Topic topic;
+		private final TextView changeText;
+		
+		public OnTimeBtnClick(Topic topic,TextView changeText){
+			this.topic = topic;
+			this.changeText = changeText;
+		}
+		
 		@Override
 		public void onClick(View v) {
 			HmsPickerBuilder hms = new HmsPickerBuilder().setFragmentManager(
 					((FragmentActivity) getActivity())
 							.getSupportFragmentManager()).setStyleResId(
 					R.style.BetterPickersDialogFragment);
+			hms.addHmsPickerDialogHandler(new HmsPickerDialogHandler(){
+
+				@Override
+				public void onDialogHmsSet(int reference, int hours,
+						int minutes, int seconds) {
+					topic.setTime(""+minutes+hours*60);
+					changeText.setText(topic.getTime());
+					
+				}
+				
+			});
 			hms.show();
 			Topic t = (Topic) v.getTag();
 			Map<String, String> info = getDescription(t);
 			Log.d(TAG, info.get("title"));
-
+			getManager().notifyDataSetChanged();
 		}
 	}
 
@@ -268,16 +280,40 @@ public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 		public void onClick(View v) {
 			// final Topic t = (Topic) v.getTag();
 			Topic subT = new Topic(); // TODO : Make new subtopic
-			subT.setTitle(parent.getTitle() + "New Topic");
+			subT.setTitle(""+subT);
+			subT.setTime("0");
 			parent.addTopic(subT);
-			System.out.println("Echo: Created" + subT + " " + parent);
-
+//			System.out.println("Echo: Created" + subT + " " + parent);
+//			List<Topic> childList = getManager().getChildren(parent);
+//			System.out.println(childList.size());
+//			if(childList.size()!=0){
+//
+//				Topic nextChild = childList.get(childList.size()-1);
+//				getManager().addAfterChild(parent, subT, nextChild);
+//			}else{
+//				getManager().addAfterChild(parent, subT, null);
+//			}
+			PrintTree();
 			activty.reconstructTree();
-			// getManager().notifyDataSetChanged();
+			getManager().notifyDataSetChanged();
 		}
 
 	}
 
+	public void PrintTree(){
+		System.out.println("Printing Manager Tree");
+		List<Topic>  top = getManager().getChildren(null);
+		for(Topic c: top){
+			printRecur(c, 0);
+			
+		}
+	}
+	public void printRecur(Topic c,int i){
+		System.out.println("Topic:"+c.getTitle()+" "+i);
+		for(Topic d: getManager().getChildren(c))
+			printRecur(d,i+1);
+	}
+	
 	public void addActivity(AgendaActivity agendaActivity) {
 		this.activty = agendaActivity;
 	}
