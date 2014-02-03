@@ -187,50 +187,32 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		contacts=getContacts(userID);
 		return contacts;
 	}
-	public static void deleteContact(String contactUserID) throws IOException {
+	public static List<Contact> deleteContact(String relationID) throws IOException {
 
-		String _url = getBaseContactUri().appendPath("Relation").build().toString();
+		String _url = getBaseContactUri().appendPath("Relations").appendPath(relationID).build().toString();
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod(IRequest.DELETE);
-		addRequestHeader(conn, false);
-		SessionManager session = SessionManager.getInstance();
+		
 
-		ByteArrayOutputStream json = new ByteArrayOutputStream();
-		// this type of print stream allows us to get a string easily
-		PrintStream ps = new PrintStream(json);
-		// Create a generator to build the JSON string
-		JsonGenerator jgen = JFACTORY.createGenerator(ps, JsonEncoding.UTF8);
-		// Build JSON Object for Title
-		jgen.writeStartObject();
-		jgen.writeStringField(Keys.User.ID, session.getUserID());
-		jgen.writeArrayFieldStart(Keys.User.CONTACTS);
-		jgen.writeStartObject();
-		jgen.writeStringField(Keys.User.CONTACTID, contactUserID);
-		jgen.writeEndObject();
-		jgen.writeEndArray();
-		jgen.writeEndObject();
-		jgen.close();
-		String payload = json.toString("UTF8");
-		ps.close();
-		
-		sendPostPayload(conn, payload);
+		addRequestHeader(conn, false);
+		int responseCode = conn.getResponseCode();
 		String response = getServerResponse(conn);
-		
-		//TODO: put add useful check here
-//		String result = new String();
-//		if (!response.isEmpty()) {
-//			JsonNode contactNode = MAPPER.readTree(response);
-//			if (!contactNode.has(Keys.Group.ID)) {
-//				result = "invalid";
-//			} else
-//				result = groupNode.get(Keys.Group.ID).asText();
-//		}
-//
-//		if (!result.equalsIgnoreCase("invalid"))
-//			g.setID(result);
+
+		boolean result = false;
+		JsonNode tree = MAPPER.readTree(response);
+		if (!response.isEmpty()) {
+			if (!tree.has(Keys.DELETED)) {
+				result = true;
+			} else {
+				logError(TAG, tree);
+			}
+		}
 
 		conn.disconnect();
+		SessionManager session = SessionManager.getInstance();
+		List<Contact> contacts = getContacts(session.getUserID());
+		return contacts;
 	}
 
 
@@ -647,22 +629,21 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		ps.close();
 		String[] payloads = payload.split("\f\\s*");
 
-//		Thread t = new Thread(new Thread(new Runnable() {
-//			@Override
-//			public void run() {
-//				try {
-//					Thread.sleep(500);
-//				} catch (InterruptedException e) {
-//					e.getLocalizedMessage();
-//				}
-//			}
-//		}));
+		Thread t = new Thread(new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					e.getLocalizedMessage();
+				}
+			}
+		}));
 		String response = "";
 		for (String p : payloads) {
-//			t.run();
-			response = updateHelper(p, getBaseUri().build().toString());
+			t.run();
+			response = updateHelper(p);
 		}
-		System.out.println(response);
 		return parseUser(MAPPER.readTree(response));
 	}
 
@@ -775,22 +756,5 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		}
 
 		return sched;
-	}
-	protected static String updateHelper(String jsonPayload, String _url) throws IOException {
-		// Server URL setup
-//		String _url = getBaseUri().build().toString();
-
-		// Establish connection
-		URL url = new URL(_url);
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-		// add request header
-		conn.setRequestMethod(IRequest.PUT);
-		addRequestHeader(conn, true);
-
-		int responseCode = sendPostPayload(conn, jsonPayload);
-		String response = getServerResponse(conn);
-		conn.disconnect();
-		return response;
 	}
 }

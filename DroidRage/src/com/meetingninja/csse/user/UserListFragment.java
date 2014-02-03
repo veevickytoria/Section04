@@ -86,12 +86,12 @@ public class UserListFragment extends Fragment implements TokenListener{
 	private AutoCompleteAdapter autoAdapter;
 	private ArrayList<User> allUsers = new ArrayList<User>();
 	private User addedUser;
-	private ArrayList<Contact> contacts = new ArrayList<Contact>();
+	private List<Contact> contacts = new ArrayList<Contact>();
+	private List<Contact> tempDeletedContacts = new ArrayList<Contact>();
 
 	public UserListFragment() {
 		// Required empty public constructor
 	}
-	//to add users. change db adapter to ContactArrayAdapter change list_item_user to list_item_contact and make it show all users not just contacts
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,	Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
@@ -100,7 +100,6 @@ public class UserListFragment extends Fragment implements TokenListener{
 		
 		dbHelper = new SQLiteUserAdapter(getActivity());
 
-//		mContactAdapter = new ContactArrayAdapter(getActivity(),R.layout.list_item_user, contacts);
 		setUpListView(v);
 		populateList(true); // uses async-task
 		return v;
@@ -177,7 +176,6 @@ public class UserListFragment extends Fragment implements TokenListener{
 
 		if (added != null) {
 			addedUser = added;
-//			addedContacts.add(added);
 		}
 	}
 
@@ -195,13 +193,30 @@ public class UserListFragment extends Fragment implements TokenListener{
 
 	}
 	public void setContacts(List<Contact> tempContacts){
-		contacts.clear();
-		contacts.addAll(tempContacts);
+		if(!tempContacts.isEmpty()){
+			contacts.clear();
+			contacts.addAll(tempContacts);
+			
+			for(int i=0;i<tempDeletedContacts.size();i++){
+				//why doesn't this work?
+//				contacts.remove(tempDeletedContacts.get(i));
+				for(int j=0;j<contacts.size();j++){
+					if(contacts.get(j).getContact().getID().equals(tempDeletedContacts.get(i).getContact().getID())){
+						contacts.remove(j);
+						break;
+					}
+				}
+			}
+		}
 		mContactAdapter.notifyDataSetChanged();
 	}
 	private void addContact(User user) {
 		AddContactTask adder = new AddContactTask(this);
 		adder.addContact(user.getID());
+	}
+	private void deleteContact(String relationID){
+		DeleteContactTask deleter= new DeleteContactTask(this);
+		deleter.deleteContact(relationID);
 	}
 
 	@Override
@@ -215,6 +230,7 @@ public class UserListFragment extends Fragment implements TokenListener{
 		SessionManager session = SessionManager.getInstance();
 		fetcher = new RetContactsObj(add);
 		fetcher.execute(session.getUserID());
+		//TODO: also remeve tempDeletedContacts
 	}
 	
 	private void setUpListView(View v){
@@ -227,12 +243,20 @@ public class UserListFragment extends Fragment implements TokenListener{
 			public EnhancedListView.Undoable onDismiss(EnhancedListView listView, final int position) {
 
 				final Contact item = (Contact) mContactAdapter.getItem(position);
+				tempDeletedContacts.add(item);
+				contacts.remove(item);
+//				for(int i=0;i<contacts.size();i++){
+//					System.out.println("this one: "+contacts.get(i).getContact().getDisplayName());
+//				}
 				mContactAdapter.remove(item);
 				
 				return new EnhancedListView.Undoable() {
 					@Override
 					public void undo() {
-						mContactAdapter.insert(item, position);
+//						mContactAdapter.insert(item, position);
+						contacts.add(item);
+						tempDeletedContacts.remove(item);
+						mContactAdapter.notifyDataSetChanged();
 					}
 
 					@Override
@@ -241,8 +265,8 @@ public class UserListFragment extends Fragment implements TokenListener{
 					}
 					@Override
 						public void discard(){
-						//TODO: check if user does want to eliminate contact
-						//TODO: delete them
+						deleteContact(item.getRelationID());
+						tempDeletedContacts.remove(item);
 						
 					}
 				};
@@ -265,18 +289,6 @@ public class UserListFragment extends Fragment implements TokenListener{
 		l.setSwipingLayout(R.id.list_group_item_frame_1); 
 
 		l.setSwipeDirection(EnhancedListView.SwipeDirection.BOTH);
-		
-//		List<User> mems = new ArrayList<User>();
-//		mems = displayTask.getMembers();
-//		for(int i = 0;i<mems.size();i++){
-//			loadUser(mems.get(i).toString(),false);
-//		}
-//		//TODO: change to a loop when backend catches up
-//		String mem = displayTask.getAssignedTo();
-//		loadUser(mem,false);
-
-		
-		
 	}
 	
 	final class RetContactsObj implements AsyncResponse<List<Contact>> {
@@ -296,25 +308,17 @@ public class UserListFragment extends Fragment implements TokenListener{
 		public void processFinish(List<Contact> result) {
 			contacts.clear();
 			contacts.addAll(result);
+			for(int i=0;i<tempDeletedContacts.size();i++){
+				//why doesn't this work?
+//				contacts.remove(tempDeletedContacts.get(i));
+				for(int j=0;j<contacts.size();j++){
+					if(contacts.get(j).getContact().getID().equals(tempDeletedContacts.get(i).getContact().getID())){
+						contacts.remove(j);
+						break;
+					}
+				}
+			}
 			mContactAdapter.notifyDataSetChanged();
 		}
 	}
-
-//	@Override
-//	public void processFinish(List<User> result) {
-//		contacts.clear();
-//		mContactAdapter.clear();
-//
-//		Collections.sort(result, new Comparator<User>() {
-//			@Override
-//			public int compare(User lhs, User rhs) {
-//				return lhs.getDisplayName().toLowerCase().compareTo(rhs.getDisplayName().toLowerCase());
-//			}
-//		});
-//		contacts.addAll(result);
-//
-//		mContactAdapter.notifyDataSetChanged();
-//
-//	}
-
 }

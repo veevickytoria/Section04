@@ -43,12 +43,9 @@ public class ContactArrayAdapter extends ArrayAdapter<Contact> {
 			viewHolder = new ViewHolder();
 
 			// cache the views
-			viewHolder.name = (TextView) convertView
-					.findViewById(R.id.user_list_name);
-			viewHolder.email = (TextView) convertView
-					.findViewById(R.id.user_list_email);
-			viewHolder.photo = (SmartImageView) convertView
-					.findViewById(R.id.user_list_image);
+			viewHolder.name = (TextView) convertView.findViewById(R.id.user_list_name);
+			viewHolder.email = (TextView) convertView.findViewById(R.id.user_list_email);
+			viewHolder.photo = (SmartImageView) convertView.findViewById(R.id.user_list_image);
 
 			convertView.setTag(viewHolder);
 		} else

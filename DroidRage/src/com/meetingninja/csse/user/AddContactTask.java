@@ -57,14 +57,14 @@ public class AddContactTask implements AsyncResponse<List<Contact>> {
 
 		@Override
 		protected List<Contact> doInBackground(String... params) {
-			List<Contact> contact = null;
+			List<Contact> contacts = new ArrayList<Contact>();
 			try {
-				contact = UserDatabaseAdapter.addContact(params[0]);
+				contacts = UserDatabaseAdapter.addContact(params[0]);
 			} catch (IOException e) {
 				Log.e("ContactAdder", "Error: Unable to add contact");
 				Log.e(TAG, e.getLocalizedMessage());
 			}
-			return contact;
+			return contacts;
 		}
 		@Override
 		protected void onPostExecute(List<Contact> contacts) {
