@@ -9,7 +9,7 @@
 		}
 			jsonString = "{"+jsonString.substring(0,jsonString.length-1)+"}";
 		alert("jsonString:"+jsonString);
-/*
+
 		    $.ajax({
             type: "PUT",
             url: "http://csse371-04.csse.rose-hulman.edu/User/",
@@ -17,7 +17,6 @@
       		success:function(data){
         	}
     });
-*/
 	}
 </script>
 <div class='prefpage'>
