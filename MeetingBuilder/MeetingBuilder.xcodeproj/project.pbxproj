@@ -80,10 +80,12 @@
 		0ACE33B317FD2461003B9C0A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ACE33B217FD2461003B9C0A /* Security.framework */; };
 		0ACE33B517FD246F003B9C0A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ACE33B417FD246F003B9C0A /* SystemConfiguration.framework */; };
 		5B0ADDAA188D87510013753B /* iWinGroupTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B0ADDA9188D87510013753B /* iWinGroupTest.m */; };
-		5B2603D3189E7CB100C0A335 /* OpenEars.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B2603D2189E7CB100C0A335 /* OpenEars.framework */; };
+		5B1B6A14189EA57F00BAF91A /* OpenEars.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B1B6A13189EA57F00BAF91A /* OpenEars.framework */; };
 		5B2603D8189E7EF400C0A335 /* iWinViewAndCreateProjectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2603D6189E7EF400C0A335 /* iWinViewAndCreateProjectViewController.m */; };
 		5B2603D9189E7EF400C0A335 /* iWinViewAndCreateProjectViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B2603D7189E7EF400C0A335 /* iWinViewAndCreateProjectViewController.xib */; };
 		5B2603DC189E871100C0A335 /* Project.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2603DB189E871100C0A335 /* Project.m */; };
+		5B2603E4189E963800C0A335 /* iWinProjectListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2603E2189E963800C0A335 /* iWinProjectListViewController.m */; };
+		5B2603E5189E963800C0A335 /* iWinProjectListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B2603E3189E963800C0A335 /* iWinProjectListViewController.xib */; };
 		5B3B6296188CB4E900C0E53E /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B3B6295188CB4E900C0E53E /* Group.m */; };
 		5B3B629A188CBDF600C0E53E /* iWinViewAndCreateGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B3B6299188CBDF600C0E53E /* iWinViewAndCreateGroupViewController.m */; };
 		5B3B62AE188CCB7000C0E53E /* iWinViewAndCreateGroupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B3B62AD188CCB7000C0E53E /* iWinViewAndCreateGroupViewController.xib */; };
@@ -239,20 +241,6 @@
 			remoteGlobalIDString = 0A04455517F3825C000FF2A0;
 			remoteInfo = MeetingBuilder;
 		};
-		79F59D15186176E8009E2C78 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 79F59D10186176E6009E2C78 /* TapkuLibrary.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D2AAC07E0554694100DB518D;
-			remoteInfo = TapkuLibrary;
-		};
-		79F59D17186176E8009E2C78 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 79F59D10186176E6009E2C78 /* TapkuLibrary.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 3B45DDF1134C736600D24C1A;
-			remoteInfo = LogicTests;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -366,12 +354,15 @@
 		0ACE33B417FD246F003B9C0A /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		5B0ADDA8188D87510013753B /* iWinGroupTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinGroupTest.h; sourceTree = "<group>"; };
 		5B0ADDA9188D87510013753B /* iWinGroupTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinGroupTest.m; sourceTree = "<group>"; };
-		5B2603D2189E7CB100C0A335 /* OpenEars.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenEars.framework; path = "../../../../../Downloads/OpenEarsDistribution 2/Framework/OpenEars.framework"; sourceTree = "<group>"; };
+		5B1B6A13189EA57F00BAF91A /* OpenEars.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = OpenEars.framework; sourceTree = "<group>"; };
 		5B2603D5189E7EF400C0A335 /* iWinViewAndCreateProjectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinViewAndCreateProjectViewController.h; sourceTree = "<group>"; };
 		5B2603D6189E7EF400C0A335 /* iWinViewAndCreateProjectViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinViewAndCreateProjectViewController.m; sourceTree = "<group>"; };
 		5B2603D7189E7EF400C0A335 /* iWinViewAndCreateProjectViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iWinViewAndCreateProjectViewController.xib; sourceTree = "<group>"; };
 		5B2603DA189E871100C0A335 /* Project.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Project.h; sourceTree = "<group>"; };
 		5B2603DB189E871100C0A335 /* Project.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Project.m; sourceTree = "<group>"; };
+		5B2603E1189E963800C0A335 /* iWinProjectListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinProjectListViewController.h; sourceTree = "<group>"; };
+		5B2603E2189E963800C0A335 /* iWinProjectListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinProjectListViewController.m; sourceTree = "<group>"; };
+		5B2603E3189E963800C0A335 /* iWinProjectListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iWinProjectListViewController.xib; sourceTree = "<group>"; };
 		5B3B6294188CB4E900C0E53E /* Group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Group.h; sourceTree = "<group>"; };
 		5B3B6295188CB4E900C0E53E /* Group.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Group.m; sourceTree = "<group>"; };
 		5B3B6298188CBDF600C0E53E /* iWinViewAndCreateGroupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinViewAndCreateGroupViewController.h; sourceTree = "<group>"; };
@@ -399,7 +390,6 @@
 		79D513CE181F9F9E00C79B71 /* iWinNoteListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinNoteListViewController.m; sourceTree = "<group>"; };
 		79D513CF181F9F9E00C79B71 /* iWinNoteListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iWinNoteListViewController.xib; sourceTree = "<group>"; };
 		79F59D0E1861768F009E2C78 /* TapkuLibrary.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TapkuLibrary.bundle; sourceTree = "<group>"; };
-		79F59D10186176E6009E2C78 /* TapkuLibrary.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TapkuLibrary.xcodeproj; path = "../../tapkulibrary-master/src/TapkuLibrary.xcodeproj"; sourceTree = "<group>"; };
 		79FCDF0918622909008345B3 /* TKCalendarDayEventView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TKCalendarDayEventView.h; path = "../tapkulibrary-master/src/TapkuLibrary/TKCalendarDayEventView.h"; sourceTree = "<group>"; };
 		79FCDF0A18622909008345B3 /* TKCalendarDayEventView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = TKCalendarDayEventView.m; path = "../tapkulibrary-master/src/TapkuLibrary/TKCalendarDayEventView.m"; sourceTree = "<group>"; };
 		79FCDF0B18622909008345B3 /* TKCalendarDayView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TKCalendarDayView.h; path = "../tapkulibrary-master/src/TapkuLibrary/TKCalendarDayView.h"; sourceTree = "<group>"; };
@@ -558,7 +548,7 @@
 				0A04455C17F3825D000FF2A0 /* Foundation.framework in Frameworks */,
 				0A04455E17F3825D000FF2A0 /* CoreGraphics.framework in Frameworks */,
 				0A04456017F3825D000FF2A0 /* CoreData.framework in Frameworks */,
-				5B2603D3189E7CB100C0A335 /* OpenEars.framework in Frameworks */,
+				5B1B6A14189EA57F00BAF91A /* OpenEars.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -604,7 +594,6 @@
 				0A8C13A5187DEA53005A25DE /* libz.1.1.3.dylib */,
 				0A8C13A3187DEA43005A25DE /* CoreLocation.framework */,
 				0A8C13A1187DEA07005A25DE /* Parse.framework */,
-				79F59D10186176E6009E2C78 /* TapkuLibrary.xcodeproj */,
 				79753AA61861095F0015098B /* MapKit.framework */,
 				79753AA71861095F0015098B /* QuartzCore.framework */,
 				0A97EDA8184169ED00160B5A /* AudioToolbox.framework */,
@@ -626,6 +615,7 @@
 		0A04456117F3825D000FF2A0 /* MeetingBuilder */ = {
 			isa = PBXGroup;
 			children = (
+				5B2603DD189E95C700C0A335 /* ProjectList */,
 				5B2603D4189E7E5A00C0A335 /* ViewAndCreateProject */,
 				DE06072E189DF13200EF0059 /* Framework */,
 				0A9C04EE189DA9EB00C4BCE9 /* LargeDefaultCell */,
@@ -971,6 +961,16 @@
 			name = ViewAndCreateProject;
 			sourceTree = "<group>";
 		};
+		5B2603DD189E95C700C0A335 /* ProjectList */ = {
+			isa = PBXGroup;
+			children = (
+				5B2603E1189E963800C0A335 /* iWinProjectListViewController.h */,
+				5B2603E2189E963800C0A335 /* iWinProjectListViewController.m */,
+				5B2603E3189E963800C0A335 /* iWinProjectListViewController.xib */,
+			);
+			name = ProjectList;
+			sourceTree = "<group>";
+		};
 		5B3B6297188CBDBE00C0E53E /* ViewAndCreateGroup */ = {
 			isa = PBXGroup;
 			children = (
@@ -1019,15 +1019,6 @@
 				79D513CF181F9F9E00C79B71 /* iWinNoteListViewController.xib */,
 			);
 			name = NoteList;
-			sourceTree = "<group>";
-		};
-		79F59D11186176E6009E2C78 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				79F59D16186176E8009E2C78 /* libTapkuLibrary.a */,
-				79F59D18186176E8009E2C78 /* LogicTests.xctest */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		79FCE013186229A8008345B3 /* TapkuSrcFiles */ = {
@@ -1171,7 +1162,7 @@
 		DE06072E189DF13200EF0059 /* Framework */ = {
 			isa = PBXGroup;
 			children = (
-				5B2603D2189E7CB100C0A335 /* OpenEars.framework */,
+				5B1B6A13189EA57F00BAF91A /* OpenEars.framework */,
 				DE06072F189DF13200EF0059 /* AcousticModelEnglish.bundle */,
 				DE060730189DF13200EF0059 /* AcousticModelSpanish.bundle */,
 				DE060732189DF13200EF0059 /* Slt.framework */,
@@ -1245,12 +1236,6 @@
 			mainGroup = 0A04454D17F3825C000FF2A0;
 			productRefGroup = 0A04455717F3825C000FF2A0 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 79F59D11186176E6009E2C78 /* Products */;
-					ProjectRef = 79F59D10186176E6009E2C78 /* TapkuLibrary.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				0A04455517F3825C000FF2A0 /* MeetingBuilder */,
@@ -1258,23 +1243,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		79F59D16186176E8009E2C78 /* libTapkuLibrary.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libTapkuLibrary.a;
-			remoteRef = 79F59D15186176E8009E2C78 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		79F59D18186176E8009E2C78 /* LogicTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = LogicTests.xctest;
-			remoteRef = 79F59D17186176E8009E2C78 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		0A04455417F3825C000FF2A0 /* Resources */ = {
@@ -1309,6 +1277,7 @@
 				0A04457017F3825D000FF2A0 /* Default@2x.png in Resources */,
 				5B3B62AE188CCB7000C0E53E /* iWinViewAndCreateGroupViewController.xib in Resources */,
 				0A04457217F3825D000FF2A0 /* Default-568h@2x.png in Resources */,
+				5B2603E5189E963800C0A335 /* iWinProjectListViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1394,6 +1363,7 @@
 				79FCDFCC1862295E008345B3 /* TKLabelTextViewCell.m in Sources */,
 				79FCDFCD1862295E008345B3 /* TKLoadingView.h in Sources */,
 				79FCDFCE1862295E008345B3 /* TKLoadingView.m in Sources */,
+				5B2603E4189E963800C0A335 /* iWinProjectListViewController.m in Sources */,
 				79FCDFCF1862295E008345B3 /* TKNetworkQueue.h in Sources */,
 				79FCDFD01862295E008345B3 /* TKNetworkQueue.m in Sources */,
 				79FCDFD11862295E008345B3 /* TKProgressAlertView.h in Sources */,
@@ -1606,11 +1576,8 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					/Users/csse/Documents/CSSE371/Section04/MeetingBuilder/MeetingBuilder/Framework,
-					/Users/csse/Documents/CSSE371/Section04/MeetingBuilder,
-					/Users/Alpha/Documents/Section04/MeetingBuilder/MeetingBuilder/Framework,
-					"/Users/brodielockard/Downloads/OpenEarsDistribution\\ 2/Framework",
+					/Users/brodielockard/Documents/Section04/MeetingBuilder/MeetingBuilder,
+					/Users/brodielockard/Documents/Section04/MeetingBuilder/MeetingBuilder/Framework,
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MeetingBuilder/MeetingBuilder-Prefix.pch";
@@ -1635,14 +1602,8 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					/Users/csse/Downloads/OpenEarsDistribution/Framework,
-					/Users/csse/Documents/CSSE371/Section04/MeetingBuilder/MeetingBuilder/Framework,
-					/Users/richard/csse374_JrProject/MeetingBuilder/MeetingBuilder/Framework,
-					/Users/csse/Documents/Section04/MeetingBuilder/MeetingBuilder/Framework,
-					/Users/csse/Documents/CSSE371/Section04/MeetingBuilder,
-					/Users/Alpha/Documents/Section04/MeetingBuilder/MeetingBuilder/Framework,
-					"/Users/brodielockard/Downloads/OpenEarsDistribution\\ 2/Framework",
+					/Users/brodielockard/Documents/Section04/MeetingBuilder/MeetingBuilder,
+					/Users/brodielockard/Documents/Section04/MeetingBuilder/MeetingBuilder/Framework,
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MeetingBuilder/MeetingBuilder-Prefix.pch";

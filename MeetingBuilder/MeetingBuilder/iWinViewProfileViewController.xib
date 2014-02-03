@@ -9,7 +9,6 @@
                 <outlet property="cancel" destination="jIF-p9-cSL" id="Bjz-fh-0rj"/>
                 <outlet property="companyTextField" destination="GcB-MD-exq" id="B3p-bi-Iwc"/>
                 <outlet property="createGroup" destination="zfa-Dy-0Yo" id="GON-Lv-RSB"/>
-                <outlet property="createProject" destination="hBg-mX-SHd" id="w9r-ux-svd"/>
                 <outlet property="displayNameTextField" destination="0c7-j4-81s" id="JVe-04-Ifk"/>
                 <outlet property="editProfile" destination="Ubq-dz-p6v" id="Ppf-9f-uUr"/>
                 <outlet property="emailTextField" destination="b6Z-LQ-axq" id="KXJ-Ng-sPc"/>
@@ -17,6 +16,7 @@
                 <outlet property="phoneTextField" destination="ITL-P1-W1p" id="wv9-fH-Ryi"/>
                 <outlet property="titleTextField" destination="bzi-iO-w9p" id="jUB-3X-O1R"/>
                 <outlet property="view" destination="2" id="3"/>
+                <outlet property="viewProjects" destination="hBg-mX-SHd" id="jC3-kO-RvG"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -159,12 +159,12 @@
                     <rect key="frame" x="386" y="898" width="382" height="39"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <color key="backgroundColor" red="0.24965362260000001" green="0.69000509509999997" blue="0.055084534339999998" alpha="1" colorSpace="calibratedRGB"/>
-                    <state key="normal" title="Create a Project">
+                    <state key="normal" title="View Projects">
                         <color key="titleColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <color key="titleShadowColor" red="0.24965362260000001" green="0.69000509509999997" blue="0.055084534339999998" alpha="1" colorSpace="calibratedRGB"/>
                     </state>
                     <connections>
-                        <action selector="onCreateProject:" destination="-1" eventType="touchUpInside" id="v5Z-6I-MSL"/>
+                        <action selector="onViewProjects:" destination="-1" eventType="touchUpInside" id="93b-lZ-C2f"/>
                     </connections>
                 </button>
             </subviews>

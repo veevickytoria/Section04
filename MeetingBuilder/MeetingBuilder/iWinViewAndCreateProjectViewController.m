@@ -61,6 +61,7 @@
     NSMutableArray *meetingIDJsonDictionary = [[NSMutableArray alloc] init];
     NSMutableArray *notesIDJsonDictionary = [[NSMutableArray alloc] init];
     NSMutableArray *userIDJsonDictionary = [[NSMutableArray alloc] init];
+
     for (int i = 0; i<[self.userList count]; i++)
     {
         Contact *c = (Contact *)self.userList[i];
@@ -99,7 +100,7 @@
     NSError *jsonParsingError = nil;
     NSDictionary *deserializedDictionary = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments|NSJSONReadingMutableContainers error:&jsonParsingError];
     self.projectID = [[deserializedDictionary objectForKey:@"projectID"] integerValue];
-    
+    NSLog(@"%d", self.projectID);    
 }
 
 - (IBAction)onClickSave:(UIButton *)sender {

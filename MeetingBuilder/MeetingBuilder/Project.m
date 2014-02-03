@@ -14,5 +14,6 @@
 @dynamic projectTitle;
 @dynamic members;
 @dynamic tasks;
+@dynamic userID;
 
 @end

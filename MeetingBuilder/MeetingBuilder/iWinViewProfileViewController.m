@@ -8,6 +8,7 @@
 
 #import "iWinViewProfileViewController.h"
 #import "iWinViewAndCreateGroupViewController.h"
+#import "iWinProjectListViewController.h"
 #import "iWinViewAndCreateProjectViewController.h"
 #import "iWinBackEndUtility.h"
 #import "iWinAppDelegate.h"
@@ -19,7 +20,7 @@
 @property (nonatomic) Contact *contact;
 @property (nonatomic) NSInteger userID;
 @property (strong, nonatomic) iWinViewAndCreateGroupViewController *createGroupVC;
-@property (strong, nonatomic) iWinViewAndCreateProjectViewController *createProjectVC;
+@property (strong, nonatomic) iWinProjectListViewController *viewProjectsVC;
 @property (nonatomic) iWinBackEndUtility *backEndUtility;
 @end
 
@@ -144,14 +145,14 @@
     self.createGroupVC.view.superview.bounds = CGRectMake(0,0,768,1003);
 }
 
-- (IBAction)onCreateProject:(id)sender {
-    self.createProjectVC = [[iWinViewAndCreateProjectViewController alloc] initWithNibName:@"iWinViewAndCreateProjectViewController" bundle:nil withUserID:self.userID withProjectID:-1];
+- (IBAction)onViewProjects:(id)sender {
+    self.viewProjectsVC = [[iWinProjectListViewController alloc] initWithNibName:@"iWinProjectListViewController" bundle:nil withUserID:self.userID];
     
-    [self.createProjectVC setModalPresentationStyle:UIModalPresentationPageSheet];
-    [self.createProjectVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+    [self.viewProjectsVC setModalPresentationStyle:UIModalPresentationPageSheet];
+    [self.viewProjectsVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     
-    [self presentViewController:self.createProjectVC animated:YES completion:nil];
-    self.createProjectVC.view.superview.bounds = CGRectMake(0,0,768,1003);
+    [self presentViewController:self.viewProjectsVC animated:YES completion:nil];
+    self.viewProjectsVC.view.superview.bounds = CGRectMake(0,0,768,1003);
 }
 
 -(IBAction)onEditProfile:(id)sender
