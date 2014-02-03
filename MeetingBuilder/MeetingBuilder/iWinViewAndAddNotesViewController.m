@@ -9,14 +9,16 @@
 #import "iWinViewAndAddNotesViewController.h"
 #import "iWinBackEndUtility.h"
 #import <QuartzCore/QuartzCore.h>
+#import "Contact.h"
 
 @interface iWinViewAndAddNotesViewController ()
 @property (nonatomic) NSInteger noteID;
 @property (nonatomic) NSString *noteDate;
 @property (nonatomic) NSInteger userID;
-@property (nonatomic) NSArray *sharedUserIDs;
+@property (nonatomic) NSMutableArray *usersSharingWithMe;
 @property (nonatomic) BOOL inEditMode;
 @property (nonatomic) iWinAddUsersViewController *userViewController;
+@property (nonatomic) iWinMergeNoteViewController *mergeViewController;
 @property (nonatomic) iWinBackEndUtility *backendUtility;
 @end
 
@@ -37,6 +39,7 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    self.usersSharingWithMe = [[NSMutableArray alloc] init];
     self.backendUtility = [[iWinBackEndUtility alloc] init];
     self.noteField.layer.borderColor = [[UIColor blackColor] CGColor];
     self.noteField.layer.borderWidth = 0.7f;
@@ -134,8 +137,8 @@
 // Override to support editing the table view.
 - (IBAction)confirmDeleteAlert
 {
-        UIAlertView *deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this note?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
-        [deleteAlertView show];
+    UIAlertView *deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this note?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
+    [deleteAlertView show];
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -151,7 +154,7 @@
 {
     NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Note/%d", self.noteID];
     NSError * error = [self.backendUtility deleteRequestForUrl:url];
-
+    
     if (!error)
     {
         [self.addNoteDelegate refreshNoteList];
@@ -161,7 +164,7 @@
 
 - (void)saveNote
 {
-
+    
     NSString *title = [[self.titleField text] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     NSString *content = [[self.noteField text] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     
@@ -186,7 +189,7 @@
         [self.addNoteDelegate refreshNoteList];
         [self dismissViewControllerAnimated:YES completion:Nil];
     }
-
+    
 }
 
 
@@ -215,22 +218,22 @@
 
 - (IBAction)cancelButton:(id)sender
 {
-      [self dismissViewControllerAnimated:YES completion:Nil];
+    [self dismissViewControllerAnimated:YES completion:Nil];
 }
 
 - (void)loadSharedUsersIntoTable
 {
     NSArray *names = [NSArray arrayWithObjects:@"John McCormack", @"Dharmin Shah", @"Gordon Hazzard", nil];
-    self.sharedUserIDs = [NSArray arrayWithObjects:@"1", @"2", @"3", nil];
+  //  self.sharedUserIDs = [NSArray arrayWithObjects:@"1", @"2", @"3", nil];
     
     // TO DO: parse JSON and set fille names and sharedUserIDs arrays
     
     // load names into list
     for (NSString *name in names) {
-  //      self.userViewController.userListTableView
+        //      self.userViewController.userListTableView
         
-    //    [self.noteList addObject:];
-     //   [self.noteIDs addObject:];
+        //    [self.noteList addObject:];
+        //   [self.noteIDs addObject:];
     }
 }
 
@@ -247,17 +250,38 @@
     self.userViewController.userDelegate = self;
     [self presentViewController:self.userViewController animated:YES completion:nil];
     self.userViewController.view.superview.bounds = CGRectMake(0,0,768,1003);
+    
+    
 }
 
 
 - (IBAction)mergeNotesButton:(id)sender {
     
+    self.mergeViewController = [[iWinMergeNoteViewController alloc] init];
+    [self.mergeViewController setModalPresentationStyle:UIModalPresentationPageSheet];
+    [self.mergeViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+    self.mergeViewController.userDelegate = self;
+    [self presentViewController:self.mergeViewController animated:YES completion:nil];
+    self.mergeViewController.view.superview.bounds = CGRectMake(0,0,768,1003);
+
+    
+    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Note/Sharing/%d", self.userID];
+    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
+    NSMutableArray *names = [[NSMutableArray alloc] init];
+    
+    // parse json into variables --> Array of dictionaries
+    for (NSArray *sharingUser in deserializedDictionary ) {
+        [self.usersSharingWithMe addObject:sharingUser];
+        //  [names addObject:[sharingUser object]];
+    }
 }
 
 
 -(void)saveMergeClicked{
     [self dismissViewControllerAnimated:YES completion:Nil];
-
+    
 }
 -(void)cancelMergeClicked
 {
@@ -283,7 +307,18 @@
 
 -(void) selectedUsers:(NSMutableArray *)userList
 {
+    NSArray *keys = [NSArray arrayWithObjects:@"noteID", @"users", nil];
+    NSMutableArray *users = [[NSMutableArray alloc] init];
+    for (Contact *c in userList) {
+        NSArray *uID = [NSArray arrayWithObjects:@"userID", nil];
+        NSArray *uVal = [NSArray arrayWithObjects:[c.userID stringValue], nil];
+        NSDictionary *u = [NSDictionary dictionaryWithObjects:uVal forKeys:uID];
+        [users addObject:u];
+    }
     
+    NSArray *objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.noteID] stringValue], users, nil];
+    NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+    [self.backendUtility postRequestForUrl:@"http://csse371-04.csse.rose-hulman.edu/Note/Sharing/" withDictionary: jsonDictionary];
 }
 
 @end

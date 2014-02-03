@@ -7,7 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface iWinMergeNoteViewController : UIViewController
-
+@protocol UserDelegate <NSObject>
+@end
+@interface iWinMergeNoteViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@property (nonatomic) id<UserDelegate> userDelegate;
+@property (nonatomic) IBOutlet UITableView *userListTable;
+@property (nonatomic) IBOutlet UITableView *noteListTable;
+@property (nonatomic) NSMutableArray *notes;
+@property (nonatomic) NSMutableArray *names;
+@property (weak, nonatomic) IBOutlet UIButton *cancelButton;
 @end
