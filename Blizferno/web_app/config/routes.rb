@@ -84,6 +84,8 @@ WebApp::Application.routes.draw do
 
   get "preferences/home"
 
+  get "documents/index"
+
   root :to => 'login#index'
 
 
