@@ -11,7 +11,7 @@
 @end
 @interface iWinMergeNoteViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 @property (nonatomic) id<UserDelegate> userDelegate;
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil noteContent:(NSString *)content userNames:(NSArray *)names notes:(NSArray *)notes;
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil noteContent:(NSString *)content userNames:(NSMutableArray *)names notes:(NSMutableArray *)notes noteID:(NSInteger)noteID;
 @property (nonatomic) IBOutlet UITableView *userListTable;
 @property (nonatomic) IBOutlet UITableView *noteListTable;
 @property (nonatomic) NSMutableArray *notes;

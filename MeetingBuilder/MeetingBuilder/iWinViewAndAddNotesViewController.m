@@ -273,7 +273,7 @@
     }
     
     
-    self.mergeViewController = [[iWinMergeNoteViewController alloc] initWithNibName:@"iWinMergeNoteViewController" bundle:nil noteContent:self.noteField.text userNames:names notes:notes] ;
+    self.mergeViewController = [[iWinMergeNoteViewController alloc] initWithNibName:@"iWinMergeNoteViewController" bundle:nil noteContent:self.noteField.text userNames:names notes:notes noteID:self.noteID] ;
     [self.mergeViewController setModalPresentationStyle:UIModalPresentationPageSheet];
     [self.mergeViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     self.mergeViewController.userDelegate = self;

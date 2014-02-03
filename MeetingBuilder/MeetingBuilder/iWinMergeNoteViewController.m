@@ -13,11 +13,12 @@
 @property (nonatomic) iWinBackEndUtility *backendUtility;
 @property (nonatomic) NSMutableArray *notesForTable;
 @property (nonatomic) NSString *noteContent;
+@property (nonatomic) NSInteger *currentNoteID;
 @end
 
 @implementation iWinMergeNoteViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil noteContent:(NSString *)content userNames:(NSMutableArray *)names notes:(NSMutableArray *)notes
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil noteContent:(NSString *)content userNames:(NSMutableArray *)names notes:(NSMutableArray *)notes noteID:(NSInteger)noteID
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
@@ -26,6 +27,7 @@
     self.noteContent = content;
     self.notes = notes;
     self.names = names;
+    self.currentNoteID = noteID;
     return self;
 }
 
@@ -112,7 +114,7 @@
     
         // next update the orignal note
         NSArray *keys = [NSArray arrayWithObjects:@"noteID", @"field", @"value", nil];
-        NSArray *objects = [NSArray arrayWithObjects:[NSNumber numberWithInt:noteID], @"content", merged, nil];
+        NSArray *objects = [NSArray arrayWithObjects:[NSString stringWithFormat:@"%d", self.currentNoteID], @"content", merged, nil];
         NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
         
         NSDictionary *deserializedDictionary2 = [self.backendUtility putRequestForUrl:@"http://csse371-04.csse.rose-hulman.edu/Note/" withDictionary:jsonDictionary];
