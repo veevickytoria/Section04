@@ -18,7 +18,7 @@
 
 @implementation iWinMergeNoteViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil noteContent:(NSString *)content userNames:(NSMutableArray *)names notes:(NSMutableArray *)notes noteID:(NSInteger)noteID callBack:(SEL)callBack
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil noteContent:(NSString *)content userNames:(NSMutableArray *)names notes:(NSMutableArray *)notes noteID:(NSInteger)noteID
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
@@ -56,6 +56,7 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
+    NSInteger i = indexPath.row;
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
@@ -84,7 +85,7 @@
     {
         return self.names.count;
     }
-    return self.notes.count;
+    return self.notesForTable.count;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -96,7 +97,7 @@
         for (NSDictionary *d in noteDictionaries) {
             [self.notesForTable addObject:[d objectForKey:@"noteTitle"]];
         }
-        [self refreshNoteList];
+        [self.noteListTable reloadData];
     }
     // otherwise perform the merge
     else {
@@ -119,6 +120,7 @@
         
         NSDictionary *deserializedDictionary2 = [self.backendUtility putRequestForUrl:@"http://csse371-04.csse.rose-hulman.edu/Note/" withDictionary:jsonDictionary];
         if (deserializedDictionary2) {
+            [self.mergeNoteDelegate loadNoteIntoView];
             [self dismissViewControllerAnimated:YES completion:Nil];
         }
     }

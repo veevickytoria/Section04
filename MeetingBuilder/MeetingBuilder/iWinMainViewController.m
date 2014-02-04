@@ -9,8 +9,6 @@
 #import "iWinMainViewController.h"
 #import "iWinHomeScreenViewController.h"
 #import <QuartzCore/QuartzCore.h>
-//#import <TapkuLibrary/TKCalendarDayView.h>
-//#import <TapkuLibrary/TKCalendarDayEventView.h>
 #import "iWinPopulateDatabase.h"
 #import "NSDate+TKCategory.h"
 #import "NSDate+CalendarGrid.h"

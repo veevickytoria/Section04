@@ -273,10 +273,10 @@
     }
     
     
-    self.mergeViewController = [[iWinMergeNoteViewController alloc] initWithNibName:@"iWinMergeNoteViewController" bundle:nil noteContent:self.noteField.text userNames:names notes:notes noteID:self.noteID] ;
+    self.mergeViewController = [[iWinMergeNoteViewController alloc] initWithNibName:@"iWinMergeNoteViewController" bundle:nil noteContent:self.noteField.text userNames:names notes:notes noteID:self.noteID];
     [self.mergeViewController setModalPresentationStyle:UIModalPresentationPageSheet];
     [self.mergeViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-    self.mergeViewController.userDelegate = self;
+    self.mergeViewController.mergeNoteDelegate = self;
     [self presentViewController:self.mergeViewController animated:YES completion:nil];
     self.mergeViewController.view.superview.bounds = CGRectMake(0,0,768,1003);
 }

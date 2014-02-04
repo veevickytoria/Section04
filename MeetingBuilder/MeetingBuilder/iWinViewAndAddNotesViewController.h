@@ -19,7 +19,7 @@
 @end
 
 
-@interface iWinViewAndAddNotesViewController : UIViewController <UIAlertViewDelegate, UserDelegate>
+@interface iWinViewAndAddNotesViewController : UIViewController <UIAlertViewDelegate, UserDelegate, MergeNoteDelegate>
 @property (nonatomic) id<ViewAddNoteDelegate> addNoteDelegate;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withNoteID:(NSInteger)noteID withUserID:(NSInteger)userID;
 - (IBAction)saveButton:(id)sender;

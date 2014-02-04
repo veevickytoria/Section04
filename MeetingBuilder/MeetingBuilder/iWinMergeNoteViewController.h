@@ -7,10 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-@protocol UserDelegate <NSObject>
+
+@protocol MergeNoteDelegate <NSObject>
+-(void)loadNoteIntoView;
 @end
 @interface iWinMergeNoteViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
-@property (nonatomic) id<UserDelegate> userDelegate;
+@property (nonatomic) id<MergeNoteDelegate> mergeNoteDelegate;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil noteContent:(NSString *)content userNames:(NSMutableArray *)names notes:(NSMutableArray *)notes noteID:(NSInteger)noteID;
 @property (nonatomic) IBOutlet UITableView *userListTable;
 @property (nonatomic) IBOutlet UITableView *noteListTable;
