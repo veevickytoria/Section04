@@ -14,6 +14,7 @@
 @property (nonatomic) NSMutableArray *notesForTable;
 @property (nonatomic) NSString *noteContent;
 @property (nonatomic) NSInteger currentNoteID;
+@property (nonatomic) NSInteger currentUserRowIndex;
 @end
 
 @implementation iWinMergeNoteViewController
@@ -91,9 +92,12 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    NSMutableArray *noteDictionaries = [self.notes objectAtIndex:indexPath.row];
+    NSMutableArray *noteDictionaries;
+    
     if ([tableView isEqual:self.userListTable])
     {
+        self.currentUserRowIndex = indexPath.row;
+        noteDictionaries = [self.notes objectAtIndex:self.currentUserRowIndex];
         self.notesForTable = [[NSMutableArray alloc]init];
         for (NSDictionary *d in noteDictionaries) {
             [self.notesForTable addObject:[d objectForKey:@"noteTitle"]];
@@ -102,8 +106,8 @@
     }
     // otherwise perform the merge
     else {
-        
-         NSInteger noteID = [[[noteDictionaries objectAtIndex:indexPath.row] objectForKey:@"noteID"] integerValue];
+        noteDictionaries = [self.notes objectAtIndex:self.currentUserRowIndex];
+        NSInteger noteID = [[[noteDictionaries objectAtIndex:indexPath.row] objectForKey:@"noteID"] integerValue];
         
         // first get note content of the note to merge with
         NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Note/%d", noteID];
