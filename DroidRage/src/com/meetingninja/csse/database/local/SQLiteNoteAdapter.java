@@ -69,7 +69,7 @@ public class SQLiteNoteAdapter extends SQLiteHelper {
 		cv.put(KEY_CONTENT, note.getContent());
 		cv.put(KEY_DESC, note.getDescription());
 		cv.put(KEY_CREATED_BY, note.getCreatedBy());
-		
+
 		long insertID = mDb.insert(TABLE_NAME, null, cv);
 		Cursor c = mDb.query(TABLE_NAME, allColumns, KEY_ID + "=" + insertID,
 				null, null, null, null);

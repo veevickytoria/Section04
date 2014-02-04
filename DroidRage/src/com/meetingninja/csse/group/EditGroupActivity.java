@@ -94,26 +94,27 @@ public class EditGroupActivity extends Activity implements TokenListener {
 				k--;
 			}
 		}
-		mListView.setDismissCallback(new de.timroes.android.listview.EnhancedListView.OnDismissCallback() {
-			@Override
-			public EnhancedListView.Undoable onDismiss(
-					EnhancedListView listView, final int position) {
-
-				final User item = mUserAdapter.getItem(position);
-				mUserAdapter.remove(item);
-				return new EnhancedListView.Undoable() {
+		mListView
+				.setDismissCallback(new de.timroes.android.listview.EnhancedListView.OnDismissCallback() {
 					@Override
-					public void undo() {
-						mUserAdapter.insert(item, position);
-					}
+					public EnhancedListView.Undoable onDismiss(
+							EnhancedListView listView, final int position) {
 
-					@Override
-					public String getTitle() {
-						return "Member deleted";
+						final User item = mUserAdapter.getItem(position);
+						mUserAdapter.remove(item);
+						return new EnhancedListView.Undoable() {
+							@Override
+							public void undo() {
+								mUserAdapter.insert(item, position);
+							}
+
+							@Override
+							public String getTitle() {
+								return "Member deleted";
+							}
+						};
 					}
-				};
-			}
-		});
+				});
 		mListView.setUndoHideDelay(5000);
 		mListView.setOnItemClickListener(new OnItemClickListener() {
 

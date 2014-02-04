@@ -29,7 +29,6 @@ public class EditProfileActivity extends Activity {
 	private User displayedUser;
 	private SmartImageView mUserImage;
 
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -45,11 +44,11 @@ public class EditProfileActivity extends Activity {
 			displayedUser = (User) extras.getParcelable(Keys.User.PARCEL);
 		} else {
 			Log.v(TAG, "Problem getting user info");
-			//			displayedUser.setID(session.getUserID());
+			// displayedUser.setID(session.getUserID());
 		}
 		setUser(displayedUser);
 
-		//		fetchUserInfo(displayedUser.getID());
+		// fetchUserInfo(displayedUser.getID());
 
 	}
 
@@ -106,16 +105,18 @@ public class EditProfileActivity extends Activity {
 		return true;
 	}
 
-	private void save(){
-		if(mName.getText() == null || mName.getText().toString().isEmpty()){
-			//TODO: stuff
+	private void save() {
+		if (mName.getText() == null || mName.getText().toString().isEmpty()) {
+			// TODO: stuff
 			return;
 		}
-		if(mEmail.getText() == null || mEmail.getText().toString().isEmpty()){
-			//TODO: stuff
+		if (mEmail.getText() == null || mEmail.getText().toString().isEmpty()) {
+			// TODO: stuff
 			return;
 		}
-		displayedUser.setDisplayName(mName.getText().toString());//mUserImage = (SmartImageView) findViewById(R.id.view_prof_pic);
+		displayedUser.setDisplayName(mName.getText().toString());// mUserImage =
+																	// (SmartImageView)
+																	// findViewById(R.id.view_prof_pic);
 		displayedUser.setCompany(mCompany.getText().toString());
 		displayedUser.setTitle(mTitle.getText().toString());
 		displayedUser.setLocation(mLocation.getText().toString());
@@ -129,20 +130,20 @@ public class EditProfileActivity extends Activity {
 		finish();
 	}
 
-	private void dbSave(){
+	private void dbSave() {
 		HashMap<String, String> fields = new HashMap<String, String>();
 		fields.put(Keys.User.NAME, displayedUser.getDisplayName());
 		fields.put(Keys.User.COMPANY, displayedUser.getCompany());
 		fields.put(Keys.User.LOCATION, displayedUser.getLocation());
-		//		fields.put(Keys.User.EMAIL, displayedUser.getEmail());
+		// fields.put(Keys.User.EMAIL, displayedUser.getEmail());
 		fields.put(Keys.User.PHONE, displayedUser.getPhone());
 		UserUpdateTask updater = new UserUpdateTask(fields);
 		updater.execute(displayedUser.getID());
 	}
 
 	private void setupViews() {
-		//		informationView = findViewById(R.id.profile_container);
-		//		emptyView = findViewById(android.R.id.empty);
+		// informationView = findViewById(R.id.profile_container);
+		// emptyView = findViewById(android.R.id.empty);
 
 		mUserImage = (SmartImageView) findViewById(R.id.view_prof_pic);
 
@@ -171,21 +172,21 @@ public class EditProfileActivity extends Activity {
 			mTitle.setText(user.getTitle());
 
 			mCompany.setText(user.getCompany());
-			//			StringBuilder sb = new StringBuilder();
-			//			if (!(user.getTitle().isEmpty() || user.getCompany().isEmpty())) {
-			//				if (!user.getTitle().isEmpty())
-			//					sb.append(user.getTitle());
-			//				if (!user.getTitle().isEmpty())
-			//					sb.append(", " + user.getCompany());
-			//				mTitleCompany.setText(sb);
-			//				mTitleCompany.setVisibility(View.VISIBLE);
-			//			} else {
-			//				mTitleCompany.setVisibility(View.GONE);
-			//			}
+			// StringBuilder sb = new StringBuilder();
+			// if (!(user.getTitle().isEmpty() || user.getCompany().isEmpty()))
+			// {
+			// if (!user.getTitle().isEmpty())
+			// sb.append(user.getTitle());
+			// if (!user.getTitle().isEmpty())
+			// sb.append(", " + user.getCompany());
+			// mTitleCompany.setText(sb);
+			// mTitleCompany.setVisibility(View.VISIBLE);
+			// } else {
+			// mTitleCompany.setVisibility(View.GONE);
+			// }
 
 			// set location
 			mLocation.setText(user.getLocation());
-
 
 			// set phone
 
@@ -195,14 +196,13 @@ public class EditProfileActivity extends Activity {
 			mTitle.setVisibility(View.GONE);
 			mCompany.setVisibility(View.GONE);
 			mLocation.setVisibility(View.GONE);
-			findViewById(R.id.profile_phone_row).setVisibility(
-					View.GONE);
+			findViewById(R.id.profile_phone_row).setVisibility(View.GONE);
 
 		}
 
 		// Swap visibility after loading information
-		//		emptyView.setVisibility(View.GONE);
-		//		informationView.setVisibility(View.VISIBLE);
+		// emptyView.setVisibility(View.GONE);
+		// informationView.setVisibility(View.VISIBLE);
 	}
 
 }

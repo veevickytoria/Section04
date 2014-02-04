@@ -27,7 +27,7 @@ public class Task extends Event implements Parcelable {
 	private String type; // title, description, isCompleted, deadline,
 							// compeltion criteria, assigned to
 	private ArrayList<User> members = new ArrayList<User>();
-	
+
 	public enum Type {
 		ASSIGNED_TO, ASSIGNED_FROM, I_CREATED
 	}
@@ -36,7 +36,7 @@ public class Task extends Event implements Parcelable {
 		Calendar c = Calendar.getInstance();
 		this.dateCreated = Long.toString(c.getTimeInMillis());
 		this.endTime = Long.toString(c.getTimeInMillis());
-		
+
 		// Required empty constructor
 	}
 
@@ -80,7 +80,7 @@ public class Task extends Event implements Parcelable {
 		this.dateAssigned = dateAssigned;
 	}
 
-	public ArrayList<User>getMembers () {
+	public ArrayList<User> getMembers() {
 		return members;
 	}
 
@@ -145,27 +145,27 @@ public class Task extends Event implements Parcelable {
 		if (another == null) {
 			return 1;
 		}
-		if(another instanceof Task){
+		if (another instanceof Task) {
 			return compareTo((Task) another);
 		}
 		return Long.valueOf(getEndTimeInMillis()).compareTo(
 				Long.valueOf(another.getEndTimeInMillis()));
 	}
-	
+
 	public int compareTo(Task another) {
 		if (another == null) {
 			return 1;
 		}
-		if(another.getIsCompleted() && !getIsCompleted()){
+		if (another.getIsCompleted() && !getIsCompleted()) {
 			return -1;
-		}else if(!another.getIsCompleted() && getIsCompleted()){
+		} else if (!another.getIsCompleted() && getIsCompleted()) {
 			return 1;
-		}else{
+		} else {
 			return Long.valueOf(getEndTimeInMillis()).compareTo(
 					Long.valueOf(another.getEndTimeInMillis()));
 		}
 	}
-	
+
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		// TODO Auto-generated method stub

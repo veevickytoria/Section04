@@ -32,13 +32,13 @@ public class AddContactTask implements AsyncResponse<List<Contact>> {
 	private static final String TAG = AddContactTask.class.getSimpleName();
 	private ContactAdder adder;
 	private UserListFragment frag;
-	
+
 	public AddContactTask(UserListFragment frag) {
-		this.frag=frag;
-		adder = new ContactAdder(this);	
+		this.frag = frag;
+		adder = new ContactAdder(this);
 	}
 
-	public void addContact(String contactID){
+	public void addContact(String contactID) {
 		this.adder.execute(contactID);
 	}
 
@@ -46,12 +46,12 @@ public class AddContactTask implements AsyncResponse<List<Contact>> {
 	public void processFinish(List<Contact> contacts) {
 		frag.setContacts(contacts);
 	}
-	
-	private class ContactAdder extends AsyncTask<String, Void, List<Contact>>{
-		
+
+	private class ContactAdder extends AsyncTask<String, Void, List<Contact>> {
+
 		private AsyncResponse<List<Contact>> delegate;
-		
-		public ContactAdder(AsyncResponse<List<Contact>> delegate){
+
+		public ContactAdder(AsyncResponse<List<Contact>> delegate) {
 			this.delegate = delegate;
 		}
 
@@ -66,18 +66,18 @@ public class AddContactTask implements AsyncResponse<List<Contact>> {
 			}
 			return contacts;
 		}
+
 		@Override
 		protected void onPostExecute(List<Contact> contacts) {
 			super.onPostExecute(contacts);
 			delegate.processFinish(contacts);
 		}
-		
+
 	}
 
-
-//	@Override
-//	protected void onCancelled() {
-//		super.onCancelled();
-//	}
+	// @Override
+	// protected void onCancelled() {
+	// super.onCancelled();
+	// }
 
 }

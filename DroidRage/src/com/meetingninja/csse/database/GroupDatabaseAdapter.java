@@ -44,7 +44,7 @@ public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
 	public static Uri.Builder getBaseUri() {
 		return Uri.parse(getBaseUrl()).buildUpon();
 	}
-	
+
 	public static Group getGroup(String groupID) throws IOException {
 		// Server URL setup
 		String _url = getBaseUri().appendPath(groupID).build().toString();
@@ -65,8 +65,8 @@ public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
 		return parseGroup(groupNode, new Group());
 	}
 
-	public static Group createGroup(Group g)
-			throws IOException, MalformedURLException {
+	public static Group createGroup(Group g) throws IOException,
+			MalformedURLException {
 		// Server URL setup
 		String _url = getBaseUri().build().toString();
 
@@ -107,16 +107,16 @@ public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
 		String response = getServerResponse(conn);
 
 		// prepare to get the id of the created Meeting
-//		Map<String, String> responseMap = new HashMap<String, String>();
+		// Map<String, String> responseMap = new HashMap<String, String>();
 
 		/*
 		 * result should get valid={"meetingID":"##"}
 		 */
 		String result = new String();
 		if (!response.isEmpty()) {
-//			responseMap = MAPPER.readValue(response,
-//					new TypeReference<HashMap<String, String>>() {
-//					});
+			// responseMap = MAPPER.readValue(response,
+			// new TypeReference<HashMap<String, String>>() {
+			// });
 			JsonNode groupNode = MAPPER.readTree(response);
 			if (!groupNode.has(Keys.Group.ID)) {
 				result = "invalid";
@@ -130,7 +130,6 @@ public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
 		conn.disconnect();
 		return g;
 	}
-
 
 	public static Group updateGroup(Group group) throws IOException {
 		ByteArrayOutputStream json = new ByteArrayOutputStream();
@@ -146,7 +145,7 @@ public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
 		jgen.close();
 		String payloadTitle = json.toString("UTF8");
 		ps.close();
-		
+
 		json = new ByteArrayOutputStream();
 		// this type of print stream allows us to get a string easily
 		ps = new PrintStream(json);
@@ -174,7 +173,7 @@ public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
 
 		return parseGroup(groupNode, new Group());
 	}
-	
+
 	private static String sendSingleEdit(String payload) throws IOException {
 		String _url = getBaseUri().build().toString();
 		URL url = new URL(_url);
@@ -185,9 +184,9 @@ public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
 		return getServerResponse(conn);
 
 	}
-	
+
 	public static Group parseGroup(JsonNode groupNode, Group g) {
-//		Group g = new Group();
+		// Group g = new Group();
 		String groupID = groupNode.get(Keys.Group.ID).asText();
 		if (groupID != null) {
 			g.setID(groupID);

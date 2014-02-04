@@ -12,89 +12,94 @@ import android.util.Log;
  * configuration changes.
  */
 public class BaseFragment extends Fragment {
-  private static final String TAG = BaseFragment.class.getSimpleName();
+	private static final String TAG = BaseFragment.class.getSimpleName();
 
-  /**
-   * Callback interface through which the fragment can report the task's
-   * progress and results back to the Activity.
-   */
-  public static interface TaskCallbacks {
-    public void onPreExecute();
-    public void onProgressUpdate(int percent);
-    public void onCancelled();
-    public void onPostExecute();
-  }
+	/**
+	 * Callback interface through which the fragment can report the task's
+	 * progress and results back to the Activity.
+	 */
+	public static interface TaskCallbacks {
+		public void onPreExecute();
 
-  private TaskCallbacks mCallbacks;
+		public void onProgressUpdate(int percent);
 
-  /**
-   * Android passes us a reference to the newly created Activity by calling this
-   * method after each configuration change.
-   */
-  @Override
-  public void onAttach(Activity activity) {
-    Log.i(TAG, "onAttach(Activity)");
-    super.onAttach(activity);
-    if (!(activity instanceof TaskCallbacks)) {
-      throw new IllegalStateException("Activity must implement the TaskCallbacks interface.");
-    }
+		public void onCancelled();
 
-    // Hold a reference to the parent Activity so we can report back the task's
-    // current progress and results.
-    mCallbacks = (TaskCallbacks) activity;
-  }
+		public void onPostExecute();
+	}
 
-  /**
-   * This method is called only once when the Fragment is first created.
-   */
-  @Override
-  public void onCreate(Bundle savedInstanceState) {
-    Log.i(TAG, "onCreate(Bundle)");
-    super.onCreate(savedInstanceState);
-    setRetainInstance(true);
-  }
+	private TaskCallbacks mCallbacks;
 
-  /**
-   * This method is <em>not</em> called when the Fragment is being retained
-   * across Activity instances.
-   */
-  @Override
-  public void onDestroy() {
-    Log.i(TAG, "onDestroy()");
-    super.onDestroy();
-  }
+	/**
+	 * Android passes us a reference to the newly created Activity by calling
+	 * this method after each configuration change.
+	 */
+	@Override
+	public void onAttach(Activity activity) {
+		Log.i(TAG, "onAttach(Activity)");
+		super.onAttach(activity);
+		if (!(activity instanceof TaskCallbacks)) {
+			throw new IllegalStateException(
+					"Activity must implement the TaskCallbacks interface.");
+		}
 
-  /************************/
-  /***** LOGS & STUFF *****/
-  /************************/
+		// Hold a reference to the parent Activity so we can report back the
+		// task's
+		// current progress and results.
+		mCallbacks = (TaskCallbacks) activity;
+	}
 
-  @Override
-  public void onActivityCreated(Bundle savedInstanceState) {
-    Log.i(TAG, "onActivityCreated(Bundle)");
-    super.onActivityCreated(savedInstanceState);
-  }
+	/**
+	 * This method is called only once when the Fragment is first created.
+	 */
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		Log.i(TAG, "onCreate(Bundle)");
+		super.onCreate(savedInstanceState);
+		setRetainInstance(true);
+	}
 
-  @Override
-  public void onStart() {
-    Log.i(TAG, "onStart()");
-    super.onStart();
-  }
+	/**
+	 * This method is <em>not</em> called when the Fragment is being retained
+	 * across Activity instances.
+	 */
+	@Override
+	public void onDestroy() {
+		Log.i(TAG, "onDestroy()");
+		super.onDestroy();
+	}
 
-  @Override
-  public void onResume() {
-    Log.i(TAG, "onResume()");
-    super.onResume();
-  }
+	/************************/
+	/***** LOGS & STUFF *****/
+	/************************/
 
-  @Override
-  public void onPause() {
-    Log.i(TAG, "onPause()");
-    super.onPause();
-  }
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		Log.i(TAG, "onActivityCreated(Bundle)");
+		super.onActivityCreated(savedInstanceState);
+	}
 
-  @Override
-  public void onStop() {
-    Log.i(TAG, "onStop()");
-    super.onStop();
-  }
+	@Override
+	public void onStart() {
+		Log.i(TAG, "onStart()");
+		super.onStart();
+	}
+
+	@Override
+	public void onResume() {
+		Log.i(TAG, "onResume()");
+		super.onResume();
+	}
+
+	@Override
+	public void onPause() {
+		Log.i(TAG, "onPause()");
+		super.onPause();
+	}
+
+	@Override
+	public void onStop() {
+		Log.i(TAG, "onStop()");
+		super.onStop();
+	}
 }

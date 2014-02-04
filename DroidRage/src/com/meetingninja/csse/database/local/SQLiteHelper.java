@@ -57,26 +57,26 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 	// Notes table create statement
 	private static final String CREATE_TABLE_NOTE = "CREATE TABLE "
 			+ SQLiteNoteAdapter.TABLE_NAME + "(" + KEY_ID
-			+ " INTEGER NOT NULL,"
-			+ SQLiteNoteAdapter.KEY_TITLE + " TEXT NOT NULL,"
-			+ SQLiteNoteAdapter.KEY_CONTENT + " TEXT NOT NULL," 
-			+ SQLiteNoteAdapter.KEY_DESC + " TEXT NOT NULL," 
-			+ SQLiteNoteAdapter.KEY_CREATED_BY + " TEXT NOT NULL" + ");";
+			+ " INTEGER NOT NULL," + SQLiteNoteAdapter.KEY_TITLE
+			+ " TEXT NOT NULL," + SQLiteNoteAdapter.KEY_CONTENT
+			+ " TEXT NOT NULL," + SQLiteNoteAdapter.KEY_DESC
+			+ " TEXT NOT NULL," + SQLiteNoteAdapter.KEY_CREATED_BY
+			+ " TEXT NOT NULL" + ");";
 	private static final String CREATE_FTS_TABLE_NOTE = "CREATE VIRTUAL TABLE "
 			+ SQLiteNoteAdapter.FTS_TABLE_NAME + " USING fts3(" + KEY_ID + ", "
 			+ SQLiteNoteAdapter.KEY_TITLE + ", "
-			+ SQLiteNoteAdapter.KEY_CONTENT + ", " 
-			+ SQLiteNoteAdapter.KEY_DESC + ");";
+			+ SQLiteNoteAdapter.KEY_CONTENT + ", " + SQLiteNoteAdapter.KEY_DESC
+			+ ");";
 
 	// Meeting table create statement
 	private static final String CREATE_TABLE_MEETING = "CREATE TABLE "
 			+ SQLiteMeetingAdapter.TABLE_NAME + "(" + KEY_ID
-			+ " INTEGER PRIMARY KEY,"
-			+ SQLiteMeetingAdapter.KEY_TITLE + " TEXT NOT NULL,"
-			+ SQLiteMeetingAdapter.KEY_LOCATION + " TEXT NOT NULL,"
-			+ SQLiteMeetingAdapter.KEY_START_TIME + " INTEGER NOT NULL,"
-			+ SQLiteMeetingAdapter.KEY_END_TIME + " INTEGER NOT NULL,"
-			+ SQLiteMeetingAdapter.KEY_DESCRIPTION + " TEXT NOT NULL"
+			+ " INTEGER PRIMARY KEY," + SQLiteMeetingAdapter.KEY_TITLE
+			+ " TEXT NOT NULL," + SQLiteMeetingAdapter.KEY_LOCATION
+			+ " TEXT NOT NULL," + SQLiteMeetingAdapter.KEY_START_TIME
+			+ " INTEGER NOT NULL," + SQLiteMeetingAdapter.KEY_END_TIME
+			+ " INTEGER NOT NULL," + SQLiteMeetingAdapter.KEY_DESCRIPTION
+			+ " TEXT NOT NULL"
 			// + SQLiteMeetingAdapter.ATTENDANCE + " TEXT NOT NULL"
 			+ ");";
 

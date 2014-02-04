@@ -10,17 +10,17 @@ import objects.Group;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class GroupCreateTask implements AsyncResponse<Void>{
-	
+public class GroupCreateTask implements AsyncResponse<Void> {
+
 	private GroupsFragment frag;
 	private GroupCreator creator;
-	
-	public GroupCreateTask(GroupsFragment frag){
+
+	public GroupCreateTask(GroupsFragment frag) {
 		this.frag = frag;
 		this.creator = new GroupCreator(this);
 	}
-	
-	public void createGroup(Group group){
+
+	public void createGroup(Group group) {
 		this.creator.execute(group);
 	}
 
@@ -28,12 +28,12 @@ public class GroupCreateTask implements AsyncResponse<Void>{
 	public void processFinish(Void result) {
 		this.frag.notifyAdapter();
 	}
-	
-	private class GroupCreator extends AsyncTask<Group, Void, Void>{
-		
+
+	private class GroupCreator extends AsyncTask<Group, Void, Void> {
+
 		private AsyncResponse<Void> delegate;
-		
-		public GroupCreator(AsyncResponse<Void> delegate){
+
+		public GroupCreator(AsyncResponse<Void> delegate) {
 			this.delegate = delegate;
 		}
 
@@ -47,13 +47,12 @@ public class GroupCreateTask implements AsyncResponse<Void>{
 			}
 			return null;
 		}
+
 		@Override
 		protected void onPostExecute(Void v) {
 			super.onPostExecute(v);
 			delegate.processFinish(v);
 		}
-		
+
 	}
 }
-
-

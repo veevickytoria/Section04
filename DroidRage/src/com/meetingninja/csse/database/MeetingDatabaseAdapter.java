@@ -161,7 +161,8 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 				String _id = attendeeNode.get("userID").asText();
 				m.addAttendee(_id);
 			}
-		} else Log.e(TAG, "Error: Unable to parse meeting attendance");
+		} else
+			Log.e(TAG, "Error: Unable to parse meeting attendance");
 
 		return m;
 	}

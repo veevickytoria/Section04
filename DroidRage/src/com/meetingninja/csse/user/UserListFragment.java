@@ -76,13 +76,13 @@ import com.meetingninja.csse.user.TempContactArrayAdapter.addContactObj;
 
 import de.timroes.android.listview.EnhancedListView;
 
-public class UserListFragment extends Fragment implements TokenListener{
-	
+public class UserListFragment extends Fragment implements TokenListener {
+
 	private SQLiteUserAdapter dbHelper;
 	private ContactArrayAdapter mContactAdapter;
 	RetContactsObj fetcher = null;
 	private EnhancedListView l;
-	
+
 	private AutoCompleteAdapter autoAdapter;
 	private ArrayList<User> allUsers = new ArrayList<User>();
 	private User addedUser;
@@ -92,12 +92,14 @@ public class UserListFragment extends Fragment implements TokenListener{
 	public UserListFragment() {
 		// Required empty public constructor
 	}
+
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,	Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		setHasOptionsMenu(true);
 		View v = inflater.inflate(R.layout.fragment_userlist, container, false);
-		
+
 		dbHelper = new SQLiteUserAdapter(getActivity());
 
 		setUpListView(v);
@@ -109,7 +111,7 @@ public class UserListFragment extends Fragment implements TokenListener{
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.menu_new_and_refresh, menu);
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -123,42 +125,49 @@ public class UserListFragment extends Fragment implements TokenListener{
 			return super.onContextItemSelected(item);
 		}
 	}
+
 	public void addContactsOption() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setTitle("Search by name or email:");
-		//TODO: only display users that aren't already a contact
+		// TODO: only display users that aren't already a contact
 		UserVolleyAdapter.fetchAllUsers(new AsyncResponse<List<User>>() {
 			@Override
 			public void processFinish(List<User> result) {
 				allUsers = new ArrayList<User>(result);
 			}
 		});
-		
-		View autocompleteView = getActivity().getLayoutInflater().inflate(R.layout.fragment_autocomplete, null);
-		final ContactTokenTextView input = (ContactTokenTextView) autocompleteView.findViewById(R.id.my_autocomplete);
+
+		View autocompleteView = getActivity().getLayoutInflater().inflate(
+				R.layout.fragment_autocomplete, null);
+		final ContactTokenTextView input = (ContactTokenTextView) autocompleteView
+				.findViewById(R.id.my_autocomplete);
 		autoAdapter = new AutoCompleteAdapter(getActivity(), allUsers);
 		input.setAdapter(autoAdapter);
-		
+
 		input.setTokenListener(this);
 		builder.setView(autocompleteView);
 		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				boolean contains=false;
-				for(int i=0;i<contacts.size();i++){
-					if(contacts.get(i).getContact().equals(addedUser)){
-						contains=true;
+				boolean contains = false;
+				for (int i = 0; i < contacts.size(); i++) {
+					if (contacts.get(i).getContact().equals(addedUser)) {
+						contains = true;
 					}
 				}
-				if(contains){
-					AlertDialogUtil.displayDialog(getActivity(), "Unable to add contact","This user is already added as a contact", "OK",null);
-				}else{
+				if (contains) {
+					AlertDialogUtil.displayDialog(getActivity(),
+							"Unable to add contact",
+							"This user is already added as a contact", "OK",
+							null);
+				} else {
 					addContact(addedUser);
-					addedUser=null;
+					addedUser = null;
 				}
 			}
 		});
-		builder.setNegativeButton("Cancel",	new DialogInterface.OnClickListener() {
+		builder.setNegativeButton("Cancel",
+				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.cancel();
@@ -166,6 +175,7 @@ public class UserListFragment extends Fragment implements TokenListener{
 				});
 		builder.show();
 	}
+
 	@Override
 	public void onTokenAdded(Object arg0) {
 		SerializableUser added = null;
@@ -192,16 +202,22 @@ public class UserListFragment extends Fragment implements TokenListener{
 		}
 
 	}
-	public void setContacts(List<Contact> tempContacts){
-		if(!tempContacts.isEmpty()){
+
+	public void setContacts(List<Contact> tempContacts) {
+		if (!tempContacts.isEmpty()) {
 			contacts.clear();
 			contacts.addAll(tempContacts);
-			
-			for(int i=0;i<tempDeletedContacts.size();i++){
-				//why doesn't this work?
-//				contacts.remove(tempDeletedContacts.get(i));
-				for(int j=0;j<contacts.size();j++){
-					if(contacts.get(j).getContact().getID().equals(tempDeletedContacts.get(i).getContact().getID())){
+
+			for (int i = 0; i < tempDeletedContacts.size(); i++) {
+				// why doesn't this work?
+				// contacts.remove(tempDeletedContacts.get(i));
+				for (int j = 0; j < contacts.size(); j++) {
+					if (contacts
+							.get(j)
+							.getContact()
+							.getID()
+							.equals(tempDeletedContacts.get(i).getContact()
+									.getID())) {
 						contacts.remove(j);
 						break;
 					}
@@ -210,12 +226,14 @@ public class UserListFragment extends Fragment implements TokenListener{
 		}
 		mContactAdapter.notifyDataSetChanged();
 	}
+
 	private void addContact(User user) {
 		AddContactTask adder = new AddContactTask(this);
 		adder.addContact(user.getID());
 	}
-	private void deleteContact(String relationID){
-		DeleteContactTask deleter= new DeleteContactTask(this);
+
+	private void deleteContact(String relationID) {
+		DeleteContactTask deleter = new DeleteContactTask(this);
 		deleter.deleteContact(relationID);
 	}
 
@@ -225,35 +243,38 @@ public class UserListFragment extends Fragment implements TokenListener{
 		super.onPause();
 	}
 
-	private void populateList(boolean add){
-//		UserVolleyAdapter.fetchAllUsers(this);
+	private void populateList(boolean add) {
+		// UserVolleyAdapter.fetchAllUsers(this);
 		SessionManager session = SessionManager.getInstance();
 		fetcher = new RetContactsObj(add);
 		fetcher.execute(session.getUserID());
-		//TODO: also remeve tempDeletedContacts
+		// TODO: also remeve tempDeletedContacts
 	}
-	
-	private void setUpListView(View v){
-		mContactAdapter = new ContactArrayAdapter(getActivity(), R.layout.list_item_user,contacts);
+
+	private void setUpListView(View v) {
+		mContactAdapter = new ContactArrayAdapter(getActivity(),
+				R.layout.list_item_user, contacts);
 		l = (EnhancedListView) v.findViewById(R.id.contacts_list);
 		l.setAdapter(mContactAdapter);
 		l.setEmptyView(v.findViewById(android.R.id.empty));
 		l.setDismissCallback(new de.timroes.android.listview.EnhancedListView.OnDismissCallback() {
 			@Override
-			public EnhancedListView.Undoable onDismiss(EnhancedListView listView, final int position) {
+			public EnhancedListView.Undoable onDismiss(
+					EnhancedListView listView, final int position) {
 
-				final Contact item = (Contact) mContactAdapter.getItem(position);
+				final Contact item = (Contact) mContactAdapter
+						.getItem(position);
 				tempDeletedContacts.add(item);
 				contacts.remove(item);
-//				for(int i=0;i<contacts.size();i++){
-//					System.out.println("this one: "+contacts.get(i).getContact().getDisplayName());
-//				}
+				// for(int i=0;i<contacts.size();i++){
+				// System.out.println("this one: "+contacts.get(i).getContact().getDisplayName());
+				// }
 				mContactAdapter.remove(item);
-				
+
 				return new EnhancedListView.Undoable() {
 					@Override
 					public void undo() {
-//						mContactAdapter.insert(item, position);
+						// mContactAdapter.insert(item, position);
 						contacts.add(item);
 						tempDeletedContacts.remove(item);
 						mContactAdapter.notifyDataSetChanged();
@@ -263,11 +284,12 @@ public class UserListFragment extends Fragment implements TokenListener{
 					public String getTitle() {
 						return "Member deleted";
 					}
+
 					@Override
-						public void discard(){
+					public void discard() {
 						deleteContact(item.getRelationID());
 						tempDeletedContacts.remove(item);
-						
+
 					}
 				};
 			}
@@ -276,9 +298,11 @@ public class UserListFragment extends Fragment implements TokenListener{
 		l.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View v, int position,long id) {
+			public void onItemClick(AdapterView<?> arg0, View v, int position,
+					long id) {
 				User clicked = mContactAdapter.getItem(position).getContact();
-				Intent profileIntent = new Intent(v.getContext(),ProfileActivity.class);
+				Intent profileIntent = new Intent(v.getContext(),
+						ProfileActivity.class);
 				profileIntent.putExtra(Keys.User.PARCEL, clicked);
 				startActivity(profileIntent);
 
@@ -286,15 +310,16 @@ public class UserListFragment extends Fragment implements TokenListener{
 
 		});
 		l.enableSwipeToDismiss();
-		l.setSwipingLayout(R.id.list_group_item_frame_1); 
+		l.setSwipingLayout(R.id.list_group_item_frame_1);
 
 		l.setSwipeDirection(EnhancedListView.SwipeDirection.BOTH);
 	}
-	
+
 	final class RetContactsObj implements AsyncResponse<List<Contact>> {
 
 		private ContactsFetcher contactsFetcher;
 		private boolean add;
+
 		public RetContactsObj(boolean add) {
 			contactsFetcher = new ContactsFetcher(this);
 			this.add = add;
@@ -308,11 +333,16 @@ public class UserListFragment extends Fragment implements TokenListener{
 		public void processFinish(List<Contact> result) {
 			contacts.clear();
 			contacts.addAll(result);
-			for(int i=0;i<tempDeletedContacts.size();i++){
-				//why doesn't this work?
-//				contacts.remove(tempDeletedContacts.get(i));
-				for(int j=0;j<contacts.size();j++){
-					if(contacts.get(j).getContact().getID().equals(tempDeletedContacts.get(i).getContact().getID())){
+			for (int i = 0; i < tempDeletedContacts.size(); i++) {
+				// why doesn't this work?
+				// contacts.remove(tempDeletedContacts.get(i));
+				for (int j = 0; j < contacts.size(); j++) {
+					if (contacts
+							.get(j)
+							.getContact()
+							.getID()
+							.equals(tempDeletedContacts.get(i).getContact()
+									.getID())) {
 						contacts.remove(j);
 						break;
 					}

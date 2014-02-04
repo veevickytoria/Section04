@@ -256,7 +256,7 @@ public class MeetingsFragment extends Fragment implements
 					} else if (data.getStringExtra("method").equals("insert")) {
 						Log.d(TAG, "Inserting Meeting # " + created.getID());
 						// created = mySQLiteAdapter.insertMeeting(created);
-//						populateList();
+						// populateList();
 					}
 				}
 			} else {
@@ -268,8 +268,8 @@ public class MeetingsFragment extends Fragment implements
 	}
 
 	public void fetchMeetings() {
-		 fetcher = new MeetingFetcherTask(this);
-		 fetcher.execute(session.getUserID());
+		fetcher = new MeetingFetcherTask(this);
+		fetcher.execute(session.getUserID());
 		// calls processFinish()
 	}
 
@@ -342,6 +342,7 @@ public class MeetingsFragment extends Fragment implements
 			}
 		});
 
-		meetingAdpt.notifyDataSetChanged();
+		if (isAdded())
+			meetingAdpt.notifyDataSetChanged();
 	}
 }

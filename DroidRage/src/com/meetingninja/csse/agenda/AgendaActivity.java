@@ -171,11 +171,12 @@ public class AgendaActivity extends FragmentActivity {
 			case R.id.agenda_addTopicBtn:
 				Topic t = new Topic(); // TODO : Create a Topic
 				t.setTitle("new topic");
-				final EditText mTitle = (EditText) ((View) v.getParent()).findViewById(R.id.agenda_title_edittext);
-				
-				System.out.println("FOUND:" +mTitle);
+				final EditText mTitle = (EditText) ((View) v.getParent())
+						.findViewById(R.id.agenda_title_edittext);
+
+				System.out.println("FOUND:" + mTitle);
 				t.setTitle(mTitle.getText().toString());
-				
+
 				displayedAgenda.addTopic(t);
 				reconstructTree();
 

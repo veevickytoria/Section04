@@ -39,8 +39,8 @@ public class NotesDatabaseAdapter extends BaseDatabaseAdapter {
 		return Uri.parse(getBaseUrl()).buildUpon();
 	}
 
-	public static void getNote(final String noteID, final AsyncResponse<Note> delegate)
-			throws Exception {
+	public static void getNote(final String noteID,
+			final AsyncResponse<Note> delegate) throws Exception {
 		String _url = getBaseUri().appendPath(noteID).build().toString();
 
 		JsonNodeRequest req = new JsonNodeRequest(_url, null,

@@ -51,7 +51,8 @@ import com.meetingninja.csse.notes.EditNoteActivity;
 
 public class ReviewAgendaActivity extends FragmentActivity {
 
-	private static final String TAG = ReviewAgendaActivity.class.getSimpleName();
+	private static final String TAG = ReviewAgendaActivity.class
+			.getSimpleName();
 	private TreeViewList treeView;
 	private TreeBuilder<Topic> treeBuilder = null;
 	private TreeStateManager<Topic> manager = null;
@@ -62,8 +63,6 @@ public class ReviewAgendaActivity extends FragmentActivity {
 	private Agenda displayedAgenda;
 	private boolean collapsible;
 
-	
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -72,11 +71,12 @@ public class ReviewAgendaActivity extends FragmentActivity {
 		setContentView(R.layout.activity_agenda_review);
 
 		setupActionBar();
-		
+
 		if (savedInstanceState == null) {
 			manager = new InMemoryTreeStateManager<Topic>();
 			newCollapsible = false;
-			displayedAgenda = getIntent().getParcelableExtra(Keys.Agenda.PARCEL);
+			displayedAgenda = getIntent()
+					.getParcelableExtra(Keys.Agenda.PARCEL);
 		} else {
 			manager = (TreeStateManager<Topic>) savedInstanceState
 					.getSerializable("treeManager");
@@ -85,16 +85,13 @@ public class ReviewAgendaActivity extends FragmentActivity {
 					.getParcelable(Keys.Agenda.PARCEL);
 		}
 
-		
-		
-		
 		setupViews();
 		treeBuilder = new TreeBuilder<Topic>(manager);
 
 		if (displayedAgenda != null) {
 			int depth = displayedAgenda.getDepth();
-			mAgendaAdpt = new ReviewAgendaItemAdapter(this, manager, treeBuilder,
-					depth);
+			mAgendaAdpt = new ReviewAgendaItemAdapter(this, manager,
+					treeBuilder, depth);
 			mAgendaAdpt.addActivity(this);
 			buildTree(treeBuilder);
 		}
@@ -105,12 +102,10 @@ public class ReviewAgendaActivity extends FragmentActivity {
 		// registerForContextMenu(treeView);
 	}
 
-
 	private void setupViews() {
 		treeView = (TreeViewList) findViewById(R.id.agendaTreeView);
 		mTitleView = (TextView) findViewById(R.id.agenda_title_edittext);
 		mAddTopicBtn = (Button) findViewById(R.id.agenda_addTopicBtn);
-
 
 	}
 
@@ -138,8 +133,8 @@ public class ReviewAgendaActivity extends FragmentActivity {
 		int depth = 0;
 		if (displayedAgenda != null) {
 			depth = displayedAgenda.getDepth();
-			mAgendaAdpt = new ReviewAgendaItemAdapter(this, manager, treeBuilder,
-					depth);
+			mAgendaAdpt = new ReviewAgendaItemAdapter(this, manager,
+					treeBuilder, depth);
 			mAgendaAdpt.addActivity(this);
 			mTitleView.setText(displayedAgenda.getTitle());
 			buildTree(treeBuilder);
@@ -160,7 +155,7 @@ public class ReviewAgendaActivity extends FragmentActivity {
 		this.collapsible = newCollapsible;
 		treeView.setCollapsible(this.collapsible);
 	}
-	
+
 	private final View.OnClickListener mActionBarListener = new OnClickListener() {
 
 		@Override
@@ -177,8 +172,9 @@ public class ReviewAgendaActivity extends FragmentActivity {
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		// Make an Ok/Cancel ActionBar
-		View actionBarButtons = inflater.inflate(R.layout.actionbar_comment_accept,
-				new LinearLayout(this), false);
+		View actionBarButtons = inflater.inflate(
+				R.layout.actionbar_comment_accept, new LinearLayout(this),
+				false);
 
 		View cancelActionView = actionBarButtons
 				.findViewById(R.id.action_comment);
@@ -210,34 +206,33 @@ public class ReviewAgendaActivity extends FragmentActivity {
 		return true;
 	}
 
-	private void comment(){
+	private void comment() {
 		AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
 		alert.setTitle("Comment");
 		alert.setMessage("Comment");
 
-		// Set an EditText view to get user input 
+		// Set an EditText view to get user input
 		final EditText input = new EditText(this);
 		alert.setView(input);
 
 		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-		public void onClick(DialogInterface dialog, int whichButton) {
-		  String value = input.getText().toString();
-		  finish();
-		  }
+			public void onClick(DialogInterface dialog, int whichButton) {
+				String value = input.getText().toString();
+				finish();
+			}
 		});
 
-		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-		  public void onClick(DialogInterface dialog, int whichButton) {
-			  
-		  }
-		});
+		alert.setNegativeButton("Cancel",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+
+					}
+				});
 
 		alert.show();
-		
+
 	}
-	
-	
 
 	/**
 	 * Represents an asynchronous task used to delete the agenda

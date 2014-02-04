@@ -299,7 +299,7 @@ public class MainActivity extends FragmentActivity implements
 			frag_notes = (NotesFragment) nextPage;
 			break;
 		case TASKS:
-			//nextPage = new TasksFragment();
+			// nextPage = new TasksFragment();
 			nextPage = TasksFragment.getInstance();
 			frag_tasks = new TasksFragment();
 			break;
@@ -410,7 +410,7 @@ public class MainActivity extends FragmentActivity implements
 				Toast.makeText(this, "Refreshing Meetings", Toast.LENGTH_SHORT)
 						.show();
 				frag_meetings.fetchMeetings();
-//				frag_meetings.populateList();
+				// frag_meetings.populateList();
 				return true;
 			case NOTES:
 				Toast.makeText(this, "Refreshing Notes", Toast.LENGTH_SHORT)

@@ -289,7 +289,8 @@ public class RadialTimePickerDialog extends DialogFragment implements
 			mAmPmTextView.setVisibility(View.GONE);
 
 			RelativeLayout.LayoutParams paramsSeparator = new RelativeLayout.LayoutParams(
-					android.view.ViewGroup.LayoutParams.WRAP_CONTENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
+					android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
+					android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 			paramsSeparator.addRule(RelativeLayout.CENTER_IN_PARENT);
 			TextView separatorView = (TextView) view
 					.findViewById(R.id.separator);

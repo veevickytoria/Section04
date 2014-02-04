@@ -58,11 +58,11 @@ public class NotesFragment extends Fragment implements
 	private SQLiteNoteAdapter mySQLiteAdapter;
 
 	private static List<Note> notes = new ArrayList<Note>();
-	
+
 	public NotesFragment() {
 		// Empty
 	}
-	
+
 	private static NotesFragment sInstance;
 
 	public static NotesFragment getInstance() {

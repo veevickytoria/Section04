@@ -105,21 +105,19 @@ public class ReviewAgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 	public LinearLayout updateView(final View view,
 			final TreeNodeInfo<Topic> treeNodeInfo) {
 
-		 final LinearLayout rowView = (LinearLayout) view;
+		final LinearLayout rowView = (LinearLayout) view;
 
 		final Topic rowTopic = treeNodeInfo.getId();
 
 		final TextView mTitle = (TextView) rowView
 				.findViewById(R.id.agenda_edit_topic);
 
-		mTitle.setText(rowTopic.getTitle()+"("+rowTopic.getTime()+"m)");
+		mTitle.setText(rowTopic.getTitle() + "(" + rowTopic.getTime() + "m)");
 
 		getManager().notifyDataSetChanged();
 		return rowView;
 	}
 
-
-	
 	@Override
 	public long getItemId(final int position) {
 
@@ -130,7 +128,7 @@ public class ReviewAgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 	public int getViewTypeCount() {
 		return 1;
 	}
-	
+
 	public void addActivity(ReviewAgendaActivity agendaActivity) {
 		this.activty = agendaActivity;
 	}

@@ -122,10 +122,9 @@ public class EditTaskActivity extends FragmentActivity implements
 		setCompletedViews();
 		// TODO: use string.xml
 
-
 	}
 
-	private void setCompletedViews(){
+	private void setCompletedViews() {
 		if (displayTask.getIsCompleted()) {
 			isCompleted.setText("Yes");
 			mCompleteBtn.setText(MARK_AS_INCOMPLETE);
@@ -134,6 +133,7 @@ public class EditTaskActivity extends FragmentActivity implements
 			mCompleteBtn.setText(MARK_AS_COMPLETE);
 		}
 	}
+
 	public void toggleCompleted(View v) {
 		displayTask.setIsCompleted(!displayTask.getIsCompleted());
 		setCompletedViews();
@@ -240,8 +240,6 @@ public class EditTaskActivity extends FragmentActivity implements
 
 			Toast.makeText(this, String.format("Saving Task"),
 					Toast.LENGTH_SHORT).show();
-
-
 
 			Intent msgIntent = new Intent();
 			msgIntent.putExtra(EXTRA_TASK, displayTask);

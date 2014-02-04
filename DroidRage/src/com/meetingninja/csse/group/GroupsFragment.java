@@ -42,7 +42,7 @@ public class GroupsFragment extends Fragment implements
 	private GroupCreateTask creator;
 
 	public GroupsFragment() {
-		// Empty 
+		// Empty
 	}
 
 	private static GroupsFragment sInstance;
@@ -62,7 +62,7 @@ public class GroupsFragment extends Fragment implements
 		super.onCreateView(inflater, container, savedInstanceState);
 		View v = inflater.inflate(R.layout.fragment_groups, container, false);
 		setHasOptionsMenu(true);
-		
+
 		creator = new GroupCreateTask(this);
 
 		session = SessionManager.getInstance();
@@ -71,7 +71,7 @@ public class GroupsFragment extends Fragment implements
 				R.layout.list_item_group, groups);
 		groupsList.setAdapter(groupAdpt);
 
-			fetchGroups();
+		fetchGroups();
 
 		groupAdpt.notifyDataSetChanged();
 		groupsList
@@ -168,18 +168,19 @@ public class GroupsFragment extends Fragment implements
 	public void processFinish(List<Group> result) {
 		groups.clear();
 		groupAdpt.clear();
-//		Collections.sort(result, new Comparator<Group>() {
-//			@Override
-//			public int compare(Group lhs, Group rhs) {
-//				return lhs.compareTo(lhs);
-//			}
-//		});
+		// Collections.sort(result, new Comparator<Group>() {
+		// @Override
+		// public int compare(Group lhs, Group rhs) {
+		// return lhs.compareTo(lhs);
+		// }
+		// });
 
 		groups.addAll(result);
 
 		groupAdpt.notifyDataSetChanged();
 	}
-	public void notifyAdapter(){
+
+	public void notifyAdapter() {
 		groupAdpt.notifyDataSetChanged();
 	}
 

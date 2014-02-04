@@ -33,13 +33,12 @@ public class DeleteContactTask implements AsyncResponse<List<Contact>> {
 	private ContactDeleter deleter;
 	private UserListFragment frag;
 
-	
 	public DeleteContactTask(UserListFragment frag) {
-		this.frag=frag;
+		this.frag = frag;
 		deleter = new ContactDeleter(this);
 	}
-	
-	public void deleteContact(String relationID){
+
+	public void deleteContact(String relationID) {
 		this.deleter.execute(relationID);
 	}
 
@@ -47,13 +46,12 @@ public class DeleteContactTask implements AsyncResponse<List<Contact>> {
 	public void processFinish(List<Contact> contacts) {
 		frag.setContacts(contacts);
 	}
-	
-	
-	private class ContactDeleter extends AsyncTask<String, Void, List<Contact>>{
-		
+
+	private class ContactDeleter extends AsyncTask<String, Void, List<Contact>> {
+
 		private AsyncResponse<List<Contact>> delegate;
-		
-		public ContactDeleter(AsyncResponse<List<Contact>> delegate){
+
+		public ContactDeleter(AsyncResponse<List<Contact>> delegate) {
 			this.delegate = delegate;
 		}
 
@@ -61,25 +59,25 @@ public class DeleteContactTask implements AsyncResponse<List<Contact>> {
 		protected List<Contact> doInBackground(String... params) {
 			List<Contact> contacts = new ArrayList<Contact>();
 			try {
-				contacts=UserDatabaseAdapter.deleteContact(params[0]);
+				contacts = UserDatabaseAdapter.deleteContact(params[0]);
 			} catch (IOException e) {
 				Log.e("ContactDeleter", "Error: Unable delete contact");
 				Log.e(TAG, e.getLocalizedMessage());
 			}
 			return contacts;
 		}
+
 		@Override
 		protected void onPostExecute(List<Contact> contacts) {
 			super.onPostExecute(contacts);
 			delegate.processFinish(contacts);
 		}
-		
+
 	}
 
-
-//	@Override
-//	protected void onCancelled() {
-//		super.onCancelled();
-//	}
+	// @Override
+	// protected void onCancelled() {
+	// super.onCancelled();
+	// }
 
 }

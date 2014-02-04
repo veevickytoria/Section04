@@ -42,7 +42,6 @@ public class ViewGroupActivity extends Activity {
 	EnhancedListView mListView;
 	private int resultCode = Activity.RESULT_CANCELED;
 
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -90,7 +89,7 @@ public class ViewGroupActivity extends Activity {
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		return true;
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -99,8 +98,8 @@ public class ViewGroupActivity extends Activity {
 			editGroup();
 			return true;
 		case R.id.delete_item_group:
-//			TaskDeleter deleter = new TaskDeleter();
-//			deleter.deleteTask(displayedTask.getID());
+			// TaskDeleter deleter = new TaskDeleter();
+			// deleter.deleteTask(displayedTask.getID());
 			setResult(RESULT_OK);
 			finish();
 		case android.R.id.home:
@@ -112,26 +111,26 @@ public class ViewGroupActivity extends Activity {
 		}
 
 	}
-	
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == Activity.RESULT_OK) {
 			if (requestCode == 8) {
-				group = data.getParcelableExtra(Keys.Group.PARCEL);				
+				group = data.getParcelableExtra(Keys.Group.PARCEL);
 				GroupUpdater updater = new GroupUpdater();
 				updater.updateGroup(group);
 				setGroup();
 			}
 		}
 	}
-	
-	private void setGroup(){
+
+	private void setGroup() {
 		titleText.setText(group.getGroupTitle());
 		mUserAdapter = new UserArrayAdapter(this, R.layout.list_item_user,
 				group.getMembers());
 		mListView.setAdapter(mUserAdapter);
 	}
-	
+
 	private void editGroup() {
 		resultCode = Activity.RESULT_OK;
 		Intent i = new Intent(this, EditGroupActivity.class);

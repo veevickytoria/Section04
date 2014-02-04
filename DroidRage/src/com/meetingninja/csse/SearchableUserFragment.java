@@ -111,10 +111,10 @@ public class SearchableUserFragment extends BaseFragment implements
 
 		UserVolleyAdapter.fetchAllUsers(this);
 
-//		SQLiteUserAdapter sqlite = new SQLiteUserAdapter(mContext);
-//		allUsers = sqlite.getAllUsers();                                                                                                                                                                                                                        println(allUsers);
-//		sqlite.close();
-		
+		// SQLiteUserAdapter sqlite = new SQLiteUserAdapter(mContext);
+		// allUsers = sqlite.getAllUsers(); println(allUsers);
+		// sqlite.close();
+
 		autoAdapter = new AutoCompleteAdapter(getActivity(), allUsers);
 
 		complete = (ContactTokenTextView) view
@@ -124,12 +124,11 @@ public class SearchableUserFragment extends BaseFragment implements
 
 		// token listener when autocompleted
 		addedIDsView = (TextView) view.findViewById(R.id.completed_ids);
-		
+
 		addedAdapter = new UserArrayAdapter(getActivity(),
 				R.layout.list_item_user, addedUsers);
 		mListView = (AbsListView) view.findViewById(android.R.id.list);
 		((AdapterView<ListAdapter>) mListView).setAdapter(addedAdapter);
-
 
 		// Set OnItemClickListener so we can be notified on item clicks
 		mListView.setOnItemClickListener(this);

@@ -64,6 +64,7 @@ public class ProfileActivity extends FragmentActivity {
 			findViewById(android.R.id.empty).setVisibility(View.VISIBLE);
 		}
 	}
+
 	/**
 	 * Set up the {@link android.app.ActionBar}.
 	 */

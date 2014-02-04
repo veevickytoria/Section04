@@ -48,7 +48,7 @@ public class SessionManager {
 	public static final String TITLE = "edu.meetingninja.rhit.preferences.title";
 	public static final String LOCATION = "edu.meetingninja.rhit.preferences.location";
 	public static final String PAGE = "edu.meetingninja.rhit.preferences.page";
-	
+
 	public static final String TIME = "edu.meetingninja.rhit.preferences.syncedTime";
 
 	// Sharedpref login state
@@ -184,19 +184,19 @@ public class SessionManager {
 	public synchronized int getPage() {
 		return pref.getInt(PAGE, 0);
 	}
-	
+
 	public synchronized long getLastSyncTime() {
 		return pref.getLong(TIME, System.currentTimeMillis());
 	}
-	
+
 	public synchronized boolean needsSync() {
-		int _3min = 3*60*1000;
+		int _3min = 3 * 60 * 1000;
 		if (System.currentTimeMillis() - getLastSyncTime() >= _3min) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	public synchronized void setSynced() {
 		Editor editor = pref.edit();
 		editor.putLong(TIME, System.currentTimeMillis());

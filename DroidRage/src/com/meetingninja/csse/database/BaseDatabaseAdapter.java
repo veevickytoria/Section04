@@ -113,7 +113,7 @@ public abstract class BaseDatabaseAdapter {
 		conn.disconnect();
 		return response;
 	}
-	
+
 	protected static void addToRequestQueue(Request<?> req) {
 		ApplicationController.getInstance().addToRequestQueue(req, "JSON");
 	}

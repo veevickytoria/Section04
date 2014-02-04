@@ -91,43 +91,49 @@ public class JsonNodeRequest extends Request<JsonNode> {
 	}
 
 	public JsonNodeRequest(String url, JsonNode jsonPOST,
-			JacksonRequestListener<JsonNode> listener, ErrorListener errorListener) {
+			JacksonRequestListener<JsonNode> listener,
+			ErrorListener errorListener) {
 		super(Method.GET, url, errorListener);
 		mListener = listener;
 	}
 
-//	@Override
-//	protected Response<JsonNode> parseNetworkResponse(NetworkResponse response) {
-//		try {
-//			String jsonString = new String(response.data,
-//					HttpHeaderParser.parseCharset(response.headers));
-//			return Response.success(OBJECT_MAPPER.readTree(jsonString),
-//					HttpHeaderParser.parseCacheHeaders(response));
-//		} catch (Exception e) {
-//			VolleyLog.e(e, "An error occurred while parsing network response:");
-//			return Response.error(new ParseError(e));
-//		}
-//	}
-	
-	@Override
-    protected Response<JsonNode> parseNetworkResponse(NetworkResponse response) {
-            JavaType returnType = mListener.getReturnType();
-            JsonNode returnData = null;
-            if (returnType != null) {
-                    try {
-                            if (response.data != null) {
-                                    returnData = OBJECT_MAPPER.readValue(response.data, returnType);
-                            } else if (response instanceof JacksonNetworkResponse) {
-                                    returnData = OBJECT_MAPPER.readValue(((JacksonNetworkResponse)response).inputStream, returnType);
-                            }
-                    } catch (Exception e) {
-                            VolleyLog.e(e, "An error occurred while parsing network response:");
-                            return Response.error(new ParseError(response));
-                    }
-            }
-            return mListener.onParseResponseComplete(Response.success(returnData, HttpHeaderParser.parseCacheHeaders(response)));
-    }
+	// @Override
+	// protected Response<JsonNode> parseNetworkResponse(NetworkResponse
+	// response) {
+	// try {
+	// String jsonString = new String(response.data,
+	// HttpHeaderParser.parseCharset(response.headers));
+	// return Response.success(OBJECT_MAPPER.readTree(jsonString),
+	// HttpHeaderParser.parseCacheHeaders(response));
+	// } catch (Exception e) {
+	// VolleyLog.e(e, "An error occurred while parsing network response:");
+	// return Response.error(new ParseError(e));
+	// }
+	// }
 
+	@Override
+	protected Response<JsonNode> parseNetworkResponse(NetworkResponse response) {
+		JavaType returnType = mListener.getReturnType();
+		JsonNode returnData = null;
+		if (returnType != null) {
+			try {
+				if (response.data != null) {
+					returnData = OBJECT_MAPPER.readValue(response.data,
+							returnType);
+				} else if (response instanceof JacksonNetworkResponse) {
+					returnData = OBJECT_MAPPER.readValue(
+							((JacksonNetworkResponse) response).inputStream,
+							returnType);
+				}
+			} catch (Exception e) {
+				VolleyLog.e(e,
+						"An error occurred while parsing network response:");
+				return Response.error(new ParseError(response));
+			}
+		}
+		return mListener.onParseResponseComplete(Response.success(returnData,
+				HttpHeaderParser.parseCacheHeaders(response)));
+	}
 
 	/**
 	 * Allows you to add additional status codes (besides 200 and 204) that will

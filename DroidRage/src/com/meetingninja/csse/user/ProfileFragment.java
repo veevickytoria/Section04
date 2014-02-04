@@ -76,7 +76,7 @@ public class ProfileFragment extends Fragment {
 		displayedUser = new User();
 
 		if (extras != null && extras.containsKey(Keys.User.PARCEL)) {
-			
+
 			displayedUser = (User) extras.getParcelable(Keys.User.PARCEL);
 			try {
 				System.out.println(JsonUtils.getObjectMapper()
@@ -89,9 +89,9 @@ public class ProfileFragment extends Fragment {
 			Log.v(TAG, "Displaying Current User");
 			displayedUser.setID(session.getUserID());
 		}
-		if(extras != null && extras.containsKey("notMine")){
-			menu=R.menu.menu_profile;
-		}else{
+		if (extras != null && extras.containsKey("notMine")) {
+			menu = R.menu.menu_profile;
+		} else {
 			menu = R.menu.menu_view_profile;
 		}
 		setHasOptionsMenu(true);
@@ -101,12 +101,11 @@ public class ProfileFragment extends Fragment {
 
 	}
 
-	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(this.menu, menu);
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -119,19 +118,17 @@ public class ProfileFragment extends Fragment {
 			return super.onContextItemSelected(item);
 		}
 	}
-	
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == Activity.RESULT_OK) {
-			if(requestCode==7){
+			if (requestCode == 7) {
 				displayedUser = data.getParcelableExtra(Keys.User.PARCEL);
 				setUser(displayedUser);
 			}
 		}
 	}
 
-
-	
 	private void setupViews(View v) {
 		informationView = v.findViewById(R.id.profile_container);
 		emptyView = v.findViewById(android.R.id.empty);
@@ -169,17 +166,16 @@ public class ProfileFragment extends Fragment {
 			return;
 		}
 
-
 		// Swap visibility while loading information
 		emptyView.setVisibility(View.VISIBLE);
 		informationView.setVisibility(View.GONE);
-		
+
 		UserVolleyAdapter.fetchUserInfo(userID, new AsyncResponse<User>() {
 			@Override
 			public void processFinish(User result) {
 				if (ProfileFragment.this.isAdded())
-				ProfileFragment.this.setUser(result);
-				
+					ProfileFragment.this.setUser(result);
+
 			}
 		});
 	}
@@ -190,20 +186,23 @@ public class ProfileFragment extends Fragment {
 		public void onClick(View v) {
 			switch (v.getId()) {
 			case R.id.profile_email:
-				Intent emailIntent = new Intent(Intent.ACTION_SENDTO,Uri.fromParts("mailto", mEmail.getText().toString(),null));
-				startActivity(Intent.createChooser(emailIntent, "Send email..."));
+				Intent emailIntent = new Intent(Intent.ACTION_SENDTO,
+						Uri.fromParts("mailto", mEmail.getText().toString(),
+								null));
+				startActivity(Intent
+						.createChooser(emailIntent, "Send email..."));
 				break;
 			case R.id.profile_phone:
 
 				Intent dialerIntent = new Intent(Intent.ACTION_DIAL);
-				dialerIntent.setData(Uri.parse("tel:"+ mPhone.getText().toString()));
-				try{
+				dialerIntent.setData(Uri.parse("tel:"
+						+ mPhone.getText().toString()));
+				try {
 					startActivity(dialerIntent);
+				} catch (Exception e) {
+					System.out.println("it didn't work!");
 				}
-				catch(Exception e){
-						System.out.println("it didn't work!");
-				}
-				
+
 			default:
 				break;
 			}

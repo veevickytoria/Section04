@@ -57,7 +57,8 @@ public class YearPickerView extends ListView implements OnItemClickListener,
 		mController = controller;
 		mController.registerOnDateChangedListener(this);
 		ViewGroup.LayoutParams frame = new ViewGroup.LayoutParams(
-				android.view.ViewGroup.LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
+				android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+				android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 		setLayoutParams(frame);
 		Resources res = context.getResources();
 		mViewSize = res

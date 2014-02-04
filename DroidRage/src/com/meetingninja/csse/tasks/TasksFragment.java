@@ -53,7 +53,7 @@ import com.meetingninja.csse.extras.MyDateUtils;
 import com.meetingninja.csse.meetings.MeetingsFragment;
 
 public class TasksFragment extends Fragment implements
-AsyncResponse<List<Task>> {
+		AsyncResponse<List<Task>> {
 
 	private HashMap<String, List<Task>> taskLists;
 	private TaskItemAdapter taskAdpt;
@@ -102,18 +102,19 @@ AsyncResponse<List<Task>> {
 		typeAdapter = new TaskTypeAdapter(getActivity(), typeNames);
 		getActivity().getActionBar().setNavigationMode(
 				ActionBar.NAVIGATION_MODE_LIST);
-		getActivity().getActionBar().setSelectedNavigationItem(prevSelectedType);
+		getActivity().getActionBar()
+				.setSelectedNavigationItem(prevSelectedType);
 		getActivity().getActionBar().setListNavigationCallbacks(typeAdapter,
 				new OnNavigationListener() {
-			@Override
-			public boolean onNavigationItemSelected(int itemPosition,
-					long itemId) {
-				setTaskList(itemPosition);
-				return true;
-			}
-		});
+					@Override
+					public boolean onNavigationItemSelected(int itemPosition,
+							long itemId) {
+						setTaskList(itemPosition);
+						return true;
+					}
+				});
 
-		if(taskLists == null){
+		if (taskLists == null) {
 			/* Set up the task list */
 			taskLists = new HashMap<String, List<Task>>();
 			ArrayList<Task> l1 = new ArrayList<Task>(), l2 = new ArrayList<Task>(), l3 = new ArrayList<Task>();
@@ -172,7 +173,8 @@ AsyncResponse<List<Task>> {
 
 	@Override
 	public void onPause() {
-		prevSelectedType = getActivity().getActionBar().getSelectedNavigationIndex();
+		prevSelectedType = getActivity().getActionBar()
+				.getSelectedNavigationIndex();
 		getActivity().getActionBar().setNavigationMode(
 				ActionBar.NAVIGATION_MODE_STANDARD);
 
@@ -183,7 +185,8 @@ AsyncResponse<List<Task>> {
 	public void onResume() {
 		getActivity().getActionBar().setNavigationMode(
 				ActionBar.NAVIGATION_MODE_LIST);
-		getActivity().getActionBar().setSelectedNavigationItem(prevSelectedType);
+		getActivity().getActionBar()
+				.setSelectedNavigationItem(prevSelectedType);
 		super.onResume();
 	}
 
@@ -192,7 +195,7 @@ AsyncResponse<List<Task>> {
 		if (resultCode == Activity.RESULT_OK) {
 			if (requestCode == 6) {
 				refreshTasks();
-			}else if(requestCode==7){
+			} else if (requestCode == 7) {
 				Task t = data.getParcelableExtra(Keys.Task.PARCEL);
 				creator.createTask(t);
 			}
@@ -336,12 +339,12 @@ class TaskTypeAdapter implements SpinnerAdapter {
 		rowView.setPadding(
 				(int) this.context.getResources().getDimension(
 						R.dimen.activity_horizontal_margin),
-						(int) this.context.getResources().getDimension(
-								R.dimen.activity_vertical_margin),
-								(int) this.context.getResources().getDimension(
-										R.dimen.activity_horizontal_margin),
-										(int) this.context.getResources().getDimension(
-												R.dimen.activity_vertical_margin));
+				(int) this.context.getResources().getDimension(
+						R.dimen.activity_vertical_margin),
+				(int) this.context.getResources().getDimension(
+						R.dimen.activity_horizontal_margin),
+				(int) this.context.getResources().getDimension(
+						R.dimen.activity_vertical_margin));
 		return rowView;
 	}
 

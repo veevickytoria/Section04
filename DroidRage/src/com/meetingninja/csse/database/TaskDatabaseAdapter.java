@@ -78,8 +78,8 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 		// return void;
 
 	}
-	
-	public static Task createTask(Task t) throws IOException{
+
+	public static Task createTask(Task t) throws IOException {
 		String _url = getBaseUri().build().toString();
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -106,14 +106,14 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 		jgen.writeStringField(Keys.Task.CREATED_BY, t.getCreatedBy());
 		jgen.writeEndObject();
 		jgen.close();
-		
+
 		String payload = json.toString("UTF8");
 		ps.close();
 		// Get server response
 		sendPostPayload(conn, payload);
 		String response = getServerResponse(conn);
 		Map<String, String> responseMap = new HashMap<String, String>();
-		if(responseMap.containsKey(Keys.Task.ID)){
+		if (responseMap.containsKey(Keys.Task.ID)) {
 			t.setID(responseMap.get(Keys.Task.ID));
 		}
 		return t;
@@ -146,12 +146,18 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 	}
 
 	public static Task editTask(Task task) throws IOException {
-		String titlePayload = getEditPayload(task.getID(), Keys.Task.TITLE,	task.getTitle());
-		String descPayload = getEditPayload(task.getID(), Keys.Task.DESC,task.getDescription());
-		String isCompPayload = getEditPayload(task.getID(),Keys.Task.COMPLETED, Boolean.toString(task.getIsCompleted()));
-		String deadlinePayload = getEditPayload(task.getID(),Keys.Task.DEADLINE, task.getEndTime());
-		String compCritPayload = getEditPayload(task.getID(),Keys.Task.CRITERIA, task.getCompletionCriteria());
-		String assignedToPayload = getEditPayload(task.getID(),	Keys.Task.ASSIGNED_TO, task.getAssignedTo());
+		String titlePayload = getEditPayload(task.getID(), Keys.Task.TITLE,
+				task.getTitle());
+		String descPayload = getEditPayload(task.getID(), Keys.Task.DESC,
+				task.getDescription());
+		String isCompPayload = getEditPayload(task.getID(),
+				Keys.Task.COMPLETED, Boolean.toString(task.getIsCompleted()));
+		String deadlinePayload = getEditPayload(task.getID(),
+				Keys.Task.DEADLINE, task.getEndTime());
+		String compCritPayload = getEditPayload(task.getID(),
+				Keys.Task.CRITERIA, task.getCompletionCriteria());
+		String assignedToPayload = getEditPayload(task.getID(),
+				Keys.Task.ASSIGNED_TO, task.getAssignedTo());
 		// Get server response
 		sendSingleEdit(titlePayload);
 		sendSingleEdit(descPayload);
@@ -206,16 +212,26 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 	public static void parseTaskNoCheck(JsonNode node, Task t) {
 		// start parsing a task
 
-		t.setDescription(node.hasNonNull(Keys.Task.DESC) ? node.get(Keys.Task.DESC).asText() : "");
-		t.setTitle(node.hasNonNull(Keys.Task.TITLE) ? node.get(Keys.Task.TITLE).asText() : "");
-		t.setEndTime(node.hasNonNull(Keys.Task.DEADLINE) ? node.get(Keys.Task.DEADLINE).asText() : "");
-		t.setDateCreated(node.hasNonNull(Keys.Task.DATE_CREATED) ? node.get(Keys.Task.DATE_CREATED).asText() : "");
-		t.setDateAssigned(node.hasNonNull(Keys.Task.DATE_ASSIGNED) ? node.get(Keys.Task.DATE_ASSIGNED).asText() : "");
-		t.setCompletionCriteria(node.hasNonNull(Keys.Task.CRITERIA) ? node.get(Keys.Task.CRITERIA).asText() : "");
-		t.setAssignedTo(node.hasNonNull(Keys.Task.ASSIGNED_TO) ? node.get(Keys.Task.ASSIGNED_TO).asText() : "");
-		t.setAssignedFrom(node.hasNonNull(Keys.Task.ASSIGNED_FROM) ? node.get(Keys.Task.ASSIGNED_FROM).asText() : "");
-		t.setCreatedBy(node.hasNonNull(Keys.Task.CREATED_BY) ? node.get(Keys.Task.CREATED_BY).asText() : "");
-		t.setIsCompleted(node.hasNonNull(Keys.Task.COMPLETED) ? node.get(Keys.Task.COMPLETED).asBoolean() : false);
+		t.setDescription(node.hasNonNull(Keys.Task.DESC) ? node.get(
+				Keys.Task.DESC).asText() : "");
+		t.setTitle(node.hasNonNull(Keys.Task.TITLE) ? node.get(Keys.Task.TITLE)
+				.asText() : "");
+		t.setEndTime(node.hasNonNull(Keys.Task.DEADLINE) ? node.get(
+				Keys.Task.DEADLINE).asText() : "");
+		t.setDateCreated(node.hasNonNull(Keys.Task.DATE_CREATED) ? node.get(
+				Keys.Task.DATE_CREATED).asText() : "");
+		t.setDateAssigned(node.hasNonNull(Keys.Task.DATE_ASSIGNED) ? node.get(
+				Keys.Task.DATE_ASSIGNED).asText() : "");
+		t.setCompletionCriteria(node.hasNonNull(Keys.Task.CRITERIA) ? node.get(
+				Keys.Task.CRITERIA).asText() : "");
+		t.setAssignedTo(node.hasNonNull(Keys.Task.ASSIGNED_TO) ? node.get(
+				Keys.Task.ASSIGNED_TO).asText() : "");
+		t.setAssignedFrom(node.hasNonNull(Keys.Task.ASSIGNED_FROM) ? node.get(
+				Keys.Task.ASSIGNED_FROM).asText() : "");
+		t.setCreatedBy(node.hasNonNull(Keys.Task.CREATED_BY) ? node.get(
+				Keys.Task.CREATED_BY).asText() : "");
+		t.setIsCompleted(node.hasNonNull(Keys.Task.COMPLETED) ? node.get(
+				Keys.Task.COMPLETED).asBoolean() : false);
 
 	}
 

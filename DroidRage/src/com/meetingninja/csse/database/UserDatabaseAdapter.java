@@ -67,8 +67,9 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 	public static Uri.Builder getBaseUri() {
 		return Uri.parse(getBaseUrl()).buildUpon();
 	}
+
 	public static String getBaseContactUrl() {
-		return BASE_URL +"Contact";
+		return BASE_URL + "Contact";
 	}
 
 	public static Uri.Builder getBaseContactUri() {
@@ -104,7 +105,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		// add request header
-		
+
 		conn.setRequestMethod(IRequest.GET);
 		addRequestHeader(conn, false);
 		// Get server response
@@ -113,26 +114,28 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		List<Contact> contacts = new ArrayList<Contact>();
 		List<String> contactIds = new ArrayList<String>();
 		List<String> relationIds = new ArrayList<String>();
-		final JsonNode contactsArray = MAPPER.readTree(response).get(Keys.User.CONTACTS);
+		final JsonNode contactsArray = MAPPER.readTree(response).get(
+				Keys.User.CONTACTS);
 		if (contactsArray.isArray()) {
 			for (final JsonNode userNode : contactsArray) {
 				relationIds.add(userNode.get(Keys.User.RELATIONID).asText());
 				contactIds.add(userNode.get(Keys.User.CONTACTID).asText());
 			}
 		}
-		
+
 		conn.disconnect();
-		for(int i=0;i<contactIds.size();i++){
+		for (int i = 0; i < contactIds.size(); i++) {
 			User contact = getUserInfo(contactIds.get(i));
-			if(contact!=null){
-				Contact oneContact = new Contact(contact,relationIds.get(i));
+			if (contact != null) {
+				Contact oneContact = new Contact(contact, relationIds.get(i));
 				contacts.add(oneContact);
 			}
 		}
 		return contacts;
 	}
-	
-	public static List<Contact> addContact(String contactUserID) throws IOException {
+
+	public static List<Contact> addContact(String contactUserID)
+			throws IOException {
 
 		String _url = getBaseContactUri().build().toString();
 		URL url = new URL(_url);
@@ -158,42 +161,43 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		jgen.close();
 		String payload = json.toString("UTF8");
 		ps.close();
-		
+
 		sendPostPayload(conn, payload);
 		String response = getServerResponse(conn);
-		
-		//TODO: put add useful check here
-//		User userContact=null;
-//		String relationID=null;
-//		String result = new String();
-//		if (!response.isEmpty()) {
-//			JsonNode contactNode = MAPPER.readTree(response);
-//			if (!contactNode.has(Keys.User.ID)) {
-//				result = "invalid";
-//			} else {
-//				result = contactNode.get(Keys.User.ID).asText();
-//				userContact = getUserInfo(result);
-//				relationID = contactNode.get(Keys.User.RELATIONID).asText();
-//			}
-//		}
 
-//		if (!result.equalsIgnoreCase("invalid"))
-//			g.setID(result);
+		// TODO: put add useful check here
+		// User userContact=null;
+		// String relationID=null;
+		// String result = new String();
+		// if (!response.isEmpty()) {
+		// JsonNode contactNode = MAPPER.readTree(response);
+		// if (!contactNode.has(Keys.User.ID)) {
+		// result = "invalid";
+		// } else {
+		// result = contactNode.get(Keys.User.ID).asText();
+		// userContact = getUserInfo(result);
+		// relationID = contactNode.get(Keys.User.RELATIONID).asText();
+		// }
+		// }
+
+		// if (!result.equalsIgnoreCase("invalid"))
+		// g.setID(result);
 		conn.disconnect();
-		
-		
-//		Contact contact = new Contact(userContact,relationID);
+
+		// Contact contact = new Contact(userContact,relationID);
 		List<Contact> contacts = new ArrayList<Contact>();
-		contacts=getContacts(userID);
+		contacts = getContacts(userID);
 		return contacts;
 	}
-	public static List<Contact> deleteContact(String relationID) throws IOException {
 
-		String _url = getBaseContactUri().appendPath("Relations").appendPath(relationID).build().toString();
+	public static List<Contact> deleteContact(String relationID)
+			throws IOException {
+
+		String _url = getBaseContactUri().appendPath("Relations")
+				.appendPath(relationID).build().toString();
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod(IRequest.DELETE);
-		
 
 		addRequestHeader(conn, false);
 		int responseCode = conn.getResponseCode();
@@ -214,7 +218,6 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		List<Contact> contacts = getContacts(session.getUserID());
 		return contacts;
 	}
-
 
 	public static String login(String email, String pass) throws IOException {
 		// Server URL setup
@@ -388,7 +391,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		// Get server response
 		int responseCode = conn.getResponseCode();
 		String response = getServerResponse(conn);
-		
+
 		System.out.println("yes");
 
 		// Initialize ObjectMapper
@@ -407,7 +410,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 			}
 		}
 		conn.disconnect();
-		
+
 		for (String id : groupIDList) {
 			groupList.add(GroupDatabaseAdapter.getGroup(id));
 		}

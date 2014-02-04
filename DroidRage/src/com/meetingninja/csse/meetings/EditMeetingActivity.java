@@ -377,15 +377,22 @@ public class EditMeetingActivity extends FragmentActivity implements
 				if (tempcal.after(now)) {
 					cal.set(year, monthOfYear, dayOfMonth, hour, minute);
 					String format = dateFormat.print(cal.getTimeInMillis());
-					if ((start && cal.after(other))	|| ((!start) && cal.before(other))) {
+					if ((start && cal.after(other))
+							|| ((!start) && cal.before(other))) {
 						other.set(year, monthOfYear, dayOfMonth, hour, minute);
-						otherTimeButton.setText(timeFormat.print(other.getTimeInMillis()));
+						otherTimeButton.setText(timeFormat.print(other
+								.getTimeInMillis()));
 						otherButton.setText(format);
 					}
 					timeButton.setText(timeFormat.print(cal.getTimeInMillis()));
 					button.setText(format);
 				} else {
-					AlertDialogUtil.displayDialog(activity,"Error","A Meeting can not be set to start or end before now","OK", null);
+					AlertDialogUtil
+							.displayDialog(
+									activity,
+									"Error",
+									"A Meeting can not be set to start or end before now",
+									"OK", null);
 				}
 			}
 		}
@@ -413,17 +420,23 @@ public class EditMeetingActivity extends FragmentActivity implements
 
 		@Override
 		public void onClick(View v) {
-			is24 = android.text.format.DateFormat.is24HourFormat(getApplicationContext());
+			is24 = android.text.format.DateFormat
+					.is24HourFormat(getApplicationContext());
 			FragmentManager fm = getSupportFragmentManager();
-			RadialTimePickerDialog timePickerDialog = RadialTimePickerDialog.newInstance(TimeClickListener.this,cal.get(Calendar.HOUR_OF_DAY),							cal.get(Calendar.MINUTE), is24);
+			RadialTimePickerDialog timePickerDialog = RadialTimePickerDialog
+					.newInstance(TimeClickListener.this,
+							cal.get(Calendar.HOUR_OF_DAY),
+							cal.get(Calendar.MINUTE), is24);
 			timePickerDialog.show(fm, "fragment_time_picker_name");
 		}
 
 		@Override
-		public void onTimeSet(RadialPickerLayout dialog, int hourOfDay,	int minute) {
+		public void onTimeSet(RadialPickerLayout dialog, int hourOfDay,
+				int minute) {
 			Calendar tempcal = Calendar.getInstance();
 			// tempcal.setTimeZone(TimeZone.getDefault());
-			tempcal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH), hourOfDay, minute);
+			tempcal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
+					cal.get(Calendar.DAY_OF_MONTH), hourOfDay, minute);
 			Calendar now = Calendar.getInstance();
 			now.setTimeZone(TimeZone.getTimeZone("UTC"));
 			now = Calendar.getInstance();
@@ -431,14 +444,18 @@ public class EditMeetingActivity extends FragmentActivity implements
 			if (tempcal.after(now)) {
 				cal.set(Calendar.HOUR_OF_DAY, hourOfDay);
 				cal.set(Calendar.MINUTE, minute);
-				if ((start && cal.after(other))|| ((!start) && cal.before(other))) {
+				if ((start && cal.after(other))
+						|| ((!start) && cal.before(other))) {
 					other.set(Calendar.HOUR_OF_DAY, hourOfDay);
 					other.set(Calendar.MINUTE, minute);
-					otherButton.setText(timeFormat.print(cal.getTimeInMillis()));
+					otherButton
+							.setText(timeFormat.print(cal.getTimeInMillis()));
 				}
 				button.setText(timeFormat.print(cal.getTimeInMillis()));
 			} else {
-				AlertDialogUtil.displayDialog(activity, "Error","A Meeting can not be set to start or end before now","OK", null);
+				AlertDialogUtil.displayDialog(activity, "Error",
+						"A Meeting can not be set to start or end before now",
+						"OK", null);
 			}
 		}
 
