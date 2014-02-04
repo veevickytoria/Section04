@@ -26,44 +26,87 @@ areCookiesEnabled()
 <!-- JAVASCRIPT REQUIRED TO ENTER THIS AREA -->
 <div id='jsNeeded' hidden>
   <!-- Temporary Login Details -->
-  <h1>**** TEMP LOGIN DETAILS ****</h1>
-  <h2>Email: hi@hi.com</h2>
-  <h2>Password: bye</h2>
+  <h4>**** TEMP LOGIN DETAILS ****</h4>
+  <h5>Email: hi@hi.com</h5>
+  <h5>Password: bye</h5>
   <br />
 
-  <!-- LOGIN WIDGET -->
-  <div>
-      <h1 style='margin-left: 24%; margin-right: auto'>Login</h1>
-      <p style='margin-left: 24%; margin-right: auto'>Welcome to our Web App! Please enter credentials below </p>
-      <form id="loginForm" method="post">
-          <input name="email" style='width:52%; margin-left: 24%; margin-right: auto' placeholder="Email" type="text" />
-          <input name="password" style='margin-left: 24%; margin-right: auto; width:52%' placeholder="Password" type="password" />
-          <input class="button" style="margin-left: 24%; margin-right: auto; font-size: 14px; cursor: pointer; visibility: none;" type="submit" value="Login" />
-          <br />
-          <p id="invalidLogin" style="text-align: center; color: #F59C17; font-size: 18px; display: none; font-weight: bold; padding-top: 10px;">
+  <div style='width:40%; margin-left: 30%; margin-right: auto;'>
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="#loginPane" data-toggle="tab">Login</a></li>
+      <li><a href="#registerPane" data-toggle="tab">Register</a></li>
+    </ul>
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <div class="tab-pane fade in active" id="loginPane">
+        <!-- LOGIN WIDGET -->
+        <br />
+        <div>
+          <form id="loginForm" method="post" role='form'>
+            <div class='form-group'>
+              <label class='sr-only' for='logEmail'>Email</label>
+              <input id='logEmail' class="form-control" name="email" style='width:52%; margin-left: 24%; margin-right: auto' placeholder="Email" type="email" />
+            </div>
+
+            <div>
+              <label class="sr-only" for='logPass'>Password</label>
+              <input id='logPass' class='form-control' name="password" style='margin-left: 24%; margin-right: auto; width:52%' placeholder="Password" type="password" />
+            </div>
+            <br />
+            <input class="btn btn-warning" style="margin-left: 24%; margin-right: auto; font-size: 14px; cursor: pointer; visibility: none;" type="submit" value="Login" />
+            <!-- <br />
+            <p id="invalidLogin" style="text-align: center; color: #F59C17; font-size: 18px; display: none; font-weight: bold; padding-top: 10px;">
               Invalid Username or Password
-          </p>
-          <a style="color: white; text-decoration: none; line-height: 62px; padding-left: 46%; cursor: pointer">
-              Forgot?
-          </a>
-      </form>
-  </div>
-  <!-- REGISTER WIDGET -->
-  <div>
-    <form id="registerForm" method="post">
-      <table style="width: 100%">
-        <input id='regName' name="name" placeholder="Full Name" type="text" required />
-        <input id='regEmail' name="email" placeholder="Email" type="email" style='font-size: 18px;height: 38px' required />
+            </p> -->
+          </form>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="registerPane">
+        <!-- REGISTER WIDGET -->
         <br />
-        <input id='p0' name='password' placeholder='Password' type='password' required />
-        <input id="p1" name="passConfirm" placeholder="Confirm password" type="password" onchange="passCheck();" />
-        <br />
-        <input name="phone" placeholder="Phone #" type="text" />
-        <input name="company" placeholder="Company" type="text" />
-        <input name="title" placeholder="Title" type="text" />
-        <input name="location" placeholder="Location" type="text" />
-        <input class="button" style='font-size: 14px; cursor: pointer' type="submit" value="Sign Up" />
-      </table>
-    </form>
+        <div>
+          <form id="registerForm" method="post" role='form'>
+            <table style="width: 100%">
+              <div class="form-group">
+                <label class='sr-only' for='regName'>Full Name</label>
+                <input id='regName' class='form-control' name="name" placeholder="Full Name" type="text" required />
+              </div>
+              <div class="form-group">
+                <label class='sr-only' for='regEmail'>Email</label>
+                <input id='regEmail' class='form-control' name="email" placeholder="Email" type="email" required />
+              </div>
+              <div class='row'>
+                <div class="col-md-6 form-group">
+                  <label class='sr-only' for='p0'>Password</label>
+                  <input id='p0' class='form-control' name='password' placeholder='Password' type='password' required />
+                </div>
+                <div class="col-md-6 form-group">
+                  <label class='sr-only' for='p1'>Confirm Password</label>
+                  <input id="p1" class='form-control' name="passConfirm" placeholder="Confirm password" type="password" onchange="passCheck();" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class='sr-only' for='phone'>Phone</label>
+                <input id='phone' name="phone" class='form-control' placeholder="Phone #" type="text" />
+              </div>
+              <div class="form-group">
+                <label class='sr-only' for='company'>Company</label>
+                <input id='phone' name="company" class='form-control' placeholder="Company" type="text" />
+              </div>
+              <div class="form-group">
+                <label class='sr-only' for='title'>Title</label>
+                <input id='phone' name="title" class='form-control' placeholder="Title" type="text" />
+              </div>
+              <div class="form-group">
+                <label class='sr-only' for='location'>Location</label>
+                <input id='phone' name="location" class='form-control' placeholder="Location" type="text" />
+              </div>
+              <input class="btn btn-warning" type="submit" value="Sign Up" />
+            </table>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
