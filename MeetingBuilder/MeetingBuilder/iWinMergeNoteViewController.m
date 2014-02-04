@@ -94,6 +94,7 @@
     NSMutableArray *noteDictionaries = [self.notes objectAtIndex:indexPath.row];
     if ([tableView isEqual:self.userListTable])
     {
+        self.notesForTable = [[NSMutableArray alloc]init];
         for (NSDictionary *d in noteDictionaries) {
             [self.notesForTable addObject:[d objectForKey:@"noteTitle"]];
         }
