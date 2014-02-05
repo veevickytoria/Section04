@@ -55,7 +55,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
                         echo json_encode(array("errorID"=>1, "errorMessage"=>"pass invalid email or password"));
                 }
         }else{
-                echo json_encode(array("errorID"=>2, "errorMessage"=>"email invalid email or password"));
+                echo json_encode(array("errorID"=>1, "errorMessage"=>"email invalid email or password"));
         }        
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'test')==0){
         //testing method to check if mailing is working correctly
@@ -278,7 +278,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 	===============*/
 	
 	if (!isset($_GET['id'])) {
-		echo json_encode(array('errorID'=>'XX', 'errorMessage'=>'ID was not set.'));
+		echo json_encode(array('errorID'=>'6', 'errorMessage'=>'No ID provided.'));
 	 } else {
 	
 		$userNode = $client->getNode($_GET['id']);
@@ -303,7 +303,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 			echo json_encode($outputArray);
 			
 		} else {
-		echo json_encode(array('errorID'=>'XX', 'errorMessage'=>$_GET['id']. ' is an unrecognized node ID in the database'));
+		echo json_encode(array('errorID'=>'5', 'errorMessage'=>$_GET['id']. ' node ID is not recognized in database'));
 		}
 	}	
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') == 0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'projects') == 0){
@@ -312,7 +312,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 	================*/
 	
 	if (!isset($_GET['id'])) {
-		echo json_encode(array('errorID'=>'XX', 'errorMessage'=>'ID was not set.'));
+		echo json_encode(array('errorID'=>'6', 'errorMessage'=>'No ID provided'));
 	 } else {
 	
 		$userNode = $client->getNode($_GET['id']);
@@ -337,7 +337,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 			echo json_encode($outputArray);
 			
 		} else {
-		echo json_encode(array('errorID'=>'XX', 'errorMessage'=>$_GET['id']. ' is an unrecognized node ID in the database'));
+		echo json_encode(array('errorID'=>'5', 'errorMessage'=>$_GET['id']. ' node ID is not recognized in database'));
 		}
 	}	
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
@@ -368,7 +368,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
                 // return the id of the node
                 echo json_encode(array("userID"=>$userNode->getId()));
         }else{
-                echo json_encode(array("errorID"=>2, "errorMessage"=>"duplicate email"));
+                echo json_encode(array("errorID"=>2, "errorMessage"=>"Duplicate email"));
         }
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'Users')==0){
         //GET all users
