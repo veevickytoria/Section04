@@ -70,18 +70,12 @@ WebApp::Application.routes.draw do
   
   get "profile/index"
   
-  get "tasks/index"
   get "tasks/new"
-  get "tasks/view"
-  get "tasks/edit"
-  get "tasks/delete"
+  get "tasks/index"
 
-  get "projects/index"
   get "projects/new"
-  get "projects/view"
-  get "projects/edit"
-  get "project/delete"
-
+  get "projects/index"
+  
   get "preferences/home"
 
   get "documents/index"
