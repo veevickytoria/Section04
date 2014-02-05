@@ -1,27 +1,43 @@
 class GroupsController < ApplicationController
+	
+	before_filter :getGroups
+
 	def index
+		# CHECK IF USER LOGGED IN
 		if (cookies[:userID].blank?)
 			redirect_to '/login/index'
 			return
 		end
+	end
+
+	def getGroups
+		# GET USER GROUPS
 		require 'net/http'
-		@UserID = '717'
+		@UserID = cookies[:userID]
+
+		# get group IDs
 		url = URI.parse('http://csse371-04.csse.rose-hulman.edu/User/Groups/' + @UserID)
 		req = Net::HTTP::Get.new(url.path)
 		res = Net::HTTP.start(url.host, url.port) {|http|
 			http.request(req)
 		}
 
+		groupIDs = JSON.parse(res.body)
 
-		#@tasks = JSON.parse(res.body)
-		@groups = JSON.parse('{"groups":[{"groupID":"1","groupTitle":"NWA","groupType":"hardcore gangsta"},
-			{"groupID":"2","groupTitle":"Group? More like poop!","groupType":"lolz"},
-			{"groupID":"3","groupTitle":"Purgatory","groupType":"limbo"},
-			{"groupID":"4","groupTitle":"Murdah Squad","groupType":"serial killer"}]}')
+		@groups = Array.new
+		groupString = ''
 
-	end
+		groupIDs['groups'].each do |group|
+			url = URI.parse('http://csse371-04.csse.rose-hulman.edu/Group/' + group['id'].to_s)
+			req = Net::HTTP::Get.new(url.path)
+			res = Net::HTTP.start(url.host, url.port) {|http|
+				http.request(req)
+			}
+			groupString = res.body
+			groupString = groupString[0..-2] + ',"groupID":"' + group['id'].to_s + '"}';
 
-	def new
+			@groups.push(JSON.parse(groupString))
+		end
 	end
 
 	layout 'slate'

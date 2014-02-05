@@ -88,16 +88,14 @@
       <th>Group Type</th>
     </tr>
   </thead>
-  <% for group in @groups['groups'] %>
-  <tr>
-    <td><%= group['groupID'] %></td>
-    <td><a onClick="showViewGroupModal(<%= group['groupID'] %>)" href = '#viewGroupModal' data-refresh = 'true' data-toggle='modal'><%= group['groupTitle'] %></a></td>
-    <td><%= group['groupType'] %></td>
-    <td colspan='1' style='cursor: pointer; text-align: center' onclick="showDeleteModal(<%= group['groupID'] %>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
-  </tr>
+  <% if !(@groups.any?) %>
+  <tr><td colspan="3" style="text-align: center;">YOU ARE NOT A MEMBER OF ANY GROUPS</td></tr>
+  <% else %>
+  <!-- REPLACE WITH: code to populate table rows with groups -->
   <% end %>
-
+  <tfoot>
   <tr>
     <td colspan='4' style='cursor: pointer; text-align: center' href='#newGroupModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
   </tr>
+  </tfoot>
 </table>

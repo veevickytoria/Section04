@@ -1,4 +1,4 @@
-var GroupArray;
+  var GroupArray;
   var deleteID;
   var Members = JSON.parse('{"members":[{"userID":"1","displayName":"Santa Claus"},{"userID":"2","displayName":"WasARebel"},{"userID":"3","displayName":"KemoSabe"},{"userID":"4","displayName":"CaptainKirk"},{"userID":"5","displayName":"Spock"},{"userID":"6","displayName":"Josh"},{"userID":"7","displayName":"Paul"},{"userID":"8","displayName":"David"},{"userID":"9","displayName":"William"},{"userID":"10","displayName":"Maxwell"},{"userID":"11","displayName":"Alpha"},{"userID":"12","displayName":"Dharmin"}]}');
 
