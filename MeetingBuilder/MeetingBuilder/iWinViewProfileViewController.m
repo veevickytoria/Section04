@@ -80,33 +80,19 @@
     
 }
 
--(void) updateTextFieldUI: (UITextField *)textField
-{
-    textField.layer.cornerRadius = 7;
-    textField.layer.borderColor = [[UIColor whiteColor] CGColor];   //May not need
-}
-
--(void) unUpdateTextFieldUI: (UITextField *)textField
-{
-    textField.layer.cornerRadius = 7;
-    textField.layer.borderColor = [[UIColor whiteColor] CGColor];   //May not need
-}
-
 -(void) saveChanges
 {
-    
-
-    NSArray *fields = [NSArray arrayWithObjects:@"displayName", @"email", @"phone", @"company", @"title", @"location",nil];
+    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/"];
+    NSArray *fields = [NSArray arrayWithObjects:@"name", @"email", @"phone", @"company", @"title", @"location",nil];
     NSArray *values = [NSArray arrayWithObjects:self.displayNameTextField.text, self.emailTextField.text, self.phoneTextField.text, self.companyTextField.text, self.titleTextField.text, self.locationTextField.text,nil];
     NSArray *keys = [NSArray arrayWithObjects:@"userID", @"field", @"value", nil];
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/"];
-    
+
     for (int i = 0; i < fields.count; i++) {
     
         NSArray *objects = [NSArray arrayWithObjects:[NSNumber numberWithInt:self.userID], fields[i], values[i], nil];
 
         NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-        [self.backEndUtility postRequestForUrl:url withDictionary:jsonDictionary];
+        [self.backEndUtility putRequestForUrl:url withDictionary:jsonDictionary];
     }
 }
 
@@ -128,7 +114,7 @@
 
     [self updateTextUI];
     
-    [self.editProfile setTintColor:[UIColor blueColor]];
+    [self.editProfile setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
     self.isEditing = NO;
     [self.editProfile setTitle:@"Edit Profile" forState:UIControlStateNormal];
     self.cancel.hidden = YES;
@@ -158,7 +144,6 @@
 -(IBAction)onEditProfile:(id)sender
 {
     if (self.isEditing) {
-        [self saveChanges];
         self.displayNameTextField.userInteractionEnabled = NO;
         self.companyTextField.userInteractionEnabled = NO;
         self.titleTextField.userInteractionEnabled = NO;
@@ -173,12 +158,12 @@
         [self.phoneTextField setBorderStyle:UITextBorderStyleNone];
         [self.locationTextField setBorderStyle:UITextBorderStyleNone];
         
-        [self unUpdateTextFieldUI:self.displayNameTextField];
-        [self unUpdateTextFieldUI:self.companyTextField];
-        [self unUpdateTextFieldUI:self.titleTextField];
-        [self unUpdateTextFieldUI:self.emailTextField];
-        [self unUpdateTextFieldUI:self.phoneTextField];
-        [self unUpdateTextFieldUI:self.locationTextField];
+//        [self unUpdateTextFieldUI:self.displayNameTextField];
+//        [self unUpdateTextFieldUI:self.companyTextField];
+//        [self unUpdateTextFieldUI:self.titleTextField];
+//        [self unUpdateTextFieldUI:self.emailTextField];
+//        [self unUpdateTextFieldUI:self.phoneTextField];
+//        [self unUpdateTextFieldUI:self.locationTextField];
         
         
         [self.editProfile setTitle:@"Edit Profile" forState:UIControlStateNormal];
@@ -203,12 +188,12 @@
         [self.phoneTextField setBorderStyle:UITextBorderStyleRoundedRect];
         [self.locationTextField setBorderStyle:UITextBorderStyleRoundedRect];
         
-        [self updateTextFieldUI:self.displayNameTextField];
-        [self updateTextFieldUI:self.companyTextField];
-        [self updateTextFieldUI:self.titleTextField];
-        [self updateTextFieldUI:self.emailTextField];
-        [self updateTextFieldUI:self.phoneTextField];
-        [self updateTextFieldUI:self.locationTextField];
+//        [self updateTextFieldUI:self.displayNameTextField];
+//        [self updateTextFieldUI:self.companyTextField];
+//        [self updateTextFieldUI:self.titleTextField];
+//        [self updateTextFieldUI:self.emailTextField];
+//        [self updateTextFieldUI:self.phoneTextField];
+//        [self updateTextFieldUI:self.locationTextField];
   
         [self.editProfile setTitle:@"Save" forState:UIControlStateNormal];
         [self.editProfile setTitleColor:[UIColor greenColor] forState:UIControlStateNormal];
