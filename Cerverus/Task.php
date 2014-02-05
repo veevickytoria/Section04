@@ -188,7 +188,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 ){
                         return;
 		}
 	}else{
-		echo json_encode(array("errorID"=>"18", "errorMessage"=>$postContent->taskID." is not recognized in the database"));
+		echo json_encode(array("errorID"=>"5", "errorMessage"=>$postContent->taskID." is not recognized in the database"));
 	}
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'DELETE')==0){
 	//deleteTask
@@ -219,10 +219,10 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 ){
 			$taskNode->delete();
 			echo json_encode(array('valid'=>'true'));
 		//} else {
-		//	echo json_encode(array('errorID'=>'7', 'errorMessage'=>'TaskDelete: Specified node is not a task.'));
+		//	echo json_encode(array('errorID'=>'11', 'errorMessage'=>'TaskDelete: Specified node is not a task.'));
 		//}	
 	} else {
-		echo json_encode(array('errorID'=>'8', 'errorMessage'=>'TaskDelete: Specified node does not exist.'));
+		echo json_encode(array('errorID'=>'5', 'errorMessage'=>'node ID is not recognized in database.'));
 	}
 }
 ?>
