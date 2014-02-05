@@ -29,19 +29,19 @@ alert("here");
 <div class="col-md-6">
 
 <p>
-  <span style="font-size:28px;">
+  <span style="font-size:40px;">
     <strong>
-      <input alt="" src="http://dogvacay.com/img/default_profile.jpg" style="width: 150px; height: 150px; border-width: 5px; border-style: solid; margin: 5px 15px; float: left;" type="image" />
       <%= @userInfo['name'] %>
     </strong>
   </span>
+  <a onclick="showEditModal()"><span class='glyphicon glyphicon-edit'></span>&nbsp<span class="badge"></span></a>
 </p>
 <p>
 
 
-<button onclick="submitEdit()">Testing</button>
+<!-- <button onclick="submitEdit()">Testing</button> -->
 
-<button onclick="showEditModal()"> Edit </button>
+
 
 <!--part of profile search
 <form id="searchProfileForm">
@@ -135,9 +135,10 @@ for (var i=0, max=all.length; i < max; i++) {
 </p>
 <br/>
 <p>
-  <span style="font-size:28px;"><strong><span style="font-size:18px;">Projects: <a href='#'><%= @userProjects['projects'][0]['projectTitle'] %></a>, <a href='#'><%= @userProjects['projects'][1]['projectTitle'] %></a></span></strong></span>
+  <span style="font-size:28px;"><strong><span style="font-size:18px;">Projects: </span>
 <br/>
-  <span style="font-size:28px;"><strong><span style="font-size:18px;">Groups: <a href='#'><%= @userGroups['groups'][0]['groupTitle'] %><a>, <a href='#'><%= @userGroups['groups'][1]['groupTitle'] %>, <a href='#'><%= @userGroups['groups'][2]['groupTitle'] %><a></a></span></strong></span>
+
+<span style="font-size:28px;"><strong><span style="font-size:18px;">Groups: <a href='#'><%= @userGroups['groups'][0]['groupTitle'] %><a>, <a href='#'><%= @userGroups['groups'][1]['groupTitle'] %>, <a href='#'><%= @userGroups['groups'][2]['groupTitle'] %><a></a></span></strong></span>
 
 <!-- Modal Stuff -->
 
