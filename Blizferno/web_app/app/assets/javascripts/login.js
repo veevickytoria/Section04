@@ -63,9 +63,8 @@ $(window).load(function() {
 			dataType: 'json',
 			success:function(data){
 				if(data.userID != null){
-
+					setCookie('userID', data.userID,'7');
 					window.location.href = "/home_page/index";
-
 				}
 			}
 		});

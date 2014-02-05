@@ -36,6 +36,8 @@ class HomePageController < ApplicationController
 		@meetingsParsed = Array.new
 		@meetingString = ''
 
+		
+
 		getUserMeetings['meetings'].each do |meeting|
 			url = URI.parse('http://csse371-04.csse.rose-hulman.edu/Meeting/' + meeting['id'].to_s)
 			req = Net::HTTP::Get.new(url.path)

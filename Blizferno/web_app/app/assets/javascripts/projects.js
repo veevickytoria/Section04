@@ -49,8 +49,8 @@ var ProjectArray;
     // });
 
     document.getElementById("titleE").value = ProjectArray["projectTitle"];
-    document.getElementById("descriptionE").value = ProjectArray["description"];
-    document.getElementById("groupE").value = ProjectArray["group"];
+    // document.getElementById("descriptionE").value = ProjectArray["description"];
+    // document.getElementById("groupE").value = ProjectArray["group"];
 
     populateSelect(Meetings["meetings"], "title", "meetingID", ProjectArray["meetings"], "meetingsE")
     populateSelect(Notes["notes"], "title", "noteID", ProjectArray["notes"], "notesE")
