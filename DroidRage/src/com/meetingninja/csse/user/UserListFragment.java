@@ -137,10 +137,8 @@ public class UserListFragment extends Fragment implements TokenListener {
 			}
 		});
 
-		View autocompleteView = getActivity().getLayoutInflater().inflate(
-				R.layout.fragment_autocomplete, null);
-		final ContactTokenTextView input = (ContactTokenTextView) autocompleteView
-				.findViewById(R.id.my_autocomplete);
+		View autocompleteView = getActivity().getLayoutInflater().inflate(R.layout.fragment_autocomplete, null);
+		final ContactTokenTextView input = (ContactTokenTextView) autocompleteView.findViewById(R.id.my_autocomplete);
 		autoAdapter = new AutoCompleteAdapter(getActivity(), allUsers);
 		input.setAdapter(autoAdapter);
 
@@ -166,8 +164,7 @@ public class UserListFragment extends Fragment implements TokenListener {
 				}
 			}
 		});
-		builder.setNegativeButton("Cancel",
-				new DialogInterface.OnClickListener() {
+		builder.setNegativeButton("Cancel",	new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.cancel();
@@ -179,10 +176,11 @@ public class UserListFragment extends Fragment implements TokenListener {
 	@Override
 	public void onTokenAdded(Object arg0) {
 		SerializableUser added = null;
-		if (arg0 instanceof SerializableUser)
+		if (arg0 instanceof SerializableUser){
 			added = (SerializableUser) arg0;
-		else if (arg0 instanceof User)
+		} 	else if (arg0 instanceof User){
 			added = new SerializableUser((User) arg0);
+		}
 
 		if (added != null) {
 			addedUser = added;
@@ -192,11 +190,11 @@ public class UserListFragment extends Fragment implements TokenListener {
 	@Override
 	public void onTokenRemoved(Object arg0) {
 		SerializableUser removed = null;
-		if (arg0 instanceof SerializableUser)
+		if (arg0 instanceof SerializableUser){
 			removed = (SerializableUser) arg0;
-		else if (arg0 instanceof User)
+		} 	else if (arg0 instanceof User){
 			removed = new SerializableUser((User) arg0);
-
+		}
 		if (removed != null) {
 			addedUser = null;
 		}
@@ -212,12 +210,7 @@ public class UserListFragment extends Fragment implements TokenListener {
 				// why doesn't this work?
 				// contacts.remove(tempDeletedContacts.get(i));
 				for (int j = 0; j < contacts.size(); j++) {
-					if (contacts
-							.get(j)
-							.getContact()
-							.getID()
-							.equals(tempDeletedContacts.get(i).getContact()
-									.getID())) {
+					if (contacts.get(j).getContact().getID().equals(tempDeletedContacts.get(i).getContact().getID())) {
 						contacts.remove(j);
 						break;
 					}
@@ -252,18 +245,15 @@ public class UserListFragment extends Fragment implements TokenListener {
 	}
 
 	private void setUpListView(View v) {
-		mContactAdapter = new ContactArrayAdapter(getActivity(),
-				R.layout.list_item_user, contacts);
+		mContactAdapter = new ContactArrayAdapter(getActivity(),R.layout.list_item_user, contacts);
 		l = (EnhancedListView) v.findViewById(R.id.contacts_list);
 		l.setAdapter(mContactAdapter);
 		l.setEmptyView(v.findViewById(android.R.id.empty));
 		l.setDismissCallback(new de.timroes.android.listview.EnhancedListView.OnDismissCallback() {
 			@Override
-			public EnhancedListView.Undoable onDismiss(
-					EnhancedListView listView, final int position) {
+			public EnhancedListView.Undoable onDismiss(EnhancedListView listView, final int position) {
 
-				final Contact item = (Contact) mContactAdapter
-						.getItem(position);
+				final Contact item = (Contact) mContactAdapter.getItem(position);
 				tempDeletedContacts.add(item);
 				contacts.remove(item);
 				// for(int i=0;i<contacts.size();i++){
@@ -298,14 +288,11 @@ public class UserListFragment extends Fragment implements TokenListener {
 		l.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View v, int position,
-					long id) {
+			public void onItemClick(AdapterView<?> arg0, View v, int position,long id) {
 				User clicked = mContactAdapter.getItem(position).getContact();
-				Intent profileIntent = new Intent(v.getContext(),
-						ProfileActivity.class);
+				Intent profileIntent = new Intent(v.getContext(),ProfileActivity.class);
 				profileIntent.putExtra(Keys.User.PARCEL, clicked);
 				startActivity(profileIntent);
-
 			}
 
 		});
@@ -337,12 +324,7 @@ public class UserListFragment extends Fragment implements TokenListener {
 				// why doesn't this work?
 				// contacts.remove(tempDeletedContacts.get(i));
 				for (int j = 0; j < contacts.size(); j++) {
-					if (contacts
-							.get(j)
-							.getContact()
-							.getID()
-							.equals(tempDeletedContacts.get(i).getContact()
-									.getID())) {
+					if (contacts.get(j).getContact().getID().equals(tempDeletedContacts.get(i).getContact().getID())) {
 						contacts.remove(j);
 						break;
 					}
