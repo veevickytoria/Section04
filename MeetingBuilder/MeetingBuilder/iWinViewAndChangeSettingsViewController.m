@@ -216,7 +216,7 @@
         self.isEditing = NO;
         self.saveAndEditButton.hidden = NO;
         self.passwordEdited = NO;
-        
+        self.oldPasswordTextField.text = @"********";
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Successful" message:@"Settings were successfully saved!" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
         [alert show];
         
@@ -226,7 +226,6 @@
         [self clearFields];
     }
     self.isEditing = NO;
-    self.oldPasswordTextField.text = @"********";
     
 }
 - (IBAction)onSaveTable:(id)sender
@@ -320,6 +319,7 @@
 -(void) showFields: (BOOL) show
 {
     if(show) {
+        
         self.oldPasswordTextField.text = @"";
         self.oldPasswordLabel.text = @"Old Password:";
         self.confirmPasswordTextField.hidden = NO;
@@ -329,6 +329,7 @@
         self.passwordLabel.hidden = NO;
         
     } else{
+        
         self.oldPasswordTextField.text = @"********";
         self.oldPasswordLabel.text = @"Password:";
         self.confirmPasswordTextField.hidden = YES;
@@ -342,21 +343,22 @@
 -(void) enableInteraction: (BOOL) enable
 {
     if (enable){
+        
         self.emailTextField.userInteractionEnabled = YES;
         self.confirmPasswordTextField.userInteractionEnabled = YES;
         self.passwordTextField.userInteractionEnabled = YES;
         self.oldPasswordTextField.userInteractionEnabled = YES;
         [self.emailTextField setBorderStyle:UITextBorderStyleRoundedRect];
         [self.oldPasswordTextField setBorderStyle:UITextBorderStyleRoundedRect];
+        
     }else{
+        
         self.emailTextField.userInteractionEnabled = NO;
         self.confirmPasswordTextField.userInteractionEnabled = NO;
         self.passwordTextField.userInteractionEnabled = NO;
         self.oldPasswordTextField.userInteractionEnabled = NO;
         [self.emailTextField setBorderStyle:UITextBorderStyleNone];
         [self.oldPasswordTextField setBorderStyle:UITextBorderStyleNone];
-
-
     }
 }
 
