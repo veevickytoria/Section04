@@ -38,7 +38,7 @@
 		<h5>Date</h5>
 		
 		<input type='text' name = "datetime" placeholder='mm/dd/yyyy HH:MM' class='form-control' />
-		<input type='text' name = "datetimeEnd" placeholder='mm/dd/yyy HH:MM' class='form-control' />
+		<input type='text' name = "datetimeEnd" placeholder='mm/dd/yyyy HH:MM' class='form-control' />
 		
 		<h5>Location</h5>
 		<table>
@@ -68,10 +68,10 @@
 		<table class='fullWidth'>
 			<tr>
 				<td style='width: 70%'>
-					<input type='url' name = 'agenda' placeholder='Paste Link' class='form-control'/>
+					<input type='url' name = 'agenda' class='fullWidth' placeholder='Agenda Title' />
 				</td>
 				<td style='width: 30%'>
-					<input type='button' value='Attach Google Doc' class='form-control'/>
+					<input type='button' value='Search Agendas' />
 				</td>
 			</tr>
 		</table>

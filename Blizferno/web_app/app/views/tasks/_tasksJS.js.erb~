@@ -65,7 +65,7 @@ function showDeleteModal(ID){
 
 function hideDeleteModal(){
 
-	var deleteData = taskJSON[deleteID]['taskID'];
+	var deleteData = tasksJSON[deleteID]['taskID'];
 	
 	$.ajax({
 		type: 'DELETE',
@@ -95,7 +95,7 @@ function showViewTaskModal(ID){
 		$(this).removeData('bs.modal');
 	});
 
-
+	currentID = ID;
 
 	document.getElementById("titleV").innerHTML = tasksJSON[currentID]["title"];
 	document.getElementById("isCompletedV").innerHTML = "false";
