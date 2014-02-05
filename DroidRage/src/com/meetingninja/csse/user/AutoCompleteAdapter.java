@@ -4,6 +4,7 @@ import java.util.List;
 
 import objects.User;
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,27 +26,39 @@ public class AutoCompleteAdapter extends FilteredArrayAdapter<User> {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		if (convertView == null) {
+		User u = getItem(position);
+		if(u == null){
+			TextView view = new TextView(this.getContext());
+			view.setText((position == 0 ? "Contacts" : "Other"));
+			view.setBackgroundColor(Color.GRAY);
+			view.setTextSize(20);
+			return view;
+		}
+		if (convertView == null || convertView instanceof TextView) {
 			convertView = (View) mLayoutInflater.inflate(
 					R.layout.chips_recipient_dropdown_item, parent, false);
 		}
-
-		User u = getItem(position);
-		((TextView) convertView.findViewById(android.R.id.title)).setText(u
-				.getDisplayName());
-		((TextView) convertView.findViewById(android.R.id.text1)).setText(u
-				.getEmail());
-		// TODO : Get url's for user images
-		SmartImageView img = (SmartImageView) convertView
-				.findViewById(android.R.id.icon);
+		
+//		if(u == null){
+//			((TextView) convertView.findViewById(android.R.id.title)).setText((position == 0 ? "Contacts" : "Other"));
+//			((TextView) convertView.findViewById(android.R.id.text1)).setText("");
+//		}else{
+			((TextView) convertView.findViewById(android.R.id.title)).setText(u
+					.getDisplayName());
+			((TextView) convertView.findViewById(android.R.id.text1)).setText(u
+					.getEmail());
+			// TODO : Get url's for user images
+			SmartImageView img = (SmartImageView) convertView
+					.findViewById(android.R.id.icon);
+//		}
 		return convertView;
 	}
 
 	@Override
 	protected boolean keepObject(User user, String mask) {
 		mask = mask.toLowerCase();
-		Log.i(mask, user.toString());
-		return user.getDisplayName().toLowerCase().startsWith(mask)
+//		Log.i(mask, user.toString());
+		return user==null || user.getDisplayName().toLowerCase().startsWith(mask)
 				|| user.getEmail().toLowerCase().startsWith(mask);
 	}
 

@@ -3,6 +3,7 @@ package com.meetingninja.csse.group;
 import java.util.ArrayList;
 import java.util.List;
 
+import objects.Contact;
 import objects.Group;
 import objects.SerializableUser;
 import objects.User;
@@ -27,11 +28,13 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.meetingninja.csse.R;
+import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.volley.UserVolleyAdapter;
 import com.meetingninja.csse.extras.AlertDialogUtil;
 import com.meetingninja.csse.extras.ContactTokenTextView;
+import com.meetingninja.csse.user.ContactsFetcher;
 import com.meetingninja.csse.user.ProfileActivity;
 import com.meetingninja.csse.user.AutoCompleteAdapter;
 import com.meetingninja.csse.user.UserArrayAdapter;
@@ -48,6 +51,9 @@ public class EditGroupActivity extends Activity implements TokenListener {
 	EditText titleText;
 	EnhancedListView mListView;
 	private ArrayList<User> allUsers = new ArrayList<User>();
+	private final List<Contact> allContacts = new ArrayList<Contact>();
+	private List<User> bothUsers = new ArrayList<User>();
+	
 	private AutoCompleteAdapter autoAdapter;
 	private ArrayList<String> addedIds = new ArrayList<String>();
 	private ArrayList<User> addedUsers = new ArrayList<User>();
@@ -94,27 +100,26 @@ public class EditGroupActivity extends Activity implements TokenListener {
 				k--;
 			}
 		}
-		mListView
-				.setDismissCallback(new de.timroes.android.listview.EnhancedListView.OnDismissCallback() {
+		mListView.setDismissCallback(new de.timroes.android.listview.EnhancedListView.OnDismissCallback() {
+			@Override
+			public EnhancedListView.Undoable onDismiss(
+					EnhancedListView listView, final int position) {
+
+				final User item = mUserAdapter.getItem(position);
+				mUserAdapter.remove(item);
+				return new EnhancedListView.Undoable() {
 					@Override
-					public EnhancedListView.Undoable onDismiss(
-							EnhancedListView listView, final int position) {
-
-						final User item = mUserAdapter.getItem(position);
-						mUserAdapter.remove(item);
-						return new EnhancedListView.Undoable() {
-							@Override
-							public void undo() {
-								mUserAdapter.insert(item, position);
-							}
-
-							@Override
-							public String getTitle() {
-								return "Member deleted";
-							}
-						};
+					public void undo() {
+						mUserAdapter.insert(item, position);
 					}
-				});
+
+					@Override
+					public String getTitle() {
+						return "Member deleted";
+					}
+				};
+			}
+		});
 		mListView.setUndoHideDelay(5000);
 		mListView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -142,6 +147,13 @@ public class EditGroupActivity extends Activity implements TokenListener {
 
 			}
 		});
+		new ContactsFetcher(new AsyncResponse<List<Contact>>(){
+			@Override
+			public void processFinish(List<Contact> result) {
+				addContacts(result);
+			}
+		}).execute((SessionManager.getInstance()).getUserID());
+		
 	}
 
 	@Override
@@ -150,6 +162,17 @@ public class EditGroupActivity extends Activity implements TokenListener {
 		getMenuInflater().inflate(R.menu.menu_edit_group, menu);
 		return true;
 	}
+	
+	private void addContacts(List<Contact> allContacts){
+		bothUsers.add(null);
+		for(Contact c : allContacts){
+			System.out.println(c.getContact().getDisplayName());
+			bothUsers.add(c.getContact());
+		}
+		bothUsers.add(null);
+		bothUsers.addAll(allUsers);
+	}
+	
 
 	private void hideKeyboard() {
 		InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -226,7 +249,7 @@ public class EditGroupActivity extends Activity implements TokenListener {
 				R.layout.fragment_autocomplete, null);
 		final ContactTokenTextView input = (ContactTokenTextView) autocompleteView
 				.findViewById(R.id.my_autocomplete);
-		autoAdapter = new AutoCompleteAdapter(this, allUsers);
+		autoAdapter = new AutoCompleteAdapter(this, bothUsers);
 		input.setAdapter(autoAdapter);
 		input.setTokenListener(this);
 		builder.setView(autocompleteView);
