@@ -1,57 +1,17 @@
-<!-- The tasks in the GET POST requests need to be changed to meetings. Implement a check on edit so it doesn't fuck up the backend db (db? more like dp.)-->
-
 <!-- PLACE JAVASCRIPT IN app/assets/javascripts/meetings.js -->
-<script src="http://code.jquery.com/jquery-latest.min.js"
-        type="text/javascript">
+<!-- IMPORTANT: Until we abstract the ruby out of our javascript ignore the above note and place javascript in app/views/meetings/_meetingsJS.js.erb instead -->
 
+<script>
+//load the javascript file
 <%= render "meetingsJS.js.erb" %>
-
-
-$(window).load(function() {
-	jQuery('#createMeeting').bind('submit', function(event){
-		event.preventDefault();
-alert("here");
-
-		var form = this;
-		var formJSON = new ConvertFormToJSON(form);
-
-		var postId = <%=@userID%>;
-		var postTitle = formJSON.title;
-		var postLocation = formJSON.location;
-		var postDateTimeBegin = formJSON.datetimeStart;
-		var postDateTimeEnd = formJSON.datetimeEnd;
-		var postDescription = formJSON.description;
-		var postAttendance = "[]";
-
-
-	var postData = JSON.stringify({"userID":postId,"title":postTitle,"location":postLocation,"datetime":postDateTimeBegin,"endDatetime":postDateTimeEnd,"description":postDescription,"attendance":postAttendance});
-
-alert("posting:"+postData);
-		$.ajax({
-			type: 'POST',
-			url: 'http://csse371-04.csse.rose-hulman.edu/Meeting/',
-			data: postData,
-			dataType: 'json',
-			success:function(data){
-				alert("created new meeting");
-			}
-		});
-
-		return true;
-	});
-});
-
-function ConvertFormToJSON(form){
-	var array = jQuery(form).serializeArray();
-	var json = {};
-
-	jQuery.each(array, function() {
-		json[this.name] = this.value || '';
-	});
-
-	return json;
-}
 </script>
+
+
+<!-- BEGIN MODAL SECTION
+	=================================================
+
+	Note on the modals: Most of the html for each modal is bootstrap magic that shouldn't need to be touched. If a new modal needs to be created most of it can be copy/pasted except for the id and onclick properties.
+-->
 
 <!-- Create Modal -->
 <div class="modal fade" id="newMeetingModal" tabindex="-1" role="dialog" aria-labelledby="newMeetingModalLabel" aria-hidden="true">
@@ -66,7 +26,7 @@ function ConvertFormToJSON(form){
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary" form="createMeeting">Submit</button>
+        <button type="button" class="btn btn-primary" onclick="submitCreateModal()">Submit</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -104,7 +64,7 @@ function ConvertFormToJSON(form){
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="showEditModal()" href="#editMeetingModal" data-refresh="true" data-toggle='modal'>Edit</button>
+        <button type="button" class="btn btn-primary" onclick="showEditModalNoID()" href="#editMeetingModal" data-refresh="true" data-toggle='modal'>Edit</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -123,11 +83,14 @@ function ConvertFormToJSON(form){
       </div>
       <div class="modal-footer">
         <button id="cancelEditButton" type="button" class="btn btn-default" onclick="cancelEdit()" data-refresh="true" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" onclick="showMeetingModalNoID()" data-refresh="true" >Save Changes</button>
+        <button type="button" class="btn btn-primary" onclick="showViewMeetingModalNoID()" data-refresh="true" >Save Changes</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+<!-- ===================================================
+	END MODAL SECTION --->
 
 <h1 class='pageTitle'>Meetings</h1>
 
@@ -136,23 +99,30 @@ function ConvertFormToJSON(form){
     <tr>
       <th>Date</th>
       <th>Title</th>
-      <th>Where</th>
+      <th>Location</th>
       <th></th>
-      <!-- <th>When</th>
-      <th>Project</th>
-      <th>Agenda</th> -->
     </tr>
   </thead>
-  <% for meeting in @meetingsParsed %>
+
+<!-- This is an example of how ruby code can be embedded in our files to provide support for logic such as loops or if statements. This loop generates the table of meetings by creating an individual row for each pass of the loop.
+-->
+
+  <% for meeting in @meetings %>
     <tr>
-      <td><%= meeting['datetime'] %></td>
-      <td><a onclick="showViewMeetingModal(<%=@meetingsParsed.index(meeting)%>)" href = '#viewMeetingModal' data-refresh = 'true' data-toggle='modal'><%= meeting['title'] %></a></td>
-      <td><%= meeting['location'] %></td>
-      <td colspan='1' style='cursor: pointer; text-align: center' onclick="showDeleteModal(<%=@meetingsParsed.index(meeting)%>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
+<!-- The onclick that is repeated on these three td tags is used to emulate click on the row itself. We can't just place a single onclick on the row because we wouldn't be able to click on the edit or delete icons without also counting as clicking on the row to bring up the view modal.
+-->
+      <td onclick="showViewMeetingModal(<%=@meetings.index(meeting)%>)" data-refresh="true" data-toggle="modal"><%= meeting['datetime'] %></td>
+      <td onclick="showViewMeetingModal(<%=@meetings.index(meeting)%>)" data-refresh="true" data-toggle="modal"><%= meeting['title'] %></td>
+      <td onclick="showViewMeetingModal(<%=@meetings.index(meeting)%>)" data-refresh="true" data-toggle="modal"><%= meeting['location'] %></td>
+<!-- The delete icon -->
+      <td colspan='1' style='cursor: pointer; text-align: center' onclick="showDeleteModal(<%=@meetings.index(meeting)%>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
+<!-- The edit icon -->
+      <td colspan='1' style='cursor: pointer; text-align: center' onclick="showEditModal(<%=@meetings.index(meeting)%>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-pencil'></span></td>
     </tr>
   <% end %>
 
+<!-- The create new meeting button at the bottom of the table. Notice the colspan='5' which tells the button to take up the 5 columns (date, title, location, delete, edit) -->
   <tr>
-    <td colspan='4' style='cursor: pointer; text-align: center' href='#newMeetingModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
+    <td colspan='5' style='cursor: pointer; text-align: center' href='#newMeetingModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
   </tr>
 </table>

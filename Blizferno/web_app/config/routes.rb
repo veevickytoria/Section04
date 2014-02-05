@@ -63,7 +63,6 @@ WebApp::Application.routes.draw do
   get "home_page/index"
   get "home_page/tabpage"
   
-  get "meetings/new"
   get "meetings/index"
   
   get "groups/index"

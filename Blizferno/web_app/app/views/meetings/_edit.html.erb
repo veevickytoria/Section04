@@ -1,31 +1,64 @@
-<h5>Topic:</h5>
-<input id="titleE" name="title" type="text" maxlength="50" class="form-control">
+<!-- The name tag on each input is used by the convertFormToJSON() function to label the field associated with that input's value. Eg. <input name="title" /> produces the JSON object {"title":"whateverTheUserInput"}
+-->
 
-<h5>Description:</h5>
-<input id="descriptionE" name="description" type="text" placeholder="mm/dd/yyyy HH:MM" class="form-control"/>
+<form id="editMeetingForm">
+	<!-- Meeting Title -->		
+	<strong><span class="viewLabel">Topic:</span></strong>
+	<br />
+	<input type="text" id="titleE" name="title" class="form-control" />
 
-<h5>Attendees:</h5>
-<select multiple id="attendees" size='6' class="form-control">
-  <option disabled>Select multiple by holding Ctrl/CMD</option>
-  <option value='1'>Santa Claus</option>
-  <option value='2'>WasARebel</option>
-  <option value='3'>KemoSabe</option>
-  <option value='4'>CaptainKirk</option>
-  <option value='5'>Spock</option>
-</select>
+	<br />
 
-<h5>Date:</h5>
-<input id="datetimeE" name="datetime" type="text" maxlength="1000" class="form-control"/>
+	<!-- Meeting Location -->
+	<strong><span class="viewLabel">Location:</span></strong>
+	<br />
+	<table>
+		<tr>
+			<td>
+				<input type="text" id="locationE" name="location" placeholder="Location" class="form-control" />
+			</td>
+<!-- To be put back in if locations become connected to the back end
+			<td style="padding-left: 5px;">
+				<input type="button" value="Search Locations" class="form-control" />
+			</td>
+-->
+		</tr>
+	</table>
 
-<h5>Location:</h5>
-<input id="locationE" name="location" type="text" maxLength="500" class="form-control"/>
+	<br />
 
-<!-- <h5>Project:</h5>
-<input id="projectE" name="project" type="text" class="form-control"/>
+	<!-- Meeting DateTime -->
+	<strong><span class="viewLabel">Date/Time:</span></strong>
+	<br />
+	<strong><span class="viewData formTitle">Start:</span></strong>
+	<input type="text" id="dateStartE" name="dateStart" placeholder="mm/dd/yyyy" class="form-control formDate" />
+	<input type="text" id="timeStartE" name="timeStart" placeholder="HH:MM" class="form-control formTime" />
+	<br />
+	<br />		
+	<strong><span class="viewData formTitle">End:</span></strong>
+	<input type="text" id="dateEndE" name="dateEnd" placeholder="mm/dd/yyyy" class="form-control formDate" />
+	<input type="text" id="timeEndE" name="timeEnd" placeholder="HH:MM" class="form-control formTime" />
 
-<h5>Agenda:</h5>
-<input id="agendaE" name="completionCriteria" type="agenda" maxLength="500" class="form-control"/>
+	<br />
+	<br />
 
-<h5>Tasks:</h5>
-<input id="taskE" name="task" type="text" class="form-control"/>
- -->
+	<!-- Meeting Description -->
+	<strong><span class="viewLabel">Description:</span></strong>
+	<br />
+	<textarea class="form-control" id="descriptionE" name="description"></textarea>
+
+	<br />
+
+	<!-- Meeting Attendees -->
+<!-- ATTENDEES ARE NOT FUNCTIONAL -->
+	<strong><span class="viewLabel">Attendees:</span></strong>
+	<br />
+	<select multiple id="attendeesE" size="6" class="form-control">
+		<option disabled>Select multiple by holding Ctrl/CMD</option>
+		<option value="1">Santa Claus</option>
+		<option value="2">WasARebel</option>
+		<option value="3">KemoSabe</option>
+		<option value="4">CaptainKirk</option>
+		<option value="5">Spock</option>
+	</select>
+</form>

@@ -1,100 +1,63 @@
-<!-- <div id = 'menu' style = 'width: 50%; float:left'> -->
+<!-- The name tag on each input is used by the convertFormToJSON() function to label the field associated with that input's value. Eg. <input name="title" /> produces the JSON object {"title":"whateverTheUserInput"}
+-->
 
-<span>* Indicates required fields.</span>
+<form id="createMeetingForm">
+	<!-- Meeting Title -->		
+	<strong><span class="viewLabel">Topic:</span></strong>
+	<br />
+	<input type="text" id="title" name="title" class="form-control" />
 
-<form name="input" id = "createMeeting" onsubmit="return validateForm()" action ="http://csse371-04.csse.rose-hulman.edu/Meeting/" method = 'post'>
-		
-		<h5>Topic</h5>
-		<input type='text' name = "title" class='form-control'/>
-		
-		<h5>Description*</h5>
+	<br />
 
-		<textarea class='form-control' name="description"></textarea>
+	<!-- Meeting Location -->
+	<strong><span class="viewLabel">Location:</span></strong>
+	<br />
+	<table>
+		<tr>
+			<td>
+				<input type="text" id="location" name="location" placeholder="Location" class="form-control" />
+			</td>
+<!-- To be put back in if locations become connected to the back end
+			<td style="padding-left: 5px;">
+				<input type="button" value="Search Locations" class="form-control" />
+			</td>
+-->
+		</tr>
+	</table>
 
-		<h5>Attendees</h5>
-		<select multiple id='attendees' size='6' class='form-control'>
-			<option disabled>Select multiple by holding Ctrl/CMD</option>
-			<option value='1'>Santa Claus</option>
-			<option value='2'>WasARebel</option>
-			<option value='3'>KemoSabe</option>
-			<option value='4'>CaptainKirk</option>
-			<option value='5'>Spock</option>
-		</select>
-		<!-- <table>
-			<tr>
-				<td>
-					<select id='mylist'>
-						<option>Recently Invited</option>
-						<optionoption>
-						<option>Jerry</option>
-						<option>George</option>
-						<option>Elaine</option>
-					</select>
-				</td>
-				<td style='padding-left: 5px;'><input type='button' value='Search Users' /></td>
-			</tr>
-		</table> -->
-		
-		<h5>Date</h5>
-		
-		<input type='text' name = "datetime" placeholder='mm/dd/yyyy HH:MM' class='form-control' />
-		<input type='text' name = "datetimeEnd" placeholder='mm/dd/yyyy HH:MM' class='form-control' />
-		
-		<h5>Location</h5>
-		<table>
-			<tr>
-				<td>
-					<input type='text' name ="location" placeholder='Location' class='form-control'/>
-				</td>
-				<td style='padding-left: 5px;'>
-					<input type='button' value='Search Locations' class='form-control'/>
-				</td>
-			</tr>
-		</table>
-		
-		<h5>Project*</h5>
-		<table>
-			<tr>
-				<td>
-					<input type='text' name = 'project' placeholder='Project' class='form-control'/>
-				</td>
-				<td style='padding-left: 5px;'>
-					<input type='button' value='Search Projects' class='form-control'/>
-				</td>
-			</tr>
-		</table>
+	<br />
 
-		<h5>Agenda</h5>
-		<table class='fullWidth'>
-			<tr>
-				<td style='width: 70%'>
-					<input type='url' name = 'agenda' class='fullWidth' placeholder='Agenda Title' />
-				</td>
-				<td style='width: 30%'>
-					<input type='button' value='Search Agendas' />
-				</td>
-			</tr>
-		</table>
-		
-		<!-- </div> -->
-		<!-- <div id = 'content' style = 'width: 50%; float:right'> -->
-		<h5>Tasks:</h5>
-		<input type='text' name = 'task' placeholder='Task' class='form-control'/>
-		<select>
-			<option>Assigned User</option>
-			<option>------------</option>
-			<option>other users here</option>
-		</select>
-		<p>More tasks...</p>
-		<!-- 
-		<div class='checkboxes'>
-		<label><input type='radio' name='schedule' /><span> Accept Suggested Time</span></label>
-		<label><input type='radio' name='schedule' /><span> Go to Scheduling Assistant</span></label>
-		</div>
-		<br /><br />
-		<input type='submit' style='font-size: 16px;padding-top: 2px;' name='createMeeting' value='Create Meeting' /> -->
-	</form>
-<!-- </div> -->
+	<!-- Meeting DateTime -->
+	<strong><span class="viewLabel">Date/Time:</span></strong>
+	<br />
+	<strong><span class="viewData formTitle">Start:</span></strong>
+	<input type="text" id="dateStart" name="dateStart" placeholder="mm/dd/yyyy" class="form-control formDate" />
+	<input type="text" id="timeStart" name="timeStart" placeholder="HH:MM" class="form-control formTime" />
+	<br />
+	<br />		
+	<strong><span class="viewData formTitle">End:</span></strong>
+	<input type="text" id="dateEnd" name="dateEnd" placeholder="mm/dd/yyyy" class="form-control formDate" />
+	<input type="text" id="timeEnd" name="timeEnd" placeholder="HH:MM" class="form-control formTime" />
 
+	<br />
+	<br />
 
+	<!-- Meeting Description -->
+	<strong><span class="viewLabel">Description:</span></strong>
+	<br />
+	<textarea class="form-control" id="description" name="description"></textarea>
 
+	<br />
+
+	<!-- Meeting Attendees -->
+	<strong><span class="viewLabel">Attendees:</span></strong>
+	<br />
+	<select multiple id="attendees" size="6" class="form-control">
+		<option disabled>Select multiple by holding Ctrl/CMD</option>
+		<option value="1">Santa Claus</option>
+		<option value="2">WasARebel</option>
+		<option value="3">KemoSabe</option>
+		<option value="4">CaptainKirk</option>
+		<option value="5">Spock</option>
+	</select>
+</form>

@@ -36,3 +36,25 @@ header > h1 {
 	margin-left: 15%;
 	margin-right: auto;
 }
+
+.formTitle{
+	margin-left: 4%;
+	text-align: right;
+	width:10%;
+	display: inline-block;
+}
+
+.formDate{
+	width: 40%;
+	display: inline-block;
+}
+
+.formTime{
+	width: 20%;
+	display: inline-block;
+}
+
+textarea.form-control{
+	resize: none;
+	height: 200px;
+}
