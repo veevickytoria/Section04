@@ -1,6 +1,7 @@
 class GroupsController < ApplicationController
 	
 	before_filter :getGroups
+	before_filter :getAllUsers
 
 	def index
 		# CHECK IF USER LOGGED IN

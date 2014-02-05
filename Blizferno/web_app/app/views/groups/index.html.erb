@@ -3,10 +3,9 @@
 <!-- PLACE JAVASCRIPT IN app/assets/javascript/groups.js -->
 
 <!-- Create Modal -->
-<div class="modal fade" id="newGroupModal" tabindex="-1" role="dialog" aria-labelledby="newGroupModalLabel" aria-hidden="true" style: 'width: 75%'>
+<div class="modal fade" id="newGroupModal" tabindex="-1" role="dialog" aria-labelledby="newGroupModalLabel" aria-hidden="true">
   <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
+    <div class="modal-content">      <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h1 class="modal-title" id="myModalLabel">Create Group</h1>
       </div>
@@ -15,7 +14,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary" form="createGroup">Submit</button>
+        <button type="submit" class="btn btn-primary" onclick='submitCreateModal()'>Submit</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
