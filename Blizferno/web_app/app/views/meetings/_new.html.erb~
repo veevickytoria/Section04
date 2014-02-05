@@ -7,7 +7,16 @@
 	<br />
 	<input type="text" id="title" name="title" class="form-control" />
 
+<<<<<<< HEAD
 	<br />
+=======
+<form name="input" id="createMeeting" action="http://csse371-04.csse.rose-hulman.edu/Meeting/" method="post">
+		
+		<h5>Topic</h5>
+		<input type='text' name = "title" class='form-control'/>
+		
+		<h5>Description*</h5>
+>>>>>>> 12619c349c507aba862246c3be9cb250656f7525
 
 	<!-- Meeting Location -->
 	<strong><span class="viewLabel">Location:</span></strong>
@@ -50,6 +59,7 @@
 	<br />
 
 	<!-- Meeting Attendees -->
+<!-- ATTENDEES ARE NOT FUNCTIONAL -->
 	<strong><span class="viewLabel">Attendees:</span></strong>
 	<br />
 	<select multiple id="attendees" size="6" class="form-control">

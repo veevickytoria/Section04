@@ -192,12 +192,15 @@ function convertFormToJSON(form){
 	var array = jQuery(form).serializeArray();
 	var json = {};
 
+<<<<<<< HEAD
 	jQuery.each(array, function() {
 		json[this.name] = this.value || '';
 	});
 
 	return json;
 }
+=======
+>>>>>>> 12619c349c507aba862246c3be9cb250656f7525
 
 //This function is still being tested but will do simple validation of user input to make sure they do not leave any field blank and that they gave dates in the correct format. This can be expanded in the future with additional validations.
 function validateMeetingForm(inputForm){

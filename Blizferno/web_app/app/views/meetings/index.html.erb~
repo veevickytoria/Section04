@@ -89,10 +89,14 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<<<<<<< HEAD
 <!-- ===================================================
 	END MODAL SECTION --->
 
 <h1 class='pageTitle'>Meetings</h1>
+=======
+<h1 class='pageTitle' style='margin-left: 15%; margin-right: auto;'>Meetings</h1>
+>>>>>>> 12619c349c507aba862246c3be9cb250656f7525
 
 <table class='table table-hover table-striped' style='width: 70%; margin-left: 15%; margin-right: auto;'>
   <thead>
@@ -107,17 +111,17 @@
 <!-- This is an example of how ruby code can be embedded in our files to provide support for logic such as loops or if statements. This loop generates the table of meetings by creating an individual row for each pass of the loop.
 -->
 
-  <% for meeting in @meetings %>
+  <% for meeting in @meetingsParsed %>
     <tr>
 <!-- The onclick that is repeated on these three td tags is used to emulate click on the row itself. We can't just place a single onclick on the row because we wouldn't be able to click on the edit or delete icons without also counting as clicking on the row to bring up the view modal.
 -->
-      <td onclick="showViewMeetingModal(<%=@meetings.index(meeting)%>)" data-refresh="true" data-toggle="modal"><%= meeting['datetime'] %></td>
-      <td onclick="showViewMeetingModal(<%=@meetings.index(meeting)%>)" data-refresh="true" data-toggle="modal"><%= meeting['title'] %></td>
-      <td onclick="showViewMeetingModal(<%=@meetings.index(meeting)%>)" data-refresh="true" data-toggle="modal"><%= meeting['location'] %></td>
+      <td onclick="showViewMeetingModal(<%=@meetingsParsed.index(meeting)%>)" data-refresh="true" data-toggle="modal"><%= meeting['datetime'] %></td>
+      <td onclick="showViewMeetingModal(<%=@meetingsParsed.index(meeting)%>)" data-refresh="true" data-toggle="modal"><%= meeting['title'] %></td>
+      <td onclick="showViewMeetingModal(<%=@meetingsParsed.index(meeting)%>)" data-refresh="true" data-toggle="modal"><%= meeting['location'] %></td>
 <!-- The delete icon -->
-      <td colspan='1' style='cursor: pointer; text-align: center' onclick="showDeleteModal(<%=@meetings.index(meeting)%>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
+      <td colspan='1' style='cursor: pointer; text-align: center' onclick="showDeleteModal(<%=@meetingsParsed.index(meeting)%>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
 <!-- The edit icon -->
-      <td colspan='1' style='cursor: pointer; text-align: center' onclick="showEditModal(<%=@meetings.index(meeting)%>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-pencil'></span></td>
+      <td colspan='1' style='cursor: pointer; text-align: center' onclick="showEditModal(<%=@meetingsParsed.index(meeting)%>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-pencil'></span></td>
     </tr>
   <% end %>
 

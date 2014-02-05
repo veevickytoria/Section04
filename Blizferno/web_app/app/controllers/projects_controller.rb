@@ -1,28 +1,45 @@
 class ProjectsController < ApplicationController
+
+	before_filter :getProjects
+
   def index
   	if (cookies[:userID].blank?)
 			redirect_to '/login/index'
 			return
-		end
-		require 'net/http'
-		@UserID = '717'
-		url = URI.parse('http://csse371-04.csse.rose-hulman.edu/User/Projects/' + @UserID)
-		req = Net::HTTP::Get.new(url.path)
-		res = Net::HTTP.start(url.host, url.port) {|http|
-			http.request(req)
-		}
-
-		@projects = JSON.parse('{"projects":[{"projectID":"1","name":"Project Uno","group":"Web"},
-											 {"projectID":"2","name":"Project Dos","group":"Backend"},
-											 {"projectID":"3","name":"Project Tres","group":"Android"},
-											 {"projectID":"4","name":"Project Cuatro","group":"iOS"}]}')
-
+	end
   end
 
   def list
   end
 
   def new
+  end
+
+  def getProjects
+  	require 'net/http'
+	url = URI.parse('http://csse371-04.csse.rose-hulman.edu/User/Projects/' + @userID)
+	req = Net::HTTP::Get.new(url.path)
+	res = Net::HTTP.start(url.host, url.port) {|http|
+		http.request(req)
+	}
+	getUserProjects = JSON.parse(res.body)
+	@projects = Array.new
+	@projectsParsed = Array.new
+	@projectString = ''
+
+	getUserProjects['projects'].each do |project|
+		url = URI.parse('http://csse371-04.csse.rose-hulman.edu/Project' + project['id'].to_s)
+		req = Net::HTTP::Get.new(url.path)
+		res = Net::HTTP.start(url.host, url.port) {|http|
+			http.request(req)
+		}
+		@projectString = res.body
+		projectIdString = ',"projectID":"'+project['id'].to_s+'"}';
+		@projectString = @projectString[0..-2] + projectIdString;
+		@projects.push(@projectString)
+		@projectsParsed.push(JSON.parse(@projectString))
+	end
+
   end
   layout 'slate'
 end
