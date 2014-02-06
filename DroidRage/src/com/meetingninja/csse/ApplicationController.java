@@ -16,12 +16,10 @@
 package com.meetingninja.csse;
 
 import android.app.Application;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.Volley;
-import com.meetingninja.csse.database.local.SQLiteHelper;
 import com.meetingninja.csse.database.local.SQLiteNoteAdapter;
 import com.meetingninja.csse.database.local.SQLiteUserAdapter;
 import com.parse.Parse;

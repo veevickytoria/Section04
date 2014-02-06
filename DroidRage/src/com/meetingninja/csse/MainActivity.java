@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -35,6 +36,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -42,7 +44,6 @@ import android.widget.Toast;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.foound.widget.AmazingListView;
-import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
 import com.meetingninja.csse.database.local.SQLiteHelper;
 import com.meetingninja.csse.group.GroupsFragment;
@@ -121,6 +122,8 @@ public class MainActivity extends FragmentActivity implements
 	private SessionManager session;
 	private boolean isDataCached;
 	private static final String KEY_SQL_CACHE = "SQL_DATA_CACHE";
+
+	private static final int REQUEST_OK = 1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -375,6 +378,14 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+
+		if (requestCode == REQUEST_OK && resultCode == RESULT_OK) {
+			ArrayList<String> thingsYouSaid = data
+					.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+			if (thingsYouSaid.contains("go to meetings")) {
+				startActivity(new Intent(this, MeetingsFragment.class));
+			}
+		}
 	}
 
 	private void logout() {
@@ -433,6 +444,18 @@ public class MainActivity extends FragmentActivity implements
 			logout();
 			return true;
 		case R.id.action_settings:
+			return true;
+		case R.id.action_speak:
+			Intent i = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+			i.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, "en-US");
+			try {
+				startActivityForResult(i, REQUEST_OK);
+
+			} catch (Exception e) {
+				Toast.makeText(this,
+						"Error initializing speech to text engine.",
+						Toast.LENGTH_LONG).show();
+			}
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -501,4 +524,5 @@ public class MainActivity extends FragmentActivity implements
 		// TODO Auto-generated method stub
 
 	}
+
 }
