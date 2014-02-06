@@ -2,6 +2,10 @@
 
 <!-- PLACE JAVASCRIPT IN app/assets/javascript/groups.js -->
 
+<script type="text/javascript">
+  <%= render "groups.js.erb" %>
+</script>
+
 <!-- Create Modal -->
 <div class="modal fade" id="newGroupModal" tabindex="-1" role="dialog" aria-labelledby="newGroupModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -14,7 +18,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary" onclick='submitCreateModal()'>Submit</button>
+        <button type="button" class="btn btn-primary" onclick='submitCreateModal()'>Submit</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->

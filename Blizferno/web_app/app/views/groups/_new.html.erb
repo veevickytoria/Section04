@@ -1,15 +1,14 @@
 <span>* Indicates required fields.</span>
 
-<form name='input' id='createGroup' onsubmit='validateGroup()'>
-	<h5>Group Title</h5>
+<form name='input' id='createGroupForm' onsubmit='validateGroup()'>
+	<h5>Group Title*</h5>
 	<input name='title' type='text' id='newTitle' class='form-control' placeholder='Title' />
-	<h5>Group Members</h5>
-	<select multiple id='grpMemSlct' size='6' class='form-control'>
+	<h5>Group Members*</h5>
+	<select multiple id='groupMembers' size='6' class='form-control'>
 		<option disabled>Select multiple by holding Ctrl/CMD</option>
 		<option value='1'>Santa Claus</option>
-		<option value='2'>WasARebel</option>
-		<option value='3'>KemoSabe</option>
-		<option value='4'>CaptainKirk</option>
-		<option value='5'>Spock</option>
+		<% for user in @allUsers['users'] %>
+		<option value="<%= user['userID'] %>"><%= user['name'] %></option>
+		<% end %>
 	</select>
 </form>

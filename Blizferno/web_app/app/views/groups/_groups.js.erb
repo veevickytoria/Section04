@@ -1,45 +1,37 @@
   var GroupArray;
   var deleteID;
-  var Members = JSON.parse('{"members":[{"userID":"1","displayName":"Santa Claus"},{"userID":"2","displayName":"WasARebel"},{"userID":"3","displayName":"KemoSabe"},{"userID":"4","displayName":"CaptainKirk"},{"userID":"5","displayName":"Spock"},{"userID":"6","displayName":"Josh"},{"userID":"7","displayName":"Paul"},{"userID":"8","displayName":"David"},{"userID":"9","displayName":"William"},{"userID":"10","displayName":"Maxwell"},{"userID":"11","displayName":"Alpha"},{"userID":"12","displayName":"Dharmin"}]}');
 
-function submitCreateModal(){ //grab the form from the html document
-  var form = document.getElementById('createMeetingForm');
-  //still testing validation
-  //if(validateMeetingForm(form)){
-  //parse it into a json object
-  var formJSON = new convertFormToJSON(form);
+  function submitCreateModal(){ //grab the form from the html document
+    var form = new convertFormToJSON(document.getElementById('createGroupForm'));
+    // REPLACE WITH: code to validate data
 
-  //manually grab the values for each field expected by the backend
-  var postId = <%=@userID%>;
-  var postTitle = formJSON.title;
-  var postLocation = formJSON.location;
-  var postDatetime = formJSON.dateStart + " " + formJSON.timeStart;
-  var postEndDatetime = formJSON.dateEnd + " " + formJSON.timeEnd;
-  var postDescription = formJSON.description;
-  var postAttendance = "[]";
+    var uid = getCookie('userID');
+    var postTitle = form.title;
+    var members = getMembers('groupMembers');
+    
+    var postMembers = [{"userID":uid}];
 
-  //set up the data for the call
-  var postData = JSON.stringify({
-    "userID":postId,
-    "title":postTitle,
-    "location":postLocation,
-    "datetime":postDatetime,
-    "endDatetime":postEndDatetime,
-    "description":postDescription,
-    "attendance":postAttendance
-  });
+    for (var i = members.length - 1; i >= 0; i--) {
+      postMembers.push({"userID":members[i]});
+    };
 
-  //make the POST request to the backend
-  $.ajax({
-    type: 'POST',
-    url: 'http://csse371-04.csse.rose-hulman.edu/Meeting/',
-    data: postData,
-    success:function(data){
-      $('#newMeetingModal').modal('hide');
-      window.location.reload(true);
-    }
-  });
-}
+    //set up the data for the call
+    var postData = JSON.stringify({
+      "groupTitle":postTitle,
+      "members":postMembers
+    });
+
+    //make the POST request to the backend
+    $.ajax({
+      type: 'POST',
+      url: 'http://csse371-04.csse.rose-hulman.edu/Group/',
+      data: postData,
+      success:function(data){
+        $('#newGroupModal').modal('hide');
+        window.location.reload(true);
+      }
+    });
+  }
 
   function hideGroupModal(){
     $('#viewGroupModal').modal('hide');
@@ -177,7 +169,7 @@ function submitCreateModal(){ //grab the form from the html document
   function getMembers(id){
     var newMembers = [];
     $( '#' + id + ' :selected' ).each( function( i, selected ) {
-      newMembers[i] = $( selected ).text();
+      newMembers[i] = $( selected ).val();
     });
     return newMembers;
   }
@@ -241,4 +233,15 @@ function submitCreateModal(){ //grab the form from the html document
     newJSONString = newJSONString + "]}";
     var newJSON = JSON.parse(newJSONString);
     return newJSON[JSONtype];
+  }
+
+  function convertFormToJSON(form){
+    var array = jQuery(form).serializeArray();
+    var json = {};
+
+    jQuery.each(array, function() {
+      json[this.name] = this.value || '';
+    });
+
+    return json;
   }
