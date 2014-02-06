@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 import objects.Contact;
 import objects.Group;
@@ -27,6 +28,7 @@ import objects.SerializableUser;
 import objects.User;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -40,8 +42,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import com.loopj.android.image.SmartImageView;
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.AsyncResponse;
@@ -49,6 +54,7 @@ import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
 import com.meetingninja.csse.database.local.SQLiteUserAdapter;
 import com.meetingninja.csse.database.volley.UserVolleyAdapter;
+import com.tokenautocomplete.FilteredArrayAdapter;
 import com.tokenautocomplete.TokenCompleteTextView.TokenListener;
 import com.meetingninja.csse.extras.AlertDialogUtil;
 import com.meetingninja.csse.extras.ContactTokenTextView;
@@ -57,6 +63,8 @@ import objects.User;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -88,6 +96,7 @@ public class UserListFragment extends Fragment implements TokenListener {
 	private User addedUser;
 	private List<Contact> contacts = new ArrayList<Contact>();
 	private List<Contact> tempDeletedContacts = new ArrayList<Contact>();
+	private List<Contact> viewContacts = new ArrayList<Contact>();
 
 	public UserListFragment() {
 		// Required empty public constructor
@@ -246,9 +255,35 @@ public class UserListFragment extends Fragment implements TokenListener {
 
 	private void setUpListView(View v) {
 		mContactAdapter = new ContactArrayAdapter(getActivity(),R.layout.list_item_user, contacts);
+		
 		l = (EnhancedListView) v.findViewById(R.id.contacts_list);
 		l.setAdapter(mContactAdapter);
 		l.setEmptyView(v.findViewById(android.R.id.empty));
+		final EditText input = (EditText) v.findViewById(R.id.my_autocomplete);
+		input.addTextChangedListener(new TextWatcher(){
+
+			@Override
+			public void afterTextChanged(Editable arg0) {
+				String text = input.getText().toString().toLowerCase();
+                mContactAdapter.getFilter().filter(text);
+				
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
 		l.setDismissCallback(new de.timroes.android.listview.EnhancedListView.OnDismissCallback() {
 			@Override
 			public EnhancedListView.Undoable onDismiss(EnhancedListView listView, final int position) {
@@ -331,6 +366,9 @@ public class UserListFragment extends Fragment implements TokenListener {
 				}
 			}
 			mContactAdapter.notifyDataSetChanged();
+			mContactAdapter.getFilter().filter("");
 		}
 	}
+	
+
 }

@@ -1,10 +1,10 @@
 package com.meetingninja.csse.user;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.loopj.android.image.SmartImageView;
 import com.meetingninja.csse.R;
+import com.tokenautocomplete.FilteredArrayAdapter;
 
 import objects.Contact;
 import objects.User;
@@ -12,19 +12,16 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class ContactArrayAdapter extends ArrayAdapter<Contact> {
+public class ContactArrayAdapter extends FilteredArrayAdapter<Contact> {
 
 	private int mLayoutId;
 	private final LayoutInflater mLayoutInflater;
-	private List<Contact> contacts;
 
 	public ContactArrayAdapter(Context context, int resourceId,
 			List<Contact> contacts) {
 		super(context, resourceId, contacts);
-		this.contacts = contacts;
 		mLayoutInflater = LayoutInflater.from(context);
 		mLayoutId = resourceId;
 	}
@@ -54,11 +51,18 @@ public class ContactArrayAdapter extends ArrayAdapter<Contact> {
 			convertView.setTag(viewHolder);
 		} else
 			viewHolder = (ViewHolder) convertView.getTag();
-
-		Contact contact = contacts.get(position);
+		Contact contact = getItem(position);
 		viewHolder.name.setText(contact.getContact().getDisplayName());
 		viewHolder.email.setText(contact.getContact().getEmail());
 		return convertView;
+	}
+
+	@Override
+	protected boolean keepObject(Contact contact, String mask) {
+		mask = mask.toLowerCase();
+		User user = contact.getContact();
+		return user.getDisplayName().toLowerCase().startsWith(mask)
+				|| user.getEmail().toLowerCase().startsWith(mask);
 	}
 
 }
