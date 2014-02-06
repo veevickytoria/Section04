@@ -233,12 +233,12 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
                         echo json_encode($array);
                 } else {
                         //return an error otherwise
-                        $errorarray = array('errorID' => '4', 'errorMessage'=>'Given node ID is not a meeting node');
+                        $errorarray = array('errorID' => '11', 'errorMessage'=>$_GET['id'].' is an not a meeting node.');
                         echo json_encode($errorarray);
                 }
         } else {
                 //return an error if ID doesn't point to a node
-                $errorarray = array('errorID' => '5', 'errorMessage'=>'Given node ID is not recognized in database');
+                $errorarray = array('errorID' => '5', 'errorMessage'=>$_GET['id'].' node ID is not recognized in database');
                 echo json_encode($errorarray);
         }
 }else{
