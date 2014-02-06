@@ -149,12 +149,12 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
 				echo json_encode($array);
 		} else {
 			//return an error otherwise
-			$errorarray = array('errorID' => '6', 'errorMessage'=>'Given node ID is not a comment node');
+			$errorarray = array('errorID' => '11', 'errorMessage'=>$_GET['id'].' is an not a comment node.');
 			echo json_encode($errorarray);
 		}
 	} else {
       //return an error if ID doesn't point to a node
-		$errorarray = array('errorID' => '7', 'errorMessage'=>'Given node ID is not recognized in the database');
+		$errorarray = array('errorID' => '5', 'errorMessage'=>$_GET['id'].' node ID is not recognized in the database');
 		echo json_encode($errorarray);
 	}
 }else{
