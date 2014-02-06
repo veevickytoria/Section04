@@ -134,7 +134,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
         	$array = $node->getProperties();
 		if(array_key_exists('nodeType', $array)){
 			if(strcasecmp($array['nodeType'], 'Agenda')!=0){
-				echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['id'].' is an not a agenda node.'));
+				echo json_encode(array('errorID'=>'11', 'errorMessage'=>$id[0].' is an not a agenda node.'));
 				return 1;
 			}
 		} 
@@ -164,13 +164,12 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
  						echo json_encode($array);
                 } else {
                         //return an error otherwise
-                        $errorarray = array('errorID' => '4', 'errorMessage'=>'Given node ID is not an agenda node');
+                        $errorarray = array('errorID' => '11', 'errorMessage'=>$id[0].' node ID is not an agenda node');
  				}
 		echo json_encode($errorarray);
 		} else {
      	//return an error if ID doesn't point to a node
-		echo '{"errorID":"5", "errorMessage":"Given node ID is not recognized in database"}';
-		$errorarray = array('errorID' => '5', 'errorMessage'=>'Given node ID is not recognized in database');
+		$errorarray = array('errorID' => '5', 'errorMessage'=>$id[0].' node ID is not recognized in database');
 		echo json_encode($errorarray);
 	}
 }else{
