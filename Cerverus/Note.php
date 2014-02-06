@@ -110,13 +110,13 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
                         echo json_encode(array_merge($array, $tempArray));
                 //tell the user they can't change the person who created the note
                 }else if(strcasecmp($postContent->field, 'createdBy') ==0){
-                        echo json_encode(array("errorID"=>"8", "errorMessage"=>"createdBy field is immutable."));
+                        echo json_encode(array("errorID"=>"16", "errorMessage"=>"createdBy field is immutable."));
                 //tell the user they can't change the date it was created
                 }else if(strcasecmp($postContent->field, 'dateCreated') ==0){
-                        echo json_encode(array("errorID"=>"8", "errorMessage"=>"dateCreated field is immutable."));
+                        echo json_encode(array("errorID"=>"16", "errorMessage"=>"dateCreated field is immutable."));
                 //unrecognized paramater
                 }else{
-                        echo json_encode(array("errorID"=>"9", "errorMessage"=>$postContent->field." is an unrecognized field."));
+                        echo json_encode(array("errorID"=>"17", "errorMessage"=>$postContent->field." is an unrecognized field."));
                 }
         //general 'you done fucked up' error message
         }else{
@@ -163,7 +163,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
                         echo json_encode($array);
                 } else {
                         //return an error otherwise
-                        $errorarray = array('errorID' => '4', 'errorMessage'=>'Given node ID is not a note node');
+                        $errorarray = array('errorID' => '11', 'errorMessage'=>'Given node ID is not a note node');
                         echo json_encode($errorarray);
                 }
         } else {
