@@ -52,8 +52,7 @@ import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.extras.MyDateUtils;
 import com.meetingninja.csse.meetings.MeetingsFragment;
 
-public class TasksFragment extends Fragment implements
-		AsyncResponse<List<Task>> {
+public class TasksFragment extends Fragment implements	AsyncResponse<List<Task>> {
 
 	private HashMap<String, List<Task>> taskLists;
 	private TaskItemAdapter taskAdpt;
@@ -83,10 +82,10 @@ public class TasksFragment extends Fragment implements
 		}
 		return sInstance;
 	}
-
+	//right now this uses getassignedto to get the userID of the user (only one right now) assigned to a task. then uses members to temperatily have multiple members 
+	//assigned to a task (just in edit or create screen) then assignes the first user's ID in the members list to assignedto when saving and sending to backend (because they only save one) 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		View v = inflater.inflate(R.layout.fragment_tasks, container, false);
 		setHasOptionsMenu(true);
@@ -100,15 +99,11 @@ public class TasksFragment extends Fragment implements
 		typeNames.add(iCreated);
 
 		typeAdapter = new TaskTypeAdapter(getActivity(), typeNames);
-		getActivity().getActionBar().setNavigationMode(
-				ActionBar.NAVIGATION_MODE_LIST);
-		getActivity().getActionBar()
-				.setSelectedNavigationItem(prevSelectedType);
-		getActivity().getActionBar().setListNavigationCallbacks(typeAdapter,
-				new OnNavigationListener() {
+		getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		getActivity().getActionBar().setSelectedNavigationItem(prevSelectedType);
+		getActivity().getActionBar().setListNavigationCallbacks(typeAdapter,new OnNavigationListener() {
 					@Override
-					public boolean onNavigationItemSelected(int itemPosition,
-							long itemId) {
+					public boolean onNavigationItemSelected(int itemPosition,long itemId) {
 						setTaskList(itemPosition);
 						return true;
 					}
@@ -127,8 +122,7 @@ public class TasksFragment extends Fragment implements
 
 		ListView lv = (ListView) v.findViewById(R.id.task_list);
 		lv.setEmptyView(v.findViewById(android.R.id.empty));
-		taskAdpt = new TaskItemAdapter(getActivity(), R.layout.list_item_task,
-				taskLists.get(iAssigned));
+		taskAdpt = new TaskItemAdapter(getActivity(), R.layout.list_item_task,taskLists.get(iAssigned));
 
 		lv.setAdapter(taskAdpt);
 		registerForContextMenu(lv);
@@ -136,8 +130,7 @@ public class TasksFragment extends Fragment implements
 		lv.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parentAdapter, View v,
-					int position, long id) {
+			public void onItemClick(AdapterView<?> parentAdapter, View v,int position, long id) {
 				// Intent viewTask = new Intent(getActivity(),
 				// ViewTaskActivity.class);
 				// startActivity(viewTask);
@@ -173,20 +166,16 @@ public class TasksFragment extends Fragment implements
 
 	@Override
 	public void onPause() {
-		prevSelectedType = getActivity().getActionBar()
-				.getSelectedNavigationIndex();
-		getActivity().getActionBar().setNavigationMode(
-				ActionBar.NAVIGATION_MODE_STANDARD);
+		prevSelectedType = getActivity().getActionBar().getSelectedNavigationIndex();
+		getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 
 		super.onPause();
 	}
 
 	@Override
 	public void onResume() {
-		getActivity().getActionBar().setNavigationMode(
-				ActionBar.NAVIGATION_MODE_LIST);
-		getActivity().getActionBar()
-				.setSelectedNavigationItem(prevSelectedType);
+		getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		getActivity().getActionBar().setSelectedNavigationItem(prevSelectedType);
 		super.onResume();
 	}
 
@@ -197,14 +186,14 @@ public class TasksFragment extends Fragment implements
 				refreshTasks();
 			} else if (requestCode == 7) {
 				Task t = data.getParcelableExtra(Keys.Task.PARCEL);
+				t.setCreatedBy(session.getUserID());
 				creator.createTask(t);
 			}
 		}
 	}
 
 	private void loadTask(Task task) {
-		while (task.getEndTimeInMillis() == 0L)
-			;
+		while (task.getEndTimeInMillis() == 0L);
 		Intent viewTask = new Intent(getActivity(), ViewTaskActivity.class);
 		viewTask.putExtra(Keys.Task.PARCEL, task);
 		startActivityForResult(viewTask, 6);
@@ -228,9 +217,7 @@ public class TasksFragment extends Fragment implements
 			taskAdpt.setTasks(taskLists.get(iCreated));
 			break;
 		}
-
 		taskAdpt.notifyDataSetChanged();
-
 	}
 
 	@Override
@@ -250,9 +237,7 @@ public class TasksFragment extends Fragment implements
 				taskLists.get(iCreated).add(task);
 			}
 		}
-
 		taskAdpt.notifyDataSetChanged();
-
 	}
 
 	public void notifyAdapter() {
@@ -336,15 +321,7 @@ class TaskTypeAdapter implements SpinnerAdapter {
 	@Override
 	public View getDropDownView(int position, View convertView, ViewGroup parent) {
 		TextView rowView = (TextView) getView(position, convertView, parent);
-		rowView.setPadding(
-				(int) this.context.getResources().getDimension(
-						R.dimen.activity_horizontal_margin),
-				(int) this.context.getResources().getDimension(
-						R.dimen.activity_vertical_margin),
-				(int) this.context.getResources().getDimension(
-						R.dimen.activity_horizontal_margin),
-				(int) this.context.getResources().getDimension(
-						R.dimen.activity_vertical_margin));
+		rowView.setPadding((int) this.context.getResources().getDimension(R.dimen.activity_horizontal_margin),(int) this.context.getResources().getDimension(R.dimen.activity_vertical_margin),(int) this.context.getResources().getDimension(R.dimen.activity_horizontal_margin),	(int) this.context.getResources().getDimension(R.dimen.activity_vertical_margin));
 		return rowView;
 	}
 
@@ -394,16 +371,13 @@ class TaskItemAdapter extends ArrayAdapter<Task> {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View rowView = convertView;
-		LayoutInflater inflater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		if (rowView == null) {
 			rowView = inflater.inflate(R.layout.list_item_task, null);
 			viewHolder = new ViewHolder();
 
-			viewHolder.title = (TextView) rowView
-					.findViewById(R.id.list_task_title);
-			viewHolder.deadline = (TextView) rowView
-					.findViewById(R.id.list_task_deadline);
+			viewHolder.title = (TextView) rowView.findViewById(R.id.list_task_title);
+			viewHolder.deadline = (TextView) rowView.findViewById(R.id.list_task_deadline);
 			viewHolder.background = rowView.findViewById(R.id.list_task_holder);
 
 			rowView.setTag(viewHolder);
@@ -414,9 +388,7 @@ class TaskItemAdapter extends ArrayAdapter<Task> {
 		Task task = tasks.get(position);
 
 		viewHolder.title.setText(task.getTitle());
-		viewHolder.deadline.setText("Deadline:  "
-				+ MyDateUtils.JODA_APP_DATE_FORMAT.print(task
-						.getEndTimeInMillis()));
+		viewHolder.deadline.setText("Deadline:  "+ MyDateUtils.JODA_APP_DATE_FORMAT.print(task.getEndTimeInMillis()));
 
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(task.getEndTimeInMillis());

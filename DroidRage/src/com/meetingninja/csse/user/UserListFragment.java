@@ -156,6 +156,10 @@ public class UserListFragment extends Fragment implements TokenListener {
 		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
+				if(addedUser == null){
+					dialog.cancel();
+					return;
+				}
 				boolean contains = false;
 				for (int i = 0; i < contacts.size(); i++) {
 					if (contacts.get(i).getContact().equals(addedUser)) {
@@ -163,10 +167,8 @@ public class UserListFragment extends Fragment implements TokenListener {
 					}
 				}
 				if (contains) {
-					AlertDialogUtil.displayDialog(getActivity(),
-							"Unable to add contact",
-							"This user is already added as a contact", "OK",
-							null);
+					AlertDialogUtil.displayDialog(getActivity(),"Unable to add contact","This user is already added as a contact", "OK",null);
+					addedUser=null;
 				} else {
 					addContact(addedUser);
 					addedUser = null;

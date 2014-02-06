@@ -53,10 +53,12 @@ public class ViewTaskActivity extends Activity {
 		setContentView(R.layout.activity_view_task);
 		// setupActionBar();
 		Bundle extras = getIntent().getExtras();
-		if (extras != null)
+		if (extras != null){
 			displayedTask = extras.getParcelable(Keys.Task.PARCEL);
-		else
+		}
+		else{
 			Log.w(TAG, "Error: Unable to find Task Parcel");
+		}
 		setupViews();
 		setTask();
 	}
@@ -116,29 +118,24 @@ public class ViewTaskActivity extends Activity {
 		updater.updateTask(displayedTask);
 		setTask();
 		resultCode = Activity.RESULT_OK;
-
 	}
 
 	private void setupViews() {
 		taskName = (TextView) this.findViewById(R.id.task_title_label);
 		dateCreated = (TextView) this.findViewById(R.id.task_date_created_text);
-		dateAssigned = (TextView) this
-				.findViewById(R.id.task_date_assigned_text);
+		dateAssigned = (TextView) this.findViewById(R.id.task_date_assigned_text);
 		deadline = (TextView) this.findViewById(R.id.task_date_deadline_text);
 		description = (TextView) this.findViewById(R.id.task_desc_text);
-		completionCriteria = (TextView) this
-				.findViewById(R.id.task_comp_crit_text);
+		completionCriteria = (TextView) this.findViewById(R.id.task_comp_crit_text);
 		isCompleted = (TextView) this.findViewById(R.id.task_completed_text);
 		assignedLabel = (TextView) this.findViewById(R.id.task_assigned_label);
 		assignedText = (TextView) this.findViewById(R.id.task_assigned_text);
-		taskCompleteButton = (Button) this
-				.findViewById(R.id.task_complete_button);
+		taskCompleteButton = (Button) this.findViewById(R.id.task_complete_button);
 	}
 
 	private void setTask() {
 		taskName.setText(displayedTask.getTitle());
-		String format = dateFormat.print(Long.parseLong(displayedTask
-				.getDateCreated()));
+		String format = dateFormat.print(Long.parseLong(displayedTask.getDateCreated()));
 		dateCreated.setText(format);
 		// TODO: change this to the real date assigned
 		dateAssigned.setText(displayedTask.getDateAssigned());
@@ -148,10 +145,7 @@ public class ViewTaskActivity extends Activity {
 		completionCriteria.setText(displayedTask.getCompletionCriteria());
 		if (displayedTask.getIsCompleted()) {
 			isCompleted.setText("Yes"); // TODO: change this to use string xml
-			System.out.println("before");
-			;
 			taskCompleteButton.setVisibility(View.INVISIBLE);
-			System.out.println("after");
 		} else {
 			isCompleted.setText("No"); // TODO: change this to use string xml
 			taskCompleteButton.setVisibility(View.VISIBLE);
@@ -164,7 +158,11 @@ public class ViewTaskActivity extends Activity {
 		} else {
 			assignedLabel.setText("Assigned To:");
 			// assignedText.setText(task.getAssignedTo());
-			fetchUserName(displayedTask.getAssignedTo());
+			if(!displayedTask.getAssignedTo().toString().equals("")){
+				fetchUserName(displayedTask.getAssignedTo());
+			}else{
+				assignedText.setText("Unassigned");
+			}
 		}
 	}
 

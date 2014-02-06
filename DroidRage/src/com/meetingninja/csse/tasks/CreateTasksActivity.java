@@ -23,8 +23,7 @@ import android.widget.Toast;
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.AsyncResponse;
 
-public class CreateTasksActivity extends FragmentActivity implements
-		AsyncResponse<Boolean> {
+public class CreateTasksActivity extends FragmentActivity implements AsyncResponse<Boolean> {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +43,7 @@ public class CreateTasksActivity extends FragmentActivity implements
 		if (result) {
 			finish();
 		} else {
-			Toast.makeText(this, "Failed to save task", Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(this, "Failed to save task", Toast.LENGTH_SHORT).show();
 		}
 	}
 
