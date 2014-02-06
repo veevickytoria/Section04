@@ -81,14 +81,13 @@ function deleteTopic($id){
  				return 'true';
             } else {
                 //return an error otherwise
-                $errorarray = array('errorID' => '4', 'errorMessage'=>'Given node ID is not a topic node');
+                $errorarray = array('errorID' => '11', 'errorMessage'=>$id.' node ID is not a topic node');
                 return 4;
  			}
 	echo json_encode($errorarray);
 	} else {
      	//return an error if ID doesn't point to a node
-		echo '{"errorID":"5", "errorMessage":"Given node ID is not recognized in database"}';
-		$errorarray = array('errorID' => '5', 'errorMessage'=>'Given node ID is not recognized in database');
+		$errorarray = array('errorID' => '5', 'errorMessage'=>$id.' node ID is not recognized in database');
 		echo json_encode($errorarray);
 		return 5;
 	}
