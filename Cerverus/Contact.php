@@ -33,13 +33,13 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'DELETE')==0 && isset($_REQUEST['cat']
 	Delete Specific Contact Method
 	==============================*/
 	if (!isset($_GET['id'])) {
-		echo json_encode(array('errorID'=>'XX', 'errorMessage'=>'ID was not set.'));
+		echo json_encode(array('errorID'=>'6', 'errorMessage'=>'No ID provided'));
 	} else {
 		$id = $_GET['id'];
 		$contactRelationship = $client->getRelationship($_GET['id']);
 	
 		if ($contactRelationship == null) {
-			echo json_encode(array('errorID'=>'XX', 'errorMessage'=>$id. ' is an unrecognized relationship ID in the database'));
+			echo json_encode(array('errorID'=>'7', 'errorMessage'=>$id. ' is an unrecognized relationship ID in the database'));
 		} else {
 			$contactRelationship->delete();
 		
@@ -48,7 +48,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'DELETE')==0 && isset($_REQUEST['cat']
 				$outputArray['valid'] = 'true';
 				echo json_encode($outputArray);
 			} else {
-				echo json_encode(array('errorID'=>'XX', 'errorMessage'=>'Relationship was not deleted.'));
+				echo json_encode(array('errorID'=>'8', 'errorMessage'=>'Relationship was not deleted.'));
 			}
 		}
 	}
@@ -58,7 +58,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'DELETE')==0 && isset($_REQUEST['cat']
 	==================*/
 	
 	if (!isset($_GET['id'])) {
-		echo json_encode(array('errorID'=>'XX', 'errorMessage'=>'ID was not set. Usage: contact<forwardslash>@id.'));
+		echo json_encode(array('errorID'=>'6', 'errorMessage'=>'ID was not set. Usage: contact<forwardslash>@id.'));
 	 } else {
 	
 		$userNode = $client->getNode($_GET['id']);
@@ -83,7 +83,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'DELETE')==0 && isset($_REQUEST['cat']
 			
 			echo json_encode($outputArray);
 		} else {
-		echo json_encode(array('errorID'=>'XX', 'errorMessage'=>$_GET['id']. ' is an unrecognized node ID in the database'));
+		echo json_encode(array('errorID'=>'5', 'errorMessage'=>$_GET['id']. ' is an unrecognized node ID in the database'));
 		}
 	}
 
@@ -94,7 +94,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'DELETE')==0 && isset($_REQUEST['cat']
 	$postContent = json_decode(@file_get_contents('php://input'));
 	$userNode = $client->getNode($postContent->userID);
 	if ($userNode == null) {
-		echo json_encode(array('errorID'=>'XX', 'errorMessage'=>$postContent->userID. ' is an unrecognized node ID in the database'));
+		echo json_encode(array('errorID'=>'5', 'errorMessage'=>$postContent->userID. ' is an unrecognized node ID in the database'));
 	} else {
 
 		//remove old contact relationships
@@ -115,7 +115,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'DELETE')==0 && isset($_REQUEST['cat']
 		}
 		
 		if ($badNode){
-			echo json_encode(array('errorID'=>'XX', 'errorMessage'=>$badNode. ' is an unrecognized node ID in the database'));
+			echo json_encode(array('errorID'=>'5', 'errorMessage'=>$badNode. ' is an unrecognized node ID in the database'));
 		} else {
 		
 			foreach($contactArray as $item){
@@ -150,7 +150,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'DELETE')==0 && isset($_REQUEST['cat']
 	$postContent = json_decode(@file_get_contents('php://input'));
 	$userNode = $client->getNode($postContent->userID);
 	if ($userNode == null) {
-		echo json_encode(array('errorID'=>'XX', 'errorMessage'=>$postContent->userID. 'is an unrecognized node ID in the database'));
+		echo json_encode(array('errorID'=>'5', 'errorMessage'=>$postContent->userID. 'is an unrecognized node ID in the database'));
 	} else {
 		//add new contact relationships
 		$contactArray = $postContent->contacts;
@@ -164,7 +164,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'DELETE')==0 && isset($_REQUEST['cat']
 		}
 		
 		if ($badNode){
-			echo json_encode(array('errorID'=>'XX', 'errorMessage'=>$badNode. ' is an unrecognized node ID in the database'));
+			echo json_encode(array('errorID'=>'5', 'errorMessage'=>$badNode. ' is an unrecognized node ID in the database'));
 		} else {
 		
 			foreach($contactArray as $item){
@@ -197,13 +197,13 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'DELETE')==0 && isset($_REQUEST['cat']
 	Delete Contacts Method
 	=====================*/
 	if (!isset($_GET['id'])) {
-		echo json_encode(array('errorID'=>'XX', 'errorMessage'=>'ID was not set. Usage: contact<forwardslash>@id.'));
+		echo json_encode(array('errorID'=>'6', 'errorMessage'=>'ID was not set. Usage: contact<forwardslash>@id.'));
 	} else {
 		$id = $_GET['id'];
 		$userNode = $client->getNode($_GET['id']);
 	
 		if ($userNode == null) {
-			echo json_encode(array('errorID'=>'XX', 'errorMessage'=>$id. ' is an unrecognized node ID in the database'));
+			echo json_encode(array('errorID'=>'5', 'errorMessage'=>$id. ' is an unrecognized node ID in the database'));
 		} else {
 			//remove all contact relationships
 			$relationArray = $userNode->getRelationships(array('CONTACT'), Relationship::DirectionOut);
