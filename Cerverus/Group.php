@@ -233,7 +233,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 ){
 			echo json_encode($array);
 		} else {
 			//return an error otherwise
-			$errorarray = array('errorID' => '4', 'errorMessage'=>'Given node ID is not a group node');
+			$errorarray = array('errorID' => '11', 'errorMessage'=>$_GET['id'].' node ID is not a group node');
 			echo json_encode($errorarray);
 		}
 	} else {
