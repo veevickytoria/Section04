@@ -205,14 +205,14 @@ function checkIfNodeInRels($nodeIDToCheck, $nodeRelsFrom, $relTypes, $direction,
         }
         return array('valid'=>TRUE,  'message'=>array('errorID'=>'13', 'errorMessage'=>$nodeIDToCheck.' already related to '.$nodeRelsFrom->getId()));
     } else {
-        return array('valid'=>FALSE, 'message'=>array('errorID'=>'14', 'errorMessage'=>'Direction not recognized in checkIfNodInRels function'));
+        return array('valid'=>FALSE, 'message'=>array('errorID'=>'14', 'errorMessage'=>'Direction not recognized in checkIfNodeInRels function'));
     }
 }
 
 //checks if a node is valid
 function checkIfNode($node){
     if($node==NULL){
-        return array('valid'=>FALSE, 'message'=>array('errorID'=>'11', 'errorMessage'=>$node->getId().' is not valid ID'));
+        return array('valid'=>FALSE, 'message'=>array('errorID'=>'5', 'errorMessage'=>$node->getId().' node ID is not recognized in database'));
     }
     return array('valid'=>TRUE);
 }
@@ -220,7 +220,7 @@ function checkIfNode($node){
 //cheks if a node is part of an index
 function checkIfIndex($index, $key, $value){
     if($index->findOne($key, $value) == NULL){
-        return array('valid'=>FALSE, 'message'=>array('errorID'=>'12', 'errorMessage'=>$value.' is not of type '.$index->getName()));
+        return array('valid'=>FALSE, 'message'=>array('errorID'=>'11', 'errorMessage'=>$value.' is not of the node type '.$index->getName()));
     }
     return array('valid'=>TRUE);
 }
