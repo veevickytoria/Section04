@@ -96,14 +96,14 @@
   <% else %>
     <% for group in @groups %>
       <tr>
-        <td onclick="showViewGroupModal(<%= group['groupID'] %>)">
+        <td style='cursor: pointer' onclick="showViewGroupModal(<%= group['groupID'] %>)">
           <%= group['groupTitle'] %>
         </td>
         <td style="width: 7%">
-          <span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span>
+          <span style='font-size: 1.3em; color: white; cursor: pointer;' onclick='showDeleteModal(<%= group["groupID"] %>)' class='glyphicon glyphicon-trash'></span>
         </td>
         <td style="width: 7%">
-          <span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-pencil'></span>
+          <span style='font-size: 1.3em; color: white; cursor: pointer;' class='glyphicon glyphicon-pencil'></span>
         </td>
       </tr>
     <% end %>

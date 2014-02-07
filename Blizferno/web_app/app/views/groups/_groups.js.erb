@@ -1,5 +1,6 @@
   var groupArray;
   var deleteID;
+  // var membInfo;
 
   function submitCreateModal(){ //grab the form from the html document
     var form = new convertFormToJSON(document.getElementById('createGroupForm'));
@@ -69,21 +70,16 @@
   }
 
   function hideDeleteModal(){
-    // TODO: Put this back in when it works and change it to the delete
-    // $.ajax({
-    //         type: 'GET',
-    //         url: 'http://csse371-04.csse.rose-hulman.edu/Tasks/' + deletelID,
-    //   success:function(data){
-    //     if(data.taskID != null){
-    //       GroupArray = JSON.parse(data);
-    //     }
-    //   }
-    // });
-    alert("The group matching id " + deleteID + " was deleted");
-
-    $('#deleteGroupModal').modal('hide');
-    // TODO: Put back in
-    //location.reload(true);
+    $.ajax({
+        type: 'DELETE',
+        url: 'http://csse371-04.csse.rose-hulman.edu/Group/' + deleteID,
+        success:function(data){
+        if(JSON.parse(data)["valid"] == "true"){
+          $('#deleteMeetingModal').modal('hide');
+          window.location.reload(true);
+        }
+      }
+    });
   }
 
   function showGroupModalNoID(){
@@ -122,6 +118,8 @@
   }
 
   function showViewGroupModal(ID){
+    var membInfo;
+    var membs = new Array();
     $('#viewGroupModal').modal('hide');
     $('#viewGroupModal').on('hidden.bs.modal', function() {
       $(this).removeData('bs.modal');
@@ -132,12 +130,25 @@
       url: 'http://csse371-04.csse.rose-hulman.edu/Group/' + ID,
       success:function(data){
         groupArray = JSON.parse(data);
-      }
+      },
+      async: false
     });
-    alert(groupArray);
-    document.getElementById("titleV").innerHTML = groupArray["groupTitle"];
+    
+    for (i in groupArray['members']){
+      $.ajax({
+        type: 'GET',
+        url: 'http://csse371-04.csse.rose-hulman.edu/User/' + groupArray['members'][i]['userID'],
+        success:function(data){
+          membInfo = JSON.parse(data);
+          membs.push({'name':membInfo['name']});
+        },
+        async: false
+      });
+    }
 
-    populateTableRows(groupArray["members"], "userID", "membersV");
+    document.getElementById("titleV").innerHTML = groupArray["groupTitle"];
+    populateTableRows(membs, "name", "membersV");
+    
 
     $('#viewGroupModal').modal('show');
     $('#editGroupModal').modal('hide');
@@ -168,6 +179,7 @@
     }
 
     for (var k in JSONArray){
+      // alert(k);
       var rowCount = table.rows.length;
       var row = table.insertRow(rowCount);
 
@@ -203,7 +215,6 @@
     }
   }
 
-  // TODO: This will probably be usless once connected to the back end
   function returnSelectValuesAsJSON(JSONtype, JSONDisplayColumn, JSONValueColumn, selectID){
     var select = document.getElementById(selectID);
     var newJSONString = "{" + "\"" + JSONtype + "\"" + ":[";
