@@ -23,6 +23,19 @@ alert("here");
 
 -->
 
+<ul class="nav nav-tabs">
+      <li class="active"><a href="#profilePane" data-toggle="tab">Profile</a></li>
+      <li><a href="#usersPane" data-toggle="tab">Users</a></li>
+</ul>
+
+
+
+
+
+
+<div class="tab-content">
+      <div class="tab-pane fade in active" id="profilePane">
+
 <div style="padding:0 15px;"><!-- offset row negative padding -->
 
 <div class="row">
@@ -134,11 +147,19 @@ for (var i=0, max=all.length; i < max; i++) {
   </strong>
 </p>
 <br/>
-<p>
-  <span style="font-size:28px;"><strong><span style="font-size:18px;">Projects: </span>
-<br/>
 
-<span style="font-size:28px;"><strong><span style="font-size:18px;">Groups: <a href='#'><%= @userGroups['groups'][0]['groupTitle'] %><a>, <a href='#'><%= @userGroups['groups'][1]['groupTitle'] %>, <a href='#'><%= @userGroups['groups'][2]['groupTitle'] %><a></a></span></strong></span>
+
+
+<!-- <span style="font-size:28px;"><strong><span style="font-size:18px;">Projects: #for project in @projects  project[#'projectTitle']  
+end 
+</span>
+<br/> -->
+
+<span style="font-size:28px;"><strong><span style="font-size:18px;">Groups: <br /></span></strong></span>
+<% for group in @groups %>
+<%= group['groupTitle'] %> <br />
+<% end %>
+
 
 <!-- Modal Stuff -->
 
@@ -191,3 +212,22 @@ for (var i=0, max=all.length; i < max; i++) {
 </div> <!-- end right col -->
 </div> <!-- end row div -->
 </div> <!-- end offset div -->
+
+
+</div>
+<div class="tab-pane fade in active" id="usersPane">
+  <div style="padding: 5%;"><!-- offset row negative padding -->
+
+    <div class="row">
+      <div class="col-md-6">
+        <% for user in @allUsers['users'] %>
+        <% if( !user['name'].nil? ) %>
+        <a href='#'> <%= user['name'] %></a> <br />
+        <% end %>
+        <% end %>
+
+      </div>
+    </div>
+  </div>
+</div>
+</div>
