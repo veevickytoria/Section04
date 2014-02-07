@@ -82,19 +82,31 @@
 </div><!-- /.modal -->
 
 <h1 style='margin-left: 15%; margin-right: auto;'>Groups</h1>
-
+<!-- <%= debug @groups %> -->
 <table class='table table-hover table-striped' style='width: 70%; margin-left: 15%; margin-right: auto;'>
   <thead>
     <tr>
-      <th>Group ID</th>
       <th>Group Name</th>
-      <th>Group Type</th>
+      <th></th>
+      <th></th>
     </tr>
   </thead>
   <% if !(@groups.any?) %>
   <tr><td colspan="3" style="text-align: center;">YOU ARE NOT A MEMBER OF ANY GROUPS</td></tr>
   <% else %>
-  <!-- REPLACE WITH: code to populate table rows with groups -->
+    <% for group in @groups %>
+      <tr>
+        <td onclick="showViewGroupModal(<%= group['groupID'] %>)">
+          <%= group['groupTitle'] %>
+        </td>
+        <td style="width: 7%">
+          <span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span>
+        </td>
+        <td style="width: 7%">
+          <span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-pencil'></span>
+        </td>
+      </tr>
+    <% end %>
   <% end %>
   <tfoot>
   <tr>

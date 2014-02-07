@@ -1,4 +1,4 @@
-  var GroupArray;
+  var groupArray;
   var deleteID;
 
   function submitCreateModal(){ //grab the form from the html document
@@ -127,32 +127,17 @@
       $(this).removeData('bs.modal');
     });
 
-    // TODO: Put this back in when it works
-    // $.ajax({
-    //         type: 'GET',
-    //         url: 'http://csse371-04.csse.rose-hulman.edu/Tasks/' + ID,
-    //   success:function(data){
-    //     if(data.taskID != null){
-    //       GroupArray = JSON.parse(data);
-    //     }
-    //   }
-    // });
+    $.ajax({
+      type: 'GET',
+      url: 'http://csse371-04.csse.rose-hulman.edu/Group/' + ID,
+      success:function(data){
+        groupArray = JSON.parse(data);
+      }
+    });
+    alert(groupArray);
+    document.getElementById("titleV").innerHTML = groupArray["groupTitle"];
 
-    if (ID == 1){
-      GroupArray = JSON.parse('{"groupID":"1","groupTitle":"NWA","groupType":"hardcore gangsta", "members":[{"userID":"1","displayName":"Santa Claus"},{"userID":"2","displayName":"WasARebel"},{"userID":"3","displayName":"KemoSabe"},{"userID":"4","displayName":"CaptainKirk"},{"userID":"5","displayName":"Spock"}]}');
-    }else if (ID == 2){
-      GroupArray = JSON.parse('{"groupID":"2","groupTitle":"Group? More like poop!","groupType":"lolz", "members":[{"userID":"1","displayName":"Santa Claus"},{"userID":"2","displayName":"WasARebel"},{"userID":"3","displayName":"KemoSabe"},{"userID":"4","displayName":"CaptainKirk"},{"userID":"5","displayName":"Spock"}]}');
-    }else if (ID == 3){
-      GroupArray = JSON.parse('{"groupID":"3","groupTitle":"Purgatory","groupType":"limbo", "members":[{"userID":"1","displayName":"Santa Claus"},{"userID":"2","displayName":"WasARebel"},{"userID":"3","displayName":"KemoSabe"},{"userID":"4","displayName":"CaptainKirk"},{"userID":"5","displayName":"Spock"}]}');
-    }else if (ID == 4){
-      GroupArray = JSON.parse('{"groupID":"4","groupTitle":"Murdah Squad","groupType":"serial killer", "members":[{"userID":"1","displayName":"Santa Claus"},{"userID":"2","displayName":"WasARebel"},{"userID":"3","displayName":"KemoSabe"},{"userID":"4","displayName":"CaptainKirk"},{"userID":"5","displayName":"Spock"}]}')
-    }
-
-    //document.getElementById("IDV").innerHTML = GroupArray["groupID"];
-    document.getElementById("titleV").innerHTML = GroupArray["groupTitle"];
-    document.getElementById("typeV").innerHTML = GroupArray["groupType"];
-
-    populateTableRows(GroupArray["members"], "displayName", "TableMembersV");
+    populateTableRows(groupArray["members"], "userID", "membersV");
 
     $('#viewGroupModal').modal('show');
     $('#editGroupModal').modal('hide');
