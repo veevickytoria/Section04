@@ -123,7 +123,7 @@ public class MainActivity extends FragmentActivity implements
 	private boolean isDataCached;
 	private static final String KEY_SQL_CACHE = "SQL_DATA_CACHE";
 
-	private static final int REQUEST_OK = 1;
+	public static final int VOICE_RECOGNITION_REQUEST_CODE = 1234;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -379,11 +379,12 @@ public class MainActivity extends FragmentActivity implements
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (requestCode == REQUEST_OK && resultCode == RESULT_OK) {
+		if (requestCode == VOICE_RECOGNITION_REQUEST_CODE
+				&& resultCode == RESULT_OK) {
 			ArrayList<String> thingsYouSaid = data
 					.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-			if (thingsYouSaid.contains("go to meetings")) {
-				startActivity(new Intent(this, MeetingsFragment.class));
+			if (thingsYouSaid.contains("meetings")) {
+				selectItem(DrawerLabel.MEETINGS.getPosition());
 			}
 		}
 	}
@@ -448,8 +449,9 @@ public class MainActivity extends FragmentActivity implements
 		case R.id.action_speak:
 			Intent i = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
 			i.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, "en-US");
+			i.putExtra(RecognizerIntent.EXTRA_PROMPT, "Go to...");
 			try {
-				startActivityForResult(i, REQUEST_OK);
+				startActivityForResult(i, VOICE_RECOGNITION_REQUEST_CODE);
 
 			} catch (Exception e) {
 				Toast.makeText(this,

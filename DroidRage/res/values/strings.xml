@@ -11,6 +11,7 @@
     <string name="action_paste">Paste</string>
     <string name="action_refresh">Refresh</string>
     <string name="action_save">Save</string>
+    <string name="action_speak">Speak Now</string>
     <string name="save_label">Done</string>
     <string name="discard_label">Cancel</string>
     <string name="title_activity_meetings">New Meeting</string>
@@ -31,17 +32,17 @@
 
     <!--
          Text displayed when the user long presses on a chip to copy the recipients email address.
-         [CHAR LIMIT=200]
+         [CHAR LIMIT=200]
     -->
     <string name="copy_email">Copy email address</string>
     <!--
          Text displayed when the user long presses on a chip to copy the recipient's phone number.
-         [CHAR LIMIT=200]
+         [CHAR LIMIT=200]
     -->
     <string name="copy_number">Copy phone number</string>
     <!--
          Text displayed in the enter key slot when the recipientedittextview has focus.
-         [CHAR LIMIT=12]
+         [CHAR LIMIT=12]
     -->
     <string name="done">Return</string>
 
@@ -79,7 +80,6 @@
     <!-- Pase SDK Keys -->
     <string name="parse_application_id">EMatFstc8b29syE3hcVBrNndCdwjRudulpFBUwdt</string>
     <string name="parse_client_key">pmsPdsBrpUyQIQfYR8sFe5sNpeHnLKlz1rfLuaEP</string>
-    
     <string name="title_activity_agenda">AgendaActivity</string>
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="title_activity_view_task">ViewTaskActivity</string>

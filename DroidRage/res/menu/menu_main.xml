@@ -1,6 +1,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
+        android:id="@+id/action_speak"
+        android:icon="@android:drawable/ic_btn_speak_now"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_speak"/>
+    <item
         android:id="@+id/action_settings"
         android:orderInCategory="9999"
         android:showAsAction="never"
@@ -10,12 +16,5 @@
         android:orderInCategory="9999"
         android:showAsAction="never"
         android:title="@string/action_logout"/>
-
-    <item
-        android:id="@+id/action_speak"
-        android:icon="@android:drawable/ic_btn_speak_now"
-        android:orderInCategory="150"
-        android:showAsAction="ifRoom"
-        android:title="@string/action_speak"/>
 
 </menu>
