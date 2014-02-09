@@ -81,6 +81,7 @@ class ApplicationController < ActionController::Base
       http.request(req)
     }
     @allUsers = JSON.parse(res.body)
+	@allUsersRaw = res.body
   end
 
   #before_filter :protect
