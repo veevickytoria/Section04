@@ -19,7 +19,7 @@
 #import "TKCalendarDayView.h"
 #import "TKCalendarDayEventView.h"
 
-@interface iWinMainViewController : UIViewController <iWinLoginDelegate, iWinRegisterVCDelegate, NoteListDelegate, ViewAddNoteDelegate, SettingsDelegate, OpenEarsDelegate, TKCalendarDayViewDelegate, TKCalendarDayViewDataSource>
+@interface iWinMainViewController : UIViewController <iWinLoginDelegate, iWinRegisterVCDelegate, SettingsDelegate, OpenEarsDelegate, TKCalendarDayViewDelegate, TKCalendarDayViewDataSource>
 
 @property (weak, nonatomic) IBOutlet UIView *mainView;
 @property (weak, nonatomic) IBOutlet UIView *slideView;
@@ -27,6 +27,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *voiceCommand;
 @property (nonatomic, strong) TKCalendarDayView *dayView;
 @property (nonatomic,strong) NSArray *data;
+@property (weak, nonatomic) IBOutlet UIView *tapView;
 
 - (IBAction)onClickMenu;
 - (IBAction)onClickHome;
@@ -39,7 +40,6 @@
 - (IBAction)onClickSchedule;
 
 - (IBAction)startListening:(id)sender;
-@property (weak, nonatomic) IBOutlet UIButton *filler;
 
 @property (weak, nonatomic) IBOutlet UIButton *scheduleButton;
 @property (weak, nonatomic) IBOutlet UIView *rightSlideView;

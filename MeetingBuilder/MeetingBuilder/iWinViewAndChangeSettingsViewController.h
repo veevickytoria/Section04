@@ -14,7 +14,6 @@
 @end
 
 @interface iWinViewAndChangeSettingsViewController : UIViewController <UITableViewDelegate,UITableViewDataSource, UIAlertViewDelegate>
-//@property (nonatomic) id<SettingsDelegate> settingsDelegate;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withID:(NSInteger) userID;
 

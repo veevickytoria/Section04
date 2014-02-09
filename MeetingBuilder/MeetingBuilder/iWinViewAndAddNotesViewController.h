@@ -12,9 +12,6 @@
 
 @protocol ViewAddNoteDelegate <NSObject>
 
-//-(void)saveNoteClicked;
-//-(void)cancelNoteClicked;
-//-(void)mergeNoteClicked;
 -(void)refreshNoteList;
 @end
 

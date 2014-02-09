@@ -82,7 +82,6 @@
 		0ACE33B517FD246F003B9C0A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ACE33B417FD246F003B9C0A /* SystemConfiguration.framework */; };
 		0AEC8CBD189F74B200D72EAA /* AcousticModelEnglish.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0AEC8CB9189F74B200D72EAA /* AcousticModelEnglish.bundle */; };
 		0AEC8CBE189F74B200D72EAA /* AcousticModelSpanish.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0AEC8CBA189F74B200D72EAA /* AcousticModelSpanish.bundle */; };
-		0AEC8CBF189F74B200D72EAA /* OpenEars.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AEC8CBB189F74B200D72EAA /* OpenEars.framework */; };
 		0AEC8CC0189F74B200D72EAA /* Slt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AEC8CBC189F74B200D72EAA /* Slt.framework */; };
 		0AF556B6189F46A000422099 /* OpenEars.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79D3D671189EF9D9000C9194 /* OpenEars.framework */; };
 		5B0ADDAA188D87510013753B /* iWinGroupTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B0ADDA9188D87510013753B /* iWinGroupTest.m */; };
@@ -556,7 +555,6 @@
 				0A04455E17F3825D000FF2A0 /* CoreGraphics.framework in Frameworks */,
 				0AEC8CC0189F74B200D72EAA /* Slt.framework in Frameworks */,
 				0A04456017F3825D000FF2A0 /* CoreData.framework in Frameworks */,
-				0AEC8CBF189F74B200D72EAA /* OpenEars.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1243,7 +1241,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = iWin;
-				LastUpgradeCheck = 0460;
+				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = CSSE371;
 				TargetAttributes = {
 					0A04455517F3825C000FF2A0 = {
@@ -1664,7 +1662,6 @@
 		0A7F1CD7185637310017209D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Meeting Ninja.app/Meeting Ninja";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
@@ -1696,7 +1693,6 @@
 		0A7F1CD8185637310017209D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Meeting Ninja.app/Meeting Ninja";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;

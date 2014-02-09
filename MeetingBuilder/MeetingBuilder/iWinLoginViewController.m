@@ -53,6 +53,16 @@
     return [self.context executeFetchRequest:request error:&error];
 }
 
+-(void) deleteRememberMeInfo
+{
+    NSError *error;
+    for (NSManagedObject * rm in [self getRememberMeInfo])
+    {
+        [self.context deleteObject:rm];
+    }
+    [self.context save:&error];
+}
+
 - (IBAction)onClickLogin:(id)sender
 {
     
@@ -79,23 +89,17 @@
                 [self createContactWithID:userID withEmail:email withPassword:password];
                 if ([self.rememberSwitch isOn])
                 {
-                    if ([self getRememberMeInfo].count == 0)
-                    {
-                        NSManagedObject *newRememberMe = [NSEntityDescription insertNewObjectForEntityForName:@"RememberMe" inManagedObjectContext:self.context];
-                        NSError *error;
-                        [newRememberMe setValue:email forKey:@"email"];
-                        [newRememberMe setValue:self.passwordField.text forKey:@"password"];
-                        [self.context save:&error];
-                    }
+                    [self deleteRememberMeInfo];
+                    NSManagedObject *newRememberMe = [NSEntityDescription insertNewObjectForEntityForName:@"RememberMe" inManagedObjectContext:self.context];
+                    NSError *error;
+                    [newRememberMe setValue:email forKey:@"email"];
+                    [newRememberMe setValue:self.passwordField.text forKey:@"password"];
+                    [self.context save:&error];
+                    
                 }
                 else
                 {
-                    NSError *error;
-                    for (NSManagedObject * rm in [self getRememberMeInfo])
-                    {
-                        [self.context deleteObject:rm];
-                    }
-                    [self.context save:&error];
+                    [self deleteRememberMeInfo];
                 }
                 
                 [self.loginDelegate login:userID];

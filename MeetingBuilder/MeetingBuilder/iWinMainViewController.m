@@ -30,8 +30,9 @@
 @property (nonatomic) NSInteger userID;
 @property BOOL movedRightView;
 @property BOOL movedView;
-@property (nonatomic) UISwipeGestureRecognizer * swiperight;
-@property (nonatomic) UISwipeGestureRecognizer * swipeleft;
+@property (nonatomic) UISwipeGestureRecognizer *swiperight;
+@property (nonatomic) UISwipeGestureRecognizer *swipeleft;
+@property (nonatomic) UITapGestureRecognizer *tapGesture;
 @property (nonatomic) UIButton *lastClicked;
 @property (strong, nonatomic) iWinBackEndUtility *backendUtility;
 @end
@@ -94,6 +95,8 @@
     
     self.swipeleft=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeleft:)];
     self.swipeleft.direction=UISwipeGestureRecognizerDirectionLeft;
+    
+    self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap:)];
     
     self.menuButton.hidden = YES;
     self.scheduleButton.hidden = YES;
@@ -219,11 +222,15 @@
     {
         [self animateSlidingMenu:NO];
         self.movedView = !self.movedView;
+        self.tapView.hidden = YES;
+        [self.tapView removeGestureRecognizer:self.tapGesture];
     }
     else if (!self.movedRightView && !self.movedView)
     {
         [self animateRightSlidingMenu:YES];
         self.movedRightView = !self.movedRightView;
+        [self.tapView addGestureRecognizer:self.tapGesture];
+        self.tapView.hidden = NO;
     }
     
 }
@@ -234,14 +241,41 @@
     {
         [self animateSlidingMenu:YES];
         self.movedView = !self.movedView;
+        [self addTapRecognizer];
     }
     else if (self.movedRightView)
     {
         [self animateRightSlidingMenu:NO];
         self.movedRightView = !self.movedRightView;
+        [self removeTapRecognizer];
     }
 }
 
+-(void)removeTapRecognizer
+{
+    self.tapView.hidden = YES;
+    [self.tapView removeGestureRecognizer:self.tapGesture];
+}
+
+-(void) addTapRecognizer
+{
+    self.tapView.hidden = NO;
+    [self.tapView addGestureRecognizer:self.tapGesture];
+}
+
+-(void) onTap:(UITapGestureRecognizer *)gestureRecognizer
+{
+    if (self.movedView)
+    {
+        [self swipeleft:nil];
+        [self removeTapRecognizer];
+    }
+    else if(self.movedRightView)
+    {
+        [self swiperight:nil];
+        [self removeTapRecognizer];
+    }
+}
 
 -(void) joinUs
 {
@@ -254,6 +288,7 @@
 {
     [self removeSubViews];
     [self enableSliding];
+    [self removeTapRecognizer];
     self.userID = userID;
     self.homeScreenViewController = [[iWinHomeScreenViewController alloc] initWithNibName:@"iWinHomeScreenViewController" bundle:nil withUserID:userID];
     [self.mainView  addSubview:self.homeScreenViewController.view];
@@ -316,6 +351,7 @@
 {
     [self removeSubViews];
     [self enableSliding];
+    [self removeTapRecognizer];
     self.homeScreenViewController = [[iWinHomeScreenViewController alloc] initWithNibName:@"iWinHomeScreenViewController" bundle:nil];
     [self.mainView  addSubview:self.homeScreenViewController.view];
     [self.homeScreenViewController.view setBounds:self.mainView.bounds];
@@ -329,6 +365,7 @@
     [self animateSlidingMenu:NO];
     [self removeSubViews];
     [self disableSliding];
+    [self removeTapRecognizer];
     self.loginViewController = [[iWinLoginViewController alloc] initWithNibName:@"iWinLoginViewController" bundle:nil];
     [self.mainView  addSubview:self.loginViewController.view];
     [self.loginViewController.view setBounds:self.mainView.bounds];
@@ -340,6 +377,7 @@
 {
     [self removeSubViews];
     [self enableSliding];
+    [self removeTapRecognizer];
     self.meetingListViewController = [[iWinMeetingViewController alloc] initWithNibName:@"iWinMeetingViewController" bundle:nil withID:self.userID];
     [self.mainView  addSubview:self.meetingListViewController.view];
     [self.meetingListViewController.view setBounds:self.mainView.bounds];
@@ -353,10 +391,10 @@
 {
     [self removeSubViews];
     [self enableSliding];
+    [self removeTapRecognizer];
     self.noteViewController = [[iWinNoteListViewController alloc] initWithNibName:@"iWinNoteListViewController" bundle:nil withUserID:self.userID];
     [self.mainView addSubview:self.noteViewController.view];
     [self.noteViewController.view setBounds:self.mainView.bounds];
-    self.noteViewController.noteListDelegate = self;
     [self animateSlidingMenu:NO];
     [self updateSelectedMenu:self.notesButton];
     [self resetSliding];
@@ -366,6 +404,7 @@
 {
     [self removeSubViews];
     [self enableSliding];
+    [self removeTapRecognizer];
     [self animateSlidingMenu:NO];
     [self updateSelectedMenu:self.tasksButton];
     self.taskListViewController = [[iWinTaskListViewController alloc] initWithNibName:@"iWinTaskListViewController" bundle:nil userID:self.userID];
@@ -378,6 +417,7 @@
 {
     [self removeSubViews];
     [self enableSliding];
+    [self removeTapRecognizer];
     self.settingsViewController = [[iWinViewAndChangeSettingsViewController alloc] initWithNibName:@"iWinViewAndChangeSettingsViewController" bundle:nil withID:self.userID];
     [self.mainView  addSubview:self.settingsViewController.view];
     [self.settingsViewController.view setBounds:self.mainView.bounds];
@@ -391,6 +431,7 @@
 - (IBAction)onClickProfile{
     [self removeSubViews];
     [self enableSliding];
+    [self removeTapRecognizer];
     self.profileViewController = [[iWinViewProfileViewController alloc] initWithNibName:@"iWinViewProfileViewController" bundle:nil withID: self.userID];
     [self.mainView  addSubview:self.profileViewController.view];
     [self.profileViewController.view setBounds:self.mainView.bounds];
@@ -429,35 +470,20 @@
     
     CGRect oldFrame = self.rightSlideView.frame;
     CGRect oldFrameMain = self.slideView.frame;
-    CGRect oldFiller = self.filler.frame;
     
     if (moveLeft)
     {
         self.rightSlideView.frame = CGRectMake(oldFrame.origin.x - 350, oldFrame.origin.y, oldFrame.size.width, oldFrame.size.height);
         self.slideView.frame = CGRectMake(oldFrameMain.origin.x-350,oldFrameMain.origin.y,oldFrameMain.size.width,oldFrameMain.size.height);
-        self.filler.frame = CGRectMake(oldFiller.origin.x-350,oldFiller.origin.y,oldFiller.size.width,oldFiller.size.height);
+        
     }
     else
     {
         self.rightSlideView.frame = CGRectMake(oldFrame.origin.x + 350, oldFrame.origin.y, oldFrame.size.width, oldFrame.size.height);
         self.slideView.frame = CGRectMake(oldFrameMain.origin.x + 350,oldFrameMain.origin.y,oldFrameMain.size.width,oldFrameMain.size.height);
-        self.filler.frame = CGRectMake(oldFiller.origin.x+350,oldFiller.origin.y,oldFiller.size.width,oldFiller.size.height);
+        
     }
     [UIView commitAnimations];
-}
-
-
-
--(void) addViewNoteClicked:(BOOL)isEditing
-{
-    [self removeSubViews];
-    [self enableSliding];
-    [self animateSlidingMenu:NO];
-    [self resetSliding];
-    self.viewAddNoteViewController = [[iWinViewAndAddNotesViewController alloc] initWithNibName:@"iWinViewAndAddNotesViewController" bundle:nil withNoteID:-1 withUserID:self.userID];
-    [self.mainView  addSubview:self.viewAddNoteViewController.view];
-    [self.viewAddNoteViewController.view setBounds:self.mainView.bounds];
-    self.viewAddNoteViewController.addNoteDelegate = self;
 }
 
 
@@ -470,17 +496,6 @@
 {
     [self onClickMeetings];
 }
-
--(void)saveNoteClicked{
-    [self onClickNotes];
-}
--(void)cancelNoteClicked{
-    [self onClickNotes];
-}
--(void)mergeNoteClicked{
-    [self onClickNotes];
-}
-
 
 -(void)viewScheduleClicked
 {
