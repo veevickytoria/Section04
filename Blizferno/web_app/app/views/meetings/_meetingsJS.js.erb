@@ -2,9 +2,14 @@ var currentID; //index of the current meeting we're looking at
 var deleteID; //what index of the table to delete from
 var meetingsJSON = <%= raw @meetings %>; //need raw in here to deal with the quote parsing issue
 meetingsJSON = JSON.parse("["+meetingsJSON.toString()+"]"); //this is manually setting up the format of the string so it parses correctly
+var allUsers = <%= raw @allUsersRaw %>;
+allUsers = JSON.parse(JSON.stringify(allUsers));
 
 //This funciton is called when a user clicks on a row in the table and is passed in the index of the row that was clicked
 function showViewMeetingModal(ID){
+	var attendeeInfo;
+	var attends = new Array();
+
 	$('#viewMeetingModal').modal('hide');
 	$('#viewMeetingModal').on('hidden.bs.modal', function() {
 		$(this).removeData('bs.modal');
@@ -19,6 +24,20 @@ function showViewMeetingModal(ID){
 	document.getElementById("endDatetimeV").innerHTML = meetingsJSON[currentID]["endDatetime"];
 	document.getElementById("descriptionV").innerHTML = meetingsJSON[currentID]["description"];
 	//document.getElementById("attendanceV").innerHTML = meetingsJSON[currentID]["attendance"];
+
+for(attendee in meetingsJSON[currentID]["attendance"]){
+	  $.ajax({
+        type: 'GET',
+        url: 'http://csse371-04.csse.rose-hulman.edu/User/' + meetingsJSON[currentID]["attendance"][attendee]['userID'],
+        success:function(data){
+          attendeeInfo = JSON.parse(data);
+          attends.push({'name':attendeeInfo['name']});
+        },
+        async: false
+      });
+}
+
+	populateTableRows(attends, "name", "attendanceV");
 
 	$('#viewMeetingModal').modal('show');
 	$('#editMeetingModal').modal('hide');
@@ -52,6 +71,8 @@ function showEditModal(ID){
 	document.getElementById("timeEndE").value = meetingsJSON[currentID]["endDatetime"].substring(11);
 	document.getElementById("descriptionE").value = meetingsJSON[currentID]["description"];
 	//document.getElementById("attendanceE").value = meetingsJSON[currentID]["attendance"];
+
+    populateSelect(allUsers['users'], "name", "userID", meetingsJSON[currentID]["attendance"], "attendanceE");
 
 	$('#editMeetingModal').modal('show');
 	$('#viewMeetingModal').modal('hide');
@@ -103,6 +124,19 @@ function updateEditedValues(){
 
 		}
 	}
+/*
+	editField = "attendance";
+	editValue = returnSelectValuesAsJSON("attendance", "name", "userID", "attendanceE");
+	editData = JSON.stringify({"meetingID":editMeetingID,"field":editField,"value":editValue});
+
+alert("editData:"+editData);
+
+	$.ajax({
+		type: 'PUT',
+		url: 'http://csse371-04.csse.rose-hulman.edu/Meeting/',
+		data: editData
+	});
+*/
 
 }
 
@@ -123,7 +157,14 @@ function submitCreateModal(){
 			var postDatetime = formJSON.dateStart + " " + formJSON.timeStart;
 			var postEndDatetime = formJSON.dateEnd + " " + formJSON.timeEnd;
 			var postDescription = formJSON.description;
-			var postAttendance = "[]";
+
+
+			var attendees = getMembers('attendees');
+			var postAttendance = [];
+
+			for (var i = attendees.length - 1; i >= 0; i--) {
+			  postAttendance.push({"userID":attendees[i]});
+			};
 
 			//set up the data for the call
 			var postData = JSON.stringify({
@@ -147,6 +188,7 @@ function submitCreateModal(){
 					window.location.reload(true);
 				}
 			});
+
 		//}
 }
 
@@ -165,8 +207,7 @@ function hideDeleteModal(){
 	//make the DELETE request to the backend
 	$.ajax({
 		type: 'DELETE',
-		url: 'http://csse371-04.csse.rose-hulman.edu/Meeting/',
-		data: deleteData,
+		url: 'http://csse371-04.csse.rose-hulman.edu/Meeting/' + deleteData,
 		success:function(data){
 			//if the database returned true
 			if(JSON.parse(data)["valid"] == "true"){
@@ -248,3 +289,72 @@ function isValidDate(dateString)
     // Check the range of the day
     return day > 0 && day <= monthLength[month - 1];
 }
+
+  function getMembers(id){
+    var newMembers = [];
+    $( '#' + id + ' :selected' ).each( function( i, selected ) {
+      newMembers[i] = $( selected ).val();
+    });
+    return newMembers;
+  }
+
+  function populateTableRows(JSONArray, JSONDisplayColumn, tableID){
+    var table = document.getElementById(tableID);
+    if(table.rows.length != 0){
+      for(var i = table.rows.length - 1; i > -1; i--){
+        table.deleteRow(i);
+      }
+    }
+
+    for (var k in JSONArray){
+      // alert(k);
+      var rowCount = table.rows.length;
+      var row = table.insertRow(rowCount);
+
+      var cell = row.insertCell(0);
+
+      cell.innerHTML = JSONArray[k][JSONDisplayColumn];
+    }
+  }
+
+  function populateSelect(JSONArray, JSONDisplayColumn, JSONValueColumn, JSONSelectValues, selectID){
+    var select = document.getElementById(selectID);
+
+    if(select.options.length != 0){
+      for(var i = select.options - 1; i > -1; i--){
+        select.remove(i);
+      }
+    }
+
+    for (var k in JSONArray){
+      var el = document.createElement("option");
+      el.textContent = JSONArray[k][JSONDisplayColumn];
+      el.value = JSONArray[k][JSONValueColumn];
+      select.appendChild(el);
+    }
+
+    for (var i in JSONSelectValues){
+      for (var j in select.options){
+        if(JSONSelectValues[i][JSONValueColumn] == select.options[j].value){
+          select.options[j].selected = true;
+          break;
+        }
+      }
+    }
+  }
+
+  function returnSelectValuesAsJSON(JSONtype, JSONDisplayColumn, JSONValueColumn, selectID){
+    var select = document.getElementById(selectID);
+    var newJSONString = "{" + "\"" + JSONtype + "\"" + ":[";
+    
+    for (var j in select.options){
+      if(select.options[j].selected){
+        newJSONString = newJSONString + "{" + "\"" + JSONValueColumn + "\":\"" + select.options[j].value + "\"},";
+      }
+    }
+
+    newJSONString = newJSONString.substring(0, newJSONString.length - 1);
+    newJSONString = newJSONString + "]}";
+    var newJSON = JSON.parse(newJSONString);
+    return newJSON[JSONtype];
+  }
