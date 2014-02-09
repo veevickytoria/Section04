@@ -126,8 +126,8 @@ var ProjectArray;
     }
 
     document.getElementById("titleV").innerHTML = ProjectArray["projectTitle"];
-    document.getElementById("descriptionV").innerHTML = ProjectArray["description"];
-    document.getElementById("groupV").innerHTML = ProjectArray["group"];
+    // document.getElementById("descriptionV").innerHTML = ProjectArray["description"];
+    // document.getElementById("groupV").innerHTML = ProjectArray["group"];
 
     populateTableRows(ProjectArray["meetings"], "title", "TableMeetingsV");
     populateTableRows(ProjectArray["notes"], "title", "TableNotesV");

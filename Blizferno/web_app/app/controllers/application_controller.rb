@@ -8,6 +8,8 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :null_session
 
   before_filter :getUserInfo
+  before_filter :getNotifications
+  before_filter :getAllUsers
 
   def getUserInfo
     if (!cookies[:userID].blank?)
@@ -21,8 +23,6 @@ class ApplicationController < ActionController::Base
       @userInfo = JSON.parse(res.body)
     end
   end
-
-  before_filter :getNotifications
 
   def getNotifications
   	if(!cookies[:userID].blank?)
@@ -71,6 +71,17 @@ class ApplicationController < ActionController::Base
   			@Group = ""
   		end
   	end
+  end
+
+  def getAllUsers
+    require 'net/http'
+    url = URI.parse('http://csse371-04.csse.rose-hulman.edu/User/Users')
+    req = Net::HTTP::Get.new(url.path)
+    res = Net::HTTP.start(url.host, url.port) {|http|
+      http.request(req)
+    }
+    @allUsers = JSON.parse(res.body)
+	@allUsersRaw = res.body
   end
 
   #before_filter :protect
