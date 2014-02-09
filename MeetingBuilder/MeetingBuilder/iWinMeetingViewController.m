@@ -95,17 +95,17 @@
             [self.meetingDetail addObject:[deserializedDictionary objectForKey:@"datetime"]];
             [self.meetingLocations addObject:[deserializedDictionary objectForKey:@"location"]];
             
-//            NSArray *jsonArray = [deserializedDictionary objectForKey:@"attendance"];
-//            NSMutableString *attendeeList;
-//            if (jsonArray.count > 0)
-//            {
-//                for (NSDictionary* users in jsonArray)
-//                {
-//                    [attendeeList appendFormat:@"%@,", (NSString *)[users objectForKey:@"userID"]];
-//                }
-//            }
-//            
-//            [attendeeList deleteCharactersInRange:NSMakeRange([attendeeList length]-1, 1)];
+            NSArray *jsonArray = [deserializedDictionary objectForKey:@"attendance"];
+            NSMutableString *attendeeList = [[NSMutableString alloc] init];
+            if (jsonArray.count > 0)
+            {
+                for (NSDictionary* users in jsonArray)
+                {
+                    [attendeeList appendFormat:@"%@,", (NSString *)[users objectForKey:@"userID"]];
+                }
+            }
+            
+            [attendeeList deleteCharactersInRange:NSMakeRange([attendeeList length]-1, 1)];
             
             //add it to local database so accessing the info for a meeting is faster.
             iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
@@ -120,7 +120,7 @@
             [newMeeting setValue:self.meetingID[i] forKey:@"meetingID"];
             [newMeeting setValue:[deserializedDictionary objectForKey:@"datetime"] forKey:@"datetime"];
             [newMeeting setValue:[NSNumber numberWithInt:self.userID] forKey:@"userID"];
-            //[newMeeting setValue:attendeeList forKey:@"attendance"];
+            [newMeeting setValue:attendeeList forKey:@"attendance"];
             [newMeeting setValue:[deserializedDictionary objectForKey:@"description"] forKey:@"meetingDesc"];
             [context save:&error];
         }
@@ -197,18 +197,6 @@
     [self presentViewController:self.scheduleMeetingVC animated:YES completion:nil];
     self.scheduleMeetingVC.view.superview.bounds = CGRectMake(MODAL_XOFFSET,MODAL_YOFFSET,MODAL_WIDTH,MODAL_HEIGHT);
     
-}
-
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    return NO;
-}
-
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        //add code here for when you hit delete
-        
-    }
 }
 
 -(void)deleteCell:(NSInteger)row

@@ -201,8 +201,8 @@
     {
         if (deserializedDictionary.count > 0)
         {
-            
-            Contact *c = [[Contact alloc] init];
+            NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Contact" inManagedObjectContext:self.context];
+            Contact *c = [[Contact alloc] initWithEntity:entityDesc insertIntoManagedObjectContext:self.context];
             c.userID = (NSNumber*)[deserializedDictionary objectForKey:@"userID"];
             c.name = (NSString *)[deserializedDictionary objectForKey:@"name"];
             c.email = (NSString *)[deserializedDictionary objectForKey:@"email"];
@@ -216,7 +216,7 @@
 
 -(void) initAttendees
 {
-    NSMutableArray *attendeeArray;
+    NSMutableArray *attendeeArray = [[NSMutableArray alloc] init];
     NSArray* attendeeFromDatabase = [self.existMeeting objectForKey:@"attendance"];
     for(int i = 0; i < [attendeeFromDatabase count]; i++){
         [attendeeArray addObject:[(NSDictionary*)[attendeeFromDatabase objectAtIndex:i] objectForKey:@"userID"]];
