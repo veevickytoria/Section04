@@ -6,9 +6,10 @@
 	<h5>Group Members*</h5>
 	<select multiple id='groupMembers' size='6' class='form-control'>
 		<option disabled>Select multiple by holding Ctrl/CMD</option>
-		<option value='1'>Santa Claus</option>
 		<% for user in @allUsers['users'] %>
-		<option value="<%= user['userID'] %>"><%= user['name'] %></option>
+			<% if !user['name'].nil? %>
+				<option value="<%= user['userID'] %>"><%= user['name'] %></option>
+			<% end %>
 		<% end %>
 	</select>
 </form>

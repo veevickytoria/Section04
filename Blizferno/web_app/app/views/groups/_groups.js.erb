@@ -1,8 +1,6 @@
-  var groupArray;
-  var deleteID;
-  // var membInfo;
+  var groupArray, deleteID, currentID;
 
-  function submitCreateModal(){ //grab the form from the html document
+  function submitCreateModal(){
     var form = new convertFormToJSON(document.getElementById('createGroupForm'));
     // REPLACE WITH: code to validate data
 
@@ -38,30 +36,35 @@
     $('#viewGroupModal').modal('hide');
   }
 
+  function submitEditModal(){
+    // REPLACE WITH: code to submit update request to DB
+  }
+
   function showEditModal(){
+    // clear previous data in modal
     $('#editGroupModal').modal('hide');
     $('#editGroupModal').on('hidden.bs.modal', function() {
       $(this).removeData('bs.modal');
     });
+    alert(currentID);
     // TODO: Put this back in when it works
-    // $.ajax({
-    //         type: 'GET',
-    //         url: 'http://csse371-04.csse.rose-hulman.edu/Groups/' + ID,
-    //   success:function(data){
-    //     if(data.groupID != null){
-    //       GroupArray = JSON.parse(data);
-    //     }
-    //   }
-    // });
-
-    //document.getElementById("IDE").value = GroupArray["groupID"];
-    document.getElementById("titleE").value = GroupArray["groupTitle"];
-    document.getElementById("typeE").value = GroupArray["groupType"];
-
-    populateSelect(Members["members"], "displayName", "userID", GroupArray["members"], "membersE")
+    $.ajax({
+      type: 'GET',
+      dataType: 'jsonp',
+      url: 'http://csse371-04.csse.rose-hulman.edu/Groups/' + currentID,
+      success:function(data){
+        alert('inside');
+      }
+    })
+    .done(function(){
+      alert('success');
+    })
+    .fail(function(){
+      alert('error');
+    });
 
     $('#editGroupModal').modal('show');
-    $('#viewGroupModal').modal('hide');
+    // $('#viewGroupModal').modal('hide');
   } 
 
   function showDeleteModal(ID){
@@ -75,51 +78,56 @@
         url: 'http://csse371-04.csse.rose-hulman.edu/Group/' + deleteID,
         success:function(data){
         if(JSON.parse(data)["valid"] == "true"){
-          $('#deleteMeetingModal').modal('hide');
+          $('#deleteGroupModal').modal('hide');
           window.location.reload(true);
+        }else{
+          alert('Delete Error');
+          $('#deleteGroupModal').modal('hide');
         }
       }
     });
   }
 
   function showGroupModalNoID(){
-    $('#viewGroupModal').modal('hide');
-    $('#viewGroupModal').on('hidden.bs.modal', function() {
-      $(this).removeData('bs.modal');
-    });
-
-    // Edit info
-    //GroupArray["groupID"] = document.getElementById("IDE").value;
-    GroupArray["groupTitle"] = document.getElementById("titleE").value;
-    GroupArray["groupType"] = document.getElementById("typeE").value;
-
-    GroupArray["members"] = returnSelectValuesAsJSON("members", "displayName", "userID", "membersE")
-
-    // TODO: Put this back in when it works and change it to update info then add a pull
-    // $.ajax({
-    //         type: '',
-    //         url: 'http://csse371-04.csse.rose-hulman.edu/Tasks/' + ID,
-    //   success:function(data){
-    //     if(data.taskID != null){
-    //       GroupArray = JSON.parse(data);
-    //     }
-    //   }
+    showViewGroupModal(currentID);
+    // $('#viewGroupModal').modal('hide');
+    // $('#viewGroupModal').on('hidden.bs.modal', function() {
+    //   $(this).removeData('bs.modal');
     // });
 
-    // Update view info
-    //document.getElementById("IDV").innerHTML = GroupArray["groupID"];
-    document.getElementById("titleV").innerHTML = GroupArray["groupTitle"];
-    document.getElementById("typeV").innerHTML = GroupArray["groupType"];
+    // // Edit info
+    // //GroupArray["groupID"] = document.getElementById("IDE").value;
+    // GroupArray["groupTitle"] = document.getElementById("titleE").value;
+    // GroupArray["groupType"] = document.getElementById("typeE").value;
 
-    populateTableRows(GroupArray["members"], "displayName", "TableMembersV");
+    // GroupArray["members"] = returnSelectValuesAsJSON("members", "displayName", "userID", "membersE")
 
-    $('#viewGroupModal').modal('show');
-    $('#editGroupModal').modal('hide');
+    // // TODO: Put this back in when it works and change it to update info then add a pull
+    // // $.ajax({
+    // //         type: '',
+    // //         url: 'http://csse371-04.csse.rose-hulman.edu/Tasks/' + ID,
+    // //   success:function(data){
+    // //     if(data.taskID != null){
+    // //       GroupArray = JSON.parse(data);
+    // //     }
+    // //   }
+    // // });
+
+    // // Update view info
+    // //document.getElementById("IDV").innerHTML = GroupArray["groupID"];
+    // document.getElementById("titleV").innerHTML = GroupArray["groupTitle"];
+    // document.getElementById("typeV").innerHTML = GroupArray["groupType"];
+
+    // populateTableRows(GroupArray["members"], "displayName", "TableMembersV");
+
+    // $('#viewGroupModal').modal('show');
+    // $('#editGroupModal').modal('hide');
   }
 
   function showViewGroupModal(ID){
     var membInfo;
     var membs = new Array();
+    currentID = ID;
     $('#viewGroupModal').modal('hide');
     $('#viewGroupModal').on('hidden.bs.modal', function() {
       $(this).removeData('bs.modal');
@@ -149,7 +157,6 @@
     document.getElementById("titleV").innerHTML = groupArray["groupTitle"];
     populateTableRows(membs, "name", "membersV");
     
-
     $('#viewGroupModal').modal('show');
     $('#editGroupModal').modal('hide');
   }
@@ -189,15 +196,25 @@
     }
   }
 
+  /* DOCUMENTATION FOR POPULATESELECT
+    Populates the select tage specified by 'selectID'
+    with text from JSONArray elements with JSONDisplayColumn data
+    and value from JSONArray elements with JSONValueColumn data.
+    Sets the values in JSONSelectValues to 'selected' in the newly
+    populated select tag.
+  */
   function populateSelect(JSONArray, JSONDisplayColumn, JSONValueColumn, JSONSelectValues, selectID){
+    // get select tag
     var select = document.getElementById(selectID);
 
+    // empty select tag
     if(select.options.length != 0){
       for(var i = select.options - 1; i > -1; i--){
         select.remove(i);
       }
     }
 
+    // populate select tag
     for (var k in JSONArray){
       var el = document.createElement("option");
       el.textContent = JSONArray[k][JSONDisplayColumn];
@@ -205,6 +222,7 @@
       select.appendChild(el);
     }
 
+    // set currently selected items to be selected
     for (var i in JSONSelectValues){
       for (var j in select.options){
         if(JSONSelectValues[i][JSONValueColumn] == select.options[j].value){

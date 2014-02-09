@@ -35,10 +35,8 @@ class GroupsController < ApplicationController
 				http.request(req)
 			}
 			groupString = res.body
-			# groupString = groupString[0..-2] + ',"groupID":"' + group['groupID'].to_s + '"}';
 
 			@groups.push(JSON.parse(groupString))
-
 		end
 	end
 
