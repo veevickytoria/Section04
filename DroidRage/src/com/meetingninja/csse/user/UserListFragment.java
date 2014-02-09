@@ -15,72 +15,38 @@
  ******************************************************************************/
 package com.meetingninja.csse.user;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 
 import objects.Contact;
-import objects.Group;
 import objects.SerializableUser;
 import objects.User;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
 
-import com.loopj.android.image.SmartImageView;
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
-import com.meetingninja.csse.database.UserDatabaseAdapter;
 import com.meetingninja.csse.database.local.SQLiteUserAdapter;
 import com.meetingninja.csse.database.volley.UserVolleyAdapter;
-import com.tokenautocomplete.FilteredArrayAdapter;
-import com.tokenautocomplete.TokenCompleteTextView.TokenListener;
 import com.meetingninja.csse.extras.AlertDialogUtil;
 import com.meetingninja.csse.extras.ContactTokenTextView;
-
-import objects.User;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.app.ListFragment;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.View.OnTouchListener;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.ListView;
-import android.widget.AdapterView.OnItemClickListener;
-
-import com.meetingninja.csse.R;
-import com.meetingninja.csse.database.AsyncResponse;
-import com.meetingninja.csse.database.Keys;
-import com.meetingninja.csse.database.UserDatabaseAdapter;
-import com.meetingninja.csse.database.local.SQLiteUserAdapter;
-import com.meetingninja.csse.extras.ContactTokenTextView;
-import com.meetingninja.csse.user.TempContactArrayAdapter.addContactObj;
+import com.tokenautocomplete.TokenCompleteTextView.TokenListener;
 
 import de.timroes.android.listview.EnhancedListView;
 

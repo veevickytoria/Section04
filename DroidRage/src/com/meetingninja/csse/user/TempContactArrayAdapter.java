@@ -1,13 +1,6 @@
 package com.meetingninja.csse.user;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-
-import com.loopj.android.image.SmartImageView;
-import com.meetingninja.csse.R;
-import com.meetingninja.csse.database.AsyncResponse;
-import com.meetingninja.csse.database.UserDatabaseAdapter;
 
 import objects.User;
 import android.content.Context;
@@ -18,6 +11,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.loopj.android.image.SmartImageView;
+import com.meetingninja.csse.R;
+import com.meetingninja.csse.database.AsyncResponse;
 
 /*
  this isn't being used but it would be used for a button in a listview and checking what even should be done when the buttons

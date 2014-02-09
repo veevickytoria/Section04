@@ -52,9 +52,7 @@ import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.MeetingDatabaseAdapter;
 import com.meetingninja.csse.database.local.SQLiteMeetingAdapter;
-import com.meetingninja.csse.database.volley.UserVolleyAdapter;
 import com.meetingninja.csse.extras.Connectivity;
-import com.meetingninja.csse.group.GroupsFragment;
 
 import de.timroes.android.listview.EnhancedListView;
 

@@ -18,9 +18,7 @@ package com.meetingninja.csse.database.local;
 import java.util.ArrayList;
 import java.util.List;
 
-import objects.SerializableUser;
 import objects.User;
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -29,16 +27,8 @@ import android.database.sqlite.SQLiteStatement;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.android.volley.ParseError;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.meetingninja.csse.ApplicationController;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
-import com.meetingninja.csse.database.UserDatabaseAdapter;
-import com.meetingninja.csse.database.volley.JsonNodeRequest;
-import com.meetingninja.csse.database.volley.JsonRequestListener;
 import com.meetingninja.csse.database.volley.UserVolleyAdapter;
 
 public class SQLiteUserAdapter extends SQLiteHelper {

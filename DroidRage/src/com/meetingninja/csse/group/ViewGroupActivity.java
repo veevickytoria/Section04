@@ -1,38 +1,26 @@
 package com.meetingninja.csse.group;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import objects.Group;
 import objects.User;
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.TextView;
 
 import com.meetingninja.csse.R;
-import com.meetingninja.csse.R.id;
-import com.meetingninja.csse.R.layout;
-import com.meetingninja.csse.R.menu;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.volley.UserVolleyAdapter;
-import com.meetingninja.csse.tasks.EditTaskActivity;
-import com.meetingninja.csse.tasks.TaskDeleter;
-import com.meetingninja.csse.user.AutoCompleteAdapter;
 import com.meetingninja.csse.user.ProfileActivity;
 import com.meetingninja.csse.user.UserArrayAdapter;
 
 import de.timroes.android.listview.EnhancedListView;
-import android.os.Bundle;
-import android.app.Activity;
-import android.content.Intent;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnTouchListener;
-import android.widget.AdapterView;
-import android.widget.EditText;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.TextView;
 
 public class ViewGroupActivity extends Activity {
 	private static final String TAG = ViewGroupActivity.class.getSimpleName();

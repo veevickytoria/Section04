@@ -1,21 +1,15 @@
 package com.meetingninja.csse.database.volley;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import objects.Meeting;
-import objects.SerializableUser;
 import objects.User;
 
 import com.android.volley.Request;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.meetingninja.csse.ApplicationController;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
-import com.meetingninja.csse.database.MeetingDatabaseAdapter;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
 
 public class UserVolleyAdapter extends UserDatabaseAdapter {

@@ -20,7 +20,6 @@ import java.util.Map;
 
 import objects.Comment;
 import objects.Note;
-import objects.builders.NoteBuilder;
 import android.net.Uri;
 
 import com.android.volley.VolleyError;

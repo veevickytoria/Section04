@@ -28,14 +28,10 @@ import objects.Meeting;
 import android.net.Uri;
 import android.util.Log;
 
-import com.android.volley.VolleyError;
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.meetingninja.csse.ApplicationController;
-import com.meetingninja.csse.database.volley.JsonNodeRequest;
-import com.meetingninja.csse.database.volley.JsonRequestListener;
 
 public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 	private final static String TAG = MeetingDatabaseAdapter.class

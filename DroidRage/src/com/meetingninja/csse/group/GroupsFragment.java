@@ -1,8 +1,6 @@
 package com.meetingninja.csse.group;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import objects.Group;
@@ -25,7 +23,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.meetingninja.csse.ApplicationController;
 import com.meetingninja.csse.R;
-import com.meetingninja.csse.SearchableUserFragment;
 import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.GroupDatabaseAdapter;

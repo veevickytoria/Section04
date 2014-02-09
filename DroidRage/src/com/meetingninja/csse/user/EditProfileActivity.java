@@ -3,16 +3,10 @@ package com.meetingninja.csse.user;
 import java.util.HashMap;
 
 import objects.User;
-
-import com.loopj.android.image.SmartImageView;
-import com.meetingninja.csse.R;
-import com.meetingninja.csse.SessionManager;
-import com.meetingninja.csse.database.Keys;
-
-import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,6 +14,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+
+import com.loopj.android.image.SmartImageView;
+import com.meetingninja.csse.R;
+import com.meetingninja.csse.SessionManager;
+import com.meetingninja.csse.database.Keys;
 
 public class EditProfileActivity extends Activity {
 	private static final String TAG = EditProfileActivity.class.getSimpleName();

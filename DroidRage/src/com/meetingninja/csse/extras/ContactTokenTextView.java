@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import objects.SerializableUser;
 import objects.User;
-import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;

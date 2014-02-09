@@ -2,10 +2,6 @@ package com.meetingninja.csse.user;
 
 import java.util.List;
 
-import com.loopj.android.image.SmartImageView;
-import com.meetingninja.csse.R;
-import com.tokenautocomplete.FilteredArrayAdapter;
-
 import objects.Contact;
 import objects.User;
 import android.content.Context;
@@ -13,6 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.loopj.android.image.SmartImageView;
+import com.meetingninja.csse.R;
+import com.tokenautocomplete.FilteredArrayAdapter;
 
 public class ContactArrayAdapter extends FilteredArrayAdapter<Contact> {
 

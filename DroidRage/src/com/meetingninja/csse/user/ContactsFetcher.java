@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import objects.Contact;
-import objects.User;
 import android.os.AsyncTask;
 import android.util.Log;
 

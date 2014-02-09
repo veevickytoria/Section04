@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (C) 2014 The Android Open Source Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,7 +36,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -46,6 +45,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.foound.widget.AmazingListView;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
 import com.meetingninja.csse.database.local.SQLiteHelper;
+import com.meetingninja.csse.extras.BaseFragment;
 import com.meetingninja.csse.group.GroupsFragment;
 import com.meetingninja.csse.meetings.MeetingsFragment;
 import com.meetingninja.csse.notes.CreateNoteActivity;
@@ -55,14 +55,13 @@ import com.meetingninja.csse.tasks.TasksFragment;
 import com.meetingninja.csse.user.LoginActivity;
 import com.meetingninja.csse.user.ProfileFragment;
 import com.meetingninja.csse.user.UserListFragment;
-import com.meetingninja.csse.extras.BaseFragment;
 import com.parse.ParseAnalytics;
 
 /**
  * Main Activity Window.
- * 
+ *
  * @author moorejm
- * 
+ *
  */
 public class MainActivity extends FragmentActivity implements
 		BaseFragment.TaskCallbacks {
@@ -101,9 +100,7 @@ public class MainActivity extends FragmentActivity implements
 
 	}
 
-	/**
-	 * Instances of fragments contained within this activity
-	 */
+	// Instances of fragments contained within this activity
 	private MeetingsFragment frag_meetings;
 	private NotesFragment frag_notes;
 	private TasksFragment frag_tasks;
@@ -114,9 +111,7 @@ public class MainActivity extends FragmentActivity implements
 	private UserListFragment frag_contacts;
 	private SearchableUserFragment frag_settings;
 
-	/**
-	 * Fields local to this activity
-	 */
+	// Fields local to this activity
 	private Bundle icicle;
 	private CharSequence mTitle;
 	private SessionManager session;

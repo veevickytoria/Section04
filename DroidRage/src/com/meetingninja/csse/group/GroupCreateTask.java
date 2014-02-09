@@ -2,13 +2,12 @@ package com.meetingninja.csse.group;
 
 import java.io.IOException;
 
-import com.meetingninja.csse.database.AsyncResponse;
-import com.meetingninja.csse.database.GroupDatabaseAdapter;
-import com.meetingninja.csse.database.TaskDatabaseAdapter;
-
 import objects.Group;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.meetingninja.csse.database.AsyncResponse;
+import com.meetingninja.csse.database.GroupDatabaseAdapter;
 
 public class GroupCreateTask implements AsyncResponse<Void> {
 

@@ -2,7 +2,6 @@ package objects;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import android.database.Cursor;
 import android.os.Parcel;

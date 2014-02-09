@@ -45,7 +45,6 @@ import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.local.SQLiteNoteAdapter;
-import com.meetingninja.csse.meetings.MeetingsFragment;
 
 public class NotesFragment extends Fragment implements
 		AsyncResponse<List<Note>> {

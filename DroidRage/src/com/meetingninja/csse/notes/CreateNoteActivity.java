@@ -15,10 +15,11 @@
  ******************************************************************************/
 package com.meetingninja.csse.notes;
 
-import org.joda.time.DateTime;
-
 import objects.Note;
 import objects.builders.NoteBuilder;
+
+import org.joda.time.DateTime;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;

@@ -21,9 +21,6 @@ import java.io.PrintStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import objects.Group;
 import objects.User;
@@ -31,9 +28,7 @@ import android.net.Uri;
 
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.meetingninja.csse.database.BaseDatabaseAdapter.IRequest;
 
 public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
 

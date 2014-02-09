@@ -50,7 +50,6 @@ import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.extras.MyDateUtils;
-import com.meetingninja.csse.meetings.MeetingsFragment;
 
 public class TasksFragment extends Fragment implements	AsyncResponse<List<Task>> {
 

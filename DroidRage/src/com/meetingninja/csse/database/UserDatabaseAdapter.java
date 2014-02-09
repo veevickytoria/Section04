@@ -40,19 +40,13 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.android.volley.Request;
-import com.android.volley.VolleyError;
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.meetingninja.csse.ApplicationController;
 import com.meetingninja.csse.SessionManager;
-import com.meetingninja.csse.database.BaseDatabaseAdapter.IRequest;
-import com.meetingninja.csse.database.volley.JsonNodeRequest;
-import com.meetingninja.csse.database.volley.JsonRequestListener;
 import com.meetingninja.csse.extras.JsonUtils;
 import com.meetingninja.csse.extras.Utilities;
 
