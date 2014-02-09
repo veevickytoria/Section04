@@ -199,13 +199,30 @@ var ProjectArray;
     return newJSON[JSONtype];
   }
 
-  function validateForm(){
-    var title = document.forms["input"]["projectTitle"].value;
-    var meetings = document.forms["input"]["meetings"].value;
-    var notes = document.forms["input"]["notes"].value;
-    var members = document.forms["input"]["members"].value;
-
-    alert("The following project was added to the db: " + title + " " + meetings + " " + notes + " " + members);
-
-    return true;
-  }
+function sendTheData(){
+  alert("made it here");
+  var userID = 5454;
+  title = "Testing the connection";
+  //var title = document.getElementById("projectTitle");
+  alert(title);
+  //var meetings = "[]";
+  var meetings = '[' + JSON.stringify({meetingID:"6201"}) + ']';
+  //var notes = "[]";
+  var notes = '[' + JSON.stringify({noteID:"1"}) + ']';
+  var members = '[' + JSON.stringify({userID:"5454"}) + ']';
+  //var members = "[]";
+  alert(meetings);
+  alert(notes);
+  alert(members);
+  //var postData = JSON.stringify({projectTitle:title,meetings:meetings,notes:notes,members:members});
+  var postData = '{"projectTitle":\"' +title+ '\","meetings":' +meetings+ ',"notes":' +notes+ ',"members":' +members+ '}';
+  alert(postData);
+  $.ajax({
+    type: "POST",
+    url: "http://csse371-04.csse.rose-hulman.edu/Project/",
+    data: postData,
+    success:function(data){
+      alert("Was successful!");
+    }
+  });
+}

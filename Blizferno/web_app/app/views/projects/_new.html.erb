@@ -3,9 +3,9 @@
 ADD THIS BACK IN WHEN BACKEND HAS PROJECT IMPLEMENTED
 <form name="input" id="createProject" action="http://csse371-04.csse.rose-hulman.edu/Project/" onsubmit="return validateForm()" method="post">
 -->
-<form name="input" id="createProject" action="http://csse371-04.csse.rose-hulman.edu/Project/" method="post">
+<form name="input" id="createProject" action="javascript:sendTheData();">
 	<h5>Project Title:*</h5>
-	<input type="text" name="projectTitle" maxlength="50" class='form-control'>
+	<input type="text" name="projectTitle" id="projectTitle" maxlength="50" class='form-control'>
 	<h5>Associated Meetings:*</h5>
 	<input type="text" name="meetings" maxlength="50" class='form-control'>
 	<h5>Associated Notes:*</h5>

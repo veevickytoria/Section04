@@ -82,14 +82,12 @@
   <thead>
     <tr >
       <th>Name</th>
-      <th>Group</th>
       <th></th>
     </tr>
   </thead>
   <% for project in @projectsParsed %>
     <tr>
-      <td><a onClick="showViewModal(<%= @projectsParsed.index(project)%>)" href = '#viewProjectModal' data-refresh="true" data-toggle='modal'><%= project['name'] %></a></td>
-      <td><%= project['group'] %></td>
+      <td><a onClick="showViewModal(<%= @projectsParsed.index(project)%>)" href="#viewProjectModal" data-refresh="true" data-toggle='modal'><%= project['projectID'] %></a></td>
       <td colspan='1' style='cursor: pointer; text-align: center' onClick="showDeleteModal(<%= project['projectID'] %>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
     </tr>
   <% end %>
