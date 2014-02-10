@@ -1,5 +1,9 @@
 <!-- PLACE JAVASCRIPT IN app/javascripts/projects.js -->
 
+<script>
+<%= render "projectsJS.js.erb" %>
+</script>
+
 <h1 style='margin-left: 15%; margin-right: auto;'>Projects</h1>
 
 <!-- Create Modal -->
@@ -15,7 +19,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary" form="createProject">Submit</button>
+        <button type="button" class="btn btn-primary" onclick="submitCreateProject()">Submit</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -85,10 +89,12 @@
       <th></th>
     </tr>
   </thead>
+
   <% for project in @projectsParsed %>
     <tr>
-      <td><a onClick="showViewModal(<%= @projectsParsed.index(project)%>)" href="#viewProjectModal" data-refresh="true" data-toggle='modal'><%= project['projectID'] %></a></td>
-      <td colspan='1' style='cursor: pointer; text-align: center' onClick="showDeleteModal(<%= project['projectID'] %>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
+      <td onClick="showViewModal(<%= @projectsParsed.index(project)%>)" data-refresh="true" data-toggle="modal"><%= project['projectTitle'] %></td>
+      <td colspan='1' style='cursor: pointer; text-align: center' onClick="showDeleteModal(<%= @projectsParsed.index(project) %>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
+      <td colspan='1' style='cursor: pointer; text-align: center' onclick="showEditModal(<%=@projectsParsed.index(project)%>" data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-pencil'></span></td>
     </tr>
   <% end %>
   <tr>
