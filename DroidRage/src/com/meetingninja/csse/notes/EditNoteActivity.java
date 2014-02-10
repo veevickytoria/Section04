@@ -20,10 +20,13 @@ import objects.Note;
 import org.joda.time.DateTime;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -46,6 +49,7 @@ public class EditNoteActivity extends Activity {
 	private SQLiteNoteAdapter mySQLiteAdapter;
 	private Note displayedNote;
 	private int listPosition;
+	private boolean createNote = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,10 +63,15 @@ public class EditNoteActivity extends Activity {
 		mNoteTitle = (EditText) findViewById(R.id.noteTitleEditor);
 
 		extras = getIntent().getExtras();
-		if (extras != null) {
+		if (extras.getBoolean(Note.CREATE_NOTE, false)){
+			displayedNote = new Note();
+			createNote = true; 
+		} else if (extras != null) {
 			listPosition = extras.getInt("listPosition", -1);
 			displayedNote = (Note) extras.getParcelable(Keys.Note.PARCEL);
-		} else {
+			mNoteTitle.setText(displayedNote.getTitle());
+			mTextEditor.setText(displayedNote.getContent()); 
+		} else{
 			displayedNote = new Note();
 		}
 
@@ -89,7 +98,7 @@ public class EditNoteActivity extends Activity {
 			save();
 			break;
 		case R.id.action_cancel:
-			cancel();
+			discard();
 			break;
 		}
 
@@ -117,18 +126,36 @@ public class EditNoteActivity extends Activity {
 		intentMessage.putExtra("listPosition", listPosition);
 		intentMessage.putExtra(Keys.Note.PARCEL, displayedNote);
 
-		if (!(displayedNote.getID() == null || displayedNote.getID().isEmpty()))
+		if(createNote)
+			mySQLiteAdapter.insertNote(displayedNote);
+		
+		else if (!(displayedNote.getID() == null || displayedNote.getID().isEmpty()))
 			mySQLiteAdapter.updateNote(displayedNote);
 
 		setResult(RESULT_OK, intentMessage);
 		finish();
 	}
 
-	public void cancel() {
-		Intent intentMessage = new Intent();
-
-		setResult(RESULT_CANCELED, intentMessage);
-		finish();
+	public void discard() {
+		if(displayedNote.getTitle().equals(this.mNoteTitle.getText().toString()) && 
+				displayedNote.getContent().equals(this.mTextEditor.getText().toString())){
+			Intent intentMessage = new Intent();
+			setResult(RESULT_CANCELED, intentMessage);
+			finish();
+		} else {
+			new AlertDialog.Builder(this)
+			.setMessage("Are you sure you want to discard changes?")
+			.setCancelable(true)
+			.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					Intent intentMessage = new Intent();
+					setResult(RESULT_CANCELED, intentMessage);
+					finish();
+				}
+			})
+			.setNegativeButton("No", null)
+			.show();
+		}
 	}
 
 	private final View.OnClickListener mActionBarListener = new OnClickListener() {
@@ -172,6 +199,14 @@ public class EditNoteActivity extends Activity {
 		}
 
 	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.menu_edit_note, menu);
+
+		return true;
+	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -185,6 +220,14 @@ public class EditNoteActivity extends Activity {
 			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
 			//
 			save();
+			return true;
+			
+		case R.id.edit_note_action_save:
+			save();
+			return true;
+			
+		case R.id.edit_note_action_discard:
+			discard();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

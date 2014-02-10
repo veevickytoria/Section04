@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import objects.Meeting;
+import objects.Note;
 import objects.Schedule;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -49,6 +50,7 @@ import com.meetingninja.csse.extras.BaseFragment;
 import com.meetingninja.csse.group.GroupsFragment;
 import com.meetingninja.csse.meetings.MeetingsFragment;
 import com.meetingninja.csse.notes.CreateNoteActivity;
+import com.meetingninja.csse.notes.EditNoteActivity;
 import com.meetingninja.csse.notes.NotesFragment;
 import com.meetingninja.csse.schedule.ScheduleAdapter;
 import com.meetingninja.csse.tasks.TasksFragment;
@@ -433,7 +435,8 @@ public class MainActivity extends FragmentActivity implements
 			frag_meetings.editMeeting(null);
 			return true;
 		case R.id.action_new_note:
-			Intent createNote = new Intent(this, CreateNoteActivity.class);
+			Intent createNote = new Intent(this, EditNoteActivity.class);
+			createNote.putExtra(Note.CREATE_NOTE, true);
 			startActivityForResult(createNote, 3);
 			return true;
 		case R.id.action_logout:

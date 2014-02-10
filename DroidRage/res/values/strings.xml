@@ -11,6 +11,7 @@
     <string name="action_paste">Paste</string>
     <string name="action_refresh">Refresh</string>
     <string name="action_save">Save</string>
+    <string name="action_discard">Discard</string>
     <string name="action_speak">Speak Now</string>
     <string name="save_label">Done</string>
     <string name="discard_label">Cancel</string>

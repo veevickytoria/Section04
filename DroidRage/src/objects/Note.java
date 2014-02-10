@@ -35,6 +35,8 @@ public class Note extends AbstractJSONObject<Note> implements Parcelable,
 	private String content;
 	@JsonProperty("dateCreated")
 	private String dateCreated;
+	
+	public static final String CREATE_NOTE = "createNote";
 
 	public Note() {
 		// Required empty constructor
