@@ -68,6 +68,7 @@ WebApp::Application.routes.draw do
   get "groups/index"
   
   get "profile/index"
+  get "profile/otherProfile"
   
   get "tasks/new"
   get "tasks/index"

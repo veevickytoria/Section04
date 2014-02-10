@@ -1,0 +1,163 @@
+<%= stylesheet_link_tag "/codebase/dhtmlxscheduler.css" %>
+<%= javascript_include_tag "/codebase/dhtmlxscheduler.js" %>
+<%= javascript_include_tag "/codebase/ext/dhtmlxscheduler_collision.js" %>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
+<script src='/codebase/ext/dhtmlxscheduler_agenda_view.js'></script>
+<script type="text/javascript" charset="utf-8">
+
+	var otherUserID = getCookie("otherUserID");
+
+	function convertToDBDate(scheduleDate){
+		var dbMonth = scheduleDate.substr(4,3);
+		var dbDay = scheduleDate.substr(8,2);
+		var dbYear = scheduleDate.substr(11,4);
+		var dbTime = scheduleDate.substr(16,5);
+
+		var dbMonthNumber;
+		switch(dbMonth)
+			{
+			case 'Jan':
+			  dbMonthNumber = '01';
+			  break;
+			case 'Feb':
+			  dbMonthNumber = '02';
+			  break;
+			case 'Mar':
+			  dbMonthNumber = '03';
+			  break;
+			case 'Apr':
+			  dbMonthNumber = '04';
+			  break;
+			case 'May':
+			  dbMonthNumber = '05';
+			  break;
+			case 'Jun':
+			  dbMonthNumber = '06';
+			  break;
+			case 'Jul':
+			  dbMonthNumber = '07';
+			  break;
+			case 'Aug':
+			  dbMonthNumber = '08';
+			  break;
+			case 'Sep':
+			  dbMonthNumber = '09';
+			  break;
+			case 'Oct':
+			  dbMonthNumber = '10';
+			  break;
+			case 'Nov':
+			  dbMonthNumber = '11';
+			  break;
+			case 'Dec':
+			  dbMonthNumber = '12';
+			  break;
+			default:
+			  alert("Error: Scheduler dateMonth parsed incorrectly");
+			}
+
+
+		var dbDate = dbMonthNumber+"/"+dbDay+"/"+dbYear+" "+dbTime;
+
+		return dbDate;
+	}
+
+	function getSchedule() {
+		var userId = otherUserID;
+//var userId = '5467';
+//alert("userId:"+userId);
+	  $.get('http://csse371-04.csse.rose-hulman.edu/User/Schedule/'+userId,function(data){
+     	//alert("Data: " + data);		
+		var schedule = JSON.parse(data);
+		var events = new Array();
+
+		for(var value in schedule.schedule){
+
+			var start_date = schedule.schedule[value].datetimeStart;
+			var end_date = schedule.schedule[value].datetimeEnd;
+			var text = schedule.schedule[value].title;
+			var color = (schedule.schedule[value].type == "meeting") ? 'blue' : 'orange';
+
+			events[value] = "{start_date:\'"+start_date+"\',end_date:\'"+end_date+"\',text:\'"+text+"\',color:\'"+color+"\'}";
+		}
+
+
+		events = "["+events+"]";
+
+/*
+//working on custom lightbox
+
+scheduler.locale.labels.section_eventType = "Type of Event"; 
+
+		var event_type = [
+		{key:1, label: 'Meeting'},
+		{key:2, label: 'Task'}
+		];
+
+
+		scheduler.config.lightbox.sections=[
+		{name:"description", height:50, map_to:"title", type:"textarea",focus:true},
+		{name:"eventType", height:50, options: event_type, map_to: "radiobutton_option", type:"radio", vertical:true},
+		{name:"time", height:50, type:"time", map_to:"auto"}
+		];
+
+*/
+
+
+
+
+		scheduler.init('scheduler_here',new Date(),"month");
+		
+		/*
+		var events = [
+					{start_date:"2014-04-11 14:00",end_date:"2014-04-11 17:00",text:"Meeting"},
+					{start_date:"2014-04-15 12:00",end_date:"2014-04-18 19:00",text:"Conference"},
+					{start_date:"2014-04-24 09:00",end_date:"2014-04-24 10:00",text:"Interview"}
+					];
+		*/
+
+		scheduler.parse(events, "json");
+	  
+
+
+		});//end GET
+
+		}
+
+/*	function init() {
+		scheduler.config.xml_date="%Y-%m-%d %H:%i";
+		scheduler.init('scheduler_here',new Date(),"month");
+		var events = [
+{start_date:"2014-04-11 14:00",end_date:"2014-04-11 17:00",text:"Meeting"},
+{start_date:"2014-04-15 12:00",end_date:"2014-04-18 19:00",text:"Conference"},
+{start_date:"2014-04-24 09:00",end_date:"2014-04-24 10:00",text:"Interview"}
+];
+ 
+scheduler.parse(events, "json");//takes the name and format of the data source
+		
+	}
+*/
+</script>
+
+<div id="scheduler_here" class="dhx_cal_container" 
+style='width:800px; height:800px; padding:10px;'>
+		<div class="dhx_cal_navline">
+			<div class="dhx_cal_prev_button">&nbsp;</div>
+			<div class="dhx_cal_next_button">&nbsp;</div>
+			<div class="dhx_cal_today_button"></div>
+			<div class="dhx_cal_date"></div>
+			<div class="dhx_cal_tab" name="day_tab" style="right:204px;"></div>
+			<div class="dhx_cal_tab" name="week_tab" style="right:140px;"></div>
+			<div class="dhx_cal_tab" name="month_tab" style="right:76px;"></div>
+			<div class="dhx_cal_tab" name='agenda_tab' style="right:248px"></div>
+		</div>
+		<div class="dhx_cal_header">
+		</div>
+		<div class="dhx_cal_data">
+		</div>
+</div>
+
+<script type="text/javascript">
+//init();
+getSchedule();
+</script>
