@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (C) 2014 The Android Open Source Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -199,7 +199,6 @@ public class NotesFragment extends Fragment implements
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == 1) { // EditNoteActivity
-			populateList();
 			if (resultCode == Activity.RESULT_OK) {
 				if (data != null) {
 					int listPosition = data.getIntExtra("listPosition", -1);
@@ -207,11 +206,13 @@ public class NotesFragment extends Fragment implements
 							.getParcelableExtra(Keys.Note.PARCEL);
 
 					int _id = Integer.valueOf(editedNote.getID());
-					
-//					if (listPosition != -1)
-//						updateNote(listPosition, editedNote);
-//					else
-//						updateNote(_id, editedNote);
+
+					// if (listPosition != -1)
+					// updateNote(listPosition, editedNote);
+					// else
+					// updateNote(_id, editedNote);
+
+					populateList();
 				}
 			} else {
 				if (resultCode == Activity.RESULT_CANCELED) {
@@ -226,20 +227,20 @@ public class NotesFragment extends Fragment implements
 		} // end CreateNoteActivity
 	}
 
-//	private boolean updateNote(Note update) {
-//		mySQLiteAdapter.updateNote(update);
-//		populateList();
-//		return true;
-//	}
-//
-//	private boolean updateNote(int position, Note update) {
-//		if (position < 0 || position >= notes.size())
-//			return false;
-//		notes.set(position, new Note(update));
-//		mySQLiteAdapter.updateNote(update);
-//		noteAdpt.notifyDataSetChanged();
-//		return true;
-//	}
+	// private boolean updateNote(Note update) {
+	// mySQLiteAdapter.updateNote(update);
+	// populateList();
+	// return true;
+	// }
+	//
+	// private boolean updateNote(int position, Note update) {
+	// if (position < 0 || position >= notes.size())
+	// return false;
+	// notes.set(position, new Note(update));
+	// mySQLiteAdapter.updateNote(update);
+	// noteAdpt.notifyDataSetChanged();
+	// return true;
+	// }
 
 	public void populateList() {
 		List<Note> contentRead = mySQLiteAdapter.getAllNotes();
@@ -256,10 +257,11 @@ public class NotesFragment extends Fragment implements
 		notes.addAll(list);
 		noteAdpt.notifyDataSetChanged();
 	}
-	
+
+	@Override
 	public void onResume() {
-		   super.onResume();
-		   populateList();
-		}
+		super.onResume();
+		populateList();
+	}
 
 }

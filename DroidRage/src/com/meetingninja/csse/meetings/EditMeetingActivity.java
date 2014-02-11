@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (C) 2014 The Android Open Source Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -219,15 +219,15 @@ public class EditMeetingActivity extends FragmentActivity implements
 	public boolean handleClick(View v) {
 		switch (v.getId()) {
 		case R.id.add_agenda_button:
-			Intent act = new Intent(EditMeetingActivity.this,
+			Intent toAgenda = new Intent(EditMeetingActivity.this,
 					AgendaActivity.class);
 
-			// Todo: Get and set the agenda ID values
+			// TODO: Get and set the agenda ID values
 
-			act.putExtra("isCreated", false);
-			act.putExtra("AgendaID", "55");
+			toAgenda.putExtra("isCreated", false);
+			toAgenda.putExtra("AgendaID", "55");
 
-			startActivity(act);
+			startActivity(toAgenda);
 			break;
 		default:
 			break;
@@ -290,6 +290,7 @@ public class EditMeetingActivity extends FragmentActivity implements
 			newMeeting.setStartTime(start.getTimeInMillis());
 			newMeeting.setEndTime(end.getTimeInMillis());
 			newMeeting.setDescription(desc);
+
 			if (displayedMeeting != null) {
 				// mySQLiteAdapter.updateMeeting(newMeeting);
 				msgIntent.putExtra("method", "update");
@@ -301,7 +302,7 @@ public class EditMeetingActivity extends FragmentActivity implements
 				msgIntent.putExtra("method", "insert");
 			}
 
-			msgIntent.putExtra(EXTRA_MEETING, newMeeting);
+			msgIntent.putExtra(Keys.Meeting.PARCEL, newMeeting);
 			if (extras != null) {
 				msgIntent.putExtra("listPosition",
 						extras.getInt("listPosition", -1));
@@ -456,35 +457,6 @@ public class EditMeetingActivity extends FragmentActivity implements
 						"A Meeting can not be set to start or end before now",
 						"OK", null);
 			}
-		}
-
-	}
-
-	public class MeetingSaveTask extends AsyncTask<Meeting, Void, Boolean> {
-		private AsyncResponse<Boolean> delegate;
-
-		public MeetingSaveTask(AsyncResponse<Boolean> delegate) {
-			this.delegate = delegate;
-		}
-
-		@Override
-		protected Boolean doInBackground(Meeting... params) {
-			Meeting m = params[0];
-			try {
-				String userID = session.getUserID();
-				MeetingDatabaseAdapter.createMeeting(userID, m);
-			} catch (Exception e) {
-				Log.e("MeetingSave", "Error: Failed to save meeting");
-				Log.e("MEETING_ERR", e.toString());
-				return false;
-			}
-			return true;
-		}
-
-		@Override
-		protected void onPostExecute(Boolean result) {
-			delegate.processFinish(result);
-			super.onPostExecute(result);
 		}
 
 	}

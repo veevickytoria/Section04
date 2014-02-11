@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (C) 2014 The Android Open Source Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,6 +26,7 @@ import java.util.Map;
 
 import objects.Meeting;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonEncoding;
@@ -124,7 +125,7 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 		 * result should get valid={"meetingID":"##"}
 		 */
 		String result = new String();
-		if (!response.isEmpty()) {
+		if (!TextUtils.isEmpty(response)) {
 			responseMap = MAPPER.readValue(response,
 					new TypeReference<HashMap<String, String>>() {
 					});

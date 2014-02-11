@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (C) 2014 The Android Open Source Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -56,12 +56,12 @@ public class SQLiteNoteAdapter extends SQLiteHelper {
 
 	/**
 	 * Insert a new note to be placed in the database
-	 * 
+	 *
 	 * @param name
 	 * @param content
 	 * @return The inserted note with an id assigned
 	 */
-	public void insertNote(Note note) {
+	public long insertNote(Note note) {
 		mDb = mDbHelper.getWritableDatabase();
 		ContentValues cv = new ContentValues();
 		cv.put(KEY_ID, note.getID());
@@ -76,6 +76,7 @@ public class SQLiteNoteAdapter extends SQLiteHelper {
 		c.moveToFirst();
 		c.close();
 		close();
+		return insertID;
 	}
 
 	public void updateNote(Note note) {
@@ -96,7 +97,7 @@ public class SQLiteNoteAdapter extends SQLiteHelper {
 
 	/**
 	 * Delete note based off of the id provided
-	 * 
+	 *
 	 * @param id
 	 */
 	public void deleteNote(long id) {
@@ -116,7 +117,7 @@ public class SQLiteNoteAdapter extends SQLiteHelper {
 	/**
 	 * Run a query on the notes table. See
 	 * {@link SQLiteDatabase#query(String, String[], String, String[], String, String, String)}
-	 * 
+	 *
 	 * @param columns
 	 * @param selection
 	 * @param selectionArgs
@@ -142,7 +143,7 @@ public class SQLiteNoteAdapter extends SQLiteHelper {
 	public List<Note> getAllNotes() {
 		List<Note> notes = new ArrayList<Note>();
 		mDb = mDbHelper.getReadableDatabase();
-		Cursor c = mDb.query(TABLE_NAME, allColumns, null, null, null, null,
+		Cursor c = query(allColumns, null, null, null, null,
 				null);
 		// looping through all rows and adding to list
 		if (c != null && c.moveToFirst()) {

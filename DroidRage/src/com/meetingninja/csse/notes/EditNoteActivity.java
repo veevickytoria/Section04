@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (C) 2014 The Android Open Source Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,6 +25,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -63,15 +64,15 @@ public class EditNoteActivity extends Activity {
 		mNoteTitle = (EditText) findViewById(R.id.noteTitleEditor);
 
 		extras = getIntent().getExtras();
-		if (extras.getBoolean(Note.CREATE_NOTE, false)){
+		if (extras.getBoolean(Note.CREATE_NOTE, false)) {
 			displayedNote = new Note();
-			createNote = true; 
+			createNote = true;
 		} else if (extras != null) {
 			listPosition = extras.getInt("listPosition", -1);
 			displayedNote = (Note) extras.getParcelable(Keys.Note.PARCEL);
 			mNoteTitle.setText(displayedNote.getTitle());
-			mTextEditor.setText(displayedNote.getContent()); 
-		} else{
+			mTextEditor.setText(displayedNote.getContent());
+		} else {
 			displayedNote = new Note();
 		}
 
@@ -121,40 +122,47 @@ public class EditNoteActivity extends Activity {
 		displayedNote.setDateCreated(MyDateUtils.JODA_SERVER_DATE_FORMAT
 				.print(now));
 
-		Intent intentMessage = new Intent();
+		Intent backToNotes = new Intent();
 
-		intentMessage.putExtra("listPosition", listPosition);
-		intentMessage.putExtra(Keys.Note.PARCEL, displayedNote);
+		long id = 0;
+		if (createNote){
+			if (TextUtils.isEmpty(displayedNote.getID()))
+				displayedNote.setID(""+ 404); // TODO: Get an ID for the note
+			id = mySQLiteAdapter.insertNote(displayedNote);
+			displayedNote.setID(""+id);
+		}
 
-		if(createNote)
-			mySQLiteAdapter.insertNote(displayedNote);
-		
-		else if (!(displayedNote.getID() == null || displayedNote.getID().isEmpty()))
+		else if (!TextUtils.isEmpty(displayedNote.getID()))
 			mySQLiteAdapter.updateNote(displayedNote);
 
-		setResult(RESULT_OK, intentMessage);
+		backToNotes.putExtra("listPosition", listPosition);
+		backToNotes.putExtra(Keys.Note.PARCEL, displayedNote);
+
+		setResult(RESULT_OK, backToNotes);
 		finish();
 	}
 
 	public void discard() {
-		if(displayedNote.getTitle().equals(this.mNoteTitle.getText().toString()) && 
-				displayedNote.getContent().equals(this.mTextEditor.getText().toString())){
+		if (displayedNote.getTitle().equals(
+				this.mNoteTitle.getText().toString())
+				&& displayedNote.getContent().equals(
+						this.mTextEditor.getText().toString())) {
 			Intent intentMessage = new Intent();
 			setResult(RESULT_CANCELED, intentMessage);
 			finish();
 		} else {
 			new AlertDialog.Builder(this)
-			.setMessage("Are you sure you want to discard changes?")
-			.setCancelable(true)
-			.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-					Intent intentMessage = new Intent();
-					setResult(RESULT_CANCELED, intentMessage);
-					finish();
-				}
-			})
-			.setNegativeButton("No", null)
-			.show();
+					.setMessage("Are you sure you want to discard changes?")
+					.setCancelable(true)
+					.setPositiveButton("Yes",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int id) {
+									Intent intentMessage = new Intent();
+									setResult(RESULT_CANCELED, intentMessage);
+									finish();
+								}
+							}).setNegativeButton("No", null).show();
 		}
 	}
 
@@ -199,7 +207,7 @@ public class EditNoteActivity extends Activity {
 		}
 
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -221,11 +229,11 @@ public class EditNoteActivity extends Activity {
 			//
 			save();
 			return true;
-			
+
 		case R.id.edit_note_action_save:
 			save();
 			return true;
-			
+
 		case R.id.edit_note_action_discard:
 			discard();
 			return true;

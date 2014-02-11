@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (C) 2014 The Android Open Source Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -52,6 +52,7 @@ import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.MeetingDatabaseAdapter;
 import com.meetingninja.csse.database.local.SQLiteMeetingAdapter;
+import com.meetingninja.csse.database.volley.MeetingVolleyAdapter;
 import com.meetingninja.csse.extras.Connectivity;
 
 import de.timroes.android.listview.EnhancedListView;
@@ -179,7 +180,7 @@ public class MeetingsFragment extends Fragment implements
 
 					@Override
 					public void discard() {
-						deleteMeeting(item.getID());
+						MeetingVolleyAdapter.deleteMeeting(item.getID());
 						meetings.remove(item);
 						meetingAdpt.notifyDataSetChanged();
 					}
@@ -219,7 +220,7 @@ public class MeetingsFragment extends Fragment implements
 			case 2: // Delete
 				Meeting meeting = meetingAdpt.getItem(position);
 				// mySQLiteAdapter.deleteMeeting(meeting); Need to implement
-				deleteMeeting(meeting.getID());
+				MeetingVolleyAdapter.deleteMeeting(meeting.getID());
 				meetings.remove(position);
 				meetingAdpt.notifyDataSetChanged();
 				handled = true;
@@ -246,15 +247,15 @@ public class MeetingsFragment extends Fragment implements
 							.getParcelableExtra(Keys.Meeting.PARCEL);
 
 					if (data.getStringExtra("method").equals("update")) {
-						Log.d(TAG, "Updating Meeting #" + created.getID());
+						Log.d(TAG, "Updating Meeting");
 						if (listPosition != -1)
 							updateMeeting(listPosition, created);
 						else
 							updateMeeting(created);
 					} else if (data.getStringExtra("method").equals("insert")) {
-						Log.d(TAG, "Inserting Meeting # " + created.getID());
+						 Log.d(TAG, "Inserting Meeting");
 						// created = mySQLiteAdapter.insertMeeting(created);
-						// populateList();
+						 fetchMeetings();
 					}
 				}
 			} else {
@@ -303,28 +304,6 @@ public class MeetingsFragment extends Fragment implements
 		meetingAdpt.notifyDataSetChanged();
 
 		return true;
-	}
-
-	public void deleteMeeting(String meetingID) {
-		String url = MeetingDatabaseAdapter.getBaseUri().appendPath(meetingID)
-				.build().toString();
-		StringRequest dr = new StringRequest(Request.Method.DELETE, url,
-				new Response.Listener<String>() {
-					@Override
-					public void onResponse(String response) {
-						// response
-						Toast.makeText(getActivity(), response,
-								Toast.LENGTH_SHORT).show();
-					}
-				}, new Response.ErrorListener() {
-					@Override
-					public void onErrorResponse(VolleyError error) {
-						// error.
-
-					}
-				});
-
-		ApplicationController.getInstance().addToRequestQueue(dr);
 	}
 
 	@Override
