@@ -47,8 +47,7 @@
       $(this).removeData('bs.modal');
     });
     alert(currentID);
-    // TODO: Put this back in when it works
-<<<<<<< HEAD
+    
     $.ajax({
       type: 'GET',
       dataType: 'jsonp',
@@ -63,7 +62,6 @@
     .fail(function(){
       alert('error');
     });
-=======
     // $.ajax({
     //         type: 'GET',
     //         url: 'http://csse371-04.csse.rose-hulman.edu/Groups/' + ID,
@@ -79,7 +77,6 @@
     document.getElementById("typeE").value = GroupArray["groupType"];
 
     populateSelect(Members["members"], "displayName", "userID", GroupArray["members"], "membersE");
->>>>>>> 025a008164b5a8b1c091281df4155674793e4ee3
 
     $('#editGroupModal').modal('show');
     // $('#viewGroupModal').modal('hide');
