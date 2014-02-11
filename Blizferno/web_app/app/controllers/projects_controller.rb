@@ -22,22 +22,31 @@ class ProjectsController < ApplicationController
 	res = Net::HTTP.start(url.host, url.port) {|http|
 		http.request(req)
 	}
+	logger.debug "check the res #{res.body}"
+
 	getUserProjects = JSON.parse(res.body)
+
 	@projects = Array.new
 	@projectsParsed = Array.new
-	@projectString = ''
+	projectString = ''
+
+	logger.debug "Check the projects #{getUserProjects}"
 
 	getUserProjects['projects'].each do |project|
-		url = URI.parse('http://csse371-04.csse.rose-hulman.edu/Project' + project['id'].to_s)
+		url = URI.parse('http://csse371-04.csse.rose-hulman.edu/Project/' + project['projectID'].to_s)
 		req = Net::HTTP::Get.new(url.path)
 		res = Net::HTTP.start(url.host, url.port) {|http|
 			http.request(req)
 		}
-		@projectString = res.body
-		projectIdString = ',"projectID":"'+project['id'].to_s+'"}';
-		@projectString = @projectString[0..-2] + projectIdString;
-		@projects.push(@projectString)
-		@projectsParsed.push(JSON.parse(@projectString))
+		projectString = res.body
+
+		projectIdString = ',"projectID":"'+project['projectID'].to_s+'"}';
+		projectString = projectString[0..-2] + projectIdString;
+
+
+		@projects.push(projectString)
+
+		@projectsParsed.push(JSON.parse(projectString))
 	end
 
   end

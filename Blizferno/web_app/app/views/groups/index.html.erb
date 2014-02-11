@@ -56,7 +56,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="showEditModal()" href="#editGroupModal" data-refresh="true" data-toggle='modal'>Edit</button>
+        <button type="button" class="btn btn-primary" onclick='showEditModal()' href="#editGroupModal" data-refresh="true" data-toggle='modal'>Edit</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -74,8 +74,8 @@
         <%= render "edit" %>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" onclick="showGroupModalNoID()" data-refresh="true" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" onclick="showGroupModalNoID()" data-refresh="true" >Save Changes</button>
+        <button type="button" class="btn btn-default" data-refresh="true" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="submitEditModal()" data-refresh="true" >Save Changes</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -96,14 +96,14 @@
   <% else %>
     <% for group in @groups %>
       <tr>
-        <td style='cursor: pointer' onclick="showViewGroupModal(<%= group['groupID'] %>)">
+        <td style='cursor: pointer' onclick="showViewGroupModal(<%= group['groupID'] %>);">
           <%= group['groupTitle'] %>
         </td>
         <td style="width: 7%">
           <span style='font-size: 1.3em; color: white; cursor: pointer;' onclick='showDeleteModal(<%= group["groupID"] %>)' class='glyphicon glyphicon-trash'></span>
         </td>
         <td style="width: 7%">
-          <span style='font-size: 1.3em; color: white; cursor: pointer;' class='glyphicon glyphicon-pencil'></span>
+          <span style='font-size: 1.3em; color: white; cursor: pointer;' onclick='showEditModal(<%= group["groupID"] %>)' class='glyphicon glyphicon-pencil'></span>
         </td>
       </tr>
     <% end %>

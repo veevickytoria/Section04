@@ -1,0 +1,143 @@
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
+<script>
+var userCookie = getCookie("otherUserID");
+	
+
+getOtherUser(userCookie);
+
+function getUserID(userID){
+  setCookie("otherUserID", userID, "1");
+}
+function getOtherUser(userID){
+	 $.ajax({
+        type: 'GET',
+        url: 'http://csse371-04.csse.rose-hulman.edu/User/' + userID,
+        success:function(data){
+          userInfo = JSON.parse(data);
+          document.getElementById("otherName").innerHTML = userInfo["name"];
+          document.getElementById("otherCompany").innerHTML = userInfo["company"];
+		  document.getElementById("otherTitle").innerHTML = userInfo["title"];
+		  document.getElementById("otherLocation").innerHTML = userInfo["location"];
+		  document.getElementById("otherEmail").innerHTML = userInfo["email"];
+		  document.getElementById("otherPhone").innerHTML = userInfo["phone"];
+
+        },
+        async: false
+      });
+	}
+</script>
+
+
+
+
+
+<ul class="nav nav-tabs">
+      <li class="active"><a href="#profilePane" data-toggle="tab">Profile</a></li>
+      <li><a href="#usersPane" data-toggle="tab">Users</a></li>
+</ul>
+
+
+
+
+
+
+<div class="tab-content">
+      <div class="tab-pane fade in active" id="profilePane">
+
+<div style="padding:0 15px;"><!-- offset row negative padding -->
+
+<div class="row">
+<div class="col-md-6">
+
+<p>
+  <span style="font-size:40px;">
+    <strong>
+      <span id = 'otherName'>
+    </strong>
+  </span>
+</p>
+
+<p>
+
+
+
+
+
+
+<p>
+  <span style="font-size:28px;">
+    <strong>
+      <span style="font-size:18px;"> 
+			Company: <span id = 'otherCompany'>
+	</span>
+    </strong>
+  </span>
+</p>
+<p>
+  <span style="font-size:28px;">
+    <strong>
+      <span style="font-size:18px;">
+		 	Job Title: <span id = 'otherTitle'>
+	</span>
+    </strong>
+  </span>
+</p>
+<p>
+  <strong>
+      <span style="font-size:18px;">
+			Location: <span id = 'otherLocation'>
+	</span>
+  </strong>
+</p>
+<p>
+  <strong>
+      <span style="font-size:14px;">
+			Email: <span id = 'otherEmail'>
+	</span>
+  </strong>
+</p>
+<p>
+<p>
+  <strong>
+      <span style="font-size:14px;">
+			Phone: <span id = 'otherPhone'>
+	</span>
+  </strong>
+</p>
+<br/>
+
+
+
+<!-- <span style="font-size:28px;"><strong><span style="font-size:18px;">Projects: #for project in @projects  project[#'projectTitle']  
+end 
+</span>
+<br/> -->
+
+
+
+
+</div> <!-- end left col -->
+<div class="col-md-6">
+<%= render 'otherschedule' %>
+</div> <!-- end right col -->
+</div> <!-- end row div -->
+</div> <!-- end offset div -->
+
+
+</div>
+<div class="tab-pane fade in active" id="usersPane">
+  <div style="padding: 5%;"><!-- offset row negative padding -->
+
+    <div class="row">
+      <div class="col-md-6">
+        <% for user in @allUsers['users'] %>
+        <% if( !user['name'].nil? ) %>
+        <a href='otherProfile' onclick="grabUserID(<%= user['userID'] %>)"> <%= user['name'] %></a> <br />
+        <% end %>
+        <% end %>
+
+      </div>
+    </div>
+  </div>
+</div>
+</div>

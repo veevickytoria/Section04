@@ -101,6 +101,12 @@ for (var i=0, max=all.length; i < max; i++) {
 }
 
 
+
+
+}
+
+function grabUserID(userID){
+  setCookie("otherUserID", userID, "1");
 }
 </script>
 
@@ -222,7 +228,7 @@ end
       <div class="col-md-6">
         <% for user in @allUsers['users'] %>
         <% if( !user['name'].nil? ) %>
-        <a href='#'> <%= user['name'] %></a> <br />
+        <a href='otherProfile' onclick="grabUserID(<%= user['userID'] %>)"> <%= user['name'] %></a> <br />
         <% end %>
         <% end %>
 
