@@ -1,7 +1,8 @@
 <%= stylesheet_link_tag "/codebase/dhtmlxscheduler.css" %>
 <%= javascript_include_tag "/codebase/dhtmlxscheduler.js" %>
 <%= javascript_include_tag "/codebase/ext/dhtmlxscheduler_collision.js" %>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
+<script src="http://code.jquery.com/jquery-latest.min.js"
+        type="text/javascript"></script>
 <script src='/codebase/ext/dhtmlxscheduler_agenda_view.js'></script>
 <script type="text/javascript" charset="utf-8">
 
@@ -62,94 +63,92 @@
 
 	function getSchedule() {
 		var userId = <%= cookies[:userID] %>;
-//var userId = '5467';
-//alert("userId:"+userId);
-	  $.get('http://csse371-04.csse.rose-hulman.edu/User/Schedule/'+userId,function(data){
-     	//alert("Data: " + data);		
-		var schedule = JSON.parse(data);
-		var events = new Array();
 
-		for(var value in schedule.schedule){
+		  $.get('http://csse371-04.csse.rose-hulman.edu/User/Schedule/'+userId,function(data){
+		
+			var schedule = JSON.parse(data);
 
-			var start_date = schedule.schedule[value].datetimeStart;
-			var end_date = schedule.schedule[value].datetimeEnd;
-			var text = schedule.schedule[value].title;
-			var color = (schedule.schedule[value].type == "meeting") ? 'blue' : 'orange';
+			var events = new Array();
 
-			events[value] = "{start_date:\'"+start_date+"\',end_date:\'"+end_date+"\',text:\'"+text+"\',color:\'"+color+"\'}";
-		}
+			for(var value in schedule.schedule){
 
+				var start_date = schedule.schedule[value].datetimeStart;
+				var end_date = schedule.schedule[value].datetimeEnd;
+				var text = schedule.schedule[value].title;
+				var color = (schedule.schedule[value].type == "meeting") ? 'blue' : 'orange';
 
-		events = "["+events+"]";
-
-/*
-//working on custom lightbox
-
-scheduler.locale.labels.section_eventType = "Type of Event"; 
-
-		var event_type = [
-		{key:1, label: 'Meeting'},
-		{key:2, label: 'Task'}
-		];
+				events[value] = "{start_date:\'"+start_date+"\',end_date:\'"+end_date+"\',text:\'"+text+"\',color:\'"+color+"\'}";
+			}
 
 
-		scheduler.config.lightbox.sections=[
-		{name:"description", height:50, map_to:"title", type:"textarea",focus:true},
-		{name:"eventType", height:50, options: event_type, map_to: "radiobutton_option", type:"radio", vertical:true},
-		{name:"time", height:50, type:"time", map_to:"auto"}
-		];
+			events = "["+events+"]";
 
-*/
+			//alert("Events:" + events);
 
+	/*
+	//working on custom lightbox
 
+	scheduler.locale.labels.section_eventType = "Type of Event"; 
 
-scheduler.attachEvent("onEventSave",function(id,data){
-
-	var postId = userId;
-	var postTitle = data.text;
-	var postLocation = "testlocation";
-	var postDateTimeBegin = convertToDBDate(data.start_date.toString());
-	var postDateTimeEnd = convertToDBDate(data.end_date.toString());
-	var postDescription = data.text;
-	var postAttendance = "[]";
+			var event_type = [
+			{key:1, label: 'Meeting'},
+			{key:2, label: 'Task'}
+			];
 
 
-	var postData = JSON.stringify({"userID":postId,"title":postTitle,"location":postLocation,"datetime":postDateTimeBegin,"endDatetime":postDateTimeEnd,"description":postDescription,"attendance":postAttendance});
+			scheduler.config.lightbox.sections=[
+			{name:"description", height:50, map_to:"title", type:"textarea",focus:true},
+			{name:"eventType", height:50, options: event_type, map_to: "radiobutton_option", type:"radio", vertical:true},
+			{name:"time", height:50, type:"time", map_to:"auto"}
+			];
+
+	*/
+
+	scheduler.attachEvent("onEventSave",function(id,data){
+
+		var postId = userId;
+		var postTitle = data.text;
+		var postLocation = "testlocation";
+		var postDateTimeBegin = convertToDBDate(data.start_date.toString());
+		var postDateTimeEnd = convertToDBDate(data.end_date.toString());
+		var postDescription = data.text;
+		var postAttendance = "[]";
 
 
-	$.ajax({
-		type: "POST",
-		url: "http://csse371-04.csse.rose-hulman.edu/Meeting/",
-		data: postData,
-		success:function(data){
-			alert("Success:");		
-		}
+		var postData = JSON.stringify({"userID":postId,"title":postTitle,"location":postLocation,"datetime":postDateTimeBegin,"endDatetime":postDateTimeEnd,"description":postDescription,"attendance":postAttendance});
+
+
+		$.ajax({
+			type: "POST",
+			url: "http://csse371-04.csse.rose-hulman.edu/Meeting/",
+			data: postData,
+			success:function(data){
+				alert("Success:");		
+			}
+		});
+
+
+		return true;
 	});
 
 
-    return true;
-});
+			scheduler.init('scheduler_here',new Date(),"agenda");
+			/*
+			var events = [
+						{start_date:"2014-04-11 14:00",end_date:"2014-04-11 17:00",text:"Meeting"},
+						{start_date:"2014-04-15 12:00",end_date:"2014-04-18 19:00",text:"Conference"},
+						{start_date:"2014-04-24 09:00",end_date:"2014-04-24 10:00",text:"Interview"}
+						];
+			*/
+			scheduler.parse(events, "json");
+		  
 
 
+			});//end GET
 
-
-		scheduler.init('scheduler_here',new Date(),"month");
-		/*
-		var events = [
-					{start_date:"2014-04-11 14:00",end_date:"2014-04-11 17:00",text:"Meeting"},
-					{start_date:"2014-04-15 12:00",end_date:"2014-04-18 19:00",text:"Conference"},
-					{start_date:"2014-04-24 09:00",end_date:"2014-04-24 10:00",text:"Interview"}
-					];
-		*/
-		scheduler.parse(events, "json");
-	  
-
-
-		});//end GET
-
-		}
-
-/*	function init() {
+			}
+/*
+	function init() {
 		scheduler.config.xml_date="%Y-%m-%d %H:%i";
 		scheduler.init('scheduler_here',new Date(),"month");
 		var events = [
@@ -162,6 +161,7 @@ scheduler.parse(events, "json");//takes the name and format of the data source
 		
 	}
 */
+
 </script>
 
 <div id="scheduler_here" class="dhx_cal_container" 
