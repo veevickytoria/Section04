@@ -46,13 +46,11 @@
         <activity
             android:name="com.meetingninja.csse.user.LoginActivity"
             android:label="@string/title_activity_login"
-            android:noHistory="true"
             android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
         <activity
             android:name="com.meetingninja.csse.user.RegisterActivity"
             android:label="@string/title_activity_register"
-            android:noHistory="true"
             android:parentActivityName="com.meetingninja.csse.user.LoginActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -65,7 +63,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.meetingninja.csse.MainActivity" />
         </activity>
- 
         <activity
             android:name="com.meetingninja.csse.tasks.CreateTasksActivity"
             android:label="@string/title_activity_tasks"
@@ -125,7 +122,6 @@
             android:label="@string/title_activity_agenda"
             android:screenOrientation="portrait" >
         </activity>
-        
         <activity
             android:name="com.meetingninja.csse.agenda.ReviewAgendaActivity"
             android:configChanges="keyboardHidden"
