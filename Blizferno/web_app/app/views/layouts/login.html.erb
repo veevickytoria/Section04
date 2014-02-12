@@ -4,7 +4,6 @@
   <%= content_for?(:title) ? yield(:title) : "" %></title>
   <%= csrf_meta_tags %>
   <!-- STYLESHEETS -->
-  <%= stylesheet_link_tag "slate", :media => "all" %>
   <%= yield(:page_stylesheet) if content_for?(:page_stylesheet) %>
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= stylesheet_link_tag params[:controller] %>
@@ -13,7 +12,6 @@
 <body onload="areCookiesEnabled()">
   <%= yield %>
 
-  <%= javascript_include_tag "slate" %>
   <%= yield(:page_javascript) if content_for?(:page_javascript) %>
   <%= javascript_include_tag "application" %>
   <%= javascript_include_tag params[:controller] %>
