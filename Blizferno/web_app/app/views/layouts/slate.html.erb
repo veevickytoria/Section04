@@ -8,12 +8,13 @@
   <title>
     <%= content_for?(:title) ? yield(:title) : "Meeting Ninja" %>
   </title>
-
   <%= csrf_meta_tags %>
 
   <!-- STYLESHEETS -->
+  <%= stylesheet_link_tag "slate", :media => "all" %>
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= yield(:page_stylesheet) if content_for?(:page_stylesheet) %>
+  <%= stylesheet_link_tag params[:controller] %>
   <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet" />
 </head>
 <body>
@@ -28,7 +29,9 @@
   -->
 
   <!-- JAVASCRIPTS -->
+  <%= javascript_include_tag "slate" %>
   <%= javascript_include_tag "application" %>
   <%= yield(:page_javascript) if content_for?(:page_javascript) %>
+  <%= javascript_include_tag params[:controller] %>
 </body>
 </html>

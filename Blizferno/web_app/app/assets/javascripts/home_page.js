@@ -1,4 +1,5 @@
-//= require meetings
-//= require projects
-//= require groups
-//= require tasks
+// $(function() {
+//     $(".preload").fadeOut(2000, function() {
+//         $(".content").fadeIn(1000);        
+//     });
+// });​
