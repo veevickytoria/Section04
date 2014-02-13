@@ -70,6 +70,8 @@
     NSString *password = [self sha256HashFor:[self.passwordField text]];
 //    [self.loginDelegate login:1];
     
+    
+    
     if (password.length > 0 && email.length>0)
     {
         //register

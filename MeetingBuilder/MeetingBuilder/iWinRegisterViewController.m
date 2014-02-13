@@ -101,6 +101,7 @@
             [self createContactWithID:userID withEmail:email withPassword:self.passwordField.text];
         }
         [self.registerDelegate onRegister:userID];
+        
     }
     else
     {
