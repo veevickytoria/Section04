@@ -660,32 +660,33 @@ function createSettings($client, $userID, $shouldNotify, $whenToNotify, $setting
 function deleteSettings($client, $userID){
         $settiIndex = new Index\NodeIndex($client, 'UserSettings');
         $settiIndex->save();
-		$userIndex = new Index\NodeIndex($client, 'Users');
-		$userIndex->save();
         //get the node
         $node = $client->getNode($userID);
         //make sure the node exists
         if($node != NULL){
                 //check if node has notification index
-                $setti = $settiIndex->findOne('ID', $node->getID());
+            $relationArray = $node->getRelationships(array('SETFOR'), Relationship::DirectionIn);
+			
+			//load up the notifications into an array
+			$setti = $relationArray[0]->getStartNode();
                                 
-                //only delete the node if it's a notification
-                if($setti != NULL){
-                        //get the relationships
-                        $relations = $setti->getRelationships();
-                        foreach($relations as $rel){
-                                //remove all relationships
-                                $rel->delete();
-                        }                
-                        
-                        //delete node and return true
-                        $setti->delete();
-                       $array = array('valid'=>'true');
-                } else {
-                        //return an error otherwise
-                        $errorarray = array('errorID' => '4', 'errorMessage'=>'Given node ID is not a notification node');
-			 //return an error otherwise
- 		}
+            //only delete the node if it's a notification
+            if($setti != NULL){
+				//get the relationships
+				$relations = $setti->getRelationships();
+				foreach($relations as $rel){
+						//remove all relationships
+						$rel->delete();
+				}                
+				
+				//delete node and return true
+				$setti->delete();
+			   $array = array('valid'=>'true');
+			} else {
+				//return an error otherwise
+				$errorarray = array('errorID' => '4', 'errorMessage'=>'Given node ID is not a notification node');
+			//return an error otherwise
+			}
 	} else {
       //return an error if ID doesn't point to a node
 	}
