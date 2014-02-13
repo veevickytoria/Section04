@@ -241,6 +241,26 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
                 $errorarray = array('errorID' => '5', 'errorMessage'=>$_GET['id'].' node ID is not recognized in database');
                 echo json_encode($errorarray);
         }
+}else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'tasks')==0){
+    $meeting = $client->getNode($_GET['id']);
+    $properties = $meeting->getProperties();
+    if(strcasecmp($properties['nodeType'], 'Meeting') != 0){
+        echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['id'].' is an not a meeting node.'));
+        return;
+    }
+    
+    $results = array();
+    $tasks = $meeting->getRelationships(['BELONGS_TO'], Relationship::DirectionIn);
+    foreach($tasks as $belongs){
+        $task = $belongs->getStartNode();
+        $properties = $task->getProperties();
+        if(strcasecmp($properties['nodeType'], 'Tasks') != 0){ continue; }
+        
+        array_push(array('taskID'=>$task->getId(), 'taskTitle'=>$properties['title']));
+    }
+    
+    echo json_encode(array("tasks"=>$results));
+    
 }else{
         echo $_SERVER['REQUEST_METHOD'] ." request method not found in Meeting";
 }

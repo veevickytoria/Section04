@@ -55,17 +55,30 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 ){
 	$taskNode->save();
 	
 	//sets the relationships on the node
-	$UserAssigned = $client->getNode($postContent-> assignedTo );
-	$assignedTo = $UserAssigned->relateTo( $taskNode,  "ASSIGNED_TO" )->save();
+        //make sure the assignedTo person is there
+        if(array_key_exists("assignedTo", $postContent)){
+            $UserAssigned = $client->getNode($postContent-> assignedTo );
+            $assignedTo = $UserAssigned->relateTo( $taskNode,  "ASSIGNED_TO" )->save();
+        }
         
-	$Assigner = $client->getNode($postContent-> assignedFrom );
-	$assignedFrom = $Assigner->relateTo( $taskNode, "ASSIGNED_FROM" )->save();
+        if(array_key_exists("assignedFrom", $postContent)){
+            $Assigner = $client->getNode($postContent-> assignedFrom );
+            $assignedFrom = $Assigner->relateTo( $taskNode, "ASSIGNED_FROM" )->save();
+        }
         
-	$Creator = $client->getNode($postContent-> createdBy );
-	$createdBy = $Creator->relateTo( $taskNode, "CREATED_BY" )->save();
-	
+        if(array_key_exists("createdBy", $postContent)){
+            $Creator = $client->getNode($postContent-> createdBy );
+            $createdBy = $Creator->relateTo( $taskNode, "CREATED_BY" )->save();
+        }
+        
+        if(array_key_exists("meetingID", $postContent)){
+            $Meeting = $client->getNode($postContent->meetingID);
+            $taskNode->relateTo($Meeting, "BELONGS_TO");
+        }
+        
 	//get node id
 	echo json_encode(array("taskID"=>$taskNode->getId())); //output was revised?
+        
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 ){
 	//viewTaskInfo
 	$taskNode=$client->getNode($_GET['id']);
@@ -143,6 +156,10 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 ){
 			$taskNode->setProperty('completionCriteria', $postContent->value);
 			$taskNode->save();
 			$updated = 1;
+                }else if(strcasecmp($postContent->field, 'meetingID') == 0){
+                        $taskNode->setProperty('meetingID', $postContent->value);
+                        $taskNode->save();
+                        $update = 1;
 		}else if (strcasecmp($postContent->field, 'assignedTo')==0){
 			$relationArray = $taskNode->getRelationships(array('ASSIGNED_TO'), Relationship::DirectionIn);
 			foreach($relationArray as $rel) {
