@@ -127,7 +127,7 @@ else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'DELETE')==0) {
     }
     echo json_encode(array("errorID"=>"15", "errorMessage"=>$user->getId()." didn't have permission to merge with ". $note->getId()));
 }
-else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0){
+else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0  && strcasecmp($_GET['cat'], 'users') == 0){
     //get the user node
     $user = $client->getNode($_GET['userID']);   
     //make sure user node
@@ -166,9 +166,29 @@ else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0){
         }  
     }
     echo json_encode($response);
-    //TODO implement getting users who gave you merge capabilies to a note
-    //list of users sharing with me (id and name)
-    //list notes thye're sharing (id and title)
+
+} else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 && strcasecmp($_GET['cat'], 'notes') == 0){
+    //get the note node
+    $note = $client->getNode($_GET['noteID']);   
+    //make sure note node
+    $checker = checkIfNode($note);    
+    if(!$checker['valid']){
+        echo json_encode($checker['message']);
+        return;
+    }
+    $checker = checkIfIndex($noteIndex, 'ID', $note->getId());
+    if(!$checker['valid']){
+        echo json_encode($checker['message']);
+        return;
+    }
+    $viewing = $note->getRelationships(array($permissionRel), Relationship::DirectionIn);
+    $response = array();
+    $foundUser = FALSE;
+    foreach($sharing as $permission){
+        $user = $permission->getEndNode();
+        array_push($response, array("userID"=>$user->getId(), "userName"=>$uesr->getProperty('name')));
+    }
+    echo json_encode(array("users"=>$response));
 }
 
 
@@ -205,7 +225,7 @@ function checkIfNodeInRels($nodeIDToCheck, $nodeRelsFrom, $relTypes, $direction,
         }
         return array('valid'=>TRUE,  'message'=>array('errorID'=>'13', 'errorMessage'=>$nodeIDToCheck.' already related to '.$nodeRelsFrom->getId()));
     } else {
-        return array('valid'=>FALSE, 'message'=>array('errorID'=>'14', 'errorMessage'=>'Direction not recognized in checkIfNodeInRels function'));
+         return array('valid'=>FALSE, 'message'=>array('errorID'=>'14', 'errorMessage'=>'Direction not recognized in checkIfNodeInRels function'));
     }
 }
 
@@ -213,7 +233,7 @@ function checkIfNodeInRels($nodeIDToCheck, $nodeRelsFrom, $relTypes, $direction,
 function checkIfNode($node){
     if($node==NULL){
         return array('valid'=>FALSE, 'message'=>array('errorID'=>'5', 'errorMessage'=>$node->getId().' node ID is not recognized in database'));
-    }
+	}
     return array('valid'=>TRUE);
 }
 

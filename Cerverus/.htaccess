@@ -24,7 +24,8 @@ RewriteRule ^UserSettings/([0-9]+)/?$ UserSettings.php?id=$1 [NC,L]
 RewriteRule ^Note/?$ Note.php [NC,L]
 RewriteRule ^Note/([0-9]+)/?$ Note.php?noteID=$1 [NC,L]
 RewriteRule ^Note/Sharing/?$ Sharing.php? [NC,L]
-RewriteRule ^Note/Sharing/([0-9]+)/?$ Sharing.php?userID=$1 [NC,L]
+RewriteRule ^User/Sharing/([0-9]+)/?$ Sharing.php?userID=$1&cat=users [NC,L]
+RewriteRule ^Note/Sharing/([0-9]+)/?$ Sharing.php?noteID=$1&cat=notes [NC,L]
 RewriteRule ^Note/Sharing/([0-9]+)/([0-9]+)/?$ Sharing.php?noteID=$1&userID=$2 [NC,L]
 
 
