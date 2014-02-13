@@ -62,12 +62,17 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
         echo json_encode(array_merge(array("noteID"=>$noteNode->getID()), $noteProps));
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0){
         //getNoteInfo
-        $noteNode=$client->getNode($_GET['noteID']);                        
+        $noteNode=$client->getNode($_GET['noteID']);      
+		if($noteNode != NULL){		
         $createdByRel = $noteNode->getRelationships(array('CREATED'), Relationship::DirectionIn);
         $createdBy = $createdByRel[0]->getStartNode(); 
         $tempArray=$noteNode->getProperties();
       	unset($tempArray['nodeType']);
         echo json_encode(array_merge(array("noteID"=>$noteNode->getId()), $tempArray));
+		}else{
+			$errorarray = array('errorID' => '5', 'errorMessage'=>$_GET['noteID'].' node ID is not recognized in database');
+            echo json_encode($errorarray);
+		}
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'PUT')==0){
         //updateNote
         $postContent = json_decode(@file_get_contents('php://input'));
@@ -168,7 +173,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
                 }
         } else {
                 //return an error if ID doesn't point to a node
-                $errorarray = array('errorID' => '5', 'errorMessage'=>'Given node ID is not recognized in database');
+                $errorarray = array('errorID' => '5', 'errorMessage'=>$id.' node ID is not recognized in database');
                 echo json_encode($errorarray);
         }
 }else{
