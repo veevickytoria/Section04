@@ -364,6 +364,9 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
                 // actually add the node in the db
                 $userNode->save();
                 $userIndex->add($userNode, 'email', $postContent->email);
+				
+				createSettings($client, $userNode->getId(),"", "", "");
+
                 
                 // return the id of the node
                 echo json_encode(array("userID"=>$userNode->getId()));
@@ -449,7 +452,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
         
         //get the node
         $node = $client->getNode($id);
-        $array = $userNode->getProperties();
+        $array = $node->getProperties();
         //make sure the node exists
         if($node != NULL){
                 if(array_key_exists('nodeType', $array)){
@@ -465,6 +468,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
                 //only delete the node if it's a note
                 if($user != NULL){
                         //get the relationships
+						deleteSettings($client, $user->getId());
                         $relations = $user->getRelationships();
                         foreach($relations as $rel){
                                 //remove all relationships
@@ -621,6 +625,71 @@ function pbkdf2($algorithm, $password, $salt, $count, $key_length, $raw_output =
         return bin2hex(substr($output, 0, $key_length));
 }
 
+function createSettings($client, $userID, $shouldNotify, $whenToNotify, $settings){
+	//create notification POST
+	//get the json string post content
+	$settiIndex = new Index\NodeIndex($client, 'UserSettings');
+	$settiIndex->save();
+	$userIndex = new Index\NodeIndex($client, 'Users');
+	$userIndex->save();
+	//create the node
+	$settiNode= $client->makeNode();
+	$settiNode->save();
+	//sets the property on the node
+	$settiNode->setProperty('shouldNotify', $shouldNotify)->setProperty('whenToNotify', $whenToNotify)->
+	setProperty('type', 'UserSettings')
+			->setProperty('nodeID', $settiNode->getID())
+			->setProperty('settings',$settings);
+	
+	//actually add the node in the db
+	$settiNode->save();
+	
+	//create a relation to the user who made the meeting
+	$user = $client->getNode($userID);
+	$settiRel = $settiNode->relateTo($user, 'SETFOR')
+			->save();
+	
+	//add the index        
+	$response= $settiIndex->add($settiNode, 'ID', $settiNode->getID());
+	
+	//return the created meeting id
+	$array=array();
+	$array['settingsID']=$settiNode->getId();
+	return $settiNode->getID();
+}
+function deleteSettings($client, $userID){
+        $settiIndex = new Index\NodeIndex($client, 'UserSettings');
+        $settiIndex->save();
+		$userIndex = new Index\NodeIndex($client, 'Users');
+		$userIndex->save();
+        //get the node
+        $node = $client->getNode($userID);
+        //make sure the node exists
+        if($node != NULL){
+                //check if node has notification index
+                $setti = $settiIndex->findOne('ID', $node->getID());
+                                
+                //only delete the node if it's a notification
+                if($setti != NULL){
+                        //get the relationships
+                        $relations = $setti->getRelationships();
+                        foreach($relations as $rel){
+                                //remove all relationships
+                                $rel->delete();
+                        }                
+                        
+                        //delete node and return true
+                        $setti->delete();
+                       $array = array('valid'=>'true');
+                } else {
+                        //return an error otherwise
+                        $errorarray = array('errorID' => '4', 'errorMessage'=>'Given node ID is not a notification node');
+			 //return an error otherwise
+ 		}
+	} else {
+      //return an error if ID doesn't point to a node
+	}
+}
 
 
 ?>

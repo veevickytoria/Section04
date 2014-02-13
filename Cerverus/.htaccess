@@ -18,6 +18,9 @@ RewriteRule ^User/Comments/([0-9]+)/?$ User.php?cat=comments&id=$1 [NC,L]
 RewriteRule ^User/([0-9]+)/?$ User.php?id=$1 [NC,L]
 RewriteRule ^User/?$ User.php [NC,L]
 
+RewriteRule ^UserSettings/?$ UserSettings.php [NC,L]
+RewriteRule ^UserSettings/([0-9]+)/?$ UserSettings.php?id=$1 [NC,L]
+
 RewriteRule ^Note/?$ Note.php [NC,L]
 RewriteRule ^Note/([0-9]+)/?$ Note.php?noteID=$1 [NC,L]
 RewriteRule ^Note/Sharing/?$ Sharing.php? [NC,L]
