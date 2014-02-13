@@ -135,9 +135,10 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 ){
 		$outputArray['members'] = $userOutputArray;
 		
 		echo json_encode($outputArray);
-	} else {
-		echo "Node not found.";
-	}
+	}else{
+			$errorarray = array('errorID' => '5', 'errorMessage'=>$_GET['id'].' node ID is not recognized in database');
+            echo json_encode($errorarray);
+		}
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'PUT')==0){
 	//updategroup
 	$postContent = json_decode(@file_get_contents('php://input'));
@@ -205,21 +206,15 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 ){
 	$id=$_GET['id'];
         
 	//get the node
-	$node = $client->getNode($id);
-	$array=$node->getProperties();
-		if(array_key_exists('nodeType', $array)){
-			if(strcasecmp($array['nodeType'], 'Group')!=0){
+	$group = $client->getNode($id);
+	if($group != NULL){
+		$array=$group->getProperties();
+			if(array_key_exists('nodeType', $array)){
+				if(strcasecmp($array['nodeType'], 'Group')!=0){
 				echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['id'].' is an not a group node.'));
 				return 1;
 			}
-		} 
-	//make sure the node exists
-	if($node != NULL){
-		//check if node has group index
-		$group = $groupIndex->findOne('ID', ''.$id);
-						
-		//only delete the node if it's a note
-		if($group != NULL){
+	} 
 			//get the relationships
 			$relations = $group->getRelationships();
 			foreach($relations as $rel){
@@ -231,11 +226,11 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 ){
 			$group->delete();
 			$array = array('valid'=>'true');
 			echo json_encode($array);
-		} else {
-			//return an error otherwise
-			$errorarray = array('errorID' => '11', 'errorMessage'=>$_GET['id'].' node ID is not a group node');
-			echo json_encode($errorarray);
-		}
+	//	} else {
+	//		//return an error otherwise
+	//		$errorarray = array('errorID' => '11', 'errorMessage'=>$_GET['id'].' node ID is not a group node');
+	//		echo json_encode($errorarray);
+	//	}
 	} else {
 		//return an error if ID doesn't point to a node
 		$errorarray = array('errorID' => '5', 'errorMessage'=>'Given node ID is not recognized in database');
