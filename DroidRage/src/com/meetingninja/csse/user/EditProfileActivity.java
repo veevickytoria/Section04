@@ -19,6 +19,7 @@ import com.loopj.android.image.SmartImageView;
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.Keys;
+import com.meetingninja.csse.user.tasks.UpdateUserTask;
 
 public class EditProfileActivity extends Activity {
 	private static final String TAG = EditProfileActivity.class.getSimpleName();
@@ -136,7 +137,7 @@ public class EditProfileActivity extends Activity {
 		fields.put(Keys.User.LOCATION, displayedUser.getLocation());
 		// fields.put(Keys.User.EMAIL, displayedUser.getEmail());
 		fields.put(Keys.User.PHONE, displayedUser.getPhone());
-		UserUpdateTask updater = new UserUpdateTask(fields);
+		UpdateUserTask updater = new UpdateUserTask(fields);
 		updater.execute(displayedUser.getID());
 	}
 

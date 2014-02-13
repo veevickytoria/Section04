@@ -13,42 +13,53 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.meetingninja.csse.user;
+package com.meetingninja.csse.user.tasks;
 
 import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
+import objects.Contact;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
+import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
 
-public class UserUpdateTask extends AsyncTask<String, Void, Void> {
+public class GetContactsTask extends AsyncTask<String, Void, List<Contact>> {
 
-	private static final String TAG = UserUpdateTask.class.getSimpleName();
-	private Map<String, String> key_values = new LinkedHashMap<String, String>();
+	private AsyncResponse<List<Contact>> delegate;
 
-	public UserUpdateTask(Map<String, String> values) {
-		this.key_values = values;
+	private static final String TAG = GetContactsTask.class.getSimpleName();
+
+	public GetContactsTask(AsyncResponse<List<Contact>> delegate) {
+		this.delegate = delegate;
 	}
 
 	@Override
-	protected Void doInBackground(String... params) {
+	protected List<Contact> doInBackground(String... params) {
+		List<Contact> contacts = new ArrayList<Contact>();
+
 		try {
-			UserDatabaseAdapter.update(params[0], key_values);
-		} catch (JsonGenerationException e) {
-			// TODO Auto-generated catch block
-			Log.e(TAG, e.getLocalizedMessage());
+			String userID = params[0];
+			contacts = UserDatabaseAdapter.getContacts(userID);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			Log.e(TAG, e.getLocalizedMessage());
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
+			Log.e(TAG, "Error: Unable to get contacts");
 			Log.e(TAG, e.getLocalizedMessage());
 		}
-		return null;
+
+		return contacts;
+	}
+
+	@Override
+	protected void onPostExecute(List<Contact> contacts) {
+		super.onPostExecute(contacts);
+		delegate.processFinish(contacts);
+	}
+
+	@Override
+	protected void onCancelled() {
+		super.onCancelled();
 	}
 
 }

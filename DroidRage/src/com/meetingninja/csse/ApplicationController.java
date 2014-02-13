@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (C) 2014 The Android Open Source Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,6 +16,7 @@
 package com.meetingninja.csse;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -62,6 +63,7 @@ public class ApplicationController extends Application {
 		PushService.setDefaultPushCallback(this, MainActivity.class);
 
 		// Save the current installation.
+		Log.d(TAG, "Saving Parse Installation");
 		ParseInstallation.getCurrentInstallation().saveInBackground();
 	}
 
@@ -110,7 +112,7 @@ public class ApplicationController extends Application {
 	/**
 	 * Adds the specified request to the global queue, if tag is specified then
 	 * it is used else Default TAG is used.
-	 * 
+	 *
 	 * @param req
 	 * @param tag
 	 */
@@ -125,7 +127,7 @@ public class ApplicationController extends Application {
 
 	/**
 	 * Adds the specified request to the global queue using the Default TAG.
-	 * 
+	 *
 	 * @param req
 	 * @param tag
 	 */
@@ -139,7 +141,7 @@ public class ApplicationController extends Application {
 	/**
 	 * Cancels all pending requests by the specified TAG, it is important to
 	 * specify a TAG so that the pending/ongoing requests can be cancelled.
-	 * 
+	 *
 	 * @param tag
 	 */
 	public void cancelPendingRequests(String tag) {

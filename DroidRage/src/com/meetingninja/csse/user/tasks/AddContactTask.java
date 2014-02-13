@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.meetingninja.csse.user;
+package com.meetingninja.csse.user.tasks;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,20 +25,21 @@ import android.util.Log;
 
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
+import com.meetingninja.csse.user.UserListFragment;
 
-public class DeleteContactTask implements AsyncResponse<List<Contact>> {
+public class AddContactTask implements AsyncResponse<List<Contact>> {
 
-	private static final String TAG = DeleteContactTask.class.getSimpleName();
-	private ContactDeleter deleter;
+	private static final String TAG = AddContactTask.class.getSimpleName();
+	private ContactAdder adder;
 	private UserListFragment frag;
 
-	public DeleteContactTask(UserListFragment frag) {
+	public AddContactTask(UserListFragment frag) {
 		this.frag = frag;
-		deleter = new ContactDeleter(this);
+		adder = new ContactAdder(this);
 	}
 
-	public void deleteContact(String relationID) {
-		this.deleter.execute(relationID);
+	public void addContact(String contactID) {
+		this.adder.execute(contactID);
 	}
 
 	@Override
@@ -46,11 +47,11 @@ public class DeleteContactTask implements AsyncResponse<List<Contact>> {
 		frag.setContacts(contacts);
 	}
 
-	private class ContactDeleter extends AsyncTask<String, Void, List<Contact>> {
+	private class ContactAdder extends AsyncTask<String, Void, List<Contact>> {
 
 		private AsyncResponse<List<Contact>> delegate;
 
-		public ContactDeleter(AsyncResponse<List<Contact>> delegate) {
+		public ContactAdder(AsyncResponse<List<Contact>> delegate) {
 			this.delegate = delegate;
 		}
 
@@ -58,9 +59,9 @@ public class DeleteContactTask implements AsyncResponse<List<Contact>> {
 		protected List<Contact> doInBackground(String... params) {
 			List<Contact> contacts = new ArrayList<Contact>();
 			try {
-				contacts = UserDatabaseAdapter.deleteContact(params[0]);
+				contacts = UserDatabaseAdapter.addContact(params[0]);
 			} catch (IOException e) {
-				Log.e("ContactDeleter", "Error: Unable delete contact");
+				Log.e("ContactAdder", "Error: Unable to add contact");
 				Log.e(TAG, e.getLocalizedMessage());
 			}
 			return contacts;

@@ -50,6 +50,9 @@ import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.extras.MyDateUtils;
+import com.meetingninja.csse.tasks.tasks.CreateTaskTask;
+import com.meetingninja.csse.tasks.tasks.GetTaskInfoTask;
+import com.meetingninja.csse.tasks.tasks.GetTaskListTask;
 
 public class TasksFragment extends Fragment implements	AsyncResponse<List<Task>> {
 
@@ -57,9 +60,9 @@ public class TasksFragment extends Fragment implements	AsyncResponse<List<Task>>
 	private TaskItemAdapter taskAdpt;
 	private TaskTypeAdapter typeAdapter;
 
-	private TaskListFetcherTask taskListfetcher = null;
-	private TaskFetcherResp taskInfoFetcher = null;
-	private TaskCreateTask creator = null;
+	private GetTaskListTask taskListfetcher = null;
+	private GetTaskInfoTask taskInfoFetcher = null;
+	private CreateTaskTask creator = null;
 	private SessionManager session;
 
 	private final String assignedToMe = "Assigned to me";
@@ -90,7 +93,7 @@ public class TasksFragment extends Fragment implements	AsyncResponse<List<Task>>
 		setHasOptionsMenu(true);
 
 		session = SessionManager.getInstance();
-		creator = new TaskCreateTask(this);
+		creator = new CreateTaskTask(this);
 		/* Set up the spinner selector */
 		List<String> typeNames = new ArrayList<String>();
 		typeNames.add(assignedToMe);
@@ -199,9 +202,9 @@ public class TasksFragment extends Fragment implements	AsyncResponse<List<Task>>
 	}
 
 	public void refreshTasks() {
-		taskListfetcher = new TaskListFetcherTask(this);
+		taskListfetcher = new GetTaskListTask(this);
 		taskListfetcher.execute(session.getUserID());
-		taskInfoFetcher = new TaskFetcherResp(this);
+		taskInfoFetcher = new GetTaskInfoTask(this);
 	}
 
 	private void setTaskList(int type) {

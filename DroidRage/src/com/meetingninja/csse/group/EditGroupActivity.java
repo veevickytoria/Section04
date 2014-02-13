@@ -34,9 +34,9 @@ import com.meetingninja.csse.database.volley.UserVolleyAdapter;
 import com.meetingninja.csse.extras.AlertDialogUtil;
 import com.meetingninja.csse.extras.ContactTokenTextView;
 import com.meetingninja.csse.user.AutoCompleteAdapter;
-import com.meetingninja.csse.user.ContactsFetcher;
 import com.meetingninja.csse.user.ProfileActivity;
 import com.meetingninja.csse.user.UserArrayAdapter;
+import com.meetingninja.csse.user.tasks.GetContactsTask;
 import com.tokenautocomplete.TokenCompleteTextView.TokenListener;
 
 import de.timroes.android.listview.EnhancedListView;
@@ -145,7 +145,7 @@ public class EditGroupActivity extends Activity implements TokenListener {
 
 			}
 		});
-		new ContactsFetcher(new AsyncResponse<List<Contact>>(){
+		new GetContactsTask(new AsyncResponse<List<Contact>>(){
 			@Override
 			public void processFinish(List<Contact> result) {
 				addContacts(result);

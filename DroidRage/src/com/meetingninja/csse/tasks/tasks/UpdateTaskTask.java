@@ -13,60 +13,61 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.meetingninja.csse.tasks;
+package com.meetingninja.csse.tasks.tasks;
 
 import java.io.IOException;
 
+import objects.Task;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.TaskDatabaseAdapter;
 
-public class TaskDeleter implements AsyncResponse<Boolean> {
+public class UpdateTaskTask implements AsyncResponse<Task> {
+	private TaskUpdateTask updater;
+	private Task task;
 
-	private TaskDeleterTask deleter = null;
-
-	public TaskDeleter() {
-		this.deleter = new TaskDeleterTask(this);
+	public UpdateTaskTask() {
+		this.updater = new TaskUpdateTask(this);
 	}
 
-	public void deleteTask(String taskID) {
-		this.deleter.execute(taskID);
+	public void updateTask(Task task) {
+		this.updater.execute(task);
 	}
 
 	@Override
-	public void processFinish(Boolean result) {
-		if (!result) {
-			// do something?
-		}
+	public void processFinish(Task result) {
+		// TODO Auto-generated method stub
 
 	}
 
 }
 
-class TaskDeleterTask extends AsyncTask<String, Void, Boolean> {
-	private AsyncResponse<Boolean> delegate;
+class TaskUpdateTask extends AsyncTask<Task, Void, Task> {
 
-	public TaskDeleterTask(AsyncResponse<Boolean> delegate) {
+	private AsyncResponse<Task> delegate;
+
+	public TaskUpdateTask(AsyncResponse<Task> delegate) {
 		this.delegate = delegate;
 	}
 
 	@Override
-	protected Boolean doInBackground(String... params) {
+	protected Task doInBackground(Task... params) {
+		Task t = null;
 		try {
-			return TaskDatabaseAdapter.deleteTask(params[0]);
+			t = TaskDatabaseAdapter.editTask(params[0]);
 		} catch (IOException e) {
-			Log.e("TaskDelete", "Error: Unable to delete task");
+			Log.e("TaskUpdate", "Error: Unable to update task info");
 			Log.e("TASKS_ERR", e.getLocalizedMessage());
 		}
-		return false;
+		return t;
 	}
 
 	@Override
-	protected void onPostExecute(Boolean b) {
-		super.onPostExecute(b);
-		delegate.processFinish(b);
+	protected void onPostExecute(Task t) {
+		super.onPostExecute(t);
+		delegate.processFinish(t);
 	}
 
 }

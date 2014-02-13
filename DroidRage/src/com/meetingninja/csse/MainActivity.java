@@ -58,6 +58,8 @@ import com.meetingninja.csse.user.LoginActivity;
 import com.meetingninja.csse.user.ProfileFragment;
 import com.meetingninja.csse.user.UserListFragment;
 import com.parse.ParseAnalytics;
+import com.parse.ParseInstallation;
+import com.parse.ParseUser;
 
 /**
  * Main Activity Window.
@@ -146,8 +148,6 @@ public class MainActivity extends FragmentActivity implements
 			setContentView(R.layout.activity_main);
 			setupActionBar();
 			setupViews();
-			setupLeftDrawer();
-			setupRightDrawer();
 
 			// on first time display view for first nav item
 			selectItem(session.getPage());
@@ -165,6 +165,14 @@ public class MainActivity extends FragmentActivity implements
 
 			// Track the usage of the application with Parse SDK
 			ParseAnalytics.trackAppOpened(getIntent());
+			ParseUser parseUser = ParseUser.getCurrentUser();
+			if (parseUser != null) {
+				ParseInstallation installation = ParseInstallation
+						.getCurrentInstallation();
+				installation.put("user", parseUser);
+				installation.put("userId", parseUser.getObjectId());
+				installation.saveEventually();
+			}
 		}
 
 	}
@@ -179,6 +187,8 @@ public class MainActivity extends FragmentActivity implements
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		leftDrawerList = (ListView) findViewById(R.id.left_drawer);
 		rightDrawerList = (AmazingListView) findViewById(R.id.right_drawer);
+		setupLeftDrawer();
+		setupRightDrawer();
 	}
 
 	private void setupLeftDrawer() {
@@ -392,6 +402,7 @@ public class MainActivity extends FragmentActivity implements
 		SQLiteHelper mySQLiteHelper = SQLiteHelper
 				.getInstance(MainActivity.this);
 		mySQLiteHelper.onUpgrade(mySQLiteHelper.getReadableDatabase(), 1, 1);
+		ParseUser.logOut();
 		finish();
 	}
 

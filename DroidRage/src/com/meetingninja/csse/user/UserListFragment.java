@@ -46,6 +46,9 @@ import com.meetingninja.csse.database.local.SQLiteUserAdapter;
 import com.meetingninja.csse.database.volley.UserVolleyAdapter;
 import com.meetingninja.csse.extras.AlertDialogUtil;
 import com.meetingninja.csse.extras.ContactTokenTextView;
+import com.meetingninja.csse.user.tasks.AddContactTask;
+import com.meetingninja.csse.user.tasks.DeleteContactTask;
+import com.meetingninja.csse.user.tasks.GetContactsTask;
 import com.tokenautocomplete.TokenCompleteTextView.TokenListener;
 
 import de.timroes.android.listview.EnhancedListView;
@@ -307,11 +310,11 @@ public class UserListFragment extends Fragment implements TokenListener {
 
 	final class RetContactsObj implements AsyncResponse<List<Contact>> {
 
-		private ContactsFetcher contactsFetcher;
+		private GetContactsTask contactsFetcher;
 		private boolean add;
 
 		public RetContactsObj(boolean add) {
-			contactsFetcher = new ContactsFetcher(this);
+			contactsFetcher = new GetContactsTask(this);
 			this.add = add;
 		}
 

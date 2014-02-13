@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.meetingninja.csse.tasks;
+package com.meetingninja.csse.tasks.tasks;
 
 import java.io.IOException;
 
@@ -23,51 +23,60 @@ import android.util.Log;
 
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.TaskDatabaseAdapter;
+import com.meetingninja.csse.tasks.TasksFragment;
 
-public class TaskUpdater implements AsyncResponse<Task> {
-	private TaskUpdateTask updater;
+public class GetTaskInfoTask implements AsyncResponse<Void> {
+
+	private TasksFragment frag;
+	private TaskFetcherTask fetcher;
 	private Task task;
 
-	public TaskUpdater() {
-		this.updater = new TaskUpdateTask(this);
+	// private Task task;
+
+	public GetTaskInfoTask(TasksFragment frag) {
+		this.frag = frag;
+		this.fetcher = new TaskFetcherTask(this);
+		// this.task = task;
 	}
 
-	public void updateTask(Task task) {
-		this.updater.execute(task);
+	public void loadTask(Task task) {
+		this.task = task;
+		this.fetcher.execute(task);
 	}
 
 	@Override
-	public void processFinish(Task result) {
-		// TODO Auto-generated method stub
-
+	public void processFinish(Void result) {
+		// Intent viewTask = new Intent(this.frag.getActivity(),
+		// ViewTaskActivity.class);
+		// viewTask.putExtra("task", this.task);
+		// this.frag.startActivityForResult(viewTask, 6);// (viewTask);
+		this.frag.notifyAdapter();
 	}
 
 }
 
-class TaskUpdateTask extends AsyncTask<Task, Void, Task> {
+class TaskFetcherTask extends AsyncTask<Task, Void, Void> {
+	private AsyncResponse<Void> delegate;
 
-	private AsyncResponse<Task> delegate;
-
-	public TaskUpdateTask(AsyncResponse<Task> delegate) {
+	public TaskFetcherTask(AsyncResponse<Void> delegate) {
 		this.delegate = delegate;
 	}
 
 	@Override
-	protected Task doInBackground(Task... params) {
-		Task t = null;
+	protected Void doInBackground(Task... params) {
 		try {
-			t = TaskDatabaseAdapter.editTask(params[0]);
+			TaskDatabaseAdapter.getTask(params[0]);
 		} catch (IOException e) {
-			Log.e("TaskUpdate", "Error: Unable to update task info");
+			Log.e("TaskFetch", "Error: Unable to get task info");
 			Log.e("TASKS_ERR", e.getLocalizedMessage());
 		}
-		return t;
+		return null;
 	}
 
 	@Override
-	protected void onPostExecute(Task t) {
-		super.onPostExecute(t);
-		delegate.processFinish(t);
+	protected void onPostExecute(Void v) {
+		super.onPostExecute(v);
+		delegate.processFinish(v);
 	}
 
 }

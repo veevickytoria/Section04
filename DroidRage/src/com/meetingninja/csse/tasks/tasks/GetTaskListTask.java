@@ -13,53 +13,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.meetingninja.csse.user;
+package com.meetingninja.csse.tasks.tasks;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import objects.Contact;
+import objects.Task;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
 
-public class ContactsFetcher extends AsyncTask<String, Void, List<Contact>> {
+public class GetTaskListTask extends AsyncTask<String, Void, List<Task>> {
 
-	private AsyncResponse<List<Contact>> delegate;
+	private AsyncResponse<List<Task>> delegate;
 
-	private static final String TAG = ContactsFetcher.class.getSimpleName();
-
-	public ContactsFetcher(AsyncResponse<List<Contact>> delegate) {
+	public GetTaskListTask(AsyncResponse<List<Task>> delegate) {
 		this.delegate = delegate;
 	}
 
 	@Override
-	protected List<Contact> doInBackground(String... params) {
-		List<Contact> contacts = new ArrayList<Contact>();
+	protected List<Task> doInBackground(String... params) {
+		List<Task> dbTasks = new ArrayList<Task>();
 
 		try {
-			String userID = params[0];
-			contacts = UserDatabaseAdapter.getContacts(userID);
+			dbTasks = UserDatabaseAdapter.getTasks(params[0]);
 		} catch (IOException e) {
-			Log.e(TAG, "Error: Unable to get contacts");
-			Log.e(TAG, e.getLocalizedMessage());
+			Log.e("TaskFetch", "Error: Unable to get tasks");
+			Log.e("TASKS_ERR", e.getLocalizedMessage());
 		}
-
-		return contacts;
+		return dbTasks;
 	}
 
 	@Override
-	protected void onPostExecute(List<Contact> contacts) {
-		super.onPostExecute(contacts);
-		delegate.processFinish(contacts);
-	}
-
-	@Override
-	protected void onCancelled() {
-		super.onCancelled();
+	protected void onPostExecute(List<Task> list) {
+		super.onPostExecute(list);
+		delegate.processFinish(list);
 	}
 
 }

@@ -7,6 +7,7 @@ import java.io.PrintStream;
 import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -127,7 +128,7 @@ public class User extends AbstractJSONObject<User> implements Parcelable {
 	/* Optional fields */
 
 	public String getPhone() {
-		return (phone != null && !phone.isEmpty()) ? phone : "";
+		return !TextUtils.isEmpty(phone) ? phone : "";
 	}
 
 	public void setPhone(String phone) {
@@ -135,7 +136,7 @@ public class User extends AbstractJSONObject<User> implements Parcelable {
 	}
 
 	public String getCompany() {
-		return (company != null && !company.isEmpty()) ? company : "";
+		return !TextUtils.isEmpty(company) ? company : "";
 	}
 
 	public void setCompany(String company) {
@@ -143,7 +144,7 @@ public class User extends AbstractJSONObject<User> implements Parcelable {
 	}
 
 	public String getTitle() {
-		return (title != null && !title.isEmpty()) ? title : "";
+		return !TextUtils.isEmpty(title) ? title : "";
 	}
 
 	public void setTitle(String title) {
@@ -155,7 +156,7 @@ public class User extends AbstractJSONObject<User> implements Parcelable {
 	}
 
 	public String getLocation() {
-		return (location != null && !location.isEmpty()) ? location : "";
+		return !TextUtils.isEmpty(location) ? location : "";
 	}
 
 	public SerializableUser toSimpleUser() {

@@ -1,4 +1,4 @@
-package com.meetingninja.csse.tasks;
+package com.meetingninja.csse.tasks.tasks;
 
 import java.io.IOException;
 
@@ -8,13 +8,14 @@ import android.util.Log;
 
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.TaskDatabaseAdapter;
+import com.meetingninja.csse.tasks.TasksFragment;
 
-public class TaskCreateTask implements AsyncResponse<Void> {
+public class CreateTaskTask implements AsyncResponse<Void> {
 
 	private TasksFragment frag;
 	private TaskCreator creator;
 
-	public TaskCreateTask(TasksFragment frag) {
+	public CreateTaskTask(TasksFragment frag) {
 		this.frag = frag;
 	}
 

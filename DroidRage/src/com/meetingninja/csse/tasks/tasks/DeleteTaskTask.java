@@ -13,69 +13,60 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.meetingninja.csse.tasks;
+package com.meetingninja.csse.tasks.tasks;
 
 import java.io.IOException;
 
-import objects.Task;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.TaskDatabaseAdapter;
 
-public class TaskFetcherResp implements AsyncResponse<Void> {
+public class DeleteTaskTask implements AsyncResponse<Boolean> {
 
-	private TasksFragment frag;
-	private TaskFetcherTask fetcher;
-	private Task task;
+	private TaskDeleterTask deleter = null;
 
-	// private Task task;
-
-	public TaskFetcherResp(TasksFragment frag) {
-		this.frag = frag;
-		this.fetcher = new TaskFetcherTask(this);
-		// this.task = task;
+	public DeleteTaskTask() {
+		this.deleter = new TaskDeleterTask(this);
 	}
 
-	public void loadTask(Task task) {
-		this.task = task;
-		this.fetcher.execute(task);
+	public void deleteTask(String taskID) {
+		this.deleter.execute(taskID);
 	}
 
 	@Override
-	public void processFinish(Void result) {
-		// Intent viewTask = new Intent(this.frag.getActivity(),
-		// ViewTaskActivity.class);
-		// viewTask.putExtra("task", this.task);
-		// this.frag.startActivityForResult(viewTask, 6);// (viewTask);
-		this.frag.notifyAdapter();
+	public void processFinish(Boolean result) {
+		if (!result) {
+			// do something?
+		}
+
 	}
 
 }
 
-class TaskFetcherTask extends AsyncTask<Task, Void, Void> {
-	private AsyncResponse<Void> delegate;
+class TaskDeleterTask extends AsyncTask<String, Void, Boolean> {
+	private AsyncResponse<Boolean> delegate;
 
-	public TaskFetcherTask(AsyncResponse<Void> delegate) {
+	public TaskDeleterTask(AsyncResponse<Boolean> delegate) {
 		this.delegate = delegate;
 	}
 
 	@Override
-	protected Void doInBackground(Task... params) {
+	protected Boolean doInBackground(String... params) {
 		try {
-			TaskDatabaseAdapter.getTask(params[0]);
+			return TaskDatabaseAdapter.deleteTask(params[0]);
 		} catch (IOException e) {
-			Log.e("TaskFetch", "Error: Unable to get task info");
+			Log.e("TaskDelete", "Error: Unable to delete task");
 			Log.e("TASKS_ERR", e.getLocalizedMessage());
 		}
-		return null;
+		return false;
 	}
 
 	@Override
-	protected void onPostExecute(Void v) {
-		super.onPostExecute(v);
-		delegate.processFinish(v);
+	protected void onPostExecute(Boolean b) {
+		super.onPostExecute(b);
+		delegate.processFinish(b);
 	}
 
 }

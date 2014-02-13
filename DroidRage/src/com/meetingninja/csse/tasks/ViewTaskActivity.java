@@ -36,6 +36,8 @@ import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.volley.UserVolleyAdapter;
 import com.meetingninja.csse.extras.MyDateUtils;
+import com.meetingninja.csse.tasks.tasks.DeleteTaskTask;
+import com.meetingninja.csse.tasks.tasks.UpdateTaskTask;
 
 public class ViewTaskActivity extends Activity {
 	private static final String TAG = ViewTaskActivity.class.getSimpleName();
@@ -81,7 +83,7 @@ public class ViewTaskActivity extends Activity {
 			this.startActivityForResult(editTask, 5);
 			return true;
 		case R.id.delete_item_task:
-			TaskDeleter deleter = new TaskDeleter();
+			DeleteTaskTask deleter = new DeleteTaskTask();
 			deleter.deleteTask(displayedTask.getID());
 			setResult(RESULT_OK);
 			finish();
@@ -102,7 +104,7 @@ public class ViewTaskActivity extends Activity {
 				if (data != null) {
 					displayedTask = data.getParcelableExtra(Keys.Task.PARCEL);
 					setTask();
-					TaskUpdater tUpdate = new TaskUpdater();
+					UpdateTaskTask tUpdate = new UpdateTaskTask();
 					tUpdate.updateTask(displayedTask);
 					this.resultCode = resultCode;
 				}
@@ -113,7 +115,7 @@ public class ViewTaskActivity extends Activity {
 	}
 
 	public void completeTask(View v) {
-		TaskUpdater updater = new TaskUpdater();
+		UpdateTaskTask updater = new UpdateTaskTask();
 		displayedTask.setIsCompleted(true);
 		updater.updateTask(displayedTask);
 		setTask();

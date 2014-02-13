@@ -13,44 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.meetingninja.csse.tasks;
+package com.meetingninja.csse.user.tasks;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-import objects.Task;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.meetingninja.csse.database.AsyncResponse;
+import com.fasterxml.jackson.core.JsonGenerationException;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
 
-public class TaskListFetcherTask extends AsyncTask<String, Void, List<Task>> {
+public class UpdateUserTask extends AsyncTask<String, Void, Void> {
 
-	private AsyncResponse<List<Task>> delegate;
+	private static final String TAG = UpdateUserTask.class.getSimpleName();
+	private Map<String, String> key_values = new LinkedHashMap<String, String>();
 
-	public TaskListFetcherTask(AsyncResponse<List<Task>> delegate) {
-		this.delegate = delegate;
+	public UpdateUserTask(Map<String, String> values) {
+		this.key_values = values;
 	}
 
 	@Override
-	protected List<Task> doInBackground(String... params) {
-		List<Task> dbTasks = new ArrayList<Task>();
-
+	protected Void doInBackground(String... params) {
 		try {
-			dbTasks = UserDatabaseAdapter.getTasks(params[0]);
+			UserDatabaseAdapter.update(params[0], key_values);
+		} catch (JsonGenerationException e) {
+			// TODO Auto-generated catch block
+			Log.e(TAG, e.getLocalizedMessage());
 		} catch (IOException e) {
-			Log.e("TaskFetch", "Error: Unable to get tasks");
-			Log.e("TASKS_ERR", e.getLocalizedMessage());
+			// TODO Auto-generated catch block
+			Log.e(TAG, e.getLocalizedMessage());
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			Log.e(TAG, e.getLocalizedMessage());
 		}
-		return dbTasks;
-	}
-
-	@Override
-	protected void onPostExecute(List<Task> list) {
-		super.onPostExecute(list);
-		delegate.processFinish(list);
+		return null;
 	}
 
 }
