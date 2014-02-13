@@ -326,10 +326,12 @@
     if (!self.movedView)
     {
         [self animateSlidingMenu:YES];
+        [self addTapRecognizer];
     }
     else
     {
         [self animateSlidingMenu:NO];
+        [self removeTapRecognizer];
     }
     self.movedView = !self.movedView;
 }
@@ -339,10 +341,12 @@
     if (!self.movedRightView)
     {
         [self animateRightSlidingMenu:YES];
+        [self addTapRecognizer];
     }
     else
     {
         [self animateRightSlidingMenu:NO];
+        [self removeTapRecognizer];
     }
     self.movedRightView = !self.movedRightView;
 }
