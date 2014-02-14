@@ -3,7 +3,8 @@
  * Include the API PHP file for neo4j
  */
 namespace Everyman\Neo4j;
-require("phar://neo4jphp.phar");
+//require("phar://neo4jphp.phar");
+require_once("CommonFunctions.php");
 
 //Make each if-else here a function. Then require Topic.php in Agenda and call the functions from there.
 
@@ -17,38 +18,86 @@ $client= new Client();
 	$topicIndex = new Index\NodeIndex($client, 'agendas');
 	$topicIndex->save();
 
-function createTopic($title, $time, $subtopic){
+function createTopic($title, $time, $description, $content, $client, $index){
 	//createTopic method
-	//paramas: title, time, subtopics
+	//params: title, time, subtopics
 	
 	//create the node
-	$topicNode= $client->makeNode();
+	$topicNode = $client->makeNode();
 	
-	//sets the property on the node
+	//sets the properties on the node
 	$topicNode->setProperty('title', $title)
-		->setProperty('time', $time);
-		//and calls to create more topics to create the subtopics
+		->setProperty('time', $time)
+		->setProperty('description', $description)
+		->setProperty('nodeType', "Topic");
 		
 	$topicNode->save();
 	
-	foreach($subtopic as $topic){
-		//pass the topic to Topic.php's create Topic method
-		$subtopicID = createTopic($topic->title, $topic->time, $topic->subtopic);
-		$node = $client->getNode($subtopicID);
-		//make a relation to the topic 'HAS_TOPIC'
-		$topicRel = $agendaNode->relateTo($node, 'HAS_TOPIC') // actually should get node associated with $topNode
-			->save();
+	//relate to parent
+//	$parentNode->relateTo($topicNode, "HAS_TOPIC");
+	
+	$topicList = array();
+	
+	//calls to create more topics to create the subtopics
+	if (isset($content) and !empty($content)) {
+		foreach($content as $topic){
+		
+			/*
+			echo(sizeof($topic));
+			echo(json_encode($topic));
+			*/
+			
+			/*
+			if (empty($topic[0])){
+				echo("empty");
+				continue;
+			} else {
+				echo("not empty");
+				echo(sizeof($topic[0]));
+			}
+			*/
+			
+			if (isset($topic->title))
+				$subTitle = $topic->title;
+			else
+				$subTitle = "NO_TITLE";
+			if (isset($topic->time))
+				$subTime = $topic->time;
+			else
+				$subTime = "NO_TIME";
+			if (isset($topic->description))
+				$subDescription = $topic->description;
+			else
+				$subDescription = "NO_DESCRIPTION";
+			if (isset($topic->content))
+				$subcontent = $topic->content;
+			else
+				$subcontent = array();
+			$subTopicCreation = createTopic($subTitle, $subTime, $subDescription, $subcontent, $client, $index);
+			//make a relation to the topic 'HAS_TOPIC'
+			$topicNode->relateTo($subTopicCreation[0], "HAS_TOPIC")
+				->save();
+			array_push($topicList, $subTopicCreation[1]);
+		}
 	}
-	
 	//get properties on the node
-	$topicProps= $topicNode->getProperties();
+	//$topicProps= $topicNode->getProperties();
+	$output = array();
+	$output["topicID"] = $topicNode->getId();
+	$output["title"] = $title;
+	$output["time"] = $time;
+	$output["description"] = $description;
+	$output["content"] = $topicList;
 	
-	$response= $topicIndex->add($topicNode, 'user', $topicProps['user']);
-	echo $response;
-	return $topicNode->getID();
+	$return = array();
+	$return[0] = $topicNode;
+	$return[1] = $output;
+	
+	//$response= $index->add($topicNode, 'user', $topicProps['user']);
+	return $return;
 }
 
-function deleteTopic($id){
+function deleteTopicOLD($id){
 	//deleteTopic
 	//parmas: id
         
@@ -93,19 +142,47 @@ function deleteTopic($id){
 	}
 }
 
-function getTopicInfo($id){
-	//getTopicInfo
-	//params: id
-	$topicNode=$client->getNode($id);
-	$result = $topicNode->getProperties();
+function getTopicInfo($id, $client){
+	$topicNode = getNodeByID($id, $client);
+	$result = array();
+	$result["title"] = $topicNode->getProperty("title");
+	$result["time"] = $topicNode->getProperty("time");
+	$result["description"] = $topicNode->getProperty("description");
 	
-    $relations = $topic->getRelationships(array('HAS_TOPIC'));
-    foreach ($relations as $rel){
-    	$toGetID = $rel->getEndNode()->getID();
-    	$ret = getTopicInfo($toGetID);
-        $result['subtopic'] = $ret;
-    }
-	echo json_encode($result);
+	//get subtopics
+	$subtopics = getRelatedNodeIDs($topicNode, "HAS_TOPIC", "topicID", "OUT");
+	$topicList = array();
+	$i = sizeof($subtopics);
+	foreach($subtopics as $subtopic){
+		$topicList[$i--] = getTopicInfo($subtopic["topicID"], $client);
+	}
+	$result["content"] = $topicList;
+	
 	return $result;
+}
+
+function deleteTopic($topic, $client){
+	//ensure node is a topic
+	if ($topic->getProperty('nodeType') != 'Topic'){
+		echo json_encode(array('errorID'=>'??', 'errorMessage'=>$topic->getId().' is not a topic node(delete topic).'));		
+		return 1;
+	}
+
+	//get subtopics
+	$subTopics = getRelatedNodes($topic, "HAS_TOPIC", "OUT");
+	
+	//delete relations
+	$relations = $topic->getRelationships();
+	foreach($relations as $rel){
+		$rel->delete();
+	}
+	
+	//delete subtopics
+	foreach ($subTopics as $subTopic){
+		deleteTopic($subTopic, $client);
+	}
+	
+	//delete topic
+	$topic->delete();
 }
 ?>
