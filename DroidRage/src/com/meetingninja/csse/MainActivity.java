@@ -419,6 +419,7 @@ public class MainActivity extends FragmentActivity implements
 		// Handle presses on the action bar items
 		// Pass the event to ActionBarDrawerToggle, if it returns
 		// true, then it has handled the app icon touch event
+		System.out.println("its in the main");
 		if (drawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}

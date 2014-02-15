@@ -99,8 +99,11 @@ public class MeetingsFragment extends Fragment implements
 				R.layout.list_item_meeting, meetings);
 
 		mListView.setAdapter(meetingAdpt);
-
-		if (Connectivity.isConnected(getActivity()) && isAdded()) {
+		if(savedInstanceState.containsKey(Keys.Project.MEETINGS)){
+			ArrayList<Meeting> temp = savedInstanceState.getParcelableArrayList(Keys.Project.MEETINGS);
+			meetings.addAll(temp);
+			meetingAdpt.notifyDataSetChanged();
+		}else if (Connectivity.isConnected(getActivity()) && isAdded()) {
 			fetchMeetings();
 		}
 

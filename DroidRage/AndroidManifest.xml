@@ -203,6 +203,10 @@
             android:name="com.meetingninja.csse.projects.ProjectFragment"
             android:label="@string/title_activity_project_fragment" >
         </activity>
+        <activity
+            android:name="com.meetingninja.csse.projects.ViewProjectActivity"
+            android:label="@string/title_activity_view_project" >
+        </activity>
     </application>
 
 </manifest>

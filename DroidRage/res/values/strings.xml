@@ -85,5 +85,6 @@
     <string name="title_activity_edit_profile">EditProfileActivity</string>
     <string name="title_activity_profile__fragment">Profile_Fragment</string>
     <string name="title_activity_project_fragment">ProjectFragment</string>
+    <string name="title_activity_view_project">ViewProjectActivity</string>
 
 </resources>

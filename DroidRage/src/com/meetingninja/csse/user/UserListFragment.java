@@ -81,7 +81,17 @@ public class UserListFragment extends Fragment implements TokenListener {
 		dbHelper = new SQLiteUserAdapter(getActivity());
 
 		setUpListView(v);
-		populateList(true); // uses async-task
+		if(savedInstanceState.containsKey(Keys.Project.MEMBERS)){
+			List<User> members = savedInstanceState.getParcelableArrayList(Keys.Project.MEMBERS);
+			for(User member : members){
+				contacts.add(new Contact(member, ""));
+			}
+			mContactAdapter.notifyDataSetChanged();
+
+			
+		}else{
+			populateList(true); // uses async-task
+		}
 		return v;
 	}
 

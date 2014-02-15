@@ -81,9 +81,13 @@ public class NotesFragment extends Fragment implements
 
 		session = SessionManager.getInstance();
 		mySQLiteAdapter = new SQLiteNoteAdapter(getActivity());
-
-		populateList();
-
+		if(savedInstanceState.containsKey(Keys.Project.NOTES)){
+			List<Note> temp = savedInstanceState.getParcelableArrayList(Keys.Project.NOTES);
+			notes.addAll(temp);
+			noteAdpt.notifyDataSetChanged();
+		}else{
+			populateList();
+		}
 		return v;
 
 	}
