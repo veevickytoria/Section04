@@ -1,5 +1,6 @@
 package com.meetingninja.csse.projects;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -8,14 +9,21 @@ import java.util.List;
 import objects.Project;
 
 import com.meetingninja.csse.R;
+import com.meetingninja.csse.SessionManager;
+import com.meetingninja.csse.database.AsyncResponse;
+import com.meetingninja.csse.database.Keys;
+import com.meetingninja.csse.database.ProjectDatabaseAdapter;
+import com.meetingninja.csse.database.UserDatabaseAdapter;
 
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,11 +33,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class ProjectFragment extends Fragment {
+public class ProjectFragment extends Fragment{
+	
+	
 	private static ProjectFragment sInstance= null;
 	private List<Project> projectsList = new ArrayList<Project>();
 	private ProjectItemAdapter projectAdpt;
-	
+	private SessionManager session;
 	public ProjectFragment() {
 		// Empty
 	}
@@ -45,7 +55,10 @@ public class ProjectFragment extends Fragment {
 //		super.onCreate(savedInstanceState);
 //		setContentView(R.layout.activity_project_fragment);
 		setHasOptionsMenu(true);
+		session = SessionManager.getInstance();
 		View v = inflater.inflate(R.layout.fragment_project, container, false);
+		
+		
 		
 		ListView lv = (ListView) v.findViewById(R.id.project_list);
 		lv.setEmptyView(v.findViewById(android.R.id.empty));
@@ -53,18 +66,18 @@ public class ProjectFragment extends Fragment {
 
 		lv.setAdapter(projectAdpt);
 		registerForContextMenu(lv);
-
+		
 		lv.setOnItemClickListener(new OnItemClickListener() {
-
+	
 			@Override
 			public void onItemClick(AdapterView<?> parentAdapter, View v,int position, long id) {
-				// Intent viewTask = new Intent(getActivity(),
-				// ViewTaskActivity.class);
-				// startActivity(viewTask);
+//				Intent viewProject = new Intent(getActivity(), ViewProjectActivity.class);
+//				startActivity(viewProject);
 				Project p = projectAdpt.getItem(position);
 				loadProject(p);
 			}
 		});
+		refreshProjects();
 		return v;
 
 	}
@@ -85,26 +98,87 @@ public class ProjectFragment extends Fragment {
 			return super.onContextItemSelected(item);
 		}
 	}
+	public void setProjects(List<Project> listOfProjects){
+		projectsList.clear();
+		projectsList.addAll(listOfProjects);
+		projectAdpt.notifyDataSetChanged();
+	}
 
 	private void refreshProjects() {
-		// TODO Auto-generated method stub
+
+		AsyncTask<String,Void,List<Project>> AsyncTaskGetUserProjects = new AsyncTask<String,Void,List<Project>>(){
+			@Override
+			protected void onPostExecute(List<Project> projectList) {
+				super.onPostExecute(projectList);
+				setProjects(projectList);
+			}
+			@Override
+			protected List<Project> doInBackground(String... params){
+				List<Project> projectList = new ArrayList<Project>();
+				try {
+					projectList = UserDatabaseAdapter.getProject(params[0]);
+				} catch (IOException e) {
+					// TODO: elim try/catch?
+					e.printStackTrace();
+				}
+				for(int i=0;i<projectList.size();i++){
+					Project p=null;
+					try {
+						p=ProjectDatabaseAdapter.getProject(projectList.get(i));
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					projectList.set(i, p);
+				}
+				return projectList;
+			}
+
+		}.execute(session.getUserID());
+		
+//		System.out.println("projects size: "+ projectsList.size());
+//		
+//		AsyncTask<Project,Void,Project> AsyncTaskProjectInfo = new AsyncTask<Project,Void,Project>(){
+//			@Override
+//			protected void onPostExecute(Project project) {
+//				super.onPostExecute(project);
+//			}
+//			@Override
+//			protected Project doInBackground(Project... params){
+//				System.out.println("getting id as: "+ params[0].getProjectID());
+//				Project project = null;
+//				try {
+//					project = ProjectDatabaseAdapter.getProject(params[0]);
+//				} catch (IOException e) {
+//					// TODO: elim try/catch?
+//					e.printStackTrace();
+//				}
+//				System.out.println("the project is: "+ project.getMembers().get(0).getEmail());
+//				return project;
+//			}
+//		};
+//		
+//		for(int i=0;i<projectsList.size();i++){
+//			AsyncTaskProjectInfo.execute(projectsList.get(i));
+//		}
+		
 		
 	}
+	
 	private void loadProject(Project project) {
 //		while (project.getEndTimeInMillis() == 0L);
-//		Intent viewTask = new Intent(getActivity(), ViewTaskActivity.class);
-//		viewTask.putExtra(Keys.Task.PARCEL, task);
-//		startActivityForResult(viewTask, 6);
+		Intent viewProject = new Intent(getActivity(), ViewProjectActivity.class);
+		viewProject.putExtra(Keys.Project.PARCEL, project);
+		startActivityForResult(viewProject, 6);	
 	}
 
-
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-//		getMenuInflater().inflate(R.menu.project, menu);
-		return true;
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.menu_new_and_refresh, menu);
 	}
 
 }
+
+	
 class ProjectItemAdapter extends ArrayAdapter<Project> {
 	private List<Project> projects;
 	private Context context;
@@ -147,7 +221,7 @@ class ProjectItemAdapter extends ArrayAdapter<Project> {
 	 * list item will look.
 	 */
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(int position, View convertView, ViewGroup parent) {//TODO: yeah change all a dis'
 		View rowView = convertView;
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		if (rowView == null) {
@@ -166,7 +240,7 @@ class ProjectItemAdapter extends ArrayAdapter<Project> {
 		// Setup from the meeting_item XML file
 		Project project = projects.get(position);
 
-//		viewHolder.title.setText(project.getTitle());
+		viewHolder.title.setText(project.getProjectTitle());
 	
 		return rowView;
 	}

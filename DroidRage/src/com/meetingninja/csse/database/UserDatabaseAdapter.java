@@ -62,7 +62,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		return Uri.parse(getBaseUrl()).buildUpon();
 	}
 
-	public static String getBaseContactUrl() {
+	public static String getBaseContactUrl() {//TODO: get rid of this put append path in path place 
 		return BASE_URL + "Contact";
 	}
 
@@ -426,16 +426,15 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		// Get server response
 		int responseCode = conn.getResponseCode();
 		String response = getServerResponse(conn);
-
 		// Initialize ObjectMapper
 		List<Project> projectList = new ArrayList<Project>();
 		final JsonNode projectArray = MAPPER.readTree(response).get(
 				Keys.Project.LIST);
-
 		if (projectArray.isArray()) {
 			for (final JsonNode projectNode : projectArray) {
 				Project p = new Project();
-				ProjectDatabaseAdapter.parseProject(projectNode, p);
+				p.setProjectID(projectNode.get(Keys.Project.ID).asText());
+				ProjectDatabaseAdapter.getProject(p);
 				if (p.getProjectID() != null && !p.getProjectID().isEmpty()) {
 					projectList.add(p);
 				}
@@ -443,7 +442,6 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		} else {
 			Log.e(TAG, "Error parsing user's project list");
 		}
-
 		conn.disconnect();
 		return projectList;
 	}

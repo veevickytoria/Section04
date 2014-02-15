@@ -21,6 +21,8 @@ import java.io.PrintStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import objects.Meeting;
 import objects.Note;
@@ -59,9 +61,9 @@ public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 		// Get server response
 		conn.getResponseCode();
 		String response = getServerResponse(conn);
-		JsonNode groupNode = MAPPER.readTree(response);
-
-		return parseProject(groupNode, p);
+		JsonNode projectNode = MAPPER.readTree(response);
+			
+		return parseProject(projectNode, p);
 	}
 
 
@@ -134,7 +136,7 @@ public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 			// new TypeReference<HashMap<String, String>>() {
 			// });
 			JsonNode projectNode = MAPPER.readTree(response);
-			if (!projectNode.has(Keys.Group.ID)) {
+			if (!projectNode.has(Keys.Project.ID)) {
 				result = "invalid";
 			} else
 				result =  projectNode.get(Keys.Project.ID).asText();
@@ -148,7 +150,7 @@ public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 	}
 
 
-	public static Project updateGroup(Project p) throws IOException {
+	public static Project updateProject(Project p) throws IOException {
 		ByteArrayOutputStream json = new ByteArrayOutputStream();
 		// this type of print stream allows us to get a string easily
 		PrintStream ps = new PrintStream(json);
@@ -167,7 +169,7 @@ public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 		// this type of print stream allows us to get a string easily
 		ps = new PrintStream(json);
 		jgen = JFACTORY.createGenerator(ps, JsonEncoding.UTF8);
-		// Build JSON Object for Group members
+		// Build JSON Object for Project members
 		jgen.writeStartObject();
 		jgen.writeStringField(Keys.Project.ID, p.getProjectID());
 		jgen.writeStringField("field", Keys.Project.MEETINGS);
@@ -189,7 +191,7 @@ public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 		// this type of print stream allows us to get a string easily
 		ps = new PrintStream(json);
 		jgen = JFACTORY.createGenerator(ps, JsonEncoding.UTF8);
-		// Build JSON Object for Group members
+		// Build JSON Object for Project members
 		jgen.writeStartObject();
 		jgen.writeStringField(Keys.Project.ID, p.getProjectID());
 		jgen.writeStringField("field", Keys.Project.NOTES);
@@ -210,7 +212,7 @@ public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 		// this type of print stream allows us to get a string easily
 		ps = new PrintStream(json);
 		jgen = JFACTORY.createGenerator(ps, JsonEncoding.UTF8);
-		// Build JSON Object for Group members
+		// Build JSON Object for Project members
 		jgen.writeStartObject();
 		jgen.writeStringField(Keys.Project.ID, p.getProjectID());
 		jgen.writeStringField("field", Keys.Project.MEMBERS);
@@ -259,8 +261,14 @@ public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 
 	}
 	
-	public static Project parseProject(JsonNode projectNode, Project p) {
+	public static Project parseProject(JsonNode projectNode, Project p) throws IOException {
 		String projectID = projectNode.get(Keys.Project.ID).asText();
+		List<Meeting> meetinglist = new ArrayList<Meeting>();
+		List<Note> notelist = new ArrayList<Note>();
+		List<User> userlist = new ArrayList<User>();
+		p.setMeetings(meetinglist);
+		p.setMembers(userlist);
+		p.setNotes(notelist);
 		if(projectID != null){
 			p.setProjectID(projectID);
 			p.setProjectTitle(projectNode.get(Keys.Project.TITLE).asText());
@@ -269,6 +277,7 @@ public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 				for (final JsonNode meetingNode : meetings) {
 					Meeting meeting = new Meeting();
 					meeting.setID(meetingNode.get(Keys.Meeting.ID).asText());
+//					MeetingDatabaseAdapter.getMeetingInfo(meeting.getID());
 					p.addMeeting(meeting);
 				}
 			}
@@ -278,6 +287,7 @@ public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 				for (final JsonNode noteNode : notes) {
 					Note note = new Note();
 					note.setID(noteNode.get(Keys.Note.ID).asText());
+//					NotesDatabaseAdapter.get TODO: lkjaslfdkjsad;lkfj
 					p.addNote(note);
 				}
 			}
@@ -287,10 +297,12 @@ public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 				for (final JsonNode memberNode : members) {
 					User user = new User();
 					user.setID(memberNode.get(Keys.User.ID).asText());
+					user = UserDatabaseAdapter.getUserInfo(user.getID());
 					p.addMember(user);
 				}
 			}
 		}
+
 		return p;
 	}
 
