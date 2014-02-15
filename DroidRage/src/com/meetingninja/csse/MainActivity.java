@@ -52,6 +52,7 @@ import com.meetingninja.csse.meetings.MeetingsFragment;
 import com.meetingninja.csse.notes.CreateNoteActivity;
 import com.meetingninja.csse.notes.EditNoteActivity;
 import com.meetingninja.csse.notes.NotesFragment;
+import com.meetingninja.csse.projects.ProjectFragment;
 import com.meetingninja.csse.schedule.ScheduleAdapter;
 import com.meetingninja.csse.tasks.TasksFragment;
 import com.meetingninja.csse.user.LoginActivity;
@@ -322,8 +323,8 @@ public class MainActivity extends FragmentActivity implements
 			frag_groups = (GroupsFragment) nextPage;
 			break;
 		case PROJECTS:
-			nextPage = new DummyFragment();
-			args.putString("Content", "TODO: Projects Page");
+			nextPage = ProjectFragment.getInstance();
+//			args.putString("Content", "TODO: Projects Page");
 			nextPage.setArguments(args);
 			break;
 		case CONTACTS:

@@ -195,6 +195,14 @@
             android:name="com.meetingninja.csse.user.EditProfileActivity"
             android:label="@string/title_activity_edit_profile" >
         </activity>
+        <activity
+            android:name="com.meetingninja.csse.projects.Profile_Fragment"
+            android:label="@string/title_activity_profile__fragment" >
+        </activity>
+        <activity
+            android:name="com.meetingninja.csse.projects.ProjectFragment"
+            android:label="@string/title_activity_project_fragment" >
+        </activity>
     </application>
 
 </manifest>

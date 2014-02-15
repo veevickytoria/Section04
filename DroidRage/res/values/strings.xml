@@ -30,11 +30,8 @@
 
     <!-- Text displayed when the recipientedittextview is not focused. Displays the total number of recipients since the field is shrunk to just display a portion -->
     <string name="more_string">\u002B<xliff:g id="count">%1$s</xliff:g></string>
-
     <string name="copy_email">Copy email address</string>
-
     <string name="copy_number">Copy phone number</string>
-
     <string name="done">Return</string>
 
     <!-- Nav Drawer Menu Items -->
@@ -73,7 +70,6 @@
     <!-- <string name="parse_client_key">pmsPdsBrpUyQIQfYR8sFe5sNpeHnLKlz1rfLuaEP</string> -->
     <string name="parse_application_id">o4UYE8YSQMmLOcyTOv7pj2z9qYkNnUpKBaqezGWx</string>
     <string name="parse_client_key">MfwhwCpIweZmhpQa2Z1yrrrm7y6zAH9elHPfazyB</string>
-
     <string name="title_activity_agenda">AgendaActivity</string>
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="title_activity_view_task">ViewTaskActivity</string>
@@ -87,5 +83,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_view_group">ViewGroupActivity</string>
     <string name="title_activity_edit_profile">EditProfileActivity</string>
+    <string name="title_activity_profile__fragment">Profile_Fragment</string>
+    <string name="title_activity_project_fragment">ProjectFragment</string>
 
 </resources>
