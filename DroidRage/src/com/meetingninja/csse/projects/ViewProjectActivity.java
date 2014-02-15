@@ -12,6 +12,7 @@ import com.meetingninja.csse.R;
 import com.meetingninja.csse.R.layout;
 import com.meetingninja.csse.R.menu;
 import com.meetingninja.csse.database.Keys;
+import com.meetingninja.csse.group.GroupUpdater;
 import com.meetingninja.csse.meetings.MeetingsFragment;
 import com.meetingninja.csse.notes.NotesFragment;
 import com.meetingninja.csse.user.UserListFragment;
@@ -20,8 +21,10 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
+import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.support.v4.app.Fragment;
@@ -30,16 +33,18 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
-public class ViewProjectActivity extends FragmentActivity {
+public class ViewProjectActivity extends FragmentActivity implements ActionBar.TabListener {
 	ArrayList<String> navItems;
 	private static int prevSelectedItem = 0;
-	private ProjectTypeAdapter typeAdapter;
+//	private ProjectTypeAdapter typeAdapter;
 	private Project project;
+	private int resultCode = Activity.RESULT_CANCELED;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -49,34 +54,66 @@ public class ViewProjectActivity extends FragmentActivity {
 		navItems.add("Notes");
 		navItems.add("Members");
 		
-		project = savedInstanceState.getParcelable(Keys.Project.PARCEL);
+		project = getIntent().getExtras().getParcelable(Keys.Project.PARCEL);
 		//TODO: type adatper?
-		typeAdapter = new ProjectTypeAdapter(this, navItems);
+//		typeAdapter = new ProjectTypeAdapter(this, navItems);
 		
 		getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		getActionBar().setSelectedNavigationItem(prevSelectedItem);
-		getActionBar().setListNavigationCallbacks(typeAdapter, new OnNavigationListener(){
-
-			@Override
-			public boolean onNavigationItemSelected(int itemPosition,
-					long itemId) {
-				setProjectTab(itemPosition);
-				return false;
-			}
-			
-		});
+		getActionBar().addTab(getActionBar().newTab().setText("Meetings").setTabListener(this));
+		getActionBar().addTab(getActionBar().newTab().setText("Notes").setTabListener(this));
+		getActionBar().addTab(getActionBar().newTab().setText("Members").setTabListener(this));
+		getActionBar().setTitle(project.getProjectTitle());
+		
 		
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.view_project, menu);
+		getMenuInflater().inflate(R.menu.menu_view_group, menu);
 		return true;
 	}
 	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		switch (item.getItemId()) {
+		case R.id.edit_item_group:
+			editProject();
+			return true;
+		case R.id.delete_item_group:
+			// TaskDeleter deleter = new TaskDeleter();
+			// deleter.deleteTask(displayedTask.getID());
+			setResult(RESULT_OK);
+			finish();
+		case android.R.id.home:
+			setResult(resultCode);
+			finish();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+
+	}
+
+	private void editProject(){
+		
+	}
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode == Activity.RESULT_OK) {
+			if (requestCode == 8) {
+				project = data.getParcelableExtra(Keys.Group.PARCEL);
+//				GroupUpdater updater = new GroupUpdater();
+//				updater.updateGroup(group);
+				setProjectTab(prevSelectedItem);
+				
+			}
+		}
+	}
 	private void setProjectTab(int pos){
 //		Parcel parcel = new Parcel()
+		prevSelectedItem = pos;
 		Fragment frag = null;
 		FragmentManager fm = getSupportFragmentManager();
 		Bundle args = new Bundle();
@@ -94,6 +131,7 @@ public class ViewProjectActivity extends FragmentActivity {
 		case 2:
 			frag = new UserListFragment();
 			args.putParcelableArrayList(Keys.Project.MEMBERS, (ArrayList<User>) project.getMembers());
+			frag.setArguments(args);
 			break;
 		default:
 			Log.e("View Project", "Cannot change tab");
@@ -101,86 +139,24 @@ public class ViewProjectActivity extends FragmentActivity {
 		}
 		if(frag != null){
 			FragmentTransaction ft = fm.beginTransaction();
-			ft.replace(R.id.content_frame, frag);
+			ft.replace(R.id.content_frame, frag).commit();
 		}
 	}
 
-}
-
-class ProjectTypeAdapter implements SpinnerAdapter {
-	private Context context;
-	private List<String> typeNames;
-
-	public ProjectTypeAdapter(Context context, List<String> typeNames) {
-		this.context = context;
-		this.typeNames = typeNames;
+	@Override
+	public void onTabReselected(Tab tab, android.app.FragmentTransaction ft) {
+		//do nothing
 	}
 
 	@Override
-	public int getCount() {
-		return this.typeNames.size();
+	public void onTabSelected(Tab tab, android.app.FragmentTransaction ft) {
+		setProjectTab(tab.getPosition());
+		
 	}
 
 	@Override
-	public Object getItem(int position) {
-		return this.typeNames.get(position);
+	public void onTabUnselected(Tab tab, android.app.FragmentTransaction ft) {
+		//do nothing
+		
 	}
-
-	@Override
-	public long getItemId(int position) {
-		return position;
-	}
-
-	@Override
-	public int getItemViewType(int position) {
-		return 0;
-	}
-
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		TextView rowView = (TextView) convertView;
-		if (rowView == null) {
-			rowView = new TextView(this.context);
-		}
-
-		rowView.setText(typeNames.get(position));
-		rowView.setTextColor(Color.WHITE);
-
-		return rowView;
-	}
-
-	@Override
-	public int getViewTypeCount() {
-		return this.typeNames.size();
-	}
-
-	@Override
-	public boolean hasStableIds() {
-		return false;
-	}
-
-	@Override
-	public boolean isEmpty() {
-		return this.typeNames.isEmpty();
-	}
-
-	@Override
-	public void registerDataSetObserver(DataSetObserver observer) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void unregisterDataSetObserver(DataSetObserver observer) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public View getDropDownView(int position, View convertView, ViewGroup parent) {
-		TextView rowView = (TextView) getView(position, convertView, parent);
-		rowView.setPadding((int) this.context.getResources().getDimension(R.dimen.activity_horizontal_margin),(int) this.context.getResources().getDimension(R.dimen.activity_vertical_margin),(int) this.context.getResources().getDimension(R.dimen.activity_horizontal_margin),	(int) this.context.getResources().getDimension(R.dimen.activity_vertical_margin));
-		return rowView;
-	}
-
 }

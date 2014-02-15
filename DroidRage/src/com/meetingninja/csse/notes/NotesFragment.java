@@ -76,16 +76,16 @@ public class NotesFragment extends Fragment implements
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		View v = inflater.inflate(R.layout.fragment_notes, container, false);
-		setHasOptionsMenu(true);
 		setupViews(v);
 
 		session = SessionManager.getInstance();
 		mySQLiteAdapter = new SQLiteNoteAdapter(getActivity());
-		if(savedInstanceState.containsKey(Keys.Project.NOTES)){
-			List<Note> temp = savedInstanceState.getParcelableArrayList(Keys.Project.NOTES);
+		if(getArguments() != null && getArguments().containsKey(Keys.Project.NOTES)){
+			List<Note> temp = getArguments().getParcelableArrayList(Keys.Project.NOTES);
 			notes.addAll(temp);
 			noteAdpt.notifyDataSetChanged();
 		}else{
+			setHasOptionsMenu(true);
 			populateList();
 		}
 		return v;

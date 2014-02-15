@@ -91,7 +91,6 @@ public class MeetingsFragment extends Fragment implements
 		super.onCreateView(inflater, container, savedInstanceState);
 		View v = inflater.inflate(R.layout.fragment_meetings, container, false);
 		setupViews(v);
-		setHasOptionsMenu(true);
 
 		session = SessionManager.getInstance();
 		mySQLiteAdapter = new SQLiteMeetingAdapter(getActivity());
@@ -99,11 +98,12 @@ public class MeetingsFragment extends Fragment implements
 				R.layout.list_item_meeting, meetings);
 
 		mListView.setAdapter(meetingAdpt);
-		if(savedInstanceState.containsKey(Keys.Project.MEETINGS)){
-			ArrayList<Meeting> temp = savedInstanceState.getParcelableArrayList(Keys.Project.MEETINGS);
+		if(getArguments() != null && getArguments().containsKey(Keys.Project.MEETINGS)){
+			ArrayList<Meeting> temp = getArguments().getParcelableArrayList(Keys.Project.MEETINGS);
 			meetings.addAll(temp);
 			meetingAdpt.notifyDataSetChanged();
 		}else if (Connectivity.isConnected(getActivity()) && isAdded()) {
+			setHasOptionsMenu(true);
 			fetchMeetings();
 		}
 

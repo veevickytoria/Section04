@@ -75,21 +75,21 @@ public class UserListFragment extends Fragment implements TokenListener {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		setHasOptionsMenu(true);
 		View v = inflater.inflate(R.layout.fragment_userlist, container, false);
 
 		dbHelper = new SQLiteUserAdapter(getActivity());
 
 		setUpListView(v);
-		if(savedInstanceState.containsKey(Keys.Project.MEMBERS)){
-			List<User> members = savedInstanceState.getParcelableArrayList(Keys.Project.MEMBERS);
+		if(getArguments() != null && getArguments().containsKey(Keys.Project.MEMBERS)){
+			List<User> members = getArguments().getParcelableArrayList(Keys.Project.MEMBERS);
 			for(User member : members){
 				contacts.add(new Contact(member, ""));
 			}
 			mContactAdapter.notifyDataSetChanged();
-
+			mContactAdapter.getFilter().filter("");
 			
 		}else{
+			setHasOptionsMenu(true);
 			populateList(true); // uses async-task
 		}
 		return v;
