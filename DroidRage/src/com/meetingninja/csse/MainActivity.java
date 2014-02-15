@@ -111,6 +111,7 @@ public class MainActivity extends FragmentActivity implements
 	private TasksFragment frag_tasks;
 	private ProfileFragment frag_profile;
 	private GroupsFragment frag_groups;
+	private ProjectFragment frag_project;
 	// private ProjectsFragment frag_projects;
 	// private ContactsFragment frag_contacts;
 	private UserListFragment frag_contacts;
@@ -325,7 +326,8 @@ public class MainActivity extends FragmentActivity implements
 		case PROJECTS:
 			nextPage = ProjectFragment.getInstance();
 //			args.putString("Content", "TODO: Projects Page");
-			nextPage.setArguments(args);
+//			nextPage.setArguments(args);
+			frag_project = new ProjectFragment();
 			break;
 		case CONTACTS:
 			// fragment = new DummyFragment();
@@ -364,6 +366,7 @@ public class MainActivity extends FragmentActivity implements
 			// Insert the fragment by replacing any existing fragment
 			ft.replace(R.id.content_frame, nextPage).commit();
 			// }
+			
 
 			// Highlight the selected item, update the title, and close the
 			// drawer
