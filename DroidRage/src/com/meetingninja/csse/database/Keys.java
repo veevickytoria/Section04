@@ -94,6 +94,9 @@ public interface Keys {
 		public final String LIST = "projects";
 		public final String ID = "projectID";
 		public final String TITLE = "projectTitle";
+		public final String MEETINGS = "meetings";
+		public final String NOTES = "notes";
+		public final String MEMBERS = "members";
 	}
 
 	public interface Group {

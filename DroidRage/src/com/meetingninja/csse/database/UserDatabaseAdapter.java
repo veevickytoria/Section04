@@ -434,8 +434,9 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 
 		if (projectArray.isArray()) {
 			for (final JsonNode projectNode : projectArray) {
-				Project p = ProjectDatabaseAdapter.parseProject(projectNode);
-				if (p != null) {
+				Project p = new Project();
+				ProjectDatabaseAdapter.parseProject(projectNode, p);
+				if (p.getProjectID() != null && !p.getProjectID().isEmpty()) {
 					projectList.add(p);
 				}
 			}

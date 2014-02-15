@@ -73,5 +73,16 @@ public class Project {
 	public void setMembers(List<User> members) {
 		this.members = members;
 	}
-
+	
+	public void addMember(User user){
+		this.members.add(user);
+	}
+	
+	public void addMeeting(Meeting meeting){
+		this.meetings.add(meeting);
+	}
+	
+	public void addNote(Note note){
+		this.notes.add(note);
+	}
 }
