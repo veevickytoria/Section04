@@ -12,18 +12,24 @@ import com.meetingninja.csse.R;
 import com.meetingninja.csse.R.layout;
 import com.meetingninja.csse.R.menu;
 import com.meetingninja.csse.database.Keys;
+import com.meetingninja.csse.extras.AlertDialogUtil;
 import com.meetingninja.csse.group.GroupUpdater;
+import com.meetingninja.csse.meetings.EditMeetingActivity;
 import com.meetingninja.csse.meetings.MeetingsFragment;
+import com.meetingninja.csse.notes.EditNoteActivity;
 import com.meetingninja.csse.notes.NotesFragment;
 import com.meetingninja.csse.user.UserListFragment;
 
 import android.os.Bundle;
 import android.os.Parcel;
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.ActionBar.OnNavigationListener;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.database.DataSetObserver;
 import android.graphics.Color;
@@ -63,14 +69,14 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 		getActionBar().addTab(getActionBar().newTab().setText("Notes").setTabListener(this));
 		getActionBar().addTab(getActionBar().newTab().setText("Members").setTabListener(this));
 		getActionBar().setTitle(project.getProjectTitle());
-		
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 		
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu_view_group, menu);
+		getMenuInflater().inflate(R.menu.menu_new_and_refresh, menu);
 		return true;
 	}
 	
@@ -78,10 +84,10 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		switch (item.getItemId()) {
-		case R.id.edit_item_group:
+		case R.id.action_new:
 			editProject();
 			return true;
-		case R.id.delete_item_group:
+		case R.id.action_refresh:
 			// TaskDeleter deleter = new TaskDeleter();
 			// deleter.deleteTask(displayedTask.getID());
 			setResult(RESULT_OK);
@@ -97,11 +103,76 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 	}
 
 	private void editProject(){
+		switch(prevSelectedItem){
+		case 0:
+			AlertDialogUtil.showTwoOptionsDialog(this, "Select an option", "Would you like to create a meeting or select an existing meeting?", 
+					"Create a meeting", "Select a meeting", new OnClickListener(){
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							createMeeting();
+						}
+				
+			}, new OnClickListener(){
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					selectMeeting();
+				}
+			});
+			break;
+		case 1:
+			AlertDialogUtil.showTwoOptionsDialog(this, "Select an option", "Would you like to create a note or select an existing note?", 
+					"Create a note", "Select a note", new OnClickListener(){
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							createNote();
+						}
+				
+			}, new OnClickListener(){
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					selectNote();
+				}
+			});
+			break;
+		case 2:
+			addMember();
+		default: return;
+		}
+	}
+	
+	public void createMeeting(){
+		Intent editMeeting = new Intent(this,
+				EditMeetingActivity.class);
+		editMeeting.putExtra(EditMeetingActivity.EXTRA_EDIT_MODE, true);
+		startActivityForResult(editMeeting, 2);
+	}
+	public void selectMeeting(){
+		
+	}
+	public void createNote(){
+		Intent createNote = new Intent(this, EditNoteActivity.class);
+		createNote.putExtra(Note.CREATE_NOTE, true);
+		startActivityForResult(createNote, 3);
+		
+	}
+	public void selectNote(){
+		
+	}
+	public void addMember(){
 		
 	}
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == Activity.RESULT_OK) {
+			if(requestCode == 2){
+				Meeting created = data.getParcelableExtra(Keys.Meeting.PARCEL);
+				project.addMeeting(created);
+				setProjectTab(0);
+			}else if(requestCode == 3){
+				Note created = data.getParcelableExtra(Keys.Note.PARCEL);
+				project.addNote(created);
+				setProjectTab(1);
+			}
 			if (requestCode == 8) {
 				project = data.getParcelableExtra(Keys.Group.PARCEL);
 //				GroupUpdater updater = new GroupUpdater();
@@ -139,7 +210,7 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 		}
 		if(frag != null){
 			FragmentTransaction ft = fm.beginTransaction();
-			ft.replace(R.id.content_frame, frag).commit();
+			ft.replace(R.id.content_frame, frag).commitAllowingStateLoss();
 		}
 	}
 

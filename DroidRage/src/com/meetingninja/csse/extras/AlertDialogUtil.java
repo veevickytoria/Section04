@@ -43,4 +43,10 @@ public class AlertDialogUtil {
 					}
 				});
 	}
+	public static void showTwoOptionsDialog(Context context, String title, String message,
+			String posButton, String negButton, DialogInterface.OnClickListener positiveListener, DialogInterface.OnClickListener negativeListener){
+		new AlertDialog.Builder(context).setTitle(title).setMessage(message)
+		.setPositiveButton(posButton, positiveListener)
+		.setNegativeButton(negButton, negativeListener).show();
+	}
 }

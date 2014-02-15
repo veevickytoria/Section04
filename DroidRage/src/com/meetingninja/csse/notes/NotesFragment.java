@@ -82,6 +82,7 @@ public class NotesFragment extends Fragment implements
 		mySQLiteAdapter = new SQLiteNoteAdapter(getActivity());
 		if(getArguments() != null && getArguments().containsKey(Keys.Project.NOTES)){
 			List<Note> temp = getArguments().getParcelableArrayList(Keys.Project.NOTES);
+			notes.clear();
 			notes.addAll(temp);
 			noteAdpt.notifyDataSetChanged();
 		}else{
@@ -261,11 +262,4 @@ public class NotesFragment extends Fragment implements
 		notes.addAll(list);
 		noteAdpt.notifyDataSetChanged();
 	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		populateList();
-	}
-
 }
