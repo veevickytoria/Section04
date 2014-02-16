@@ -28,6 +28,7 @@ import android.os.Bundle;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -45,6 +46,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 public class ViewProjectActivity extends FragmentActivity implements ActionBar.TabListener {
@@ -79,7 +81,7 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu_new_and_refresh, menu);
+		getMenuInflater().inflate(R.menu.menu_edit_new_and_refresh, menu);
 		return true;
 	}
 
@@ -93,9 +95,12 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 		case R.id.action_refresh:
 			// TaskDeleter deleter = new TaskDeleter();
 			// deleter.deleteTask(displayedTask.getID());
-//			setResult(RESULT_OK);
-//			finish();
+			//			setResult(RESULT_OK);
+			//			finish();
 			refreshProject();
+			return true;
+		case R.id.action_edit:
+			editTitle();
 			return true;
 		case android.R.id.home:
 			Intent i = new Intent();
@@ -112,7 +117,23 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 	private void refreshProject(){
 		//TODO
 	}
-	
+
+	private void editTitle(){
+		final EditText title = new EditText(this);
+		title.setText(project.getProjectTitle());
+		title.selectAll();
+		new AlertDialog.Builder(this).setTitle("Enter a title")
+		.setPositiveButton("OK", new OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				project.setProjectTitle(title.getText().toString());
+				getActionBar().setTitle(project.getProjectTitle());
+				updateProject();
+			}
+		}).setView(title).show();
+	}
+
 	private void editProject(){
 		switch(prevSelectedItem){
 		case 0:
@@ -187,7 +208,7 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 			public void onClick(View v) {
 				dlg.dismiss();
 			}
-			
+
 		});
 		lv.setOnItemClickListener(new OnItemClickListener(){
 
@@ -197,7 +218,7 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 				addMeeting(adpt.getItem(position));
 				dlg.dismiss();
 			}
-			
+
 		});
 		dlg.setContentView(v);
 		dlg.show();
@@ -215,7 +236,7 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 		selectNote(mySQLiteAdapter.getAllNotes());
 
 	}
-	
+
 	public void selectNote(List<Note> notes){
 		final Dialog dlg = new Dialog(this);
 		LayoutInflater li = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -230,7 +251,7 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 			public void onClick(View v) {
 				dlg.dismiss();
 			}
-			
+
 		});
 		lv.setOnItemClickListener(new OnItemClickListener(){
 
@@ -240,7 +261,7 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 				addNote(adpt.getItem(position));
 				dlg.dismiss();
 			}
-			
+
 		});
 		dlg.setContentView(v);
 		dlg.show();
@@ -255,6 +276,7 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 		}
 		project.addMember(user);
 		updateProject();
+		setProjectTab(2);
 	}
 
 	protected void deleteMember(User user){
@@ -291,7 +313,7 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 	}
 
 	protected void addMeeting(Meeting meeting){
-//		new  SQLiteMeetingAdapter(this).updateMeeting(meeting);
+		//		new  SQLiteMeetingAdapter(this).updateMeeting(meeting);
 		project.addMeeting(meeting);
 		setProjectTab(0);
 		updateProject();

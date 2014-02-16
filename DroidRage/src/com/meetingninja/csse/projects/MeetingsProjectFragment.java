@@ -10,8 +10,10 @@ public class MeetingsProjectFragment extends MeetingsFragment{
 	protected void deleteMeeting(Meeting item){
 		this.pCont.deleteMeeting(item);
 	}
-	
-	
+	@Override
+	public void editMeeting(Meeting editMe) {
+		this.pCont.createMeeting();
+	}
 	public MeetingsProjectFragment setProjectController(ViewProjectActivity pCont){
 		this.pCont = pCont;
 		return this;

@@ -166,6 +166,14 @@ public class User extends AbstractJSONObject<User> implements Parcelable {
 		simple.setEmail(this.getEmail());
 		return simple;
 	}
+	
+	@Override
+	public boolean equals(Object u){
+		if(u instanceof User){
+			return getID().equals(((User) u).getID());
+		}
+		return false;
+	}
 
 	@Override
 	public int describeContents() {
@@ -255,52 +263,52 @@ public class User extends AbstractJSONObject<User> implements Parcelable {
 		return result;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (!(obj instanceof User))
-			return false;
-		User other = (User) obj;
-		if (company == null) {
-			if (other.company != null)
-				return false;
-		} else if (!company.equals(other.company))
-			return false;
-		if (displayName == null) {
-			if (other.displayName != null)
-				return false;
-		} else if (!displayName.equals(other.displayName))
-			return false;
-		if (email == null) {
-			if (other.email != null)
-				return false;
-		} else if (!email.equals(other.email))
-			return false;
-		if (location == null) {
-			if (other.location != null)
-				return false;
-		} else if (!location.equals(other.location))
-			return false;
-		if (phone == null) {
-			if (other.phone != null)
-				return false;
-		} else if (!phone.equals(other.phone))
-			return false;
-		if (title == null) {
-			if (other.title != null)
-				return false;
-		} else if (!title.equals(other.title))
-			return false;
-		if (userID == null) {
-			if (other.userID != null)
-				return false;
-		} else if (!userID.equals(other.userID))
-			return false;
-		return true;
-	}
+//	@Override
+//	public boolean equals(Object obj) {
+//		if (this == obj)
+//			return true;
+//		if (obj == null)
+//			return false;
+//		if (!(obj instanceof User))
+//			return false;
+//		User other = (User) obj;
+//		if (company == null) {
+//			if (other.company != null)
+//				return false;
+//		} else if (!company.equals(other.company))
+//			return false;
+//		if (displayName == null) {
+//			if (other.displayName != null)
+//				return false;
+//		} else if (!displayName.equals(other.displayName))
+//			return false;
+//		if (email == null) {
+//			if (other.email != null)
+//				return false;
+//		} else if (!email.equals(other.email))
+//			return false;
+//		if (location == null) {
+//			if (other.location != null)
+//				return false;
+//		} else if (!location.equals(other.location))
+//			return false;
+//		if (phone == null) {
+//			if (other.phone != null)
+//				return false;
+//		} else if (!phone.equals(other.phone))
+//			return false;
+//		if (title == null) {
+//			if (other.title != null)
+//				return false;
+//		} else if (!title.equals(other.title))
+//			return false;
+//		if (userID == null) {
+//			if (other.userID != null)
+//				return false;
+//		} else if (!userID.equals(other.userID))
+//			return false;
+//		return true;
+//	}
 
 	@Override
 	public String toString() {
