@@ -34,13 +34,14 @@ import android.net.Uri;
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.meetingninja.csse.database.BaseDatabaseAdapter.IRequest;
 
 public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 
 	public static String getBaseUrl() {
 		return BASE_URL + "Project";
 	}
-
+	
 	public static Uri.Builder getBaseUri() {
 		return Uri.parse(getBaseUrl()).buildUpon();
 	}
@@ -150,7 +151,7 @@ public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 	}
 
 
-	public static Project updateProject(Project p) throws IOException {
+	public static void updateProject(Project p) throws IOException {
 		ByteArrayOutputStream json = new ByteArrayOutputStream();
 		// this type of print stream allows us to get a string easily
 		PrintStream ps = new PrintStream(json);
@@ -234,10 +235,26 @@ public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 		updateHelper(payloadTitle);
 		updateHelper(payloadMeetings);
 		updateHelper(payloadNotes);
-		String response = updateHelper(payloadMembers);
-		JsonNode projectNode = MAPPER.readTree(response);
+		System.out.println(updateHelper(payloadMembers));
+		
+	}
+	
+	protected static String updateHelper(String jsonPayload) throws IOException {
+		// Server URL setup
+		String _url = getBaseUri().build().toString();
 
-		return parseProject(projectNode, p);
+		// Establish connection
+		URL url = new URL(_url);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+		// add request header
+		conn.setRequestMethod(IRequest.PUT);
+		addRequestHeader(conn, true);
+
+		sendPostPayload(conn, jsonPayload);
+		String response = getServerResponse(conn);
+		conn.disconnect();
+		return response;
 	}
 	
 
@@ -277,7 +294,7 @@ public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 				for (final JsonNode meetingNode : meetings) {
 					Meeting meeting = new Meeting();
 					meeting.setID(meetingNode.get(Keys.Meeting.ID).asText());
-//					MeetingDatabaseAdapter.getMeetingInfo(meeting.getID());
+					meeting = MeetingDatabaseAdapter.getMeetingInfo(meeting.getID());
 					p.addMeeting(meeting);
 				}
 			}
@@ -287,7 +304,7 @@ public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 				for (final JsonNode noteNode : notes) {
 					Note note = new Note();
 					note.setID(noteNode.get(Keys.Note.ID).asText());
-//					NotesDatabaseAdapter.get TODO: lkjaslfdkjsad;lkfj
+//					NotesDatabaseAdapter.get //TODO: lkjaslfdkjsad;lkfj
 					p.addNote(note);
 				}
 			}

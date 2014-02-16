@@ -177,10 +177,7 @@ public class NotesFragment extends Fragment implements
 				handled = true;
 				break;
 			case 2: // Delete
-				Note note = noteAdpt.getItem(position);
-				mySQLiteAdapter.deleteNote(note);
-				notes.remove(position);
-				noteAdpt.notifyDataSetChanged();
+				deleteNote(noteAdpt.getItem(position));
 				handled = true;
 				break;
 			case 3:
@@ -198,6 +195,12 @@ public class NotesFragment extends Fragment implements
 		}
 
 		return handled;
+	}
+	
+	protected void deleteNote(Note note){
+		mySQLiteAdapter.deleteNote(note);
+		notes.remove(note);
+		noteAdpt.notifyDataSetChanged();
 	}
 
 	@Override

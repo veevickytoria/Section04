@@ -183,9 +183,7 @@ public class MeetingsFragment extends Fragment implements
 
 					@Override
 					public void discard() {
-						MeetingVolleyAdapter.deleteMeeting(item.getID());
-						meetings.remove(item);
-						meetingAdpt.notifyDataSetChanged();
+						deleteMeeting(item);
 					}
 				};
 			}
@@ -193,6 +191,12 @@ public class MeetingsFragment extends Fragment implements
 		mListView.enableSwipeToDismiss();
 		mListView.setSwipingLayout(R.id.list_meeting_item_frame_1);
 		mListView.setSwipeDirection(EnhancedListView.SwipeDirection.BOTH);
+	}
+	
+	protected void deleteMeeting(Meeting item){
+		MeetingVolleyAdapter.deleteMeeting(item.getID());
+		meetings.remove(item);
+		meetingAdpt.notifyDataSetChanged();
 	}
 
 	@Override
