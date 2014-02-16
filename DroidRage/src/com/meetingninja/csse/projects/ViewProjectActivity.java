@@ -14,6 +14,7 @@ import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.ProjectDatabaseAdapter;
+import com.meetingninja.csse.database.local.SQLiteMeetingAdapter;
 import com.meetingninja.csse.database.local.SQLiteNoteAdapter;
 import com.meetingninja.csse.extras.AlertDialogUtil;
 import com.meetingninja.csse.meetings.EditMeetingActivity;
@@ -65,8 +66,6 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 		navItems.add("Members");
 
 		project = getIntent().getExtras().getParcelable(Keys.Project.PARCEL);
-		//TODO: type adatper?
-		//		typeAdapter = new ProjectTypeAdapter(this, navItems);
 
 		getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		getActionBar().addTab(getActionBar().newTab().setText("Meetings").setTabListener(this));
@@ -94,10 +93,14 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 		case R.id.action_refresh:
 			// TaskDeleter deleter = new TaskDeleter();
 			// deleter.deleteTask(displayedTask.getID());
-			setResult(RESULT_OK);
-			finish();
+//			setResult(RESULT_OK);
+//			finish();
+			refreshProject();
+			return true;
 		case android.R.id.home:
-			setResult(resultCode);
+			Intent i = new Intent();
+			i.putExtra(Keys.Project.PARCEL, project);
+			setResult(resultCode, i);
 			finish();
 			return true;
 		default:
@@ -106,6 +109,10 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 
 	}
 
+	private void refreshProject(){
+		//TODO
+	}
+	
 	private void editProject(){
 		switch(prevSelectedItem){
 		case 0:
@@ -196,7 +203,6 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 		dlg.show();
 	}
 
-
 	public void createNote(){
 		Intent createNote = new Intent(this, EditNoteActivity.class);
 		createNote.putExtra(Note.CREATE_NOTE, true);
@@ -251,7 +257,6 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 		updateProject();
 	}
 
-
 	protected void deleteMember(User user){
 		for(int i = 0; i < project.getMembers().size(); i++){
 			if(user.getID().equals(project.getMembers().get(i).getID())){
@@ -286,6 +291,7 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 	}
 
 	protected void addMeeting(Meeting meeting){
+//		new  SQLiteMeetingAdapter(this).updateMeeting(meeting);
 		project.addMeeting(meeting);
 		setProjectTab(0);
 		updateProject();

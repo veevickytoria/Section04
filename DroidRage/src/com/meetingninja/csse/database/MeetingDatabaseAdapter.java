@@ -117,26 +117,21 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 		String response = getServerResponse(conn);
 
 		// prepare to get the id of the created Meeting
-		Map<String, String> responseMap = new HashMap<String, String>();
+		JsonNode responseMap;
 		m.setID(404);
 		Meeting created = new Meeting(m);
-
 		/*
 		 * result should get valid={"meetingID":"##"}
 		 */
-		String result = new String();
-		if (!TextUtils.isEmpty(response)) {
-			responseMap = MAPPER.readValue(response,
-					new TypeReference<HashMap<String, String>>() {
-					});
-			if (!responseMap.containsKey(Keys.Meeting.ID)) {
-				result = "invalid";
-			} else
-				result = responseMap.get(Keys.Meeting.ID);
+//		String result = new String();
+		if (!response.isEmpty()) {
+			responseMap = MAPPER.readTree(response);
+			if (responseMap.has(Keys.Meeting.ID)) 
+				created.setID(responseMap.get(Keys.Meeting.ID).asText());
 		}
 
-		if (!result.equalsIgnoreCase("invalid"))
-			created.setID(result);
+//		if (!result.equalsIgnoreCase("invalid"))
+//			created.setID(result);
 
 		conn.disconnect();
 		return created;

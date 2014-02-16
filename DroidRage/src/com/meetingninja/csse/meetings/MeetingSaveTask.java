@@ -8,15 +8,15 @@ import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.MeetingDatabaseAdapter;
 
-public class MeetingSaveTask extends AsyncTask<Meeting, Void, Boolean> {
-	private AsyncResponse<Boolean> delegate;
+public class MeetingSaveTask extends AsyncTask<Meeting, Void, String> {
+	private AsyncResponse<String> delegate;
 
-	public MeetingSaveTask(AsyncResponse<Boolean> delegate) {
+	public MeetingSaveTask(AsyncResponse<String> delegate) {
 		this.delegate = delegate;
 	}
 
 	@Override
-	protected Boolean doInBackground(Meeting... params) {
+	protected String doInBackground(Meeting... params) {
 		Meeting m = params[0];
 		try {
 			String userID = SessionManager.getInstance().getUserID();
@@ -24,13 +24,13 @@ public class MeetingSaveTask extends AsyncTask<Meeting, Void, Boolean> {
 		} catch (Exception e) {
 			Log.e("MeetingSave", "Error: Failed to save meeting");
 			Log.e("MEETING_ERR", e.getLocalizedMessage());
-			return false;
+			return null;
 		}
-		return true;
+		return m.getID();
 	}
 
 	@Override
-	protected void onPostExecute(Boolean result) {
+	protected void onPostExecute(String result) {
 		delegate.processFinish(result);
 		super.onPostExecute(result);
 	}

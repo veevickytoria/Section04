@@ -54,7 +54,7 @@ import com.meetingninja.csse.extras.AlertDialogUtil;
 import com.meetingninja.csse.extras.MyDateUtils;
 
 public class EditMeetingActivity extends FragmentActivity implements
-		AsyncResponse<Boolean> {
+		AsyncResponse<String> {
 
 	private Bundle extras;
 	private EditText mTitle, mLocation, mDescription;
@@ -260,8 +260,13 @@ public class EditMeetingActivity extends FragmentActivity implements
 	// }
 
 	@Override
-	public void processFinish(Boolean result) {
-		if (result) {
+	public void processFinish(String result) {
+		if (result != null && !result.isEmpty()) {
+			displayedMeeting.setID(result);
+			Intent msgIntent = new Intent();
+			msgIntent.putExtra("method", "insert");
+			msgIntent.putExtra(Keys.Meeting.PARCEL, displayedMeeting);
+			setResult(RESULT_OK, msgIntent);
 			finish();
 		} else {
 			Toast.makeText(this, "Failed to save meeting", Toast.LENGTH_SHORT)
@@ -300,6 +305,8 @@ public class EditMeetingActivity extends FragmentActivity implements
 						EditMeetingActivity.this);
 				task.execute(newMeeting);
 				msgIntent.putExtra("method", "insert");
+				displayedMeeting = newMeeting;
+				return;
 			}
 
 			msgIntent.putExtra(Keys.Meeting.PARCEL, newMeeting);
