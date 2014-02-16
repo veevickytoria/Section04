@@ -22,7 +22,6 @@ class ProjectsController < ApplicationController
 	res = Net::HTTP.start(url.host, url.port) {|http|
 		http.request(req)
 	}
-	logger.debug "check the res #{res.body}"
 
 	getUserProjects = JSON.parse(res.body)
 
@@ -30,7 +29,6 @@ class ProjectsController < ApplicationController
 	@projectsParsed = Array.new
 	projectString = ''
 
-	logger.debug "Check the projects #{getUserProjects}"
 
 	getUserProjects['projects'].each do |project|
 		url = URI.parse('http://csse371-04.csse.rose-hulman.edu/Project/' + project['projectID'].to_s)

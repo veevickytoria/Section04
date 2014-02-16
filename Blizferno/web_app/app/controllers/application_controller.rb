@@ -10,6 +10,8 @@ class ApplicationController < ActionController::Base
   before_filter :getUserInfo
   before_filter :getNotifications
   before_filter :getAllUsers
+  before_filter :getAllMeetings
+  before_filter :getAllNotes
 
   def getUserInfo
     if (!cookies[:userID].blank?)
@@ -82,6 +84,35 @@ class ApplicationController < ActionController::Base
     }
     @allUsers = JSON.parse(res.body)
 	@allUsersRaw = res.body
+  end
+
+  def getAllMeetings
+    if (!cookies[:userID].blank?)
+      require 'net/http'
+      @userID = cookies[:userID]
+      url = URI.parse('http://csse371-04.csse.rose-hulman.edu/User/Meetings/' + @userID)
+      req = Net::HTTP::Get.new(url.path)
+      res = Net::HTTP.start(url.host, url.port) {|http|
+        http.request(req)
+      }
+      @userMeetings = JSON.parse(res.body)
+      @userMeetingsRaw = res.body
+    end
+  end
+
+
+  def getAllNotes
+    if (!cookies[:userID].blank?)
+      require 'net/http'
+      @userID = cookies[:userID]
+      url = URI.parse('http://csse371-04.csse.rose-hulman.edu/User/Notes/' + @userID)
+      req = Net::HTTP::Get.new(url.path)
+      res = Net::HTTP.start(url.host, url.port) {|http|
+        http.request(req)
+      }
+      @userNotes = JSON.parse(res.body)
+      @userNotesRaw = res.body
+    end
   end
 
   #before_filter :protect

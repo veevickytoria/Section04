@@ -1,27 +1,34 @@
-<h5>Project:</h5>
-<input id="titleE" name="title" type="text" maxlength="50" size="25" class='form-control'/>
+<form id="editProjectForm">
 
-<!-- <h5>Group:</h5>
-<input id="groupE" name="group" type="text" maxlength="50" size="25" class='form-control'/>
+<strong><span class="viewLabel">Project Name:</span><strong>
+	<br />
+	<input type="text" id="titleE" name="title" class="form-control" />
 
-<h5>Description:</h5>
-<input id="descriptionE" name="description" type="text" maxlength="1000" size="25" class='form-control'/> -->
+<br />
+<br />
 
-<h5>Meetings:</h5>
-<select name="meetings" id="meetingsE" size="10" multiple="multiple" class='form-control'>
+<strong><span class="viewLabel">Meetings:</span></strong>
+<br />
+<select multiple id="TableMeetingsE" size="6" class="form-control">
+	<option disabled>Select multiple by holding Ctrl/CMD></option>
 </select>
 
-<h5>Notes:</h5>
-<select name="notes" id="notesE" size="10" multiple="multiple" class='form-control'>
+<br />
+<br />
+
+<strong><span class="viewLabel">Notes:</span></strong>
+<br />
+<select multiple id="TableNotesE" size"6" class="form-control">
+	<option disabled>Select multiple by holding Ctrl/CMD></option>
 </select>
 
-<h5>Members:</h5>
-<select multiple id='membersE' size='6' class='form-control'>
-		<option disabled>Select multiple by holding Ctrl/CMD</option>
-		<option value='1'>Santa Claus</option>
-		<option value='2'>WasARebel</option>
-		<option value='3'>KemoSabe</option>
-		<option value='4'>CaptainKirk</option>
-		<option value='5'>Spock</option>
-	</select>
+<br />
+<br />
+
+<strong><span class="viewLabel">Members:</span></strong>
+<br />
+<select multiple id="TableMembersE" size="6" class="form-control">
+	<option diabled>Select multiple by holding Ctrl/CMD></option>
 </select>
+
+</form>
