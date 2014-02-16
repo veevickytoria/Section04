@@ -250,7 +250,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
     }
     
     $results = array();
-    $tasks = $meeting->getRelationships(['BELONGS_TO'], Relationship::DirectionIn);
+    $tasks = $meeting->getRelationships(array('BELONGS_TO'), Relationship::DirectionIn);
     foreach($tasks as $belongs){
         $task = $belongs->getStartNode();
         $properties = $task->getProperties();
