@@ -112,6 +112,7 @@
         [self presentViewController:mc animated:YES completion:NULL];
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Failure" message:@"You're device does not have email set up." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        [alert show];
     }
 }
 
@@ -275,6 +276,15 @@ shouldReloadTableForSearchString:(NSString *)searchString
         self.searchDisplayController.searchBar.frame = barFrame;
     }
     
+}
+
+-(void)initAttendeesList:(NSMutableArray*)attendees
+{
+    for (int i=0; i<attendees.count; i++)
+    {
+        [self.attendeeList addObject:attendees[i]];
+    }
+    [self.userListTableView reloadData];
 }
 
 @end

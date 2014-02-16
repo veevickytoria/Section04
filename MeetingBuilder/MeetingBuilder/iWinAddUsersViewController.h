@@ -33,4 +33,5 @@
 @property (weak, nonatomic) IBOutlet UILabel *orLabel;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 -(void)setUIFor:(NSString*)pageName;
+-(void)initAttendeesList:(NSMutableArray*)attendees;
 @end
