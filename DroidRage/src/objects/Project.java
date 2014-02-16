@@ -127,6 +127,14 @@ public class Project implements Comparable<Project>, Parcelable{
 	};
 	
 	@Override
+	public boolean equals(Object p){
+		if(p instanceof Project){
+			return this.getProjectID().equals(((Project) p).getProjectID());
+		}
+		return false;
+	}
+	
+	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		// TODO Auto-generated method stub
 		dest.writeString(getProjectID());

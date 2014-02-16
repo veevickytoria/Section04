@@ -207,6 +207,10 @@
             android:name="com.meetingninja.csse.projects.ViewProjectActivity"
             android:label="@string/title_activity_view_project" >
         </activity>
+        <activity
+            android:name="com.meetingninja.csse.projects.ProjectCustomDialog"
+            android:label="@string/title_activity_project_custom_dialog" >
+        </activity>
     </application>
 
 </manifest>

@@ -210,14 +210,14 @@ public class UserListFragment extends Fragment implements TokenListener {
 		mContactAdapter.notifyDataSetChanged();
 	}
 
-	private void addContact(User user) {
+	protected void addContact(User user) {
 		AddContactTask adder = new AddContactTask(this);
 		adder.addContact(user.getID());
 	}
 
-	private void deleteContact(String relationID) {
+	protected void deleteContact(Contact item) {
 		DeleteContactTask deleter = new DeleteContactTask(this);
-		deleter.deleteContact(relationID);
+		deleter.deleteContact(item.getRelationID());
 	}
 
 	@Override
@@ -293,7 +293,7 @@ public class UserListFragment extends Fragment implements TokenListener {
 
 					@Override
 					public void discard() {
-						deleteContact(item.getRelationID());
+						deleteContact(item);
 						tempDeletedContacts.remove(item);
 
 					}
