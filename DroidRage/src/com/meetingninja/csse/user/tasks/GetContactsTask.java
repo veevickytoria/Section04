@@ -24,7 +24,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.meetingninja.csse.database.AsyncResponse;
-import com.meetingninja.csse.database.UserDatabaseAdapter;
+import com.meetingninja.csse.database.ContactDatabaseAdapter;
 
 public class GetContactsTask extends AsyncTask<String, Void, List<Contact>> {
 
@@ -42,7 +42,7 @@ public class GetContactsTask extends AsyncTask<String, Void, List<Contact>> {
 
 		try {
 			String userID = params[0];
-			contacts = UserDatabaseAdapter.getContacts(userID);
+			contacts = ContactDatabaseAdapter.getContacts(userID);
 		} catch (IOException e) {
 			Log.e(TAG, "Error: Unable to get contacts");
 			Log.e(TAG, e.getLocalizedMessage());
