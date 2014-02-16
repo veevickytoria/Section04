@@ -683,9 +683,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 			for (final JsonNode userNode : userArray) {
 				User u = parseUser(userNode);
 				// assign and check null and do not add local user
-				if (u != null
-						&& !TextUtils.equals(u.getID(), SessionManager
-								.getInstance().getUserID())) {
+				if (u != null) {
 					userList.add(u);
 				}
 			}
