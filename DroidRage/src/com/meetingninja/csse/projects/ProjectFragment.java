@@ -74,9 +74,10 @@ public class ProjectFragment extends Fragment{
 			if (requestCode == 6) {
 				refreshProjects();
 			} else if (requestCode == 7) {
-				//				Project p = data.getParcelableExtra(Keys.Project.PARCEL);
-				//				p.setCreatedBy(session.getUserID());
-				//				creator.createProject(p);
+				Project p = data.getParcelableExtra(Keys.Project.PARCEL);
+				projectsList.add(p);
+				Collections.sort(projectsList);
+				projectAdpt.notifyDataSetChanged();
 			}
 		}
 	}
@@ -89,12 +90,6 @@ public class ProjectFragment extends Fragment{
 			return true;
 		case R.id.action_new:
 			createProjectOption();
-
-
-			//			Intent i = new Intent(getActivity(), EditTaskActivity.class);//TODO: yeah shouldn't be this
-			//			Project p = new Project();
-			//			i.putExtra(Keys.Project.PARCEL, p);
-			//			startActivityForResult(i, 7);
 			return true;
 		default:
 			return super.onContextItemSelected(item);

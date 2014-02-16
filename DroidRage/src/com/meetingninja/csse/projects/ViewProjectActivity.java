@@ -320,6 +320,7 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 	}
 
 	private void updateProject(){
+		resultCode = Activity.RESULT_OK;
 		new AsyncTask<Project, Void, Void>(){
 
 			@Override
