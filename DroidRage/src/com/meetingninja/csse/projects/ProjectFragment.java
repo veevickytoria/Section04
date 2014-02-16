@@ -3,17 +3,15 @@ package com.meetingninja.csse.projects;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import objects.Project;
-
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.SessionManager;
-import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.ProjectDatabaseAdapter;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
+import de.timroes.android.listview.EnhancedListView;
 
 
 import android.os.AsyncTask;
@@ -29,7 +27,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
@@ -40,6 +37,7 @@ public class ProjectFragment extends Fragment{
 	private List<Project> projectsList = new ArrayList<Project>();
 	private ProjectItemAdapter projectAdpt;
 	private SessionManager session;
+	private EnhancedListView l;
 	public ProjectFragment() {
 		// Empty
 	}
@@ -57,26 +55,8 @@ public class ProjectFragment extends Fragment{
 		setHasOptionsMenu(true);
 		session = SessionManager.getInstance();
 		View v = inflater.inflate(R.layout.fragment_project, container, false);
+		setUpListView(v);
 		
-		
-		
-		ListView lv = (ListView) v.findViewById(R.id.project_list);
-		lv.setEmptyView(v.findViewById(android.R.id.empty));
-		projectAdpt = new ProjectItemAdapter(getActivity(), R.layout.list_item_task,projectsList);
-
-		lv.setAdapter(projectAdpt);
-		registerForContextMenu(lv);
-		
-		lv.setOnItemClickListener(new OnItemClickListener() {
-	
-			@Override
-			public void onItemClick(AdapterView<?> parentAdapter, View v,int position, long id) {
-//				Intent viewProject = new Intent(getActivity(), ViewProjectActivity.class);
-//				startActivity(viewProject);
-				Project p = projectAdpt.getItem(position);
-				loadProject(p);
-			}
-		});
 		refreshProjects();
 		return v;
 
@@ -106,10 +86,11 @@ public class ProjectFragment extends Fragment{
 
 	private void refreshProjects() {
 
-		AsyncTask<String,Void,List<Project>> AsyncTaskGetUserProjects = new AsyncTask<String,Void,List<Project>>(){
+		new AsyncTask<String,Void,List<Project>>(){
 			@Override
 			protected void onPostExecute(List<Project> projectList) {
 				super.onPostExecute(projectList);
+				Collections.sort(projectList);
 				setProjects(projectList);
 			}
 			@Override
@@ -118,7 +99,7 @@ public class ProjectFragment extends Fragment{
 				try {
 					projectList = UserDatabaseAdapter.getProject(params[0]);
 				} catch (IOException e) {
-					// TODO: elim try/catch?
+					System.out.println("failed to get projects");
 					e.printStackTrace();
 				}
 				for(int i=0;i<projectList.size();i++){
@@ -126,6 +107,7 @@ public class ProjectFragment extends Fragment{
 					try {
 						p=ProjectDatabaseAdapter.getProject(projectList.get(i));
 					} catch (IOException e) {
+						System.out.println("fialed to get project info");
 						e.printStackTrace();
 					}
 					projectList.set(i, p);
@@ -135,33 +117,22 @@ public class ProjectFragment extends Fragment{
 
 		}.execute(session.getUserID());
 		
-//		System.out.println("projects size: "+ projectsList.size());
-//		
-//		AsyncTask<Project,Void,Project> AsyncTaskProjectInfo = new AsyncTask<Project,Void,Project>(){
-//			@Override
-//			protected void onPostExecute(Project project) {
-//				super.onPostExecute(project);
-//			}
-//			@Override
-//			protected Project doInBackground(Project... params){
-//				System.out.println("getting id as: "+ params[0].getProjectID());
-//				Project project = null;
-//				try {
-//					project = ProjectDatabaseAdapter.getProject(params[0]);
-//				} catch (IOException e) {
-//					// TODO: elim try/catch?
-//					e.printStackTrace();
-//				}
-//				System.out.println("the project is: "+ project.getMembers().get(0).getEmail());
-//				return project;
-//			}
-//		};
-//		
-//		for(int i=0;i<projectsList.size();i++){
-//			AsyncTaskProjectInfo.execute(projectsList.get(i));
-//		}
+	}
+	private void deleteProject(Project p) {
+
+		new AsyncTask<Project,Void,Void>(){
 		
-		
+			@Override
+			protected Void doInBackground(Project... params){
+				try {
+					ProjectDatabaseAdapter.deleteProject(params[0]);
+				} catch (IOException e) {
+					System.out.println("failed to delete project");
+					e.printStackTrace();
+				}
+				return null;
+			}
+		}.execute(p);
 	}
 	
 	private void loadProject(Project project) {
@@ -175,7 +146,65 @@ public class ProjectFragment extends Fragment{
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.menu_new_and_refresh, menu);
 	}
+	
+	private void setUpListView(View v) {
+		projectAdpt = new ProjectItemAdapter(getActivity(),R.layout.list_item_task, projectsList);
+		
+		l = (EnhancedListView) v.findViewById(R.id.project_list);
+		l.setAdapter(projectAdpt);
+		l.setEmptyView(v.findViewById(android.R.id.empty));
+//		final EditText input = (EditText) v.findViewById(R.id.my_autocomplete);
+		
+		l.setDismissCallback(new de.timroes.android.listview.EnhancedListView.OnDismissCallback() {
+			@Override
+			public EnhancedListView.Undoable onDismiss(EnhancedListView listView, final int position) {
 
+				final Project item = (Project) projectAdpt.getItem(position);
+//				tempDeletedContacts.add(item);
+				projectsList.remove(item);
+//				projectAdpt.remove(item);
+
+				return new EnhancedListView.Undoable() {
+					@Override
+					public void undo() {
+						projectsList.add(item);
+//						tempDeletedContacts.remove(item);
+						projectAdpt.notifyDataSetChanged();
+					}
+
+					@Override
+					public String getTitle() {
+						return "Project Deleted";
+					}
+
+					@Override
+					public void discard() {
+						deleteProject(item);
+//						tempDeletedContacts.remove(item);
+
+					}
+				};
+			}
+		});
+		l.setUndoHideDelay(5000);
+		l.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View v, int position,long id) {
+				Intent viewProject = new Intent(getActivity(), ViewProjectActivity.class);
+				startActivity(viewProject);
+				Project p = projectAdpt.getItem(position);
+				loadProject(p);
+			}
+
+		});
+		l.enableSwipeToDismiss();
+		l.setSwipingLayout(R.id.list_group_item_frame_1);
+
+		l.setSwipeDirection(EnhancedListView.SwipeDirection.BOTH);
+	}
+	
+	
 }
 
 	
@@ -194,14 +223,8 @@ class ProjectItemAdapter extends ArrayAdapter<Project> {
 	}
 
 	@Override
-	public void sort(Comparator<? super Project> c) {
-		Collections.sort(projects);
-	}
-
-	@Override
 	public int getCount() {
 		return this.projects.size();
-		
 	}
 
 	@Override
@@ -210,8 +233,7 @@ class ProjectItemAdapter extends ArrayAdapter<Project> {
 	}
 
 	private class ViewHolder {
-		TextView title, deadline;
-		View background;
+		TextView title;
 	}
 
 	ViewHolder viewHolder;
@@ -221,16 +243,13 @@ class ProjectItemAdapter extends ArrayAdapter<Project> {
 	 * list item will look.
 	 */
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {//TODO: yeah change all a dis'
+	public View getView(int position, View convertView, ViewGroup parent) {
 		View rowView = convertView;
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		if (rowView == null) {
-			rowView = inflater.inflate(R.layout.list_item_task, null);
+			rowView = inflater.inflate(R.layout.list_item_project, null);
 			viewHolder = new ViewHolder();
-
-			viewHolder.title = (TextView) rowView.findViewById(R.id.list_task_title);
-			viewHolder.deadline = (TextView) rowView.findViewById(R.id.list_task_deadline);
-			viewHolder.background = rowView.findViewById(R.id.list_task_holder);
+			viewHolder.title = (TextView) rowView.findViewById(R.id.list_project_title);
 
 			rowView.setTag(viewHolder);
 		} else{
@@ -241,7 +260,7 @@ class ProjectItemAdapter extends ArrayAdapter<Project> {
 		Project project = projects.get(position);
 
 		viewHolder.title.setText(project.getProjectTitle());
-	
+		
 		return rowView;
 	}
 }

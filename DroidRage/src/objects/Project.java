@@ -100,10 +100,7 @@ public class Project implements Comparable<Project>, Parcelable{
 		if (another == null) {
 			return 1;
 		}
-		if (another instanceof Project) {
-			return compareTo((Project) another);
-		}
-		return this.getProjectTitle().compareTo(another.getProjectTitle());
+		return this.getProjectTitle().compareToIgnoreCase(another.getProjectTitle());
 	}
 
 	@Override
