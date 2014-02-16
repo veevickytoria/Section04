@@ -276,6 +276,7 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 		}
 		project.addMember(user);
 		updateProject();
+		setProjectTab(2);
 	}
 
 	protected void deleteMember(User user){

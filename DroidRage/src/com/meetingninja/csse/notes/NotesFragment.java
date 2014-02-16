@@ -92,6 +92,14 @@ public class NotesFragment extends Fragment implements
 		return v;
 
 	}
+	
+	protected void createNote(){
+		Log.d("createnote", "goto editactivity");
+		Intent createNote = new Intent(getActivity(),
+				EditNoteActivity.class);
+		createNote.putExtra(Note.CREATE_NOTE, true);
+		startActivity(createNote);
+	}
 
 	private void setupViews(View v) {
 		// setup listview
@@ -106,11 +114,7 @@ public class NotesFragment extends Fragment implements
 		notesImageButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Log.d("createnote", "goto editactivity");
-				Intent createNote = new Intent(getActivity(),
-						EditNoteActivity.class);
-				createNote.putExtra(Note.CREATE_NOTE, true);
-				startActivity(createNote);
+				createNote();
 			}
 		});
 

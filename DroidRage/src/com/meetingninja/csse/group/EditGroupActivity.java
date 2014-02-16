@@ -162,12 +162,11 @@ public class EditGroupActivity extends Activity implements TokenListener {
 	}
 	
 	private void addContacts(List<Contact> allContacts){
-		bothUsers.add(null);
 		for(Contact c : allContacts){
-			System.out.println(c.getContact().getDisplayName());
 			bothUsers.add(c.getContact());
+			allUsers.remove(c.getContact());
 		}
-		bothUsers.add(null);
+		
 		bothUsers.addAll(allUsers);
 	}
 	

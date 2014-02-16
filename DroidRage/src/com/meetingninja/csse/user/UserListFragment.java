@@ -116,16 +116,20 @@ public class UserListFragment extends Fragment implements TokenListener {
 	}
 
 	public void addContactsOption() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		builder.setTitle("Search by name or email:");
+
 		// TODO: only display users that aren't already a contact
 		UserVolleyAdapter.fetchAllUsers(new AsyncResponse<List<User>>() {
 			@Override
 			public void processFinish(List<User> result) {
 				allUsers = new ArrayList<User>(result);
+				addContactsOptionLoaded();
 			}
 		});
-
+	}
+	public void addContactsOptionLoaded(){
+		
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		builder.setTitle("Search by name or email:");
 		View autocompleteView = getActivity().getLayoutInflater().inflate(R.layout.fragment_autocomplete, null);
 		final ContactTokenTextView input = (ContactTokenTextView) autocompleteView.findViewById(R.id.my_autocomplete);
 		autoAdapter = new AutoCompleteAdapter(getActivity(), allUsers);

@@ -26,13 +26,6 @@ public class AutoCompleteAdapter extends FilteredArrayAdapter<User> {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		User u = getItem(position);
-		if(u == null){
-			TextView view = new TextView(this.getContext());
-			view.setText((position == 0 ? "Contacts" : "Other"));
-			view.setBackgroundColor(Color.GRAY);
-			view.setTextSize(20);
-			return view;
-		}
 		if (convertView == null || convertView instanceof TextView) {
 			convertView = (View) mLayoutInflater.inflate(
 					R.layout.chips_recipient_dropdown_item, parent, false);
@@ -57,7 +50,7 @@ public class AutoCompleteAdapter extends FilteredArrayAdapter<User> {
 	protected boolean keepObject(User user, String mask) {
 		mask = mask.toLowerCase();
 //		Log.i(mask, user.toString());
-		return user==null || user.getDisplayName().toLowerCase().startsWith(mask)
+		return user.getDisplayName().toLowerCase().startsWith(mask)
 				|| user.getEmail().toLowerCase().startsWith(mask);
 	}
 
