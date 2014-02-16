@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.List;
 
 import objects.Project;
+import objects.Task;
+
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.Keys;
@@ -16,6 +18,7 @@ import de.timroes.android.listview.EnhancedListView;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
@@ -61,6 +64,18 @@ public class ProjectFragment extends Fragment{
 		return v;
 
 	}
+//	@Override
+//	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//		if (resultCode == Activity.RESULT_OK) {
+//			if (requestCode == 6) {
+//				refreshTasks();
+//			} else if (requestCode == 7) {
+//				Task t = data.getParcelableExtra(Keys.Task.PARCEL);
+//				t.setCreatedBy(session.getUserID());
+//				creator.createTask(t);
+//			}
+//		}
+//	}
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {

@@ -16,6 +16,7 @@
 package com.meetingninja.csse.user;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import objects.Contact;
@@ -195,9 +196,10 @@ public class UserListFragment extends Fragment implements TokenListener {
 		if (!tempContacts.isEmpty()) {
 			contacts.clear();
 			contacts.addAll(tempContacts);
-
+			Collections.sort(contacts);
+			
 			for (int i = 0; i < tempDeletedContacts.size(); i++) {
-				// why doesn't this work?
+				// why doesn't this work? cuz i need to make equals method in contact
 				// contacts.remove(tempDeletedContacts.get(i));
 				for (int j = 0; j < contacts.size(); j++) {
 					if (contacts.get(j).getContact().getID().equals(tempDeletedContacts.get(i).getContact().getID())) {
@@ -213,11 +215,13 @@ public class UserListFragment extends Fragment implements TokenListener {
 	protected void addContact(User user) {
 		AddContactTask adder = new AddContactTask(this);
 		adder.addContact(user.getID());
+		mContactAdapter.notifyDataSetChanged();
 	}
 
 	protected void deleteContact(Contact item) {
 		DeleteContactTask deleter = new DeleteContactTask(this);
 		deleter.deleteContact(item.getRelationID());
+		mContactAdapter.notifyDataSetChanged();
 	}
 
 	@Override

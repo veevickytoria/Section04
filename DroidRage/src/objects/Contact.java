@@ -1,6 +1,6 @@
 package objects;
 
-public class Contact {
+public class Contact implements Comparable<Contact>{
 
 	private User contact;
 	private String relationID;
@@ -29,5 +29,18 @@ public class Contact {
 	public String getRelationID() {
 		return relationID;
 	}
+	public int compareTo(Contact another) {
+		if (another == null) {
+			return 1;
+		}
+		return this.contact.getDisplayName().compareToIgnoreCase(another.getContact().getDisplayName());
+	}
+//	@Override
+//	public boolean equals(Object p){
+//		if(p instanceof Project){
+//			return this.getProjectID().equals(((Project) p).getProjectID());
+//		}
+//		return false;
+//	}
 
 }
