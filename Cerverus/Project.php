@@ -199,7 +199,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 ){
 				$attRel = $projectNode->relateTo($note, 'NOTE_ABOUT_PROJECT')->save();
 			}
 			$updated = 1;
-		}else if (strcasecmp($postContent->field, 'users')==0){
+		}else if (strcasecmp($postContent->field, 'members')==0){
 			$relationArray = $projectNode->getRelationships(array('WORKS_ON_PROJECT'), Relationship::DirectionOut);
 			foreach($relationArray as $rel) {
 				$rel->delete();
