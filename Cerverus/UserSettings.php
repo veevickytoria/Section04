@@ -121,8 +121,6 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') == 0){
                         $array = $setti->getProperties();
                         echo json_encode($array);
                 }
-                        $array = $setti->getProperties();
-                        echo json_encode($array);
 		}
 		}
 		}
