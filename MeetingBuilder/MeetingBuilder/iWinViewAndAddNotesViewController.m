@@ -254,8 +254,8 @@
         [notes addObject:[sharingUser objectForKey:@"notes"]];
     }
     
-    
-    self.mergeViewController = [[iWinMergeNoteViewController alloc] initWithNibName:@"iWinMergeNoteViewController" bundle:nil noteContent:self.noteField.text userNames:names notes:notes noteID:self.noteID];
+    // create merge notes controller
+    self.mergeViewController = [[iWinMergeNoteViewController alloc] initWithNibName:@"iWinMergeNoteViewController" bundle:nil noteContent:self.noteField.text userNames:names notes:notes noteID:self.noteID userID:self.userID];
     [self.mergeViewController setModalPresentationStyle:UIModalPresentationPageSheet];
     [self.mergeViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     self.mergeViewController.mergeNoteDelegate = self;
