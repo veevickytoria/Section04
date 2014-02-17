@@ -33,9 +33,10 @@ class ApplicationController < ActionController::Base
   		res = Net::HTTP.start(url.host, url.port) {|http|
   			http.request(req)
   		}
-  		# TODO: Put back in when database actually adds and deletes notifications
-  		# @Notifications = JSON.parse(res.body)
-  		@Notifications = JSON.parse('{"totalAmount":"6","userID":"0","notifications":[{"datetime":"","type":"Meeting","nodeID":"","description":""},{"datetime":"","type":"Task","nodeID":"","description":""},{"datetime":"","type":"Project","nodeID":"","description":""},{"datetime":"","type":"Task","nodeID":"","description":""},{"datetime":"","type":"Group","nodeID":"","description":""},{"datetime":"","type":"Meeting","nodeID":"","description":""},{"datetime":"","type":"Project","nodeID":"","description":""},{"datetime":"","type":"Task","nodeID":"","description":""},{"datetime":"","type":"Meeting","nodeID":"","description":""},{"datetime":"","type":"Project","nodeID":"","description":""},{"datetime":"","type":"Meeting","nodeID":"","description":""},{"datetime":"","type":"Task","nodeID":"","description":""},{"datetime":"","type":"Task","nodeID":"","description":""}]}')
+  	
+  		@Notifications = JSON.parse(res.body)
+  		# Testing string
+      # @Notifications = JSON.parse('{"totalAmount":"6","userID":"0","notifications":[{"datetime":"","type":"Meeting","nodeID":"","description":""},{"datetime":"","type":"Task","nodeID":"","description":""},{"datetime":"","type":"Project","nodeID":"","description":""},{"datetime":"","type":"Task","nodeID":"","description":""},{"datetime":"","type":"Group","nodeID":"","description":""},{"datetime":"","type":"Meeting","nodeID":"","description":""},{"datetime":"","type":"Project","nodeID":"","description":""},{"datetime":"","type":"Task","nodeID":"","description":""},{"datetime":"","type":"Meeting","nodeID":"","description":""},{"datetime":"","type":"Project","nodeID":"","description":""},{"datetime":"","type":"Meeting","nodeID":"","description":""},{"datetime":"","type":"Task","nodeID":"","description":""},{"datetime":"","type":"Task","nodeID":"","description":""}]}')
   		@Noti = @Notifications["notifications"]
   		@Meeting = 0
   		@Task = 0

@@ -1,6 +1,6 @@
 <span>* Indicates required fields.</span>
 
-<form name="input" id="createTask" onsubmit="return validateForm()" action ="http://csse371-04.csse.rose-hulman.edu/Task/" method='post'>
+<form id="createTask" >
 	<h5>Topic:*</h5>
 	<input type="text" name="title" maxlength="50" class="form-control"/>
 
@@ -21,13 +21,8 @@
 	<h5>Assigned to:*</h5>
 	<select multiple id="assignedTo" size='6' class="form-control">
   		<option disabled>Select multiple by holding Ctrl/CMD</option>
-  		<option value='1'>Santa Claus</option>
-  		<option value='2'>WasARebel</option>
-  		<option value='3'>KemoSabe</option>
-  		<option value='4'>CaptainKirk</option>
-  		<option value='5'>Spock</option>
+  		<% for user in @allUsers['users'] %>
+		<option value="<%= user['userID'] %>"><%= user['name'] %></option>
+		<% end %>
 	</select>
-
-	<input type="hidden" name="assignedFrom" value="749" /> <!-- Change this to current user -->
-	<input type="hidden" name="createdBy" value="749" /> <!-- Change this to current user -->
 </form>

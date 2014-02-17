@@ -2,6 +2,8 @@ var currentID;
 var deleteID;
 var tasksJSON = <%= raw @tasks %>;
 tasksJSON = JSON.parse("["+tasksJSON.toString()+"]");
+var allUsers = <%= raw @allUsersRaw %>;
+allUsers = JSON.parse(JSON.stringify(allUsers));
 
 function hideTaskModal(){
 	$('#viewTaskModal').modal('hide');
@@ -9,6 +11,7 @@ function hideTaskModal(){
 
 function cancelEdit(){
 	showViewTaskModal(currentID);
+	$('#editTaskModal').modal('hide');
 }
 
 function showEditModal(){
@@ -22,7 +25,8 @@ function showEditModal(){
 	document.getElementById("descriptionE").value = tasksJSON[currentID]["description"];
 	document.getElementById("deadlineE").value = tasksJSON[currentID]["deadline"];
 	document.getElementById("completionCriteriaE").value = tasksJSON[currentID]["completionCriteria"];
-	document.getElementById("assignedToE").value = tasksJSON[currentID]["assignedTo"];
+	
+	populateSelect(allUsers['users'], "name", "userID", tasksJSON[currentID]["assignedTo"], "grpMemSlct");
 
 	$('#editTaskModal').modal('show');
 	$('#viewTaskModal').modal('hide');
@@ -54,9 +58,8 @@ function updateEditedValues(){
 
 		}
 	}
-
+	$('#editTaskModal').modal('hide');
 }
-
 
 function showDeleteModal(ID){
 	deleteID = ID;
@@ -78,11 +81,8 @@ function hideDeleteModal(){
 	});
 
 	$('#deleteTaskModal').modal('hide');
-	// TODO: Put back in
-	//location.reload(true);
+	window.location.reload(true);
 }
-
-
 
 function showViewTaskModalNoID(){
 	updateEditedValues();
@@ -98,15 +98,45 @@ function showViewTaskModal(ID){
 	currentID = ID;
 
 	document.getElementById("titleV").innerHTML = tasksJSON[currentID]["title"];
-	document.getElementById("isCompletedV").innerHTML = "false";
+
+	if(tasksJSON[currentID]["isCompleted"] == "on")
+	document.getElementById("isCompletedV").innerHTML = "True";
 	document.getElementById("descriptionV").innerHTML = tasksJSON[currentID]["description"];
-	document.getElementById("deadlineV").innerHTML = "02/13/2014 13:33";
-	document.getElementById("dateCreatedV").innerHTML = "02/08/2014 10:01";
-	document.getElementById("dateAssignedV").innerHTML = "02/08/2014 10:01";
+	document.getElementById("deadlineV").innerHTML = tasksJSON[currentID]["deadline"];
+	document.getElementById("dateCreatedV").innerHTML = tasksJSON[currentID]["dateCreated"];
+	document.getElementById("dateAssignedV").innerHTML = tasksJSON[currentID]["dateAssigned"];
 	document.getElementById("completionCriteriaV").innerHTML = tasksJSON[currentID]["completionCriteria"];
-	document.getElementById("assignedToV").innerHTML = "5454";
-	document.getElementById("assignedFromV").innerHTML ="5454";
-	document.getElementById("createdByV").innerHTML = "5454";
+
+	$.ajax({
+		type: 'GET',
+        url: "http://csse371-04.csse.rose-hulman.edu/User/" + tasksJSON[currentID]["assignedTo"],
+        success:function(data){
+          assignedTo = JSON.parse(data);
+        },
+        async: false
+	});
+
+	$.ajax({
+		type: 'GET',
+        url: "http://csse371-04.csse.rose-hulman.edu/User/" + tasksJSON[currentID]["assignedTo"],
+        success:function(data){
+          assignedFrom = JSON.parse(data);
+        },
+        async: false
+	});
+
+	$.ajax({
+		type: 'GET',
+        url: "http://csse371-04.csse.rose-hulman.edu/User/" + tasksJSON[currentID]["assignedTo"],
+        success:function(data){
+          createdBy = JSON.parse(data);
+        },
+        async: false
+	});
+
+	document.getElementById("assignedToV").innerHTML = assignedTo["name"];
+	document.getElementById("assignedFromV").innerHTML = assignedFrom["name"];
+	document.getElementById("createdByV").innerHTML = createdBy["name"];
 
 	$('#viewTaskModal').modal('show');
 	$('#editTaskModal').modal('hide');
@@ -149,4 +179,106 @@ function checkDeadlineFormat(deadline){
 		else if(day > 31 || day == 0 || month > 12 || month == 0 || year < date.getFullYear() || hours > 23 || minutes > 59) return false;
 		else return true;
 	}
+}
+
+function submitCreateModal(){
+		
+		//grab the form from the html document
+		var form = document.getElementById('createTask');
+		//still testing validation
+		//if(validateMeetingForm(form)){
+		//parse it into a json object
+		var formJSON = new convertFormToJSON(form);
+
+		//manually grab the values for each field expected by the backend
+		var userID = <%=@userID%>;
+		var postTitle = formJSON.title;
+		var postisCompleted = formJSON.isCompleted;
+		var postDescription = formJSON.description;
+		var postDeadline = formJSON.deadline;
+		var postDateCreated = formJSON.dateCreated;
+		var postDateAssigned = formJSON.dateAssigned;
+		var postCompletionCriteria = formJSON.completionCriteria;
+		var postAssignedFrom = <%=@userID%>;
+		var postCreatedBy = <%=@userID%>;
+
+
+		var attendees = getMembers('assignedTo');
+		var postAttendance = [];
+
+		for (var i = attendees.length - 1; i >= 0; i--) {
+		  postAttendance.push({"userID":attendees[i]});
+		};
+
+		//set up the data for the call
+		var postData = JSON.stringify({
+			"title":postTitle,
+			"isCompleted":postisCompleted,
+			"description":postDescription,
+			"deadline":postDeadline,
+			"dateCreated":postDateCreated,
+			"dateAssigned":postDateAssigned,
+			"completionCriteria":postCompletionCriteria,
+			"assignedTo":userID,
+			"assignedFrom":postAssignedFrom,
+			"createdBy":postCreatedBy
+		});
+			
+		//make the POST request to the backend
+		$.ajax({
+			type: 'POST',
+			url: 'http://csse371-04.csse.rose-hulman.edu/Task/',
+			data: postData,
+			success:function(data){
+				//if successful then close the modal and reload the page
+				$('#newTaskModal').modal('hide');
+				window.location.reload(true);
+			}
+		});
+}
+
+function getMembers(id){
+    var newMembers = [];
+    $( '#' + id + ' :selected' ).each( function( i, selected ) {
+      newMembers[i] = $( selected ).val();
+    });
+    return newMembers;
+}
+
+function populateSelect(JSONArray, JSONDisplayColumn, JSONValueColumn, JSONSelectValues, selectID){
+    var select = document.getElementById(selectID);
+
+    if(select.options.length != 0){
+      for(var i = select.options - 1; i > -1; i--){
+        select.remove(i);
+      }
+    }
+
+    for (var k in JSONArray){
+      var el = document.createElement("option");
+      el.textContent = JSONArray[k][JSONDisplayColumn];
+      el.value = JSONArray[k][JSONValueColumn];
+      select.appendChild(el);
+    }
+
+    for (var i in JSONSelectValues){
+      for (var j in select.options){
+        if(JSONSelectValues[i][JSONValueColumn] == select.options[j].value){
+          select.options[j].selected = true;
+          break;
+        }
+      }
+    }
+}
+
+//This function takes a form element and creates a json object using the name of each input in the form as the field and the value of each input as the corresponding input
+function convertFormToJSON(form){
+	var array = jQuery(form).serializeArray();
+	var json = {};
+
+	jQuery.each(array, function() {
+		json[this.name] = this.value || '';
+	});
+
+	return json;
 }

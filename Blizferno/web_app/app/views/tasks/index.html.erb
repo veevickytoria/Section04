@@ -5,63 +5,6 @@
 
 <%= render "tasksJS.js.erb" %>
 
-$(window).load(function() {
-	jQuery('#createTask').bind('submit', function(event){
-		event.preventDefault();
-
-		var form = this;
-		var formJSON = new ConvertFormToJSON(form);
-
-		var postTitle = "testTitle";
-		var postIsCompleted = "false";
-		var postDescription = "testDescription";
-		var postDeadline = "02/13/2014 13:03";
-		var postDateCreated = "02/02/2014 10:11";
-		var postDateAssigned = "02/02/2014 10:11";
-		var postCompletionCriteria = "testCompletionCriteria";
-		var postAssignedTo = "5454";
-		var postAssignedFrom = "5454";
-		var postCreatedBy = "5454";
-
-
-	var postData = JSON.stringify({
-			"title":postTitle,
-			"isCompleted":postIsCompleted,
-			"description":postDescription,
-			"deadline":postDeadline,
-			"dateCreated":postDateCreated,
-			"dateAssigned":postDateAssigned,
-			"completionCriteria":postCompletionCriteria,
-			"assignedTo":postAssignedTo,
-			"assignedFrom":postAssignedFrom,
-			"createdBy":postCreatedBy
-		});
-
-		$.ajax({
-			type: 'POST',
-			url: 'http://csse371-04.csse.rose-hulman.edu/Task/',
-			data: postData,
-			dataType: 'json',
-			success:function(data){
-				alert("created new task");
-			}
-		});
-
-
-		return true;
-	});
-});
-
-function ConvertFormToJSON(form){
-	var array = jQuery(form).serializeArray();
-	var json = {};
-
-	jQuery.each(array, function() {
-		json[this.name] = this.value || '';
-	});
-
-	return json;
-}
 </script>
 
 
@@ -80,7 +23,7 @@ function ConvertFormToJSON(form){
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary" form="createTask">Submit</button>
+        <button type="submit" class="btn btn-primary" onclick="submitCreateModal()">Submit</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -136,7 +79,7 @@ function ConvertFormToJSON(form){
         <%= render "edit" %>
       </div>
       <div class="modal-footer">
-        <button id="cancelEditButton" type="button" class="btn btn-default" onclick="cancelEdit()" data-refresh="true" data-dismiss="modal">Cancel</button>
+        <button id="cancelEditButton" type="button" class="btn btn-default" onclick="cancelEdit()" data-dismiss="modal" data-refresh="true">Cancel</button>
         <button type="button" class="btn btn-primary" onclick="showViewTaskModalNoID()" data-refresh="true" >Save Changes</button>
       </div>
     </div><!-- /.modal-content -->
