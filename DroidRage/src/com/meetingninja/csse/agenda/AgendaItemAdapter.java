@@ -17,16 +17,19 @@ package com.meetingninja.csse.agenda;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+import objects.Task;
 import objects.Topic;
 import pl.polidea.treeview.AbstractTreeViewAdapter;
 import pl.polidea.treeview.TreeBuilder;
 import pl.polidea.treeview.TreeNodeInfo;
 import pl.polidea.treeview.TreeStateManager;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -38,10 +41,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.doomonafireball.betterpickers.hmspicker.HmsPickerBuilder;
 import com.doomonafireball.betterpickers.hmspicker.HmsPickerDialogFragment.HmsPickerDialogHandler;
 import com.meetingninja.csse.R;
+import com.meetingninja.csse.database.Keys;
+import com.meetingninja.csse.tasks.EditTaskActivity;
 
 public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 	private final String TAG = AgendaItemAdapter.class.getSimpleName();
@@ -204,18 +208,6 @@ public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 		return rowView;
 	}
 
-	// @Override
-	// public void handleItemClick(final View view, final Object id) {
-	// final Topic t = (Topic) id;
-	// final TreeNodeInfo<Topic> info = getManager().getNodeInfo(t);
-	// if (info.isWithChildren()) {
-	// super.handleItemClick(view, id);
-	// } else {
-	// final ViewGroup vg = (ViewGroup) view;
-	//
-	// }
-	// }
-
 	@Override
 	public long getItemId(final int position) {
 
@@ -237,27 +229,62 @@ public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 		}
 
 		@Override
-		public void onClick(View v) {
-			HmsPickerBuilder hms = new HmsPickerBuilder().setFragmentManager(
-					((FragmentActivity) getActivity())
-							.getSupportFragmentManager()).setStyleResId(
-					R.style.BetterPickersDialogFragment);
-			hms.addHmsPickerDialogHandler(new HmsPickerDialogHandler() {
+		public void onClick(final View v) {
 
-				@Override
-				public void onDialogHmsSet(int reference, int hours,
-						int minutes, int seconds) {
-					topic.setTime("" + (minutes + hours * 60));
-					changeText.setText(topic.getTime());
+			final CharSequence[] items = { "Set Time", "Create Task from Item",
+					"Delete Topic" };
 
+			AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+			builder.setTitle("Select an Option");
+			builder.setItems(items, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int item) {
+
+					switch (item) {
+					case 0:
+						HmsPickerBuilder hms = new HmsPickerBuilder()
+								.setFragmentManager(
+										((FragmentActivity) getActivity())
+												.getSupportFragmentManager())
+								.setStyleResId(
+										R.style.BetterPickersDialogFragment);
+						hms.addHmsPickerDialogHandler(new HmsPickerDialogHandler() {
+
+							@Override
+							public void onDialogHmsSet(int reference,
+									int hours, int minutes, int seconds) {
+								topic.setTime("" + (minutes + hours * 60));
+								changeText.setText(topic.getTime());
+
+							}
+
+						});
+						hms.show();
+						Topic t = (Topic) v.getTag();
+						Map<String, String> info = getDescription(t);
+						Log.d(TAG, info.get("title"));
+						getManager().notifyDataSetChanged();
+						break;
+					case 1:
+
+						Intent i = new Intent(getActivity(),
+								EditTaskActivity.class);
+						Task q = new Task();
+						q.setTitle(topic.getTitle());
+						i.putExtra(Keys.Task.PARCEL, q);
+						((Activity) mContext).startActivityForResult(i, 7);
+
+						break;
+					case 2:
+
+						break;
+					default:
+						break;
+					}
 				}
-
 			});
-			hms.show();
-			Topic t = (Topic) v.getTag();
-			Map<String, String> info = getDescription(t);
-			Log.d(TAG, info.get("title"));
-			getManager().notifyDataSetChanged();
+			AlertDialog alert = builder.create();
+			alert.show();
+
 		}
 	}
 
@@ -272,8 +299,10 @@ public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 		public void onClick(View v) {
 			// final Topic t = (Topic) v.getTag();
 			Topic subT = new Topic(); // TODO : Make new subtopic
+			subT.setTitle("");
 			subT.setTime("0");
 			parent.addTopic(subT);
+
 			// System.out.println("Echo: Created" + subT + " " + parent);
 			// List<Topic> childList = getManager().getChildren(parent);
 			// System.out.println(childList.size());
@@ -285,6 +314,7 @@ public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 			// getManager().addAfterChild(parent, subT, null);
 			// }
 			((AgendaActivity) mContext).reconstructTree();
+
 			getManager().notifyDataSetChanged();
 		}
 

@@ -109,8 +109,12 @@ public class Group extends Event implements Parcelable {
 
 	@Override
 	public String getID() {
-		// TODO Auto-generated method stub
 		return groupID;
+	}
+
+	public void addMembers(ArrayList<User> members) {
+		this.members.addAll(members);
+
 	}
 
 }

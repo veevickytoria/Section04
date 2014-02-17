@@ -19,7 +19,10 @@ import de.timroes.android.listview.EnhancedListView;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -30,12 +33,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class ProjectFragment extends Fragment{
-	
-	
+
+
 	private static ProjectFragment sInstance= null;
 	private List<Project> projectsList = new ArrayList<Project>();
 	private ProjectItemAdapter projectAdpt;
@@ -50,33 +54,34 @@ public class ProjectFragment extends Fragment{
 		}
 		return sInstance;
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//		super.onCreate(savedInstanceState);
-//		setContentView(R.layout.activity_project_fragment);
+		//		super.onCreate(savedInstanceState);
+		//		setContentView(R.layout.activity_project_fragment);
 		setHasOptionsMenu(true);
 		session = SessionManager.getInstance();
 		View v = inflater.inflate(R.layout.fragment_project, container, false);
 		setUpListView(v);
-		
+
 		refreshProjects();
 		return v;
 
 	}
-//	@Override
-//	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//		if (resultCode == Activity.RESULT_OK) {
-//			if (requestCode == 6) {
-//				refreshTasks();
-//			} else if (requestCode == 7) {
-//				Task t = data.getParcelableExtra(Keys.Task.PARCEL);
-//				t.setCreatedBy(session.getUserID());
-//				creator.createTask(t);
-//			}
-//		}
-//	}
-	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode == Activity.RESULT_OK) {
+			if (requestCode == 6) {
+				refreshProjects();
+			} else if (requestCode == 7) {
+				Project p = data.getParcelableExtra(Keys.Project.PARCEL);
+				projectsList.add(p);
+				Collections.sort(projectsList);
+				projectAdpt.notifyDataSetChanged();
+			}
+		}
+	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -84,10 +89,7 @@ public class ProjectFragment extends Fragment{
 			refreshProjects();
 			return true;
 		case R.id.action_new:
-//			Intent i = new Intent(getActivity(), EditTaskActivity.class);// yeah shouldn't be this
-//			Project p = new Project();
-//			i.putExtra(Keys.Project.PARCEL, p);
-//			startActivityForResult(i, 7);
+			createProjectOption();
 			return true;
 		default:
 			return super.onContextItemSelected(item);
@@ -97,6 +99,50 @@ public class ProjectFragment extends Fragment{
 		projectsList.clear();
 		projectsList.addAll(listOfProjects);
 		projectAdpt.notifyDataSetChanged();
+	}
+	public void createProjectOption(){
+		final EditText title = new EditText(getActivity());
+		//      title.setText(getProjectTitle());
+		new AlertDialog.Builder(getActivity()).setTitle("Enter a title").setPositiveButton("OK", new OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				createProject(title.getText().toString());
+			}
+		}).setNegativeButton("Cancel", new OnClickListener(){
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+			}
+		}).setView(title).show();
+		
+	}
+	public void createProject(String title){
+		Project project = new Project();
+		project.setProjectTitle(title);
+		new AsyncTask<Project,Void,Project>(){
+			@Override
+			protected void onPostExecute(Project p) {
+				super.onPostExecute(p);
+				Intent i = new Intent(getActivity(), ViewProjectActivity.class);
+				i.putExtra(Keys.Project.PARCEL, p);
+				startActivityForResult(i, 7);
+				//TODO: check if you add yourself to a project if it automatically updates fragment list
+			}
+			@Override
+			protected Project doInBackground(Project... params){
+				Project p = new Project();
+				try {
+					p=ProjectDatabaseAdapter.createProject(params[0]);
+				} catch (IOException e) {
+					System.out.println("failed to create project");
+					e.printStackTrace();
+				}
+				return p;
+			}
+
+		}.execute(project);
+		
 	}
 
 	private void refreshProjects() {
@@ -131,12 +177,12 @@ public class ProjectFragment extends Fragment{
 			}
 
 		}.execute(session.getUserID());
-		
+
 	}
 	private void deleteProject(Project p) {
 
 		new AsyncTask<Project,Void,Void>(){
-		
+
 			@Override
 			protected Void doInBackground(Project... params){
 				try {
@@ -149,9 +195,9 @@ public class ProjectFragment extends Fragment{
 			}
 		}.execute(p);
 	}
-	
+
 	private void loadProject(Project project) {
-//		while (project.getEndTimeInMillis() == 0L);
+		//		while (project.getEndTimeInMillis() == 0L);
 		Intent viewProject = new Intent(getActivity(), ViewProjectActivity.class);
 		viewProject.putExtra(Keys.Project.PARCEL, project);
 		startActivityForResult(viewProject, 6);	
@@ -161,29 +207,29 @@ public class ProjectFragment extends Fragment{
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.menu_new_and_refresh, menu);
 	}
-	
+
 	private void setUpListView(View v) {
 		projectAdpt = new ProjectItemAdapter(getActivity(),R.layout.list_item_task, projectsList);
-		
+
 		l = (EnhancedListView) v.findViewById(R.id.project_list);
 		l.setAdapter(projectAdpt);
 		l.setEmptyView(v.findViewById(android.R.id.empty));
-//		final EditText input = (EditText) v.findViewById(R.id.my_autocomplete);
-		
+		//		final EditText input = (EditText) v.findViewById(R.id.my_autocomplete);
+
 		l.setDismissCallback(new de.timroes.android.listview.EnhancedListView.OnDismissCallback() {
 			@Override
 			public EnhancedListView.Undoable onDismiss(EnhancedListView listView, final int position) {
 
 				final Project item = (Project) projectAdpt.getItem(position);
-//				tempDeletedContacts.add(item);
+				//				tempDeletedContacts.add(item);
 				projectsList.remove(item);
-//				projectAdpt.remove(item);
+				//				projectAdpt.remove(item);
 
 				return new EnhancedListView.Undoable() {
 					@Override
 					public void undo() {
 						projectsList.add(item);
-//						tempDeletedContacts.remove(item);
+						//						tempDeletedContacts.remove(item);
 						projectAdpt.notifyDataSetChanged();
 					}
 
@@ -195,7 +241,7 @@ public class ProjectFragment extends Fragment{
 					@Override
 					public void discard() {
 						deleteProject(item);
-//						tempDeletedContacts.remove(item);
+						//						tempDeletedContacts.remove(item);
 
 					}
 				};
@@ -206,8 +252,8 @@ public class ProjectFragment extends Fragment{
 
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View v, int position,long id) {
-				Intent viewProject = new Intent(getActivity(), ViewProjectActivity.class);
-				startActivity(viewProject);
+				//				Intent viewProject = new Intent(getActivity(), ViewProjectActivity.class);
+				//				startActivity(viewProject);
 				Project p = projectAdpt.getItem(position);
 				loadProject(p);
 			}
@@ -218,11 +264,11 @@ public class ProjectFragment extends Fragment{
 
 		l.setSwipeDirection(EnhancedListView.SwipeDirection.BOTH);
 	}
-	
-	
+
+
 }
 
-	
+
 class ProjectItemAdapter extends ArrayAdapter<Project> {
 	private List<Project> projects;
 	private Context context;
@@ -275,7 +321,7 @@ class ProjectItemAdapter extends ArrayAdapter<Project> {
 		Project project = projects.get(position);
 
 		viewHolder.title.setText(project.getProjectTitle());
-		
+
 		return rowView;
 	}
 }

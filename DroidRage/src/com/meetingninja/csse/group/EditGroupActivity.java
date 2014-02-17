@@ -9,6 +9,8 @@ import objects.SerializableUser;
 import objects.User;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -56,6 +58,7 @@ public class EditGroupActivity extends Activity implements TokenListener {
 	private AutoCompleteAdapter autoAdapter;
 	private ArrayList<String> addedIds = new ArrayList<String>();
 	private ArrayList<User> addedUsers = new ArrayList<User>();
+	private Dialog dlg;
 
 	// public static EditGroupActivity newInstance(Bundle args){
 	// EditGroupActivity act = new EditGroupActivity();
@@ -163,12 +166,11 @@ public class EditGroupActivity extends Activity implements TokenListener {
 	}
 
 	private void addContacts(List<Contact> allContacts){
-		bothUsers.add(null);
 		for(Contact c : allContacts){
-			System.out.println(c.getContact().getDisplayName());
 			bothUsers.add(c.getContact());
+			allUsers.remove(c.getContact());
 		}
-		bothUsers.add(null);
+
 		bothUsers.addAll(allUsers);
 	}
 
@@ -242,15 +244,17 @@ public class EditGroupActivity extends Activity implements TokenListener {
 	}
 
 	public void addMember(View view) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle("Search by name or email:");
-		View autocompleteView = this.getLayoutInflater().inflate(
-				R.layout.fragment_autocomplete, null);
-		final ContactTokenTextView input = (ContactTokenTextView) autocompleteView
-				.findViewById(R.id.my_autocomplete);
+
+
+
+		dlg = new Dialog(this);
+		dlg.setTitle("Search by name or email:");
+		View autocompleteView = getLayoutInflater().inflate(R.layout.fragment_autocomplete, null);
+		final ContactTokenTextView input = (ContactTokenTextView) autocompleteView.findViewById(R.id.my_autocomplete);
 		autoAdapter = new AutoCompleteAdapter(this, bothUsers);
 		input.setAdapter(autoAdapter);
 		input.setTokenListener(this);
+		Builder builder = new AlertDialog.Builder(getApplicationContext());
 		builder.setView(autocompleteView);
 		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 			@Override
@@ -268,6 +272,8 @@ public class EditGroupActivity extends Activity implements TokenListener {
 					}
 				});
 		builder.show();
+		dlg.setContentView(autocompleteView);
+		dlg.show();
 	}
 
 	private void loadUser(String userID) {
@@ -293,6 +299,10 @@ public class EditGroupActivity extends Activity implements TokenListener {
 
 		if (added != null) {
 			addedUsers.add(added);
+			dlg.dismiss();
+			displayedGroup.addMembers(addedUsers);
+			addedUsers.clear();
+			mUserAdapter.notifyDataSetChanged();
 		}
 
 	}

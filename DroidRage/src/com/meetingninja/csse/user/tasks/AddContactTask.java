@@ -24,7 +24,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.meetingninja.csse.database.AsyncResponse;
-import com.meetingninja.csse.database.UserDatabaseAdapter;
+import com.meetingninja.csse.database.ContactDatabaseAdapter;
 import com.meetingninja.csse.user.UserListFragment;
 
 public class AddContactTask implements AsyncResponse<List<Contact>> {
@@ -59,7 +59,7 @@ public class AddContactTask implements AsyncResponse<List<Contact>> {
 		protected List<Contact> doInBackground(String... params) {
 			List<Contact> contacts = new ArrayList<Contact>();
 			try {
-				contacts = UserDatabaseAdapter.addContact(params[0]);
+				contacts = ContactDatabaseAdapter.addContact(params[0]);
 			} catch (IOException e) {
 				Log.e("ContactAdder", "Error: Unable to add contact");
 				Log.e(TAG, e.getLocalizedMessage());

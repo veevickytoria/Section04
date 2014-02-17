@@ -10,7 +10,12 @@ public class NotesProjectFragment extends NotesFragment{
 	
 	@Override
 	protected void deleteNote(Note note){
-		
+		pCont.deleteNote(note);
+	}
+	
+	@Override
+	protected void createNote(){
+		pCont.createNote();
 	}
 	
 	public NotesProjectFragment setProjectController(ViewProjectActivity pCont){

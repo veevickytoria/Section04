@@ -23,6 +23,7 @@ import objects.Contact;
 import objects.SerializableUser;
 import objects.User;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -67,7 +68,7 @@ public class UserListFragment extends Fragment implements TokenListener {
 	private List<Contact> contacts = new ArrayList<Contact>();
 	private List<Contact> tempDeletedContacts = new ArrayList<Contact>();
 	private List<Contact> viewContacts = new ArrayList<Contact>();
-
+	private Dialog dlg;
 	public UserListFragment() {
 		// Required empty public constructor
 	}
@@ -88,7 +89,7 @@ public class UserListFragment extends Fragment implements TokenListener {
 			}
 			mContactAdapter.notifyDataSetChanged();
 			mContactAdapter.getFilter().filter("");
-			
+
 		}else{
 			setHasOptionsMenu(true);
 			populateList(true); // uses async-task
@@ -116,52 +117,27 @@ public class UserListFragment extends Fragment implements TokenListener {
 	}
 
 	public void addContactsOption() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		builder.setTitle("Search by name or email:");
+
 		// TODO: only display users that aren't already a contact
 		UserVolleyAdapter.fetchAllUsers(new AsyncResponse<List<User>>() {
 			@Override
 			public void processFinish(List<User> result) {
 				allUsers = new ArrayList<User>(result);
+				addContactsOptionLoaded();
 			}
 		});
+	}
+	public void addContactsOptionLoaded(){
 
+		dlg = new Dialog(getActivity());
+		dlg.setTitle("Search by name or email:");
 		View autocompleteView = getActivity().getLayoutInflater().inflate(R.layout.fragment_autocomplete, null);
 		final ContactTokenTextView input = (ContactTokenTextView) autocompleteView.findViewById(R.id.my_autocomplete);
 		autoAdapter = new AutoCompleteAdapter(getActivity(), allUsers);
 		input.setAdapter(autoAdapter);
-
 		input.setTokenListener(this);
-		builder.setView(autocompleteView);
-		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				if(addedUser == null){
-					dialog.cancel();
-					return;
-				}
-				boolean contains = false;
-				for (int i = 0; i < contacts.size(); i++) {
-					if (contacts.get(i).getContact().equals(addedUser)) {
-						contains = true;
-					}
-				}
-				if (contains) {
-					AlertDialogUtil.displayDialog(getActivity(),"Unable to add contact","This user is already added as a contact", "OK",null);
-					addedUser=null;
-				} else {
-					addContact(addedUser);
-					addedUser = null;
-				}
-			}
-		});
-		builder.setNegativeButton("Cancel",	new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.cancel();
-					}
-				});
-		builder.show();
+		dlg.setContentView(autocompleteView);
+		dlg.show();
 	}
 
 	@Override
@@ -175,185 +151,203 @@ public class UserListFragment extends Fragment implements TokenListener {
 
 		if (added != null) {
 			addedUser = added;
+			dlg.dismiss();
+			if(addedUser == null){
+				return;
+			}
+			boolean contains = false;
+			for (int i = 0; i < contacts.size(); i++) {
+				if (contacts.get(i).getContact().equals(addedUser)) {
+					contains = true;
+				}
+			}
+			if (contains) {
+				AlertDialogUtil.displayDialog(getActivity(),"Unable to add contact","This user is already added as a contact", "OK",null);
+				addedUser=null;
+			} else {
+				addContact(addedUser);
+				addedUser = null;
+			}
 		}
 	}
 
-	@Override
-	public void onTokenRemoved(Object arg0) {
-		SerializableUser removed = null;
-		if (arg0 instanceof SerializableUser){
-			removed = (SerializableUser) arg0;
-		} 	else if (arg0 instanceof User){
-			removed = new SerializableUser((User) arg0);
-		}
-		if (removed != null) {
-			addedUser = null;
-		}
 
+@Override
+public void onTokenRemoved(Object arg0) {
+	SerializableUser removed = null;
+	if (arg0 instanceof SerializableUser){
+		removed = (SerializableUser) arg0;
+	} 	else if (arg0 instanceof User){
+		removed = new SerializableUser((User) arg0);
+	}
+	if (removed != null) {
+		addedUser = null;
 	}
 
-	public void setContacts(List<Contact> tempContacts) {
-		if (!tempContacts.isEmpty()) {
-			contacts.clear();
-			contacts.addAll(tempContacts);
-			Collections.sort(contacts);
-			
-			for (int i = 0; i < tempDeletedContacts.size(); i++) {
-				// why doesn't this work? cuz i need to make equals method in contact
-				// contacts.remove(tempDeletedContacts.get(i));
-				for (int j = 0; j < contacts.size(); j++) {
-					if (contacts.get(j).getContact().getID().equals(tempDeletedContacts.get(i).getContact().getID())) {
-						contacts.remove(j);
-						break;
-					}
+}
+
+public void setContacts(List<Contact> tempContacts) {
+	if (!tempContacts.isEmpty()) {
+		contacts.clear();
+		contacts.addAll(tempContacts);
+		Collections.sort(contacts);
+
+		for (int i = 0; i < tempDeletedContacts.size(); i++) {
+			// why doesn't this work? cuz i need to make equals method in contact
+			// contacts.remove(tempDeletedContacts.get(i));
+			for (int j = 0; j < contacts.size(); j++) {
+				if (contacts.get(j).getContact().getID().equals(tempDeletedContacts.get(i).getContact().getID())) {
+					contacts.remove(j);
+					break;
 				}
 			}
 		}
-		mContactAdapter.notifyDataSetChanged();
 	}
+	mContactAdapter.notifyDataSetChanged();
+	mContactAdapter.getFilter().filter("");
+}
 
-	protected void addContact(User user) {
-		AddContactTask adder = new AddContactTask(this);
-		adder.addContact(user.getID());
-		mContactAdapter.notifyDataSetChanged();
-	}
+protected void addContact(User user) {
+	AddContactTask adder = new AddContactTask(this);
+	adder.addContact(user.getID());	
+}
 
-	protected void deleteContact(Contact item) {
-		DeleteContactTask deleter = new DeleteContactTask(this);
-		deleter.deleteContact(item.getRelationID());
-		mContactAdapter.notifyDataSetChanged();
-	}
+protected void deleteContact(Contact item) {
+	DeleteContactTask deleter = new DeleteContactTask(this);
+	deleter.deleteContact(item.getRelationID());
+	mContactAdapter.notifyDataSetChanged();
+}
 
-	@Override
-	public void onPause() {
-		dbHelper.close();
-		super.onPause();
-	}
+@Override
+public void onPause() {
+	dbHelper.close();
+	super.onPause();
+}
 
-	private void populateList(boolean add) {
-		// UserVolleyAdapter.fetchAllUsers(this);
-		SessionManager session = SessionManager.getInstance();
-		fetcher = new RetContactsObj(add);
-		fetcher.execute(session.getUserID());
-		// TODO: also remeve tempDeletedContacts
-	}
+private void populateList(boolean add) {
+	// UserVolleyAdapter.fetchAllUsers(this);
+	SessionManager session = SessionManager.getInstance();
+	fetcher = new RetContactsObj(add);
+	fetcher.execute(session.getUserID());
+	// TODO: also remeve tempDeletedContacts
+}
 
-	private void setUpListView(View v) {
-		mContactAdapter = new ContactArrayAdapter(getActivity(),R.layout.list_item_user, contacts);
-		
-		l = (EnhancedListView) v.findViewById(R.id.contacts_list);
-		l.setAdapter(mContactAdapter);
-		l.setEmptyView(v.findViewById(android.R.id.empty));
-		final EditText input = (EditText) v.findViewById(R.id.my_autocomplete);
-		input.addTextChangedListener(new TextWatcher(){
+private void setUpListView(View v) {
+	mContactAdapter = new ContactArrayAdapter(getActivity(),R.layout.list_item_user, contacts);
 
-			@Override
-			public void afterTextChanged(Editable arg0) {
-				String text = input.getText().toString().toLowerCase();
-                mContactAdapter.getFilter().filter(text);
-				
-			}
+	l = (EnhancedListView) v.findViewById(R.id.contacts_list);
+	l.setAdapter(mContactAdapter);
+	l.setEmptyView(v.findViewById(android.R.id.empty));
+	final EditText input = (EditText) v.findViewById(R.id.my_autocomplete);
+	input.addTextChangedListener(new TextWatcher(){
 
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-				// TODO Auto-generated method stub
-				
-			}
+		@Override
+		public void afterTextChanged(Editable arg0) {
+			String text = input.getText().toString().toLowerCase();
+			mContactAdapter.getFilter().filter(text);
 
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-		});
-		l.setDismissCallback(new de.timroes.android.listview.EnhancedListView.OnDismissCallback() {
-			@Override
-			public EnhancedListView.Undoable onDismiss(EnhancedListView listView, final int position) {
-
-				final Contact item = (Contact) mContactAdapter.getItem(position);
-				tempDeletedContacts.add(item);
-				contacts.remove(item);
-				// for(int i=0;i<contacts.size();i++){
-				// System.out.println("this one: "+contacts.get(i).getContact().getDisplayName());
-				// }
-				mContactAdapter.remove(item);
-
-				return new EnhancedListView.Undoable() {
-					@Override
-					public void undo() {
-						// mContactAdapter.insert(item, position);
-						contacts.add(item);
-						tempDeletedContacts.remove(item);
-						mContactAdapter.notifyDataSetChanged();
-					}
-
-					@Override
-					public String getTitle() {
-						return "Member deleted";
-					}
-
-					@Override
-					public void discard() {
-						deleteContact(item);
-						tempDeletedContacts.remove(item);
-
-					}
-				};
-			}
-		});
-		l.setUndoHideDelay(5000);
-		l.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View v, int position,long id) {
-				User clicked = mContactAdapter.getItem(position).getContact();
-				Intent profileIntent = new Intent(v.getContext(),ProfileActivity.class);
-				profileIntent.putExtra(Keys.User.PARCEL, clicked);
-				startActivity(profileIntent);
-			}
-
-		});
-		l.enableSwipeToDismiss();
-		l.setSwipingLayout(R.id.list_group_item_frame_1);
-
-		l.setSwipeDirection(EnhancedListView.SwipeDirection.BOTH);
-	}
-
-	final class RetContactsObj implements AsyncResponse<List<Contact>> {
-
-		private GetContactsTask contactsFetcher;
-		private boolean add;
-
-		public RetContactsObj(boolean add) {
-			contactsFetcher = new GetContactsTask(this);
-			this.add = add;
-		}
-
-		public void execute(String userID) {
-			contactsFetcher.execute(userID);
 		}
 
 		@Override
-		public void processFinish(List<Contact> result) {
-			contacts.clear();
-			contacts.addAll(result);
-			for (int i = 0; i < tempDeletedContacts.size(); i++) {
-				// why doesn't this work?
-				// contacts.remove(tempDeletedContacts.get(i));
-				for (int j = 0; j < contacts.size(); j++) {
-					if (contacts.get(j).getContact().getID().equals(tempDeletedContacts.get(i).getContact().getID())) {
-						contacts.remove(j);
-						break;
-					}
+		public void beforeTextChanged(CharSequence s, int start, int count,
+				int after) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onTextChanged(CharSequence s, int start, int before,
+				int count) {
+			// TODO Auto-generated method stub
+
+		}
+
+	});
+	l.setDismissCallback(new de.timroes.android.listview.EnhancedListView.OnDismissCallback() {
+		@Override
+		public EnhancedListView.Undoable onDismiss(EnhancedListView listView, final int position) {
+
+			final Contact item = (Contact) mContactAdapter.getItem(position);
+			tempDeletedContacts.add(item);
+			contacts.remove(item);
+			// for(int i=0;i<contacts.size();i++){
+			// System.out.println("this one: "+contacts.get(i).getContact().getDisplayName());
+			// }
+			mContactAdapter.remove(item);
+
+			return new EnhancedListView.Undoable() {
+				@Override
+				public void undo() {
+					// mContactAdapter.insert(item, position);
+					contacts.add(item);
+					tempDeletedContacts.remove(item);
+					mContactAdapter.notifyDataSetChanged();
+				}
+
+				@Override
+				public String getTitle() {
+					return "Member deleted";
+				}
+
+				@Override
+				public void discard() {
+					deleteContact(item);
+					tempDeletedContacts.remove(item);
+
+				}
+			};
+		}
+	});
+	l.setUndoHideDelay(5000);
+	l.setOnItemClickListener(new OnItemClickListener() {
+
+		@Override
+		public void onItemClick(AdapterView<?> arg0, View v, int position,long id) {
+			User clicked = mContactAdapter.getItem(position).getContact();
+			Intent profileIntent = new Intent(v.getContext(),ProfileActivity.class);
+			profileIntent.putExtra(Keys.User.PARCEL, clicked);
+			startActivity(profileIntent);
+		}
+
+	});
+	l.enableSwipeToDismiss();
+	l.setSwipingLayout(R.id.list_group_item_frame_1);
+
+	l.setSwipeDirection(EnhancedListView.SwipeDirection.BOTH);
+}
+
+final class RetContactsObj implements AsyncResponse<List<Contact>> {
+
+	private GetContactsTask contactsFetcher;
+	private boolean add;
+
+	public RetContactsObj(boolean add) {
+		contactsFetcher = new GetContactsTask(this);
+		this.add = add;
+	}
+
+	public void execute(String userID) {
+		contactsFetcher.execute(userID);
+	}
+
+	@Override
+	public void processFinish(List<Contact> result) {
+		contacts.clear();
+		contacts.addAll(result);
+		for (int i = 0; i < tempDeletedContacts.size(); i++) {
+			// why doesn't this work?
+			// contacts.remove(tempDeletedContacts.get(i));
+			for (int j = 0; j < contacts.size(); j++) {
+				if (contacts.get(j).getContact().getID().equals(tempDeletedContacts.get(i).getContact().getID())) {
+					contacts.remove(j);
+					break;
 				}
 			}
-			mContactAdapter.notifyDataSetChanged();
-			mContactAdapter.getFilter().filter("");
 		}
+		mContactAdapter.notifyDataSetChanged();
+		mContactAdapter.getFilter().filter("");
 	}
-	
+}
+
 
 }

@@ -49,7 +49,7 @@ public abstract class AbstractTreeViewAdapter<T> extends BaseAdapter implements
 	};
 
 	private boolean collapsible;
-	private final Activity activity;
+	public final Activity activity;
 
 	public Activity getActivity() {
 		return activity;

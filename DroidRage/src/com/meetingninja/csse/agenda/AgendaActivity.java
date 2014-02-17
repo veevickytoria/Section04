@@ -15,17 +15,17 @@
  ******************************************************************************/
 package com.meetingninja.csse.agenda;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import objects.Agenda;
+import objects.Task;
 import objects.Topic;
 import pl.polidea.treeview.InMemoryTreeStateManager;
 import pl.polidea.treeview.TreeBuilder;
 import pl.polidea.treeview.TreeStateManager;
 import pl.polidea.treeview.TreeViewList;
+import android.app.Activity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
@@ -37,9 +37,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.meetingninja.csse.R;
-import com.meetingninja.csse.database.AgendaDatabaseAdapter;
+import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.Keys;
-import com.meetingninja.csse.extras.JsonUtils;
+import com.meetingninja.csse.tasks.tasks.CreateTaskTask;
 
 public class AgendaActivity extends FragmentActivity {
 
@@ -194,6 +194,23 @@ public class AgendaActivity extends FragmentActivity {
 	}
 
 	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+		System.out.println("Arrived here");
+		if (resultCode == Activity.RESULT_OK) {
+			System.out.println("Arrived here");
+			if (requestCode == 6) {
+			} else if (requestCode == 7) {
+				System.out.println("Arrived here");
+				Task t = data.getParcelableExtra(Keys.Task.PARCEL);
+				t.setCreatedBy(SessionManager.getInstance().getUserID());
+				CreateTaskTask creator = new CreateTaskTask(null);
+				creator.createTask(t);
+			}
+		}
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(final MenuItem item) {
 		// Handle presses on the action bar items
 		// Pass the event to ActionBarDrawerToggle, if it returns
@@ -205,11 +222,6 @@ public class AgendaActivity extends FragmentActivity {
 		case R.id.action_delete:
 			Intent intent = getIntent();
 			Boolean isCreated = intent.getBooleanExtra("isCreated", false);
-			if (isCreated) {
-				String agendaID = intent.getStringExtra("agendaID");
-				AsyncTask<String, Void, Void> deleteTask = new DeleteAgendaTask();
-				deleteTask.execute(agendaID);
-			}
 			finish();
 			return true;
 		case R.id.collapsible_menu_item:
@@ -232,69 +244,5 @@ public class AgendaActivity extends FragmentActivity {
 		return true;
 	}
 
-	// @Override
-	// public void onCreateContextMenu(final ContextMenu menu, final View v,
-	// final ContextMenuInfo menuInfo) {
-	// final AdapterContextMenuInfo adapterInfo = (AdapterContextMenuInfo)
-	// menuInfo;
-	// final long id = adapterInfo.id;
-	// final TreeNodeInfo<Long> info = manager.getNodeInfo(id);
-	// final MenuInflater menuInflater = getMenuInflater();
-	// menuInflater.inflate(R.menu.context_menu, menu);
-	// if (info.isWithChildren()) {
-	// if (info.isExpanded()) {
-	// menu.findItem(R.id.context_menu_expand_item).setVisible(false);
-	// menu.findItem(R.id.context_menu_expand_all).setVisible(false);
-	// } else {
-	// menu.findItem(R.id.context_menu_collapse).setVisible(false);
-	// }
-	// } else {
-	// menu.findItem(R.id.context_menu_expand_item).setVisible(false);
-	// menu.findItem(R.id.context_menu_expand_all).setVisible(false);
-	// menu.findItem(R.id.context_menu_collapse).setVisible(false);
-	// }
-	// super.onCreateContextMenu(menu, v, menuInfo);
-	// }
-
-	// @Override
-	// public boolean onContextItemSelected(final MenuItem item) {
-	// final AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
-	// .getMenuInfo();
-	// final long id = info.id;
-	// if (item.getItemId() == R.id.context_menu_collapse) {
-	// manager.collapseChildren(id);
-	// return true;
-	// } else if (item.getItemId() == R.id.context_menu_expand_all) {
-	// manager.expandEverythingBelow(id);
-	// return true;
-	// } else if (item.getItemId() == R.id.context_menu_expand_item) {
-	// manager.expandDirectChildren(id);
-	// return true;
-	// } else if (item.getItemId() == R.id.context_menu_delete) {
-	// manager.removeNodeRecursively(id);
-	// return true;
-	// } else {
-	// return super.onContextItemSelected(item);
-	// }
-	// }
-
-	/**
-	 * Represents an asynchronous task used to delete the agenda
-	 */
-	public class DeleteAgendaTask extends AsyncTask<String, Void, Void> {
-		@Override
-		protected Void doInBackground(String... params) {
-			String AgendaID = params[0];
-			try {
-				AgendaDatabaseAdapter.deleteAgenda(AgendaID);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return null;
-
-		}
-
-	}
 
 }
