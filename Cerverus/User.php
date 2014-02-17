@@ -670,7 +670,6 @@ function createSettings($client, $userID, $shouldNotify, $whenToNotify, $tasks, 
 	//sets the property on the node
 	$settiNode->setProperty('shouldNotify', $shouldNotify)->setProperty('whenToNotify', $whenToNotify)->
 	setProperty('type', 'UserSettings')
-			->setProperty('nodeID', $settiNode->getID())
 			->setProperty('tasks',$tasks)
 			->setProperty('groups',$groups)
 			->setProperty('meetings',$meetings)
