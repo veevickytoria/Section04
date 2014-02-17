@@ -95,13 +95,23 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') == 0){
                         $setti->save();
                         $array = $setti->getProperties();
                         echo json_encode($array);
-                }else if(strcasecmp($postContent->field, 'nodeID') ==0){
-                        $setti->setProperty('nodeID', $postContent->value);
+                }else if(strcasecmp($postContent->field, 'tasks') ==0){
+                        $setti->setProperty('tasks', $postContent->value);
                         $setti->save();
                         $array = $setti->getProperties();
                         echo json_encode($array);
-                }else if(strcasecmp($postContent->field, 'settings') ==0){
-                        $setti->setProperty('settings', $postContent->value);
+                }else if(strcasecmp($postContent->field, 'groups') ==0){
+                        $setti->setProperty('groups', $postContent->value);
+                        $setti->save();
+                        $array = $setti->getProperties();
+                        echo json_encode($array);
+                }else if(strcasecmp($postContent->field, 'meetings') ==0){
+                        $setti->setProperty('meetings', $postContent->value);
+                        $setti->save();
+                        $array = $setti->getProperties();
+                        echo json_encode($array);
+                }else if(strcasecmp($postContent->field, 'projects') ==0){
+                        $setti->setProperty('projectss', $postContent->value);
                         $setti->save();
                         $array = $setti->getProperties();
                         echo json_encode($array);
