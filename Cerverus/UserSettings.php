@@ -49,8 +49,10 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') == 0){
 				$array['shouldNotify']=$tempArray['shouldNotify'];
 				$array['whenToNotify']=$tempArray['whenToNotify'];
 				$array['type']=$rel->getType();
-				$array['nodeID']=strval($tempArray['nodeID']);
-				$array['settings']=$tempArray['settings'];
+				$array['tasks']=$tempArray['tasks'];
+				$array['groups']=$tempArray['groups'];
+				$array['meetings']=$tempArray['meetings'];
+				$array['projects']=$tempArray['projects'];
 				
 				$i = $i + 1;
 		
