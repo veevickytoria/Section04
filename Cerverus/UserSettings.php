@@ -76,35 +76,29 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') == 0){
                         $setti->setProperty('shouldNotify', $postContent->value);
                         $setti->save();
                         $array = $setti->getProperties();
-                        $array['nodeID']=$setti->getId();
                         echo json_encode($array);
                 }else if(strcasecmp($postContent->field, 'type') ==0){
                         $setti->setProperty('type', $postContent->value);
                         $setti->save();
                         $array = $setti->getProperties();
-                        $array['nodeID']=$setti->getId();
                         echo json_encode($array);
                 }else if(strcasecmp($postContent->field, 'nodeID') ==0){
                         $setti->setProperty('nodeID', $postContent->value);
                         $setti->save();
                         $array = $setti->getProperties();
-                        $array['nodeID']=$setti->getId();
                         echo json_encode($array);
                 }else if(strcasecmp($postContent->field, 'settings') ==0){
                         $setti->setProperty('settings', $postContent->value);
                         $setti->save();
                         $array = $setti->getProperties();
-                        $array['nodeID']=$setti->getId();
                         echo json_encode($array);
                 }else if(strcasecmp($postContent->field, 'whenToNotify') ==0){
                         $setti->setProperty('whenToNotify', $postContent->value);
                         $setti->save();
                         $array = $setti->getProperties();
-                        $array['nodeID']=$setti->getId();
                         echo json_encode($array);
                 }
                         $array = $setti->getProperties();
-                        $array['nodeID']=$noti->getId();
                         echo json_encode($array);
         }
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'DELETE') == 0){      
