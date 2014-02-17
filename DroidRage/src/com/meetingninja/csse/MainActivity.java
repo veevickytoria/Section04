@@ -252,7 +252,7 @@ public class MainActivity extends FragmentActivity implements
 				R.layout.list_item_schedule_header, rightDrawerList, false));
 		Schedule sched = new Schedule();
 		try {
-			sched = UserDatabaseAdapter.getSchedule("");
+			sched = UserDatabaseAdapter.getSchedule(""); // TODO: Get the real schedule for the user
 		} catch (JsonParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -385,6 +385,11 @@ public class MainActivity extends FragmentActivity implements
 		SQLiteHelper mySQLiteHelper = SQLiteHelper
 				.getInstance(MainActivity.this);
 		mySQLiteHelper.onUpgrade(mySQLiteHelper.getReadableDatabase(), 1, 1);
+		// disassociate Parse SDK
+		ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+		installation.remove("userId");
+		installation.remove("user");
+		installation.saveInBackground();
 		ParseUser.logOut();
 		finish();
 	}
@@ -398,10 +403,6 @@ public class MainActivity extends FragmentActivity implements
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle presses on the action bar items
-		// Pass the event to ActionBarDrawerToggle, if it returns
-		// true, then it has handled the app icon touch event
-		System.out.println("its in the main");
 		if (drawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}

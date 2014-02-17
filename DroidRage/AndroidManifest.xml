@@ -43,6 +43,7 @@
         <activity
             android:name="com.meetingninja.csse.MainActivity"
             android:label="@string/app_name"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan|adjustResize" >
             <intent-filter android:label="@string/app_name" >
                 <action android:name="android.intent.action.MAIN" />
