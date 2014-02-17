@@ -86,17 +86,17 @@ public class EditMeetingActivity extends FragmentActivity implements
 		setupActionBar();
 
 		// Do some initializations
+		extras = getIntent().getExtras();
+		if (extras != null && !extras.isEmpty()) {
+			edit_mode = extras.getBoolean(EXTRA_EDIT_MODE, true);
+			displayedMeeting = extras.getParcelable(EXTRA_MEETING);
+		}
 		is24 = android.text.format.DateFormat
 				.is24HourFormat(getApplicationContext());
 		session = SessionManager.getInstance();
 		timeFormat = is24 ? MyDateUtils.JODA_24_TIME_FORMAT
 				: MyDateUtils.JODA_12_TIME_FORMAT;
-		extras = getIntent().getExtras();
-		edit_mode = extras.getBoolean(EXTRA_EDIT_MODE, true);
 		mySQLiteAdapter = new SQLiteMeetingAdapter(this);
-		if (extras != null && !extras.isEmpty()) {
-			displayedMeeting = extras.getParcelable(EXTRA_MEETING);
-		}
 
 		setupViews();
 
@@ -126,11 +126,10 @@ public class EditMeetingActivity extends FragmentActivity implements
 			// end.set(Calendar.MINUTE, 0);
 		}
 
-		mFromDate.setOnClickListener(new DateClickListener(mFromDate, start,
-				this, end, mToDate, true, mFromTime, mToTime));
+		mFromDate.setOnClickListener(new DateClickListener(mFromDate, start, end, mToDate, true, mFromTime, mToTime));
 		mFromDate.setText(dateFormat.print(start.getTimeInMillis()));
 
-		mToDate.setOnClickListener(new DateClickListener(mToDate, end, this,
+		mToDate.setOnClickListener(new DateClickListener(mToDate, end,
 				start, mFromDate, false, mToTime, mFromTime));
 		mToDate.setText(dateFormat.print(end.getTimeInMillis()));
 
@@ -261,7 +260,7 @@ public class EditMeetingActivity extends FragmentActivity implements
 
 	@Override
 	public void processFinish(String result) {
-		if (result != null && !result.isEmpty()) {
+		if (!TextUtils.isEmpty(result)) {
 			displayedMeeting.setID(result);
 			Intent msgIntent = new Intent();
 			msgIntent.putExtra("method", "insert");
@@ -324,15 +323,12 @@ public class EditMeetingActivity extends FragmentActivity implements
 			OnDateSetListener {
 		Button button, otherButton, timeButton, otherTimeButton;
 		Calendar cal, other;
-		FragmentActivity activity;
 		boolean start;
 
-		public DateClickListener(Button b, Calendar c,
-				FragmentActivity activity, Calendar other, Button b1,
+		public DateClickListener(Button b, Calendar c, Calendar other, Button b1,
 				Boolean start, Button timeButton, Button otherTimeButton) {
 			this.button = b;
 			this.otherButton = b1;
-			this.activity = activity;
 			this.other = other;
 			this.cal = c;
 			this.start = start;
@@ -396,7 +392,7 @@ public class EditMeetingActivity extends FragmentActivity implements
 				} else {
 					AlertDialogUtil
 							.displayDialog(
-									activity,
+									EditMeetingActivity.this,
 									"Error",
 									"A Meeting can not be set to start or end before now",
 									"OK", null);
@@ -409,7 +405,6 @@ public class EditMeetingActivity extends FragmentActivity implements
 			OnTimeSetListener {
 		Button button, otherButton;
 		Calendar cal, other;
-		FragmentActivity activity;
 		boolean start;
 
 		public TimeClickListener(Button b, Calendar c,
@@ -419,7 +414,6 @@ public class EditMeetingActivity extends FragmentActivity implements
 			is24 = android.text.format.DateFormat
 					.is24HourFormat(getApplicationContext());
 			this.cal = c;
-			this.activity = activity;
 			this.otherButton = b1;
 			this.other = other;
 			this.start = start;
@@ -460,7 +454,7 @@ public class EditMeetingActivity extends FragmentActivity implements
 				}
 				button.setText(timeFormat.print(cal.getTimeInMillis()));
 			} else {
-				AlertDialogUtil.displayDialog(activity, "Error",
+				AlertDialogUtil.displayDialog(EditMeetingActivity.this, "Error",
 						"A Meeting can not be set to start or end before now",
 						"OK", null);
 			}

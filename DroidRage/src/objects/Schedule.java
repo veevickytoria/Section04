@@ -27,15 +27,10 @@ public class Schedule {
 
 	public List<Event> getEvents() {
 		List<Event> events = new ArrayList<Event>();
-		sort();
 		events.addAll(getMeetings());
 		events.addAll(getTasks());
+		Collections.sort(events);
 		return events;
-	}
-
-	public void sort() {
-		Collections.sort(meetings);
-		Collections.sort(tasks);
 	}
 
 	public void addMeeting(Meeting m) {

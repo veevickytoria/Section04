@@ -26,7 +26,7 @@ public class Project implements Comparable<Project>, Parcelable{
 	private List<Note> notes = new ArrayList<Note>();
 	@JsonProperty("members")
 	private List<User> members = new ArrayList<User>();
-	
+
 	public Project(Parcel in){
 		readFromParcel(in);
 	}
@@ -39,6 +39,8 @@ public class Project implements Comparable<Project>, Parcelable{
 	public String getProjectID() {
 		return projectID;
 	}
+
+
 
 	@JsonProperty("projectID")
 	public void setProjectID(String projectID) {
@@ -84,15 +86,15 @@ public class Project implements Comparable<Project>, Parcelable{
 	public void setMembers(List<User> members) {
 		this.members = members;
 	}
-	
+
 	public void addMember(User user){
 		this.members.add(user);
 	}
-	
+
 	public void addMeeting(Meeting meeting){
 		this.meetings.add(meeting);
 	}
-	
+
 	public void addNote(Note note){
 		this.notes.add(note);
 	}
@@ -122,7 +124,7 @@ public class Project implements Comparable<Project>, Parcelable{
 		}
 
 	};
-	
+
 	@Override
 	public boolean equals(Object p){
 		if(p instanceof Project){
@@ -130,7 +132,7 @@ public class Project implements Comparable<Project>, Parcelable{
 		}
 		return false;
 	}
-	
+
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		// TODO Auto-generated method stub
@@ -139,7 +141,7 @@ public class Project implements Comparable<Project>, Parcelable{
 		dest.writeList(getMeetings());
 		dest.writeList(getNotes());
 		dest.writeList(getMembers());
-		
+
 	}
 	public void readFromParcel(Parcel in){
 		projectID = in.readString();

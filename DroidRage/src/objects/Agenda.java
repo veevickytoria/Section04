@@ -8,6 +8,7 @@ import java.util.Iterator;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -71,7 +72,7 @@ public class Agenda implements IJSONObject<Agenda>, Parcelable {
 
 	@JsonProperty("title")
 	public String getTitle() {
-		return (title != null && !title.isEmpty()) ? title : "";
+		return (!TextUtils.isEmpty(title)) ? title : "";
 	}
 
 	@JsonProperty("title")
@@ -208,6 +209,7 @@ public class Agenda implements IJSONObject<Agenda>, Parcelable {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	private void readFromParcel(Parcel in) {
 		this.agendaID = in.readString();
 		this.title = in.readString();

@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (C) 2014 The Android Open Source Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -64,7 +64,7 @@ public class SQLiteUserAdapter extends SQLiteHelper {
 	/**
 	 * Run a query on the users table. See
 	 * {@link SQLiteDatabase#query(String, String[], String, String[], String, String, String)}
-	 * 
+	 *
 	 * @param columns
 	 * @param selection
 	 * @param selectionArgs
@@ -117,7 +117,7 @@ public class SQLiteUserAdapter extends SQLiteHelper {
 			for (User user : userList) {
 				statement.clearBindings();
 				fts_statement.clearBindings();
-				if (!(user.getID() == null || user.getID().isEmpty())) {
+				if (!TextUtils.isEmpty(user.getID())) {
 					statement.bindLong(1, Long.parseLong(user.getID()));
 					fts_statement.bindLong(1, Long.parseLong(user.getID()));
 				}

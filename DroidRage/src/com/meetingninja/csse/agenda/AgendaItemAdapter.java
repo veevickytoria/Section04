@@ -43,13 +43,6 @@ import com.doomonafireball.betterpickers.hmspicker.HmsPickerBuilder;
 import com.doomonafireball.betterpickers.hmspicker.HmsPickerDialogFragment.HmsPickerDialogHandler;
 import com.meetingninja.csse.R;
 
-/**
- * This is a very simple adapter that provides very basic tree view with a
- * checkboxes and simple item description.
- *
- * @param <T>
- *
- */
 public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 	private final String TAG = AgendaItemAdapter.class.getSimpleName();
 
@@ -58,11 +51,12 @@ public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 	private TreeStateManager<Topic> manager;
 
 	private static int _topics = 0;
-	private final HashMap<Topic, Boolean> Comparison;
-	private final HashMap<EditText, TextWatcher> TextHandlers;
+	private final HashMap<Topic, Boolean> comparison;
+	private final HashMap<EditText, TextWatcher> textHandlers;
+
 	private boolean checked;
+
 	private int counter;
-	private AgendaActivity activty;
 
 	// private void changeSelected(final boolean isChecked, final Long id) {
 	// if (isChecked) {
@@ -80,8 +74,8 @@ public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 		this.builder = treeBuilder;
 		this.manager = treeStateManager;
 		_topics = manager.getVisibleCount();
-		Comparison = new HashMap<Topic, Boolean>();
-		TextHandlers = new HashMap<EditText, TextWatcher>();
+		comparison = new HashMap<Topic, Boolean>();
+		textHandlers = new HashMap<EditText, TextWatcher>();
 		checked = false;
 		counter = 0;
 	}
@@ -115,7 +109,7 @@ public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 	}
 
 	public void addhash(Topic s) {
-		Comparison.put(s, true);
+		comparison.put(s, true);
 		checked = true;
 		counter = 0;
 	}
@@ -136,8 +130,8 @@ public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 
 		final TextView mTime = (TextView) rowView
 				.findViewById(R.id.agenda_topic_time);
-		if (TextHandlers.containsKey(mTitle)) {
-			mTitle.removeTextChangedListener(TextHandlers.get(mTitle));
+		if (textHandlers.containsKey(mTitle)) {
+			mTitle.removeTextChangedListener(textHandlers.get(mTitle));
 		}
 		mTitle.setText(rowTopic.getTitle());
 
@@ -173,7 +167,7 @@ public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 		};
 
 		mTitle.addTextChangedListener(c);
-		TextHandlers.put(mTitle, c);
+		textHandlers.put(mTitle, c);
 
 		final Button mAddTopicBtn = (Button) rowView
 				.findViewById(R.id.agenda_subtopicAddBtn);
@@ -278,7 +272,6 @@ public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 		public void onClick(View v) {
 			// final Topic t = (Topic) v.getTag();
 			Topic subT = new Topic(); // TODO : Make new subtopic
-			subT.setTitle("" + subT);
 			subT.setTime("0");
 			parent.addTopic(subT);
 			// System.out.println("Echo: Created" + subT + " " + parent);
@@ -291,29 +284,9 @@ public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 			// }else{
 			// getManager().addAfterChild(parent, subT, null);
 			// }
-			PrintTree();
-			activty.reconstructTree();
+			((AgendaActivity) mContext).reconstructTree();
 			getManager().notifyDataSetChanged();
 		}
 
-	}
-
-	public void PrintTree() {
-		System.out.println("Printing Manager Tree");
-		List<Topic> top = getManager().getChildren(null);
-		for (Topic c : top) {
-			printRecur(c, 0);
-
-		}
-	}
-
-	public void printRecur(Topic c, int i) {
-		System.out.println("Topic:" + c.getTitle() + " " + i);
-		for (Topic d : getManager().getChildren(c))
-			printRecur(d, i + 1);
-	}
-
-	public void addActivity(AgendaActivity agendaActivity) {
-		this.activty = agendaActivity;
 	}
 }

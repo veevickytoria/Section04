@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (C) 2014 The Android Open Source Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -62,7 +62,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		return Uri.parse(getBaseUrl()).buildUpon();
 	}
 
-	public static String getBaseContactUrl() {//TODO: get rid of this put append path in path place 
+	public static String getBaseContactUrl() {//TODO: get rid of this put append path in path place
 		return BASE_URL + "Contact";
 	}
 
@@ -285,10 +285,8 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		addRequestHeader(conn, false);
 
 		// Get server response
-		// TODO: Uncomment this later
-		// int responseCode = conn.getResponseCode();
-		// String response = getServerResponse(conn);
-		String response = MockObjectFactory.getMockSchedule();
+		 int responseCode = conn.getResponseCode();
+		 String response = getServerResponse(conn);
 
 		Schedule sched = parseSchedule(MAPPER.readTree(response));
 
@@ -524,7 +522,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 
 	/**
 	 * Registers a passed in User and returns that user with an assigned UserID
-	 * 
+	 *
 	 * @param registerMe
 	 * @param password
 	 * @return the passed-in user with an assigned ID by the server

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -116,7 +117,7 @@ public class Meeting extends Event implements Parcelable, IJSONObject<Meeting> {
 	}
 
 	public String getLocation() {
-		return (location != null && !location.isEmpty()) ? location : "";
+		return (!TextUtils.isEmpty(location)) ? location : "";
 	}
 
 	public void setLocation(String location) {

@@ -50,7 +50,7 @@ public class EditNoteActivity extends Activity {
 	private SQLiteNoteAdapter mySQLiteAdapter;
 	private Note displayedNote;
 	private int listPosition;
-	private boolean createNote = false;
+	private boolean isCreationMode = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +66,7 @@ public class EditNoteActivity extends Activity {
 		extras = getIntent().getExtras();
 		if (extras.getBoolean(Note.CREATE_NOTE, false)) {
 			displayedNote = new Note();
-			createNote = true;
+			isCreationMode = true;
 		} else if (extras != null) {
 			listPosition = extras.getInt("listPosition", -1);
 			displayedNote = (Note) extras.getParcelable(Keys.Note.PARCEL);
@@ -125,14 +125,14 @@ public class EditNoteActivity extends Activity {
 		Intent backToNotes = new Intent();
 
 		long id = 0;
-		if (createNote){
+		if (isCreationMode) {
 			if (TextUtils.isEmpty(displayedNote.getID()))
-				displayedNote.setID(""+ 404); // TODO: Get an ID for the note
+				displayedNote.setID("" + 404); // TODO: Get an ID for the note
 			id = mySQLiteAdapter.insertNote(displayedNote);
-			displayedNote.setID(""+id);
+			displayedNote.setID("" + id);
 		}
 
-		else if (!TextUtils.isEmpty(displayedNote.getID()))
+		else
 			mySQLiteAdapter.updateNote(displayedNote);
 
 		backToNotes.putExtra("listPosition", listPosition);
@@ -143,10 +143,11 @@ public class EditNoteActivity extends Activity {
 	}
 
 	public void discard() {
-		if (displayedNote.getTitle().equals(
-				this.mNoteTitle.getText().toString())
-				&& displayedNote.getContent().equals(
-						this.mTextEditor.getText().toString())) {
+		// Check if modifications have been made
+		if (TextUtils.equals(displayedNote.getTitle(),
+				this.mNoteTitle.getText())
+				&& TextUtils.equals(displayedNote.getContent(),
+						this.mTextEditor.getText())) {
 			Intent intentMessage = new Intent();
 			setResult(RESULT_CANCELED, intentMessage);
 			finish();
@@ -220,13 +221,6 @@ public class EditNoteActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			// This ID represents the Home or Up button. In the case of this
-			// activity, the Up button is shown. Use NavUtils to allow users
-			// to navigate up one level in the application structure. For
-			// more details, see the Navigation pattern on Android Design:
-			//
-			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
-			//
 			save();
 			return true;
 

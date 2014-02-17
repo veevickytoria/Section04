@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -44,14 +45,14 @@ import de.timroes.android.listview.EnhancedListView;
 public class EditGroupActivity extends Activity implements TokenListener {
 
 	private static final String TAG = EditGroupActivity.class.getSimpleName();
-	private Group group;
+	private Group displayedGroup;
 	private UserArrayAdapter mUserAdapter;
 	EditText titleText;
 	EnhancedListView mListView;
 	private ArrayList<User> allUsers = new ArrayList<User>();
 	private final List<Contact> allContacts = new ArrayList<Contact>();
 	private List<User> bothUsers = new ArrayList<User>();
-	
+
 	private AutoCompleteAdapter autoAdapter;
 	private ArrayList<String> addedIds = new ArrayList<String>();
 	private ArrayList<User> addedUsers = new ArrayList<User>();
@@ -68,12 +69,12 @@ public class EditGroupActivity extends Activity implements TokenListener {
 
 		Bundle data = getIntent().getExtras();
 		if (data != null)
-			group = data.getParcelable(Keys.Group.PARCEL);
+			displayedGroup = data.getParcelable(Keys.Group.PARCEL);
 		else
 			Log.e(TAG, "Error: Unable to get group from parcel");
 
 		titleText = (EditText) findViewById(R.id.group_edit_title);
-		titleText.setText(group.getGroupTitle());
+		titleText.setText(displayedGroup.getGroupTitle());
 
 		// allows keyboard to hide when not editing text
 		findViewById(R.id.group_edit_main_container).setOnTouchListener(
@@ -86,19 +87,18 @@ public class EditGroupActivity extends Activity implements TokenListener {
 				});
 
 		mUserAdapter = new UserArrayAdapter(this, R.layout.list_item_user,
-				group.getMembers());
+				displayedGroup.getMembers());
 		mListView = (EnhancedListView) findViewById(R.id.group_list);
 		mListView.setAdapter(mUserAdapter);
-		for (int k = 0; k < group.getMembers().size(); k++) {
-
-			if (group.getMembers().get(k).getDisplayName() == null
-					|| group.getMembers().get(k).getDisplayName().isEmpty()) {
-				loadUser(group.getMembers().get(k).getID());
-				group.getMembers().remove(k);
+		for (int k = 0; k < displayedGroup.getMembers().size(); k++) {
+			User kthUser = displayedGroup.getMembers().get(k);
+			if (TextUtils.isEmpty(kthUser.getDisplayName())) {
+				loadUser(kthUser.getID());
+				displayedGroup.getMembers().remove(k);
 				k--;
 			}
 		}
-		mListView.setDismissCallback(new de.timroes.android.listview.EnhancedListView.OnDismissCallback() {
+		mListView.setDismissCallback(new EnhancedListView.OnDismissCallback() {
 			@Override
 			public EnhancedListView.Undoable onDismiss(
 					EnhancedListView listView, final int position) {
@@ -145,13 +145,14 @@ public class EditGroupActivity extends Activity implements TokenListener {
 
 			}
 		});
+
 		new GetContactsTask(new AsyncResponse<List<Contact>>(){
 			@Override
 			public void processFinish(List<Contact> result) {
 				addContacts(result);
 			}
 		}).execute((SessionManager.getInstance()).getUserID());
-		
+
 	}
 
 	@Override
@@ -160,7 +161,7 @@ public class EditGroupActivity extends Activity implements TokenListener {
 		getMenuInflater().inflate(R.menu.menu_edit_group, menu);
 		return true;
 	}
-	
+
 	private void addContacts(List<Contact> allContacts){
 		bothUsers.add(null);
 		for(Contact c : allContacts){
@@ -170,7 +171,6 @@ public class EditGroupActivity extends Activity implements TokenListener {
 		bothUsers.add(null);
 		bothUsers.addAll(allUsers);
 	}
-	
 
 	private void hideKeyboard() {
 		InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -228,14 +228,15 @@ public class EditGroupActivity extends Activity implements TokenListener {
 	}
 
 	private void save() {
-		if (titleText.getText().toString().isEmpty()) {
+		String title = titleText.getText().toString();
+		if (TextUtils.isEmpty(title)) {
 			AlertDialogUtil.showErrorDialog(this, "Cannot have an empty title");
 			return;
 		}
 
-		group.setGroupTitle(titleText.getText().toString());
+		displayedGroup.setGroupTitle(title);
 		Intent i = new Intent();
-		i.putExtra(Keys.Group.PARCEL, group);
+		i.putExtra(Keys.Group.PARCEL, displayedGroup);
 		setResult(RESULT_OK, i);
 		finish();
 	}
@@ -254,7 +255,7 @@ public class EditGroupActivity extends Activity implements TokenListener {
 		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				group.getMembers().addAll(addedUsers);
+				displayedGroup.getMembers().addAll(addedUsers);
 				addedUsers.clear();
 				mUserAdapter.notifyDataSetChanged();
 			}
@@ -273,7 +274,7 @@ public class EditGroupActivity extends Activity implements TokenListener {
 		UserVolleyAdapter.fetchUserInfo(userID, new AsyncResponse<User>() {
 			@Override
 			public void processFinish(User result) {
-				group.addMember(result);
+				displayedGroup.addMember(result);
 				mUserAdapter.notifyDataSetChanged();
 			}
 		});

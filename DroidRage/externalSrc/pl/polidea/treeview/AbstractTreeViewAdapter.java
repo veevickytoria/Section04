@@ -19,13 +19,13 @@ import com.meetingninja.csse.R;
 
 /**
  * Adapter used to feed the table view.
- * 
+ *
  * @param <T>
  *            class for ID of the tree
  */
 public abstract class AbstractTreeViewAdapter<T> extends BaseAdapter implements
 		ListAdapter {
-	private static final String TAG = AbstractTreeViewAdapter.class
+	protected static final String TAG = AbstractTreeViewAdapter.class
 			.getSimpleName();
 	private final TreeStateManager<T> treeStateManager;
 	private final int numberOfLevels;
@@ -183,7 +183,7 @@ public abstract class AbstractTreeViewAdapter<T> extends BaseAdapter implements
 
 	/**
 	 * Called when new view is to be created.
-	 * 
+	 *
 	 * @param treeNodeInfo
 	 *            node info
 	 * @return view that should be displayed as tree content
@@ -195,7 +195,7 @@ public abstract class AbstractTreeViewAdapter<T> extends BaseAdapter implements
 	 * and fill it in with the data required to display the new information. You
 	 * can also create a new view, which will mean that the old view will not be
 	 * reused.
-	 * 
+	 *
 	 * @param view
 	 *            view that should be updated with the new values
 	 * @param treeNodeInfo
@@ -206,7 +206,7 @@ public abstract class AbstractTreeViewAdapter<T> extends BaseAdapter implements
 
 	/**
 	 * Retrieves background drawable for the node.
-	 * 
+	 *
 	 * @param treeNodeInfo
 	 *            node info
 	 * @return drawable returned as background for the whole row. Might be null,
@@ -233,7 +233,7 @@ public abstract class AbstractTreeViewAdapter<T> extends BaseAdapter implements
 				: individualRowDrawable);
 		final LinearLayout.LayoutParams indicatorLayoutParams = new LinearLayout.LayoutParams(
 				calculateIndentation(nodeInfo),
-				android.view.ViewGroup.LayoutParams.FILL_PARENT);
+				android.view.ViewGroup.LayoutParams.MATCH_PARENT);
 		final LinearLayout indicatorLayout = (LinearLayout) layout
 				.findViewById(R.id.treeview_list_item_image_layout);
 		indicatorLayout.setGravity(indicatorGravity);
@@ -253,8 +253,8 @@ public abstract class AbstractTreeViewAdapter<T> extends BaseAdapter implements
 		final FrameLayout frameLayout = (FrameLayout) layout
 				.findViewById(R.id.treeview_list_item_frame);
 		final FrameLayout.LayoutParams childParams = new FrameLayout.LayoutParams(
-				android.view.ViewGroup.LayoutParams.FILL_PARENT,
-				android.view.ViewGroup.LayoutParams.FILL_PARENT);
+				android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+				android.view.ViewGroup.LayoutParams.MATCH_PARENT);
 		if (newChildView) {
 			frameLayout.addView(childView, childParams);
 		}

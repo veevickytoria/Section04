@@ -263,27 +263,6 @@ public class MainActivity extends FragmentActivity implements
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Meeting m = new Meeting();
-		m.setStartTime(0L);
-		sched.addMeeting(m);
-		m = new Meeting();
-		m.setStartTime(918723912L);
-		sched.addMeeting(m);
-		m = new Meeting();
-		m.setStartTime(928374983274L);
-		sched.addMeeting(m);
-		m = new Meeting();
-		m.setStartTime(38501234L);
-		for (int i = 0; i < 5; i++) {
-			sched.addMeeting(m);
-		}
-		m = new Meeting();
-		m.setStartTime(12321387L);
-		sched.addMeeting(m);
-		for (int i = 0; i < 3; i++) {
-			sched.addMeeting(m);
-		}
-		sched.sort();
 		rightDrawerAdapter = new ScheduleAdapter(MainActivity.this, sched);
 		rightDrawerList.setAdapter(rightDrawerAdapter);
 		rightDrawerAdapter.notifyDataSetChanged();
@@ -366,7 +345,7 @@ public class MainActivity extends FragmentActivity implements
 			// Insert the fragment by replacing any existing fragment
 			ft.replace(R.id.content_frame, nextPage).commit();
 			// }
-			
+
 
 			// Highlight the selected item, update the title, and close the
 			// drawer

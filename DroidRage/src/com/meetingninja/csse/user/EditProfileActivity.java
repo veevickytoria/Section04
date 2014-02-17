@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -106,11 +107,11 @@ public class EditProfileActivity extends Activity {
 	}
 
 	private void save() {
-		if (mName.getText() == null || mName.getText().toString().isEmpty()) {
+		if (TextUtils.isEmpty(mName.getText())) {
 			// TODO: stuff
 			return;
 		}
-		if (mEmail.getText() == null || mEmail.getText().toString().isEmpty()) {
+		if (TextUtils.isEmpty(mEmail.getText())) {
 			// TODO: stuff
 			return;
 		}
