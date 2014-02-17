@@ -1,15 +1,7 @@
 Section04
 =========
 
-Dr. Rupakheti's CSSE 371 Section 04
+Dr. Rupakheti's CSSE 371 & CSSE374 Section 04
 Refer questions to the google group: https://groups.google.com/forum/#!forum/csse-371-fall-2013-2014
 
-TODO:
-- Make sure that everyone has access to this repo.
-
-Christopher O'Hara has access!
-Jordan Moore has access!
-John McCormack has access!
-Lindsey Watterson has access!
-Grant Smith has access!
-Seth Ruji has access!
+The planning and development of Meeting Ninja: a meeting handler across 3 frontends Web, iOS, and Android.
