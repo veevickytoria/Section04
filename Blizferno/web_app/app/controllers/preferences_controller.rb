@@ -20,6 +20,11 @@ class PreferencesController < ApplicationController
   	# 		{|http|http.request(req)}
 
    #  @userSettings = JSON.parse(res.body)
+   #  @tasks = @userSettings['tasks']
+   #  @projects = @userSettings['projects']
+   #  @groups = @userSettings['groups']
+   #  @meetings = @userSettings['meetings']
+
 
   end
 
