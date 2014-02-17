@@ -1,9 +1,13 @@
 <!-- The tasks in the GET POST requests need to be changed to groups. Implement a check on edit so it doesn't fuck up the backend db (db? more like dp.)-->
 
+<script>
+//load the javascript file
+<%= render "documentsJS.js.erb" %>
+</script>
+
 <!-- PLACE JAVASCRIPT IN app/assets/javascript/documents.js -->
 <script type="text/javascript" src="assets/javascripts/jquery-2.1.0.js"></script>
 <script type="text/javascript">
-
 </script>
 
 <!-- Create Agenda Modal -->
@@ -38,7 +42,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary" form="createNote">Submit</button>
+        <button type="button" class="btn btn-primary" onclick="submitCreateModal()">Submit</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -76,7 +80,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="showEditModal()" href="#editAgendaModal" data-refresh="true" data-toggle='modal'>Edit</button>
+        <button type="button" class="btn btn-primary" onclick="showEditModalNoID()" href="#editNoteModal" data-refresh="true" data-toggle='modal'>Edit</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -94,7 +98,7 @@
         <%= render 'editAgenda' %>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" onclick="showDocumentModalNoID()" data-refresh="true" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-default" onclick="cancelEdit()" data-refresh="true" data-dismiss="modal">Cancel</button>
         <button type="button" class="btn btn-primary" onclick="showDocumentModalNoID()" data-refresh="true" >Save Changes</button>
       </div>
     </div><!-- /.modal-content -->
@@ -113,7 +117,7 @@
         <%= render 'editNote' %>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" onclick="showDocumentModalNoID()" data-refresh="true" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-default" onclick="cancelEdit()" data-refresh="true" data-dismiss="modal">Cancel</button>
         <button type="button" class="btn btn-primary" onclick="showDocumentModalNoID()" data-refresh="true" >Save Changes</button>
       </div>
     </div><!-- /.modal-content -->
@@ -140,12 +144,12 @@
     </tr>
   <% end %>
   <!-- POPULATE NOTES -->
-  <% for note in @notes['notes'] %>
+  <% for note in @notesParsed %>
     <tr>
-      <td><a onClick="showViewDocumentModal(<%= note['noteID'] %>, 'note')" href = '#viewDocumentModal' data-refresh = 'true' data-toggle='modal'><%= note['title'] %></a></td>
+      <td><a onClick="showViewDocumentModal(<%= @notesParsed.index(note) %>)" href = '#viewDocumentModal' data-refresh = 'true' data-toggle='modal'><%= note['title'] %></a></td>
       <td></td>
       <td>Note</td>
-      <td colspan='1' style='cursor: pointer; text-align: center' onclick="showDeleteModal(<%= note['noteID'] %>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
+      <td colspan='1' style='cursor: pointer; text-align: center' onclick="showDeleteModal(<%= @notesParsed.index(note) %>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
     </tr>
   <% end %>
   <tfoot>

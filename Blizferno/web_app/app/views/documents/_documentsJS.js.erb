@@ -1,0 +1,175 @@
+var currentID; //index of the current meeting we're looking at
+var deleteID; //what index of the table to delete from
+var documentsJSON = <%= raw @notes %>; //need raw in here to deal with the quote parsing issue
+documentsJSON = JSON.parse("["+documentsJSON.toString()+"]"); //this is manually setting up the format of the string so it parses correctly
+
+//This funciton is called when a user clicks on a row in the table and is passed in the index of the row that was clicked
+function showViewDocumentModal(ID){
+
+	$('#viewDocumentModal').modal('hide');
+	$('#viewDocumentModal').on('hidden.bs.modal', function() {
+		$(this).removeData('bs.modal');
+	});
+
+	currentID = ID; //set the currentID to the ID we are currently looking at
+
+	//Look up the meeting in our JSON object using the currentID and manually set each value to the appropriate element in the ViewMeetingModal
+	document.getElementById("titleV").innerHTML = documentsJSON[currentID]["title"];
+	document.getElementById("contentV").innerHTML = documentsJSON[currentID]["content"];
+
+	$('#viewDocumentModal').modal('show');
+	$('#editNoteModal').modal('hide');
+}
+
+function showDeleteModal(ID){
+	deleteID = ID;
+	$('#deleteDocumentModal').modal('show');
+}
+
+
+function hideDeleteModal(){
+
+	//get the id of the meeting associated with the index of the meeting from our table
+	var deleteData = documentsJSON[deleteID]['noteID'];
+	//make the DELETE request to the backend
+	$.ajax({
+		type: 'DELETE',
+		url: 'http://csse371-04.csse.rose-hulman.edu/Note/' + deleteData,
+		success:function(data){
+			//if the database returned true
+			if(JSON.parse(data)["valid"] == "true"){
+				//hide the delete modal
+				$('#deleteDocumentModal').modal('hide');
+				//refresh the page
+				window.location.reload(true);
+			}
+		}
+	});
+}
+
+function submitCreateModal(){
+
+	var today = new Date();
+	var dd = today.getDate();
+	var mm = today.getMonth()+1; //January is 0!
+
+	var yyyy = today.getFullYear();
+	if(dd<10){dd='0'+dd} 
+		if(mm<10){mm='0'+mm} today = mm+'/'+dd+'/'+yyyy;
+		
+		//grab the form from the html document
+		var form = document.getElementById('createDocument');
+		//still testing validation
+		//if(validateMeetingForm(form)){
+			//parse it into a json object
+			var formJSON = new convertFormToJSON(form);
+
+			//manually grab the values for each field expected by the backend
+			var postCreator = <%=@userID%>;
+			var postTitle = formJSON.title;
+			var postDescription = formJSON.description;
+			var postDatetime = today;
+			var postContent = formJSON.content;
+
+			//set up the data for the call
+			var postData = JSON.stringify({
+				"createdBy":postCreator,
+				"title":postTitle,
+				"description":postDescription,
+				"dateCreated":postDatetime,
+				"content":postContent
+			});
+			
+			//make the POST request to the backend
+			$.ajax({
+				type: 'POST',
+				url: 'http://csse371-04.csse.rose-hulman.edu/Note/',
+				data: postData,
+				success:function(data){
+					//if successful then close the modal and reload the page
+					$('#newNoteModal').modal('hide');
+					window.location.reload(true);
+				}
+			});
+
+		//}
+}
+
+//This function is called when a user clicks on the edit icon to directly bring up the EditMeetingModal that corresponds to the index of the row they clicked which is passed in as ID.
+function showEditModal(ID){
+	$('#editNoteModal').modal('hide');
+	$('#editNoteModal').on('hidden.bs.modal', function() {
+		$(this).removeData('bs.modal');
+	});
+
+	currentID = ID; //set the currentID to the ID we are currently looking at
+
+
+	//Look up the meeting in our JSON object using the currentID and manually set each value to the appropriate element's value in the EditMeetingModal
+	document.getElementById("titleE").value = documentsJSON[currentID]["title"];
+	document.getElementById("contentE").value = documentsJSON[currentID]["content"];
+	document.getElementById("descriptionE").value = documentsJSON[currentID]["description"];
+
+	$('#editNoteModal').modal('show');
+	$('#viewDocumentModal').modal('hide');
+}
+
+//This function is called when a user clicks on the "Edit" button inside of a ViewMeetingModal. We cannot access our javascript variable, currentID, in the html file, index, when we set the functionality of the ViewMeetingModal's "Edit" button so we use this as a proxy.
+function showEditModalNoID(){
+	showEditModal(currentID);
+}
+
+function updateEditedValues(){
+	//convert the form into a JSON object for easy parsing
+	var editForm = convertFormToJSON(document.getElementById("editNote"));
+
+	var editDocumentID = documentsJSON[currentID]['noteID'].toString();
+	var editField = "";
+	var editValue = "";
+	var editData = "";
+
+//for each field in the edit form
+	for (key in documentsJSON[currentID]){
+	//check to see if the value we just got from the edit form is the value we had before
+//alert("key:"+key+"\n[key]:"+meetingsJSON[currentID][key]+"\neditForm[key]"+editForm[key]);
+		if(editForm[key] != null && documentsJSON[currentID][key] != editForm[key]){
+			//if not then change the value we had to the value we just got from the edit form
+			documentsJSON[currentID][key] = editForm[key];
+//alert("meetingsJSON[currentID]:"+JSON.stringify(meetingsJSON[currentID]));
+
+			//set up the request data
+			editField = key;
+			editValue = documentsJSON[currentID][key];
+			editData = JSON.stringify({"noteID":editDocumentID,"field":editField,"value":editValue});
+
+			//make a PUT request with the backend to change the specified field for the specified meeting to the specified value
+			$.ajax({
+				type: 'PUT',
+				url: 'http://csse371-04.csse.rose-hulman.edu/Note/',
+				data: editData
+			});
+
+		}
+	}
+}
+
+function cancelEdit(){
+	showViewDocumentModal(currentID);
+}
+
+function showDocumentModalNoID(){
+	updateEditedValues();
+	showViewDocumentModal(currentID);
+}
+
+//This function takes a form element and creates a json object using the name of each input in the form as the field and the value of each input as the corresponding input
+function convertFormToJSON(form){
+	var array = jQuery(form).serializeArray();
+	var json = {};
+
+	jQuery.each(array, function() {
+		json[this.name] = this.value || '';
+	});
+
+	return json;
+}
