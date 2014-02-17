@@ -11,22 +11,21 @@
             <tr >
               <th>Due</th>
               <th>Task Name</th>
-              <th>Project</th>
+              <th>Completion Criteria</th>
               <th></th>
             </tr>
           </thead>
  		  <% counter = 0; max = 3; %>
-          <% for task in @tasks['tasks']; if counter >= max; break; end; %>
+          <% for task in @tasksParsed; if counter >= max; break; end; %>
           <tr>
             <td><%= task['deadline'] %></td>
-            <td><a onClick="showViewModal(<%= task['taskID'] %>)" data-refresh="true" data-toggle='modal'><%= task['title'] %></a></td>
-            <td><%= task['project'] %></td>
-            <td colspan='1' style='cursor: pointer; text-align: center' onClick="showDeleteModal(<%= task['taskID'] %>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
+            <td><%= task['title'] %></td>
+            <td><%= task['completionCriteria'] %></td>
           </tr>
   	   	  <% counter = counter + 1 %>
           <% end %>
           <tr>
-            <td colspan='4' style='cursor: pointer; text-align: center' href='#newTaskModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
+            <td colspan='4' style='cursor: pointer; text-align: center'><span style='font-size: 1.1em; color: white;'><a href='/tasks/index'>Go to Tasks</a></span></td>
           </tr>
         </table>
       </div>
@@ -43,19 +42,17 @@
           <thead>
             <tr >
               <th>Name</th>
-              <th></th>
             </tr>
           </thead>
 		  <% counter = 0; max = 3; %>
           <% for project in @projectsParsed; if counter >= max; break; end; %>
           <tr>
-            <td><a onClick="showViewModal(<%= @projectsParsed.index(project) %>)" href='#viewProjectModal' data-refresh="true" data-toggle='modal'><%= project['projectTitle'] %></a></td>
-            <td colspan='1' style='cursor: pointer; text-align: center' onClick="showDeleteModal(<%= @projectsParsed.index(project) %>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
+            <td><%= project['projectTitle'] %></td>
           </tr>
   		  <% counter = counter + 1 %>
           <% end %>
           <tr>
-            <td colspan='4' style='cursor: pointer; text-align: center' href='#newProjectModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
+            <td colspan='4' style='cursor: pointer; text-align: center'><span style='font-size: 1.1em; color: white;'><a href='/projects/index' >Go to Projects</a></span></td>
           </tr>
         </table>
       </div>
@@ -85,16 +82,15 @@
  
     <tr>
       <td><%= meeting['datetime'] %></td>
-      <td><a onClick="showViewMeetingModal(<%=@meetingsParsed.index(meeting)%>)" href = '#viewMeetingModal' data-refresh = 'true' data-toggle='modal'><%= meeting['title'] %></a></td>
+      <td><%= meeting['title'] %></td>
       <td><%= meeting['location'] %></td>
-      <td colspan='1' style='cursor: pointer; text-align: center' onclick="showDeleteModal(<%=@meetingsParsed.index(meeting)%>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
     </tr>
 
   <% counter = counter + 1 %>
   <% end %>
 
   <tr>
-    <td colspan='4' style='cursor: pointer; text-align: center' href='#newMeetingModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
+    <td colspan='4' style='cursor: pointer; text-align: center' href='#newMeetingModal' data-toggle='modal'><span style='font-size: 1.1em; color: white;'><a href="/meetings/index">Go to Meetings</a></span></td>
   </tr>
 </table>
 
@@ -111,24 +107,19 @@
         <table class='table table-hover table-striped' style='width: 70%; margin-left: 15%; margin-right: auto;'>
           <thead>
             <tr>
-              <th>Group ID</th>
               <th>Group Name</th>
-              <th>Group Type</th>
             </tr>
           </thead>
   		  <% counter = 0; max = 3; %>
-          <% for group in @groups['groups']; if counter >= max; break; end; %>
+          <% for group in @groups; if counter >= max; break; end; %>
           <tr>
-            <td><%= group['groupID'] %></td>
-            <td><a onClick="showViewGroupModal(<%= group['groupID'] %>)" href = '#viewGroupModal' data-refresh = 'true' data-toggle='modal'><%= group['groupTitle'] %></a></td>
-            <td><%= group['groupType'] %></td>
-            <td colspan='1' style='cursor: pointer; text-align: center' onclick="showDeleteModal(<%= group['groupID'] %>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
+            <td><%= group['groupTitle'] %></td>
           </tr>
   		  <% counter = counter + 1 %>
           <% end %>
 
           <tr>
-            <td colspan='4' style='cursor: pointer; text-align: center' href='#newGroupModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
+            <td colspan='4' style='cursor: pointer; text-align: center'><span style='font-size: 1.1em; color: white;'><a href='/groups/index'>Go to Groups</a></span></td>
           </tr>
         </table>
       </div>

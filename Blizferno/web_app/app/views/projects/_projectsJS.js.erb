@@ -26,8 +26,6 @@ var ProjectArray;
   function hideDeleteModal(){
       var deleteData = projectsJSON[deleteID]['projectID'];
 
-
-
       $.ajax({
         type: 'DELETE',
         url: 'http://csse371-04.csse.rose-hulman.edu/Project/' + deleteData,
