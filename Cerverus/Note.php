@@ -133,9 +133,9 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
         $id=$_GET['noteID'];
         
         //get the node
-        $node = $client->getNode($id);
+        $note = $client->getNode($id);
         //make sure the node exists
-        if($node != NULL){
+        if($note != NULL){
         	$array = $note->getProperties();
 		if(array_key_exists('nodeType', $array)){
 			if(strcasecmp($array['nodeType'], 'Note')!=0){
