@@ -26,7 +26,8 @@ public class CreateTaskTask implements AsyncResponse<Void> {
 
 	@Override
 	public void processFinish(Void result) {
-		this.frag.refreshTasks();
+		if (frag != null)
+			this.frag.refreshTasks();
 	}
 
 	private class TaskCreator extends AsyncTask<Task, Void, Void> {

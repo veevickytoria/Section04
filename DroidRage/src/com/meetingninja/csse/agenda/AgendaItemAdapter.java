@@ -283,7 +283,7 @@ public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 						Task q = new Task();
 						q.setTitle(topic.getTitle());
 						i.putExtra(Keys.Task.PARCEL, q);
-						activty.startActivity(i);
+						activty.startActivityForResult(i, 7);
 					
 			    		break;
 			    	case 2:

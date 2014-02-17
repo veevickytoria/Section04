@@ -20,11 +20,13 @@ import java.util.ArrayList;
 
 import objects.Agenda;
 import objects.MockObjectFactory;
+import objects.Task;
 import objects.Topic;
 import pl.polidea.treeview.InMemoryTreeStateManager;
 import pl.polidea.treeview.TreeBuilder;
 import pl.polidea.treeview.TreeStateManager;
 import pl.polidea.treeview.TreeViewList;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -38,9 +40,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.meetingninja.csse.R;
+import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.AgendaDatabaseAdapter;
+import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.extras.JsonUtils;
+import com.meetingninja.csse.tasks.TasksFragment;
+import com.meetingninja.csse.tasks.tasks.CreateTaskTask;
 
 public class AgendaActivity extends FragmentActivity {
 
@@ -206,6 +212,23 @@ public class AgendaActivity extends FragmentActivity {
 		return super.onPrepareOptionsMenu(menu);
 	}
 
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		
+		System.out.println("Arrived here");
+		if (resultCode == Activity.RESULT_OK) {
+			System.out.println("Arrived here");
+			if (requestCode == 6) {
+			} else if (requestCode == 7) {
+				System.out.println("Arrived here");
+				Task t = data.getParcelableExtra(Keys.Task.PARCEL);
+				t.setCreatedBy(SessionManager.getInstance().getUserID());
+				CreateTaskTask creator = new CreateTaskTask(null);
+				creator.createTask(t);
+			}
+		}
+	}
+	
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item) {
 		// Handle presses on the action bar items
