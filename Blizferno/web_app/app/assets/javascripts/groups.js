@@ -45,25 +45,32 @@
     };
 
     //set up the data for the call
-    var postData = JSON.stringify({
-      "groupTitle":postTitle,
-      "members":postMembers
+    var updateTitle = JSON.stringify({
+      "groupID":currentID,
+      "field":"groupTitle",
+      "value":postTitle
     });
 
-    // PUT requests? phhh... who needs those? Watch this.
+    var updateMembers = JSON.stringify({
+      "groupID":currentID,
+      "field":"members",
+      "value":postMembers
+    });
+
     $.ajax({
-      type: 'DELETE',
-      url: 'http://csse371-04.csse.rose-hulman.edu/Group/' + currentID,
+      type: 'PUT',
+      url: 'http://csse371-04.csse.rose-hulman.edu/Group/',
+      data: updateTitle,
       success:function(data){
         // do nothing
       },
       async: false
-    });
+    })
 
     $.ajax({
-      type: 'POST',
+      type: 'PUT',
       url: 'http://csse371-04.csse.rose-hulman.edu/Group/',
-      data: postData,
+      data: updateMembers,
       success:function(data){
         $('#editGroupModal').modal('hide');
         $('#newGroupModal').modal('hide');
@@ -80,7 +87,11 @@
     groupArray = JSON.parse(d);
   }
 
-  function showEditModal(){
+  function showEditModalNoID(){
+    showEditModalNoID(currentID);
+  }
+
+  function showEditModal(id){
     var membInfo, currentMembs = new Array(), mid;
     // clear previous data in modal
     $('#editGroupModal').modal('hide');
@@ -90,11 +101,11 @@
 
     $.ajax({
       type: 'GET',
-      url: 'http://csse371-04.csse.rose-hulman.edu/Group/' + currentID,
+      url: 'http://csse371-04.csse.rose-hulman.edu/Group/' + id,
       success:function(data){
-        if(data.groupID != null)
-          setGroupArray(data);
-      }
+        setGroupArray(data);
+      },
+      async: false
     });
 
     for (i in groupArray['members']){
@@ -112,8 +123,8 @@
 
     document.getElementById("titleE").value = groupArray["groupTitle"];
 
-    // populateSelect([], "name", "mid", currentMembs, "membersE");
-    presetSelectObject()
+    populateSelect([], "name", "mid", currentMembs, "membersE");
+    // presetSelectObject(currentMembs, 'name', 'membersE');
 
     $('#editGroupModal').modal('show');
     // $('#viewGroupModal').modal('hide');
@@ -142,6 +153,38 @@
 
   function showGroupModalNoID(){
     showViewGroupModal(currentID);
+    // $('#viewGroupModal').modal('hide');
+    // $('#viewGroupModal').on('hidden.bs.modal', function() {
+    //   $(this).removeData('bs.modal');
+    // });
+
+    // // Edit info
+    // //GroupArray["groupID"] = document.getElementById("IDE").value;
+    // GroupArray["groupTitle"] = document.getElementById("titleE").value;
+    // GroupArray["groupType"] = document.getElementById("typeE").value;
+
+    // GroupArray["members"] = returnSelectValuesAsJSON("members", "displayName", "userID", "membersE")
+
+    // // TODO: Put this back in when it works and change it to update info then add a pull
+    // // $.ajax({
+    // //         type: '',
+    // //         url: 'http://csse371-04.csse.rose-hulman.edu/Tasks/' + ID,
+    // //   success:function(data){
+    // //     if(data.taskID != null){
+    // //       GroupArray = JSON.parse(data);
+    // //     }
+    // //   }
+    // // });
+
+    // // Update view info
+    // //document.getElementById("IDV").innerHTML = GroupArray["groupID"];
+    // document.getElementById("titleV").innerHTML = GroupArray["groupTitle"];
+    // document.getElementById("typeV").innerHTML = GroupArray["groupType"];
+
+    // populateTableRows(GroupArray["members"], "displayName", "TableMembersV");
+
+    // $('#viewGroupModal').modal('show');
+    // $('#editGroupModal').modal('hide');
   }
 
   function showViewGroupModal(ID){
@@ -253,23 +296,24 @@
     }
   }
 
-  /* DOCUMENTATION
+  /* DOES NOT WORK
     A variation of populateSelect where the select tag is prefilled
     using Ruby SS code snippets. This function then takes a simple
     array and value selector as input and selects the items in the
     select box that should be seen as selected by the user.
   */
-  function presetSelectObject(SelectedValuesArray, JSONValueColumn){
+  function presetSelectObject(SelectedValuesArray, JSONValueColumn, selectID){
+    var selectBox = document.getElementById(selectID);
     // deselect currently selected items
-    for (var i in select.options){
-      select.options[i].select = false;
+    for (var i in selectBox.options){
+      selectBox.options[i].selected = false;
     }
 
     // preselect items
     for (var j in SelectedValuesArray){
-      for (var k in select.options){
-        if(SelectedValuesArray[j][JSONValueColumn] == select.options[k].value){
-          select.options[k].selected = true;
+      for (var k in selectBox.options){
+        if(SelectedValuesArray[j][JSONValueColumn] == selectBox.options[k].value){
+          selectBox.options[k].selected = true;
           break;
         }
       }
