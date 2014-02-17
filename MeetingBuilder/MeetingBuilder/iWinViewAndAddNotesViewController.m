@@ -241,7 +241,7 @@
     NSMutableArray *names = [[NSMutableArray alloc] init];
     NSMutableArray *notes = [[NSMutableArray alloc] init];
     
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Note/Sharing/%d", self.userID];
+    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Sharing/%d", self.userID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
