@@ -43,16 +43,14 @@
           <thead>
             <tr >
               <th>Name</th>
-              <th>Group</th>
               <th></th>
             </tr>
           </thead>
 		  <% counter = 0; max = 3; %>
-          <% for project in @projects['projects']; if counter >= max; break; end; %>
+          <% for project in @projectsParsed; if counter >= max; break; end; %>
           <tr>
-            <td><a onClick="showViewModal(<%= project['projectID'] %>)" data-refresh="true" data-toggle='modal'><%= project['name'] %></a></td>
-            <td><%= project['group'] %></td>
-            <td colspan='1' style='cursor: pointer; text-align: center' onClick="showDeleteModal(<%= project['projectID'] %>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
+            <td><a onClick="showViewModal(<%= @projectsParsed.index(project) %>)" href='#viewProjectModal' data-refresh="true" data-toggle='modal'><%= project['projectTitle'] %></a></td>
+            <td colspan='1' style='cursor: pointer; text-align: center' onClick="showDeleteModal(<%= @projectsParsed.index(project) %>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
           </tr>
   		  <% counter = counter + 1 %>
           <% end %>

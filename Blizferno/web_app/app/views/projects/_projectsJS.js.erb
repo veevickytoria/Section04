@@ -72,8 +72,56 @@ var ProjectArray;
     showViewModal(currentID);
   }
 
-  function updateEditedValues(){
-    var editForm = convertFormToJSON(document.getElementById("editProjectForm"));
+  function submitEditModal(){
+    var form = new convertFormToJSON(document.getElementById('editProjectForm'));
+
+    var postTitle = form.title;
+  
+    var meetings = getElements('TableMeetingsE');
+    var notes = getElements('TableNotesE');
+    var members = getElements('TableMembersE');
+
+    var postMeetings = [];
+    var postNotes = [];
+    var postMembers = [];
+
+    for (var i = meetings.length - 1; i>=0; i--){
+      postMeetings.push({"meetingID":meetings[i]});
+    };
+
+    for (var i = notes.length - 1; i>=0; i--){
+      postNotes.push({"noteID":notes[i]});
+    };
+
+    for (var i = members.length - 1; i>= 0; i--) {
+      postMembers.push({"userID":members[i]});
+    };
+    var postData = JSON.stringify({
+        "projectTitle":postTitle,
+        "meetings":postMeetings,
+        "notes":postNotes,
+        "members":postMembers
+      });
+
+    $.ajax({
+      type: 'DELETE',
+      url: 'http://csse371-04.csse.rose-hulman.edu/Project/' + currentID,
+      success:function(data){
+        // do nothing
+      },
+      async: false
+    });
+
+    $.ajax({
+      type: 'POST',
+      url: 'http://csse371-04.csse.rose-hulman.edu/Project/',
+      data: postData,
+      success:function(data){
+        $('#editGroupModal').modal('hide');
+        $('#newGroupModal').modal('hide');
+        window.location.reload(true);
+      }
+    });
 
   }
 
