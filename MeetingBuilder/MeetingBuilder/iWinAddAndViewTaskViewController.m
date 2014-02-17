@@ -13,6 +13,7 @@
 #import "Task.h"
 #import "iWinAppDelegate.h"
 #import "iWinBackEndUtility.h"
+#import "Settings.h"
 
 @interface iWinAddAndViewTaskViewController ()
 @property (nonatomic) NSInteger taskID;
@@ -261,10 +262,112 @@
         [self saveNewTask];
     }
 
-    
+    [self scheduleNotification];
     [self.viewTaskDelegate refreshTaskList];
     
 }
+
+-(void) scheduleNotification
+{
+    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Settings" inManagedObjectContext:self.context];
+    
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDesc];
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userID = %d", self.userID];
+    [request setPredicate:predicate];
+    
+    NSError *error;
+    NSArray *result = [self.context executeFetchRequest:request
+                                                  error:&error];
+    
+    Settings *settings = (Settings *)[result objectAtIndex:0];
+    if ([settings.shouldNotify boolValue])
+    {
+        [self removeOldNotifications];
+        
+        NSString *meetingStartDate = [NSString stringWithFormat:@"%@ %@", self.endDateLabel.text, self.endTimeLabel.text];
+        NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
+        [formatter setDateFormat:@"MM/dd/yyyy hh:mm a"];
+        NSDate *dateTimeOfMeeting = [formatter dateFromString:meetingStartDate];
+        
+        UILocalNotification* localNotification = [[UILocalNotification alloc] init];
+        localNotification.timeZone = [NSTimeZone defaultTimeZone];
+        
+        NSNumber *taskID = [NSNumber numberWithInt:self.taskID];
+        NSArray *key = [[NSArray alloc] initWithObjects:@"taskID", nil];
+        NSArray *object = [[NSArray alloc] initWithObjects:taskID, nil];
+        NSDictionary *userInfo = [[NSDictionary alloc] initWithObjects:object forKeys:key];
+        localNotification.userInfo = userInfo;
+        
+        NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
+        NSDate *fireDate;
+        switch ([settings.whenToNotify integerValue]) {
+            case 0:
+                fireDate = dateTimeOfMeeting;
+                localNotification.alertBody = [NSString stringWithFormat:@"%@ Task due now", self.titleField.text];
+                break;
+            case 1:
+                [dateComponents setMinute:-5];
+                fireDate = [[NSCalendar currentCalendar] dateByAddingComponents:dateComponents toDate:dateTimeOfMeeting options:0];
+                localNotification.alertBody = [NSString stringWithFormat:@"%@ Task due in 5 minutes", self.titleField.text];
+                break;
+            case 2:
+                [dateComponents setMinute:-15];
+                fireDate = [[NSCalendar currentCalendar] dateByAddingComponents:dateComponents toDate:dateTimeOfMeeting options:0];
+                localNotification.alertBody = [NSString stringWithFormat:@"%@ Task due in 15 minutes", self.titleField.text];
+                break;
+            case 3:
+                [dateComponents setMinute:-30];
+                fireDate = [[NSCalendar currentCalendar] dateByAddingComponents:dateComponents toDate:dateTimeOfMeeting options:0];
+                localNotification.alertBody = [NSString stringWithFormat:@"%@ Task due in 30 minutes", self.titleField.text];
+                break;
+            case 4:
+                [dateComponents setHour:-1];
+                fireDate = [[NSCalendar currentCalendar] dateByAddingComponents:dateComponents toDate:dateTimeOfMeeting options:0];
+                localNotification.alertBody = [NSString stringWithFormat:@"%@ Task due in 1 hour", self.titleField.text];
+                break;
+            case 5:
+                [dateComponents setHour:-2];
+                fireDate = [[NSCalendar currentCalendar] dateByAddingComponents:dateComponents toDate:dateTimeOfMeeting options:0];
+                localNotification.alertBody = [NSString stringWithFormat:@"%@ Task due in 2 hours", self.titleField.text];
+                break;
+            case 6:
+                [dateComponents setDay:-1];
+                fireDate = [[NSCalendar currentCalendar] dateByAddingComponents:dateComponents toDate:dateTimeOfMeeting options:0];
+                localNotification.alertBody = [NSString stringWithFormat:@"%@ Task due in 1 day", self.titleField.text];
+                break;
+            case 7:
+                [dateComponents setDay:-2];
+                fireDate = [[NSCalendar currentCalendar] dateByAddingComponents:dateComponents toDate:dateTimeOfMeeting options:0];
+                localNotification.alertBody = [NSString stringWithFormat:@"%@ Task due in 2 days", self.titleField.text];
+                break;
+            default:
+                break;
+        }
+        localNotification.fireDate = fireDate;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadData" object:self];
+        localNotification.applicationIconBadgeNumber = [[UIApplication sharedApplication] applicationIconBadgeNumber] + 1;
+        [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+    }
+}
+-(void) removeOldNotifications
+{
+    NSArray *notifications = [[UIApplication sharedApplication] scheduledLocalNotifications];
+    for (int i=0; i<[notifications count]; i++)
+    {
+        UILocalNotification* notification = [notifications objectAtIndex:i];
+        NSDictionary *userInfo = notification.userInfo;
+        NSInteger taskID=[[userInfo valueForKey:@"taskID"] integerValue];
+        if (taskID == self.taskID)
+        {
+            [[UIApplication sharedApplication] cancelLocalNotification:notification];
+            break;
+        }
+    }
+}
+
+
 - (void)taskCreationAlert:(BOOL)error
 {
     NSString *title;

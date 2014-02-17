@@ -326,6 +326,7 @@
     [self.userViewController setModalPresentationStyle:UIModalPresentationPageSheet];
     [self.userViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     self.userViewController.userDelegate = self;
+    [self.userViewController initAttendeesList:self.userList];
     [self presentViewController:self.userViewController animated:YES completion:nil];
     self.userViewController.view.superview.bounds = CGRectMake(0,0,768,1003);
 }
