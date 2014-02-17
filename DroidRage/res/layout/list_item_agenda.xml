@@ -28,7 +28,7 @@
         android:layout_weight="0"
         android:minHeight="24dp"
         android:padding="4dip"
-        android:text="Add"
+        android:text="Add Subtopic"
         android:background="@drawable/button_selector"
         android:textColor="#FF777777"
         android:textSize="18sp" />
@@ -40,7 +40,7 @@
         android:layout_weight="0"
         android:minHeight="24dp"
         android:padding="4dip"
-        android:text="Time"
+        android:text="Add"
         android:background="@drawable/button_selector"
         android:textColor="#FF777777" />
 

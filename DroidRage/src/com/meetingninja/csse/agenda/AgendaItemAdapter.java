@@ -224,18 +224,6 @@ public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 		return rowView;
 	}
 
-	// @Override
-	// public void handleItemClick(final View view, final Object id) {
-	// final Topic t = (Topic) id;
-	// final TreeNodeInfo<Topic> info = getManager().getNodeInfo(t);
-	// if (info.isWithChildren()) {
-	// super.handleItemClick(view, id);
-	// } else {
-	// final ViewGroup vg = (ViewGroup) view;
-	//
-	// }
-	// }
-
 	@Override
 	public long getItemId(final int position) {
 
@@ -325,7 +313,7 @@ public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 		public void onClick(View v) {
 			// final Topic t = (Topic) v.getTag();
 			Topic subT = new Topic(); // TODO : Make new subtopic
-			subT.setTitle("" + subT);
+			subT.setTitle("");
 			subT.setTime("0");
 			parent.addTopic(subT);
 			
