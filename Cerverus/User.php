@@ -397,7 +397,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
                 $userNode->save();
                 $userIndex->add($userNode, 'email', $postContent->email);
 				
-				createSettings($client, $userNode->getId(),"", "", "");
+				createSettings($client, $userNode->getId(),"", "", "","","","");
 
                 
                 // return the id of the node
@@ -657,7 +657,7 @@ function pbkdf2($algorithm, $password, $salt, $count, $key_length, $raw_output =
         return bin2hex(substr($output, 0, $key_length));
 }
 
-function createSettings($client, $userID, $shouldNotify, $whenToNotify, $settings){
+function createSettings($client, $userID, $shouldNotify, $whenToNotify, $tasks, $groups, $meetings, $projects){
 	//create notification POST
 	//get the json string post content
 	$settiIndex = new Index\NodeIndex($client, 'UserSettings');
@@ -671,7 +671,10 @@ function createSettings($client, $userID, $shouldNotify, $whenToNotify, $setting
 	$settiNode->setProperty('shouldNotify', $shouldNotify)->setProperty('whenToNotify', $whenToNotify)->
 	setProperty('type', 'UserSettings')
 			->setProperty('nodeID', $settiNode->getID())
-			->setProperty('settings',$settings);
+			->setProperty('tasks',$tasks)
+			->setProperty('groups',$groups)
+			->setProperty('meetings',$meetings)
+			->setProperty('projects',$projects);
 	
 	//actually add the node in the db
 	$settiNode->save();

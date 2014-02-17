@@ -46,7 +46,10 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') == 0){
 				$array=array();
 				$array['shouldNotify']=$tempArray['shouldNotify'];
 				$array['whenToNotify']=$tempArray['whenToNotify'];
-				$array['settings']=$tempArray['settings'];
+				$array['tasks']=$tempArray['tasks'];
+				$array['groups']=$tempArray['groups'];
+				$array['meetings']=$tempArray['meetings'];
+				$array['projects']=$tempArray['projects'];
 				$array['nodeID']=strval($tempArray['nodeID']);
 				$array['type']=$rel->getType();
 		
@@ -103,13 +106,32 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') == 0){
                         $array = $setti->getProperties();
                         $array['nodeID']=$setti->getId();
                         echo json_encode($array);
-                }else if(strcasecmp($postContent->field, 'settings') ==0){
-                        $setti->setProperty('settings', $postContent->value);
+                }else if(strcasecmp($postContent->field, 'tasks') ==0){
+                        $setti->setProperty('tasks', $postContent->value);
                         $setti->save();
                         $array = $setti->getProperties();
                         $array['nodeID']=$setti->getId();
                         echo json_encode($array);
-                }else if(strcasecmp($postContent->field, 'whenToNotify') ==0){
+                }else if(strcasecmp($postContent->field, 'groups') ==0){
+                        $setti->setProperty('groups', $postContent->value);
+                        $setti->save();
+                        $array = $setti->getProperties();
+                        $array['nodeID']=$setti->getId();
+                        echo json_encode($array);
+                }else if(strcasecmp($postContent->field, 'meetings') ==0){
+                        $setti->setProperty('meetings', $postContent->value);
+                        $setti->save();
+                        $array = $setti->getProperties();
+                        $array['nodeID']=$setti->getId();
+                        echo json_encode($array);
+                }else if(strcasecmp($postContent->field, 'projects') ==0){
+                        $setti->setProperty('projects', $postContent->value);
+                        $setti->save();
+                        $array = $setti->getProperties();
+                        $array['nodeID']=$setti->getId();
+                        echo json_encode($array);
+                }
+				else if(strcasecmp($postContent->field, 'whenToNotify') ==0){
                         $setti->setProperty('whenToNotify', $postContent->value);
                         $setti->save();
                         $array = $setti->getProperties();
