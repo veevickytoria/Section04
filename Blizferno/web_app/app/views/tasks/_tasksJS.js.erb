@@ -78,6 +78,8 @@ function hideDeleteModal(){
 				delete tasksJSON[deleteID];
 			}
 		}
+	}).fail(function(){
+		alert('delete error');
 	});
 
 	$('#deleteTaskModal').modal('hide');
