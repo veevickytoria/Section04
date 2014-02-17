@@ -406,6 +406,8 @@ public class MainActivity extends FragmentActivity implements
 				selectItem(DrawerLabel.TASKS.getPosition());
 			} else if (thingsYouSaid.contains("projects")) {
 				selectItem(DrawerLabel.PROJECTS.getPosition());
+			} else if (thingsYouSaid.contains("contacts")) {
+				selectItem(DrawerLabel.CONTACTS.getPosition());
 			}
 		}
 	}
