@@ -323,10 +323,11 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		return projectList;
 	}
 
-	public static List<Note> getNotes(String userID) throws IOException {
+	public static List<Note> getNotes(String userID) throws Exception {
 		// Server URL setup
 		String _url = getBaseUri().appendPath("Notes").appendPath(userID)
 				.build().toString();
+		Log.d("GETNOTES", _url);
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
@@ -341,15 +342,15 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		// Initialize ObjectMapper
 		List<Note> noteList = new ArrayList<Note>();
 		List<String> noteIds = new ArrayList<String>();
-		final JsonNode noteArray = MAPPER.readTree(response)
-				.get(Keys.Note.LIST);
+		final JsonNode noteArray = MAPPER.readTree(response).get(Keys.Note.LIST);
 
 		if (noteArray.isArray()) {
 			for (final JsonNode noteNode : noteArray) {
-				// Note n = NotesDatabaseAdapter.parseNote(noteNode);
-				// if (n != null) {
-				// noteList.add(n);
-				// }
+				Note n = NotesDatabaseAdapter.getNote(JsonUtils.getJSONValue(noteNode, Keys.Note.ID));
+				n.setCreatedBy(JsonUtils.getJSONValue(noteNode, Keys.Note.CREATED_BY));
+				if (n != null) {
+					noteList.add(n);
+				}
 				noteIds.add(noteNode.get(Keys.Note.ID).asText());
 			}
 		} else {

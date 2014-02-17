@@ -15,6 +15,8 @@
  ******************************************************************************/
 package com.meetingninja.csse.notes;
 
+import java.io.IOException;
+
 import objects.Note;
 
 import org.joda.time.DateTime;
@@ -24,8 +26,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,11 +40,14 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import com.meetingninja.csse.R;
+import com.meetingninja.csse.SessionManager;
+import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
+import com.meetingninja.csse.database.NotesDatabaseAdapter;
 import com.meetingninja.csse.database.local.SQLiteNoteAdapter;
 import com.meetingninja.csse.extras.MyDateUtils;
 
-public class EditNoteActivity extends Activity {
+public class EditNoteActivity extends Activity implements AsyncResponse<String> {
 
 	private static final String TAG = EditNoteActivity.class.getSimpleName();
 
@@ -51,6 +58,8 @@ public class EditNoteActivity extends Activity {
 	private Note displayedNote;
 	private int listPosition;
 	private boolean isCreationMode = false;
+	private CreateNoteTask createNoteTask;
+	private UpdateNoteTask updateNoteTask;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +76,7 @@ public class EditNoteActivity extends Activity {
 		if (extras.getBoolean(Note.CREATE_NOTE, false)) {
 			displayedNote = new Note();
 			isCreationMode = true;
+			displayedNote.setCreatedBy(SessionManager.getInstance().getUserID());
 		} else if (extras != null) {
 			listPosition = extras.getInt("listPosition", -1);
 			displayedNote = (Note) extras.getParcelable(Keys.Note.PARCEL);
@@ -124,16 +134,15 @@ public class EditNoteActivity extends Activity {
 
 		Intent backToNotes = new Intent();
 
-		long id = 0;
 		if (isCreationMode) {
-			if (TextUtils.isEmpty(displayedNote.getID()))
-				displayedNote.setID("" + 404); // TODO: Get an ID for the note
-			id = mySQLiteAdapter.insertNote(displayedNote);
-			displayedNote.setID("" + id);
+			createNoteTask = new CreateNoteTask(this);
+			createNoteTask.execute(displayedNote);
 		}
 
-		else
-			mySQLiteAdapter.updateNote(displayedNote);
+		else {
+			updateNoteTask = new UpdateNoteTask(this);
+			updateNoteTask.execute(displayedNote);
+		}
 
 		backToNotes.putExtra("listPosition", listPosition);
 		backToNotes.putExtra(Keys.Note.PARCEL, displayedNote);
@@ -233,6 +242,81 @@ public class EditNoteActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	
+	private class CreateNoteTask extends AsyncTask<Note, Void, String> {
+
+		private AsyncResponse<String> delegate;
+
+		public CreateNoteTask(AsyncResponse<String> del) {
+			this.delegate = del;
+		}
+
+		@Override
+		protected String doInBackground(Note... params) {
+			try {
+				Note n = (Note) params[0];
+				
+				return NotesDatabaseAdapter.createNote(n);
+			} catch (IOException e) {
+				Log.e("DB Adapter", "Error: CreateNote failed");
+				Log.e("CreateNoteIO", e.toString());
+			} catch (Exception e) {
+				Log.e("CreateNoteE", e.toString());
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			super.onPostExecute(result);
+			delegate.processFinish(result);
+		}
+	}
+	
+	private class UpdateNoteTask extends AsyncTask<Note, Void, String> {
+
+		private AsyncResponse<String> delegate;
+
+		public UpdateNoteTask(AsyncResponse<String> del) {
+			this.delegate = del;
+		}
+
+		@Override
+		protected String doInBackground(Note... params) {
+			try {
+				Note n = (Note) params[0];
+				
+				NotesDatabaseAdapter.updateNote(n);
+				return n.getID();
+			} catch (Exception e) {
+				Log.e("update_ERR", e.toString());
+			}
+			return "-1";
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			super.onPostExecute(result);
+			delegate.processFinish(result);
+		}
+	}
+
+	@Override
+	public void processFinish(String result) {
+		Intent backToNotes = new Intent();
+
+		backToNotes.putExtra("listPosition", listPosition);
+		backToNotes.putExtra(Keys.Note.PARCEL, displayedNote);
+		
+		if(result != null){
+			setResult(RESULT_OK, backToNotes);
+		} else {
+			setResult(RESULT_CANCELED, backToNotes);
+		}
+		
+		finish();
 	}
 
 }
