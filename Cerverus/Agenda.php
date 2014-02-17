@@ -48,7 +48,6 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
 			return;
 		}
 	} else {
-		echo json_encode(array('warningID'=>'??', 'warningMessage'=>'No meeting set.'));
 		$meeting = "none";
 	}
 	
@@ -62,7 +61,6 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
 			return;
 		}
 	} else {
-		echo json_encode(array('warningID'=>'??', 'warningMessage'=>'No user set.'));
 		$user = "none";
 	}
 	
@@ -103,7 +101,6 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
 			array_push($topicList, $topicCreation[1]);
 		}
 	} else {
-		echo json_encode(array('warningID'=>'??', 'warningMessage'=>'No content set.'));
 		$topics = "none";
 	}
 	
