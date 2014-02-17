@@ -109,7 +109,7 @@ function showEditModal(ID){
 	//Look up the meeting in our JSON object using the currentID and manually set each value to the appropriate element's value in the EditMeetingModal
 	document.getElementById("titleE").value = documentsJSON[currentID]["title"];
 	document.getElementById("contentE").value = documentsJSON[currentID]["content"];
-	document.getElementById("descriptionE").value = documentsJSON[currentID]["description"];
+	document.getElementById("descE").value = documentsJSON[currentID]["description"];
 
 	$('#editNoteModal').modal('show');
 	$('#viewDocumentModal').modal('hide');
@@ -131,6 +131,7 @@ function updateEditedValues(){
 
 //for each field in the edit form
 	for (key in documentsJSON[currentID]){
+		alert(key);
 	//check to see if the value we just got from the edit form is the value we had before
 //alert("key:"+key+"\n[key]:"+meetingsJSON[currentID][key]+"\neditForm[key]"+editForm[key]);
 		if(editForm[key] != null && documentsJSON[currentID][key] != editForm[key]){
