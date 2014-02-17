@@ -24,6 +24,7 @@ import objects.Schedule;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -247,25 +248,43 @@ public class MainActivity extends FragmentActivity implements
 
 	}
 
-	private void setupRightDrawer() {
+	private void setupRightDrawer(Schedule sched) {
 		rightDrawerList.setPinnedHeaderView(LayoutInflater.from(this).inflate(
 				R.layout.list_item_schedule_header, rightDrawerList, false));
-		Schedule sched = new Schedule();
-		try {
-			sched = UserDatabaseAdapter.getSchedule(""); // TODO: Get the real schedule for the user
-		} catch (JsonParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		rightDrawerAdapter = new ScheduleAdapter(MainActivity.this, sched);
 		rightDrawerList.setAdapter(rightDrawerAdapter);
 		rightDrawerAdapter.notifyDataSetChanged();
+	}
+
+	private void setupRightDrawer() {
+		new AsyncTask<Void, Void, Schedule>() {
+
+			@Override
+			protected Schedule doInBackground(Void... arg0) {
+				Schedule sched = new Schedule();
+				try {
+					sched = UserDatabaseAdapter.getSchedule(SessionManager
+							.getInstance().getUserID());
+				} catch (JsonParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (JsonMappingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return sched;
+			}
+
+			@Override
+			public void onPostExecute(Schedule result) {
+				setupRightDrawer(result);
+			}
+
+		}.execute();
+
 	}
 
 	/** Swaps fragments in the main content view */
@@ -304,8 +323,8 @@ public class MainActivity extends FragmentActivity implements
 			break;
 		case PROJECTS:
 			nextPage = ProjectFragment.getInstance();
-//			args.putString("Content", "TODO: Projects Page");
-//			nextPage.setArguments(args);
+			// args.putString("Content", "TODO: Projects Page");
+			// nextPage.setArguments(args);
 			frag_project = new ProjectFragment();
 			break;
 		case CONTACTS:
@@ -346,7 +365,6 @@ public class MainActivity extends FragmentActivity implements
 			ft.replace(R.id.content_frame, nextPage).commit();
 			// }
 
-
 			// Highlight the selected item, update the title, and close the
 			// drawer
 			leftDrawerList.setItemChecked(position, true);
@@ -369,12 +387,23 @@ public class MainActivity extends FragmentActivity implements
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
+		if (requestCode == 3)
+			frag_notes.populateList();
+
 		if (requestCode == VOICE_RECOGNITION_REQUEST_CODE
 				&& resultCode == RESULT_OK) {
 			ArrayList<String> thingsYouSaid = data
 					.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 			if (thingsYouSaid.contains("meetings")) {
 				selectItem(DrawerLabel.MEETINGS.getPosition());
+			} else if (thingsYouSaid.contains("groups")) {
+				selectItem(DrawerLabel.GROUPS.getPosition());
+			} else if (thingsYouSaid.contains("notes")) {
+				selectItem(DrawerLabel.NOTES.getPosition());
+			} else if (thingsYouSaid.contains("profile")) {
+				selectItem(DrawerLabel.PROFILE.getPosition());
+			} else if (thingsYouSaid.contains("tasks")) {
+				selectItem(DrawerLabel.TASKS.getPosition());
 			}
 		}
 	}
@@ -386,7 +415,8 @@ public class MainActivity extends FragmentActivity implements
 				.getInstance(MainActivity.this);
 		mySQLiteHelper.onUpgrade(mySQLiteHelper.getReadableDatabase(), 1, 1);
 		// disassociate Parse SDK
-		ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+		ParseInstallation installation = ParseInstallation
+				.getCurrentInstallation();
 		installation.remove("userId");
 		installation.remove("user");
 		installation.saveInBackground();

@@ -15,12 +15,14 @@
  ******************************************************************************/
 package com.meetingninja.csse.notes;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import objects.Note;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -44,10 +46,11 @@ import com.meetingninja.csse.R;
 import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
+import com.meetingninja.csse.database.NotesDatabaseAdapter;
+import com.meetingninja.csse.database.UserDatabaseAdapter;
 import com.meetingninja.csse.database.local.SQLiteNoteAdapter;
 
-public class NotesFragment extends Fragment implements
-		AsyncResponse<List<Note>> {
+public class NotesFragment extends Fragment implements AsyncResponse<List<Note>> {
 
 	private static final String TAG = NotesFragment.class.getSimpleName();
 
@@ -55,6 +58,10 @@ public class NotesFragment extends Fragment implements
 	private NoteArrayAdapter noteAdpt;
 	private ImageButton notesImageButton;
 	private SQLiteNoteAdapter mySQLiteAdapter;
+	private PopulateTask populateTask;
+	private DeleteNoteTask deleteNoteTask;
+	private UpdateNoteTask updateNoteTask;
+	private Note mergeNote;
 
 	private static List<Note> notes = new ArrayList<Note>();
 
@@ -155,6 +162,8 @@ public class NotesFragment extends Fragment implements
 						aInfo.position, 2, "Delete");
 				menu.add(MainActivity.DrawerLabel.NOTES.getPosition(),
 						aInfo.position, 3, "Version Control");
+				menu.add(MainActivity.DrawerLabel.NOTES.getPosition(),
+						aInfo.position, 4, "Merge");
 			}
 
 		});
@@ -181,7 +190,7 @@ public class NotesFragment extends Fragment implements
 				handled = true;
 				break;
 			case 2: // Delete
-				deleteNote(noteAdpt.getItem(position));
+				delete(noteAdpt.getItem(position));
 				handled = true;
 				break;
 			case 3:
@@ -189,6 +198,33 @@ public class NotesFragment extends Fragment implements
 						VersionControlActivity.class);
 				startActivity(versionControl);
 				handled = true;
+				break;
+			case 4:
+				Note n = noteAdpt.getItem(position);
+				if(mergeNote == null){
+					Log.d("MERGE", "merge_a: " + n.getID());
+					mergeNote = n;
+					Toast.makeText(getActivity(),
+							String.format("Select second note to merge."),
+							Toast.LENGTH_LONG).show();
+				}
+				else if (mergeNote.getID().equalsIgnoreCase(n.getID())){
+					Log.d("MERGE", "merge_b: " + n.getID() + " : " + mergeNote.getID());
+					mergeNote = null;
+					Toast.makeText(getActivity(),
+							String.format("Error: Same note selected twice. Please reselect notes to merge."),
+							Toast.LENGTH_LONG).show();
+				} else {
+					Log.d("MERGE", "merge_c: " + n.getID() + " : " + mergeNote.getID());
+					Toast.makeText(getActivity(),
+							String.format("Merging " + n.getTitle() + " into " + mergeNote.getTitle()),
+							Toast.LENGTH_LONG).show();
+					mergeNote.setContent(mergeNote.getContent() + "\n" + n.getContent());
+					delete(n);
+					updateNote(mergeNote);
+					mergeNote = null;
+					populateList();
+				}
 				break;
 			default:
 				Log.wtf(TAG, "Invalid context menu option selected");
@@ -201,11 +237,26 @@ public class NotesFragment extends Fragment implements
 		return handled;
 	}
 	
+	private void updateNote(Note note) {
+		updateNoteTask = new UpdateNoteTask(this);
+		updateNoteTask.execute(note);
+		populateList();
+	}
+
+	private void delete(Note note) {
+		deleteNoteTask = new DeleteNoteTask(this);
+		deleteNoteTask.execute(note.getID());
+		populateList();
+	}
+	
 	protected void deleteNote(Note note){
 		mySQLiteAdapter.deleteNote(note);
 		notes.remove(note);
 		noteAdpt.notifyDataSetChanged();
+		populateList();
 	}
+
+
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -235,6 +286,7 @@ public class NotesFragment extends Fragment implements
 			if (resultCode == Activity.RESULT_OK) {
 				Toast.makeText(getActivity(), "New Note Created",
 						Toast.LENGTH_SHORT).show();
+				populateList();
 			}
 		} // end CreateNoteActivity
 	}
@@ -255,18 +307,116 @@ public class NotesFragment extends Fragment implements
 	// }
 
 	public void populateList() {
-		List<Note> contentRead = mySQLiteAdapter.getAllNotes();
-		processFinish(contentRead);
+		populateTask = new PopulateTask(this);
+		populateTask.execute(this.session.getUserID());
 	}
 
 	@Override
 	public void processFinish(List<Note> list) {
+		int numNotes = 0;
+		try {
+			numNotes = list.size();
+		} catch (java.lang.NullPointerException e){
+			
+		}
 		Toast.makeText(getActivity(),
-				String.format("Received %d notes", list.size()),
+				String.format("Received %d notes", numNotes),
 				Toast.LENGTH_SHORT).show();
 		noteAdpt.clear();
 		notes.clear();
 		notes.addAll(list);
 		noteAdpt.notifyDataSetChanged();
+	}
+	
+	private class PopulateTask extends AsyncTask<String, Void, List<Note>> {
+
+		private AsyncResponse<List<Note>> delegate;
+
+		public PopulateTask(AsyncResponse<List<Note>> del) {
+			this.delegate = del;
+		}
+
+		@Override
+		protected List<Note> doInBackground(String... params) {
+			try {
+				String userID = (String) params[0];
+
+				return UserDatabaseAdapter.getNotes(userID);
+			} catch (IOException e) {
+				Log.e("DB Adapter", "Error: Register failed");
+				Log.e("REGISTER_ERR", e.toString());
+			} catch (Exception e) {
+				Log.e("REGISTER_ERR", e.toString());
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(List<Note> result) {
+			Log.d("populatenotes", "stuff");
+			super.onPostExecute(result);
+			if(result != null)
+				delegate.processFinish(result);
+		}
+	}
+	
+	private class DeleteNoteTask extends AsyncTask<String, Void, List<Note>> {
+
+		private AsyncResponse<List<Note>> delegate;
+
+		public DeleteNoteTask(AsyncResponse<List<Note>> del) {
+			this.delegate = del;
+		}
+
+		@Override
+		protected List<Note> doInBackground(String... params) {
+			try {
+				String noteID = (String) params[0];
+				
+				NotesDatabaseAdapter.deleteNote(noteID).toString();
+			} catch (IOException e) {
+				Log.e("DB Adapter", "Error: DeleteNote failed");
+				Log.e("DeleteNoteIO", e.toString());
+			} catch (Exception e) {
+				Log.e("DeleteNoteE", e.toString());
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(List<Note> result) {
+			super.onPostExecute(result);
+			//delegate.processFinish(result);
+		}
+	}
+	
+	private class UpdateNoteTask extends AsyncTask<Note, Void, List<Note>> {
+
+		private AsyncResponse<List<Note>> delegate;
+
+		public UpdateNoteTask(AsyncResponse<List<Note>> del) {
+			this.delegate = del;
+		}
+
+		@Override
+		protected List<Note> doInBackground(Note... params) {
+			try {
+				Note n = (Note) params[0];
+				
+				NotesDatabaseAdapter.updateNote(n);
+			} catch (IOException e) {
+				Log.e("DB Adapter", "Error: CreateNote failed");
+				Log.e("CreateNoteIO", e.toString());
+			} catch (Exception e) {
+				Log.e("CreateNoteE", e.toString());
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(List<Note> result) {
+			super.onPostExecute(result);
+			//delegate.processFinish(result);
+		}
 	}
 }
