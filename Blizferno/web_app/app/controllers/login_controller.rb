@@ -1,5 +1,5 @@
 class LoginController < ApplicationController
-	layout 'login'
+	layout 'slate'
 	def index
 	end
 end

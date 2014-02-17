@@ -17,21 +17,19 @@
   <%# stylesheet_link_tag params[:controller] %>
   <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet" />
 </head>
-<body>
-  <!-- Sitewide navigation bar -->
+<body onload="areCookiesEnabled()">
+  <% @notOnLogin = params[:controller].to_s != "login" %>
+  <% if (@notOnLogin) %>
   <%= render '/panes/navbar_top' %>
+  <% end %>
 
   <!-- Page content -->
   <%= yield %>
 
-  <!-- Sitewide info-link bar 
-  %= render '/panes/navbar_bottom' %>
-  -->
-
   <!-- JAVASCRIPTS -->
-  <%# javascript_include_tag "slate" %>
-  <%= javascript_include_tag "application" %>
+  <%= javascript_include_tag "slate" %>
+  <%# javascript_include_tag "application" %>
   <%= yield(:page_javascript) if content_for?(:page_javascript) %>
-  <%# javascript_include_tag params[:controller] %>
+  <%= javascript_include_tag params[:controller] %>
 </body>
 </html>

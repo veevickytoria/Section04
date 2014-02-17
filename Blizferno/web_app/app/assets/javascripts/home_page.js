@@ -3,3 +3,7 @@
 //         $(".content").fadeIn(1000);        
 //     });
 // });​
+//= require meetings
+//= require groups
+//= require tasks
+//= require projects

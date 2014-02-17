@@ -82,13 +82,4 @@ function passCheck(){
 		document.getElementById('p1').style.box-shadow('none');
 }
 
-function areCookiesEnabled(){
-	var cookiesEnabled = (navigator.cookiesEnabled) ? true : false;
-
-	if (typeof navigator.cookiesEnabled == "undefined" && !cookiesEnabled){ 
-		document.cookie="testcookie";
-		cookiesEnabled = (document.cookie.indexOf("testcookie") != -1) ? true : false;
-	}
-	if(!cookiesEnabled)
-		alert('You do not have cookies enabled. To continue using this site, please re-enable cookies and refresh the page.');
-}
+ß
