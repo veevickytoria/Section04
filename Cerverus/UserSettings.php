@@ -70,7 +70,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') == 0){
         //get the json string post content
         $postContent = json_decode(@file_get_contents('php://input'));
         
-        $setti=$client->getNode($postContent->settingID);
+        $setti=$client->getNode($postContent->userID);
         if(sizeof($setti > 0)){
                 if(strcasecmp($postContent->field, 'shouldNotify') ==0){
                         $setti->setProperty('shouldNotify', $postContent->value);
