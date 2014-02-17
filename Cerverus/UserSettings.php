@@ -111,7 +111,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') == 0){
                         $array = $setti->getProperties();
                         echo json_encode($array);
                 }else if(strcasecmp($postContent->field, 'projects') ==0){
-                        $setti->setProperty('projectss', $postContent->value);
+                        $setti->setProperty('projects', $postContent->value);
                         $setti->save();
                         $array = $setti->getProperties();
                         echo json_encode($array);
