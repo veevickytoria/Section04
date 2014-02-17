@@ -65,9 +65,9 @@ import com.parse.ParseUser;
 
 /**
  * Main Activity Window.
- *
+ * 
  * @author moorejm
- *
+ * 
  */
 public class MainActivity extends FragmentActivity implements
 		BaseFragment.TaskCallbacks {
@@ -404,6 +404,8 @@ public class MainActivity extends FragmentActivity implements
 				selectItem(DrawerLabel.PROFILE.getPosition());
 			} else if (thingsYouSaid.contains("tasks")) {
 				selectItem(DrawerLabel.TASKS.getPosition());
+			} else if (thingsYouSaid.contains("projects")) {
+				selectItem(DrawerLabel.PROJECTS.getPosition());
 			}
 		}
 	}
