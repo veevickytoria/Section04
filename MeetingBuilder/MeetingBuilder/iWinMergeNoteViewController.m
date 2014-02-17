@@ -57,7 +57,7 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
-    NSInteger i = indexPath.row;
+    NSInteger index = indexPath.row;
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
@@ -67,10 +67,10 @@
     // Configure the cell.
     if ([tableView isEqual:self.userListTable])
     {
-        cell.textLabel.text = [self.names objectAtIndex:indexPath.row];
+        cell.textLabel.text = [self.names objectAtIndex:index];
     }
     else if (self.notesForTable.count > 0) {
-        cell.textLabel.text = [self.notesForTable objectAtIndex:indexPath.row];
+        cell.textLabel.text = [self.notesForTable objectAtIndex:index];
     }
     return cell;
 }

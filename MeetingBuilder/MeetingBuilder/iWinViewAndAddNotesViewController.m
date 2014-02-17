@@ -182,7 +182,7 @@
     NSDictionary *deserializedDictionary = [self.backendUtility postRequestForUrl:url withDictionary:jsonDictionary];
     
     if (!deserializedDictionary) {
-        [self noteCreationAlert:YES];
+        [self noteCreationAlert:@"Error" : @"Could not load your notes!"];
     }
     else
     {
@@ -206,7 +206,7 @@
     NSDictionary *deserializedDictionary = [self.backendUtility putRequestForUrl:url withDictionary:jsonDictionary];
     
     if (!deserializedDictionary) {
-        [self noteCreationAlert:YES];
+        [self noteCreationAlert:@"Error" : @"Could not update your note!"];
     }
     else if (returnAndRefresh)
     {
@@ -219,22 +219,6 @@
 - (IBAction)cancelButton:(id)sender
 {
     [self dismissViewControllerAnimated:YES completion:Nil];
-}
-
-- (void)loadSharedUsersIntoTable
-{
-    NSArray *names = [NSArray arrayWithObjects:@"John McCormack", @"Dharmin Shah", @"Gordon Hazzard", nil];
-  //  self.sharedUserIDs = [NSArray arrayWithObjects:@"1", @"2", @"3", nil];
-    
-    // TO DO: parse JSON and set fille names and sharedUserIDs arrays
-    
-    // load names into list
-    for (NSString *name in names) {
-        //      self.userViewController.userListTableView
-        
-        //    [self.noteList addObject:];
-        //   [self.noteIDs addObject:];
-    }
 }
 
 
@@ -250,8 +234,6 @@
     self.userViewController.userDelegate = self;
     [self presentViewController:self.userViewController animated:YES completion:nil];
     self.userViewController.view.superview.bounds = CGRectMake(0,0,768,1003);
-    
-    
 }
 
 
@@ -291,19 +273,8 @@
     [self dismissViewControllerAnimated:YES completion:Nil];
 }
 
-- (void)noteCreationAlert:(BOOL)error
+- (void)noteCreationAlert:(NSString*)title : (NSString*)message
 {
-    NSString *title;
-    NSString *message;
-    if (error) {
-        title = @"Error";
-        message = @"Failed to save note";
-    }
-    else
-    {
-        title = @"Success";
-        message = @"Note has been saved";
-    }
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
     [alert show];
 }
