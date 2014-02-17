@@ -33,6 +33,7 @@ RewriteRule ^Meeting/$ Meeting.php [NC,L]
 RewriteRule ^Meeting/([0-9]+)/?$ Meeting.php?id=$1 [NC,L]
 RewriteRule ^Meeting/Notes/?$ Meeting.php?cat=notes [NC,L]
 RewriteRule ^Meeting/Tasks/([0-9]+)/?$ Meeting.php?cat=tasks&id=$1 [NC,L]
+RewriteRule ^Meeting/Agendas/([0-9]+)/?$ Meeting.php?cat=agendas&id=$1 [NC,L]
 
 RewriteRule ^Task/?$ Task.php [NC,L]
 RewriteRule ^Task/([0-9]+)/?$ Task.php?id=$1 [NC,L]

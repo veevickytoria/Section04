@@ -3,7 +3,8 @@
  * Include the API PHP file for neo4j
  */
 namespace Everyman\Neo4j;
-require("phar://neo4jphp.phar");
+require_once("Topic.php");
+require_once("CommonFunctions.php");
 
     if (isset($_SERVER['HTTP_ORIGIN'])) {
         header("Access-Control-Allow-Origin: *");
@@ -83,7 +84,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
         $array['meetingID']=$meetingNode->getId();
         echo json_encode($array);
         
-}else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') == 0){
+}else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') == 0 && ! isset($_REQUEST['cat'])){
         //getMeetingInfo
         $meetingNode=$client->getNode($_GET['id']);
                 $array = $meetingNode->getProperties();
@@ -241,7 +242,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
                 $errorarray = array('errorID' => '5', 'errorMessage'=>$_GET['id'].' node ID is not recognized in database');
                 echo json_encode($errorarray);
         }
-}else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'tasks')==0){
+}else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') ==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'tasks')==0){
     $meeting = $client->getNode($_GET['id']);
     $properties = $meeting->getProperties();
     if(strcasecmp($properties['nodeType'], 'Meeting') != 0){
@@ -260,6 +261,32 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
     }
     
     echo json_encode(array("tasks"=>$results));
+    
+}else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') ==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'agendas')==0){
+    $meeting = $client->getNode($_GET['id']);
+    $properties = $meeting->getProperties();
+    if(strcasecmp($properties['nodeType'], 'Meeting') != 0){
+        echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['id'].' is an not a meeting node.'));
+        return;
+    }
+    // find the agenda
+    $agendaRels = $meeting->getRelationships(array('FOLLOWS'), Relationship::DirectionOut);
+    if(count($agendaRels) <= 0){
+        echo json_encode(array('errorID'=>'12', 'errorMessage'=>'Meeting '. $meeting->getId() . ' has no agenda.'));
+        return;        
+    }
+    
+    $agenda = $agendaRels[0]->getEndNode();
+    $response = array("agendaID"=>$agenda->getId(), "title"=>$agenda->getProperty("title"));
+    
+    //merge topic content
+    $topics = getRelatedNodeIds($agenda, "HAS_TOPIC", "topicID", "OUT");
+    $topicContent = array();
+    foreach($topics as $topic){
+        array_push($topicContent, getTopicInfo($topic["topicID"], $client));
+    }
+    $response['content'] = $topicContent;
+    echo json_encode($response);
     
 }else{
         echo $_SERVER['REQUEST_METHOD'] ." request method not found in Meeting";
