@@ -45,31 +45,44 @@
     };
 
     //set up the data for the call
-    var postData = JSON.stringify({
-      "groupTitle":postTitle,
-      "members":postMembers
+    var updateTitle = JSON.stringify({
+      "groupID":currentID,
+      "field":"groupTitle",
+      "value":postTitle
     });
 
-    // PUT requests? phhh... who needs those? Watch this.
+    var updateMembers = JSON.stringify({
+      "groupID":currentID,
+      "field":"members",
+      "value":postMembers
+    });
+
     $.ajax({
-      type: 'DELETE',
-      url: 'http://csse371-04.csse.rose-hulman.edu/Group/' + currentID,
+      type: 'PUT',
+      url: 'http://csse371-04.csse.rose-hulman.edu/Group/',
+      data: updateTitle,
       success:function(data){
-        // do nothing
+        alert(data);
       },
       async: false
+    })
+    .done(function(){
+      alert('done');
+    })
+    .fail(function(){
+      alert('error');
     });
 
-    $.ajax({
-      type: 'POST',
-      url: 'http://csse371-04.csse.rose-hulman.edu/Group/',
-      data: postData,
-      success:function(data){
-        $('#editGroupModal').modal('hide');
-        $('#newGroupModal').modal('hide');
-        window.location.reload(true);
-      }
-    });
+    // $.ajax({
+    //   type: 'PUT',
+    //   url: 'http://csse371-04.csse.rose-hulman.edu/Group/',
+    //   data: postData,
+    //   success:function(data){
+    //     $('#editGroupModal').modal('hide');
+    //     $('#newGroupModal').modal('hide');
+    //     window.location.reload(true);
+    //   }
+    // });
   }
 
   function hideGroupModal(){
