@@ -126,7 +126,6 @@
 -(void) initForExistingMeeting
 {
     self.headerLabel.text = @"View Meeting";
-    [self.addAgendaButton setTitle:@"Agenda 101" forState:UIControlStateNormal];
     self.saveAndAddMoreButton.hidden = YES;
     
 //    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Meeting" inManagedObjectContext:self.context];
@@ -158,11 +157,35 @@
     }
     
     self.titleField.text = [self.existMeeting objectForKey:@"title"];
-    self.placeField.text = [self.existMeeting objectForKey:@"location"];    
+    self.placeField.text = [self.existMeeting objectForKey:@"location"];
+    
+     NSString *agendaTitle = [self getAgendaTitle];
+     [self.addAgendaButton setTitle:agendaTitle forState:UIControlStateNormal];
     
     [self initDateTimeLabels];
     [self initAttendees];
 }
+
+-(NSString *) getAgendaTitle
+{
+    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Meeting/Agenda/%d", self.meetingID];
+    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
+    NSString *agendaTitle;
+    
+    if (!deserializedDictionary)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Meeting agenda not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alert show];
+    }
+    else
+    {
+        agendaTitle =  [deserializedDictionary objectForKey:@"title"];
+    }
+    return agendaTitle;
+}
+
+
 
 -(void) initDateTimeLabels
 {
@@ -302,16 +325,17 @@
 
 - (IBAction)onAddAgenda
 {
-    if ([self.addAgendaButton.titleLabel.text isEqualToString:@"Add Agenda"])
-    {
+//    if ([self.addAgendaButton.titleLabel.text isEqualToString:@"Add Agenda"])
+//    {
+//        self.agendaController = [[iWinViewAndAddViewController alloc] initWithNibName:@"iWinViewAndAddViewController" bundle:nil];
+//    }
+//    else
+//    {
         self.agendaController = [[iWinViewAndAddViewController alloc] initWithNibName:@"iWinViewAndAddViewController" bundle:nil];
-        self.agendaController.meetingID = self.meetingID;
-    }
-    else
-    {
-        self.agendaController = [[iWinViewAndAddViewController alloc] initWithNibName:@"iWinViewAndAddViewController" bundle:nil];
-        self.agendaController.meetingID = self.meetingID;
-    }
+   // }
+    self.agendaController.meetingID = self.meetingID;
+    self.agendaController.userID = self.userID;
+    
     [self.agendaController setModalPresentationStyle:UIModalPresentationPageSheet];
     [self.agendaController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     self.agendaController.delegate = self;

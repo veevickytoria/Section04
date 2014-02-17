@@ -61,7 +61,6 @@
         NSData * data = [NSURLConnection sendSynchronousRequest:urlRequest
                                               returningResponse:&response
                                                           error:&error];
-        NSArray *jsonArray;
         if (error)
         {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Meetings not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
@@ -71,13 +70,10 @@
         {
             NSError *jsonParsingError = nil;
             NSDictionary *deserializedDictionary = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
-            jsonArray = [deserializedDictionary objectForKey:@"title"];
+            self.titleTextField.text = [deserializedDictionary objectForKey:@"title"];
+            self.itemList =[deserializedDictionary objectForKey:@"content"];
         }
-
-        
-        
-        
-        
+   
     }
 }
 
@@ -138,16 +134,17 @@
 {
     if (self.agendaID == 0)
     {
-        [self saveNewMeeting];
+        [self saveNewAgenda];
     }
     else
     {
-        [self updateMeetingInfo];
+        [self updateAgendaInfo];
     }
 
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
--(void) updateMeetingInfo
+-(void) updateAgendaInfo
 {
     NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Agenda/"];
     
@@ -166,10 +163,10 @@
 }
 
 
--(void) saveNewMeeting
+-(void) saveNewAgenda
 {
-    NSArray *keys = [NSArray arrayWithObjects:@"title", @"meeting", @"content",nil];
-    NSArray *objects = [NSArray arrayWithObjects: self.titleTextField.text, [[NSNumber numberWithInt:self.meetingID] stringValue], self.itemList, nil];
+    NSArray *keys = [NSArray arrayWithObjects:@"title", @"user", @"content",nil];
+    NSArray *objects = [NSArray arrayWithObjects: self.titleTextField.text, [[NSNumber numberWithInt:self.userID] stringValue], self.itemList, nil];
     
     NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
     NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Agenda/"];

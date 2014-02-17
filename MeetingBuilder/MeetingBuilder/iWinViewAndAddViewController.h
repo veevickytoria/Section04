@@ -26,6 +26,8 @@
 @property (nonatomic) BOOL isAgendaCreated;
 
 @property (nonatomic, assign) NSInteger meetingID;
+@property (nonatomic, assign) NSInteger userID;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil inEditMode:(BOOL)isEditing;
 @end
