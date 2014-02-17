@@ -31,6 +31,7 @@ function hideDeleteModal(){
 
 	//get the id of the meeting associated with the index of the meeting from our table
 	var deleteData = documentsJSON[deleteID]['noteID'];
+	
 	//make the DELETE request to the backend
 	$.ajax({
 		type: 'DELETE',
@@ -122,7 +123,7 @@ function showEditModalNoID(){
 function updateEditedValues(){
 	//convert the form into a JSON object for easy parsing
 	var editForm = convertFormToJSON(document.getElementById("editNote"));
-
+	
 	var editDocumentID = documentsJSON[currentID]['noteID'].toString();
 	var editField = "";
 	var editValue = "";

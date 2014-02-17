@@ -142,38 +142,6 @@
 
   function showGroupModalNoID(){
     showViewGroupModal(currentID);
-    // $('#viewGroupModal').modal('hide');
-    // $('#viewGroupModal').on('hidden.bs.modal', function() {
-    //   $(this).removeData('bs.modal');
-    // });
-
-    // // Edit info
-    // //GroupArray["groupID"] = document.getElementById("IDE").value;
-    // GroupArray["groupTitle"] = document.getElementById("titleE").value;
-    // GroupArray["groupType"] = document.getElementById("typeE").value;
-
-    // GroupArray["members"] = returnSelectValuesAsJSON("members", "displayName", "userID", "membersE")
-
-    // // TODO: Put this back in when it works and change it to update info then add a pull
-    // // $.ajax({
-    // //         type: '',
-    // //         url: 'http://csse371-04.csse.rose-hulman.edu/Tasks/' + ID,
-    // //   success:function(data){
-    // //     if(data.taskID != null){
-    // //       GroupArray = JSON.parse(data);
-    // //     }
-    // //   }
-    // // });
-
-    // // Update view info
-    // //document.getElementById("IDV").innerHTML = GroupArray["groupID"];
-    // document.getElementById("titleV").innerHTML = GroupArray["groupTitle"];
-    // document.getElementById("typeV").innerHTML = GroupArray["groupType"];
-
-    // populateTableRows(GroupArray["members"], "displayName", "TableMembersV");
-
-    // $('#viewGroupModal').modal('show');
-    // $('#editGroupModal').modal('hide');
   }
 
   function showViewGroupModal(ID){
