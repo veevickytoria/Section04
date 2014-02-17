@@ -398,6 +398,18 @@ public class MainActivity extends FragmentActivity implements
 			if (thingsYouSaid.contains("meetings")) {
 				selectItem(DrawerLabel.MEETINGS.getPosition());
 			}
+			else if (thingsYouSaid.contains("groups")) {
+				selectItem(DrawerLabel.GROUPS.getPosition());
+			}
+			else if (thingsYouSaid.contains("notes")) {
+				selectItem(DrawerLabel.NOTES.getPosition());
+			}
+			else if (thingsYouSaid.contains("profile")) {
+				selectItem(DrawerLabel.PROFILE.getPosition());
+			}
+			else if (thingsYouSaid.contains("tasks")) {
+				selectItem(DrawerLabel.TASKS.getPosition());
+			}
 		}
 	}
 
