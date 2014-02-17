@@ -24,6 +24,7 @@ import objects.Schedule;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -246,26 +247,44 @@ public class MainActivity extends FragmentActivity implements
 		// GravityCompat.END);
 
 	}
-
-	private void setupRightDrawer() {
+	
+	private void setupRightDrawer(Schedule sched){
 		rightDrawerList.setPinnedHeaderView(LayoutInflater.from(this).inflate(
 				R.layout.list_item_schedule_header, rightDrawerList, false));
-		Schedule sched = new Schedule();
-		try {
-			sched = UserDatabaseAdapter.getSchedule("");
-		} catch (JsonParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		rightDrawerAdapter = new ScheduleAdapter(MainActivity.this, sched);
 		rightDrawerList.setAdapter(rightDrawerAdapter);
 		rightDrawerAdapter.notifyDataSetChanged();
+	}
+
+	private void setupRightDrawer() {
+		new AsyncTask<Void, Void, Schedule>(){
+
+			@Override
+			protected Schedule doInBackground(Void... arg0) {
+				Schedule sched = new Schedule();
+				try {
+					sched = UserDatabaseAdapter.getSchedule(SessionManager.getInstance().getUserID());
+				} catch (JsonParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (JsonMappingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return sched;
+			}
+			
+			@Override
+			public void onPostExecute(Schedule result){
+				setupRightDrawer(result);
+			}
+			
+		}.execute();
+		
+		
 	}
 
 	/** Swaps fragments in the main content view */
