@@ -208,12 +208,12 @@ description itemIndex: (NSInteger *) itemIndex
 {
     //TODO: PUT DESCRIPTION BACK!!!
     if((NSInteger)self.agendaItemViewController.itemIndex > -1){
-        NSDictionary *agendaItem = @{@"title" : name, @"duration": duration, @"description": description};
+        NSDictionary *agendaItem = @{@"title" : name, @"time": duration, @"description": description, @"content": @""};
         [self.itemList replaceObjectAtIndex:self.agendaItemViewController.itemIndex withObject:agendaItem];
     }
     
     else{
-        NSDictionary *agendaItem = @{@"title" : name, @"duration": duration, @"description": description};
+        NSDictionary *agendaItem = @{@"title" : name, @"time": duration, @"description": description, @"content": @""};
     [self.itemList addObject:agendaItem];
     }
     
