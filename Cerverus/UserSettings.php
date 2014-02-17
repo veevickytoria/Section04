@@ -70,7 +70,18 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') == 0){
         //get the json string post content
         $postContent = json_decode(@file_get_contents('php://input'));
         
-        $setti=$client->getNode($postContent->userID);
+        $node=$client->getNode($postContent->userID);
+		if($node != null){
+		$userNode = $userIndex->findOne('email',$node->getProperty('email'));
+		if($userNode!=NULL)
+		{
+		
+			//get the notifications related
+			$relationArray = $userNode->getRelationships(array('SETFOR'), Relationship::DirectionIn);
+
+			//load up the notifications into an array
+
+			$setti = $relationArray[0]->getStartNode();
         if(sizeof($setti > 0)){
                 if(strcasecmp($postContent->field, 'shouldNotify') ==0){
                         $setti->setProperty('shouldNotify', $postContent->value);
@@ -100,7 +111,9 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') == 0){
                 }
                         $array = $setti->getProperties();
                         echo json_encode($array);
-        }
+		}
+		}
+		}
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'DELETE') == 0){      
 	//delete notification DELETE
         //get the id
