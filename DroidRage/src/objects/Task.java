@@ -138,6 +138,16 @@ public class Task extends Event implements Parcelable {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	@Override
+	public String getStartTime(){
+		return this.getEndTime();
+	}
+	
+	@Override
+	public long getStartTimeInMillis(){
+		return this.getEndTimeInMillis();
+	}
+	
 
 	@Override
 	public int compareTo(Event another) {
@@ -147,8 +157,9 @@ public class Task extends Event implements Parcelable {
 		if (another instanceof Task) {
 			return compareTo((Task) another);
 		}
+		
 		return Long.valueOf(getEndTimeInMillis()).compareTo(
-				Long.valueOf(another.getEndTimeInMillis()));
+				Long.valueOf(another.getStartTimeInMillis()));
 	}
 
 	public int compareTo(Task another) {

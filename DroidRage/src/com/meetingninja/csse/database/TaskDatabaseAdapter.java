@@ -94,9 +94,9 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 		// Build JSON Object for Title
 		jgen.writeStartObject();
 		jgen.writeStringField(Keys.Task.TITLE, t.getTitle());
-		jgen.writeBooleanField(Keys.Task.COMPLETED, t.getIsCompleted());
+		jgen.writeStringField(Keys.Task.COMPLETED, Boolean.toString(t.getIsCompleted()));
 		jgen.writeStringField(Keys.Task.DESC, t.getDescription());
-		jgen.writeNumberField(Keys.Task.DEADLINE, t.getEndTimeInMillis());
+		jgen.writeStringField(Keys.Task.DEADLINE, Long.toString(t.getEndTimeInMillis()));
 		jgen.writeStringField(Keys.Task.DATE_CREATED, t.getDateCreated());
 		jgen.writeStringField(Keys.Task.DATE_ASSIGNED, t.getDateAssigned());
 		jgen.writeStringField(Keys.Task.CRITERIA, t.getCompletionCriteria());
