@@ -1,9 +1,14 @@
-<form name='input' id='createGroupForm' onsubmit='validateGroup()'>
+<form name='input' id='updateGroupForm'>
 	<h5>Group Title*</h5>
 	<input name='title' type='text' id='titleE' class='form-control' placeholder='Title' />
 	<h5>Group Members*</h5>
 	<select multiple id='membersE' size='6' class='form-control'>
 		<option disabled>Select multiple by holding Ctrl/CMD</option>
+		<% for user in @allUsers['users'] %>
+			<% if !user['name'].nil? %>
+				<option value="<%= user['userID'] %>"><%= user['name'] %></option>
+			<% end %>
+		<% end %>
 	</select>
 </form>
 

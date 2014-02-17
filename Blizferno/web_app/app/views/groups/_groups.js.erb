@@ -31,51 +31,88 @@
       }
     });
   }
+  function submitEditModal(){
+    var form = new convertFormToJSON(document.getElementById('updateGroupForm'));
+    // REPLACE WITH: code to validate data
+
+    var postTitle = form.title;
+    var members = getMembers('membersE');
+    
+    var postMembers = new Array();
+
+    for (var i = members.length - 1; i >= 0; i--) {
+      postMembers.push({"userID":members[i]});
+    };
+
+    //set up the data for the call
+    var postData = JSON.stringify({
+      "groupTitle":postTitle,
+      "members":postMembers
+    });
+
+    // PUT requests? phhh... who needs those? Watch this.
+    $.ajax({
+      type: 'DELETE',
+      url: 'http://csse371-04.csse.rose-hulman.edu/Group/' + currentID,
+      success:function(data){
+        // do nothing
+      },
+      async: false
+    });
+
+    $.ajax({
+      type: 'POST',
+      url: 'http://csse371-04.csse.rose-hulman.edu/Group/',
+      data: postData,
+      success:function(data){
+        $('#editGroupModal').modal('hide');
+        $('#newGroupModal').modal('hide');
+        window.location.reload(true);
+      }
+    });
+  }
 
   function hideGroupModal(){
     $('#viewGroupModal').modal('hide');
   }
 
-  function submitEditModal(){
-    // REPLACE WITH: code to submit update request to DB
+  function setGroupArray(d){
+    groupArray = JSON.parse(d);
   }
 
   function showEditModal(){
+    var membInfo, currentMembs = new Array(), mid;
     // clear previous data in modal
     $('#editGroupModal').modal('hide');
     $('#editGroupModal').on('hidden.bs.modal', function() {
-      $(this).removeData('bs.modal');
+    $(this).removeData('bs.modal');
     });
-    alert(currentID);
-    
+
     $.ajax({
       type: 'GET',
-      url: 'http://csse371-04.csse.rose-hulman.edu/Groups/' + currentID,
+      url: 'http://csse371-04.csse.rose-hulman.edu/Group/' + currentID,
       success:function(data){
-        alert('inside');
+        if(data.groupID != null)
+          setGroupArray(data);
       }
-    })
-    .done(function(){
-      alert('success');
-    })
-    .fail(function(){
-      alert('error');
     });
-    // $.ajax({
-    //         type: 'GET',
-    //         url: 'http://csse371-04.csse.rose-hulman.edu/Groups/' + ID,
-    //   success:function(data){
-    //     if(data.groupID != null){
-    //       GroupArray = JSON.parse(data);
-    //     }
-    //   }
-    // });
 
-    //document.getElementById("IDE").value = GroupArray["groupID"];
-    document.getElementById("titleE").value = GroupArray["groupTitle"];
-    document.getElementById("typeE").value = GroupArray["groupType"];
+    for (i in groupArray['members']){
+      mid = groupArray['members'][i]['userID'];
+      $.ajax({
+        type: 'GET',
+        url: 'http://csse371-04.csse.rose-hulman.edu/User/' + mid,
+        success:function(data){
+          membInfo = JSON.parse(data);
+          currentMembs.push({'mid':mid,'name':membInfo['name']});
+        },
+        async: false
+      });
+    }
 
-    populateSelect(Members["members"], "displayName", "userID", GroupArray["members"], "membersE");
+    document.getElementById("titleE").value = groupArray["groupTitle"];
+
+    populateSelect([], "name", "mid", currentMembs, "membersE");
 
     $('#editGroupModal').modal('show');
     // $('#viewGroupModal').modal('hide');
@@ -180,7 +217,6 @@
     var type = document.forms["input"]["type"].value;
     var desc = document.forms["input"]["desc"].value;
     var groupMembers = getMembers('grpMemSlct');
-    alert("The following fields were added to the db: Title: " + title + ", Type: " + type + ", Description: " + desc + ", GroupMembers: " + groupMembers);
   }
 
   function getMembers(id){
@@ -211,7 +247,7 @@
   }
 
   /* DOCUMENTATION FOR POPULATESELECT
-    Populates the select tage specified by 'selectID'
+    Populates the select tag specified by 'selectID'
     with text from JSONArray elements with JSONDisplayColumn data
     and value from JSONArray elements with JSONValueColumn data.
     Sets the values in JSONSelectValues to 'selected' in the newly
@@ -231,6 +267,7 @@
     // populate select tag
     for (var k in JSONArray){
       var el = document.createElement("option");
+      // alert(JSONArray[k][JSONDisplayColumn]);
       el.textContent = JSONArray[k][JSONDisplayColumn];
       el.value = JSONArray[k][JSONValueColumn];
       select.appendChild(el);
@@ -241,6 +278,29 @@
       for (var j in select.options){
         if(JSONSelectValues[i][JSONValueColumn] == select.options[j].value){
           select.options[j].selected = true;
+          break;
+        }
+      }
+    }
+  }
+
+  /* DOCUMENTATION
+    A variation of populateSelect where the select tag is prefilled
+    using Ruby SS code snippets. This function then takes a simple
+    array and value selector as input and selects the items in the
+    select box that should be seen as selected by the user.
+  */
+  function presetSelectObject(SelectedValuesArray, JSONValueColumn){
+    // deselect currently selected items
+    for (var i in select.options){
+      select.options[i].select = false;
+    }
+
+    // preselect items
+    for (var j in SelectedValuesArray){
+      for (var k in select.options){
+        if(SelectedValuesArray[j][JSONValueColumn] == select.options[k].value){
+          select.options[k].selected = true;
           break;
         }
       }
