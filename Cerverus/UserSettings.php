@@ -84,7 +84,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') == 0){
 			//load up the notifications into an array
 
 			$setti = $relationArray[0]->getStartNode();
-        if(sizeof($setti > 0)){
+        if(sizeof($setti) > 0){
                 if(strcasecmp($postContent->field, 'shouldNotify') ==0){
                         $setti->setProperty('shouldNotify', $postContent->value);
                         $setti->save();
