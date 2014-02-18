@@ -22,7 +22,6 @@
 		0A1A727E1819E1F5009A49E5 /* iWinHomeScreenViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A1A727C1819E1F5009A49E5 /* iWinHomeScreenViewController.xib */; };
 		0A1A728A1819F590009A49E5 /* iWinScheduleViewMeetingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A1A72881819F590009A49E5 /* iWinScheduleViewMeetingViewController.m */; };
 		0A1A728B1819F590009A49E5 /* iWinScheduleViewMeetingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A1A72891819F590009A49E5 /* iWinScheduleViewMeetingViewController.xib */; };
-		0A1A72901819FE48009A49E5 /* iWinViewAndAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A1A728E1819FE48009A49E5 /* iWinViewAndAddViewController.m */; };
 		0A1A72911819FE48009A49E5 /* iWinViewAndAddViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A1A728F1819FE48009A49E5 /* iWinViewAndAddViewController.xib */; };
 		0A1A7296181A1802009A49E5 /* iWinAgendaItemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A1A7294181A1802009A49E5 /* iWinAgendaItemViewController.m */; };
 		0A1A7297181A1802009A49E5 /* iWinAgendaItemViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A1A7295181A1802009A49E5 /* iWinAgendaItemViewController.xib */; };
@@ -233,6 +232,7 @@
 		79FCE0101862295E008345B3 /* UIView+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF911862295E008345B3 /* UIView+TKCategory.m */; };
 		79FCE0111862295E008345B3 /* UIViewController+TKCategory.h in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF921862295E008345B3 /* UIViewController+TKCategory.h */; };
 		79FCE0121862295E008345B3 /* UIViewController+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FCDF931862295E008345B3 /* UIViewController+TKCategory.m */; };
+		DE245E8318B3EBCC00E27E70 /* iWinViewAndAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A1A728E1819FE48009A49E5 /* iWinViewAndAddViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1322,6 +1322,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DE245E8318B3EBCC00E27E70 /* iWinViewAndAddViewController.m in Sources */,
 				79FCDF941862295E008345B3 /* NSArray+TKCategory.h in Sources */,
 				79FCDF951862295E008345B3 /* NSArray+TKCategory.m in Sources */,
 				79FCDF961862295E008345B3 /* NSDate+CalendarGrid.h in Sources */,
@@ -1478,7 +1479,6 @@
 				7941FDC81828843500AAA92E /* iWinViewAndChangeSettingsViewController.m in Sources */,
 				0A91DC9D1835D7AB00741349 /* OCDaysView.m in Sources */,
 				0A04456817F3825D000FF2A0 /* main.m in Sources */,
-				0A1A72901819FE48009A49E5 /* iWinViewAndAddViewController.m in Sources */,
 				0A30739418921CB300C2D5F6 /* iWinMergeNoteViewController.m in Sources */,
 				7941FDD5182A0DCE00AAA92E /* iWinViewProfileViewController.m in Sources */,
 				0A7E516517FBEBA200A4B8B7 /* iWinRegisterViewController.m in Sources */,

@@ -7,7 +7,6 @@
 //
 
 #import "iWinScheduleViewMeetingViewController.h"
-#import "iWinViewAndAddViewController.h"
 #import "iWinAddUsersViewController.h"
 #import "iWinAppDelegate.h"
 #import <QuartzCore/QuartzCore.h>
@@ -340,7 +339,7 @@
     
     [self.agendaController setModalPresentationStyle:UIModalPresentationPageSheet];
     [self.agendaController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-    //self.agendaController.delegate = self;
+    self.agendaController.agendaDelegate = self;
     self.agendaController.isAgendaCreated = [self.addAgendaButton.titleLabel.text isEqualToString:@"Add Agenda"] ? NO : YES;
     [self presentViewController:self.agendaController animated:YES completion:nil];
     self.agendaController.view.superview.bounds = CGRectMake(0,0,768,1003);
@@ -802,6 +801,5 @@
     self.agendaID = agendaID;
     [self.agendaController dismissViewControllerAnimated:YES completion:nil];
 }
-
 
 @end

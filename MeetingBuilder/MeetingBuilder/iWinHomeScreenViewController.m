@@ -83,7 +83,15 @@
             }
             
             else {
-                [self.taskFeed addObject:element];
+                NSInteger taskID =[[element objectForKey:@"id"] integerValue];
+                
+                url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Task/%@", [[NSNumber numberWithInt:taskID] stringValue]];
+                url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                deserializedDictionary = [self.backendUtility getRequestForUrl:url];
+                
+                if([deserializedDictionary objectForKey:@"isCompleted"]){
+                    [self.taskFeed addObject:element];
+                }
             }
         }
     }
