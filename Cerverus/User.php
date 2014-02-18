@@ -5,6 +5,8 @@
  
 namespace Everyman\Neo4j;
 require("phar://neo4jphp.phar");
+require_once("CommonFunctions.php");
+require_once("Topic.php");
 // These constants may be changed without breaking existing hashes.
 define("PBKDF2_HASH_ALGORITHM", "sha256");
 define("PBKDF2_ITERATIONS", 1000);
@@ -372,6 +374,62 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 		echo json_encode(array('errorID'=>'5', 'errorMessage'=>$_GET['id']. ' node ID is not recognized in database'));
 		}
 	}	
+}else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'Agendas')==0){
+        //GET userAgendas
+        $userNode=$client->getNode($_GET['id']);
+		if (sizeof($userNode) > 0){
+        $array = $userNode->getProperties();
+        if(array_key_exists('nodeType', $array)){
+                if(strcasecmp($array['nodeType'], 'User')!=0){
+                        echo json_encode(array('errorID'=>'11', 'errorMessage'=>$_GET['id'].' is an not a user node.'));
+                        return 1;
+                }
+        }
+        $relationArray = $userNode->getRelationships(array('CREATED', Relationship::DirectionOut));
+        $fullarray=array();
+        foreach($relationArray as $rel){
+                $node = $rel->getEndNode();
+                $tempArray=$node->getProperties();
+                $array = array();
+                //check if node is an agenda here
+                if(array_key_exists('nodeType', $tempArray)){
+                	if(strcasecmp($tempArray['nodeType'], 'Agenda')==0){
+                		//here we have the Agenda node.
+                		//get the information into an array and put it in fullarray
+	
+						if ($node == NULL)
+							return 1;
+						//get properties
+						$output = array();
+						$output["agendaID"] = $node->getId();
+						$output["title"] = $node->getProperty("title");
+	
+	
+						//get relationships
+						$meetings = getRelatedNodeIDs($node, "FOLLOWS", "meetingID", "IN");
+						$output["meetingID"] = $meetings[0]["meetingID"];
+		
+						$users = getRelatedNodeIDs($node, "CREATED", "userID", "IN");
+						$output["userID"]  = $users[0]["userID"];
+			
+						//get subtopics
+						$topics = getRelatedNodeIDs($node, "HAS_TOPIC", "topicID", "OUT");
+						$topicList = array();
+						$i = sizeof($topics);
+						foreach($topics as $topic){
+							$topicList[$i--] = getTopicInfo($topic["topicID"], $client);
+						}
+						$output["content"] = $topicList;
+						
+                		array_push($fullarray,$output);
+                	}
+                }
+        }
+        echo json_encode($fullarray);
+		}else{
+			$errorarray = array('errorID' => '5', 'errorMessage'=>$_GET['id'].' node ID is not recognized in database');
+            echo json_encode($errorarray);
+		}
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
         // register method
     
