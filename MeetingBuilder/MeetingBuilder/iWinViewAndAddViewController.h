@@ -10,6 +10,11 @@
 #import "iWinAgendaItemViewController.h"
 #import "iWinScheduleViewMeetingViewController.h"
 
+@protocol AgendaDelegate <NSObject>
+- (void) onSaveAgenda: (NSInteger) agendaID;
+
+@end
+
 @interface iWinViewAndAddViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, AgendaItemDelegate, NSURLConnectionDelegate>
 - (IBAction)onClickSave;
 - (IBAction)onClickCancel;
@@ -23,6 +28,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *addItemButton;
 @property (weak, nonatomic) IBOutlet UITableView *itemTableView;
 @property (weak, nonatomic) iWinScheduleViewMeetingViewController *delegate;
+@property (nonatomic) id<AgendaDelegate> agendaDelegate;
 @property (nonatomic) BOOL isAgendaCreated;
 
 @property (nonatomic, assign) NSInteger meetingID;

@@ -39,6 +39,7 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    self.backendUtility = [[iWinBackEndUtility alloc] init];
     if (!self.isAgendaCreated) {
         self.itemList = [[NSMutableArray alloc] init];
     
@@ -140,8 +141,7 @@
     {
         [self updateAgendaInfo];
     }
-
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self.agendaDelegate onSaveAgenda: self.agendaID];
 }
 
 -(void) updateAgendaInfo
@@ -166,7 +166,7 @@
 -(void) saveNewAgenda
 {
     NSArray *keys = [NSArray arrayWithObjects:@"title", @"user", @"content",nil];
-    NSArray *objects = [NSArray arrayWithObjects: self.titleTextField.text, [[NSNumber numberWithInt:self.userID] stringValue], self.itemList, nil];
+    NSArray *objects = [NSArray arrayWithObjects: self.titleTextField.text,[[NSNumber numberWithInt:self.userID] stringValue], self.itemList, nil];
     
     NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
     NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Agenda/"];

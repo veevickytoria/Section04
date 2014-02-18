@@ -37,6 +37,8 @@
 @property (nonatomic) UIAlertView *deleteAlertView;
 @property (strong, nonatomic) iWinBackEndUtility *backendUtility;
 @property (nonatomic) NSDictionary *existMeeting;
+@property (nonatomic) NSInteger agendaID;
+
 @end
 
 @implementation iWinScheduleViewMeetingViewController
@@ -338,7 +340,7 @@
     
     [self.agendaController setModalPresentationStyle:UIModalPresentationPageSheet];
     [self.agendaController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-    self.agendaController.delegate = self;
+    //self.agendaController.delegate = self;
     self.agendaController.isAgendaCreated = [self.addAgendaButton.titleLabel.text isEqualToString:@"Add Agenda"] ? NO : YES;
     [self presentViewController:self.agendaController animated:YES completion:nil];
     self.agendaController.view.superview.bounds = CGRectMake(0,0,768,1003);
@@ -794,4 +796,12 @@
     [textField resignFirstResponder];
     return YES;
 }
+
+-(void) onSaveAgenda:(NSInteger)agendaID
+{
+    self.agendaID = agendaID;
+    [self.agendaController dismissViewControllerAnimated:YES completion:nil];
+}
+
+
 @end

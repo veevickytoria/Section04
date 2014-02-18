@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "OCCalendarViewController.h"
 #import "iWinAddUsersViewController.h"
+#import "iWinViewAndAddViewController.h"
 
 @protocol ViewMeetingDelegate <NSObject>
 
@@ -16,7 +17,7 @@
 
 @end
 
-@interface iWinScheduleViewMeetingViewController : UIViewController <OCCalendarDelegate, UserDelegate, UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate, UITextFieldDelegate>
+@interface iWinScheduleViewMeetingViewController : UIViewController <OCCalendarDelegate, UserDelegate, UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate, UITextFieldDelegate, AgendaDelegate>
 - (IBAction)onAddAgenda;
 - (IBAction)onAddAttendees;
 - (IBAction)onViewMySchedule;
