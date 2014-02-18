@@ -15,11 +15,12 @@
 @property (nonatomic) NSString *noteContent;
 @property (nonatomic) NSInteger currentNoteID;
 @property (nonatomic) NSInteger currentUserRowIndex;
+@property (nonatomic) NSInteger userID;
 @end
 
 @implementation iWinMergeNoteViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil noteContent:(NSString *)content userNames:(NSMutableArray *)names notes:(NSMutableArray *)notes noteID:(NSInteger)noteID
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil noteContent:(NSString *)content userNames:(NSMutableArray *)names notes:(NSMutableArray *)notes noteID:(NSInteger)noteID userID:(NSInteger)userID
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
@@ -29,6 +30,7 @@
     self.notes = notes;
     self.names = names;
     self.currentNoteID = noteID;
+    self.userID = userID;
     return self;
 }
 
@@ -57,7 +59,7 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
-    NSInteger i = indexPath.row;
+    NSInteger index = indexPath.row;
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
@@ -67,10 +69,10 @@
     // Configure the cell.
     if ([tableView isEqual:self.userListTable])
     {
-        cell.textLabel.text = [self.names objectAtIndex:indexPath.row];
+        cell.textLabel.text = [self.names objectAtIndex:index];
     }
     else if (self.notesForTable.count > 0) {
-        cell.textLabel.text = [self.notesForTable objectAtIndex:indexPath.row];
+        cell.textLabel.text = [self.notesForTable objectAtIndex:index];
     }
     return cell;
 }
@@ -128,6 +130,11 @@
             [self.mergeNoteDelegate loadNoteIntoView];
             [self dismissViewControllerAnimated:YES completion:Nil];
         }
+        
+        // remove shared note from user
+        NSString *unshareUrl = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Note/Sharing/%d/%d", noteID, self.userID];
+        [self.backendUtility deleteRequestForUrl:unshareUrl];
+
     }
 }
 
