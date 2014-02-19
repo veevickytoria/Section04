@@ -88,7 +88,7 @@
   }
 
   function showEditModalNoID(){
-    showEditModalNoID(currentID);
+    showEditModal(currentID);
   }
 
   function showEditModal(id){
