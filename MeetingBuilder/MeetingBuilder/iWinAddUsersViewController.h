@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MessageUI/MessageUI.h>
+#import "CustomSubtitledCell.h"
 
 @protocol UserDelegate <NSObject>
 
@@ -14,10 +16,10 @@
 
 @end
 
-@interface iWinAddUsersViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate>
+@interface iWinAddUsersViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate,MFMailComposeViewControllerDelegate, SubtitledCellDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *userListTableView;
-@property (strong, nonatomic) id<UserDelegate> userDelegate;
-- (IBAction)onClickSendInvite;
+@property (nonatomic) id<UserDelegate> userDelegate;
+- (IBAction)onClickSendInvite:(id)sender;
 - (IBAction)onClickSave;
 - (IBAction)onClickCancel;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withPageName:(NSString *)pageName inEditMode:(BOOL)isEditing;
@@ -27,4 +29,9 @@
 @property (strong, nonatomic) NSMutableArray *attendeeList;
 @property (strong, nonatomic) NSMutableArray *filteredList;
 -(void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope;
+@property (weak, nonatomic) IBOutlet UIButton *inviteButton;
+@property (weak, nonatomic) IBOutlet UILabel *orLabel;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+-(void)setUIFor:(NSString*)pageName;
+-(void)initAttendeesList:(NSMutableArray*)attendees;
 @end

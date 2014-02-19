@@ -9,22 +9,28 @@
 #import "iWinViewAndAddViewController.h"
 #import "iWinAddUsersViewController.h"
 #import <QuartzCore/QuartzCore.h>
+#import "iWinBackEndUtility.h"
 
 @interface iWinViewAndAddViewController ()
 @property (nonatomic) NSMutableArray *itemList;
 @property (nonatomic) BOOL isEditing;
 @property (nonatomic) iWinAgendaItemViewController *agendaItemViewController;
-@property (strong, nonatomic) iWinAddUsersViewController *userViewController;
+@property (nonatomic) iWinAddUsersViewController *userViewController;
+@property (nonatomic) NSInteger agendaID;
+@property (strong, nonatomic) iWinBackEndUtility *backendUtility;
+
 @end
+
 
 @implementation iWinViewAndAddViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil inEditMode:(BOOL)isEditing
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        self.isEditing = isEditing;
+//        self.isEditing = isEditing;
+        self.agendaID = 0;
     }
     return self;
 }
@@ -33,17 +39,42 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    self.itemList = [[NSMutableArray alloc] init];
+    self.backendUtility = [[iWinBackEndUtility alloc] init];
+    if (!self.isAgendaCreated) {
+        self.itemList = [[NSMutableArray alloc] init];
     
-    self.headerLabel.text = @"Create Agenda";
+        self.headerLabel.text = @"Create Agenda";
     
-    if (self.isEditing)
-    {
-        self.titleTextField.text = @"Agenda 101";
-        [self.itemList addObject:@"Item 1"];
-        [self.itemList addObject:@"Item 2"];
-        [self.itemList addObject:@"Item 3"];
-        self.headerLabel.text = @"View Agenda";
+        if (self.isEditing)
+        {
+            self.titleTextField.text = @"Agenda 101";
+            [self.itemList addObject:@"Item 1"];
+            [self.itemList addObject:@"Item 2"];
+            [self.itemList addObject:@"Item 3"];
+            self.headerLabel.text = @"View Agenda";
+        }
+    } else {
+        NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Agenda/%d", self.agendaID];
+        NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:30];
+        [urlRequest setHTTPMethod:@"GET"];
+        NSURLResponse * response = nil;
+        NSError * error = nil;
+        NSData * data = [NSURLConnection sendSynchronousRequest:urlRequest
+                                              returningResponse:&response
+                                                          error:&error];
+        if (error)
+        {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Meetings not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+            [alert show];
+        }
+        else
+        {
+            NSError *jsonParsingError = nil;
+            NSDictionary *deserializedDictionary = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
+            self.titleTextField.text = [deserializedDictionary objectForKey:@"title"];
+            self.itemList =[deserializedDictionary objectForKey:@"content"];
+        }
+   
     }
 }
 
@@ -61,7 +92,8 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ItemCell"];
     }
     
-    cell.textLabel.text = (NSString *)[self.itemList objectAtIndex:indexPath.row];
+    NSString *agendaItemName = [[self.itemList objectAtIndex:indexPath.row] objectForKey:@"title"];
+    cell.textLabel.text = agendaItemName;
     return cell;
 }
 
@@ -72,14 +104,77 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-   // [self.meetingListDelegate meetingSelected];
+    //This is where edit on a row happen: indexPath.row
+    
+    NSDictionary *agendaItem = [self.itemList objectAtIndex:indexPath.row];
+    NSString *agendaItemName = [agendaItem objectForKey:@"title"];
+    NSString *agendaItemDuration = [agendaItem objectForKey:@"duration"];
+    NSString *agendaItemDescription = [agendaItem objectForKey:@"description"];
+
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    self.agendaItemViewController = [[iWinAgendaItemViewController alloc]
+                                     initWithNibName:@"iWinAgendaItemViewController" bundle:nil];
+    self.agendaItemViewController.itemTitle = agendaItemName;
+    self.agendaItemViewController.itemDuration = agendaItemDuration;
+    self.agendaItemViewController.itemDescription = agendaItemDescription;
+
+    self.agendaItemViewController.itemIndex = indexPath.row;
+    
+    
+    self.agendaItemViewController.itemDelegate = self;
+    [self.agendaItemViewController setModalPresentationStyle:UIModalPresentationPageSheet];
+    [self.agendaItemViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+    
+    [self presentViewController:self.agendaItemViewController animated:YES completion:nil];
+    self.agendaItemViewController.view.superview.bounds = CGRectMake(0,0,556,283);
+    
 }
 
 - (IBAction)onClickSave
 {
-    //save agenda
-    [self dismissViewControllerAnimated:YES completion:nil];
+    if (self.agendaID == 0)
+    {
+        [self saveNewAgenda];
+    }
+    else
+    {
+        [self updateAgendaInfo];
+    }
+    [self.agendaDelegate onSaveAgenda: self.agendaID];
 }
+
+-(void) updateAgendaInfo
+{
+    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Agenda/"];
+    
+    NSArray *keys = [NSArray arrayWithObjects:@"agendaID", @"field", @"value", nil];
+    NSArray *objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.agendaID] stringValue], @"title", self.titleTextField.text, nil];
+    NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+    [self.backendUtility putRequestForUrl:url withDictionary:jsonDictionary];
+    
+    
+    objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.agendaID] stringValue], @"meeting", [[NSNumber numberWithInt:self.meetingID] stringValue], nil];
+    jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+    [self.backendUtility putRequestForUrl:url withDictionary:jsonDictionary];
+    
+    objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.agendaID] stringValue], @"content", self.itemList, nil];    jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+    [self.backendUtility putRequestForUrl:url withDictionary:jsonDictionary];
+}
+
+
+-(void) saveNewAgenda
+{
+    NSArray *keys = [NSArray arrayWithObjects:@"title", @"user", @"content",nil];
+    NSArray *objects = [NSArray arrayWithObjects: self.titleTextField.text,[[NSNumber numberWithInt:self.userID] stringValue], self.itemList, nil];
+    
+    NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Agenda/"];
+    NSDictionary *deserializedDictionary = [self.backendUtility postRequestForUrl:url withDictionary:jsonDictionary];
+    self.agendaID = [[deserializedDictionary objectForKey:@"agendaID"] integerValue];
+}
+
+
 
 - (IBAction)onClickCancel
 {
@@ -88,7 +183,7 @@
 
 - (IBAction)onClickAddItem
 {
-    self.agendaItemViewController = [[iWinAgendaItemViewController alloc] initWithNibName:@"iWinAgendaItemViewController" bundle:nil inEditMode:NO];
+    self.agendaItemViewController = [[iWinAgendaItemViewController alloc] initWithNibName:@"iWinAgendaItemViewController" bundle:nil];
     self.agendaItemViewController.itemDelegate = self;
     [self.agendaItemViewController setModalPresentationStyle:UIModalPresentationFormSheet];
     [self.agendaItemViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
@@ -100,17 +195,28 @@
 
 - (IBAction)onClickAddAttendees
 {
-    self.userViewController = [[iWinAddUsersViewController alloc] initWithNibName:@"iWinAddUsersViewController" bundle:nil withPageName:@"Meeting" inEditMode:self.isEditing];
+    self.userViewController = [[iWinAddUsersViewController alloc] initWithNibName:@"iWinAddUsersViewController" bundle:nil withPageName:@"Agenda" inEditMode:self.isEditing];
     [self.userViewController setModalPresentationStyle:UIModalPresentationPageSheet];
     [self.userViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-    
+  //  self.userViewController.userDelegate = self;
     [self presentViewController:self.userViewController animated:YES completion:nil];
     self.userViewController.view.superview.bounds = CGRectMake(0,0,768,1003);
 }
 
--(void)saveItem:(NSString *)name
+-(void)saveItem:(NSString *)name duration: (NSString*) duration description:(NSString*)
+description itemIndex: (NSInteger *) itemIndex
 {
-    [self.itemList addObject:name];
+    //TODO: PUT DESCRIPTION BACK!!!
+    if((NSInteger)self.agendaItemViewController.itemIndex > -1){
+        NSDictionary *agendaItem = @{@"title" : name, @"time": duration, @"description": description, @"content": @""};
+        [self.itemList replaceObjectAtIndex:self.agendaItemViewController.itemIndex withObject:agendaItem];
+    }
+    
+    else{
+        NSDictionary *agendaItem = @{@"title" : name, @"time": duration, @"description": description, @"content": @""};
+    [self.itemList addObject:agendaItem];
+    }
+    
     [self.itemTableView reloadData];
     [self dismissViewControllerAnimated:YES completion:Nil];
 }
@@ -119,4 +225,6 @@
 {
     [self dismissViewControllerAnimated:YES completion:Nil];
 }
+
+
 @end

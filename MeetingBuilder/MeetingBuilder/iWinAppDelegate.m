@@ -18,6 +18,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor whiteColor];
@@ -26,9 +27,15 @@
     [self.window makeKeyAndVisible];
     
     //register for push notifications
-    [Parse setApplicationId:@"B9XnZ39grBnt6SyxBibLnxPV8hPQmkdQp6g2MvU5" clientKey:@"qvvWQNlvZcI0fFlXACz7YpTnccaedcHL76gUoLiF"];
+    [Parse setApplicationId:@"o4UYE8YSQMmLOcyTOv7pj2z9qYkNnUpKBaqezGWx" clientKey:@"MfwhwCpIweZmhpQa2Z1yrrrm7y6zAH9elHPfazyB"];
     
     [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound];
+    //[application registerForRemoteNotificationTypes:UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound];
+//    UILocalNotification *locationNotification = [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
+//    if (locationNotification) {
+//        // Set icon badge number to zero
+//        application.applicationIconBadgeNumber = application.applicationIconBadgeNumber - 1;
+//    }
     
     return YES;
 }
@@ -166,7 +173,25 @@
 
 -(void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
-    [PFPush handlePush:userInfo];
+//    [PFPush handlePush:userInfo];
+    [[[UIAlertView alloc] initWithTitle:@"Push Notification" message:@"Received Notification from backend" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil] show];
 }
+
+//- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
+//{
+//    UIApplicationState state = [application applicationState];
+//    if (state == UIApplicationStateActive) {
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Reminder"
+//                                                        message:notification.alertBody
+//                                                       delegate:self cancelButtonTitle:@"OK"
+//                                              otherButtonTitles:nil];
+//        [alert show];
+//    }
+//    
+////    // Request to reload table view data
+////    [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadData" object:self];
+//    
+//    application.applicationIconBadgeNumber = application.applicationIconBadgeNumber - 1;
+//}
 
 @end

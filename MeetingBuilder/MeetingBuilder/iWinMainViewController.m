@@ -9,11 +9,10 @@
 #import "iWinMainViewController.h"
 #import "iWinHomeScreenViewController.h"
 #import <QuartzCore/QuartzCore.h>
-//#import <TapkuLibrary/TKCalendarDayView.h>
-//#import <TapkuLibrary/TKCalendarDayEventView.h>
 #import "iWinPopulateDatabase.h"
 #import "NSDate+TKCategory.h"
 #import "NSDate+CalendarGrid.h"
+#import "iWinBackEndUtility.h"
 
 
 @interface iWinMainViewController ()
@@ -31,9 +30,11 @@
 @property (nonatomic) NSInteger userID;
 @property BOOL movedRightView;
 @property BOOL movedView;
-@property (nonatomic) UISwipeGestureRecognizer * swiperight;
-@property (nonatomic) UISwipeGestureRecognizer * swipeleft;
+@property (nonatomic) UISwipeGestureRecognizer *swiperight;
+@property (nonatomic) UISwipeGestureRecognizer *swipeleft;
+@property (nonatomic) UITapGestureRecognizer *tapGesture;
 @property (nonatomic) UIButton *lastClicked;
+@property (strong, nonatomic) iWinBackEndUtility *backendUtility;
 @end
 
 @implementation iWinMainViewController
@@ -76,7 +77,8 @@
     [super viewDidLoad];
     iWinPopulateDatabase *db = [[iWinPopulateDatabase alloc] init];
     [db populateContacts];
-    
+    [db populateSettings];
+    self.backendUtility = [[iWinBackEndUtility alloc] init];
     self.loginViewController = [[iWinLoginViewController alloc] initWithNibName:@"iWinLoginViewController" bundle:nil];
     self.registerViewController = [[iWinRegisterViewController alloc] initWithNibName:@"iWinRegisterViewController" bundle:nil];
     self.movedView = NO;
@@ -93,6 +95,8 @@
     self.swipeleft=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeleft:)];
     self.swipeleft.direction=UISwipeGestureRecognizerDirectionLeft;
     
+    self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap:)];
+    
     self.menuButton.hidden = YES;
     self.scheduleButton.hidden = YES;
     self.voiceCommand.hidden = YES;
@@ -100,22 +104,6 @@
     self.openEars = [[iWinOpenEarsModel alloc] init];
     self.openEars.openEarsDelegate = self;
     [self.openEars initialize];
-    
-    
-    self.data = @[
-                  @[@"Meeting with five random dudes", @"Five Guys", @5, @0, @5, @30],
-                  @[@"Unlimited bread rolls got me sprung", @"Olive Garden", @7, @0, @12, @0],
-                  @[@"Appointment", @"Dennys", @15, @0, @18, @0],
-                  @[@"Hamburger Bliss", @"Wendys", @15, @0, @18, @0],
-                  @[@"Fishy Fishy Fishfelayyyyyyyy", @"McDonalds", @5, @30, @6, @0],
-                  @[@"Turkey Time...... oh wait", @"Chick-fela", @14, @0, @19, @0],
-                  @[@"Greet the king at the castle", @"Burger King", @19, @30, @30, @0]];
-    
-    self.dayView = [[TKCalendarDayView alloc] initWithFrame:self.rightSlideView.bounds];
-	self.dayView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	self.dayView.delegate = self;
-	self.dayView.dataSource = self;
-	[self.rightSlideView addSubview:self.dayView];
 }
 - (void) viewDidUnload {
 	self.dayView = nil;
@@ -123,34 +111,58 @@
 
 #pragma mark TKCalendarDayViewDelegate
 - (NSArray *) calendarDayTimelineView:(TKCalendarDayView*)calendarDayTimeline eventsForDate:(NSDate *)eventDate{
-    if([eventDate compare:[NSDate dateWithTimeIntervalSinceNow:-24*60*60]] == NSOrderedAscending) return @[];
-	if([eventDate compare:[NSDate dateWithTimeIntervalSinceNow:24*60*60]] == NSOrderedDescending) return @[];
+    //if([eventDate compare:[NSDate dateWithTimeIntervalSinceNow:-24*60*60]] == NSOrderedAscending) return @[];
+	//if([eventDate compare:[NSDate dateWithTimeIntervalSinceNow:24*60*60]] == NSOrderedDescending) return @[];
     
 	NSDateComponents *info = [[NSDate date] dateComponentsWithTimeZone:calendarDayTimeline.timeZone];
 	info.second = 0;
 	NSMutableArray *ret = [NSMutableArray array];
-	
-	for(NSArray *ar in self.data){
-		
-		TKCalendarDayEventView *event = [calendarDayTimeline dequeueReusableEventView];
-		if(event == nil) event = [TKCalendarDayEventView eventView];
+    
+    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Schedule/%d", self.userID];
+    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
+    
+    if (!deserializedDictionary)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Schedule not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alert show];
+    }
+    else
+    {
+        NSArray *jsonArray = [deserializedDictionary objectForKey:@"schedule"];
+        if (jsonArray.count > 0)
+        {
+            for (NSDictionary* meetings in jsonArray)
+            {
+                if ([[meetings objectForKey:@"type"] isEqualToString:@"meeting"]){
+                    TKCalendarDayEventView *event = [calendarDayTimeline dequeueReusableEventView];
+                    if(event == nil) event = [TKCalendarDayEventView eventView];
+                    
+                    event.identifier = nil;
+                    event.titleLabel.text = [meetings objectForKey:@"title"];
+                    event.locationLabel.text = [meetings objectForKey:@"description"];
+                    
+                    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                    //Set the AM and PM symbols
+                    [dateFormatter setAMSymbol:@"AM"];
+                    [dateFormatter setPMSymbol:@"PM"];
+                    //Specify only 2 M for month, 2 d for day and 2 h for hour
+                    [dateFormatter setDateFormat:@"MM/dd/yyyy hh:mm a"];
+                    
+                    NSDate *date = [dateFormatter dateFromString:[meetings objectForKey:@"datetimeStart"]];
+                    event.startDate = date;
+                    
+                    date = [dateFormatter dateFromString:[meetings objectForKey:@"datetimeEnd"]];
+                    event.endDate = date;
+                    
+                    [ret addObject:event];
+                }
+
+            }
+        }
+    }
         
-		event.identifier = nil;
-		event.titleLabel.text = ar[0];
-		event.locationLabel.text = ar[1];
-		
-		info.hour = [ar[2] intValue];
-		info.minute = [ar[3] intValue];
-		event.startDate = [NSDate dateWithDateComponents:info];
-		
-		info.hour = [ar[4] intValue];
-		info.minute = [ar[5] intValue];
-		event.endDate = [NSDate dateWithDateComponents:info];
-        
-		[ret addObject:event];
-		
-	}
-	return ret;
+		return ret;
 }
 - (void) calendarDayTimelineView:(TKCalendarDayView*)calendarDayTimeline eventViewWasSelected:(TKCalendarDayEventView *)eventView{
     
@@ -191,6 +203,16 @@
     
     [self updateSelectedMenu:self.homeButton];
     self.openEars.openEarsDelegate = self;
+    
+    CGRect scheduleFrame = CGRectMake(self.rightSlideView.bounds.origin.x, self.rightSlideView.bounds.origin.y + 81, self.rightSlideView.bounds.size.width, self.rightSlideView.bounds.size.height - 95);
+    
+    self.dayView = [[TKCalendarDayView alloc] initWithFrame:scheduleFrame];
+	self.dayView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    self.dayView.backgroundColor = [UIColor blackColor];
+	self.dayView.delegate = self;
+	self.dayView.dataSource = self;
+	[self.rightSlideView addSubview:self.dayView];
+
 }
 
 -(void)swipeleft:(UISwipeGestureRecognizer*)gestureRecognizer
@@ -199,11 +221,15 @@
     {
         [self animateSlidingMenu:NO];
         self.movedView = !self.movedView;
+        self.tapView.hidden = YES;
+        [self.tapView removeGestureRecognizer:self.tapGesture];
     }
     else if (!self.movedRightView && !self.movedView)
     {
         [self animateRightSlidingMenu:YES];
         self.movedRightView = !self.movedRightView;
+        [self.tapView addGestureRecognizer:self.tapGesture];
+        self.tapView.hidden = NO;
     }
     
 }
@@ -214,14 +240,41 @@
     {
         [self animateSlidingMenu:YES];
         self.movedView = !self.movedView;
+        [self addTapRecognizer];
     }
     else if (self.movedRightView)
     {
         [self animateRightSlidingMenu:NO];
         self.movedRightView = !self.movedRightView;
+        [self removeTapRecognizer];
     }
 }
 
+-(void)removeTapRecognizer
+{
+    self.tapView.hidden = YES;
+    [self.tapView removeGestureRecognizer:self.tapGesture];
+}
+
+-(void) addTapRecognizer
+{
+    self.tapView.hidden = NO;
+    [self.tapView addGestureRecognizer:self.tapGesture];
+}
+
+-(void) onTap:(UITapGestureRecognizer *)gestureRecognizer
+{
+    if (self.movedView)
+    {
+        [self swipeleft:nil];
+        [self removeTapRecognizer];
+    }
+    else if(self.movedRightView)
+    {
+        [self swiperight:nil];
+        [self removeTapRecognizer];
+    }
+}
 
 -(void) joinUs
 {
@@ -234,6 +287,8 @@
 {
     [self removeSubViews];
     [self enableSliding];
+    [self removeTapRecognizer];
+    self.userID = userID;
     self.homeScreenViewController = [[iWinHomeScreenViewController alloc] initWithNibName:@"iWinHomeScreenViewController" bundle:nil withUserID:userID];
     [self.mainView  addSubview:self.homeScreenViewController.view];
     [self.homeScreenViewController.view setBounds:self.mainView.bounds];
@@ -270,10 +325,12 @@
     if (!self.movedView)
     {
         [self animateSlidingMenu:YES];
+        [self addTapRecognizer];
     }
     else
     {
         [self animateSlidingMenu:NO];
+        [self removeTapRecognizer];
     }
     self.movedView = !self.movedView;
 }
@@ -283,10 +340,12 @@
     if (!self.movedRightView)
     {
         [self animateRightSlidingMenu:YES];
+        [self addTapRecognizer];
     }
     else
     {
         [self animateRightSlidingMenu:NO];
+        [self removeTapRecognizer];
     }
     self.movedRightView = !self.movedRightView;
 }
@@ -295,6 +354,7 @@
 {
     [self removeSubViews];
     [self enableSliding];
+    [self removeTapRecognizer];
     self.homeScreenViewController = [[iWinHomeScreenViewController alloc] initWithNibName:@"iWinHomeScreenViewController" bundle:nil];
     [self.mainView  addSubview:self.homeScreenViewController.view];
     [self.homeScreenViewController.view setBounds:self.mainView.bounds];
@@ -308,6 +368,7 @@
     [self animateSlidingMenu:NO];
     [self removeSubViews];
     [self disableSliding];
+    [self removeTapRecognizer];
     self.loginViewController = [[iWinLoginViewController alloc] initWithNibName:@"iWinLoginViewController" bundle:nil];
     [self.mainView  addSubview:self.loginViewController.view];
     [self.loginViewController.view setBounds:self.mainView.bounds];
@@ -319,7 +380,8 @@
 {
     [self removeSubViews];
     [self enableSliding];
-    self.meetingListViewController = [[iWinMeetingViewController alloc] initWithNibName:@"iWinMeetingViewController" bundle:nil withEmail:self.user];
+    [self removeTapRecognizer];
+    self.meetingListViewController = [[iWinMeetingViewController alloc] initWithNibName:@"iWinMeetingViewController" bundle:nil withID:self.userID];
     [self.mainView  addSubview:self.meetingListViewController.view];
     [self.meetingListViewController.view setBounds:self.mainView.bounds];
     [self animateSlidingMenu:NO];
@@ -332,22 +394,23 @@
 {
     [self removeSubViews];
     [self enableSliding];
-    self.noteViewController = [[iWinNoteListViewController alloc] initWithNibName:@"iWinNoteListViewController" bundle:nil];
+    [self removeTapRecognizer];
+    self.noteViewController = [[iWinNoteListViewController alloc] initWithNibName:@"iWinNoteListViewController" bundle:nil withUserID:self.userID];
     [self.mainView addSubview:self.noteViewController.view];
     [self.noteViewController.view setBounds:self.mainView.bounds];
-    self.noteViewController.noteListDelegate = self;
     [self animateSlidingMenu:NO];
     [self updateSelectedMenu:self.notesButton];
+    [self resetSliding];
 }
 
 - (IBAction)onClickTasks
 {
     [self removeSubViews];
     [self enableSliding];
+    [self removeTapRecognizer];
     [self animateSlidingMenu:NO];
     [self updateSelectedMenu:self.tasksButton];
-    
-    self.taskListViewController = [[iWinTaskListViewController alloc] initWithNibName:@"iWinTaskListViewController" bundle:nil];
+    self.taskListViewController = [[iWinTaskListViewController alloc] initWithNibName:@"iWinTaskListViewController" bundle:nil userID:self.userID];
     [self.mainView  addSubview:self.taskListViewController.view];
     [self.taskListViewController.view setBounds:self.mainView.bounds];
     [self resetSliding];
@@ -357,10 +420,11 @@
 {
     [self removeSubViews];
     [self enableSliding];
-    self.settingsViewController = [[iWinViewAndChangeSettingsViewController alloc] initWithNibName:@"iWinViewAndChangeSettingsViewController" bundle:nil];
+    [self removeTapRecognizer];
+    self.settingsViewController = [[iWinViewAndChangeSettingsViewController alloc] initWithNibName:@"iWinViewAndChangeSettingsViewController" bundle:nil withID:self.userID];
     [self.mainView  addSubview:self.settingsViewController.view];
     [self.settingsViewController.view setBounds:self.mainView.bounds];
-    self.settingsViewController.settingsDelegate = self;
+    //self.settingsViewController.settingsDelegate = self;
     [self animateSlidingMenu:NO];
     
     [self updateSelectedMenu:self.settingsButton];
@@ -370,10 +434,11 @@
 - (IBAction)onClickProfile{
     [self removeSubViews];
     [self enableSliding];
+    [self removeTapRecognizer];
     self.profileViewController = [[iWinViewProfileViewController alloc] initWithNibName:@"iWinViewProfileViewController" bundle:nil withID: self.userID];
     [self.mainView  addSubview:self.profileViewController.view];
     [self.profileViewController.view setBounds:self.mainView.bounds];
-    //self.profileViewController.profileDelegate = self;
+   //self.profileViewController.profileDelegate = self;
     [self animateSlidingMenu:NO];
     
     [self updateSelectedMenu:self.profileButton];
@@ -413,27 +478,15 @@
     {
         self.rightSlideView.frame = CGRectMake(oldFrame.origin.x - 350, oldFrame.origin.y, oldFrame.size.width, oldFrame.size.height);
         self.slideView.frame = CGRectMake(oldFrameMain.origin.x-350,oldFrameMain.origin.y,oldFrameMain.size.width,oldFrameMain.size.height);
+        
     }
     else
     {
         self.rightSlideView.frame = CGRectMake(oldFrame.origin.x + 350, oldFrame.origin.y, oldFrame.size.width, oldFrame.size.height);
         self.slideView.frame = CGRectMake(oldFrameMain.origin.x + 350,oldFrameMain.origin.y,oldFrameMain.size.width,oldFrameMain.size.height);
+        
     }
     [UIView commitAnimations];
-}
-
-
-
--(void) addViewNoteClicked:(BOOL)isEditing
-{
-    [self removeSubViews];
-    [self enableSliding];
-    [self animateSlidingMenu:NO];
-    [self resetSliding];
-    self.viewAddNoteViewController = [[iWinViewAndAddNotesViewController alloc] initWithNibName:@"iWinViewAndAddNotesViewController" bundle:nil inEditMode:isEditing];
-    [self.mainView  addSubview:self.viewAddNoteViewController.view];
-    [self.viewAddNoteViewController.view setBounds:self.mainView.bounds];
-    self.viewAddNoteViewController.addNoteDelegate = self;
 }
 
 
@@ -447,17 +500,6 @@
     [self onClickMeetings];
 }
 
--(void)saveNoteClicked{
-    [self onClickNotes];
-}
--(void)cancelNoteClicked{
-    [self onClickNotes];
-}
--(void)mergeNoteClicked{
-    [self onClickNotes];
-}
-
-
 -(void)viewScheduleClicked
 {
     
@@ -468,11 +510,9 @@
     [self onClickTasks];
 }
 
--(void) onClickSaveSettings{
-    
-}
--(void) onclickCancelSettings{
-    
+-(void) onDeleteAccount
+{
+    [self onClickLogOut];
 }
 
 -(void)speechToText:(NSString *)hypothesis

@@ -7,9 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "iWinScheduleViewMeetingViewController.h"
+#import "iWinAddAndViewTaskViewController.h"
 
 
-@interface iWinHomeScreenViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface iWinHomeScreenViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, ViewMeetingDelegate, ViewTaskDelegate>
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withUserID:(NSInteger)userID;
 @property (weak, nonatomic) IBOutlet UITableView *feedTable;

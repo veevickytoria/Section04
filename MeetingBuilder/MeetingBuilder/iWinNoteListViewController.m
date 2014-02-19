@@ -7,23 +7,28 @@
 //
 
 #import "iWinNoteListViewController.h"
+#import "iWinViewAndAddNotesViewController.h"
+#import "iWinBackEndUtility.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface iWinNoteListViewController ()
 
 @property (strong, nonatomic) NSMutableArray *noteList;
-@property (strong, nonatomic) NSMutableArray *noteDetail;
-@property (strong, nonatomic) NSString* email;
+@property (strong, nonatomic) NSMutableArray *noteIDs;
+@property (nonatomic) NSInteger userID;
+@property (nonatomic) NSInteger selectedNote;
+@property (nonatomic) iWinBackEndUtility *backendUtility;
+@property (strong, nonatomic) iWinViewAndAddNotesViewController *createNoteVC;
 @end
 
 
 @implementation iWinNoteListViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withEmail:(NSString *) email
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withUserID:(NSInteger) userID
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.email = email;
+        self.userID = userID;
     }
     return self;
 }
@@ -31,22 +36,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    self.noteList = [[NSMutableArray alloc] init];
-    self.noteDetail = [[NSMutableArray alloc] init];
-    
-    [self.noteList addObject:@"Notes for Meeting 1"];
-    [self.noteDetail addObject:@"10/24/13 9:00 pm"];
-    
-    [self.noteList addObject:@"Notes for Meeting 2"];
-    [self.noteDetail addObject:@"10/25/13 9:10 pm"];
-    
-    [self.noteList addObject:@"Notes for Meeting 3"];
-    [self.noteDetail addObject:@"10/26/13 7:00 pm"];
-    
-    self.createNoteButton.layer.cornerRadius = 0;
-    self.createNoteButton.layer.borderColor = [[UIColor darkGrayColor] CGColor];
-    self.createNoteButton.layer.borderWidth = 1.0f;
+    self.backendUtility = [[iWinBackEndUtility alloc] init];
+    [self.noteTable registerNib:[UINib nibWithNibName:@"LargeDefaultCell" bundle:nil] forCellReuseIdentifier:@"NoteCell"];
+    [self refreshNoteList];
 }
 
 - (void)didReceiveMemoryWarning
@@ -54,22 +46,78 @@
     [super didReceiveMemoryWarning];
 }
 
+- (void)refreshNoteList
+{
+    self.noteList = [[NSMutableArray alloc] init];
+    self.noteIDs = [[NSMutableArray alloc] init];
+    
+    //populate note list
+    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Notes/%d", self.userID];
+    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
+    
+    if (!deserializedDictionary) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Failure" message:@"Could not load your notes" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alert show];
+    }
+    else
+    {
+        NSArray *jsonArray = [deserializedDictionary objectForKey:@"notes"];
+        if (jsonArray.count > 0)
+        {
+            for (NSDictionary* note in jsonArray)
+            {
+                [self.noteList addObject:[note objectForKey:@"noteTitle"]];
+                [self.noteIDs addObject:[note objectForKey:@"noteID"]];
+            }
+        }
+        [self.noteTable reloadData];
+    }
+}
+
+-(void)deleteCell:(NSInteger)row
+{
+    self.selectedNote = row;
+    UIAlertView *deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this note?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
+    [deleteAlertView show];
+}
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1)
+    {
+        [self deleteNote];
+        self.selectedNote = -1;
+    }
+}
+
+-(void)deleteNote
+{
+    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Note/%d", [[self.noteIDs objectAtIndex:self.selectedNote] integerValue]];
+    NSError * error = [self.backendUtility deleteRequestForUrl:url];
+    
+    if (!error)
+        [self refreshNoteList];
+}
+
 -(IBAction) onCreateNewNote
 {
-    [self.noteListDelegate addViewNoteClicked:NO];
+    [self enterNoteEditCreationView:-1];
 }
 
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"NoteCell"];
+    LargeDefaultCell *cell = (LargeDefaultCell *)[tableView dequeueReusableCellWithIdentifier:@"NoteCell"];
     if (cell == nil)
     {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"NoteCell"];
+        cell = [[LargeDefaultCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"NoteCell"];
     }
-    
-    cell.textLabel.text = (NSString *)[self.noteList objectAtIndex:indexPath.row];
-    cell.detailTextLabel.text = (NSString *)[self.noteDetail objectAtIndex:indexPath.row];
+    [cell initLargeCell];
+    cell.largeCellDelegate = self;
+    cell.deleteButton.tag = indexPath.row;
+    cell.titleLabel.text = (NSString *)[self.noteList objectAtIndex:indexPath.row];
     return cell;
 }
 
@@ -80,7 +128,16 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    //[self.noteListDelegate createNoteClicked:YES];
+    [self enterNoteEditCreationView:[[self.noteIDs objectAtIndex:indexPath.row] integerValue]];
+}
+
+-(void)enterNoteEditCreationView:(NSInteger)noteID {
+    self.createNoteVC = [[iWinViewAndAddNotesViewController alloc] initWithNibName:@"iWinViewAndAddNotesViewController" bundle:nil withNoteID:noteID withUserID:self.userID];
+    [self.createNoteVC setModalPresentationStyle:UIModalPresentationPageSheet];
+    self.createNoteVC.addNoteDelegate = self;
+    [self.createNoteVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+    [self presentViewController:self.createNoteVC animated:YES completion:nil];
+    self.createNoteVC.view.superview.bounds = CGRectMake(0,0,768,1003);
 }
 
 @end

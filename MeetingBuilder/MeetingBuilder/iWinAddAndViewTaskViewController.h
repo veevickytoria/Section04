@@ -7,8 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OCCalendarViewController.h"
+#import "iWinAddUsersViewController.h"
 
-@interface iWinAddAndViewTaskViewController : UIViewController
+@protocol ViewTaskDelegate <NSObject>
+
+-(void)refreshTaskList;
+
+@end
+
+
+@interface iWinAddAndViewTaskViewController : UIViewController <OCCalendarDelegate, UserDelegate, UIAlertViewDelegate>
 - (IBAction)onClickCancel;
 - (IBAction)onClickSave;
 - (IBAction)onClickSaveAndAddMore;
@@ -18,10 +27,16 @@
 @property (weak, nonatomic) IBOutlet UIButton *cancelButton;
 @property (weak, nonatomic) IBOutlet UILabel *headerLabel;
 @property (weak, nonatomic) IBOutlet UITextField *titleField;
+@property (weak, nonatomic) IBOutlet UIButton *deleteBtn;
 @property (weak, nonatomic) IBOutlet UITextField *dueField;
 @property (weak, nonatomic) IBOutlet UITextView *descriptionField;
 @property (weak, nonatomic) IBOutlet UITextField *createdByField;
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil inEditMode:(BOOL)isEditing;
+@property (weak, nonatomic) IBOutlet UISwitch *isCompleted;
+@property (weak, nonatomic) IBOutlet UILabel *endDateLabel;
+@property (weak, nonatomic) IBOutlet UILabel *endTimeLabel;
+@property (nonatomic) id<ViewTaskDelegate> viewTaskDelegate;
 - (IBAction)onClickAddAssignees;
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withUserID:(NSInteger)userID withTaskID:(NSInteger)taskID;
+- (IBAction)onDeleteTask;
 
 @end

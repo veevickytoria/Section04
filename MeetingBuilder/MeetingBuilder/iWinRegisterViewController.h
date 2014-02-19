@@ -15,7 +15,7 @@
 
 @end
 
-@interface iWinRegisterViewController : UIViewController <UIScrollViewDelegate, NSURLConnectionDelegate>
+@interface iWinRegisterViewController : UIViewController <UIScrollViewDelegate, NSURLConnectionDelegate, UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *nameField;
 @property (weak, nonatomic) IBOutlet UITextField *emailField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordField;

@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "0A04455517F3825C000FF2A0"
-               BuildableName = "MeetingBuilder.app"
+               BuildableName = "Meeting Ninja.app"
                BlueprintName = "MeetingBuilder"
                ReferencedContainer = "container:MeetingBuilder.xcodeproj">
             </BuildableReference>
@@ -43,7 +43,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "0A04455517F3825C000FF2A0"
-            BuildableName = "MeetingBuilder.app"
+            BuildableName = "Meeting Ninja.app"
             BlueprintName = "MeetingBuilder"
             ReferencedContainer = "container:MeetingBuilder.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "0A04455517F3825C000FF2A0"
-            BuildableName = "MeetingBuilder.app"
+            BuildableName = "Meeting Ninja.app"
             BlueprintName = "MeetingBuilder"
             ReferencedContainer = "container:MeetingBuilder.xcodeproj">
          </BuildableReference>
@@ -80,7 +80,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "0A04455517F3825C000FF2A0"
-            BuildableName = "MeetingBuilder.app"
+            BuildableName = "Meeting Ninja.app"
             BlueprintName = "MeetingBuilder"
             ReferencedContainer = "container:MeetingBuilder.xcodeproj">
          </BuildableReference>

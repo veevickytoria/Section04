@@ -11,16 +11,20 @@
 
 @interface iWinAgendaItemViewController ()
 @property (nonatomic) BOOL isEditing;
+
+
 @end
 
 @implementation iWinAgendaItemViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil inEditMode:(BOOL)isEditing
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+//inEditMode:(BOOL)isEditing
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        self.isEditing = isEditing;
+        //self.isEditing = isEditing;]
+        self.itemIndex = -1;
     }
     return self;
 }
@@ -29,13 +33,17 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    self.headerLabel.text = @"Add New Item";
-    if (self.isEditing)
-    {
-        self.headerLabel.text = @"View Item";
-        self.durationTextField.text = @"1 hr";
-        self.descriptionField.text = @"Enter description here.";
-    }
+    
+    
+    
+    //self.headerLabel.text = @"Add New Item";
+    //if (self.isEditing)
+    //{
+        self.headerLabel.text = self.itemTitle;
+        self.titleTextField.text = self.itemTitle;
+        self.durationTextField.text = self.itemDuration;
+        self.descriptionField.text = self.itemDescription;
+    //}
 }
 
 - (void)didReceiveMemoryWarning
@@ -46,7 +54,8 @@
 
 - (IBAction)onClickSave
 {
-    [self.itemDelegate saveItem:self.titleTextField.text];
+    //[self.itemDelegate saveItem:self.titleTextField.text];
+    [self.itemDelegate saveItem :self.titleTextField.text duration :self.durationTextField.text description :self.descriptionField.text itemIndex:self.itemIndex];
 }
 
 - (IBAction)onClickCancel
