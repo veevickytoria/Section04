@@ -5,8 +5,6 @@
  
 namespace Everyman\Neo4j;
 require("phar://neo4jphp.phar");
-require_once("CommonFunctions.php");
-require_once("Topic.php");
 // These constants may be changed without breaking existing hashes.
 define("PBKDF2_HASH_ALGORITHM", "sha256");
 define("PBKDF2_ITERATIONS", 1000);
@@ -376,6 +374,11 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 	}	
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'Agendas')==0){
         //GET userAgendas
+        //can we require in here?
+        
+		//include "\CommonFunctions.php";
+		//include "Topic.php";
+
         $userNode=$client->getNode($_GET['id']);
 		if (sizeof($userNode) > 0){
         $array = $userNode->getProperties();
@@ -784,5 +787,71 @@ function deleteSettings($client, $userID){
 	}
 }
 
+function getRelatedNodeIDs($node, $relationValue, $relationName, $direction) {
+	$outputArray = array();
+	if ($node != NULL) {
+		//$outputArray['nodeID']=$node->getId();
+		if ($direction == "IN") {
+			$relationArray = $node->getRelationships(array(), Relationship::DirectionIn);
+		} else if ($direction == "OUT") {
+			$relationArray = $node->getRelationships(array(), Relationship::DirectionOut);
+		} else {
+			return null;
+		}
+		$nodeOutputArray = array();
+		$i = 0;
+		foreach($relationArray as $rel){
+			$relType = $rel->getType();
+			if($relType == $relationValue) {
+				if ($direction == "IN") {
+					$relatedNode=$rel->getStartNode();
+				} else if ($direction == "OUT") {
+					$relatedNode=$rel->getEndNode();
+				} else {
+					return null;
+				}
+				$nArray = array();
+				$nArray[$relationName]=$relatedNode->getId();
+				$nodeOutputArray[$i++] = $nArray;
+			}
+		}
+		return $nodeOutputArray;
+		$outputArray['relatedNodes'] = $nodeOutputArray;
+		
+	} else {
+		$outputArray['relatedNodes'] = "";
+	}
+	
+	return $outputArray;
+}
+
+function getNodeByID($id, $client) {
+	$node = $client->getNode($id);
+	if ($node == NULL)  {
+		echo json_encode(array('errorID'=>'XX', 'errorMessage'=>$id . ' is an unrecognized node ID in the database'));
+		return NULL;
+	} else {
+		return $node;
+	}
+}
+
+function getTopicInfo($id, $client){
+	$topicNode = getNodeByID($id, $client);
+	$result = array();
+	$result["title"] = $topicNode->getProperty("title");
+	$result["time"] = $topicNode->getProperty("time");
+	$result["description"] = $topicNode->getProperty("description");
+	
+	//get subtopics
+	$subtopics = getRelatedNodeIDs($topicNode, "HAS_TOPIC", "topicID", "OUT");
+	$topicList = array();
+	$i = sizeof($subtopics);
+	foreach($subtopics as $subtopic){
+		$topicList[$i--] = getTopicInfo($subtopic["topicID"], $client);
+	}
+	$result["content"] = $topicList;
+	
+	return $result;
+}
 
 ?>
