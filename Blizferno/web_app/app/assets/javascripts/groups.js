@@ -73,7 +73,7 @@
       data: updateMembers,
       success:function(data){
         $('#editGroupModal').modal('hide');
-        $('#newGroupModal').modal('hide');
+        $('#viewGroupModal').modal('hide');
         window.location.reload(true);
       }
     });
