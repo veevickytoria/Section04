@@ -1,5 +1,6 @@
 class HomePageController < ApplicationController
 
+	before_filter :index
 	before_filter :getSettings
 	before_filter :getMeetings
 	before_filter :getProjects
