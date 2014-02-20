@@ -16,7 +16,6 @@
 @property (nonatomic) BOOL isEditing;
 @property (nonatomic) iWinAgendaItemViewController *agendaItemViewController;
 @property (nonatomic) iWinAddUsersViewController *userViewController;
-@property (nonatomic) NSInteger agendaID;
 @property (strong, nonatomic) iWinBackEndUtility *backendUtility;
 
 @end
@@ -40,9 +39,9 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     self.backendUtility = [[iWinBackEndUtility alloc] init];
+    self.itemList = [[NSMutableArray alloc] init];
+
     if (!self.isAgendaCreated) {
-        self.itemList = [[NSMutableArray alloc] init];
-    
         self.headerLabel.text = @"Create Agenda";
     
         if (self.isEditing)
@@ -55,26 +54,15 @@
         }
     } else {
         NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Agenda/%d", self.agendaID];
-        NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:30];
-        [urlRequest setHTTPMethod:@"GET"];
-        NSURLResponse * response = nil;
-        NSError * error = nil;
-        NSData * data = [NSURLConnection sendSynchronousRequest:urlRequest
-                                              returningResponse:&response
-                                                          error:&error];
-        if (error)
-        {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Meetings not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
-            [alert show];
+        url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
+        self.titleTextField.text = [deserializedDictionary objectForKey:@"title"];
+        
+        int conteneSize = [[deserializedDictionary objectForKey:@"content"] count] + 1;
+        for(int i = 1; i < conteneSize; i++){
+            NSDictionary *item = [[deserializedDictionary objectForKey:@"content"] objectForKey:[[NSNumber numberWithInt:i] stringValue]];
+            [self.itemList addObject:item];
         }
-        else
-        {
-            NSError *jsonParsingError = nil;
-            NSDictionary *deserializedDictionary = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
-            self.titleTextField.text = [deserializedDictionary objectForKey:@"title"];
-            self.itemList =[deserializedDictionary objectForKey:@"content"];
-        }
-   
     }
 }
 
@@ -108,7 +96,7 @@
     
     NSDictionary *agendaItem = [self.itemList objectAtIndex:indexPath.row];
     NSString *agendaItemName = [agendaItem objectForKey:@"title"];
-    NSString *agendaItemDuration = [agendaItem objectForKey:@"duration"];
+    NSString *agendaItemDuration = [agendaItem objectForKey:@"time"];
     NSString *agendaItemDescription = [agendaItem objectForKey:@"description"];
 
     
@@ -148,18 +136,11 @@
 {
     NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Agenda/"];
     
-    NSArray *keys = [NSArray arrayWithObjects:@"agendaID", @"field", @"value", nil];
-    NSArray *objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.agendaID] stringValue], @"title", self.titleTextField.text, nil];
+    NSArray *keys = [NSArray arrayWithObjects:@"agendaID", @"title", @"meeting", @"user", @"content", nil];
+    NSArray *objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.agendaID] stringValue], self.titleTextField.text, [[NSNumber numberWithInt:self.meetingID] stringValue], [[NSNumber numberWithInt:self.userID] stringValue], self.itemList, nil];
     NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
     [self.backendUtility putRequestForUrl:url withDictionary:jsonDictionary];
-    
-    
-    objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.agendaID] stringValue], @"meeting", [[NSNumber numberWithInt:self.meetingID] stringValue], nil];
-    jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-    [self.backendUtility putRequestForUrl:url withDictionary:jsonDictionary];
-    
-    objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.agendaID] stringValue], @"content", self.itemList, nil];    jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-    [self.backendUtility putRequestForUrl:url withDictionary:jsonDictionary];
+
 }
 
 
