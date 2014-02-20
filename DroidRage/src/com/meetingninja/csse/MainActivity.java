@@ -92,7 +92,7 @@ public class MainActivity extends FragmentActivity implements
 
 	public enum DrawerLabel {
 		MEETINGS(0), NOTES(1), TASKS(2), PROFILE(3), GROUPS(4), PROJECTS(5), CONTACTS(
-				6), SETTINGS(7), ABOUT(8), LOGOUT(9);
+				6), LOGOUT(9);
 
 		private int position;
 
@@ -333,16 +333,16 @@ public class MainActivity extends FragmentActivity implements
 			// fragment.setArguments(args);
 			nextPage = new UserListFragment();
 			break;
-		case SETTINGS:
-			nextPage = SearchableUserFragment.getInstance();
-			// args.putString("Content", "TODO: Settings Page");
-			// fragment.setArguments(args);
-			break;
-		case ABOUT:
-			nextPage = new DummyFragment();
-			args.putString("Content", "TODO: About Page");
-			nextPage.setArguments(args);
-			break;
+//		case SETTINGS:
+//			nextPage = SearchableUserFragment.getInstance();
+//			// args.putString("Content", "TODO: Settings Page");
+//			// fragment.setArguments(args);
+//			break;
+//		case ABOUT:
+//			nextPage = new DummyFragment();
+//			args.putString("Content", "TODO: About Page");
+//			nextPage.setArguments(args);
+//			break;
 		case LOGOUT:
 			logout();
 			break;

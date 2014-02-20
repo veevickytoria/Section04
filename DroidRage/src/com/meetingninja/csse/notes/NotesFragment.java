@@ -313,15 +313,15 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 
 	@Override
 	public void processFinish(List<Note> list) {
-		int numNotes = 0;
-		try {
-			numNotes = list.size();
-		} catch (java.lang.NullPointerException e){
-			
-		}
-		Toast.makeText(getActivity(),
-				String.format("Received %d notes", numNotes),
-				Toast.LENGTH_SHORT).show();
+//		int numNotes = 0;
+//		try {
+//			numNotes = list.size();
+//		} catch (java.lang.NullPointerException e){
+//			
+//		}
+//		Toast.makeText(getActivity(),
+//				String.format("Received %d notes", numNotes),
+//				Toast.LENGTH_SHORT).show();
 		noteAdpt.clear();
 		notes.clear();
 		notes.addAll(list);

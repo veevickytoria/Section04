@@ -254,24 +254,6 @@ public class EditGroupActivity extends Activity implements TokenListener {
 		autoAdapter = new AutoCompleteAdapter(this, bothUsers);
 		input.setAdapter(autoAdapter);
 		input.setTokenListener(this);
-		Builder builder = new AlertDialog.Builder(getApplicationContext());
-		builder.setView(autocompleteView);
-		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				displayedGroup.getMembers().addAll(addedUsers);
-				addedUsers.clear();
-				mUserAdapter.notifyDataSetChanged();
-			}
-		});
-		builder.setNegativeButton("Cancel",
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.cancel();
-					}
-				});
-		builder.show();
 		dlg.setContentView(autocompleteView);
 		dlg.show();
 	}
