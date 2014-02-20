@@ -171,10 +171,12 @@
     [currentInstallation saveInBackground];
 }
 
+int SOMETHING = 1;
+
 -(void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
-//    [PFPush handlePush:userInfo];
-    [[[UIAlertView alloc] initWithTitle:@"Push Notification" message:@"Received Notification from backend" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil] show];
+    [[[UIAlertView alloc] initWithTitle:@"Push Notification" message:[NSString stringWithFormat:@"Received Notification from backend %d", SOMETHING] delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil] show];
+    SOMETHING = 2;
 }
 
 //- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
