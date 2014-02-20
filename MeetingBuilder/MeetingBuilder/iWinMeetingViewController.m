@@ -107,7 +107,10 @@
                 }
             }
             
-            [attendeeList deleteCharactersInRange:NSMakeRange([attendeeList length]-1, 1)];
+            if (attendeeList.length > 0)
+            {
+                [attendeeList deleteCharactersInRange:NSMakeRange([attendeeList length]-1, 1)];
+            }
             
             //add it to local database so accessing the info for a meeting is faster.
             iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
