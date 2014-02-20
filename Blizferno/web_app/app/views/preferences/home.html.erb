@@ -1,26 +1,7 @@
-<script>
-	function saveSettings(){
-		var jsonString = "";
-		var table = document.getElementById('settingsTable');
-		var input = table.getElementsByTagName('input');
-		for(var i = 0; i < input.length; i++){
-			//alert(input[i].name);
-			jsonString += "\""+input[i].name+"\":\""+ input[i].value +"\",";
-		}
-			jsonString = "{"+jsonString.substring(0,jsonString.length-1)+"}";
-		alert("jsonString:"+jsonString);
-/*
-		    $.ajax({
-            type: "PUT",
-            url: "http://csse371-04.csse.rose-hulman.edu/User/",
-            data: JSON.stringify({"userID":"<%= @userID %>", "field":"settings", "value":jsonString}),
-      		success:function(data){
-        	}
-    });
-*/
-	}
-	alert(@tasks);
+<script type="text/javascript">
+<%= render "preferencesJS.js.erb" %>
 </script>
+
 <div class='prefpage'>
 	<br />
 	<span style="font-size:20px;margin:5px;">Home Page Options:</span>
@@ -31,7 +12,7 @@
 				<span>Number of Tasks Shown:</span> 
 			</td>
 			<td style="width:24%;">
-				<input type="text" placeholder="3" max="25" size="2" name="numTasks" value="3"><br>
+				<input type="text" placeholder="3" max="25" size="2" id="taskID" name="tasks"><br>
 			</td>
 			<td style="width:4%;">
 			</td>
@@ -39,7 +20,7 @@
 				<span>Number of Projects Shown:</span> 
 			</td>
 			<td style="width:24%;">
-				<input readonly="true" type="text" placeholder="3" max="25" size="2" name="numProjects" value="3"><br>
+				<input type="text" placeholder="3" max="25" size="2" name="projects" id="projectID"><br>
 			</td>
 		</tr>
 		<tr>
@@ -47,7 +28,7 @@
 				<span>Number of Meetings Shown:</span> 
 			</td>
 			<td style="width:24%;">
-				<input type="text" placeholder="3" max="25" size="2" name="numMeetings" value="3"><br>
+				<input type="text" placeholder="3" max="25" size="2" name="meetings" id="meetingID"><br>
 			</td>
 			<td style="width:4%;">
 			</td>
@@ -55,7 +36,7 @@
 				<span>Number of Groups Shown:</span> 
 			</td>
 			<td style="width:24%;">
-				<input readonly="true" type="text" placeholder="3" max="25" size="2" name="numGroups" value="3"><br>
+				<input type="text" placeholder="3" max="25" size="2" name="groups" id="groupID"><br>
 			</td>
 		</tr>
 	</table>

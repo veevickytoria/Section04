@@ -1,0 +1,63 @@
+	function saveSettings(){
+		// var jsonString = "";
+		var table = document.getElementById('settingsTable');
+		var input = table.getElementsByTagName('input');
+		ID = <%= @userID %>;
+
+		// for(var i = 0; i < input.length; i++){
+		// 	//alert(input[i].name);
+		// 	jsonString += "\""+input[i].name+"\":\""+ input[i].value +"\",";
+		// }
+		// 	jsonString = {+jsonString.substring(0,jsonString.length-1)+};
+
+		var tasks = document.getElementById('taskID').value;
+		var groups = document.getElementById('groupID').value;
+		var projects = document.getElementById('projectID').value;
+		var meetings = document.getElementById('meetingID').value;
+
+		// var postData = JSON.stringify({
+		// 		"userID":ID,
+		// 		"tasks":tasks,
+		// 		"groups":groups,
+		// 		"projects":projects,
+		// 		"meetings":meetings
+		// 	});
+
+      	if(tasks != ""){
+      		$.ajax({
+	        	type: "PUT",
+            	url: "http://csse371-04.csse.rose-hulman.edu/UserSettings/",
+            	data: JSON.stringify({"userID":ID, "field":"tasks", "value":tasks}),
+            	async: false
+    		});
+      	}
+      	if(groups != ""){
+      		$.ajax({
+	        	type: "PUT",
+            	url: "http://csse371-04.csse.rose-hulman.edu/UserSettings/",
+            	data: JSON.stringify({"userID":ID, "field":"groups", "value":groups}),
+            	async: false
+    		});
+      	}
+      	if(projects != ""){
+      		$.ajax({
+	        	type: "PUT",
+            	url: "http://csse371-04.csse.rose-hulman.edu/UserSettings/",
+            	data: JSON.stringify({"userID":ID, "field":"projects", "value":projects}),
+            	async: false
+    		});
+      	}
+      	if(meetings != ""){
+      		$.ajax({
+	        	type: "PUT",
+            	url: "http://csse371-04.csse.rose-hulman.edu/UserSettings/",
+            	data: JSON.stringify({"userID":ID, "field":"meetings", "value":meetings}),
+            	async: false,
+            	success:function(data){
+      				window.location.href = "meetingninja.csse.rose-hulman.edu";
+      			}
+    		});
+      	}
+
+
+}

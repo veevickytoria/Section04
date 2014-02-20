@@ -1,5 +1,6 @@
 class HomePageController < ApplicationController
 
+	before_filter :getSettings
 	before_filter :getMeetings
 	before_filter :getProjects
 	before_filter :getGroups
@@ -14,6 +15,26 @@ class HomePageController < ApplicationController
 	end
 	def mypage
 	end
+
+  def getSettings
+    if (!cookies[:userID].blank?)
+      require 'net/http'
+      @userID = cookies[:userID]
+
+      url = URI.parse('http://csse371-04.csse.rose-hulman.edu/UserSettings/' + @userID)
+      req = Net::HTTP::Get.new(url.path)
+      res = Net::HTTP.start(url.host, url.port) {|http|
+        http.request(req)
+      }
+
+      settings = JSON.parse(res.body);
+
+      @taskVal = settings['tasks']
+      @groupVal = settings['groups']
+      @projectVal = settings['projects']
+      @meetingVal = settings['meetings']
+    end
+  end
 
 	def getTasks
 		require 'net/http'

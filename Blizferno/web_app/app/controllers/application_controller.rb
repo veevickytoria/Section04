@@ -12,6 +12,8 @@ class ApplicationController < ActionController::Base
   before_filter :getAllUsers
   before_filter :getAllMeetings
   before_filter :getAllNotes
+  before_filter :loadSettings
+
 
   def getUserInfo
     if (!cookies[:userID].blank?)
@@ -115,6 +117,35 @@ class ApplicationController < ActionController::Base
       @userNotesRaw = res.body
     end
   end
+
+  def loadSettings
+    if (!cookies[:userID].blank?)
+      require 'net/http'
+      @userID = cookies[:userID]
+      url = URI.parse('http://csse371-04.csse.rose-hulman.edu/UserSettings/' + @userID)
+      req = Net::HTTP::Get.new(url.path)
+      res = Net::HTTP.start(url.host, url.port) {|http|
+        http.request(req)
+      }
+      @settings = JSON.parse(res.body)
+
+      if(@settings['tasks'] == "")
+        @settings['tasks'] = 3;
+      end
+      if(@settings['groups'] == "")
+        @settings['groups'] = 3;
+      end
+      if(@settings['projects'] == "")
+        @settings['projects'] = 3;
+      end
+      if(@settings['meetings'] == "")
+        @settings['meetings'] = 3;
+      end
+
+
+    end
+  end
+
 
   #before_filter :protect
 
