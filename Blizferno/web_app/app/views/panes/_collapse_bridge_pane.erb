@@ -15,7 +15,7 @@
               <th></th>
             </tr>
           </thead>
- 		  <% counter = 0; max = 3; %>
+ 		  <% counter = 0; max = @taskVal.to_i; %>
           <% for task in @tasksParsed; if counter >= max; break; end; %>
           <tr>
             <td><%= task['deadline'] %></td>
@@ -44,7 +44,7 @@
               <th>Name</th>
             </tr>
           </thead>
-		  <% counter = 0; max = 3; %>
+		  <% counter = 0; max = @projectVal.to_i; %>
           <% for project in @projectsParsed; if counter >= max; break; end; %>
           <tr>
             <td><%= project['projectTitle'] %></td>
@@ -60,7 +60,7 @@
   </div>
   <!-- MEETINGS PANEL -->
   <div class="panel panel-default">
-    <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+    <a data-toggle="collapse" data-parenmt="#accordion" href="#collapseTwo">
       <input type='button' class="btn btn-success panel-title" value='Meetings'>
     </a>
     <div id="collapseTwo" class="panel-collapse collapse in">
@@ -77,7 +77,7 @@
       <th>Agenda</th> -->
     </tr>
   </thead>
-  <% counter = 0; max = 3; %>
+  <% counter = 0; max = @meetingVal.to_i; %>
   <% for meeting in @meetingsParsed; if counter >= max; break; end; %>
  
     <tr>
@@ -110,7 +110,7 @@
               <th>Group Name</th>
             </tr>
           </thead>
-  		  <% counter = 0; max = 3; %>
+  		  <% counter = 0; max = @groupVal.to_i; %>
           <% for group in @groups; if counter >= max; break; end; %>
           <tr>
             <td><%= group['groupTitle'] %></td>

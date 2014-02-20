@@ -1,6 +1,6 @@
 class PreferencesController < ApplicationController
 
-#before_filter :getUserSettings
+before_filter :getUserSettings
 
   def home
   	if (cookies[:userID].blank?)
@@ -11,20 +11,15 @@ class PreferencesController < ApplicationController
 
   def getUserSettings
 
-   #  @UserID = cookies[:userID]
+    @userID = cookies[:userID]
 
-  	# required 'net/http'
-  	# url = URI.parse('http://csse371-04.csse.rose-hulman.edu/UserSettings/' + @userID)
-  	# req = Net::HTTP::Get.new(url.path)
-  	# res = Net::HTTP.start(url.host, url.port) 
-  	# 		{|http|http.request(req)}
+  	require 'net/http'
 
-   #  @userSettings = JSON.parse(res.body)
-   #  @tasks = @userSettings['tasks']
-   #  @projects = @userSettings['projects']
-   #  @groups = @userSettings['groups']
-   #  @meetings = @userSettings['meetings']
+  	url = URI.parse('http://csse371-04.csse.rose-hulman.edu/UserSettings/' + @userID)
+  	req = Net::HTTP::Get.new(url.path)
+  	res = Net::HTTP.start(url.host, url.port){|http|http.request(req)}
 
+    @userSettings = JSON.parse(res.body)
 
   end
 
