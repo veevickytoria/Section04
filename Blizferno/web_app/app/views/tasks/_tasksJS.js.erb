@@ -69,21 +69,19 @@ function showDeleteModal(ID){
 function hideDeleteModal(){
 
 	var deleteData = tasksJSON[deleteID]['taskID'];
-	
+
 	$.ajax({
 		type: 'DELETE',
 		url: 'http://csse371-04.csse.rose-hulman.edu/Task/'+deleteData,
 		success:function(data){
-			if(data.deleted == true){
+			if(JSON.parse(data)["valid"] == "true"){
 				delete tasksJSON[deleteID];
+				window.location.reload(true);
 			}
 		}
-	}).fail(function(){
-		alert('delete error');
 	});
 
 	$('#deleteTaskModal').modal('hide');
-	window.location.reload(true);
 }
 
 function showViewTaskModalNoID(){
