@@ -222,15 +222,13 @@
     {
         [self animateSlidingMenu:NO];
         self.movedView = !self.movedView;
-        self.tapView.hidden = YES;
-        [self.tapView removeGestureRecognizer:self.tapGesture];
+        [self removeTapRecognizer];
     }
     else if (!self.movedRightView && !self.movedView)
     {
         [self animateRightSlidingMenu:YES];
         self.movedRightView = !self.movedRightView;
-        [self.tapView addGestureRecognizer:self.tapGesture];
-        self.tapView.hidden = NO;
+        [self addTapRecognizer];
     }
     
 }
@@ -255,12 +253,17 @@
 {
     self.tapView.hidden = YES;
     [self.tapView removeGestureRecognizer:self.tapGesture];
+    [self.tapView removeGestureRecognizer:self.swipeleft];
+    [self.tapView removeGestureRecognizer:self.swiperight];
+    [self enableSliding];
 }
 
 -(void) addTapRecognizer
 {
     self.tapView.hidden = NO;
     [self.tapView addGestureRecognizer:self.tapGesture];
+    [self.tapView addGestureRecognizer:self.swipeleft];
+    [self.tapView addGestureRecognizer:self.swiperight];
 }
 
 -(void) onTap:(UITapGestureRecognizer *)gestureRecognizer
