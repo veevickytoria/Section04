@@ -50,6 +50,7 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 ){
 		->setProperty( 'deadline', $postContent->deadline )
 		->setProperty( 'dateCreated', $postContent->dateCreated )
 		->setProperty( 'completionCriteria', $postContent->completionCriteria )
+                ->setProperty('dateAssigned', $postContent->dateAssigned)
 		->setProperty( 'nodeType', 'Task');
 	//actually add the node in the db
 	$taskNode->save();
