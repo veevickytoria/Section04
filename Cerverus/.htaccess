@@ -5,6 +5,7 @@ RewriteEngine On
 
 RewriteRule ^User/([0-9]+)/?$ User.php?id=$1 [NC,L]
 RewriteRule ^User/Test/?$ User.php?cat=login [NC,L]
+RewriteRule ^User/Push/?$ User.php?cat=push [NC,L]
 RewriteRule ^User/Login/?$ User.php?cat=login [NC,L]
 RewriteRule ^User/Schedule/([0-9]+)/?$ User.php?cat=schedule&id=$1 [NC,L]
 RewriteRule ^User/Schedules/?$ User.php?cat=schedule [NC,L]

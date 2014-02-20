@@ -68,6 +68,9 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) 
 
         mail($to, $subject, $message, $headers);
         
+}else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'push')==0){
+	//method to test push notifications
+	push("hello from meeting ninja");
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'schedule')==0){
         //GET getUserSchedule
         $userNode=$client->getNode($_GET['id']);
@@ -852,6 +855,35 @@ function getTopicInfo($id, $client){
 	$result["content"] = $topicList;
 	
 	return $result;
+}
+
+function push($MESSAGE){
+	$APPLICATION_ID= 'o4UYE8YSQMmLOcyTOv7pj2z9qYkNnUpKBaqezGWx';
+	$REST_API_KEY= 'OR1VZ6aX0iikN9wuDXvPhTrfdZErrhJEDZunYtzP';
+	$url = 'https://api.parse.com/1/push';
+	$data = array(
+		'channel' => '',
+		'type' => 'android',
+		'data' => array(
+			'alert' => $MESSAGE,
+		),
+	);
+	$_data = json_encode($data);
+	$headers = array(
+		'X-Parse-Application-Id: ' . $APPLICATION_ID,
+		'X-Parse-REST-API-Key: ' . $REST_API_KEY,
+		'Content-Type: application/json',
+		'Content-Length: ' . strlen($_data),
+	);
+
+	$curl = curl_init($url);
+	curl_setopt($curl, CURLOPT_POST, 1);
+	curl_setopt($curl, CURLOPT_POSTFIELDS, $_data);
+	curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+	curl_setopt ($process, CURLOPT_SSL_VERIFYPEER, false);
+	$res= curl_exec($curl);
+	echo $res;
+	curl_close($curl);
 }
 
 ?>
