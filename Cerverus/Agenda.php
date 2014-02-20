@@ -12,7 +12,7 @@ require_once("Topic.php");
 $client= new Client();
 
 	//get the index
-	$agendaIndex = new Index\NodeIndex($client, 'agendas');
+	$agendaIndex = new Index\NodeIndex($client, 'Agenda');
 	$userIndex = new Index\NodeIndex($client, 'Users');
 	$agendaIndex->save();
 if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
@@ -38,13 +38,21 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
 	$agendaNode->setProperty('title', $title);
 		
 	//ensure that if meeting or user are specified, they exist
-	if (isset($postContent->meeting)){
+	$isMeetingSet = isset($postContent->meeting);
+	if ($isMeetingSet){
 		$meeting = $postContent->meeting;
 		$meetingNode = getNodeByID($meeting, $client);
 		if ($meetingNode == NULL) {
 			return;
 		} else if (strcmp($meetingNode->getProperty("nodeType"), "Meeting")){
 			echo json_encode(array('errorID'=>'??', 'errorMessage'=>$meeting. ' is not a meetingID in the database'));
+			return;
+		}
+		$oldAgenda = $agendaIndex->findOne('meetingID', $postContent->meeting);
+							
+		//only add node if meeting doesnt already have agenda
+		if($oldAgenda != NULL){
+			echo json_encode(array('errorID'=>'??', 'errorMessage'=>$meeting. ' meeting already has an agenda.'));
 			return;
 		}
 	} else {
@@ -133,7 +141,9 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
 	$output["meetingID"] = $meeting;
 	$output["userID"] = $user;
 	$output["content"] = $topicList;
-	
+	if($isMeetingSet){
+	$agendaIndex->add($agendaNode, 'meetingID', $postContent->meeting);
+	}
 	//return information about the node
 	echo json_encode($output);
 	
