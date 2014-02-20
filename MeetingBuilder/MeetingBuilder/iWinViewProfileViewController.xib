@@ -12,6 +12,7 @@
                 <outlet property="displayNameTextField" destination="0c7-j4-81s" id="JVe-04-Ifk"/>
                 <outlet property="editProfile" destination="Ubq-dz-p6v" id="Ppf-9f-uUr"/>
                 <outlet property="emailTextField" destination="b6Z-LQ-axq" id="KXJ-Ng-sPc"/>
+                <outlet property="groupsTableView" destination="JaD-7F-68S" id="1ag-6s-yMb"/>
                 <outlet property="locationTextField" destination="uoo-Sg-rRy" id="mk1-4s-jtC"/>
                 <outlet property="phoneTextField" destination="ITL-P1-W1p" id="wv9-fH-Ryi"/>
                 <outlet property="titleTextField" destination="bzi-iO-w9p" id="jUB-3X-O1R"/>
@@ -56,7 +57,7 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ubq-dz-p6v">
-                    <rect key="frame" x="540" y="668" width="85" height="30"/>
+                    <rect key="frame" x="20" y="20" width="85" height="30"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <state key="normal" title="Edit Profile">
                         <color key="titleColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -78,8 +79,14 @@
                     <fontDescription key="fontDescription" type="system" pointSize="19"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Groups:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FAF-jU-MW9">
+                    <rect key="frame" x="248" y="664" width="68" height="23"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="19"/>
+                    <nil key="highlightedColor"/>
+                </label>
                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jIF-p9-cSL">
-                    <rect key="frame" x="396" y="668" width="68" height="30"/>
+                    <rect key="frame" x="680" y="20" width="68" height="30"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <state key="normal" title="Cancel">
                         <color key="titleColor" red="1" green="0.043376036710000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -167,6 +174,22 @@
                         <action selector="onViewProjects:" destination="-1" eventType="touchUpInside" id="93b-lZ-C2f"/>
                     </connections>
                 </button>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FiO-cV-HTJ">
+                    <rect key="frame" x="268" y="656" width="0.0" height="0.0"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="JaD-7F-68S">
+                    <rect key="frame" x="390" y="664" width="239" height="208"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="XpE-SO-15m"/>
+                        <outlet property="delegate" destination="-1" id="njn-Ri-gyA"/>
+                    </connections>
+                </tableView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>

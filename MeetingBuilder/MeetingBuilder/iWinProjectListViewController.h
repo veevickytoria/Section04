@@ -8,9 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "iWinViewAndCreateProjectViewController.h"
-#import "CustomSubtitledCell.h"
 
-@interface iWinProjectListViewController : UIViewController
+@interface iWinProjectListViewController : UIViewController <ProjectDelegate>
 - (IBAction)onClickCreateProject:(id)sender;
 - (IBAction)onClickBackToProfile:(id)sender;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withUserID:(NSInteger)userID;

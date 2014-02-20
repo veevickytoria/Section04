@@ -6,9 +6,13 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="iWinViewAndCreateGroupViewController">
             <connections>
+                <outlet property="addMembersButton" destination="egj-AS-j3S" id="JUD-4L-fM0"/>
+                <outlet property="groupName" destination="RTd-VB-Ec2" id="4y3-mn-Qbj"/>
                 <outlet property="groupTitleField" destination="RTd-VB-Ec2" id="vUo-OL-T2K"/>
                 <outlet property="memberTableView" destination="4pD-ua-0Zd" id="IlY-of-1rg"/>
+                <outlet property="saveButton" destination="6CB-le-2qj" id="0g2-42-7wk"/>
                 <outlet property="view" destination="1" id="5Vu-d9-9cr"/>
+                <outlet property="viewTitle" destination="LJh-w8-gfd" id="vwB-B1-giu"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>

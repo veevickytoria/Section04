@@ -36,6 +36,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *phoneTextField;
 @property (weak, nonatomic) IBOutlet UITextField *titleTextField;
 @property (weak, nonatomic) IBOutlet UITextField *locationTextField;
+@property (weak, nonatomic) IBOutlet UITableView *groupsTableView;
 
 //@property (nonatomic) id<ProfileDelegate> profileDelegate;
 

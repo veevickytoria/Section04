@@ -7,11 +7,15 @@
 //
 
 #import "iWinViewAndCreateProjectViewController.h"
+#import "iWinProjectListViewController.h"
 #import "iWinAddUsersViewController.h"
+#import "iWinAppDelegate.h"
+#import <QuartzCore/QuartzCore.h>
 #import "Contact.h"
 #import "Settings.h"
 #import "Group.h"
 #import "Project.h"
+#import "iWinBackEndUtility.h"
 
 @interface iWinViewAndCreateProjectViewController ()
 @property (nonatomic) BOOL isEditing;
@@ -20,6 +24,9 @@
 @property (nonatomic) NSInteger userID;
 @property (nonatomic) NSInteger projectID;
 @property (nonatomic) NSUInteger rowToDelete;
+@property (nonatomic) NSDictionary *existProject;
+@property (strong, nonatomic) iWinBackEndUtility *backendUtility;
+@property (strong, nonatomic) NSManagedObjectContext *context;
 
 @end
 
@@ -30,9 +37,12 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        self.isEditing = YES;
+        self.isEditing = TRUE;
         self.userID = userID;
         self.projectID = projectID;
+        if(projectID == -1) {
+            self.isEditing = FALSE;
+        }
     }
     return self;
 }
@@ -41,13 +51,23 @@
 {
     self.userList = userList;
     [self.membersTableView reloadData];
+    
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    self.backendUtility = [[iWinBackEndUtility alloc] init];
     self.userList = [[NSMutableArray alloc] init];
+    iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    self.context = [appDelegate managedObjectContext];
+
+    if (self.isEditing)
+    {
+        
+        [self initForExistingProject];
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -103,8 +123,41 @@
     NSLog(@"%d", self.projectID);    
 }
 
+-(void) updateProject
+{
+    NSMutableArray *userIDJsonDictionary = [[NSMutableArray alloc] init];
+    
+    for (int i = 0; i<[self.userList count]; i++)
+    {
+        Contact *c = (Contact *)self.userList[i];
+        
+        NSArray *userIDKeys = [[NSArray alloc] initWithObjects:@"userID", nil];
+        NSArray *userIDObjects = [[NSArray alloc] initWithObjects:[c.userID stringValue], nil];
+        NSDictionary *dict = [NSDictionary dictionaryWithObjects:userIDObjects forKeys:userIDKeys];
+        [userIDJsonDictionary addObject:dict];
+    }
+    
+    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Project/"];
+    
+    NSArray *keys = [NSArray arrayWithObjects:@"projectID", @"field", @"value", nil];
+    NSArray *objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.projectID] stringValue], @"projectTitle", self.projectTitleField.text,nil];
+    NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+    [self.backendUtility putRequestForUrl:url withDictionary:jsonDictionary];
+    
+    
+    objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.projectID] stringValue], @"members", userIDJsonDictionary,nil];
+    jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+    [self.backendUtility putRequestForUrl:url withDictionary:jsonDictionary];
+}
+
 - (IBAction)onClickSave:(UIButton *)sender {
-    [self saveNewProject];
+    if(self.isEditing) {
+        [self updateProject];
+    }
+    else {
+        [self saveNewProject];
+    }
+    [self.projectDelegate refreshProjectList];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -155,6 +208,74 @@
         UIAlertView *deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
         [deleteAlertView show];
     }
+}
+
+
+-(void) initForExistingProject
+{
+    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Project/%d", self.projectID];
+    
+    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
+    
+    if (!deserializedDictionary)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Project not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alert show];
+    }
+    else
+    {
+        self.existProject  = deserializedDictionary;
+        
+    }
+    
+    self.projectTitleField.text = [self.existProject objectForKey:@"projectTitle"];
+
+    [self initAttendees];
+}
+
+
+-(void) initAttendees
+{
+    NSMutableArray *attendeeArray = [[NSMutableArray alloc]init];
+    NSArray* attendeeFromDatabase = [self.existProject objectForKey:@"members"];
+    for(int i = 0; i < [attendeeFromDatabase count]; i++){
+        [attendeeArray addObject:[(NSDictionary*)[attendeeFromDatabase objectAtIndex:i] objectForKey:@"userID"]];
+    }
+    
+    for (int i=0; i<[attendeeArray count]; i++)
+    {
+        [self.userList addObject:[self getContactForID:(NSString *)attendeeArray[i]]];
+    }
+}
+
+
+-(Contact *)getContactForID:(NSString*)userID
+{
+    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/%@", userID];
+    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
+    if (!deserializedDictionary)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Project not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alert show];
+    }
+    else
+    {
+        if (deserializedDictionary.count > 0)
+        {
+            
+            NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Contact" inManagedObjectContext:self.context];
+            Contact *c = [[Contact alloc] initWithEntity:entityDesc insertIntoManagedObjectContext:self.context];
+            c.userID = [NSNumber numberWithInt:[userID integerValue]];
+            c.name = (NSString *)[deserializedDictionary objectForKey:@"name"];
+            c.email = (NSString *)[deserializedDictionary objectForKey:@"email"];
+            return c;
+            
+        }
+    }
+    
+    return nil;
 }
 
 @end

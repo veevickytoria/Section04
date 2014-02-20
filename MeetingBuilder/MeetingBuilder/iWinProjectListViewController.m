@@ -136,14 +136,15 @@ const int WIDTH = 804;
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    CustomSubtitledCell *cell = (CustomSubtitledCell *)[tableView dequeueReusableCellWithIdentifier:@"ProjectCell"];
+    CustomSubtitledCell *cell = (CustomSubtitledCell *)[tableView dequeueReusableCellWithIdentifier:@"AttendeeCell"];
     if (cell == nil)
     {
-        cell = [[CustomSubtitledCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ProjectCell"];
+        cell = [[CustomSubtitledCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AttendeeCell"];
     }
     [cell initCell];
     //cell.subTitledDelegate = self;
-    [cell.titleLabel  setText:(NSString *)[self.projectList objectAtIndex:indexPath.row]];
+    [cell.textLabel  setText:(NSString *)[self.projectList objectAtIndex:indexPath.row]];
+    cell.detailTextLabel.text = @"";
     [cell.deleteButton setTag:indexPath.row];
     return cell;
 }
@@ -152,18 +153,21 @@ const int WIDTH = 804;
 {
     return self.projectList.count;
 }
-/*
+
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     self.viewProjectVC = [[iWinViewAndCreateProjectViewController alloc] initWithNibName:@"iWinViewAndCreateProjectViewController" bundle:nil withUserID:self.userID withProjectID:[self.projectID[indexPath.row] integerValue]];
-    //self.viewProjectVC.viewProjectDelegate = self;
+    self.viewProjectVC.projectDelegate = self;
     [self.viewProjectVC setModalPresentationStyle:UIModalPresentationPageSheet];
     [self.viewProjectVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+    
     
     [self presentViewController:self.viewProjectVC animated:YES completion:nil];
     self.viewProjectVC.view.superview.bounds = CGRectMake(XOFFSET,YOFFSET,WIDTH,HEIGHT);
 }
+
+
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     return NO;
@@ -197,13 +201,14 @@ const int WIDTH = 804;
         }
     }
 }
-*/
+
 - (IBAction)onClickCreateProject:(id)sender {
     self.createProjectVC = [[iWinViewAndCreateProjectViewController alloc] initWithNibName:@"iWinViewAndCreateProjectViewController" bundle:nil withUserID:self.userID withProjectID:-1];
     
     [self.createProjectVC setModalPresentationStyle:UIModalPresentationPageSheet];
     [self.createProjectVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     
+    self.createProjectVC.projectDelegate = self;
     [self presentViewController:self.createProjectVC animated:YES completion:nil];
     self.createProjectVC.view.superview.bounds = CGRectMake(XOFFSET,YOFFSET,WIDTH,HEIGHT);
 }

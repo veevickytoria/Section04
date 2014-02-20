@@ -9,6 +9,11 @@
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="userID" attributeType="Integer 64" defaultValueString="0" indexed="YES" syncable="YES"/>
     </entity>
+    <entity name="Group" syncable="YES">
+        <attribute name="groupID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="groupTitle" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="members" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
     <entity name="Meeting" representedClassName="Meeting" syncable="YES">
         <attribute name="attendance" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="datetime" optional="YES" attributeType="String" syncable="YES"/>
@@ -51,10 +56,11 @@
     </entity>
     <elements>
         <element name="Contact" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Group" positionX="0" positionY="0" width="0" height="0"/>
         <element name="Meeting" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Project" positionX="0" positionY="0" width="0" height="0"/>
         <element name="RememberMe" positionX="0" positionY="0" width="0" height="0"/>
         <element name="Settings" positionX="0" positionY="0" width="0" height="0"/>
         <element name="Task" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="Project" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>
