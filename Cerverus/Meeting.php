@@ -22,7 +22,7 @@ require_once("CommonFunctions.php");
         exit(0);
     }
 
-/**
+/**16077
  *        Create a graphDb connection 
  */
 $client= new Client();
@@ -128,8 +128,8 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
         $postContent = json_decode(@file_get_contents('php://input'));
         
         $meeting=$client->getNode($postContent->meetingID);
-        if(sizeof($meeting > 0)){
-		$array = $meeting->getProperties();
+        if(sizeof($meeting) > 0){
+                $array = $meeting->getProperties();
 		if(array_key_exists('nodeType', $array)){
 			if(strcasecmp($array['nodeType'], 'Meeting')!=0){
 				echo json_encode(array('errorID'=>'11', 'errorMessage'=>$postContent->meetingID.' is an not a meeting node.'));
@@ -139,67 +139,45 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
                 if(strcasecmp($postContent->field, 'user') ==0){
                         $meeting->setProperty('user', $postContent->value);
                         $meeting->save();
-                        $array = $meeting->getProperties();
-                        $array['meetingID']=$meeting->getId();
-						unset($array['nodeType']);
-                        echo json_encode($array);
                 }else if(strcasecmp($postContent->field, 'title') ==0){
                         $meeting->setProperty('title', $postContent->value);
                         $meeting->save();
-                        $array = $meeting->getProperties();
-                        $array['meetingID']=$meeting->getId();
-						unset($array['nodeType']);
-                        echo json_encode($array);
                 }else if(strcasecmp($postContent->field, 'datetime') ==0){
                         $meeting->setProperty('datetime', $postContent->value);
                         $meeting->save();
-                        $array = $meeting->getProperties();
-                        $array['meetingID']=$meeting->getId();
-						unset($array['nodeType']);
-                        echo json_encode($array);
                 }else if(strcasecmp($postContent->field, 'duration') ==0){
                         $meeting->setProperty('duration', $postContent->value);
                         $meeting->save();
-                        $array = $meeting->getProperties();
-                        $array['meetingID']=$meeting->getId();
-						unset($array['nodeType']);
-                        echo json_encode($array);
                 }else if(strcasecmp($postContent->field, 'location') ==0){
                         $meeting->setProperty('location', $postContent->value);
                         $meeting->save();
-                        $array = $meeting->getProperties();
-                        $array['meetingID']=$meeting->getId();
-						unset($array['nodeType']);
-                        echo json_encode($array);
                 }else if(strcasecmp($postContent->field, 'description') ==0){
                         $meeting->setProperty('description', $postContent->value);
                         $meeting->save();
-                        $array = $meeting->getProperties();
-                        $array['meetingID']=$meeting->getId();
-						unset($array['nodeType']);
-                        echo json_encode($array);
                 }else if(strcasecmp($postContent->field, 'attendance') ==0){
-                        $attendeeArray = $postContent->value;
-                        foreach($attendeeArray as $attendee){
-                                $key = key(get_object_vars($attendee));
-                                $users = $userIndex->query('name:'.$key[0]);
-                                $meetingRels = $meeting->getRelationships('ATTEND_MEETING');
-                                foreach($meetingRels as $rel){
-                                        if ($users[0]->getID() == $rel->getStartNode->getID()){
-                                                $rel->setProperty('ATTENDANCE', $attendee->{$key}[0])
-                                                        ->save();
-                                        }else{
-                                                $attendRel = $users[0]->relateTo($meeting)
-                                                        ->setProperty('ATTENDANCE', $attendee->{$key}[0])
-                                                        ->save();
-                                        }
-                                }
+
+                        $attendanceRels = $meeting->getRelationships(array('ATTEND_MEETING'), Relationship::DirectionIn);
+                        //remove old relations
+                        foreach($attendanceRels as $rel){
+                            $rel->delete();
                         }
-                        $array = $meeting->getProperties();
-                        $array['meetingID']=$meeting->getId();
-						unset($array['nodeType']);
-                        echo json_encode($array);
+                        $userArray = $postContent->value;
+                        //add new ones
+                        foreach($postContent->value as $userInfo){
+                            $user = $client->getNode($userInfo->userID);
+                            $user->relateTo($meeting, 'ATTEND_MEETING')->save();
+                        }
                 }
+                
+                $props = $meeting->getProperties();
+                $props['meetingID'] = $meeting->getId();
+                unset($props['nodeType']);
+                $props['attendance'] = array();
+                foreach($meeting->getRelationships(array('ATTEND_MEETING'), Relationship::DirectionIn) as $userRel){
+                    $userID = $userRel->getStartNode()->getId();
+                    array_push($props['attendance'], array('userID'=>$userID));
+                }
+                echo json_encode($props);
         }
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'DELETE') == 0){      
         //delete meeting DELETE
