@@ -161,8 +161,11 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0){
 	
 	//get relationships
 	$meetings = getRelatedNodeIDs($agendaNode, "FOLLOWS", "meetingID", "IN");
-	$output["meetingID"] = $meetings[0]["meetingID"];
-	
+	if(!empty($meetings)){
+		$output["meetingID"] = $meetings[0]["meetingID"];
+	}else{
+		$output["meetingID"] = "none";
+	}
 	$users = getRelatedNodeIDs($agendaNode, "CREATED", "userID", "IN");
 	$output["userID"]  = $users[0]["userID"];
 	
