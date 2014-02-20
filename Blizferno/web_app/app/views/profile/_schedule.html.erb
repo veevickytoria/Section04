@@ -168,8 +168,8 @@ function switchLightbox(type){
 	scheduler.locale.labels["taskButton"] = "Create Tasks";
 
 	//scheduler.config.readonly = true;
-	scheduler.config.buttons_right = ["dhx_delete_btn","taskButton","meetingButton"];
-
+	//scheduler.config.buttons_right = ["dhx_delete_btn","taskButton","meetingButton"];
+	scheduler.config.buttons_right = ["taskButton","meetingButton"];
 
 	scheduler.config.lightbox.sections = configs["meeting"];
 
@@ -183,11 +183,12 @@ function switchLightbox(type){
     scheduler.attachEvent("onLightboxButton", function(button_id, node, e){
         if(button_id == "meetingButton"){
             switchLightbox("meeting");
-			$("div.meetingButton_set").toggleClass('activeCreateButton');
+			//$("div.meetingButton_set").toggleClass('activeCreateButton');
 			
         }else if(button_id == "taskButton"){
             switchLightbox("task");
 			$("div.taskButton_set").toggleClass('activeCreateButton');
+			$("div.meetingButton_set").toggleClass('activeCreateButton');
 		}
     });
 
@@ -201,6 +202,10 @@ function switchLightbox(type){
 		scheduler.showLightbox(id);
 		
 	});
+
+scheduler.attachEvent("onLightbox", function (id){
+			$("div.meetingButton_set").toggleClass('activeCreateButton');
+});
 
 
 
@@ -219,8 +224,9 @@ function switchLightbox(type){
 //	scheduler.attachEvent("onBeforeDrag", function(id,e){
 //		return false;
 //	});
-//scheduler.attachEvent("onBeforeLightbox", function(id,e){
-//
+//	scheduler.attachEvent("onBeforeLightbox", function(id,e){
+//		$("div.meetingButton_set").toggleClass('activeCreateButton');
+//		scheduler.showLightbox(id);
 //	});
 	
 
