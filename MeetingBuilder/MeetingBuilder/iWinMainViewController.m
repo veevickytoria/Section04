@@ -204,7 +204,9 @@
     
     [self updateSelectedMenu:self.homeButton];
     self.openEars.openEarsDelegate = self;
-    
+}
+
+-(void) loadScheduleView {
     CGRect scheduleFrame = CGRectMake(self.rightSlideView.bounds.origin.x, self.rightSlideView.bounds.origin.y + 81, self.rightSlideView.bounds.size.width, self.rightSlideView.bounds.size.height - 95);
     
     self.dayView = [[TKCalendarDayView alloc] initWithFrame:scheduleFrame];
@@ -213,7 +215,6 @@
 	self.dayView.delegate = self;
 	self.dayView.dataSource = self;
 	[self.rightSlideView addSubview:self.dayView];
-
 }
 
 -(void)swipeleft:(UISwipeGestureRecognizer*)gestureRecognizer
@@ -235,6 +236,7 @@
 
 -(void)swiperight:(UISwipeGestureRecognizer*)gestureRecognizer
 {
+    [self loadScheduleView];
     if (!self.movedView && !self.movedRightView)
     {
         [self animateSlidingMenu:YES];
@@ -341,6 +343,7 @@
 
 - (IBAction)onClickSchedule
 {
+    [self loadScheduleView];
     if (!self.movedRightView)
     {
         [self animateRightSlidingMenu:YES];
@@ -386,6 +389,7 @@
     [self enableSliding];
     [self removeTapRecognizer];
     self.meetingListViewController = [[iWinMeetingViewController alloc] initWithNibName:@"iWinMeetingViewController" bundle:nil withID:self.userID];
+    self.meetingListViewController.reloadScheduleDelegate = self;
     [self.mainView  addSubview:self.meetingListViewController.view];
     [self.meetingListViewController.view setBounds:self.mainView.bounds];
     [self animateSlidingMenu:NO];

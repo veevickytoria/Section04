@@ -155,6 +155,7 @@
     self.meetingLocations = [[NSMutableArray alloc] init];
     [self populateMeetingList];
     [self.projectTable reloadData];
+    [self.reloadScheduleDelegate loadScheduleView];
 }
 
 -(IBAction) onScheduleNewMeeting

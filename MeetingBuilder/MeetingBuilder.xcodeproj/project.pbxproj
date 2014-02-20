@@ -641,6 +641,7 @@
 				79D513C1181F9CC800C79B71 /* ViewAndAddNotes */,
 				0A1A729A181A2297009A49E5 /* AddAttendees */,
 				0A1A7299181A2210009A49E5 /* AddAndViewTask */,
+				0A1A7298181A2202009A49E5 /* TaskList */,
 				0A1A7292181A17EC009A49E5 /* AgendaItem */,
 				0A1A728C1819FE30009A49E5 /* ViewAndAddAgenda */,
 				0A1A72861819F571009A49E5 /* ViewAndScheduleMeeting */,
@@ -725,7 +726,6 @@
 				0ACE339717FCF5F8003B9C0A /* iWinMeetingViewController.h */,
 				0ACE339817FCF5F8003B9C0A /* iWinMeetingViewController.m */,
 				0ACE339917FCF5F8003B9C0A /* iWinMeetingViewController.xib */,
-				0A1A7298181A2202009A49E5 /* TaskList */,
 			);
 			name = MeetingList;
 			sourceTree = "<group>";
