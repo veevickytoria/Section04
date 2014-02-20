@@ -1,5 +1,6 @@
 class MeetingsController < ApplicationController
 
+	before_filter :index
 	#The before_filter will call the functions listed before the page is served. In this case we are using it to get all meetings associated with our user before we navigate to the meetings page. Currently the way we are going about getting the meetings is synchronous (single-thread) so the controller has to wait to load all of the meetings from the backend before it can serve the page. This is why it takes so long to load the page. Ideally we will change this to an asynchronous (multi-thread) method so that the page can render and display individual meetings as they get loaded.
  	before_filter :getMeetings
 	before_filter :getAllUsers

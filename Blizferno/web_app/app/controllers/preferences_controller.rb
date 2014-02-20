@@ -1,5 +1,6 @@
 class PreferencesController < ApplicationController
 
+before_filter :home
 before_filter :getUserSettings
 
   def home

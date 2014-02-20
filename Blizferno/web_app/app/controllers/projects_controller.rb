@@ -1,5 +1,6 @@
 class ProjectsController < ApplicationController
 
+	before_filter :index
 	before_filter :getProjects
 
   def index
