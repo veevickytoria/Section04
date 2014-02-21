@@ -71,7 +71,7 @@ function submitEdit(){
     $.ajax({
             type: "PUT",
             url: "http://csse371-04.csse.rose-hulman.edu/User/",
-            data: JSON.stringify({"userID":"5454", "field":"name", "value":"test"}),
+            data: JSON.stringify({"userID": <%= @userInfo['userID'] %>, "field":"name", "value":"test"}),
       		success:function(data){
         	}
     });
@@ -153,18 +153,6 @@ function grabUserID(userID){
   </strong>
 </p>
 <br/>
-
-
-
-<!-- <span style="font-size:28px;"><strong><span style="font-size:18px;">Projects: #for project in @projects  project[#'projectTitle']  
-end 
-</span>
-<br/> -->
-
-<span style="font-size:28px;"><strong><span style="font-size:18px;">Groups: <br /></span></strong></span>
-<% for group in @groups %>
-<%= group['groupTitle'] %> <br />
-<% end %>
 
 
 <!-- Modal Stuff -->
