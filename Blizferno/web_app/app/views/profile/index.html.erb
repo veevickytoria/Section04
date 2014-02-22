@@ -1,163 +1,14 @@
-
-
-<!-- working on profile search
 <script>
-alert("blah");
-$(window).load(function() { 
-alert("test");
-    jQuery('#searchProfileForm').bind('submit', function(event){
-        event.preventDefault();
-/*
-        $.ajax({
-            type: 'GET',
-            url: 'http://csse371-04.csse.rose-hulman.edu/User/'+document.getElementByName("profileSearch").value,
-            success:function(data){
-                alert("data:"+data);
-            }
-        });
-*/
-alert("here");
-        return true;
-    });
-</script>
+  function convertFormToJSON(form){
+    var array = jQuery(form).serializeArray();
+    var json = {};
 
--->
-
-<ul class="nav nav-tabs">
-      <li class="active"><a href="#profilePane" data-toggle="tab">Profile</a></li>
-      <li><a href="#usersPane" data-toggle="tab">Users</a></li>
-</ul>
-
-
-
-
-
-
-<div class="tab-content">
-      <div class="tab-pane fade in active" id="profilePane">
-
-<div style="padding:0 15px;"><!-- offset row negative padding -->
-
-<div class="row">
-<div class="col-md-6">
-
-<p>
-  <span style="font-size:40px;">
-    <strong>
-      <%= @userInfo['name'] %>
-    </strong>
-  </span>
-  <a onclick="showEditModal()"><span class='glyphicon glyphicon-edit'></span>&nbsp<span class="badge"></span></a>
-</p>
-<p>
-
-
-<!-- <button onclick="submitEdit()">Testing</button> -->
-
-
-
-<!--part of profile search
-<form id="searchProfileForm">
-	<input name="profileSearch" type="search" placeholder="Search Profiles"/>
-<input type="submit">
-</form>
--->
-
-<script>
-
-function submitEdit(){
-
-
-    $.ajax({
-            type: "PUT",
-            url: "http://csse371-04.csse.rose-hulman.edu/User/",
-            data: JSON.stringify({"userID": <%= @userInfo['userID'] %>, "field":"name", "value":"test"}),
-      		success:function(data){
-        	}
+    jQuery.each(array, function() {
+      json[this.name] = this.value || '';
     });
 
-}
-
-
-function saveEdit(){
-
-var userInfoArray = <%= raw @userInfo.to_json %>;
-var userID = "<%= @userID %>";
-
-var all = document.getElementsByTagName("*");
-
-for (var i=0, max=all.length; i < max; i++) {
-	if(all[i].id.slice(-1) == 'E'){
-
-		var editId = all[i].id;
-		var editIdLength = editId.length;
-		var normalId = editId.substr(0, editIdLength - 1);
-		var editValue = all[i].value;
-
-		if(editValue != userInfoArray[normalId]){
-			alert("{\'userID\':\'"+userID+"\',\'field\':\'"+normalId+"\',\'value\':\'"+editValue+"\'}");
-		}
-	}
-}
-
-
-
-
-}
-
-function grabUserID(userID){
-  setCookie("otherUserID", userID, "1");
-}
-</script>
-
-
-
-<p>
-  <span style="font-size:28px;">
-    <strong>
-      <span style="font-size:18px;"> 
-			Company: <%= @userInfo['company'] %>
-	</span>
-    </strong>
-  </span>
-</p>
-<p>
-  <span style="font-size:28px;">
-    <strong>
-      <span style="font-size:18px;">
-		 	Job Title: <%= @userInfo['title'] %>
-	</span>
-    </strong>
-  </span>
-</p>
-<p>
-  <strong>
-      <span style="font-size:18px;">
-			Location: <%= @userInfo['location'] %>
-	</span>
-  </strong>
-</p>
-<p>
-  <strong>
-      <span style="font-size:14px;">
-			Email: <%= @userInfo['email'] %>
-	</span>
-  </strong>
-</p>
-<p>
-<p>
-  <strong>
-      <span style="font-size:14px;">
-			Phone: <%= @userInfo['phone'] %>
-	</span>
-  </strong>
-</p>
-<br/>
-
-
-<!-- Modal Stuff -->
-
-<script type = 'text/javascript'>
+    return json;
+  }
 
 
   function showEditModal(){
@@ -166,62 +17,196 @@ function grabUserID(userID){
       $(this).removeData('bs.modal');
     });
 
-	document.getElementById("nameE").value = "<%= @userInfo['name'] %>";
-	document.getElementById("companyE").value = "<%= @userInfo['company'] %>";
-	document.getElementById("titleE").value = "<%= @userInfo['title'] %>";
-	document.getElementById("locationE").value = "<%= @userInfo['location'] %>";
-	document.getElementById("emailE").value = "<%= @userInfo['email'] %>";
-	document.getElementById("phoneE").value = "<%= @userInfo['phone'] %>";
-	
+  document.getElementById("nameE").value = "<%= @userInfo['name'] %>";
+  document.getElementById("companyE").value = "<%= @userInfo['company'] %>";
+  document.getElementById("titleE").value = "<%= @userInfo['title'] %>";
+  document.getElementById("locationE").value = "<%= @userInfo['location'] %>";
+  document.getElementById("emailE").value = "<%= @userInfo['email'] %>";
+  document.getElementById("phoneE").value = "<%= @userInfo['phone'] %>";
+  
     $('#editProfileModal').modal('show');
   }
 
+  function submitEdit(){
+    var form = new convertFormToJSON(document.getElementById('EditProfile'));
+
+    var uid = getCookie('userID');
+
+    var name = form.name;
+    var title = form.title;
+    var company = form.company;
+    var location = form.location;
+    var email = form.email;
+    var phone = form.phone;
+
+
+
+
+    $.ajax({
+      type: "PUT",
+      url: "http://csse371-04.csse.rose-hulman.edu/User/",
+      data: JSON.stringify({"userID": uid, "field":"name", "value":name}),
+      success:function(data){
+      }, async: false
+    });
+
+    $.ajax({
+      type: "PUT",
+      url: "http://csse371-04.csse.rose-hulman.edu/User/",
+      data: JSON.stringify({"userID": uid, "field":"title", "value":title}),
+      success:function(data){
+      }, async: false
+    });
+
+    $.ajax({
+      type: "PUT",
+      url: "http://csse371-04.csse.rose-hulman.edu/User/",
+      data: JSON.stringify({"userID": uid, "field":"company", "value":company}),
+      success:function(data){
+      }, async: false
+    });
+
+    $.ajax({
+      type: "PUT",
+      url: "http://csse371-04.csse.rose-hulman.edu/User/",
+      data: JSON.stringify({"userID": uid, "field":"location", "value":location}),
+      success:function(data){
+      }, async: false
+    });
+
+    $.ajax({
+      type: "PUT",
+      url: "http://csse371-04.csse.rose-hulman.edu/User/",
+      data: JSON.stringify({"userID": uid, "field":"email", "value":email}),
+      success:function(data){
+      }, async: false
+    });
+
+    $.ajax({
+      type: "PUT",
+      url: "http://csse371-04.csse.rose-hulman.edu/User/",
+      data: JSON.stringify({"userID": uid, "field":"phone", "value":phone}),
+      success:function(data){
+        window.location.reload(true);
+      }
+    });
+
+    
+  }
+
+  function grabUserID(userID){
+    setCookie("otherUserID", userID, "1");
+  }
 </script>
 
-<!-- Edit Modal -->
-<div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog" aria-labelledby="editProfileModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Edit </h4>
-      </div>
-      <div class="modal-body">
-        <%= render "edit" %>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default"  data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="saveEdit()" data-refresh="true" >Save Changes</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+<ul class="nav nav-tabs">
+  <li class="active"><a href="#profilePane" data-toggle="tab">Profile</a></li>
+  <li><a href="#usersPane" data-toggle="tab">Users</a></li>
+</ul>
+
+<div class="tab-content">
+  <div class="tab-pane fade in active" id="profilePane">
+
+    <div style="padding:0 15px;"><!-- offset row negative padding -->
+
+      <div class="row">
+        <div class="col-md-6">
+
+          <p>
+            <span style="font-size:40px;">
+              <strong>
+                <%= @userInfo['name'] %>
+              </strong>
+            </span>
+            <a onclick="showEditModal()"><span class='glyphicon glyphicon-edit'></span>&nbsp<span class="badge"></span></a>
+          </p>
+
+          <p>
+            <span style="font-size:28px;">
+              <strong>
+                <span style="font-size:18px;"> 
+                  Company: <%= @userInfo['company'] %>
+                </span>
+              </strong>
+            </span>
+          </p>
+          <p>
+            <span style="font-size:28px;">
+              <strong>
+                <span style="font-size:18px;">
+                  Job Title: <%= @userInfo['title'] %>
+                </span>
+              </strong>
+            </span>
+          </p>
+          <p>
+            <strong>
+              <span style="font-size:18px;">
+                Location: <%= @userInfo['location'] %>
+              </span>
+            </strong>
+          </p>
+          <p>
+            <strong>
+              <span style="font-size:14px;">
+                Email: <%= @userInfo['email'] %>
+              </span>
+            </strong>
+          </p>
+          <p>
+            <p>
+              <strong>
+                <span style="font-size:14px;">
+                  Phone: <%= @userInfo['phone'] %>
+                </span>
+              </strong>
+            </p>
+            <br/>
+
+            <!-- Edit Modal -->
+            <div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Edit </h4>
+                  </div>
+                  <div class="modal-body">
+                    <%= render "edit" %>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default"  data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick= "submitEdit()" data-refresh="true" >Save Changes</button>
+                  </div>
+                </div><!-- /.modal-content -->
+              </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
 
 
-<!--------- /end modal stuff ---->
+            <!-- /end modal stuff -->
 
-</div> <!-- end left col -->
-<div class="col-md-6">
-<%= render 'schedule' %>
-</div> <!-- end right col -->
-</div> <!-- end row div -->
-</div> <!-- end offset div -->
+          </div> <!-- end left col -->
+          <div class="col-md-6">
+            <%= render 'schedule' %>
+          </div> <!-- end right col -->
+        </div> <!-- end row div -->
+      </div> <!-- end offset div -->
 
 
-</div>
-<div class="tab-pane fade" id="usersPane">
-  <div style="padding: 5%;"><!-- offset row negative padding -->
+    </div>
+    <div class="tab-pane fade" id="usersPane">
+      <div style="padding: 5%;"><!-- offset row negative padding -->
 
-    <div class="row">
-      <div class="col-md-6">
-        <% for user in @allUsers['users'] %>
-        <% if( !user['name'].nil? ) %>
-        <a href='otherProfile' onclick="grabUserID(<%= user['userID'] %>)"> <%= user['name'] %></a> <br />
-        <% end %>
-        <% end %>
+        <div class="row">
+          <div class="col-md-6">
+            <% for user in @allUsers['users'] %>
+            <% if( !user['name'].nil? ) %>
+            <a href='otherProfile' onclick="grabUserID(<%= user['userID'] %>)"> <%= user['name'] %></a> <br />
+            <% end %>
+            <% end %>
 
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
-</div>
