@@ -85,6 +85,7 @@
     self.movedView = NO;
     self.movedRightView = NO;
     self.registerViewController.registerDelegate = self;
+    
     self.loginViewController.loginDelegate = self;
     [self.mainView  addSubview:self.loginViewController.view];
     [self.loginViewController.view setBounds:self.mainView.bounds];
@@ -105,7 +106,17 @@
     self.openEars = [[iWinOpenEarsModel alloc] init];
     self.openEars.openEarsDelegate = self;
     [self.openEars initialize];
+    
+    self.menuView.hidden = YES;
 }
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    CGRect oldFrame = self.menuView.frame;
+    self.menuView.frame = CGRectMake(-200, oldFrame.origin.y, oldFrame.size.width, oldFrame.size.height);
+    self.menuView.hidden = NO;
+}
+
 - (void) viewDidUnload {
 	self.dayView = nil;
 }
@@ -374,13 +385,16 @@
 {
     [self animateSlidingMenu:NO];
     [self removeSubViews];
-    [self disableSliding];
     [self removeTapRecognizer];
+    [self disableSliding];
     self.loginViewController = [[iWinLoginViewController alloc] initWithNibName:@"iWinLoginViewController" bundle:nil];
     [self.mainView  addSubview:self.loginViewController.view];
     [self.loginViewController.view setBounds:self.mainView.bounds];
     self.loginViewController.loginDelegate = self;
     [self resetSliding];
+    self.menuButton.hidden = YES;
+    self.scheduleButton.hidden = YES;
+    self.voiceCommand.hidden = YES;
 }
 
 - (IBAction)onClickMeetings
