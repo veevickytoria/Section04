@@ -178,3 +178,14 @@ function getCookie(c_name){
 function deleteCookie(name){
   document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 }
+
+function convertFormToJSON(form){
+  var array = jQuery(form).serializeArray();
+  var json = {};
+
+  jQuery.each(array, function() {
+    json[this.name] = this.value || '';
+  });
+
+  return json;
+}

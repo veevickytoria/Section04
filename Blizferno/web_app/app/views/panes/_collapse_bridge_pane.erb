@@ -1,4 +1,4 @@
-<div class="panel-group" id="accordion">
+<div class="accordian-group" id="accordion">
   <!-- TASK PANEL -->
   <div class="panel panel-default">
     <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
@@ -12,20 +12,26 @@
               <th>Due</th>
               <th>Task Name</th>
               <th>Completion Criteria</th>
-              <th></th>
             </tr>
           </thead>
-          <% counter = 0; max = @taskVal.to_i; %>
-          <% for task in @tasksParsed; if counter >= max; break; end; %>
-          <tr>
-            <td><%= task['deadline'] %></td>
-            <td><%= task['title'] %></td>
-            <td><%= task['completionCriteria'] %></td>
-          </tr>
-          <% counter = counter + 1 %>
+          <% counter = 0; max = @taskVal.to_i; seenTasks = []; %>
+          <% for task in @tasksParsed %>
+            <% if counter >= max %>
+              <% break %>
+            <% elsif seenTasks.include? task['taskID'] %>
+              <% next %>
+            <% else %>
+              <tr>
+                <td><%= task['deadline'] %></td>
+                <td><%= task['title'] %></td>
+                <td><%= task['completionCriteria'] %></td>
+              </tr>
+              <% seenTasks.push(task['taskID']) %>
+              <% counter = counter + 1 %>
+            <% end %>
           <% end %>
           <tr>
-            <td colspan='4' style='cursor: pointer; text-align: center'><span style='font-size: 1.1em; color: white;'><a href='/tasks/index'>Go to Tasks</a></span></td>
+            <td colspan='4' style='cursor: pointer; text-align: center' href='#newTaskModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
           </tr>
         </table>
       </div>
@@ -33,12 +39,12 @@
   </div>
   <!-- PROJECTS PANEL -->
   <div class="panel panel-default">
-    <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour">
+    <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
       <input type='button' class="btn btn-warning panel-title" value='Projects'>
     </a>
-    <div id="collapseFour" class="panel-collapse collapse">
+    <div id="collapseTwo" class="panel-collapse collapse">
       <div class="panel-body">
-        <table class='table table-hover table-striped' style='width: 70%; margin-left: 15%; margin-right: auto;'>
+        <table class='table table-striped' style='width: 70%; margin-left: 15%; margin-right: auto;'>
           <thead>
             <tr >
               <th>Name</th>
@@ -51,79 +57,79 @@
           </tr>
           <% counter = counter + 1 %>
           <% end %>
+          <tfoot>
           <tr>
-            <td colspan='4' style='cursor: pointer; text-align: center'><span style='font-size: 1.1em; color: white;'><a href='/projects/index' >Go to Projects</a></span></td>
+            <td colspan='4' style='cursor: pointer; text-align: center' href='#newProjectModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
           </tr>
+          </tfoot>
         </table>
       </div>
     </div>
   </div>
   <!-- MEETINGS PANEL -->
   <div class="panel panel-default">
-    <a data-toggle="collapse" data-parenmt="#accordion" href="#collapseTwo">
-      <input type='button' class="btn btn-success panel-title" value='Meetings'>
+    <a data-toggle="collapse" data-parent="#accordion" href="#collapseMeetings">
+      <input type='button' class="btn btn-success panel-title" value='Meetings' />
     </a>
-    <div id="collapseTwo" class="panel-collapse collapse in">
+    <div id="collapseMeetings" class="panel-collapse collapse in">
       <div class="panel-body">
-        <table class='table table-hover table-striped' style='width: 70%; margin-left: 15%; margin-right: auto;'>
+        <table class='table table-striped' style='width: 70%; margin-left: 15%; margin-right: auto;'>
           <thead>
             <tr>
               <th>Date</th>
               <th>Title</th>
               <th>Where</th>
-              <th></th>
-<!-- <th>When</th>
-<th>Project</th>
-<th>Agenda</th> -->
-</tr>
-</thead>
-<% counter = 0; max = @meetingVal.to_i; %>
-<% for meeting in @meetingsParsed; if counter >= max; break; end; %>
+            </tr>
+          </thead>
+          <% counter = 0; max = @meetingVal.to_i; %>
+          <% for meeting in @meetingsParsed; if counter >= max; break; end; %>
 
-<tr>
-  <td><%= meeting['datetime'] %></td>
-  <td><%= meeting['title'] %></td>
-  <td><%= meeting['location'] %></td>
-</tr>
-
-<% counter = counter + 1 %>
-<% end %>
-
-<tr>
-  <td colspan='4' style='cursor: pointer; text-align: center' href='#newMeetingModal' data-toggle='modal'><span style='font-size: 1.1em; color: white;'><a href="/meetings/index">Go to Meetings</a></span></td>
-</tr>
-</table>
-
-</div>
-</div>
-</div>
-<!-- GROUPS PANEL -->
-<div class="panel panel-default">
-  <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
-    <input type='button' class="btn btn-info panel-title" value='Groups'>
-  </a>
-  <div id="collapseThree" class="panel-collapse collapse">
-    <div class="panel-body">
-    <table class='table table-striped' style='width: 70%; margin-left: 15%; margin-right: auto;'>
-        <thead>
           <tr>
-            <th>Group Name</th>
+            <td><%= meeting['datetime'] %></td>
+            <td><%= meeting['title'] %></td>
+            <td><%= meeting['location'] %></td>
           </tr>
-        </thead>
-        <% counter = 0; max = @groupVal.to_i; %>
-        <% for group in @groups; if counter >= max; break; end; %>
-        <tr>
-          <td><%= group['groupTitle'] %></td>
-        </tr>
-        <% counter = counter + 1 %>
-        <% end %>
-        <tfoot>
+
+          <% counter = counter + 1 %>
+          <% end %>
+
+          <tfoot>
           <tr>
-            <td colspan='4' style='cursor: pointer; text-align: center' href='#newGroupModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
+            <td colspan='5' style='cursor: pointer; text-align: center' href='#newMeetingModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
           </tr>
-        </tfoot>
-      </table>
+          </tfoot>
+        </table>
+
+      </div>
     </div>
   </div>
-</div>
+  <!-- GROUPS PANEL -->
+  <div class="panel panel-default">
+    <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour">
+      <input type='button' class="btn btn-info panel-title" value='Groups'>
+    </a>
+    <div id="collapseFour" class="panel-collapse collapse">
+      <div class="panel-body">
+        <table class='table table-striped' style='width: 70%; margin-left: 15%; margin-right: auto;'>
+          <thead>
+            <tr>
+              <th>Group Name</th>
+            </tr>
+          </thead>
+          <% counter = 0; max = @groupVal.to_i; %>
+          <% for group in @groups; if counter >= max; break; end; %>
+          <tr>
+            <td><%= group['groupTitle'] %></td>
+          </tr>
+          <% counter = counter + 1 %>
+          <% end %>
+          <tfoot>
+            <tr>
+              <td colspan='4' style='cursor: pointer; text-align: center' href='#newGroupModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
