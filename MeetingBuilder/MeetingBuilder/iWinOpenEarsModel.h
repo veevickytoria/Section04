@@ -27,4 +27,5 @@
 -(void) startListening;
 @property (nonatomic) id<OpenEarsDelegate> openEarsDelegate;
 - (void)initialize;
+-(void)addNavWord:(NSString*) word;
 @end

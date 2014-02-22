@@ -16,6 +16,7 @@
 @property (strong, nonatomic) OpenEarsEventsObserver *openEarsEventsObserver;
 @property (strong, nonatomic) FliteController *fliteController;
 @property (nonatomic, strong) Slt *slt;
+@property (nonatomic) NSMutableArray *words;
 @end
 
 @implementation iWinOpenEarsModel
@@ -29,15 +30,18 @@
     self.slt = [[Slt alloc] init];
     self.fliteController = [[FliteController alloc] init];
     
-    NSArray *words = [NSArray arrayWithObjects:@"GO", @"TO", @"HOME", @"MEETINGS", @"PROFILE", @"TASK", @"NOTES", @"SETTINGS", @"LOG", @"OUT", @"MENU", @"SCHEDULE", @"CREATE", @"EDIT",  nil];
+    self.words = [[NSMutableArray alloc] initWithObjects:@"GO", @"TO", @"HOME", @"MEETINGS", @"PROFILE", @"TASK", @"NOTES", @"SETTINGS", @"LOG", @"OUT", @"MENU", @"SCHEDULE", @"CREATE", @"EDIT",  nil];
 
-    //NSError *error;
-    //NSString *x = [NSString stringWithContentsOfFile:myCorpus encoding:NSUTF8StringEncoding error:&error];
     
-    //NSArray *words = [x componentsSeparatedByString:@"\n"];
+    [self initOpenEars];
+    [self.openEarsEventsObserver setDelegate:self];
+}
+
+-(void) initOpenEars
+{
     NSString *name = @"MyLanguageModelFiles";
     
-    NSError *err = [self.lmGenerator generateLanguageModelFromArray:[NSArray arrayWithArray:words] withFilesNamed:name forAcousticModelAtPath:[AcousticModel pathToModel:@"AcousticModelEnglish"]];
+    NSError *err = [self.lmGenerator generateLanguageModelFromArray:[NSArray arrayWithArray:self.words] withFilesNamed:name forAcousticModelAtPath:[AcousticModel pathToModel:@"AcousticModelEnglish"]];
     
     NSDictionary *languageGeneratorResults = nil;
     self.lmPath = nil;
@@ -53,8 +57,12 @@
     } else {
         NSLog(@"Error: %@",[err localizedDescription]);
     }
-    
-    [self.openEarsEventsObserver setDelegate:self];
+}
+
+-(void)addNavWord:(NSString*) word
+{
+    [self.words addObject:word];
+    [self initOpenEars];
 }
 
 - (void) pocketsphinxDidReceiveHypothesis:(NSString *)hypothesis recognitionScore:(NSString *)recognitionScore utteranceID:(NSString *)utteranceID {
