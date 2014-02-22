@@ -14,39 +14,20 @@ I would like to display a loading bar before the entire page is loaded.
 </div>
 
 <!-- GROUPS -->
-<!-- Delete Modal -->
-<div class="modal fade" id="deleteGroupModal" tabindex="-1" role="dialog" aria-labelledby="deleteGroupModalLabel" aria-hidden="true">
+<!-- Create Modal -->
+<div class="modal fade" id="newGroupModal" tabindex="-1" role="dialog" aria-labelledby="newGroupModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Delete Group</h4>
+        <h1 class="modal-title" id="myModalLabel">Create Group</h1>
       </div>
       <div class="modal-body">
-        <%= render "groups/delete" %>
+        <%= render "groups/new" %>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="hideDeleteModal()">Delete</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
-<!-- View Modal -->
-<div class="modal fade" id="viewGroupModal" tabindex="-1" role="dialog" aria-labelledby="viewGroupModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">View Group Details</h4>
-      </div>
-      <div class="modal-body">
-        <%= render "groups/view" %>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="showEditModal()" href="#editGroupModal" data-refresh="true" data-toggle='modal'>Edit</button>
+        <button type="button" class="btn btn-primary" onclick='submitCreateGroupModal()'>Submit</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->

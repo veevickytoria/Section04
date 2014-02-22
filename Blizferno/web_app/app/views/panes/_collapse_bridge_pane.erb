@@ -15,14 +15,14 @@
               <th></th>
             </tr>
           </thead>
- 		  <% counter = 0; max = @taskVal.to_i; %>
+          <% counter = 0; max = @taskVal.to_i; %>
           <% for task in @tasksParsed; if counter >= max; break; end; %>
           <tr>
             <td><%= task['deadline'] %></td>
             <td><%= task['title'] %></td>
             <td><%= task['completionCriteria'] %></td>
           </tr>
-  	   	  <% counter = counter + 1 %>
+          <% counter = counter + 1 %>
           <% end %>
           <tr>
             <td colspan='4' style='cursor: pointer; text-align: center'><span style='font-size: 1.1em; color: white;'><a href='/tasks/index'>Go to Tasks</a></span></td>
@@ -44,12 +44,12 @@
               <th>Name</th>
             </tr>
           </thead>
-		  <% counter = 0; max = @projectVal.to_i; %>
+          <% counter = 0; max = @projectVal.to_i; %>
           <% for project in @projectsParsed; if counter >= max; break; end; %>
           <tr>
             <td><%= project['projectTitle'] %></td>
           </tr>
-  		  <% counter = counter + 1 %>
+          <% counter = counter + 1 %>
           <% end %>
           <tr>
             <td colspan='4' style='cursor: pointer; text-align: center'><span style='font-size: 1.1em; color: white;'><a href='/projects/index' >Go to Projects</a></span></td>
@@ -66,63 +66,64 @@
     <div id="collapseTwo" class="panel-collapse collapse in">
       <div class="panel-body">
         <table class='table table-hover table-striped' style='width: 70%; margin-left: 15%; margin-right: auto;'>
-  <thead>
-    <tr>
-      <th>Date</th>
-      <th>Title</th>
-      <th>Where</th>
-      <th></th>
-      <!-- <th>When</th>
-      <th>Project</th>
-      <th>Agenda</th> -->
-    </tr>
-  </thead>
-  <% counter = 0; max = @meetingVal.to_i; %>
-  <% for meeting in @meetingsParsed; if counter >= max; break; end; %>
- 
-    <tr>
-      <td><%= meeting['datetime'] %></td>
-      <td><%= meeting['title'] %></td>
-      <td><%= meeting['location'] %></td>
-    </tr>
-
-  <% counter = counter + 1 %>
-  <% end %>
-
-  <tr>
-    <td colspan='4' style='cursor: pointer; text-align: center' href='#newMeetingModal' data-toggle='modal'><span style='font-size: 1.1em; color: white;'><a href="/meetings/index">Go to Meetings</a></span></td>
-  </tr>
-</table>
-
-      </div>
-    </div>
-  </div>
-  <!-- GROUPS PANEL -->
-  <div class="panel panel-default">
-    <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
-      <input type='button' class="btn btn-info panel-title" value='Groups'>
-    </a>
-    <div id="collapseThree" class="panel-collapse collapse">
-      <div class="panel-body">
-        <table class='table table-hover table-striped' style='width: 70%; margin-left: 15%; margin-right: auto;'>
           <thead>
             <tr>
-              <th>Group Name</th>
-            </tr>
-          </thead>
-  		  <% counter = 0; max = @groupVal.to_i; %>
-          <% for group in @groups; if counter >= max; break; end; %>
-          <tr>
-            <td><%= group['groupTitle'] %></td>
-          </tr>
-  		  <% counter = counter + 1 %>
-          <% end %>
+              <th>Date</th>
+              <th>Title</th>
+              <th>Where</th>
+              <th></th>
+<!-- <th>When</th>
+<th>Project</th>
+<th>Agenda</th> -->
+</tr>
+</thead>
+<% counter = 0; max = @meetingVal.to_i; %>
+<% for meeting in @meetingsParsed; if counter >= max; break; end; %>
 
+<tr>
+  <td><%= meeting['datetime'] %></td>
+  <td><%= meeting['title'] %></td>
+  <td><%= meeting['location'] %></td>
+</tr>
+
+<% counter = counter + 1 %>
+<% end %>
+
+<tr>
+  <td colspan='4' style='cursor: pointer; text-align: center' href='#newMeetingModal' data-toggle='modal'><span style='font-size: 1.1em; color: white;'><a href="/meetings/index">Go to Meetings</a></span></td>
+</tr>
+</table>
+
+</div>
+</div>
+</div>
+<!-- GROUPS PANEL -->
+<div class="panel panel-default">
+  <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+    <input type='button' class="btn btn-info panel-title" value='Groups'>
+  </a>
+  <div id="collapseThree" class="panel-collapse collapse">
+    <div class="panel-body">
+    <table class='table table-striped' style='width: 70%; margin-left: 15%; margin-right: auto;'>
+        <thead>
           <tr>
-            <td colspan='4' style='cursor: pointer; text-align: center'><span style='font-size: 1.1em; color: white;'><a href='/groups/index'>Go to Groups</a></span></td>
+            <th>Group Name</th>
           </tr>
-        </table>
-      </div>
+        </thead>
+        <% counter = 0; max = @groupVal.to_i; %>
+        <% for group in @groups; if counter >= max; break; end; %>
+        <tr>
+          <td><%= group['groupTitle'] %></td>
+        </tr>
+        <% counter = counter + 1 %>
+        <% end %>
+        <tfoot>
+          <tr>
+            <td colspan='4' style='cursor: pointer; text-align: center' href='#newGroupModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
+          </tr>
+        </tfoot>
+      </table>
     </div>
   </div>
+</div>
 </div>

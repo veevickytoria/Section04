@@ -81,5 +81,3 @@ function passCheck(){
 	else
 		document.getElementById('p1').style.box-shadow('none');
 }
-
-ß

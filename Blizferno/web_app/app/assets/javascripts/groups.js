@@ -1,6 +1,6 @@
   var groupArray, deleteID, currentID;
 
-  function submitCreateModal(){
+  function submitCreateGroupModal(){
     var form = new convertFormToJSON(document.getElementById('createGroupForm'));
     // REPLACE WITH: code to validate data
 
@@ -33,7 +33,6 @@
   }
   function submitEditModal(){
     var form = new convertFormToJSON(document.getElementById('updateGroupForm'));
-    // REPLACE WITH: code to validate data
 
     var postTitle = form.title;
     var members = getMembers('membersE');
