@@ -95,22 +95,14 @@
       <th></th>
     </tr>
   </thead>
-  <% counter = 0; max = @taskVal.to_i; seenTasks = [ ]; %> <% for task in @tasksParsed%>
-      <% if counter >= max %>
-        <% break %>
-      <% elsif seenTasks.include? task['taskID'] %>
-        <% next %>
-      <% else %>
-        <tr>
-          <td><%= task['deadline'] %></td>
-          <td><a onClick="showViewTaskModal(<%= @tasksParsed.index(task) %>)" href = '#viewTaskModal' data-refresh="true" data-toggle='modal'><%= task['title'] %></a></td>
-          <td><%= task['completionCriteria'] %></td>
-          <td colspan='1' style='cursor: pointer; text-align: center' onClick="showDeleteModal(<%= @tasksParsed.index(task)%>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
-        </tr>
-        <% seenTasks.push(task['taskID']) %>
-        <% counter = counter + 1 %>
-      <% end %>
-    <% end %>
+  <% for task in @tasksParsed%>
+    <tr>
+      <td><%= task['deadline'] %></td>
+      <td><a onClick="showViewTaskModal(<%= @tasksParsed.index(task) %>)" href = '#viewTaskModal' data-refresh="true" data-toggle='modal'><%= task['title'] %></a></td>
+      <td><%= task['completionCriteria'] %></td>
+      <td colspan='1' style='cursor: pointer; text-align: center' onClick="showDeleteModal(<%= @tasksParsed.index(task)%>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
+    </tr>
+  <% end %>
   <tr>
     <td colspan='4' style='cursor: pointer; text-align: center' href='#newTaskModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
   </tr>

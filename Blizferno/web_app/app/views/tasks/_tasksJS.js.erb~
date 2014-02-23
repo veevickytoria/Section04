@@ -74,7 +74,7 @@ function hideDeleteModal(){
 		type: 'DELETE',
 		url: 'http://csse371-04.csse.rose-hulman.edu/Task/'+deleteData,
 		success:function(data){
-			if(JSON.parse(data)["valid"] == "true"){
+			if(data.deleted == true){
 				delete tasksJSON[deleteID];
 				window.location.reload(true);
 			}
