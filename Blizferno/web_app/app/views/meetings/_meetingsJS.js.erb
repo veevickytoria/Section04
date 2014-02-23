@@ -366,6 +366,7 @@ function isValidDate(dateString)
 
     newJSONString = newJSONString.substring(0, newJSONString.length - 1);
     newJSONString = newJSONString + "]}";
+    cookies[:testString] = newJSONString;
     var newJSON = JSON.parse(newJSONString);
     return newJSON[JSONtype];
   }
