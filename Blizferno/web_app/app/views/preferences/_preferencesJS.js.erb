@@ -32,7 +32,6 @@
             	async: false,
               success:function(data){
                 count++;
-              window.location.href = response.redirect;
             }
     		});
       	}
@@ -44,7 +43,6 @@
             	async: false,
               success:function(data){
                 count++;
-              window.location.reload(data);
             }
     		});
       	}
@@ -56,7 +54,6 @@
             	async: false,
               success:function(data){
                 count++;
-              window.location.reload(data);
             }
     		});
       	}
@@ -68,12 +65,13 @@
             	async: false,
             	success:function(data){
                 count++;
-      				window.location.reload(data);
       			}
     		});
 
           if(count > 0){
-            alert("Your Settings have been saved!")
+            if(confirm("Your Settings have been saved!")){
+              window.location.replace("http://meetingninja.csse.rose-hulman.edu/home_page/index")
+            }
           }
       	}
 
