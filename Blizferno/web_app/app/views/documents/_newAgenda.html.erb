@@ -11,8 +11,14 @@
 	<h5>Related Meeting</h5>
 	<!--<input name='type' type='text' id='newType' class='form-control' placeholder='Meeting' />-->
 	<select id="meeting" size="6" class="form-control">
-		<% for meeting in @userMeetings['meetings'] %>
+		<% 	meetingIDs = Array.new
+			@agendasParsed.each do |agenda|
+				meetingIDs.push(agenda['meetingID'])
+			end
+			for meeting in @userMeetings['meetings']
+				if !meetingIDs.include? meeting['id'] %>
 		<option value="<%= meeting['id'] %>"><%= meeting['title'] %></option>
-		<% end %>
+		<%		end 
+			end %>
 	</select>
 </form>

@@ -1,51 +1,178 @@
-var currentID; //index of the current meeting we're looking at
-var deleteID; //what index of the table to delete from
-var documentsJSON = <%= raw @notes %>; //need raw in here to deal with the quote parsing issue
-documentsJSON = JSON.parse("["+documentsJSON.toString()+"]"); //this is manually setting up the format of the string so it parses correctly
+var currentID;
+var deleteID;
+var notesJSON = <%= raw @notes %>;
+notesJSON = JSON.parse("["+notesJSON.toString()+"]");
+var agendasJSON = <%= raw @agendas %>;
+agendasJSON = JSON.parse(JSON.stringify(agendasJSON));
+var userMeetings = <%= raw @userMeetingsRaw %>;
+userMeetings = JSON.parse(JSON.stringify(userMeetings));
 
-//This funciton is called when a user clicks on a row in the table and is passed in the index of the row that was clicked
-function showViewDocumentModal(ID, type){
+function showViewModal(ID, type){
+	currentID = ID;
+	if(type == 'note'){
+		showViewNoteModal();
+	}else if(type == 'agenda'){
+		showViewAgendaModal();
+	}
+}
 
-	$('#viewDocumentModal').modal('hide');
-	$('#viewDocumentModal').on('hidden.bs.modal', function() {
-		$(this).removeData('bs.modal');
-	});
+function showViewNoteModal(){
+	document.getElementById("NtitleV").innerHTML = notesJSON[currentID]["title"];
+	document.getElementById("NcontentV").innerHTML = notesJSON[currentID]["content"];
+	document.getElementById("NdescriptionV").innerHTML = notesJSON[currentID]["description"];
+	document.getElementById("NdateCreatedV").innerHTML = notesJSON[currentID]["dateCreated"];
 
-	currentID = ID; //set the currentID to the ID we are currently looking at
-
-	//Look up the meeting in our JSON object using the currentID and manually set each value to the appropriate element in the ViewMeetingModal
-	document.getElementById("titleV").innerHTML = documentsJSON[currentID]["title"];
-	document.getElementById("contentV").innerHTML = documentsJSON[currentID]["content"];
-
-	$('#viewDocumentModal').modal('show');
 	$('#editNoteModal').modal('hide');
+	$('#viewNoteModal').modal('show');
 }
 
-function showDeleteModal(ID){
-	deleteID = ID;
-	$('#deleteDocumentModal').modal('show');
+function showViewAgendaModal(){
+	document.getElementById("AtitleV").innerHTML = agendasJSON[currentID]["title"];
+	document.getElementById("AuserIDV").innerHTML = agendasJSON[currentID]["userID"];
+	document.getElementById("AmeetingIDV").innerHTML = agendasJSON[currentID]["meetingID"];
+	document.getElementById("AcontentTitleV").innerHTML = agendasJSON[currentID]["content"]["1"]["title"];
+	document.getElementById("AcontentTimeV").innerHTML = agendasJSON[currentID]["content"]["1"]["time"];
+	document.getElementById("AcontentDescriptionV").innerHTML = agendasJSON[currentID]["content"]["1"]["description"];
+
+$('#editAgendaModal').modal('hide');
+$('#viewAgendaModal').modal('show');	
 }
 
+function showViewModalNoID(type){
+	updateEditedValues(type);
+	showViewModal(currentID, type);
+}
 
-function hideDeleteModal(){
+function showEditModal(ID, type){
+	currentID = ID;
+	if(type == 'note'){
+		showEditNoteModal();
+	}else if(type == 'agenda'){
+		showEditAgendaModal();
+	}
+}
 
-	//get the id of the meeting associated with the index of the meeting from our table
-	var deleteData = documentsJSON[deleteID]['noteID'];
-	
-	//make the DELETE request to the backend
-	$.ajax({
-		type: 'DELETE',
-		url: 'http://csse371-04.csse.rose-hulman.edu/Note/' + deleteData,
-		success:function(data){
-			//if the database returned true
-			if(JSON.parse(data)["valid"] == "true"){
-				//hide the delete modal
-				$('#deleteDocumentModal').modal('hide');
-				//refresh the page
+function showEditNoteModal(){
+	document.getElementById("NtitleE").value = notesJSON[currentID]["title"];
+	document.getElementById("NcontentE").value = notesJSON[currentID]["content"];
+	document.getElementById("NdescriptionE").value = notesJSON[currentID]["description"];
+	document.getElementById("NdateCreatedE").innerHTML = notesJSON[currentID]["dateCreated"];
+
+	$('#viewNoteModal').modal('hide');
+	$('#editNoteModal').modal('show');
+}
+
+function showEditAgendaModal(){
+	document.getElementById("AtitleE").value = agendasJSON[currentID]["title"];
+	document.getElementById("AuserIDE").innerHTML = agendasJSON[currentID]["userID"];
+	document.getElementById("AcontentTitleE").value = agendasJSON[currentID]["content"]["1"]["title"];
+	document.getElementById("AcontentTimeE").value = agendasJSON[currentID]["content"]["1"]["time"];
+	document.getElementById("AcontentDescriptionE").value = agendasJSON[currentID]["content"]["1"]["description"];
+
+
+		 	meetingIDs = [];
+			possibleMeetings = [{"meetingID":agendasJSON[currentID]["meetingID"],"title":agendasJSON[currentID]["meetingID"]}]
+			for(agenda in agendasJSON){
+				meetingIDs.push(agenda['meetingID'])
+			}
+			for(meeting in userMeetings['meetings']){
+				if(meetingIDs.indexOf(meeting['id']) > 0){
+					possibleMeetings.push({"meetingID":meeting['id'],"title":meeting['title']});
+				} 
+			}
+
+
+    populateSelect(possibleMeetings, "title", "meetingID", agendasJSON[currentID]["meetingID"], "AmeetingIDE");
+
+	$('#viewAgendaModal').modal('hide');
+	$('#editAgendaModal').modal('show');
+}
+
+function showEditModalNoID(type){
+	showEditModal(currentID, type);
+}
+
+function cancelEdit(type){
+	showViewModal(currentID, type)
+}
+
+function updateEditedValues(type){
+	if(type == 'note'){
+		updateEditedNoteValues();
+	}else if(type =='agenda'){
+		updateEditedAgendaValues();
+	}
+}
+
+function updateEditedNoteValues(){
+	var editForm = convertFormToJSON(document.getElementById("editNoteForm"));
+
+	var editNoteID = noteJSON[currentID]['noteID'].toString();
+	var editField = "";
+	var editValue = "";
+	var editData = "";
+
+
+	for (key in notesJSON[currentID]){
+		if(editForm[key] != null && notesJSON[currentID][key] != editForm[key]){
+			notesJSON[currentID][key] = editForm[key];
+
+			editField = key;
+			editValue = notesJSON[currentID][key];
+			editData = JSON.stringify({"noteID":editNoteID,"field":editField,"value":editValue});
+
+			$.ajax({
+				type: 'PUT',
+				url: 'http://csse371-04.csse.rose-hulman.edu/Note/',
+				data: editData
+			});
+
+		}
+	}
+}
+
+function updateEditedAgendaValues(){
+		var form = document.getElementById('editAgendaForm');
+		var formJSON = new convertFormToJSON(form);
+
+		var postTitle = formJSON.title;
+		var postMeeting = formJSON.meeting;
+		var postUser = <%=@userID%>;
+		var postContent = JSON.stringify([{
+				"title":formJSON["contentTitle"],
+				"time":formJSON["contentTime"],
+				"description":formJSON["contentDescription"],
+				"content":[]
+			}]);
+		postContent = JSON.parse(postContent);
+
+		var postData = JSON.stringify({
+			"title":postTitle,
+			"meeting":postMeeting,
+			"user":postUser,
+			"content":postContent
+		});
+
+		$.ajax({
+			type: 'PUT',
+			url: 'http://csse371-04.csse.rose-hulman.edu/Agenda/',
+			data: postData,
+			success:function(data){
+				$('#editAgendaModal').modal('hide');
 				window.location.reload(true);
 			}
-		}
-	});
+		});
+
+
+}
+
+
+function submitCreateModal(type){
+	if(type == 'note'){
+		submitCreateNoteModal();
+	}else if(type == 'agenda'){
+		submiteCreateAgendaModal();
+	}
 }
 
 function submitCreateNoteModal(){
@@ -101,7 +228,7 @@ function submitCreateAgendaModal(){
 
 		var form = document.getElementById('createAgenda');
 		var formJSON = new convertFormToJSON(form);
-alert("formJSON:"+JSON.stringify(formJSON));
+
 		var postTitle = formJSON.title;
 		var postMeeting = document.getElementById("meeting").value;
 		var postUser = <%=@userID%>;
@@ -119,14 +246,12 @@ alert("formJSON:"+JSON.stringify(formJSON));
 			"user":postUser,
 			"content":postContent
 		});
-alert("postData:"+postData);	
 
 		$.ajax({
 			type: 'POST',
 			url: 'http://csse371-04.csse.rose-hulman.edu/Agenda/',
 			data: postData,
 			success:function(data){
-	alert("here");
 				$('#newAgendaModal').modal('hide');
 				window.location.reload(true);
 			}
@@ -135,74 +260,53 @@ alert("postData:"+postData);
 
 }
 
-//This function is called when a user clicks on the edit icon to directly bring up the EditMeetingModal that corresponds to the index of the row they clicked which is passed in as ID.
-function showEditModal(ID){
-	$('#editNoteModal').modal('hide');
-	$('#editNoteModal').on('hidden.bs.modal', function() {
-		$(this).removeData('bs.modal');
-	});
-
-	currentID = ID; //set the currentID to the ID we are currently looking at
-
-
-	//Look up the meeting in our JSON object using the currentID and manually set each value to the appropriate element's value in the EditMeetingModal
-	document.getElementById("titleE").value = documentsJSON[currentID]["title"];
-	document.getElementById("contentE").value = documentsJSON[currentID]["content"];
-	document.getElementById("descE").value = documentsJSON[currentID]["description"];
-
-	$('#editNoteModal').modal('show');
-	$('#viewDocumentModal').modal('hide');
-}
-
-//This function is called when a user clicks on the "Edit" button inside of a ViewMeetingModal. We cannot access our javascript variable, currentID, in the html file, index, when we set the functionality of the ViewMeetingModal's "Edit" button so we use this as a proxy.
-function showEditModalNoID(){
-	showEditModal(currentID);
-}
-
-function updateEditedValues(){
-	//convert the form into a JSON object for easy parsing
-	var editForm = convertFormToJSON(document.getElementById("editNote"));
-
-	var editDocumentID = documentsJSON[currentID]['noteID'].toString();
-	var editField = "";
-	var editValue = "";
-	var editData = "";
-
-//for each field in the edit form
-	for (key in documentsJSON[currentID]){
-	//check to see if the value we just got from the edit form is the value we had before
-//alert("key:"+key+"\n[key]:"+meetingsJSON[currentID][key]+"\neditForm[key]"+editForm[key]);
-		if(editForm[key] != null && documentsJSON[currentID][key] != editForm[key]){
-			//if not then change the value we had to the value we just got from the edit form
-			documentsJSON[currentID][key] = editForm[key];
-//alert("meetingsJSON[currentID]:"+JSON.stringify(meetingsJSON[currentID]));
-
-			//set up the request data
-			editField = key;
-			editValue = documentsJSON[currentID][key];
-			editData = JSON.stringify({"noteID":editDocumentID,"field":editField,"value":editValue});
-
-			//make a PUT request with the backend to change the specified field for the specified meeting to the specified value
-			$.ajax({
-				type: 'PUT',
-				url: 'http://csse371-04.csse.rose-hulman.edu/Note/',
-				data: editData
-			});
-
-		}
+function showDeleteModal(ID, type){
+	deleteID = ID;
+	if(type == 'note'){
+		$('#deleteNoteModal').modal('show');
+	}else if(type == 'agenda'){
+		$('#deleteAgendaModal').modal('show');
 	}
 }
 
-function cancelEdit(){
-	showViewDocumentModal(currentID);
+function hideDeleteModal(type){
+	if(type == 'note'){
+		hideDeleteNoteModal();
+	}else if(type == 'agenda'){
+		hideDeleteAgendaModal();
+	}
 }
 
-function showDocumentModalNoID(){
-	updateEditedValues();
-	showViewDocumentModal(currentID);
+function hideDeleteNoteModal(){
+	var deleteData = notesJSON[deleteID]['noteID'];
+
+	$.ajax({
+		type: 'DELETE',
+		url: 'http://csse371-04.csse.rose-hulman.edu/Note/' + deleteData,
+		success:function(data){
+			if(JSON.parse(data)["valid"] == "true"){
+				$('#deleteNoteModal').modal('hide');
+				window.location.reload(true);
+			}
+		}
+	});
 }
 
-//This function takes a form element and creates a json object using the name of each input in the form as the field and the value of each input as the corresponding input
+function hideDeleteAgendaModal(){
+	var deleteData = agendasJSON[deleteID]['agendaID'];
+
+	$.ajax({
+		type: 'DELETE',
+		url: 'http://csse371-04.csse.rose-hulman.edu/Agenda/' + deleteData,
+		success:function(data){
+			if(JSON.parse(data)["valid"] == "true"){
+				$('#deleteAgendaModal').modal('hide');
+				window.location.reload(true);
+			}
+		}
+	});
+}
+
 function convertFormToJSON(form){
 	var array = jQuery(form).serializeArray();
 	var json = {};
@@ -220,4 +324,30 @@ function convertFormToJSON(form){
       newMembers[i] = $( selected ).val();
     });
     return newMembers;
+  }
+
+  function populateSelect(JSONArray, JSONDisplayColumn, JSONValueColumn, JSONSelectValues, selectID){
+    var select = document.getElementById(selectID);
+
+    if(select.options.length != 0){
+      for(var i = select.options - 1; i > -1; i--){
+        select.remove(i);
+      }
+    }
+
+    for (var k in JSONArray){
+      var el = document.createElement("option");
+      el.textContent = JSONArray[k][JSONDisplayColumn];
+      el.value = JSONArray[k][JSONValueColumn];
+      select.appendChild(el);
+    }
+
+    for (var i in JSONSelectValues){
+      for (var j in select.options){
+        if(JSONSelectValues[i][JSONValueColumn] == select.options[j].value){
+          select.options[j].selected = true;
+          break;
+        }
+      }
+    }
   }
