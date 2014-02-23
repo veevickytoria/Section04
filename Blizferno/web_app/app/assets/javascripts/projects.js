@@ -1,4 +1,6 @@
 function submitCreateProject(){
+    $('#sCrProj').addClass('disabled');
+    $('#cCrProj').addClass('disabled');
     var form = document.getElementById('createProject');
 
     var formJSON = new convertFormToJSON(form);

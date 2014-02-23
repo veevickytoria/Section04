@@ -26,8 +26,8 @@ I would like to display a loading bar before the entire page is loaded.
         <%= render "groups/new" %>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick='submitCreateGroupModal()'>Submit</button>
+        <button type="button" id='cCrGrp' class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" id='sCrGrp' class="btn btn-primary" onclick='submitCreateGroupModal()'>Submit</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -46,8 +46,8 @@ I would like to display a loading bar before the entire page is loaded.
         <%= render "meetings/new" %>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick='submitCreateMeetingModal()'>Submit</button>
+        <button type="button" id='cCrMeet' class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" id='sCrMeet' class="btn btn-primary" onclick='submitCreateMeetingModal()'>Submit</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -66,8 +66,8 @@ I would like to display a loading bar before the entire page is loaded.
         <%= render "projects/new" %>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="submitCreateProject()">Submit</button>
+        <button type="button" id='cCrProj' class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" id='sCrProj' class="btn btn-primary" onclick="submitCreateProject()">Submit</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -87,8 +87,8 @@ I would like to display a loading bar before the entire page is loaded.
         <%= render "tasks/new" %>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary" onclick="submitCreateTaskModal()">Submit</button>
+        <button type="button" id='cCrTsk' class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" id='sCrTsk' class="btn btn-primary" onclick="submitCreateTaskModal()">Submit</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->

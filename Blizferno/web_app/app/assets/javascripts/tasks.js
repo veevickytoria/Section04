@@ -1,5 +1,6 @@
 function submitCreateTaskModal(){
-		
+		$('#sCrTsk').addClass('disabled');
+    	$('#cCrTsk').addClass('disabled');
 		//grab the form from the html document
 		var form = document.getElementById('createTask');
 		//still testing validation

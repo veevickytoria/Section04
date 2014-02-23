@@ -1,4 +1,6 @@
 function submitCreateMeetingModal(){
+	$('#sCrMeet').addClass('disabled');
+    $('#cCrMeet').addClass('disabled');
 	var form = document.getElementById('createMeetingForm');
 	var formJSON = new convertFormToJSON(form);
 

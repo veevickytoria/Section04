@@ -1,6 +1,8 @@
   var groupArray, deleteID, currentID;
 
   function submitCreateGroupModal(){
+    $('#sCrGrp').addClass('disabled');
+    $('#cCrGrp').addClass('disabled');
     var form = new convertFormToJSON(document.getElementById('createGroupForm'));
     // REPLACE WITH: code to validate data
 
