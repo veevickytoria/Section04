@@ -7,7 +7,6 @@
 
 </script>
 
-
 <h1 style='margin-left: 15%; margin-right: auto;'>Tasks</h1>
 
 <!-- Create Modal -->
@@ -95,10 +94,9 @@
       <th></th>
     </tr>
   </thead>
-  <% counter = 0; max = @taskVal.to_i; seenTasks = [ ]; %> <% for task in @tasksParsed%>
-      <% if counter >= max %>
-        <% break %>
-      <% elsif seenTasks.include? task['taskID'] %>
+  <% seenTasks = []; %>
+  <% for task in @tasksParsed%>
+      <% if seenTasks.include? task['taskID'] %>
         <% next %>
       <% else %>
         <tr>
@@ -108,7 +106,6 @@
           <td colspan='1' style='cursor: pointer; text-align: center' onClick="showDeleteModal(<%= @tasksParsed.index(task)%>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
         </tr>
         <% seenTasks.push(task['taskID']) %>
-        <% counter = counter + 1 %>
       <% end %>
     <% end %>
   <tr>

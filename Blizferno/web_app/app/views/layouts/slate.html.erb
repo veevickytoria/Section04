@@ -9,11 +9,7 @@
     <%= content_for?(:title) ? yield(:title) : "Meeting Ninja" %>
   </title>
   <%= csrf_meta_tags %>
-  <!-- JAVASCRIPTS -->
-  <%= javascript_include_tag "slate" %>
-  <%# javascript_include_tag "application" %>
-  <%= yield(:page_javascript) if content_for?(:page_javascript) %>
-  <%= javascript_include_tag params[:controller] %>
+  
 
   <!-- STYLESHEETS -->
   <%# stylesheet_link_tag "slate", :media => "all" %>
@@ -31,6 +27,10 @@
   <!-- Page content -->
   <%= yield %>
 
-  
+  <!-- JAVASCRIPTS -->
+  <%= javascript_include_tag "slate" %>
+  <%# javascript_include_tag "application" %>
+  <%= yield(:page_javascript) if content_for?(:page_javascript) %>
+  <%= javascript_include_tag params[:controller] %>
 </body>
 </html>
