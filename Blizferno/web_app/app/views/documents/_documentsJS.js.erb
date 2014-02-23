@@ -4,7 +4,7 @@ var documentsJSON = <%= raw @notes %>; //need raw in here to deal with the quote
 documentsJSON = JSON.parse("["+documentsJSON.toString()+"]"); //this is manually setting up the format of the string so it parses correctly
 
 //This funciton is called when a user clicks on a row in the table and is passed in the index of the row that was clicked
-function showViewDocumentModal(ID){
+function showViewDocumentModal(ID, type){
 
 	$('#viewDocumentModal').modal('hide');
 	$('#viewDocumentModal').on('hidden.bs.modal', function() {
@@ -48,7 +48,7 @@ function hideDeleteModal(){
 	});
 }
 
-function submitCreateModal(){
+function submitCreateNoteModal(){
 
 	var today = new Date();
 	var dd = today.getDate();
@@ -94,6 +94,45 @@ function submitCreateModal(){
 			});
 
 		//}
+}
+
+function submitCreateAgendaModal(){
+
+
+		var form = document.getElementById('createAgenda');
+		var formJSON = new convertFormToJSON(form);
+alert("formJSON:"+JSON.stringify(formJSON));
+		var postTitle = formJSON.title;
+		var postMeeting = document.getElementById("meeting").value;
+		var postUser = <%=@userID%>;
+		var postContent = JSON.stringify([{
+				"title":formJSON["contentTitle"],
+				"time":formJSON["contentTime"],
+				"description":formJSON["contentDescription"],
+				"content":[]
+			}]);
+		postContent = JSON.parse(postContent);
+
+		var postData = JSON.stringify({
+			"title":postTitle,
+			"meeting":postMeeting,
+			"user":postUser,
+			"content":postContent
+		});
+alert("postData:"+postData);	
+
+		$.ajax({
+			type: 'POST',
+			url: 'http://csse371-04.csse.rose-hulman.edu/Agenda/',
+			data: postData,
+			success:function(data){
+	alert("here");
+				$('#newAgendaModal').modal('hide');
+				window.location.reload(true);
+			}
+		});
+
+
 }
 
 //This function is called when a user clicks on the edit icon to directly bring up the EditMeetingModal that corresponds to the index of the row they clicked which is passed in as ID.
@@ -174,3 +213,11 @@ function convertFormToJSON(form){
 
 	return json;
 }
+
+  function getMembers(id){
+    var newMembers = [];
+    $( '#' + id + ' :selected' ).each( function( i, selected ) {
+      newMembers[i] = $( selected ).val();
+    });
+    return newMembers;
+  }

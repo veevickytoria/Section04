@@ -1,11 +1,11 @@
 class DocumentsController < ApplicationController
 
 before_filter :getDocuments
+before_filter :getAgendas
 
 	def index
 
-		 @agendas = JSON.parse('{"agendas":[{"agendaID":"1","title": "agenda1","content": [{"topic": "@agendaTopic","time": "@duration","description": "@description","subtopic": [{"topic": "agendaTopic","time": "@duration","description": "@description"}]}]},
-		 	{"agendaID":"2","title": "agenda2","content": [{"topic": "@agendaTopic","time": "@duration","description": "@description","subtopic": [{"topic": "agendaTopic","time": "@duration","description": "@description"}]}]}]}')
+
 
 
 		if (cookies[:userID].blank?)
@@ -44,5 +44,22 @@ before_filter :getDocuments
 
 		end
 	end
+
+	def getAgendas
+
+		require 'net/http'
+		@userID = cookies[:userID]
+
+		url = URI.parse('http://csse371-04.csse.rose-hulman.edu/User/Agenda/' + @userID)
+		req = Net::HTTP::Get.new(url.path)
+		res = Net::HTTP.start(url.host, url.port) {|http|
+			http.request(req)
+		}
+
+		@agendas = res.body
+		@agendasParsed = JSON.parse(res.body)
+		
+	end
+
 	layout "slate"
 end

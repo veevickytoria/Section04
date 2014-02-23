@@ -23,7 +23,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary" form="createAgenda">Submit</button>
+        <button type="submit" class="btn btn-primary" onclick="submitCreateAgendaModal()">Submit</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -42,7 +42,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="submitCreateModal()">Submit</button>
+        <button type="button" class="btn btn-primary" onclick="submitCreateNoteModal()">Submit</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -134,19 +134,23 @@
       <th>Type</th>
     </tr>
   </thead>
+
+<script>
+alert("agendas:"+JSON.stringify(JSON.parse(<%=raw @agendas%>)));
+</script>
   <!-- POPULATE AGENDAS -->
-  <% for agenda in @agendas['agendas'] %>
+  <% for agenda in @agendasParsed %>
     <tr>
-      <td><a onClick="showViewDocumentModal(<%= agenda['agendaID'] %>, 'agenda')" href = '#viewDocumentModal' data-refresh = 'true' data-toggle='modal'><%= agenda['title'] %></a></td>
-      <td><%= agenda['content'][0]['topic'] %></td>
-      <td>Agenda</td>
+      <td onClick="showViewDocumentModal(<%= @agendasParsed.index(agenda)%>, 'agenda')" href = '#viewDocumentModal' data-refresh = 'true' data-toggle='modal'><%= agenda['title'] %></td>
+      <td onClick="showViewDocumentModal(<%= @agendasParsed.index(agenda)%>, 'agenda')" href = '#viewDocumentModal' data-refresh = 'true' data-toggle='modal'><%=  %></td>
+      <td onClick="showViewDocumentModal(<%= @agendasParsed.index(agenda)%>, 'agenda')" href = '#viewDocumentModal' data-refresh = 'true' data-toggle='modal'>Agenda</td>
       <td colspan='1' style='cursor: pointer; text-align: center' onclick="showDeleteModal(<%= agenda['agendaID'] %>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
     </tr>
   <% end %>
   <!-- POPULATE NOTES -->
   <% for note in @notesParsed %>
     <tr>
-      <td><a onClick="showViewDocumentModal(<%= @notesParsed.index(note) %>)" href = '#viewDocumentModal' data-refresh = 'true' data-toggle='modal'><%= note['title'] %></a></td>
+      <td><a onClick="showViewDocumentModal(<%= @notesParsed.index(note) %>, 'note')" href = '#viewDocumentModal' data-refresh = 'true' data-toggle='modal'><%= note['title'] %></a></td>
       <td></td>
       <td>Note</td>
       <td colspan='1' style='cursor: pointer; text-align: center' onclick="showDeleteModal(<%= @notesParsed.index(note) %>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
