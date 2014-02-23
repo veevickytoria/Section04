@@ -98,7 +98,6 @@ function updateEditedValues(){
 	//convert the form into a JSON object for easy parsing
 	var editForm = convertFormToJSON(document.getElementById("editMeetingForm"));
 
-	//alert(editForm);
 
 	//concatenate the date and time together to meet the "mm/dd/yyyy HH:MM" format
 	editForm['datetime'] = editForm['dateStart'] +" "+ editForm['timeStart'];
@@ -115,7 +114,7 @@ function updateEditedValues(){
 	for (key in meetingsJSON[currentID]){
 	//check to see if the value we just got from the edit form is the value we had before
 //alert("key:"+key+"\n[key]:"+meetingsJSON[currentID][key]+"\neditForm[key]"+editForm[key]);
-		//alert(meetingsJSON[currentID]);
+
 		if(editForm[key] != null && meetingsJSON[currentID][key] != editForm[key]){
 			//if not then change the value we had to the value we just got from the edit form
 			meetingsJSON[currentID][key] = editForm[key];
@@ -145,7 +144,10 @@ function updateEditedValues(){
 	$.ajax({
 		type: 'PUT',
 		url: 'http://csse371-04.csse.rose-hulman.edu/Meeting/',
-		data: editData
+		data: editData,
+		success:function(data){
+			window.location.reload(true);
+		}
 	});
 
 
@@ -366,6 +368,7 @@ function isValidDate(dateString)
 
     newJSONString = newJSONString.substring(0, newJSONString.length - 1);
     newJSONString = newJSONString + "]}";
+    // cookies[:testString] = newJSONString;
     var newJSON = JSON.parse(newJSONString);
     return newJSON[JSONtype];
   }
