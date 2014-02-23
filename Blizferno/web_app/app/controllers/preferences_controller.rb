@@ -11,17 +11,23 @@ before_filter :getUserSettings
   end
 
   def getUserSettings
+    if (!cookies[:userID].blank?)
+      require 'net/http'
+      @userID = cookies[:userID]
 
-    @userID = cookies[:userID]
+      url = URI.parse('http://csse371-04.csse.rose-hulman.edu/UserSettings/' + @userID)
+      req = Net::HTTP::Get.new(url.path)
+      res = Net::HTTP.start(url.host, url.port) {|http|
+        http.request(req)
+      }
 
-  	require 'net/http'
+      settings = JSON.parse(res.body);
 
-  	url = URI.parse('http://csse371-04.csse.rose-hulman.edu/UserSettings/' + @userID)
-  	req = Net::HTTP::Get.new(url.path)
-  	res = Net::HTTP.start(url.host, url.port){|http|http.request(req)}
-
-    @userSettings = JSON.parse(res.body)
-
+      @curTask = settings['tasks']
+      @curGroup = settings['groups']
+      @curProject = settings['projects']
+      @curMeeting = settings['meetings']
+    end
   end
 
   layout 'slate'

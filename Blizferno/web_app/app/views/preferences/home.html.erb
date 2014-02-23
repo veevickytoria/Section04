@@ -12,7 +12,7 @@
 				<span>Number of Tasks Shown:</span> 
 			</td>
 			<td style="width:24%;">
-				<input type="text" placeholder="3" max="25" size="2" id="taskID" name="tasks"><br>
+				<input type="text" placeholder=<%= @curTask.to_i %> max="25" size="2" id="taskID" name="tasks"><br>
 			</td>
 			<td style="width:4%;">
 			</td>
@@ -20,7 +20,7 @@
 				<span>Number of Projects Shown:</span> 
 			</td>
 			<td style="width:24%;">
-				<input type="text" placeholder="3" max="25" size="2" name="projects" id="projectID"><br>
+				<input type="text" placeholder=<%= @curProject.to_i %>  max="25" size="2" name="projects" id="projectID"><br>
 			</td>
 		</tr>
 		<tr>
@@ -28,7 +28,7 @@
 				<span>Number of Meetings Shown:</span> 
 			</td>
 			<td style="width:24%;">
-				<input type="text" placeholder="3" max="25" size="2" name="meetings" id="meetingID"><br>
+				<input type="text" placeholder=<%= @curMeeting.to_i %>  max="25" size="2" name="meetings" id="meetingID"><br>
 			</td>
 			<td style="width:4%;">
 			</td>
@@ -36,7 +36,7 @@
 				<span>Number of Groups Shown:</span> 
 			</td>
 			<td style="width:24%;">
-				<input type="text" placeholder="3" max="25" size="2" name="groups" id="groupID"><br>
+				<input type="text" placeholder=<%= @curGroup.to_i %>  max="25" size="2" name="groups" id="groupID"><br>
 			</td>
 		</tr>
 	</table>

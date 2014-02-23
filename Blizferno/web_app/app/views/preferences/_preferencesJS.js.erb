@@ -3,6 +3,7 @@
 		var table = document.getElementById('settingsTable');
 		var input = table.getElementsByTagName('input');
 		ID = <%= @userID %>;
+    var count = 0;
 
 		// for(var i = 0; i < input.length; i++){
 		// 	//alert(input[i].name);
@@ -28,7 +29,11 @@
 	        	type: "PUT",
             	url: "http://csse371-04.csse.rose-hulman.edu/UserSettings/",
             	data: JSON.stringify({"userID":ID, "field":"tasks", "value":tasks}),
-            	async: false
+            	async: false,
+              success:function(data){
+                count++;
+              window.location.href = response.redirect;
+            }
     		});
       	}
       	if(groups != ""){
@@ -36,7 +41,11 @@
 	        	type: "PUT",
             	url: "http://csse371-04.csse.rose-hulman.edu/UserSettings/",
             	data: JSON.stringify({"userID":ID, "field":"groups", "value":groups}),
-            	async: false
+            	async: false,
+              success:function(data){
+                count++;
+              window.location.reload(data);
+            }
     		});
       	}
       	if(projects != ""){
@@ -44,7 +53,11 @@
 	        	type: "PUT",
             	url: "http://csse371-04.csse.rose-hulman.edu/UserSettings/",
             	data: JSON.stringify({"userID":ID, "field":"projects", "value":projects}),
-            	async: false
+            	async: false,
+              success:function(data){
+                count++;
+              window.location.reload(data);
+            }
     		});
       	}
       	if(meetings != ""){
@@ -54,9 +67,14 @@
             	data: JSON.stringify({"userID":ID, "field":"meetings", "value":meetings}),
             	async: false,
             	success:function(data){
+                count++;
       				window.location.reload(data);
       			}
     		});
+
+          if(count > 0){
+            alert("Your Settings have been saved!")
+          }
       	}
 
 
