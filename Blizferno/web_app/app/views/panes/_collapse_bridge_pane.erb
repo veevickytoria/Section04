@@ -18,17 +18,18 @@
           <% for task in @tasksParsed %>
             <% if counter >= max %>
               <% break %>
-            <% elsif seenTasks.include? task['taskID'] %>
-              <% next %>
+            <%# elsif seenTasks.include? task['taskID'] %>
+              <%# next %>
             <% else %>
               <tr>
                 <td><%= task['deadline'] %></td>
                 <td><%= task['title'] %></td>
                 <td><%= task['completionCriteria'] %></td>
               </tr>
-              <% seenTasks.push(task['taskID']) %>
+              <%# seenTasks.push(task['taskID']) %>
               <% counter = counter + 1 %>
             <% end %>
+            <%# seenTasks = [] %>
           <% end %>
           <tr>
             <td colspan='4' style='cursor: pointer; text-align: center' href='#newTaskModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
