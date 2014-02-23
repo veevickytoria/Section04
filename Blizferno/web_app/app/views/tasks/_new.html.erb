@@ -19,7 +19,7 @@
 	<input type="text" name="completionCriteria" maxLength="500" class="form-control"/>
 
 	<h5>Assigned to:*</h5>
-	<select multiple id="assignedTo" size='6' class="form-control">
+	<select name="assignedTo" size='1' class="form-control">
   		<option disabled>Select multiple by holding Ctrl/CMD</option>
   		<% for user in @allUsers['users'] %>
 		<option value="<%= user['userID'] %>"><%= user['name'] %></option>
