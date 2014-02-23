@@ -92,9 +92,9 @@
 
   <% for project in @projectsParsed %>
     <tr>
-      <td onClick="showViewModal(<%= @projectsParsed.index(project)%>)" data-refresh="true" data-toggle="modal"><%= project['projectTitle'] %></td>
-      <td colspan='1' style='cursor: pointer; text-align: center' onClick="showDeleteModal(<%= @projectsParsed.index(project) %>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
-      <td colspan='1' style='cursor: pointer; text-align: center' onclick="showEditModal(<%=@projectsParsed.index(project)%>)" data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-pencil'></span></td>
+      <td onClick="showViewModal(<%= project["projectID"] %>)" data-refresh="true" data-toggle="modal"><%= project['projectTitle'] %></td>
+      <td colspan='1' style='cursor: pointer; text-align: center' onClick="showDeleteModal(<%= project["projectID"] %>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
+      <td colspan='1' style='cursor: pointer; text-align: center' onclick="showEditModal(<%= project["projectID"] %>)" data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-pencil'></span></td>
     </tr>
   <% end %>
   <tr>

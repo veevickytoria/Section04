@@ -11,15 +11,11 @@
 <br />
 <select multiple id="TableMeetingsE" size="6" class="form-control">
 	<option disabled>Select multiple by holding Ctrl/CMD></option>
-</select>
-
-<br />
-<br />
-
-<strong><span class="viewLabel">Notes:</span></strong>
-<br />
-<select multiple id="TableNotesE" size"6" class="form-control">
-	<option disabled>Select multiple by holding Ctrl/CMD></option>
+	<% for meeting in @userMeetings['meetings'] %>
+		<% if !meeting['title'].nil? %>
+		<option value="<%= meeting['id'] %>"><%= meeting['title'] %></option>
+		<% end %>
+		<% end %>
 </select>
 
 <br />
@@ -29,6 +25,11 @@
 <br />
 <select multiple id="TableMembersE" size="6" class="form-control">
 	<option diabled>Select multiple by holding Ctrl/CMD></option>
+	<% for user in @allUsers['users'] %>
+		<% if !user['name'].nil? %>
+		<option value="<%= user['userID'] %>"><%= user['name'] %></option>
+		<% end %>
+		<% end %>
 </select>
 
 </form>
