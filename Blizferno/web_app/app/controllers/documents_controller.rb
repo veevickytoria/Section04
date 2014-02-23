@@ -1,5 +1,6 @@
 class DocumentsController < ApplicationController
 
+before_filter :index
 before_filter :getDocuments
 before_filter :getAgendas
 

@@ -14,156 +14,81 @@ I would like to display a loading bar before the entire page is loaded.
 </div>
 
 <!-- GROUPS -->
-<!-- Delete Modal -->
-<div class="modal fade" id="deleteGroupModal" tabindex="-1" role="dialog" aria-labelledby="deleteGroupModalLabel" aria-hidden="true">
+<!-- Create Modal -->
+<div class="modal fade" id="newGroupModal" tabindex="-1" role="dialog" aria-labelledby="newGroupModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Delete Group</h4>
+        <h1 class="modal-title" id="newGroupModalLabel">Create Group</h1>
       </div>
       <div class="modal-body">
-        <%= render "groups/delete" %>
+        <%= render "groups/new" %>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="hideDeleteModal()">Delete</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
-<!-- View Modal -->
-<div class="modal fade" id="viewGroupModal" tabindex="-1" role="dialog" aria-labelledby="viewGroupModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">View Group Details</h4>
-      </div>
-      <div class="modal-body">
-        <%= render "groups/view" %>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="showEditModal()" href="#editGroupModal" data-refresh="true" data-toggle='modal'>Edit</button>
+        <button type="button" class="btn btn-primary" onclick='submitCreateGroupModal()'>Submit</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
 <!-- MEETINGS -->
-<!-- Delete Modal -->
-<div class="modal fade" id="deleteMeetingModal" tabindex="-1" role="dialog" aria-labelledby="deleteMeetingModalLabel" aria-hidden="true">
+<!-- Create Modal -->
+<div class="modal fade" id="newMeetingModal" tabindex="-1" role="dialog" aria-labelledby="newMeetingModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Delete Meeting</h4>
+        <h1 class="modal-title" id="newMeetingModalLabel">Create Meeting</h1>
       </div>
       <div class="modal-body">
-        <%= render "meetings/delete" %>
+        <%= render "meetings/new" %>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="hideDeleteModal()">Delete</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
-<!-- View Modal -->
-<div class="modal fade" id="viewMeetingModal" tabindex="-1" role="dialog" aria-labelledby="viewMeetingModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">View Meeting</h4>
-      </div>
-      <div class="modal-body">
-        <%= render "meetings/view" %>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="showEditModal()" href="#editMeetingModal" data-refresh="true" data-toggle='modal'>Edit</button>
+        <button type="button" class="btn btn-primary" onclick='submitCreateMeetingModal()'>Submit</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
 <!-- PROJECTS -->
-<!-- Delete Modal -->
-<div class="modal fade" id="deleteProjectModal" tabindex="-1" role="dialog" aria-labelledby="deleteProjectModalLabel" aria-hidden="true">
+<!-- Create Modal -->
+<div class="modal fade" id="newProjectModal" tabindex="-1" role="dialog" aria-labelledby="newProjectModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Delete Project</h4>
+        <h4 class="modal-title" id="newProjectModalLabel">Create Project</h4>
       </div>
       <div class="modal-body">
-        <%= render "projects/delete" %>
+        <%= render "projects/new" %>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="hideDeleteProjectModal()">Delete</button>
+        <button type="button" class="btn btn-primary" onclick="submitCreateProject()">Submit</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<!-- View Modal -->
-<div class="modal fade" id="viewProjectModal"  tabindex="-1" role="dialog" aria-labelledby="viewProjectModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">View Project</h4>
-      </div>
-      <div class="modal-body">
-        <%= render "projects/view" %>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal" data-refresh="true">Close</button>
-        <button type="button" class="btn btn-primary" onclick="showEditProjectModal()" href="#editProjectModal" data-refresh="true" data-toggle='modal'>Edit</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
 
 <!-- TASKS -->
-<!-- Delete Modal -->
-<div class="modal fade" id="deleteTaskModal" tabindex="-1" role="dialog" aria-labelledby="deleteTaskModalLabel" aria-hidden="true">
+<!-- Create Modal -->
+<div class="modal fade" id="newTaskModal" tabindex="-1" role="dialog" aria-labelledby="newTaskModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Delete Task</h4>
+        <h4 class="modal-title" id="newTaskModalLabel">Create Task</h4>
       </div>
       <div class="modal-body">
-        <%= render "tasks/delete" %>
+        <%= render "tasks/new" %>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="hideDeleteTaskModal()">Delete</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
-<!-- View Modal -->
-<div class="modal fade" id="viewTaskModal"  tabindex="-1" role="dialog" aria-labelledby="viewTaskModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">View Task</h4>
-      </div>
-      <div class="modal-body">
-        <%= render "tasks/view" %>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal" data-refresh="true">Close</button>
-        <button type="button" class="btn btn-primary" onclick="showEditTaskModal()" href="#editTaskModal" data-refresh="true" data-toggle='modal'>Edit</button>
+        <button type="submit" class="btn btn-primary" onclick="submitCreateTaskModal()">Submit</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->

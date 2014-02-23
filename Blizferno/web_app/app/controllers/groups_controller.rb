@@ -1,5 +1,6 @@
 class GroupsController < ApplicationController
 	
+	before_filter :index
 	before_filter :getGroups
 	before_filter :getAllUsers
 

@@ -10,15 +10,9 @@ ADD THIS BACK IN WHEN BACKEND HAS PROJECT IMPLEMENTED
 	<select multiple id='meetings' name='meetings' size='6' class='form-control'>
 		<option disabled>Select multiple by holding Ctrl/CMD</option>
 		<% for meeting in @userMeetings['meetings'] %>
+			<% if !meeting['title'].nil? %>
 		<option value="<%= meeting['id'] %>"><%= meeting['title'] %></option>
 		<% end %>
-	</select>
-
-	<h5>Associated Notes:*</h5>
-	<select multiple id='notes' name='notes' size='6' class='form-control'>
-		<option disabled>Select multiple by holding Ctrl/CMD</option>
-		<% for note in @userNotes['notes'] %>
-		<option value="<%= note['noteID'] %>"><%= note['title'] %></option>
 		<% end %>
 	</select>
 
@@ -26,7 +20,9 @@ ADD THIS BACK IN WHEN BACKEND HAS PROJECT IMPLEMENTED
 	<select multiple id='members' name="members" size='6' class='form-control'>
 		<option disabled>Select multiple by holding Ctrl/CMD</option>
 		<% for user in @allUsers['users'] %>
+		<% if !user['name'].nil? %>
 		<option value="<%= user['userID'] %>"><%= user['name'] %></option>
+		<% end %>
 		<% end %>
 	</select>
 

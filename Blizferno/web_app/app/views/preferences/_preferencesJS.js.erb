@@ -54,7 +54,7 @@
             	data: JSON.stringify({"userID":ID, "field":"meetings", "value":meetings}),
             	async: false,
             	success:function(data){
-      				window.location.href = "meetingninja.csse.rose-hulman.edu";
+      				window.location.reload(data);
       			}
     		});
       	}

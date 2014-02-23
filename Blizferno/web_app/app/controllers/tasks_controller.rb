@@ -1,5 +1,6 @@
 class TasksController < ApplicationController
 
+	before_filter :index
 	before_filter :getTasks
 
 	def index
