@@ -2,6 +2,8 @@ package objects;
 
 import java.io.IOException;
 
+import objects.builders.NoteBuilder;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -12,9 +14,9 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import com.meetingninja.csse.database.Keys;
 
-@JsonDeserialize(builder = Note.NoteBuilder.class)
+@JsonDeserialize(builder = NoteBuilder.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "noteID", "createdBy", "title", "description", "content",
 		"dateCreated" })
@@ -33,6 +35,8 @@ public class Note extends AbstractJSONObject<Note> implements Parcelable,
 	private String content;
 	@JsonProperty("dateCreated")
 	private String dateCreated;
+	
+	public static final String CREATE_NOTE = "createNote";
 
 	public Note() {
 		// Required empty constructor
@@ -45,7 +49,19 @@ public class Note extends AbstractJSONObject<Note> implements Parcelable,
 		this.description = copyNote.getDescription();
 		this.content = copyNote.getContent();
 		this.dateCreated = copyNote.getDateCreated();
+	}
 
+	public Note(Cursor crsr) {
+		int idxID = crsr.getColumnIndex(Keys._ID);
+		int idxTITLE = crsr.getColumnIndex(Keys.Note.TITLE);
+		int idxCONTENT = crsr.getColumnIndex(Keys.Note.CONTENT);
+		int idxDESC = crsr.getColumnIndex(Keys.Note.DESC);
+		int idxCREATOR = crsr.getColumnIndex(Keys.Note.CREATED_BY);
+		setID("" + crsr.getInt(idxID));
+		setTitle(crsr.getString(idxTITLE));
+		setContent(crsr.getString(idxCONTENT));
+		setDescription(crsr.getString(idxDESC));
+		setCreatedBy(crsr.getString(idxCREATOR));
 	}
 
 	public Note(Parcel in) {
@@ -173,55 +189,6 @@ public class Note extends AbstractJSONObject<Note> implements Parcelable,
 		dest.writeString(getContent());
 		dest.writeString(getDateCreated());
 
-	}
-
-	@JsonPOJOBuilder
-	public static class NoteBuilder extends AbstractBuilder<Note> {
-		private String noteID;
-		private String createdBy;
-		private String title;
-		private String description;
-		private String content;
-		private String dateCreated;
-
-		public NoteBuilder() {
-
-		}
-
-		public NoteBuilder withID(String id) {
-			this.noteID = id;
-			return this;
-		}
-
-		public NoteBuilder withCreatedBy(String userID) {
-			this.createdBy = userID;
-			return this;
-		}
-
-		public NoteBuilder withTitle(String title) {
-			this.title = title;
-			return this;
-		}
-
-		public NoteBuilder withDescription(String desc) {
-			this.description = desc;
-			return this;
-		}
-
-		public NoteBuilder withContent(String content) {
-			this.content = content;
-			return this;
-		}
-
-		public NoteBuilder withDateModified(String dateTime) {
-			this.dateCreated = dateTime;
-			return this;
-		}
-
-		@Override
-		public Note build() {
-			return new Note(this);
-		}
 	}
 
 	@Override

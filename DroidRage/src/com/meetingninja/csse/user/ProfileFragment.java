@@ -15,53 +15,46 @@
  ******************************************************************************/
 package com.meetingninja.csse.user;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
-import objects.Meeting;
 import objects.User;
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.loopj.android.image.SmartImageView;
-import com.meetingninja.csse.ApplicationController;
 import com.meetingninja.csse.R;
+import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.AsyncResponse;
-import com.meetingninja.csse.database.JsonNodeRequest;
 import com.meetingninja.csse.database.Keys;
-import com.meetingninja.csse.database.UserDatabaseAdapter;
-import com.meetingninja.csse.meetings.MeetingItemAdapter;
+import com.meetingninja.csse.database.volley.UserVolleyAdapter;
+import com.meetingninja.csse.extras.JsonUtils;
 
 public class ProfileFragment extends Fragment {
 
 	private static final String TAG = ProfileFragment.class.getSimpleName();
 
-	private ListView meetingList;
-	private List<Meeting> meetings = new ArrayList<Meeting>();
-	private MeetingItemAdapter adpt;
+	private TextView mTitleCompany, mName, mPhone, mEmail, mLocation;
+	private View pageView, informationView, emptyView;
+	private SmartImageView mUserImage;
 
 	private SessionManager session;
-	private TextView mTitleCompany, mName, mPhone, mEmail, mLocation;
-	private SmartImageView mUserImage;
 	private User displayedUser;
+	private int menu;
 
-	private RetUserObj infoFetcher = null;
-	private View pageView, informationView, emptyView;
-
-	// private GetProfBitmap bitmapFetcher = null;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -72,11 +65,13 @@ public class ProfileFragment extends Fragment {
 
 		Bundle extras = getArguments();
 		displayedUser = new User();
-		
+
 		if (extras != null && extras.containsKey(Keys.User.PARCEL)) {
+
 			displayedUser = (User) extras.getParcelable(Keys.User.PARCEL);
 			try {
-				System.out.println(ApplicationController.getInstance().getObjectMapper().writeValueAsString(displayedUser));
+				System.out.println(JsonUtils.getObjectMapper()
+						.writeValueAsString(displayedUser));
 			} catch (JsonProcessingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -85,31 +80,50 @@ public class ProfileFragment extends Fragment {
 			Log.v(TAG, "Displaying Current User");
 			displayedUser.setID(session.getUserID());
 		}
-
-		// Peter Pan URL
-		// mUserImage
-		// .setImageUrl("http://www.tdnforums.com/uploads/profile/photo-27119.jpg?_r=0");
-
-		// infoFetcher = new RetUserObj();
-		// infoFetcher.execute(session.getUserID());
-
+		if (extras != null && extras.containsKey("notMine")) {
+			menu = R.menu.menu_profile;
+		} else {
+			menu = R.menu.menu_view_profile;
+		}
+		setHasOptionsMenu(true);
 		fetchUserInfo(displayedUser.getID());
-
-		/*
-		 * meetingList = (ListView) pageView
-		 * .findViewById(R.id.profile_meetingList); adpt = new
-		 * MeetingItemAdapter(getActivity(), R.layout.list_item_meeting,
-		 * meetings); meetingList.setAdapter(adpt);
-		 * 
-		 * MeetingFetcherTask fetcher = new MeetingFetcherTask(this);
-		 * fetcher.execute(session.getUserID());
-		 */
 
 		return pageView;
 
 	}
 
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(this.menu, menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.edit_item_profile:
+			Intent i = new Intent(getActivity(), EditProfileActivity.class);
+			i.putExtra(Keys.User.PARCEL, displayedUser);
+			startActivityForResult(i, 7);
+			return true;
+		default:
+			return super.onContextItemSelected(item);
+		}
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode == Activity.RESULT_OK) {
+			if (requestCode == 7) {
+				displayedUser = data.getParcelableExtra(Keys.User.PARCEL);
+				setUser(displayedUser);
+			}
+		}
+	}
+
 	private void setupViews(View v) {
+		informationView = v.findViewById(R.id.profile_container);
+		emptyView = v.findViewById(android.R.id.empty);
+
 		mUserImage = (SmartImageView) v.findViewById(R.id.view_prof_pic);
 
 		mName = (TextView) v.findViewById(R.id.profile_name);
@@ -119,12 +133,11 @@ public class ProfileFragment extends Fragment {
 		mLocation.setVisibility(View.GONE);
 
 		mEmail = (TextView) v.findViewById(R.id.profile_email);
+		mEmail.setOnClickListener(new ContactListener());
 
 		mPhone = (TextView) v.findViewById(R.id.profile_phone);
 		v.findViewById(R.id.profile_phone_row).setVisibility(View.GONE);
-
-		informationView = v.findViewById(R.id.profile_container);
-		emptyView = v.findViewById(android.R.id.empty);
+		mPhone.setOnClickListener(new ContactListener());
 
 	}
 
@@ -144,33 +157,48 @@ public class ProfileFragment extends Fragment {
 			return;
 		}
 
-		String _url = UserDatabaseAdapter.getBaseUri().appendPath(userID)
-				.build().toString();
-
 		// Swap visibility while loading information
 		emptyView.setVisibility(View.VISIBLE);
 		informationView.setVisibility(View.GONE);
 
-		JsonNodeRequest req = new JsonNodeRequest(_url, null,
-				new Response.Listener<JsonNode>() {
-					@Override
-					public void onResponse(JsonNode response) {
-						VolleyLog.v("Response:%n %s", response);
-						User retUser = UserDatabaseAdapter.parseUser(response);
-						retUser.setID(userID);
-						ProfileFragment.this.setUser(retUser);
-					}
-				}, new Response.ErrorListener() {
-					@Override
-					public void onErrorResponse(VolleyError error) {
-						VolleyLog.e("Error: ", error.getMessage());
+		UserVolleyAdapter.fetchUserInfo(userID, new AsyncResponse<User>() {
+			@Override
+			public void processFinish(User result) {
+				if (ProfileFragment.this.isAdded())
+					ProfileFragment.this.setUser(result);
 
-					}
-				});
+			}
+		});
+	}
 
-		// add the request object to the queue to be executed
-		ApplicationController app = ApplicationController.getInstance();
-		app.addToRequestQueue(req, "JSON");
+	private class ContactListener implements OnClickListener {
+
+		@Override
+		public void onClick(View v) {
+			switch (v.getId()) {
+			case R.id.profile_email:
+				Intent emailIntent = new Intent(Intent.ACTION_SENDTO,
+						Uri.fromParts("mailto", mEmail.getText().toString(),
+								null));
+				startActivity(Intent
+						.createChooser(emailIntent, "Send email..."));
+				break;
+			case R.id.profile_phone:
+
+				Intent dialerIntent = new Intent(Intent.ACTION_DIAL);
+				dialerIntent.setData(Uri.parse("tel:"
+						+ mPhone.getText().toString()));
+				try {
+					startActivity(dialerIntent);
+				} catch (Exception e) {
+					System.out.println("it didn't work!");
+				}
+
+			default:
+				break;
+			}
+		}
+
 	}
 
 	private void setUser(User user) {
@@ -223,25 +251,6 @@ public class ProfileFragment extends Fragment {
 		// Swap visibility after loading information
 		emptyView.setVisibility(View.GONE);
 		informationView.setVisibility(View.VISIBLE);
-	}
-
-	final class RetUserObj implements AsyncResponse<User> {
-
-		private UserInfoFetcher infoFetcher;
-
-		public RetUserObj() {
-			infoFetcher = new UserInfoFetcher(this);
-		}
-
-		public void execute(String userID) {
-			infoFetcher.execute(userID);
-		}
-
-		@Override
-		public void processFinish(User result) {
-			if (isAdded())
-				setUser(result);
-		}
 	}
 
 }

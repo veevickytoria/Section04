@@ -20,6 +20,8 @@ public interface Keys {
 		public final String LOCATION = "location";
 		public final String CONTACTS = "contacts";
 		public final String SCHEDULE = "schedule";
+		public final String CONTACTID = "contactID";
+		public final String RELATIONID = "relationID";
 	}
 
 	public interface Note {
@@ -92,6 +94,9 @@ public interface Keys {
 		public final String LIST = "projects";
 		public final String ID = "projectID";
 		public final String TITLE = "projectTitle";
+		public final String MEETINGS = "meetings";
+		public final String NOTES = "notes";
+		public final String MEMBERS = "members";
 	}
 
 	public interface Group {

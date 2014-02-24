@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <string name="app_name">Meeting Ninja</string>
     <string name="hello_world">Hello world!</string>
@@ -11,6 +11,8 @@
     <string name="action_paste">Paste</string>
     <string name="action_refresh">Refresh</string>
     <string name="action_save">Save</string>
+    <string name="action_discard">Discard</string>
+    <string name="action_speak">Speak Now</string>
     <string name="save_label">Done</string>
     <string name="discard_label">Cancel</string>
     <string name="title_activity_meetings">New Meeting</string>
@@ -26,16 +28,21 @@
     <string name="drawer_open">Open Nav drawer</string>
     <string name="drawer_close">Close Nav drawer</string>
 
+    <!-- Text displayed when the recipientedittextview is not focused. Displays the total number of recipients since the field is shrunk to just display a portion -->
+    <string name="more_string">\u002B<xliff:g id="count">%1$s</xliff:g></string>
+    <string name="copy_email">Copy email address</string>
+    <string name="copy_number">Copy phone number</string>
+    <string name="done">Return</string>
+
     <!-- Nav Drawer Menu Items -->
     <string-array name="nav_drawer_items">
         <item>Meetings</item>
         <item>Notes</item>
         <item>Tasks</item>
         <item>My Profile</item>
-        <item>Contacts</item>
+        <item>My Groups</item>
         <item>My Projects</item>
-        <item>App Settings</item>
-        <item>About</item>
+        <item>Contacts</item>
         <item>Logout</item>
     </string-array>
 
@@ -48,6 +55,7 @@
         <item>@drawable/ic_action_person</item>
         <item>@drawable/ic_action_group</item>
         <item>@drawable/ic_action_projects</item>
+        <item>@drawable/ic_action_group</item>
         <item>@drawable/ic_action_settings</item>
         <item>@drawable/ic_action_about</item>
         <item>@drawable/ic_action_accounts</item>
@@ -56,13 +64,26 @@
     <string name="desc_drawer_icon">Nav Drawer Icon</string>
 
     <!-- Pase SDK Keys -->
-    <string name="parse_application_id">EMatFstc8b29syE3hcVBrNndCdwjRudulpFBUwdt</string>
-    <string name="parse_client_key">pmsPdsBrpUyQIQfYR8sFe5sNpeHnLKlz1rfLuaEP</string>
+    <!-- <string name="parse_application_id">EMatFstc8b29syE3hcVBrNndCdwjRudulpFBUwdt</string> -->
+    <!-- <string name="parse_client_key">pmsPdsBrpUyQIQfYR8sFe5sNpeHnLKlz1rfLuaEP</string> -->
+    <string name="parse_application_id">o4UYE8YSQMmLOcyTOv7pj2z9qYkNnUpKBaqezGWx</string>
+    <string name="parse_client_key">MfwhwCpIweZmhpQa2Z1yrrrm7y6zAH9elHPfazyB</string>
     <string name="title_activity_agenda">AgendaActivity</string>
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="title_activity_view_task">ViewTaskActivity</string>
     <string name="title_activity_edit_task">EditTaskActivity</string>
     <string name="title_activity_tasks">CreateTaskActivity</string>
     <string name="title_activity_view_note">ViewNoteActivity</string>
+    <string name="title_activity_edit_group">EditGroupActivity</string>
+    <string name="title_activity_groups">Groups</string>
+    <string name="title_activity_groups_fragment">GroupsFragment</string>
+    <string name="title_activity_swipe_list__test">SwipeList_TestActivity</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_view_group">ViewGroupActivity</string>
+    <string name="title_activity_edit_profile">EditProfileActivity</string>
+    <string name="title_activity_profile__fragment">Profile_Fragment</string>
+    <string name="title_activity_project_fragment">ProjectFragment</string>
+    <string name="title_activity_view_project">ViewProjectActivity</string>
+    <string name="title_activity_project_custom_dialog">ProjectCustomDialog</string>
 
 </resources>

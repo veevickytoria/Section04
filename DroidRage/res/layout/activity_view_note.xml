@@ -50,7 +50,6 @@
                 android:layout_marginTop="8dp"
                 android:text="Edited"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
-
         </RelativeLayout>
     </LinearLayout>
 

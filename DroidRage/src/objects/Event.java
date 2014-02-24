@@ -1,10 +1,8 @@
 package objects;
 
-import java.text.ParseException;
-
 import org.joda.time.DateTime;
 
-import android.util.Log;
+import android.text.TextUtils;
 
 import com.meetingninja.csse.extras.MyDateUtils;
 
@@ -28,7 +26,7 @@ public abstract class Event implements Comparable<Event> {
 	}
 
 	public String getTitle() {
-		return (title != null && !title.isEmpty()) ? title : "";
+		return (!TextUtils.isEmpty(title)) ? title : "";
 	}
 
 	public void setTitle(String title) {
@@ -36,12 +34,12 @@ public abstract class Event implements Comparable<Event> {
 	}
 
 	public String getStartTime() {
-		return (startTime != null && !startTime.isEmpty()) ? startTime
+		return (!TextUtils.isEmpty(startTime)) ? startTime
 				: MyDateUtils.JODA_SERVER_DATE_FORMAT.print(new DateTime(0L));
 	}
 
-	public long getStartTime_Time() throws ParseException {
-		return MyDateUtils.JODA_SERVER_DATE_FORMAT.parseMillis(startTime);
+	public long getStartTimeInMillis() {
+		return (!TextUtils.isEmpty(startTime)) ? Long.parseLong(startTime) : 0L;
 	}
 
 	public void setStartTime(String datetimeStart) {
@@ -49,16 +47,16 @@ public abstract class Event implements Comparable<Event> {
 	}
 
 	public void setStartTime(long msStartTime) {
-		this.startTime = MyDateUtils.JODA_SERVER_DATE_FORMAT.print(msStartTime);
+		this.startTime = Long.toString(msStartTime);
 	}
 
 	public String getEndTime() {
-		return (endTime != null && !endTime.isEmpty()) ? endTime
+		return (!TextUtils.isEmpty(endTime)) ? endTime
 				: MyDateUtils.JODA_SERVER_DATE_FORMAT.print(new DateTime(1L));
 	}
 
-	public long getEndTime_Time() throws ParseException {
-		return MyDateUtils.JODA_SERVER_DATE_FORMAT.parseMillis(endTime);
+	public long getEndTimeInMillis() {
+		return (!TextUtils.isEmpty(endTime)) ? Long.parseLong(endTime) : 0L;
 	}
 
 	public void setEndTime(String datetimeEnd) {
@@ -66,12 +64,11 @@ public abstract class Event implements Comparable<Event> {
 	}
 
 	public void setEndTime(long msEndTime) {
-		this.endTime = MyDateUtils.JODA_SERVER_DATE_FORMAT.print(msEndTime);
+		this.endTime = Long.toString(msEndTime);
 	}
 
 	public String getDescription() {
-		return (description != null && !description.isEmpty()) ? description
-				: "";
+		return (!TextUtils.isEmpty(description)) ? description : "";
 	}
 
 	public void setDescription(String description) {
@@ -80,14 +77,10 @@ public abstract class Event implements Comparable<Event> {
 
 	@Override
 	public int compareTo(Event another) {
-		if (another == null)
+		if (another == null) {
 			return 1;
-		try {
-			return Long.valueOf(getStartTime_Time()).compareTo(
-					Long.valueOf(another.getStartTime_Time()));
-		} catch (ParseException e) {
-			Log.e("Meeting compareTo ", e.getLocalizedMessage());
 		}
-		return 1;
+		return Long.valueOf(getStartTime()).compareTo(
+				Long.valueOf(another.getStartTime()));
 	}
 }

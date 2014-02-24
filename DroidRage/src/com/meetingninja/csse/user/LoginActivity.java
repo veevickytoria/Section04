@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (C) 2014 The Android Open Source Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,8 +38,13 @@ import android.widget.Toast;
 
 import com.meetingninja.csse.MainActivity;
 import com.meetingninja.csse.R;
+import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
 import com.meetingninja.csse.extras.Utilities;
+import com.parse.LogInCallback;
+import com.parse.ParseException;
+import com.parse.ParseInstallation;
+import com.parse.ParseUser;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
@@ -74,11 +79,12 @@ public class LoginActivity extends Activity {
 		// Set up the login form.
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			boolean registerSucces = extras
-					.getBoolean("registerSuccess", false);
-			if (registerSucces)
+			boolean registerSuccess = extras.getBoolean("registerSuccess",
+					false);
+			if (registerSuccess) {
 				Toast.makeText(LoginActivity.this, "Registration Successful",
 						Toast.LENGTH_SHORT).show();
+			}
 			mEmail = extras.getString(Intent.EXTRA_EMAIL);
 			mEmailView.setText(mEmail);
 		}
@@ -156,8 +162,8 @@ public class LoginActivity extends Activity {
 		mPasswordView.setError(null);
 
 		// Store values at the time of the login attempt.
-		mEmail = mEmailView.getText().toString();
-		mPassword = mPasswordView.getText().toString();
+		mEmail = mEmailView.getText().toString().trim();
+		mPassword = mPasswordView.getText().toString().trim();
 
 		boolean cancel = false;
 		View focusView = null;
@@ -191,7 +197,7 @@ public class LoginActivity extends Activity {
 		 * Intent(mLoginFormView.getContext(), MainActivity.class);
 		 * main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		 * main.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-		 * 
+		 *
 		 * startActivityForResult(main, 0);
 		 * overridePendingTransition(anim.fade_in, anim.fade_out);
 		 */
@@ -268,6 +274,8 @@ public class LoginActivity extends Activity {
 	 * the user.
 	 */
 	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+		private User logged;
+
 		@Override
 		protected Boolean doInBackground(Void... params) {
 			String login_result = "";
@@ -275,21 +283,17 @@ public class LoginActivity extends Activity {
 			try {
 				login_result = UserDatabaseAdapter.login(mEmail, mPassword);
 				if (login_result.contains("invalid")) {
-					Log.e(TAG, mEmail + " does not exist");
+					Log.e(TAG, "Invalid email or password");
 					return false;
 				} else {
 					SessionManager session = SessionManager.getInstance();
 					session.clear();
 					session.createLoginSession(login_result);
-					User loggedIn = UserDatabaseAdapter
-							.getUserInfo(login_result);
-					session.createLoginSession(loggedIn);
+					logged = UserDatabaseAdapter.getUserInfo(login_result);
+					session.createLoginSession(logged);
 				}
 				Thread.sleep(2000);
-			} catch (IOException e) {
-				Log.e(TAG + " Error", e.getLocalizedMessage());
-				return false;
-			} catch (InterruptedException e) {
+			} catch (Exception e) {
 				Log.e(TAG + " Error", e.getLocalizedMessage());
 				return false;
 			}
@@ -305,10 +309,20 @@ public class LoginActivity extends Activity {
 
 			// if successful login, start main activity
 			if (success) {
-				Intent main = new Intent(LoginActivity.this, MainActivity.class);
-				// main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				// main.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+				// get ParseUser
+				ParseUser.logInInBackground(logged.getDisplayName(), mPassword,
+						new LogInCallback() {
+							@Override
+							public void done(ParseUser user, ParseException e) {
+								if (user != null) {
+									// Hooray! The user is logged in.
+								} else {
+									Log.e(TAG, e.getLocalizedMessage());
+								}
 
+							}
+						});
+				Intent main = new Intent(LoginActivity.this, MainActivity.class);
 				startActivity(main);
 				overridePendingTransition(anim.fade_in, anim.fade_out);
 			} else {

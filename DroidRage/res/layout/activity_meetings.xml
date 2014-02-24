@@ -28,6 +28,7 @@
                     android:ems="10"
                     android:enabled="true"
                     android:hint="Event Name" >
+
                     <requestFocus />
                 </EditText>
 
@@ -136,7 +137,6 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:minHeight="32dp" />
-
                     </LinearLayout>
                 </LinearLayout>
 
@@ -230,7 +230,6 @@
                     android:layout_marginTop="@dimen/vertical_spacer"
                     android:hint="Description"
                     android:inputType="textAutoComplete" >
-
                 </EditText>
 
                 <LinearLayout

@@ -23,8 +23,7 @@ import android.widget.Toast;
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.AsyncResponse;
 
-public class CreateTasksActivity extends FragmentActivity implements
-		AsyncResponse<Boolean> {
+public class CreateTasksActivity extends FragmentActivity implements AsyncResponse<Boolean> {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +34,7 @@ public class CreateTasksActivity extends FragmentActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.create_tasks, menu);
+		getMenuInflater().inflate(R.menu.menu_create_tasks, menu);
 		return true;
 	}
 
@@ -44,8 +43,7 @@ public class CreateTasksActivity extends FragmentActivity implements
 		if (result) {
 			finish();
 		} else {
-			Toast.makeText(this, "Failed to save task", Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(this, "Failed to save task", Toast.LENGTH_SHORT).show();
 		}
 	}
 

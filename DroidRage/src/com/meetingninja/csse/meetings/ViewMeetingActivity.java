@@ -32,7 +32,8 @@ public class ViewMeetingActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.view_meeting, menu);
+		getMenuInflater().inflate(R.menu.menu_view_meeting, menu);
+		System.out.println("makes it here?");
 		return true;
 	}
 

@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (C) 2014 The Android Open Source Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,15 +15,23 @@
  ******************************************************************************/
 package com.meetingninja.csse.notes;
 
+import java.io.IOException;
+
 import objects.Note;
 
 import org.joda.time.DateTime;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -32,11 +40,14 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import com.meetingninja.csse.R;
+import com.meetingninja.csse.SessionManager;
+import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
+import com.meetingninja.csse.database.NotesDatabaseAdapter;
 import com.meetingninja.csse.database.local.SQLiteNoteAdapter;
 import com.meetingninja.csse.extras.MyDateUtils;
 
-public class EditNoteActivity extends Activity {
+public class EditNoteActivity extends Activity implements AsyncResponse<String> {
 
 	private static final String TAG = EditNoteActivity.class.getSimpleName();
 
@@ -46,6 +57,9 @@ public class EditNoteActivity extends Activity {
 	private SQLiteNoteAdapter mySQLiteAdapter;
 	private Note displayedNote;
 	private int listPosition;
+	private boolean isCreationMode = false;
+	private CreateNoteTask createNoteTask;
+	private UpdateNoteTask updateNoteTask;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +73,15 @@ public class EditNoteActivity extends Activity {
 		mNoteTitle = (EditText) findViewById(R.id.noteTitleEditor);
 
 		extras = getIntent().getExtras();
-		if (extras != null) {
+		if (extras.getBoolean(Note.CREATE_NOTE, false)) {
+			displayedNote = new Note();
+			isCreationMode = true;
+			displayedNote.setCreatedBy(SessionManager.getInstance().getUserID());
+		} else if (extras != null) {
 			listPosition = extras.getInt("listPosition", -1);
 			displayedNote = (Note) extras.getParcelable(Keys.Note.PARCEL);
+			mNoteTitle.setText(displayedNote.getTitle());
+			mTextEditor.setText(displayedNote.getContent());
 		} else {
 			displayedNote = new Note();
 		}
@@ -89,7 +109,7 @@ public class EditNoteActivity extends Activity {
 			save();
 			break;
 		case R.id.action_cancel:
-			cancel();
+			discard();
 			break;
 		}
 
@@ -106,28 +126,54 @@ public class EditNoteActivity extends Activity {
 		String title = mNoteTitle.getText().toString().trim();
 		String content = mTextEditor.getText().toString().trim();
 		DateTime now = DateTime.now();
-		
+
 		displayedNote.setTitle(title);
 		displayedNote.setContent(content);
-		displayedNote.setDateCreated(MyDateUtils.JODA_SERVER_DATE_FORMAT.print(now));
-		
-		Intent intentMessage = new Intent();
+		displayedNote.setDateCreated(MyDateUtils.JODA_SERVER_DATE_FORMAT
+				.print(now));
 
-		intentMessage.putExtra("listPosition", listPosition);
-		intentMessage.putExtra(Keys.Note.PARCEL, displayedNote);
+		Intent backToNotes = new Intent();
 
-		if (!(displayedNote.getID() == null || displayedNote.getID().isEmpty()))
-			mySQLiteAdapter.updateNote(displayedNote);
+		if (isCreationMode) {
+			createNoteTask = new CreateNoteTask(this);
+			createNoteTask.execute(displayedNote);
+		}
 
-		setResult(RESULT_OK, intentMessage);
+		else {
+			updateNoteTask = new UpdateNoteTask(this);
+			updateNoteTask.execute(displayedNote);
+		}
+
+		backToNotes.putExtra("listPosition", listPosition);
+		backToNotes.putExtra(Keys.Note.PARCEL, displayedNote);
+
+		setResult(RESULT_OK, backToNotes);
 		finish();
 	}
 
-	public void cancel() {
-		Intent intentMessage = new Intent();
-
-		setResult(RESULT_CANCELED, intentMessage);
-		finish();
+	public void discard() {
+		// Check if modifications have been made
+		if (TextUtils.equals(displayedNote.getTitle(),
+				this.mNoteTitle.getText())
+				&& TextUtils.equals(displayedNote.getContent(),
+						this.mTextEditor.getText())) {
+			Intent intentMessage = new Intent();
+			setResult(RESULT_CANCELED, intentMessage);
+			finish();
+		} else {
+			new AlertDialog.Builder(this)
+					.setMessage("Are you sure you want to discard changes?")
+					.setCancelable(true)
+					.setPositiveButton("Yes",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int id) {
+									Intent intentMessage = new Intent();
+									setResult(RESULT_CANCELED, intentMessage);
+									finish();
+								}
+							}).setNegativeButton("No", null).show();
+		}
 	}
 
 	private final View.OnClickListener mActionBarListener = new OnClickListener() {
@@ -173,20 +219,104 @@ public class EditNoteActivity extends Activity {
 	}
 
 	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.menu_edit_note, menu);
+
+		return true;
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			// This ID represents the Home or Up button. In the case of this
-			// activity, the Up button is shown. Use NavUtils to allow users
-			// to navigate up one level in the application structure. For
-			// more details, see the Navigation pattern on Android Design:
-			//
-			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
-			//
 			save();
+			return true;
+
+		case R.id.edit_note_action_save:
+			save();
+			return true;
+
+		case R.id.edit_note_action_discard:
+			discard();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	
+	private class CreateNoteTask extends AsyncTask<Note, Void, String> {
+
+		private AsyncResponse<String> delegate;
+
+		public CreateNoteTask(AsyncResponse<String> del) {
+			this.delegate = del;
+		}
+
+		@Override
+		protected String doInBackground(Note... params) {
+			try {
+				Note n = (Note) params[0];
+				
+				return NotesDatabaseAdapter.createNote(n);
+			} catch (IOException e) {
+				Log.e("DB Adapter", "Error: CreateNote failed");
+				Log.e("CreateNoteIO", e.toString());
+			} catch (Exception e) {
+				Log.e("CreateNoteE", e.toString());
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			super.onPostExecute(result);
+			delegate.processFinish(result);
+		}
+	}
+	
+	private class UpdateNoteTask extends AsyncTask<Note, Void, String> {
+
+		private AsyncResponse<String> delegate;
+
+		public UpdateNoteTask(AsyncResponse<String> del) {
+			this.delegate = del;
+		}
+
+		@Override
+		protected String doInBackground(Note... params) {
+			try {
+				Note n = (Note) params[0];
+				
+				NotesDatabaseAdapter.updateNote(n);
+				return n.getID();
+			} catch (Exception e) {
+				Log.e("update_ERR", e.toString());
+			}
+			return "-1";
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			super.onPostExecute(result);
+			delegate.processFinish(result);
+		}
+	}
+
+	@Override
+	public void processFinish(String result) {
+		Intent backToNotes = new Intent();
+
+		backToNotes.putExtra("listPosition", listPosition);
+		backToNotes.putExtra(Keys.Note.PARCEL, displayedNote);
+		
+		if(result != null){
+			setResult(RESULT_OK, backToNotes);
+		} else {
+			setResult(RESULT_CANCELED, backToNotes);
+		}
+		
+		finish();
 	}
 
 }

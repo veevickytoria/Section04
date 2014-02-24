@@ -15,7 +15,6 @@
  ******************************************************************************/
 package com.meetingninja.csse.database.local;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +23,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.meetingninja.csse.database.Keys;
 
@@ -68,49 +66,38 @@ public class SQLiteMeetingAdapter extends SQLiteHelper {
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(KEY_TITLE, m.getTitle());
 		contentValues.put(KEY_LOCATION, m.getLocation());
-		try {
-			contentValues.put(KEY_START_TIME, m.getStartTime_Time());
-		} catch (ParseException e) {
-			Log.e(TAG, e.getLocalizedMessage());
-			return null;
-		}
-		try {
-			contentValues.put(KEY_END_TIME, m.getEndTime_Time());
-		} catch (ParseException e) {
-			Log.e(TAG, e.getLocalizedMessage());
-			return null;
-		}
+		contentValues.put(KEY_START_TIME, m.getStartTime());
+		contentValues.put(KEY_END_TIME, m.getEndTime());
 		contentValues.put(KEY_DESCRIPTION, m.getDescription());
 
 		long insertID = mDb.insert(TABLE_NAME, null, contentValues);
 		Cursor c = this.query(new String[] { KEY_ID, KEY_TITLE, KEY_LOCATION,
-				KEY_START_TIME, KEY_END_TIME, KEY_DESCRIPTION }, KEY_ID + "=" + insertID,
-				null, null, null, null);
+				KEY_START_TIME, KEY_END_TIME, KEY_DESCRIPTION }, KEY_ID + "="
+				+ insertID, null, null, null, null);
 		c.moveToFirst();
-		Meeting newMeeting = new MeetingCursor(c).getModel();
+		Meeting newMeeting = new Meeting(c);
 		c.close();
 		close();
 		return newMeeting;
 	}
 
 	public List<Meeting> getAllMeetings() {
-		List<Meeting> meetings = new ArrayList<Meeting>();
-		String[] columns = new String[] { KEY_ID, KEY_TITLE, KEY_LOCATION, KEY_START_TIME,
-				KEY_END_TIME, KEY_DESCRIPTION };
+		List<Meeting> meetingList = new ArrayList<Meeting>();
+		String[] columns = new String[] { KEY_ID, KEY_TITLE, KEY_LOCATION,
+				KEY_START_TIME, KEY_END_TIME, KEY_DESCRIPTION };
 		Cursor c = this.query(columns, null, null, null, null, null);
 		Meeting meeting = null;
 		// looping through all rows and adding to list
 		if (c.moveToFirst()) {
 			do {
-				if ((meeting = new MeetingCursor(c).getModel()) != null) {
-					meetings.add(meeting);
-					Log.d(TAG + " getAll", meeting.toString());
+				if ((meeting = new Meeting(c)) != null) {
+					meetingList.add(meeting);
 				}
 			} while (c.moveToNext());
 		}
 		c.close();
 		close();
-		return meetings;
+		return meetingList;
 	}
 
 	/**
@@ -142,67 +129,22 @@ public class SQLiteMeetingAdapter extends SQLiteHelper {
 		ContentValues data = new ContentValues();
 		data.put(KEY_TITLE, meeting.getTitle());
 		data.put(KEY_LOCATION, meeting.getLocation());
-		try {
-			data.put(KEY_START_TIME, meeting.getStartTime_Time());
-		} catch (ParseException e) {
-			Log.e(TAG, e.getLocalizedMessage());
-			return;
-		}
-		try {
-			data.put(KEY_END_TIME, meeting.getEndTime_Time());
-		} catch (ParseException e) {
-			Log.e(TAG, e.getLocalizedMessage());
-			return;
-		}
+		data.put(KEY_START_TIME, meeting.getStartTime());
+		data.put(KEY_END_TIME, meeting.getEndTime());
 		data.put(KEY_DESCRIPTION, meeting.getDescription());
 
 		mDb.update(TABLE_NAME, data, KEY_ID + "=" + meeting.getID(), null);
 		close();
 	}
 
-	/**
-	 * Delete meeting based off of the id provided
-	 * 
-	 * @param id
-	 */
-	public int deleteMeeting(long id) {
-		mDb = mDbHelper.getWritableDatabase();
-		int numRowsAffected = mDb.delete(TABLE_NAME, KEY_ID + "=" + id, null);
-		close();
-		return numRowsAffected;
-	}
-
 	public int deleteMeeting(Meeting meeting) {
+		mDb = mDbHelper.getWritableDatabase();
 		int numRowsAffected = 0;
 		if (meeting != null)
-			numRowsAffected = deleteMeeting(Long.parseLong(meeting.getID()));
+			numRowsAffected = mDb.delete(TABLE_NAME,
+					KEY_ID + "=" + meeting.getID(), null);
+		close();
 		return numRowsAffected;
-	}
-
-	private class MeetingCursor extends ModelCursor<Meeting> {
-
-		public MeetingCursor(Cursor c) {
-			super(c);
-			this.model = new Meeting();
-		}
-
-		@Override
-		public Meeting getModel() {
-			int idxID = crsr.getColumnIndexOrThrow(KEY_ID);
-			int idxTITLE = crsr.getColumnIndexOrThrow(KEY_TITLE);
-			int idxLOCATION = crsr.getColumnIndexOrThrow(KEY_LOCATION);
-			int idxSTART_TIME = crsr.getColumnIndexOrThrow(KEY_START_TIME);
-			int idxEND_TIME = crsr.getColumnIndexOrThrow(KEY_END_TIME);
-			int idxDESCRIPTION = crsr.getColumnIndexOrThrow(KEY_DESCRIPTION);
-			model.setID(crsr.getInt(idxID));
-			model.setTitle(crsr.getString(idxTITLE));
-			model.setLocation(crsr.getString(idxLOCATION));
-			model.setStartTime(crsr.getLong(idxSTART_TIME));
-			model.setEndTime(crsr.getLong(idxEND_TIME));
-			model.setDescription(crsr.getString(idxDESCRIPTION));
-			return model;
-		}
-
 	}
 
 }

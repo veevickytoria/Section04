@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (C) 2014 The Android Open Source Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,6 +26,8 @@ import java.util.Map;
 
 import objects.Meeting;
 import android.net.Uri;
+import android.text.TextUtils;
+import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -61,16 +63,15 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 		String response = getServerResponse(conn);
 		JsonNode meetingNode = MAPPER.readTree(response);
 
-		return parseMeeting(meetingNode, meetingID);
+		Meeting ret = parseMeeting(meetingNode);
+		ret.setID(meetingID);
+		return ret;
 	}
-
-	
 
 	public static Meeting createMeeting(String userID, Meeting m)
 			throws IOException, MalformedURLException {
 		// Server URL setup
-		String _url = getBaseUri().appendPath(userID)
-				.build().toString();
+		String _url = getBaseUri().appendPath(userID).build().toString();
 
 		// establish connection
 		URL url = new URL(_url);
@@ -116,49 +117,44 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 		String response = getServerResponse(conn);
 
 		// prepare to get the id of the created Meeting
-		Map<String, String> responseMap = new HashMap<String, String>();
+		JsonNode responseMap;
 		m.setID(404);
 		Meeting created = new Meeting(m);
-
 		/*
 		 * result should get valid={"meetingID":"##"}
 		 */
-		String result = new String();
+//		String result = new String();
 		if (!response.isEmpty()) {
-			responseMap = MAPPER.readValue(response,
-					new TypeReference<HashMap<String, String>>() {
-					});
-			if (!responseMap.containsKey(Keys.Meeting.ID)) {
-				result = "invalid";
-			} else
-				result = responseMap.get(Keys.Meeting.ID);
+			responseMap = MAPPER.readTree(response);
+			if (responseMap.has(Keys.Meeting.ID)) 
+				created.setID(responseMap.get(Keys.Meeting.ID).asText());
 		}
 
-		if (!result.equalsIgnoreCase("invalid"))
-			created.setID(result);
+//		if (!result.equalsIgnoreCase("invalid"))
+//			created.setID(result);
 
 		conn.disconnect();
 		return created;
 	}
 
-	public static Meeting parseMeeting(JsonNode node, String meetingID) {
+	public static Meeting parseMeeting(JsonNode node) {
+		logPrint(node.toString());
 		Meeting m = new Meeting();
-		if (meetingID != null) {
-			m.setID(meetingID);
-			// if (m.getID().isEmpty())
-			// m.setID(node.get(KEY_ID).asText());
-			m.setTitle(node.get(Keys.Meeting.TITLE).asText());
-			m.setLocation(node.get(Keys.Meeting.LOCATION).asText());
-			m.setStartTime(node.get(Keys.Meeting.DATETIME).asText());
-			m.setEndTime(node.get("endDatetime").asText());
-			m.setDescription(node.get(Keys.Meeting.DESC).asText());
-//			JsonNode attendance = node.get(KEY_ATTEND);
-//			if (attendance.isArray()) {
-//				for (final JsonNode attendeeNode : attendance) {
-//					m.addAttendee(attendeeNode.get("userID").asText());
-//				}
-//			}
-		}
+		// if (m.getID().isEmpty())
+		// m.setID(node.get(KEY_ID).asText());
+		m.setTitle(node.get(Keys.Meeting.TITLE).asText());
+		m.setLocation(node.get(Keys.Meeting.LOCATION).asText());
+		m.setStartTime(node.get(Keys.Meeting.DATETIME).asText());
+		m.setEndTime(node.get("endDatetime").asText());
+		m.setDescription(node.get(Keys.Meeting.DESC).asText());
+		JsonNode attendance = node.get(Keys.Meeting.ATTEND);
+		if (attendance != null && attendance.isArray()) {
+			for (final JsonNode attendeeNode : attendance) {
+				String _id = attendeeNode.get("userID").asText();
+				m.addAttendee(_id);
+			}
+		} else
+			Log.e(TAG, "Error: Unable to parse meeting attendance");
 
 		return m;
 	}

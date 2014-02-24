@@ -99,7 +99,8 @@ public class DayPickerView extends ListView implements OnScrollListener,
 		mHandler = new Handler();
 		mController = controller;
 		mController.registerOnDateChangedListener(this);
-		setLayoutParams(new LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+		setLayoutParams(new LayoutParams(
+				android.view.ViewGroup.LayoutParams.MATCH_PARENT,
 				android.view.ViewGroup.LayoutParams.MATCH_PARENT));
 		setDrawSelectorOnTop(false);
 		init(context);

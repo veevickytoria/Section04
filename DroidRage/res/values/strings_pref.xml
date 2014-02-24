@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="pref_sync_summ">Sync Summary</string>
     <string name="pref_sync">Sync Preferred</string>
     <string name="pref_syncConnectionTypes_default">Automatically</string>
     <string name="pref_syncConnectionType">Connection Type</string>
-    
-    
+
     <string-array name="pref_syncConnectionTypes_entries">
         <item>Automatically</item>
         <item>Hourly</item>
@@ -13,6 +13,5 @@
         <item>Every 3 Hours</item>
         <item>Manually</item>
     </string-array>
-    
-    
+
 </resources>

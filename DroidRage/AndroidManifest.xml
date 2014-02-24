@@ -4,16 +4,17 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
@@ -21,10 +22,17 @@
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.READ_SYNC_STATS" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <uses-sdk
-        android:minSdkVersion="16"
+        android:minSdkVersion="17"
         android:targetSdkVersion="19" />
+
+    <permission
+        android:name="com.meetingninja.csse.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.meetingninja.csse.permission.C2D_MESSAGE" />
 
     <application
         android:name="com.meetingninja.csse.ApplicationController"
@@ -35,6 +43,7 @@
         <activity
             android:name="com.meetingninja.csse.MainActivity"
             android:label="@string/app_name"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan|adjustResize" >
             <intent-filter android:label="@string/app_name" >
                 <action android:name="android.intent.action.MAIN" />
@@ -45,13 +54,11 @@
         <activity
             android:name="com.meetingninja.csse.user.LoginActivity"
             android:label="@string/title_activity_login"
-            android:noHistory="true"
             android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
         <activity
             android:name="com.meetingninja.csse.user.RegisterActivity"
             android:label="@string/title_activity_register"
-            android:noHistory="true"
             android:parentActivityName="com.meetingninja.csse.user.LoginActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -107,6 +114,18 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.meetingninja.csse.MainActivity" />
         </activity>
+        <activity
+            android:name="com.meetingninja.csse.agenda.AgendaActivity"
+            android:configChanges="keyboardHidden"
+            android:label="@string/title_activity_agenda"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.meetingninja.csse.agenda.ReviewAgendaActivity"
+            android:configChanges="keyboardHidden"
+            android:label="@string/title_activity_agenda"
+            android:screenOrientation="portrait" >
+        </activity>
 
         <service android:name="com.parse.PushService" />
 
@@ -116,13 +135,16 @@
                 <action android:name="android.intent.action.USER_PRESENT" />
             </intent-filter>
         </receiver>
+        <receiver
+            android:name="com.parse.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
 
-        <activity
-            android:name="com.meetingninja.csse.agenda.AgendaActivity"
-            android:configChanges="keyboardHidden"
-            android:label="@string/title_activity_agenda"
-            android:screenOrientation="portrait" >
-        </activity>
+                <category android:name="com.meetingninja.csse" />
+            </intent-filter>
+        </receiver>
 
         <provider
             android:name="com.meetingninja.csse.sync.provider.StubContentProvider"
@@ -147,13 +169,48 @@
         <activity
             android:name="com.meetingninja.csse.user.ProfileActivity"
             android:parentActivityName="com.meetingninja.csse.MainActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.DIAL" />
+            </intent-filter>
+
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.meetingninja.csse.MainActivity" />
         </activity>
         <activity android:name="com.meetingninja.csse.tasks.ViewTaskActivity" >
         </activity>
-        <activity android:name="com.meetingninja.csse.tasks.EditTaskActivity" >
+        <activity
+            android:name="com.meetingninja.csse.tasks.EditTaskActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/title_activity_edit_task" >
+        </activity>
+        <activity
+            android:name="com.meetingninja.csse.group.EditGroupActivity"
+            android:label="@string/title_activity_edit_group" >
+        </activity>
+        <activity
+            android:name="com.meetingninja.csse.group.ViewGroupActivity"
+            android:label="@string/title_activity_view_group" >
+        </activity>
+        <activity
+            android:name="com.meetingninja.csse.user.EditProfileActivity"
+            android:label="@string/title_activity_edit_profile" >
+        </activity>
+        <activity
+            android:name="com.meetingninja.csse.projects.Profile_Fragment"
+            android:label="@string/title_activity_profile__fragment" >
+        </activity>
+        <activity
+            android:name="com.meetingninja.csse.projects.ProjectFragment"
+            android:label="@string/title_activity_project_fragment" >
+        </activity>
+        <activity
+            android:name="com.meetingninja.csse.projects.ViewProjectActivity"
+            android:label="@string/title_activity_view_project" >
+        </activity>
+        <activity
+            android:name="com.meetingninja.csse.projects.ProjectCustomDialog"
+            android:label="@string/title_activity_project_custom_dialog" >
         </activity>
     </application>
 

@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (C) 2014 The Android Open Source Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,14 +16,14 @@
 package com.meetingninja.csse;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.Volley;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import com.meetingninja.csse.database.local.SQLiteNoteAdapter;
+import com.meetingninja.csse.database.local.SQLiteUserAdapter;
 import com.parse.Parse;
 import com.parse.ParseInstallation;
 import com.parse.PushService;
@@ -47,12 +47,7 @@ public class ApplicationController extends Application {
 	 * places
 	 */
 	private static ApplicationController sInstance;
-	
-	/**
-	 * A singleton instance of an objectmapper for JSON serialization
-	 */
-	private ObjectMapper mObjMapper;
-	
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -68,6 +63,7 @@ public class ApplicationController extends Application {
 		PushService.setDefaultPushCallback(this, MainActivity.class);
 
 		// Save the current installation.
+		Log.d(TAG, "Saving Parse Installation");
 		ParseInstallation.getCurrentInstallation().saveInBackground();
 	}
 
@@ -76,6 +72,28 @@ public class ApplicationController extends Application {
 	 */
 	public static synchronized ApplicationController getInstance() {
 		return sInstance;
+	}
+
+	/**
+	 * Load All Users into the SQLiteDatabase
+	 */
+	public void loadUsers() {
+		SQLiteUserAdapter sqlite = new SQLiteUserAdapter(
+				getApplicationContext());
+		sqlite.clear();
+		sqlite.cacheUsers();
+		sqlite.close();
+	}
+
+	/**
+	 * Load All Notes into the SQLiteDatabase
+	 */
+	public void loadNotes() {
+		SQLiteNoteAdapter sqlite = new SQLiteNoteAdapter(
+				getApplicationContext());
+		// sqlite.cacheNotes(false);
+		// sqlite.cacheNotes(true);
+		sqlite.close();
 	}
 
 	/**
@@ -90,24 +108,11 @@ public class ApplicationController extends Application {
 
 		return mRequestQueue;
 	}
-	
-	/**
-	 * @return The ObjectMapper, mapper will be created if it is null
-	 */
-	public ObjectMapper getObjectMapper() {
-		if (mObjMapper == null) {
-			mObjMapper = new ObjectMapper();
-			mObjMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			mObjMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
-		}
-
-		return mObjMapper;
-	}
 
 	/**
 	 * Adds the specified request to the global queue, if tag is specified then
 	 * it is used else Default TAG is used.
-	 * 
+	 *
 	 * @param req
 	 * @param tag
 	 */
@@ -122,7 +127,7 @@ public class ApplicationController extends Application {
 
 	/**
 	 * Adds the specified request to the global queue using the Default TAG.
-	 * 
+	 *
 	 * @param req
 	 * @param tag
 	 */
@@ -136,12 +141,13 @@ public class ApplicationController extends Application {
 	/**
 	 * Cancels all pending requests by the specified TAG, it is important to
 	 * specify a TAG so that the pending/ongoing requests can be cancelled.
-	 * 
+	 *
 	 * @param tag
 	 */
-	public void cancelPendingRequests(Object tag) {
+	public void cancelPendingRequests(String tag) {
 		if (mRequestQueue != null) {
 			mRequestQueue.cancelAll(tag);
 		}
 	}
+
 }

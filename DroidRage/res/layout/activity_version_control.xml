@@ -8,10 +8,10 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".VersionControlActivity" >
 
-     <ListView
+    <ListView
         android:id="@+id/versionControlList"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
     </ListView>
-    
+
 </RelativeLayout>

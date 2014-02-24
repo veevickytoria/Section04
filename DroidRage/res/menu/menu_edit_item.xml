@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/edit_item_task"
+        android:icon="@drawable/ic_action_notes"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom"
+        android:title="Edit">
+    </item>
+    <item
+        android:id="@+id/delete_item_task"
+        android:icon="@drawable/ic_action_discard_light"
+        android:orderInCategory="200"
+        android:showAsAction="ifRoom"
+        android:title="Delete">
+    </item>
+
+</menu>

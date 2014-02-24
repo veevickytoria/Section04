@@ -20,9 +20,8 @@ import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import android.annotation.SuppressLint;
-import android.app.ActionBar.LayoutParams;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -46,7 +45,6 @@ import com.nineoldandroids.animation.ObjectAnimator;
 /**
  * Dialog to set a time.
  */
-@SuppressLint("ValidFragment")
 public class RadialTimePickerDialog extends DialogFragment implements
 		OnValueSelectedListener {
 
@@ -71,6 +69,7 @@ public class RadialTimePickerDialog extends DialogFragment implements
 	// Delay before starting the pulse animation, in ms.
 	private static final int PULSE_ANIMATOR_DELAY = 300;
 
+	private OnDialogDismissListener mDimissCallback;
 	private OnTimeSetListener mCallback;
 
 	private TextView mDoneButton;
@@ -86,6 +85,7 @@ public class RadialTimePickerDialog extends DialogFragment implements
 	private int mBlack;
 	private String mAmText;
 	private String mPmText;
+	private String mDoneText;
 
 	private boolean mAllowAutoAdvance;
 	private int mInitialHourOfDay;
@@ -125,6 +125,11 @@ public class RadialTimePickerDialog extends DialogFragment implements
 		void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute);
 	}
 
+	public static interface OnDialogDismissListener {
+
+		public abstract void onDialogDismiss(DialogInterface dialoginterface);
+	}
+
 	public RadialTimePickerDialog() {
 		// Empty constructor required for dialog fragment.
 	}
@@ -153,6 +158,11 @@ public class RadialTimePickerDialog extends DialogFragment implements
 		mInKbMode = false;
 	}
 
+	public void setOnDismissListener(
+			OnDialogDismissListener ondialogdismisslistener) {
+		mDimissCallback = ondialogdismisslistener;
+	}
+
 	public void setOnTimeSetListener(OnTimeSetListener callback) {
 		mCallback = callback;
 	}
@@ -161,6 +171,18 @@ public class RadialTimePickerDialog extends DialogFragment implements
 		mInitialHourOfDay = hourOfDay;
 		mInitialMinute = minute;
 		mInKbMode = false;
+	}
+
+	public void setText(String text) {
+		mDoneText = text;
+	}
+
+	@Override
+	public void onDismiss(DialogInterface dialoginterface) {
+		super.onDismiss(dialoginterface);
+		if (mDimissCallback != null) {
+			mDimissCallback.onDialogDismiss(dialoginterface);
+		}
 	}
 
 	@Override
@@ -240,6 +262,9 @@ public class RadialTimePickerDialog extends DialogFragment implements
 		});
 
 		mDoneButton = (TextView) view.findViewById(R.id.done_button);
+		if (mDoneText != null) {
+			mDoneButton.setText(mDoneText);
+		}
 		mDoneButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -263,7 +288,8 @@ public class RadialTimePickerDialog extends DialogFragment implements
 			mAmPmTextView.setVisibility(View.GONE);
 
 			RelativeLayout.LayoutParams paramsSeparator = new RelativeLayout.LayoutParams(
-					android.view.ViewGroup.LayoutParams.WRAP_CONTENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
+					android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
+					android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 			paramsSeparator.addRule(RelativeLayout.CENTER_IN_PARENT);
 			TextView separatorView = (TextView) view
 					.findViewById(R.id.separator);

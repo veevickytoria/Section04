@@ -189,13 +189,13 @@
 
                 <Button
                     android:id="@+id/task_complete_button"
-                    style="@style/TextAppearance.EditEvent_LabelSmall"
+                    style="?android:attr/buttonStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginBottom="0dip"
                     android:layout_marginTop="0dip"
-                    android:background="?android:attr/selectableItemBackground"
+                    android:background="@drawable/button_selector"
                     android:contentDescription="@string/reminders_label"
                     android:gravity="top"
                     android:minHeight="20dip"

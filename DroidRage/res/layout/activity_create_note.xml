@@ -48,9 +48,10 @@
         android:layout_alignParentRight="true"
         android:layout_marginBottom="20dp"
         android:layout_marginRight="40dp"
-        android:text="Create Note" 
-        android:onClick="createNewNote"/>
-	<Button
+        android:onClick="createNewNote"
+        android:text="Create Note" />
+
+    <Button
         android:id="@+id/button3"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"

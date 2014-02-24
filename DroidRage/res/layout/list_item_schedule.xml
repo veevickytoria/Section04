@@ -23,18 +23,18 @@
 
             <TextView
                 android:id="@+id/block_time"
-                android:textColor="#b7b7b7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="6sp"
+                android:textColor="#b7b7b7"
                 android:textSize="@dimen/text_size_small" />
 
             <TextView
                 android:id="@+id/block_endtime"
-                android:textColor="#aeaeae"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="4dp"
+                android:textColor="#aeaeae"
                 android:textSize="@dimen/text_size_small" />
         </LinearLayout>
 
@@ -51,14 +51,14 @@
             <TextView
                 android:id="@+id/block_title"
                 style="@style/ListItemTitle"
-                android:textSize="@dimen/text_size_medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="?android:attr/listPreferredItemPaddingLeft"
                 android:layout_marginRight="?android:attr/listPreferredItemPaddingRight"
                 android:duplicateParentState="true"
                 android:paddingTop="8dp"
-                android:textColor="@color/list_item_title" />
+                android:textColor="@color/list_item_title"
+                android:textSize="@dimen/text_size_medium" />
 
             <TextView
                 android:id="@+id/block_subtitle"

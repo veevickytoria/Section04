@@ -19,7 +19,6 @@ import objects.User;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -53,8 +52,9 @@ public class ProfileActivity extends FragmentActivity {
 		Bundle args = new Bundle();
 
 		if (displayedUser != null) {
-//			args.putString("userID", displayedUser.getID());
+			// args.putString("userID", displayedUser.getID());
 			args.putParcelable(Keys.User.PARCEL, displayedUser);
+			args.putString("notMine", "yup");
 			profFrag.setArguments(args);
 			fm.beginTransaction().replace(R.id.profile_container, profFrag)
 					.commit();
@@ -80,7 +80,7 @@ public class ProfileActivity extends FragmentActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.profile, menu);
+		getMenuInflater().inflate(R.menu.menu_profile, menu);
 		return true;
 	}
 
@@ -95,7 +95,8 @@ public class ProfileActivity extends FragmentActivity {
 			//
 			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
 			//
-			NavUtils.navigateUpFromSameTask(this);
+			// NavUtils.navigateUpFromSameTask(this);
+			finish();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

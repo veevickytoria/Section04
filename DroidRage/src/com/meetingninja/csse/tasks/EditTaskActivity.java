@@ -15,22 +15,34 @@
  ******************************************************************************/
 package com.meetingninja.csse.tasks;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+import java.util.TimeZone;
 
+import objects.SerializableUser;
 import objects.Task;
+import objects.User;
 
-import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -40,26 +52,41 @@ import android.widget.Toast;
 import com.doomonafireball.betterpickers.calendardatepicker.CalendarDatePickerDialog;
 import com.doomonafireball.betterpickers.calendardatepicker.CalendarDatePickerDialog.OnDateSetListener;
 import com.meetingninja.csse.R;
+import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.AsyncResponse;
+import com.meetingninja.csse.database.Keys;
+import com.meetingninja.csse.database.volley.UserVolleyAdapter;
+import com.meetingninja.csse.extras.AlertDialogUtil;
+import com.meetingninja.csse.extras.ContactTokenTextView;
 import com.meetingninja.csse.extras.MyDateUtils;
-import com.meetingninja.csse.user.SessionManager;
+import com.meetingninja.csse.user.AutoCompleteAdapter;
+import com.meetingninja.csse.user.ProfileActivity;
+import com.meetingninja.csse.user.UserArrayAdapter;
+import com.tokenautocomplete.TokenCompleteTextView.TokenListener;
 
-public class EditTaskActivity extends FragmentActivity implements
-		AsyncResponse<Boolean> {
+import de.timroes.android.listview.EnhancedListView;
+
+public class EditTaskActivity extends FragmentActivity implements AsyncResponse<Boolean>, TokenListener {
 	final String MARK_AS_COMPLETE = "Mark As Complete";
 	final String MARK_AS_INCOMPLETE = "Mark As Incomplete";
 
 	private EditText mDescription, completionCriteria, mTitle;
 	private TextView assignedDateLabel, createdDateLabel, isCompleted;
 	private Button mDeadlineBtn, mCompleteBtn;
-	private DateTimeFormatter dateFormat = MyDateUtils.JODA_MEETING_DATE_FORMAT;
+	private DateTimeFormatter dateFormat = MyDateUtils.JODA_APP_DATE_FORMAT;
+	private AutoCompleteAdapter autoAdapter;
+	private ArrayList<User> allUsers = new ArrayList<User>();
+	private ArrayList<User> assignedUsers = new ArrayList<User>();
+	private User addedUser;
 
-	private SessionManager session;
+	// private SessionManager session;
 	private Task displayTask;
 	Calendar cal = null;
-	public static final String EXTRA_TASK = "task";
-
-	private static final String TAG = EditTaskActivity.class.getSimpleName();
+	public static final String EXTRA_TASK = Keys.Task.PARCEL;
+	private UserArrayAdapter mUserAdapter;
+	private EnhancedListView l;
+	private String userId;
+	private SessionManager session;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -67,46 +94,50 @@ public class EditTaskActivity extends FragmentActivity implements
 		setContentView(R.layout.activity_edit_task);
 		setupActionBar();
 		setupViews();
-
 		Bundle extras = getIntent().getExtras();
+
+		session = SessionManager.getInstance();
+		userId = session.getUserID();
+
 		if (extras != null) {
 			displayTask = extras.getParcelable(EXTRA_TASK);
 		}
 		if (displayTask != null) {
+			// allows keyboard to hide when not editing text
+			setUpListView();
 			setTask();
-			mTitle.setSelection(0, mTitle.getText().toString().length());
-
-			String _deadline = displayTask.getEndTime();
-			DateTime deadline = MyDateUtils.JODA_SERVER_DATE_FORMAT
-					.parseDateTime(_deadline);
-
-			int month = deadline.getMonthOfYear();
-			int year = deadline.getYear();
-			int day = deadline.getDayOfMonth();
 
 			cal = Calendar.getInstance();
-			cal.set(Calendar.YEAR, year, Calendar.MONTH, month - 1,
-					Calendar.DAY_OF_MONTH, day);
-			// cal.set(Calendar.YEAR, year);
-			// cal.set(Calendar.MONTH, month - 1);
-			// cal.set(Calendar.DAY_OF_MONTH, day);
+			cal.setTimeZone(TimeZone.getTimeZone("UTC"));
+			cal.setTimeInMillis(displayTask.getEndTimeInMillis());
 
-			mDeadlineBtn.setText(_deadline);
-			mDeadlineBtn.setOnClickListener(new DateClickListener(mDeadlineBtn, cal));
-
-			// findViewById(R.id.task_edit_date_created).toString();
-
+			mDeadlineBtn.setOnClickListener(new DateClickListener(mDeadlineBtn,cal, this));
 			// assignedDateLabel.setText(dateFormat.format(assignedDate));
 			// createdDateLabel.setText(dateFormat.format(createdDate));
 		}
 	}
 
 	private void setTask() {
-		System.out.println("got to settask");
 		mTitle.setText(displayTask.getTitle());
 		completionCriteria.setText(displayTask.getCompletionCriteria());
 		mDescription.setText(displayTask.getDescription());
+		String format = dateFormat.print(displayTask.getEndTimeInMillis());
+		mDeadlineBtn.setText(format);
+		// String format =
+		// dateFormat.print(Long.parseLong(displayTask.getDateAssigned()));
+		// assignedDateLabel.setText(format);
+		format = dateFormat.print(Long.parseLong(displayTask.getDateCreated()));
+		createdDateLabel.setText(format);
+		assignedUsers.clear();
+//		TODO: change to a loop when backend allows for multiple assigned to
+		assignedUsers.addAll(displayTask.getMembers());
+		
+		setCompletedViews();
 		// TODO: use string.xml
+
+	}
+
+	private void setCompletedViews() {
 		if (displayTask.getIsCompleted()) {
 			isCompleted.setText("Yes");
 			mCompleteBtn.setText(MARK_AS_INCOMPLETE);
@@ -114,26 +145,20 @@ public class EditTaskActivity extends FragmentActivity implements
 			isCompleted.setText("No");
 			mCompleteBtn.setText(MARK_AS_COMPLETE);
 		}
-		// TODO: fetcher for assigned to/from
 	}
 
 	public void toggleCompleted(View v) {
-		System.out.println("got to toggle");
-		TaskUpdater updater = new TaskUpdater();
 		displayTask.setIsCompleted(!displayTask.getIsCompleted());
-		updater.updateTask(displayTask);
-		setTask();
+		setCompletedViews();
 	}
 
 	private void trimTextView() {
 		mTitle.setText(mTitle.getText().toString().trim());
 		mDescription.setText(mDescription.getText().toString().trim());
-		completionCriteria.setText(completionCriteria.getText().toString()
-				.trim());
+		completionCriteria.setText(completionCriteria.getText().toString().trim());
 	}
 
 	private final View.OnClickListener tActionBarListener = new OnClickListener() {
-
 		@Override
 		public void onClick(View v) {
 			onActionBarItemSelected(v);
@@ -144,11 +169,9 @@ public class EditTaskActivity extends FragmentActivity implements
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		// Make an Ok/Cancel ActionBar
-		View actionBarButtons = inflater.inflate(R.layout.actionbar_ok_cancel,
-				new LinearLayout(this), false);
+		View actionBarButtons = inflater.inflate(R.layout.actionbar_ok_cancel,	new LinearLayout(this), false);
 
-		View cancelActionView = actionBarButtons
-				.findViewById(R.id.action_cancel);
+		View cancelActionView = actionBarButtons.findViewById(R.id.action_cancel);
 		cancelActionView.setOnClickListener(tActionBarListener);
 
 		View doneActionView = actionBarButtons.findViewById(R.id.action_done);
@@ -188,6 +211,35 @@ public class EditTaskActivity extends FragmentActivity implements
 		mDeadlineBtn = (Button) findViewById(R.id.task_edit_deadline);
 		mCompleteBtn = (Button) findViewById(R.id.task_mark_complete_button);
 		isCompleted = (TextView) findViewById(R.id.task_edit_completed);
+		assignedDateLabel = (TextView) findViewById(R.id.task_edit_date_assigned);
+		createdDateLabel = (TextView) findViewById(R.id.task_edit_date_created);
+	}
+	@Override
+	public void onTokenAdded(Object arg0) {
+		SerializableUser added = null;
+		if (arg0 instanceof SerializableUser){
+			added = (SerializableUser) arg0;
+		} 	else if (arg0 instanceof User){
+			added = new SerializableUser((User) arg0);
+		}
+
+		if (added != null) {
+			addedUser = added;
+		}
+	}
+
+	@Override
+	public void onTokenRemoved(Object arg0) {
+		SerializableUser removed = null;
+		if (arg0 instanceof SerializableUser){
+			removed = (SerializableUser) arg0;
+		} 	else if (arg0 instanceof User){
+			removed = new SerializableUser((User) arg0);
+		}
+		if (removed != null) {
+			addedUser = null;
+		}
+
 	}
 
 	@Override
@@ -195,76 +247,228 @@ public class EditTaskActivity extends FragmentActivity implements
 		if (result) {
 			finish();
 		} else {
-			Toast.makeText(this, "Failed to save task", Toast.LENGTH_SHORT)
-					.show();
-
+			Toast.makeText(this, "Failed to save task", Toast.LENGTH_LONG).show();
 		}
 	}
 
 	private void save() {
 		if (TextUtils.isEmpty(mTitle.getText())) {
-			Toast.makeText(this, "Empty Task not created", Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(this, "Empty Task not created", Toast.LENGTH_LONG).show();
 			setResult(RESULT_CANCELED);
 			finish();
 		} else {
 			trimTextView();
 			displayTask.setTitle(mTitle.getText().toString());
 			displayTask.setDescription(mDescription.getText().toString());
-			displayTask.setCompletionCriteria(completionCriteria.getText()
-					.toString());
-			displayTask.setEndTime(mDeadlineBtn.getText().toString());
-			
-			TaskUpdater tUpdate = new TaskUpdater();
-			tUpdate.updateTask(displayTask);
+			displayTask.setCompletionCriteria(completionCriteria.getText().toString());
+			displayTask.setEndTime(cal.getTimeInMillis());
+			displayTask.setAssignedFrom(userId);
+			// TODO: change this
+			if (!displayTask.getMembers().isEmpty()) {
+				displayTask.setAssignedTo(displayTask.getMembers().get(0).getID());
+			} else {
+				displayTask.setAssignedTo("");
+			}
+			// TODO: fetcher for assigned to
+
+			Toast.makeText(this, String.format("Saving Task"),Toast.LENGTH_SHORT).show();
 
 			Intent msgIntent = new Intent();
 			msgIntent.putExtra(EXTRA_TASK, displayTask);
 			setResult(RESULT_OK, msgIntent);
-
 			finish();
-
 		}
 	}
 
-	private class DateClickListener implements OnClickListener,
-			OnDateSetListener {
-		Calendar cal;
+	private void setUpListView() {
+		// allows keyboard to hide when not editing text
+		findViewById(R.id.edit_task_container).setOnTouchListener(new OnTouchListener() {
+					@Override
+					public boolean onTouch(View v, MotionEvent event) {
+						hideKeyboard();
+						return false;
+					}
+				});
 
-		public DateClickListener(Button b, Calendar c) {
+		mUserAdapter = new UserArrayAdapter(this, R.layout.list_item_user,displayTask.getMembers());
+		l = (EnhancedListView) findViewById(R.id.edit_task_members_list);
+		l.setAdapter(mUserAdapter);
+		l.setDismissCallback(new de.timroes.android.listview.EnhancedListView.OnDismissCallback() {
+			@Override
+			public EnhancedListView.Undoable onDismiss(
+					EnhancedListView listView, final int position) {
+
+				final User item = (User) mUserAdapter.getItem(position);
+				mUserAdapter.remove(item);
+				return new EnhancedListView.Undoable() {
+					@Override
+					public void undo() {
+						mUserAdapter.insert(item, position);
+					}
+
+					@Override
+					public String getTitle() {
+						return "Member deleted";
+					}
+				};
+			}
+		});
+		l.setUndoHideDelay(5000);
+		l.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View v, int position,long id) {
+				User clicked = mUserAdapter.getItem(position);
+				Intent profileIntent = new Intent(v.getContext(),ProfileActivity.class);
+				profileIntent.putExtra(Keys.User.PARCEL, clicked);
+				startActivity(profileIntent);
+
+			}
+
+		});
+		l.enableSwipeToDismiss();
+		l.setSwipingLayout(R.id.list_group_item_frame_1);
+
+		l.setSwipeDirection(EnhancedListView.SwipeDirection.BOTH);
+
+		// List<User> mems = new ArrayList<User>();
+		// mems = displayTask.getMembers();
+		// for(int i = 0;i<mems.size();i++){
+		// loadUser(mems.get(i).toString(),false);
+		// }
+		
+		// TODO: change to a loop when backend catches up
+		String mem = displayTask.getAssignedTo();
+		loadUser(mem, false);
+
+	}
+
+	private void hideKeyboard() {
+		InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+		inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+	}
+
+	public void addMember(final View view) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("Search by name or email:");
+		// TODO: only display users that aren't already a contact
+		UserVolleyAdapter.fetchAllUsers(new AsyncResponse<List<User>>() {
+			@Override
+			public void processFinish(List<User> result) {
+				allUsers = new ArrayList<User>(result);
+			}
+		});
+
+		View autocompleteView = this.getLayoutInflater().inflate(R.layout.fragment_autocomplete, null);
+		final ContactTokenTextView input = (ContactTokenTextView) autocompleteView.findViewById(R.id.my_autocomplete);
+		autoAdapter = new AutoCompleteAdapter(this, allUsers);
+		input.setAdapter(autoAdapter);
+
+		input.setTokenListener(this);
+		builder.setView(autocompleteView);
+		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				if(addedUser == null){
+					dialog.cancel();
+					return;
+				}
+				boolean contains = false;
+				for (int i = 0; i < assignedUsers.size(); i++) {
+					if (assignedUsers.get(i).equals(addedUser)) {
+						contains = true;
+					}
+				}
+				if (contains) {
+					AlertDialogUtil.displayDialog(view.getContext(),"Unable to add user","This user is already assigned to this task", "OK",null);
+					addedUser=null;
+				} else {
+					addAssignedUser(addedUser);
+					addedUser = null;
+				}
+			}
+		});
+		builder.setNegativeButton("Cancel",	new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.cancel();
+					}
+				});
+		builder.show();
+//		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//		builder.setTitle("Enter member ID");
+//		final EditText input = new EditText(this);
+//		builder.setView(input);
+//		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//			@Override
+//			public void onClick(DialogInterface dialog, int which) {
+//
+//				loadUser(input.getText().toString(), true);
+//				// mUserAdapter.getItem(mUserAdapter.)
+//				// member = input.getText().toString();
+//			}
+//		});
+//		builder.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
+//					@Override
+//					public void onClick(DialogInterface dialog, int which) {
+//						dialog.cancel();
+//					}
+//				});
+//		builder.show();
+	}
+	private void addAssignedUser(User user){
+		displayTask.addMember(user);
+		assignedUsers.add(user);
+		mUserAdapter.notifyDataSetChanged();
+	}
+	private void loadUser(String userID, final boolean add) {
+		UserVolleyAdapter.fetchUserInfo(userID, new AsyncResponse<User>() {
+			@Override
+			public void processFinish(User result) {
+				if (add) {
+					displayTask.addMember(result);
+				}
+				// TODO: eliminate when i can change assignedto to a list. this is becuase members isn't intially being set to have what is in assigned to
+				if (displayTask.getMembers().isEmpty()) {
+					displayTask.addMember(result);
+				}
+				
+				mUserAdapter.notifyDataSetChanged();
+			}
+		});
+	}
+
+	private class DateClickListener implements OnClickListener,	OnDateSetListener {
+		Calendar cal;
+		FragmentActivity activity;
+
+		public DateClickListener(Button b, Calendar c, FragmentActivity activity) {
 			this.cal = c;
+			this.activity = activity;
 		}
 
 		@Override
 		public void onClick(View v) {
 			FragmentManager fm = getSupportFragmentManager();
-			CalendarDatePickerDialog calendarDatePickerDialog = CalendarDatePickerDialog
-					.newInstance(DateClickListener.this,
-							cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
-							cal.get(Calendar.DAY_OF_MONTH));
+			CalendarDatePickerDialog calendarDatePickerDialog = CalendarDatePickerDialog.newInstance(DateClickListener.this,cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH));
 			calendarDatePickerDialog.show(fm, "fragment_date_picker_name");
 		}
 
 		@Override
-		public void onDateSet(CalendarDatePickerDialog dialog, int year,
-				int monthOfYear, int dayOfMonth) {
+		public void onDateSet(CalendarDatePickerDialog dialog, int year, int monthOfYear, int dayOfMonth) {
 			Calendar tempcal = Calendar.getInstance();
-			tempcal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-			tempcal.set(Calendar.MONTH, monthOfYear);
-			tempcal.set(Calendar.YEAR, year);
-			Calendar now = null;
-			now = Calendar.getInstance();
-			now.add(Calendar.DAY_OF_MONTH, -1);
-			if (tempcal.before(now)) {
+			tempcal.set(year, monthOfYear, dayOfMonth);
+			Calendar today = Calendar.getInstance();
+			today.set(Calendar.HOUR_OF_DAY, 0);
+			today.set(Calendar.MINUTE, 0);
+			today.set(Calendar.SECOND, 0);
+			if (tempcal.after(today)) {
+				cal.set(year, monthOfYear, dayOfMonth);
+				String format = dateFormat.print(cal.getTimeInMillis());
+				mDeadlineBtn.setText(format);
 			} else {
-				cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-				cal.set(Calendar.MONTH, monthOfYear);
-				cal.set(Calendar.YEAR, year);
-				mDeadlineBtn.setText(cal.get(Calendar.MONTH) + 1 + "/"
-						+ cal.get(Calendar.DAY_OF_MONTH) + "/"
-						+ cal.get(Calendar.YEAR));
+				AlertDialogUtil.displayDialog(activity, "Error","A deadline can not be set before today's date", "OK",null);
 			}
-
 		}
 	}
 }

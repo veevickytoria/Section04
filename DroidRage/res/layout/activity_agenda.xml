@@ -13,7 +13,7 @@
         android:orientation="horizontal" >
 
         <EditText
-            android:id="@+id/agenda_title"
+            android:id="@+id/agenda_title_edittext"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -25,9 +25,11 @@
             android:id="@+id/agenda_addTopicBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackground"
+			android:background="@drawable/button_selector"
             android:hint="+ Add Topic"
-            android:minHeight="28dp" />
+            android:minHeight="28dp"
+            android:textColor="#FF777777" />
+
     </LinearLayout>
 
     <pl.polidea.treeview.TreeViewList

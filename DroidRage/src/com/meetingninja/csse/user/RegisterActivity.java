@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (C) 2014 The Android Open Source Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,6 +22,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Shader.TileMode;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,6 +38,10 @@ import android.widget.Toast;
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
+import com.meetingninja.csse.extras.Utilities;
+import com.parse.ParseException;
+import com.parse.ParseUser;
+import com.parse.SignUpCallback;
 
 public class RegisterActivity extends Activity implements AsyncResponse<User> {
 
@@ -156,6 +161,7 @@ public class RegisterActivity extends Activity implements AsyncResponse<User> {
 
 	private void tryRegister() {
 		// Reset errors
+		nameText.setError(null);
 		emailText.setError(null);
 		passwordText.setError(null);
 		confirmPasswordText.setError(null);
@@ -172,21 +178,6 @@ public class RegisterActivity extends Activity implements AsyncResponse<User> {
 		boolean cancel = false;
 		View focusView = null;
 
-		if (TextUtils.isEmpty(name)) {
-			passwordText.setError(getString(R.string.error_field_required));
-			focusView = nameText;
-			cancel = true;
-		}
-		if (TextUtils.isEmpty(email)) {
-			passwordText.setError(getString(R.string.error_field_required));
-			focusView = emailText;
-			cancel = true;
-		}
-		if (TextUtils.isEmpty(pass)) {
-			passwordText.setError(getString(R.string.error_field_required));
-			focusView = passwordText;
-			cancel = true;
-		}
 		if (TextUtils.isEmpty(confPass)) {
 			confirmPasswordText
 					.setError(getString(R.string.error_field_required));
@@ -197,6 +188,34 @@ public class RegisterActivity extends Activity implements AsyncResponse<User> {
 			confirmPasswordText
 					.setError(getString(R.string.error_mismatch_password));
 			focusView = confirmPasswordText;
+			cancel = true;
+		} else if (confPass.length() < 4) {
+			confirmPasswordText
+					.setError(getString(R.string.error_invalid_password));
+			focusView = confirmPasswordText;
+			cancel = true;
+		}
+		if (TextUtils.isEmpty(pass)) {
+			passwordText.setError(getString(R.string.error_field_required));
+			focusView = passwordText;
+			cancel = true;
+		} else if (pass.length() < 4) {
+			passwordText.setError(getString(R.string.error_field_required));
+			focusView = passwordText;
+			cancel = true;
+		}
+		if (TextUtils.isEmpty(email)) {
+			emailText.setError(getString(R.string.error_field_required));
+			focusView = emailText;
+			cancel = true;
+		} else if (!Utilities.isValidEmailAddress(email)) {
+			emailText.setError(getString(R.string.error_invalid_email));
+			focusView = emailText;
+			cancel = true;
+		}
+		if (TextUtils.isEmpty(name)) {
+			nameText.setError(getString(R.string.error_field_required));
+			focusView = nameText;
 			cancel = true;
 		}
 
@@ -218,12 +237,37 @@ public class RegisterActivity extends Activity implements AsyncResponse<User> {
 			Toast.makeText(getApplicationContext(),
 					"Registration Unsuccessful", Toast.LENGTH_LONG).show();
 		} else {
-			Intent goLogin = new Intent();
-			goLogin.putExtra(Intent.EXTRA_EMAIL, result.getEmail());
-			goLogin.putExtra("registerSuccess", mRegisterSuccess);
-			setResult(RESULT_OK, goLogin);
-			finish();
+			parseSDKRegistration(result);
 		}
+
+	}
+
+	private void parseSDKRegistration(final User user) {
+		ParseUser parseUser = new ParseUser();
+		parseUser.setUsername(user.getDisplayName());
+		parseUser.setPassword(passwordText.getText().toString().trim());
+		parseUser.setEmail(user.getEmail());
+
+		// other fields can be set just like with ParseObject
+		parseUser.put("backendId", user.getID());
+		parseUser.put("phone", user.getPhone());
+		parseUser.put("company", user.getCompany());
+		parseUser.put("title", user.getTitle());
+		parseUser.put("location", user.getLocation());
+
+		parseUser.signUpInBackground(new SignUpCallback() {
+			public void done(ParseException e) {
+				if (e == null) {
+					Intent goLogin = new Intent();
+					goLogin.putExtra(Intent.EXTRA_EMAIL, user.getEmail());
+					goLogin.putExtra("registerSuccess", mRegisterSuccess);
+					setResult(RESULT_OK, goLogin);
+					finish();
+				} else {
+					e.printStackTrace();
+				}
+			}
+		});
 
 	}
 

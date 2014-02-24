@@ -91,8 +91,12 @@
                             android:id="@+id/profile_email"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:clickable="true"
+                            android:focusable="true"
                             android:paddingLeft="8dp"
+                            android:background="@drawable/textview_selector"
                             android:textSize="18sp" />
+
                     </LinearLayout>
                 </LinearLayout>
 
@@ -130,8 +134,12 @@
                             android:id="@+id/profile_phone"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:clickable="true"
+                            android:focusable="true"
                             android:paddingLeft="8dp"
-                            android:textSize="18sp" />
+                            android:textSize="18sp"
+                            android:background="@drawable/textview_selector" />
+
                     </LinearLayout>
                 </LinearLayout>
 

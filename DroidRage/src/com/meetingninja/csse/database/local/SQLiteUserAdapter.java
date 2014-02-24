@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (C) 2014 The Android Open Source Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,19 +19,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 import objects.User;
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
+import android.database.sqlite.SQLiteStatement;
+import android.text.TextUtils;
+import android.util.Log;
 
+import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
+import com.meetingninja.csse.database.volley.UserVolleyAdapter;
 
 public class SQLiteUserAdapter extends SQLiteHelper {
+	private static final String TAG = SQLiteUserAdapter.class.getSimpleName();
 
 	private SQLiteHelper mDbHelper;
 	private SQLiteDatabase mDb;
 
 	protected static final String TABLE_NAME = "users";
+	protected static final String FTS_TABLE_NAME = "users_fts";
 
 	// Columns
 	public static final String KEY_NAME = Keys.User.NAME;
@@ -54,55 +61,10 @@ public class SQLiteUserAdapter extends SQLiteHelper {
 		this.mDbHelper.close();
 	}
 
-	public User insertUser(User u) {
-		mDb = mDbHelper.getWritableDatabase();
-
-		ContentValues values = new ContentValues();
-		values.put(KEY_NAME, u.getDisplayName());
-		values.put(KEY_EMAIL, u.getEmail());
-		values.put(KEY_PHONE, u.getPhone());
-		values.put(KEY_COMPANY, u.getCompany());
-		values.put(KEY_TITLE, u.getTitle());
-		values.put(KEY_LOCATION, u.getLocation());
-
-		long insertId = mDb.insert(TABLE_NAME, null, values);
-		Cursor c = mDb.query(TABLE_NAME, allColumns, KEY_ID + "=" + insertId,
-				null, null, null, null);
-		c.moveToFirst();
-		User newUser = new UserCursor(c).getModel();
-		c.close();
-		close();
-		return newUser;
-	}
-
-	public void deleteUser(User u) {
-		mDb = mDbHelper.getWritableDatabase();
-		mDb.delete(TABLE_NAME, KEY_ID + "=" + u.getID(), null);
-		close();
-	}
-
-	public List<User> getAllUsers() {
-		List<User> users = new ArrayList<User>();
-		mDb = mDbHelper.getReadableDatabase();
-		Cursor c = mDb.query(TABLE_NAME, allColumns, null, null, null, null,
-				KEY_NAME);
-
-		// looping through all rows and adding to list
-		if (c.moveToFirst()) {
-			do {
-				User u = new UserCursor(c).getModel();
-				users.add(u);
-			} while (c.moveToNext());
-		}
-		c.close();
-		close();
-		return users;
-	}
-
 	/**
 	 * Run a query on the users table. See
 	 * {@link SQLiteDatabase#query(String, String[], String, String[], String, String, String)}
-	 * 
+	 *
 	 * @param columns
 	 * @param selection
 	 * @param selectionArgs
@@ -119,31 +81,109 @@ public class SQLiteUserAdapter extends SQLiteHelper {
 				groupBy, having, orderBy);
 	}
 
-	private class UserCursor extends ModelCursor<User> {
+	public void clear() {
+		Log.d(TAG, "Clearing Users Table");
+		mDb = mDbHelper.getWritableDatabase();
+		mDb.delete(TABLE_NAME, null, null);
+		close();
+	}
 
-		public UserCursor(Cursor c) {
-			super(c);
-			this.model = new User();
+	public void cacheUsers() {
+		UserVolleyAdapter.fetchAllUsers(new AsyncResponse<List<User>>() {
+
+			@Override
+			public void processFinish(List<User> result) {
+				try {
+					bulkInsertUsers(result);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	private synchronized void bulkInsertUsers(List<User> userList)
+			throws Exception {
+		String sql = "INSERT INTO " + TABLE_NAME
+				+ " VALUES (?, ?, ?, ?, ?, ?, ?);";
+		String fts_sql = "INSERT INTO " + FTS_TABLE_NAME
+				+ " VALUES (?, ?, ?, ?);";
+
+		mDb = mDbHelper.getWritableDatabase();
+		mDb.beginTransaction();
+		SQLiteStatement statement = mDb.compileStatement(sql);
+		SQLiteStatement fts_statement = mDb.compileStatement(fts_sql);
+		try {
+			for (User user : userList) {
+				statement.clearBindings();
+				fts_statement.clearBindings();
+				if (!TextUtils.isEmpty(user.getID())) {
+					statement.bindLong(1, Long.parseLong(user.getID()));
+					fts_statement.bindLong(1, Long.parseLong(user.getID()));
+				}
+				statement.bindString(2, user.getDisplayName());
+				statement.bindString(3, user.getEmail());
+				statement.bindString(4, user.getPhone());
+
+				fts_statement.bindString(2, user.getDisplayName());
+				fts_statement.bindString(3, user.getEmail());
+				fts_statement.bindString(4, user.getPhone());
+				fts_statement.executeInsert(); // done with fts data
+
+				statement.bindString(5, user.getCompany());
+				statement.bindString(6, user.getTitle());
+				statement.bindString(7, user.getCompany());
+
+				statement.executeInsert(); // done with all data
+			}
+			mDb.setTransactionSuccessful();
+			mDb.endTransaction();
+		} catch (Exception e) {
+			mDb.endTransaction(); // may not reach end transaction
+			throw e;
+		} finally {
+			close(); // close db connection
 		}
+	}
 
-		@Override
-		public User getModel() {
-			int idxID = crsr.getColumnIndex(KEY_ID);
-			int idxUSERNAME = crsr.getColumnIndex(KEY_NAME);
-			int idxEMAIL = crsr.getColumnIndex(KEY_EMAIL);
-			int idxPHONE = crsr.getColumnIndex(KEY_PHONE);
-			int idxCOMPANY = crsr.getColumnIndex(KEY_COMPANY);
-			int idxTITLE = crsr.getColumnIndex(KEY_TITLE);
-			int idxLOCATION = crsr.getColumnIndex(KEY_LOCATION);
-			model.setID("" + crsr.getInt(idxID));
-			model.setDisplayName(crsr.getString(idxUSERNAME));
-			model.setEmail(crsr.getString(idxEMAIL));
-			model.setPhone(crsr.getString(idxPHONE));
-			model.setCompany(crsr.getString(idxCOMPANY));
-			model.setTitle(crsr.getString(idxTITLE));
-			model.setLocation(crsr.getString(idxLOCATION));
-			return model;
+	public ArrayList<User> getAllUsers() {
+		ArrayList<User> users = new ArrayList<User>();
+		Cursor c = query(allColumns, null, null, null, null, null);
+
+		// looping through all rows and adding to list
+		if (c.moveToFirst()) {
+			do {
+				users.add(new User(c));
+			} while (c.moveToNext());
 		}
+		c.close();
+		close();
+		return users;
+	}
 
+	public Cursor getNameMatches(String query, String[] columns) {
+		assert !TextUtils.isEmpty(query) : "query must not be an empty string!";
+		String selection = KEY_NAME + " MATCH ?";
+
+		String[] selectionArgs = new String[] { query + "*" };
+
+		return queryFTS(selection, selectionArgs, columns);
+	}
+
+	private Cursor queryFTS(String selection, String[] selectionArgs,
+			String[] columns) {
+		SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+		builder.setTables(FTS_TABLE_NAME);
+
+		Cursor cursor = builder.query(getReadableDatabase(), columns,
+				selection, selectionArgs, null, null, KEY_NAME + ", "
+						+ KEY_EMAIL);
+
+		if (!(cursor == null || cursor.moveToFirst())) {
+			cursor.close();
+		} else {
+			Log.d("Query User FTS", "Cursor is null");
+		}
+		return cursor;
 	}
 }
