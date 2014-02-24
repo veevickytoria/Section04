@@ -65,9 +65,9 @@ import com.parse.ParseUser;
 
 /**
  * Main Activity Window.
- *
+ * 
  * @author moorejm
- *
+ * 
  */
 public class MainActivity extends FragmentActivity implements
 		BaseFragment.TaskCallbacks {
@@ -92,7 +92,7 @@ public class MainActivity extends FragmentActivity implements
 
 	public enum DrawerLabel {
 		MEETINGS(0), NOTES(1), TASKS(2), PROFILE(3), GROUPS(4), PROJECTS(5), CONTACTS(
-				6), SETTINGS(7), ABOUT(8), LOGOUT(9);
+				6), LOGOUT(9);
 
 		private int position;
 
@@ -333,16 +333,16 @@ public class MainActivity extends FragmentActivity implements
 			// fragment.setArguments(args);
 			nextPage = new UserListFragment();
 			break;
-		case SETTINGS:
-			nextPage = SearchableUserFragment.getInstance();
-			// args.putString("Content", "TODO: Settings Page");
-			// fragment.setArguments(args);
-			break;
-		case ABOUT:
-			nextPage = new DummyFragment();
-			args.putString("Content", "TODO: About Page");
-			nextPage.setArguments(args);
-			break;
+//		case SETTINGS:
+//			nextPage = SearchableUserFragment.getInstance();
+//			// args.putString("Content", "TODO: Settings Page");
+//			// fragment.setArguments(args);
+//			break;
+//		case ABOUT:
+//			nextPage = new DummyFragment();
+//			args.putString("Content", "TODO: About Page");
+//			nextPage.setArguments(args);
+//			break;
 		case LOGOUT:
 			logout();
 			break;
@@ -404,6 +404,10 @@ public class MainActivity extends FragmentActivity implements
 				selectItem(DrawerLabel.PROFILE.getPosition());
 			} else if (thingsYouSaid.contains("tasks")) {
 				selectItem(DrawerLabel.TASKS.getPosition());
+			} else if (thingsYouSaid.contains("projects")) {
+				selectItem(DrawerLabel.PROJECTS.getPosition());
+			} else if (thingsYouSaid.contains("contacts")) {
+				selectItem(DrawerLabel.CONTACTS.getPosition());
 			}
 		}
 	}
