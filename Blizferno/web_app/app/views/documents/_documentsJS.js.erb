@@ -171,7 +171,7 @@ function submitCreateModal(type){
 	if(type == 'note'){
 		submitCreateNoteModal();
 	}else if(type == 'agenda'){
-		submiteCreateAgendaModal();
+		submitCreateAgendaModal();
 	}
 }
 
@@ -252,10 +252,13 @@ function submitCreateAgendaModal(){
 			url: 'http://csse371-04.csse.rose-hulman.edu/Agenda/',
 			data: postData,
 			success:function(data){
+				alert(data);
 				$('#newAgendaModal').modal('hide');
 				window.location.reload(true);
 			}
 		});
+		window.location.reload(true);
+
 
 
 }
@@ -294,7 +297,7 @@ function hideDeleteNoteModal(){
 
 function hideDeleteAgendaModal(){
 	var deleteData = agendasJSON[deleteID]['agendaID'];
-
+	alert(deleteData);
 	$.ajax({
 		type: 'DELETE',
 		url: 'http://csse371-04.csse.rose-hulman.edu/Agenda/' + deleteData,
