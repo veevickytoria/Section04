@@ -22,6 +22,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Shader.TileMode;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,6 +38,7 @@ import android.widget.Toast;
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
+import com.meetingninja.csse.extras.Utilities;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
@@ -159,6 +161,7 @@ public class RegisterActivity extends Activity implements AsyncResponse<User> {
 
 	private void tryRegister() {
 		// Reset errors
+		nameText.setError(null);
 		emailText.setError(null);
 		passwordText.setError(null);
 		confirmPasswordText.setError(null);
@@ -175,21 +178,6 @@ public class RegisterActivity extends Activity implements AsyncResponse<User> {
 		boolean cancel = false;
 		View focusView = null;
 
-		if (TextUtils.isEmpty(name)) {
-			passwordText.setError(getString(R.string.error_field_required));
-			focusView = nameText;
-			cancel = true;
-		}
-		if (TextUtils.isEmpty(email)) {
-			passwordText.setError(getString(R.string.error_field_required));
-			focusView = emailText;
-			cancel = true;
-		}
-		if (TextUtils.isEmpty(pass)) {
-			passwordText.setError(getString(R.string.error_field_required));
-			focusView = passwordText;
-			cancel = true;
-		}
 		if (TextUtils.isEmpty(confPass)) {
 			confirmPasswordText
 					.setError(getString(R.string.error_field_required));
@@ -200,6 +188,34 @@ public class RegisterActivity extends Activity implements AsyncResponse<User> {
 			confirmPasswordText
 					.setError(getString(R.string.error_mismatch_password));
 			focusView = confirmPasswordText;
+			cancel = true;
+		} else if (confPass.length() < 4) {
+			confirmPasswordText
+					.setError(getString(R.string.error_invalid_password));
+			focusView = confirmPasswordText;
+			cancel = true;
+		}
+		if (TextUtils.isEmpty(pass)) {
+			passwordText.setError(getString(R.string.error_field_required));
+			focusView = passwordText;
+			cancel = true;
+		} else if (pass.length() < 4) {
+			passwordText.setError(getString(R.string.error_field_required));
+			focusView = passwordText;
+			cancel = true;
+		}
+		if (TextUtils.isEmpty(email)) {
+			emailText.setError(getString(R.string.error_field_required));
+			focusView = emailText;
+			cancel = true;
+		} else if (!Utilities.isValidEmailAddress(email)) {
+			emailText.setError(getString(R.string.error_invalid_email));
+			focusView = emailText;
+			cancel = true;
+		}
+		if (TextUtils.isEmpty(name)) {
+			nameText.setError(getString(R.string.error_field_required));
+			focusView = nameText;
 			cancel = true;
 		}
 
