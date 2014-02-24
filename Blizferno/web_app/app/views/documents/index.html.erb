@@ -6,7 +6,6 @@
 </script>
 
 <!-- PLACE JAVASCRIPT IN app/assets/javascript/documents.js -->
-<script type="text/javascript" src="assets/javascripts/jquery-2.1.0.js"></script>
 <script type="text/javascript">
 </script>
 
@@ -23,7 +22,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary" form="createAgenda">Submit</button>
+        <button type="submit" class="btn btn-primary" onclick="submitCreateModal('agenda')">Submit</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -42,45 +41,83 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="submitCreateModal()">Submit</button>
+        <button type="button" class="btn btn-primary" onclick="submitCreateModal('note')">Submit</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<!-- Delete Modal -->
-<div class="modal fade" id="deleteDocumentModal" tabindex="-1" role="dialog" aria-labelledby="deleteDocumentModalLabel" aria-hidden="true">
+<!-- Delete Note Modal -->
+<div class="modal fade" id="deleteNoteModal" tabindex="-1" role="dialog" aria-labelledby="deleteNoteModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Delete Document</h4>
+        <h4 class="modal-title" id="myModalLabel">Delete Note</h4>
       </div>
       <div class="modal-body">
-        <%= render "delete" %>
+        <%= render "deleteNote" %>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="hideDeleteModal()">Delete</button>
+        <button type="button" class="btn btn-primary" onclick="hideDeleteModal('note')">Delete</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<!-- View Modal -->
-<div class="modal fade" id="viewDocumentModal" tabindex="-1" role="dialog" aria-labelledby="viewDocumentModalLabel" aria-hidden="true">
+<!-- Delete Agenda Modal -->
+<div class="modal fade" id="deleteAgendaModal" tabindex="-1" role="dialog" aria-labelledby="deleteAgendaModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">View Document</h4>
+        <h4 class="modal-title" id="myModalLabel">Delete Agenda</h4>
       </div>
       <div class="modal-body">
-        <%= render 'view' %>
+        <%= render "deleteAgenda" %>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="showEditModalNoID()" href="#editNoteModal" data-refresh="true" data-toggle='modal'>Edit</button>
+        <button type="button" class="btn btn-primary" onclick="hideDeleteModal('agenda')">Delete</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- View Note Modal -->
+<div class="modal fade" id="viewNoteModal" tabindex="-1" role="dialog" aria-labelledby="viewNoteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">View Note</h4>
+      </div>
+      <div class="modal-body">
+        <%= render 'viewNote' %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="showEditModalNoID('note')" href="#editNoteModal" data-refresh="true" data-toggle='modal'>Edit</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- View Agenda Modal -->
+<div class="modal fade" id="viewAgendaModal" tabindex="-1" role="dialog" aria-labelledby="viewAgendaModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">View Agenda</h4>
+      </div>
+      <div class="modal-body">
+        <%= render 'viewAgenda' %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="showEditModalNoID('agenda')" href="#editAgendaModal" data-refresh="true" data-toggle='modal'>Edit</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -92,14 +129,14 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Edit Document Details</h4>
+        <h4 class="modal-title" id="myModalLabel">Edit Agenda Details</h4>
       </div>
       <div class="modal-body">
         <%= render 'editAgenda' %>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" onclick="cancelEdit()" data-refresh="true" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" onclick="showDocumentModalNoID()" data-refresh="true" >Save Changes</button>
+        <button type="button" class="btn btn-default" onclick="cancelEdit('agenda')" data-refresh="true" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="showViewModalNoID('agenda')" data-refresh="true" >Save Changes</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -117,8 +154,8 @@
         <%= render 'editNote' %>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" onclick="cancelEdit()" data-refresh="true" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" onclick="showDocumentModalNoID()" data-refresh="true" >Save Changes</button>
+        <button type="button" class="btn btn-default" onclick="cancelEdit('note')" data-refresh="true" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="showViewModalNoID('note')" data-refresh="true" >Save Changes</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -134,22 +171,27 @@
       <th>Type</th>
     </tr>
   </thead>
+
   <!-- POPULATE AGENDAS -->
-  <% for agenda in @agendas['agendas'] %>
+  <% for agenda in @agendasParsed %>
     <tr>
-      <td><a onClick="showViewDocumentModal(<%= agenda['agendaID'] %>, 'agenda')" href = '#viewDocumentModal' data-refresh = 'true' data-toggle='modal'><%= agenda['title'] %></a></td>
-      <td><%= agenda['content'][0]['topic'] %></td>
-      <td>Agenda</td>
-      <td colspan='1' style='cursor: pointer; text-align: center' onclick="showDeleteModal(<%= agenda['agendaID'] %>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
+      <td onClick="showViewModal(<%= @agendasParsed.index(agenda)%>, 'agenda')" data-refresh='true' data-toggle='modal'><%= agenda['title'] %></td>
+      <td onClick="showViewModal(<%= @agendasParsed.index(agenda)%>, 'agenda')" data-refresh='true' data-toggle='modal'><%= agenda['content']['1']['title'] %></td>
+      <td onClick="showViewModal(<%= @agendasParsed.index(agenda)%>, 'agenda')" data-refresh='true' data-toggle='modal'>Agenda</td>
+      <td colspan='1' style='cursor: pointer; text-align: center' onclick="showDeleteModal(<%=@agendasParsed.index(agenda)%>,'agenda')"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
+      <td colspan='1' style='cursor: pointer; text-align: center' onclick="showEditModal(<%=@agendasParsed.index(agenda)%>,'agenda')"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-pencil'></span></td>
+    </tr>
     </tr>
   <% end %>
   <!-- POPULATE NOTES -->
   <% for note in @notesParsed %>
     <tr>
-      <td><a onClick="showViewDocumentModal(<%= @notesParsed.index(note) %>)" href = '#viewDocumentModal' data-refresh = 'true' data-toggle='modal'><%= note['title'] %></a></td>
-      <td></td>
-      <td>Note</td>
-      <td colspan='1' style='cursor: pointer; text-align: center' onclick="showDeleteModal(<%= @notesParsed.index(note) %>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
+      <td onClick="showViewModal(<%= @notesParsed.index(note) %>, 'note')" data-refresh = 'true' data-toggle='modal'><%= note['title'] %></td>
+      <td onClick="showViewModal(<%= @notesParsed.index(note) %>, 'note')" data-refresh = 'true' data-toggle='modal'><%= note['content'] %></td>
+      <td onClick="showViewModal(<%= @notesParsed.index(note) %>, 'note')" data-refresh = 'true' data-toggle='modal'>Note</td>
+      <td colspan='1' style='cursor: pointer; text-align: center' onclick="showDeleteModal(<%= @notesParsed.index(note) %>,'note')"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
+      <td colspan='1' style='cursor: pointer; text-align: center' onclick="showEditModal(<%=@notesParsed.index(note)%>,'note')"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-pencil'></span></td>
+    </tr>
     </tr>
   <% end %>
   <tfoot>
