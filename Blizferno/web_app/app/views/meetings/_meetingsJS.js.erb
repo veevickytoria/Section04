@@ -129,7 +129,8 @@ function updateEditedValues(){
 			$.ajax({
 				type: 'PUT',
 				url: 'http://csse371-04.csse.rose-hulman.edu/Meeting/',
-				data: editData
+				data: editData,
+				async: false
 			});
 
 		}
