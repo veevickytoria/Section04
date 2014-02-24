@@ -147,6 +147,7 @@ function updateEditedAgendaValues(){
 		postContent = JSON.parse(postContent);
 
 		var postData = JSON.stringify({
+			"agendaID":agendasJSON[currentID]["agendaID"],
 			"title":postTitle,
 			"meeting":postMeeting,
 			"user":postUser,
@@ -252,15 +253,10 @@ function submitCreateAgendaModal(){
 			url: 'http://csse371-04.csse.rose-hulman.edu/Agenda/',
 			data: postData,
 			success:function(data){
-				alert(data);
 				$('#newAgendaModal').modal('hide');
 				window.location.reload(true);
 			}
 		});
-		window.location.reload(true);
-
-
-
 }
 
 function showDeleteModal(ID, type){
@@ -297,7 +293,6 @@ function hideDeleteNoteModal(){
 
 function hideDeleteAgendaModal(){
 	var deleteData = agendasJSON[deleteID]['agendaID'];
-	alert(deleteData);
 	$.ajax({
 		type: 'DELETE',
 		url: 'http://csse371-04.csse.rose-hulman.edu/Agenda/' + deleteData,
