@@ -19,8 +19,8 @@
   <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet" />
 </head>
 <body onload="areCookiesEnabled()">
-  <% @notOnLogin = params[:controller].to_s != "login" %>
-  <% if (@notOnLogin) %>
+  <% notOnLogin = params[:controller].to_s != "login" %>
+  <% if (notOnLogin) %>
   <%= render '/panes/navbar_top' %>
   <% end %>
 
