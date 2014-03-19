@@ -15,10 +15,12 @@
  ******************************************************************************/
 package com.meetingninja.csse.meetings;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.TimeZone;
 
 import objects.Meeting;
+import objects.User;
 
 import org.joda.time.format.DateTimeFormatter;
 
@@ -65,6 +67,7 @@ public class EditMeetingActivity extends FragmentActivity implements
 	private MeetingSaveTask creater = null;
 	private DateTimeFormatter timeFormat;
 	private DateTimeFormatter dateFormat = MyDateUtils.JODA_APP_DATE_FORMAT;
+	private ArrayList<User> attendees;
 
 	private SQLiteMeetingAdapter mySQLiteAdapter;
 	private SessionManager session;
@@ -294,11 +297,22 @@ public class EditMeetingActivity extends FragmentActivity implements
 			newMeeting.setStartTime(start.getTimeInMillis());
 			newMeeting.setEndTime(end.getTimeInMillis());
 			newMeeting.setDescription(desc);
-
+//TODO:		newMeeting.setAttendance();
 			if (displayedMeeting != null) {
+				System.out.println("saving");
+				System.out.println(newMeeting.getStartTimeInMillis());
+				System.out.println(newMeeting.getEndTimeInMillis());
 				// mySQLiteAdapter.updateMeeting(newMeeting);
 				msgIntent.putExtra("method", "update");
 				newMeeting.setID(displayedMeeting.getID());
+				UpdateMeetingTask task = new UpdateMeetingTask();
+				task.updateMeeting(newMeeting);
+				
+				
+				//??
+				displayedMeeting = newMeeting;
+				//??
+				
 			} else {
 				MeetingSaveTask task = new MeetingSaveTask(
 						EditMeetingActivity.this);
@@ -307,6 +321,7 @@ public class EditMeetingActivity extends FragmentActivity implements
 				displayedMeeting = newMeeting;
 				return;
 			}
+			Toast.makeText(this, String.format("Saving Meeting"),Toast.LENGTH_SHORT).show();
 
 			msgIntent.putExtra(Keys.Meeting.PARCEL, newMeeting);
 			if (extras != null) {
