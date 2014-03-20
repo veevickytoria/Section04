@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<title>TestCases</title>
+<head>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+</head>
+<body>
+<input name="searchTxt" type="text" maxlength="512" id="GETid" class="searchField"/>
+<input name="searchTxt" placeholder="REQUIRED EMAIL"  type="text" maxlength="512" id="PUTid" class="searchField"/>
+<button type="button" value="" onclick="UserPostTest()">userTest</button>
+<button type="button" value="" onclick="UserDeleteTest()">DELETETEST</button>
+<h1>User TestCases</h1>
+<div id="UserRes"></div>
+<script type="text/javascript">
+UserGetTest = function() {
+	var groupDiv = $("#UserRes");
+    var resultDiv = $("#resultDivContainer");
+    $.ajax({
+        url: "http://csse371-04.csse.rose-hulman.edu/User/"+document.getElementById('GETid').value,
+        type: "GET",
+        success: function (result) {
+            switch (result) {
+                case true:
+                    //processResponse(result);
+                    break;
+                default:
+					if (JSON.parse(result).errorMessage !== undefined)
+					{
+						groupDiv.html(groupDiv.html()+"<br>"+"Get User FAIL");
+					}
+					else //if(JSON.parse(result).userID==document.getElementById('GETid').value)
+					{
+						groupDiv.html(groupDiv.html()+"<br>"+"Get User Passed");
+						groupDiv.html(groupDiv.html()+"<br>"+"Testing PUT");
+						UserPutTest();
+					}
+            }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+        alert(xhr.status);
+        alert(thrownError);
+        }
+    });
+};
+UserPostTest = function() {
+	
+	var resultDiv = $("#resultDivContainer");
+	var groupDiv = $("#UserRes");
+	groupDiv.html(groupDiv.html()+"<br>"+"Testing POST");
+	var datta = JSON.stringify({ "name": "PaulBlue",    "password": "123",   "email": document.getElementById('PUTid').value,    "phone": "123321",    "company": "12",    "title": "titl",    "location": "loc"});	
+    $.ajax({
+        url: "http://csse371-04.csse.rose-hulman.edu/User/",
+        type: "POST",
+        data: datta,
+	 	dataType: "text",
+        success: function (result) {
+		//resultDiv.html(result);
+			switch (result) {
+			    case true:
+			        //processResponse(result);
+			        break;
+			    default:
+			        if (JSON.parse(result).errorMessage !== undefined)
+				{
+					groupDiv.html(groupDiv.html()+"<br>"+"Post User FAIL");
+				}
+				else if(JSON.parse(result).userID !== undefined)
+				{
+					document.getElementById('GETid').value=JSON.parse(result).userID;
+					groupDiv.html(groupDiv.html()+"<br>"+"User Post Passed");
+					groupDiv.html(groupDiv.html()+"<br>"+"Testing GET");
+					UserGetTest();
+				}
+			}
+		},
+		error: function (xhr, ajaxOptions, thrownError) {
+		alert(xhr.status);
+		alert(thrownError);
+		}
+   });
+};
+UserPutTest = function() {
+	var resultDiv = $("#resultDivContainer");
+	var groupDiv = $("#UserRes");
+	var datta = JSON.stringify({"userID": document.getElementById('GETid').value , "field" : "title", "value" : "PutTest"});
+	//{"userID": document.getElementById('GETid'), "field": "title" , "value": "TestWorked"});	
+    $.ajax({
+        url: "http://csse371-04.csse.rose-hulman.edu/User/",
+        type: "PUT",
+        data: datta,
+	 	dataType: "text",
+        success: function (result) {
+			switch (result) {
+			    case true:
+			        //processResponse(result);
+			        break;
+			    default:
+			        if (JSON.parse(result).errorMessage !== undefined)
+				{
+					groupDiv.html(groupDiv.html()+"<br>"+"Put User FAIL");
+				}
+				else if(JSON.parse(result).userID !== undefined)
+				{	
+					if(JSON.parse(result).title=='PutTest'){
+						groupDiv.html(groupDiv.html()+"<br>"+"User Put Passed");
+						groupDiv.html(groupDiv.html()+"<br>"+"Testing DELETE");
+						UserDeleteTest();
+					}else{
+						groupDiv.html(groupDiv.html()+"<br>"+"Put User FAIL");
+					}
+				}
+			}
+		},
+		error: function (xhr, ajaxOptions, thrownError) {
+		alert(xhr.status);
+		alert(thrownError);
+		}
+   });
+};
+UserDeleteTest = function() {
+	var groupDiv = $("#UserRes");
+    var resultDiv = $("#resultDivContainer");
+    $.ajax({
+        url: "http://csse371-04.csse.rose-hulman.edu/User/"+document.getElementById('GETid').value,
+        type: "DELETE",
+        success: function (result) {
+            switch (result) {
+                case true:
+                    //processResponse(result);
+                    break;
+                default:
+					if (JSON.parse(result).errorMessage !== undefined)
+					{
+						groupDiv.html(groupDiv.html()+"<br>"+"Delete User FAIL");
+					}
+					else if(JSON.parse(result).valid=="true")
+					{
+						groupDiv.html(groupDiv.html()+"<br>"+"Delete User Passed");
+					}
+            }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+        alert(xhr.status);
+        alert(thrownError);
+        }
+    });
+};
+</script>
+<h1>Agenda TestCases</h1>
+<div id="AgendaRes"></div>
+<h1>Note TestCases</h1>
+<div id="NoteRes"></div>
+<h1>Task TestCases</h1>
+<div id="TaskRes"></div>
+<h1>Project TestCases</h1>
+<div id="ProjectRes"></div>
+<h1>Group TestCases</h1>
+<div id="GroupRes"></div>
+
+<div id="resultDivContainer"></div>
+
+</body>
+</html> 
