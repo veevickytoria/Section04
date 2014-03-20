@@ -210,25 +210,33 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 
 	public static void parseTaskNoCheck(JsonNode node, Task t) {
 		// start parsing a task
-
-		t.setDescription(node.hasNonNull(Keys.Task.DESC) ? node.get(
-				Keys.Task.DESC).asText() : "");
-		t.setTitle(node.hasNonNull(Keys.Task.TITLE) ? node.get(Keys.Task.TITLE)
-				.asText() : "");
-		t.setEndTime(node.hasNonNull(Keys.Task.DEADLINE) ? node.get(
-				Keys.Task.DEADLINE).asText() : "");
-		t.setDateCreated(node.hasNonNull(Keys.Task.DATE_CREATED) ? node.get(
-				Keys.Task.DATE_CREATED).asText() : "");
-		t.setDateAssigned(node.hasNonNull(Keys.Task.DATE_ASSIGNED) ? node.get(
-				Keys.Task.DATE_ASSIGNED).asText() : "");
-		t.setCompletionCriteria(node.hasNonNull(Keys.Task.CRITERIA) ? node.get(
-				Keys.Task.CRITERIA).asText() : "");
-		t.setAssignedTo(node.hasNonNull(Keys.Task.ASSIGNED_TO) ? node.get(
-				Keys.Task.ASSIGNED_TO).asText() : "");
-		t.setAssignedFrom(node.hasNonNull(Keys.Task.ASSIGNED_FROM) ? node.get(
-				Keys.Task.ASSIGNED_FROM).asText() : "");
-		t.setCreatedBy(node.hasNonNull(Keys.Task.CREATED_BY) ? node.get(
-				Keys.Task.CREATED_BY).asText() : "");
+		t.setDescription(JsonUtils.getJSONValue(node, Keys.Task.DESC));
+		t.setTitle(JsonUtils.getJSONValue(node, Keys.Task.TITLE));
+		t.setEndTime(JsonUtils.getJSONValue(node, Keys.Task.DEADLINE));
+		t.setDateCreated(JsonUtils.getJSONValue(node, Keys.Task.DATE_CREATED));
+		t.setDateAssigned(JsonUtils.getJSONValue(node, Keys.Task.DATE_ASSIGNED));
+		t.setCompletionCriteria(JsonUtils.getJSONValue(node, Keys.Task.CRITERIA));
+		t.setAssignedTo(JsonUtils.getJSONValue(node, Keys.Task.ASSIGNED_TO));
+		t.setAssignedTo(JsonUtils.getJSONValue(node, Keys.Task.ASSIGNED_FROM));
+		t.setCreatedBy(JsonUtils.getJSONValue(node, Keys.Task.CREATED_BY));
+//		t.setDescription(node.hasNonNull(Keys.Task.DESC) ? node.get(
+//				Keys.Task.DESC).asText() : "");
+//		t.setTitle(node.hasNonNull(Keys.Task.TITLE) ? node.get(Keys.Task.TITLE)
+//				.asText() : "");
+//		t.setEndTime(node.hasNonNull(Keys.Task.DEADLINE) ? node.get(
+//				Keys.Task.DEADLINE).asText() : "");
+//		t.setDateCreated(node.hasNonNull(Keys.Task.DATE_CREATED) ? node.get(
+//				Keys.Task.DATE_CREATED).asText() : "");
+//		t.setDateAssigned(node.hasNonNull(Keys.Task.DATE_ASSIGNED) ? node.get(
+//				Keys.Task.DATE_ASSIGNED).asText() : "");
+//		t.setCompletionCriteria(node.hasNonNull(Keys.Task.CRITERIA) ? node.get(
+//				Keys.Task.CRITERIA).asText() : "");
+//		t.setAssignedTo(node.hasNonNull(Keys.Task.ASSIGNED_TO) ? node.get(
+//				Keys.Task.ASSIGNED_TO).asText() : "");
+//		t.setAssignedFrom(node.hasNonNull(Keys.Task.ASSIGNED_FROM) ? node.get(
+//				Keys.Task.ASSIGNED_FROM).asText() : "");
+//		t.setCreatedBy(node.hasNonNull(Keys.Task.CREATED_BY) ? node.get(
+//				Keys.Task.CREATED_BY).asText() : "");
 		t.setIsCompleted(node.hasNonNull(Keys.Task.COMPLETED) ? node.get(
 				Keys.Task.COMPLETED).asBoolean() : false);
 

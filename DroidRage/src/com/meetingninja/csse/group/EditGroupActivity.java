@@ -81,8 +81,7 @@ public class EditGroupActivity extends Activity implements TokenListener {
 		titleText.setText(displayedGroup.getGroupTitle());
 
 		// allows keyboard to hide when not editing text
-		findViewById(R.id.group_edit_main_container).setOnTouchListener(
-				new OnTouchListener() {
+		findViewById(R.id.group_edit_main_container).setOnTouchListener(new OnTouchListener() {
 					@Override
 					public boolean onTouch(View v, MotionEvent event) {
 						hideKeyboard();
@@ -90,8 +89,7 @@ public class EditGroupActivity extends Activity implements TokenListener {
 					}
 				});
 
-		mUserAdapter = new UserArrayAdapter(this, R.layout.list_item_user,
-				displayedGroup.getMembers());
+		mUserAdapter = new UserArrayAdapter(this, R.layout.list_item_user,displayedGroup.getMembers());
 		mListView = (EnhancedListView) findViewById(R.id.group_list);
 		mListView.setAdapter(mUserAdapter);
 		for (int k = 0; k < displayedGroup.getMembers().size(); k++) {
@@ -126,8 +124,7 @@ public class EditGroupActivity extends Activity implements TokenListener {
 		mListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View v, int position,
-					long id) {
+			public void onItemClick(AdapterView<?> arg0, View v, int position,long id) {
 				User clicked = mUserAdapter.getItem(position);
 				Intent profileIntent = new Intent(v.getContext(),
 						ProfileActivity.class);
@@ -153,9 +150,11 @@ public class EditGroupActivity extends Activity implements TokenListener {
 		new GetContactsTask(new AsyncResponse<List<Contact>>(){
 			@Override
 			public void processFinish(List<Contact> result) {
-				addContacts(result);
+//				addContacts(result);
 			}
 		}).execute((SessionManager.getInstance()).getUserID());
+		
+		bothUsers.addAll(allUsers);
 
 	}
 
@@ -166,19 +165,19 @@ public class EditGroupActivity extends Activity implements TokenListener {
 		return true;
 	}
 
-	private void addContacts(List<Contact> allContacts){
-		for(Contact c : allContacts){
-			bothUsers.add(c.getContact());
-			allUsers.remove(c.getContact());
-		}
-
-		bothUsers.addAll(allUsers);
-	}
+//	private void addContacts(List<Contact> allContacts){
+//		for(Contact c : allContacts){
+//			bothUsers.add(c.getContact());
+//			allUsers.remove(c.getContact());
+//		}
+//		//TODO: check if above code is useful?
+//		//TODO: add current user to list?
+//		bothUsers.addAll(allUsers);
+//	}
 
 	private void hideKeyboard() {
 		InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-		inputMethodManager.hideSoftInputFromWindow(getCurrentFocus()
-				.getWindowToken(), 0);
+		inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
 	}
 
 	private final View.OnClickListener gActionBarListener = new OnClickListener() {
@@ -193,11 +192,9 @@ public class EditGroupActivity extends Activity implements TokenListener {
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		// Make an Ok/Cancel ActionBar
-		View actionBarButtons = inflater.inflate(R.layout.actionbar_ok_cancel,
-				new LinearLayout(this), false);
+		View actionBarButtons = inflater.inflate(R.layout.actionbar_ok_cancel,new LinearLayout(this), false);
 
-		View cancelActionView = actionBarButtons
-				.findViewById(R.id.action_cancel);
+		View cancelActionView = actionBarButtons.findViewById(R.id.action_cancel);
 		cancelActionView.setOnClickListener(gActionBarListener);
 
 		View doneActionView = actionBarButtons.findViewById(R.id.action_done);
@@ -245,14 +242,12 @@ public class EditGroupActivity extends Activity implements TokenListener {
 	}
 
 	public void addMember(View view) {
-
-
-
 		dlg = new Dialog(this);
 		dlg.setTitle("Search by name or email:");
 		View autocompleteView = getLayoutInflater().inflate(R.layout.fragment_autocomplete, null);
 		final ContactTokenTextView input = (ContactTokenTextView) autocompleteView.findViewById(R.id.my_autocomplete);
-		autoAdapter = new AutoCompleteAdapter(this, bothUsers);
+//		autoAdapter = new AutoCompleteAdapter(this, bothUsers);
+		autoAdapter = new AutoCompleteAdapter(this,allUsers);
 		input.setAdapter(autoAdapter);
 		input.setTokenListener(this);
 		dlg.setContentView(autocompleteView);
