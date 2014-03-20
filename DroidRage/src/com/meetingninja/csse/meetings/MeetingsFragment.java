@@ -128,6 +128,13 @@ public class MeetingsFragment extends Fragment implements
 
 		setupSwipeList();
 	}
+	
+	private void loadMeeting (Meeting meeting) {
+		while (meeting.getEndTimeInMillis() == 0L);
+		Intent viewMeeting = new Intent(getActivity(), ViewMeetingActivity.class);
+		viewMeeting.putExtra(Keys.Meeting.PARCEL, meeting);
+		startActivityForResult(viewMeeting, 6);
+	}
 
 	private void setupSwipeList() {
 		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -136,8 +143,7 @@ public class MeetingsFragment extends Fragment implements
 			public void onItemClick(AdapterView<?> parentAdapter, View v,
 					int position, long id) {
 				Meeting clicked = meetingAdpt.getItem(position);
-				editMeeting(clicked, position);
-
+				loadMeeting(clicked);
 			}
 		});
 
