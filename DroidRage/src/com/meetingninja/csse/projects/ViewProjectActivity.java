@@ -8,6 +8,7 @@ import objects.Meeting;
 import objects.Note;
 import objects.Project;
 import objects.User;
+import objects.parcelable.UserParcel;
 
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.SessionManager;
@@ -49,15 +50,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-public class ViewProjectActivity extends FragmentActivity implements ActionBar.TabListener {
+public class ViewProjectActivity extends FragmentActivity implements
+		ActionBar.TabListener {
 	ArrayList<String> navItems;
 	private static int prevSelectedItem = 0;
-	//	private ProjectTypeAdapter typeAdapter;
+	// private ProjectTypeAdapter typeAdapter;
 	private Project project;
 	private int resultCode = Activity.RESULT_CANCELED;
 	private MemberListFragment memberFrag;
 	private MeetingsProjectFragment meetingFrag;
 	private NotesProjectFragment notesFrag;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -70,9 +73,14 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 		project = getIntent().getExtras().getParcelable(Keys.Project.PARCEL);
 
 		getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		getActionBar().addTab(getActionBar().newTab().setText("Meetings").setTabListener(this));
-		getActionBar().addTab(getActionBar().newTab().setText("Notes").setTabListener(this));
-		getActionBar().addTab(getActionBar().newTab().setText("Members").setTabListener(this));
+		getActionBar().addTab(
+				getActionBar().newTab().setText("Meetings")
+						.setTabListener(this));
+		getActionBar().addTab(
+				getActionBar().newTab().setText("Notes").setTabListener(this));
+		getActionBar()
+				.addTab(getActionBar().newTab().setText("Members")
+						.setTabListener(this));
 		getActionBar().setTitle(project.getProjectTitle());
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -95,8 +103,8 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 		case R.id.action_refresh:
 			// TaskDeleter deleter = new TaskDeleter();
 			// deleter.deleteTask(displayedTask.getID());
-			//			setResult(RESULT_OK);
-			//			finish();
+			// setResult(RESULT_OK);
+			// finish();
 			refreshProject();
 			return true;
 		case R.id.action_edit:
@@ -114,87 +122,102 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 
 	}
 
-	private void refreshProject(){
-		//TODO
+	private void refreshProject() {
+		// TODO
 	}
 
-	private void editTitle(){
+	private void editTitle() {
 		final EditText title = new EditText(this);
 		title.setText(project.getProjectTitle());
 		title.selectAll();
 		new AlertDialog.Builder(this).setTitle("Enter a title")
-		.setPositiveButton("OK", new OnClickListener() {
+				.setPositiveButton("OK", new OnClickListener() {
 
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				project.setProjectTitle(title.getText().toString());
-				getActionBar().setTitle(project.getProjectTitle());
-				updateProject();
-			}
-		}).setView(title).show();
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						project.setProjectTitle(title.getText().toString());
+						getActionBar().setTitle(project.getProjectTitle());
+						updateProject();
+					}
+				}).setView(title).show();
 	}
 
-	private void editProject(){
-		switch(prevSelectedItem){
+	private void editProject() {
+		switch (prevSelectedItem) {
 		case 0:
-			AlertDialogUtil.showTwoOptionsDialog(this, "Select an option", "Would you like to create a meeting or select an existing meeting?", 
-					"Create a meeting", "Select a meeting", new OnClickListener(){
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					createMeeting();
-				}
+			AlertDialogUtil
+					.showTwoOptionsDialog(
+							this,
+							"Select an option",
+							"Would you like to create a meeting or select an existing meeting?",
+							"Create a meeting", "Select a meeting",
+							new OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									createMeeting();
+								}
 
-			}, new OnClickListener(){
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					selectMeeting();
-				}
-			});
+							}, new OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									selectMeeting();
+								}
+							});
 			break;
 		case 1:
-			AlertDialogUtil.showTwoOptionsDialog(this, "Select an option", "Would you like to create a note or select an existing note?", 
-					"Create a note", "Select a note", new OnClickListener(){
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					createNote();
-				}
+			AlertDialogUtil
+					.showTwoOptionsDialog(
+							this,
+							"Select an option",
+							"Would you like to create a note or select an existing note?",
+							"Create a note", "Select a note",
+							new OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									createNote();
+								}
 
-			}, new OnClickListener(){
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					selectNote();
-				}
-			});
+							}, new OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									selectNote();
+								}
+							});
 			break;
 		case 2:
-			//			addMember();
-			if(memberFrag != null){
+			// addMember();
+			if (memberFrag != null) {
 				memberFrag.addContactsOption();
 			}
 			break;
-		default: return;
+		default:
+			return;
 		}
 	}
 
-	public void createMeeting(){
-		Intent editMeeting = new Intent(this,
-				EditMeetingActivity.class);
+	public void createMeeting() {
+		Intent editMeeting = new Intent(this, EditMeetingActivity.class);
 		editMeeting.putExtra(EditMeetingActivity.EXTRA_EDIT_MODE, true);
 		startActivityForResult(editMeeting, 2);
 	}
 
-	public void selectMeeting(){
-		MeetingFetcherTask fetcher = new MeetingFetcherTask(new AsyncResponse<List<Meeting>>(){
-			@Override
-			public void processFinish(List<Meeting> result) {
-				selectMeeting(result);
-			}
+	public void selectMeeting() {
+		MeetingFetcherTask fetcher = new MeetingFetcherTask(
+				new AsyncResponse<List<Meeting>>() {
+					@Override
+					public void processFinish(List<Meeting> result) {
+						selectMeeting(result);
+					}
 
-		});
+				});
 		fetcher.execute(SessionManager.getInstance().getUserID());
 	}
 
-	public void selectMeeting(List<Meeting> meetings){
+	public void selectMeeting(List<Meeting> meetings) {
 		final Dialog dlg = new Dialog(this);
 		LayoutInflater li = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View v = li.inflate(R.layout.activity_project_custom_dialog, null);
@@ -203,18 +226,18 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 				R.layout.list_item_meeting, meetings);
 		lv.setAdapter(adpt);
 		Button cancel = (Button) v.findViewById(R.id.button);
-		cancel.setOnClickListener(new View.OnClickListener(){
+		cancel.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				dlg.dismiss();
 			}
 
 		});
-		lv.setOnItemClickListener(new OnItemClickListener(){
+		lv.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parantAdpt, View v, int position,
-					long id) {
+			public void onItemClick(AdapterView<?> parantAdpt, View v,
+					int position, long id) {
 				addMeeting(adpt.getItem(position));
 				dlg.dismiss();
 			}
@@ -224,20 +247,20 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 		dlg.show();
 	}
 
-	public void createNote(){
+	public void createNote() {
 		Intent createNote = new Intent(this, EditNoteActivity.class);
 		createNote.putExtra(Note.CREATE_NOTE, true);
 		startActivityForResult(createNote, 3);
 
 	}
 
-	public void selectNote(){
+	public void selectNote() {
 		SQLiteNoteAdapter mySQLiteAdapter = new SQLiteNoteAdapter(this);
 		selectNote(mySQLiteAdapter.getAllNotes());
 
 	}
 
-	public void selectNote(List<Note> notes){
+	public void selectNote(List<Note> notes) {
 		final Dialog dlg = new Dialog(this);
 		LayoutInflater li = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View v = li.inflate(R.layout.activity_project_custom_dialog, null);
@@ -246,18 +269,18 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 				R.layout.list_item_meeting, notes);
 		lv.setAdapter(adpt);
 		Button cancel = (Button) v.findViewById(R.id.button);
-		cancel.setOnClickListener(new View.OnClickListener(){
+		cancel.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				dlg.dismiss();
 			}
 
 		});
-		lv.setOnItemClickListener(new OnItemClickListener(){
+		lv.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parantAdpt, View v, int position,
-					long id) {
+			public void onItemClick(AdapterView<?> parantAdpt, View v,
+					int position, long id) {
 				addNote(adpt.getItem(position));
 				dlg.dismiss();
 			}
@@ -267,10 +290,11 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 		dlg.show();
 	}
 
-	protected void addMember(User user){
-		for(int i = 0; i < project.getMembers().size(); i++){
-			if(user.getID().equals(project.getMembers().get(i).getID())){
-				AlertDialogUtil.showErrorDialog(this, "This user is already a member of your group");
+	protected void addMember(User user) {
+		for (int i = 0; i < project.getMembers().size(); i++) {
+			if (user.getID().equals(project.getMembers().get(i).getID())) {
+				AlertDialogUtil.showErrorDialog(this,
+						"This user is already a member of your group");
 				return;
 			}
 		}
@@ -279,49 +303,49 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 		setProjectTab(2);
 	}
 
-	protected void deleteMember(User user){
-		for(int i = 0; i < project.getMembers().size(); i++){
-			if(user.getID().equals(project.getMembers().get(i).getID())){
+	protected void deleteMember(User user) {
+		for (int i = 0; i < project.getMembers().size(); i++) {
+			if (user.getID().equals(project.getMembers().get(i).getID())) {
 				project.getMembers().remove(i);
-				updateProject();				
+				updateProject();
 			}
 		}
 	}
 
-	protected void deleteNote(Note note){
-		for(int i = 0; i < project.getNotes().size(); i++){
-			if(note.getID().equals(project.getNotes().get(i).getID())){
+	protected void deleteNote(Note note) {
+		for (int i = 0; i < project.getNotes().size(); i++) {
+			if (note.getID().equals(project.getNotes().get(i).getID())) {
 				project.getNotes().remove(i);
-				updateProject();				
+				updateProject();
 			}
 		}
 	}
 
-	protected void addNote(Note note){
+	protected void addNote(Note note) {
 		project.addNote(note);
 		setProjectTab(1);
 		updateProject();
 	}
 
-	protected void deleteMeeting(Meeting meeting){
-		for(int i = 0; i < project.getMeetings().size(); i++){
-			if(meeting.getID().equals(project.getMeetings().get(i).getID())){
+	protected void deleteMeeting(Meeting meeting) {
+		for (int i = 0; i < project.getMeetings().size(); i++) {
+			if (meeting.getID().equals(project.getMeetings().get(i).getID())) {
 				project.getMeetings().remove(i);
-				updateProject();				
+				updateProject();
 			}
 		}
 	}
 
-	protected void addMeeting(Meeting meeting){
-		//		new  SQLiteMeetingAdapter(this).updateMeeting(meeting);
+	protected void addMeeting(Meeting meeting) {
+		// new SQLiteMeetingAdapter(this).updateMeeting(meeting);
 		project.addMeeting(meeting);
 		setProjectTab(0);
 		updateProject();
 	}
 
-	private void updateProject(){
+	private void updateProject() {
 		resultCode = Activity.RESULT_OK;
-		new AsyncTask<Project, Void, Void>(){
+		new AsyncTask<Project, Void, Void>() {
 
 			@Override
 			protected Void doInBackground(Project... params) {
@@ -340,43 +364,50 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == Activity.RESULT_OK) {
-			if(requestCode == 2){
+			if (requestCode == 2) {
 				Meeting created = data.getParcelableExtra(Keys.Meeting.PARCEL);
 				addMeeting(created);
-			}else if(requestCode == 3){
+			} else if (requestCode == 3) {
 				Note created = data.getParcelableExtra(Keys.Note.PARCEL);
 				addNote(created);
 			}
 		}
 	}
 
-	private void setProjectTab(int pos){
-		//		Parcel parcel = new Parcel()
+	private void setProjectTab(int pos) {
+		// Parcel parcel = new Parcel()
 		prevSelectedItem = pos;
 		Fragment frag = null;
 		FragmentManager fm = getSupportFragmentManager();
 		Bundle args = new Bundle();
-		switch(pos){
+		switch (pos) {
 		case 0:
-			meetingFrag = new MeetingsProjectFragment().setProjectController(this);
+			meetingFrag = new MeetingsProjectFragment()
+					.setProjectController(this);
 			frag = meetingFrag;
-			args.putParcelableArrayList(Keys.Project.MEETINGS, (ArrayList<Meeting>) project.getMeetings());
+			args.putParcelableArrayList(Keys.Project.MEETINGS,
+					(ArrayList<Meeting>) project.getMeetings());
 			break;
 		case 1:
 			notesFrag = new NotesProjectFragment().setProjectController(this);
 			frag = notesFrag;
-			args.putParcelableArrayList(Keys.Project.NOTES, (ArrayList<Note>) project.getNotes());
+			args.putParcelableArrayList(Keys.Project.NOTES,
+					(ArrayList<Note>) project.getNotes());
 			break;
 		case 2:
 			memberFrag = new MemberListFragment().setProjectController(this);
 			frag = memberFrag;
-			args.putParcelableArrayList(Keys.Project.MEMBERS, (ArrayList<User>) project.getMembers());
+			ArrayList<UserParcel> userParcels = new ArrayList<UserParcel>();
+			for (User user : project.getMembers()) {
+				userParcels.add(new UserParcel(user));
+			}
+			args.putParcelableArrayList(Keys.Project.MEMBERS, userParcels);
 			break;
 		default:
 			Log.e("View Project", "Cannot change tab");
 			return;
 		}
-		if(frag != null){
+		if (frag != null) {
 			frag.setArguments(args);
 			FragmentTransaction ft = fm.beginTransaction();
 			ft.replace(R.id.content_frame, frag).commitAllowingStateLoss();
@@ -385,7 +416,7 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 
 	@Override
 	public void onTabReselected(Tab tab, android.app.FragmentTransaction ft) {
-		//do nothing
+		// do nothing
 	}
 
 	@Override
@@ -396,7 +427,7 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 
 	@Override
 	public void onTabUnselected(Tab tab, android.app.FragmentTransaction ft) {
-		//do nothing
+		// do nothing
 
 	}
 }

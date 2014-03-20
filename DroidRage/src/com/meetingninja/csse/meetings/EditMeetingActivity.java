@@ -91,11 +91,13 @@ public class EditMeetingActivity extends FragmentActivity implements
 			edit_mode = extras.getBoolean(EXTRA_EDIT_MODE, true);
 			displayedMeeting = extras.getParcelable(EXTRA_MEETING);
 		}
+		session = SessionManager.getInstance();
+
 		is24 = android.text.format.DateFormat
 				.is24HourFormat(getApplicationContext());
-		session = SessionManager.getInstance();
 		timeFormat = is24 ? MyDateUtils.JODA_24_TIME_FORMAT
 				: MyDateUtils.JODA_12_TIME_FORMAT;
+
 		mySQLiteAdapter = new SQLiteMeetingAdapter(this);
 
 		setupViews();

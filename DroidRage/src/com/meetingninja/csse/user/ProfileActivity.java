@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (C) 2014 The Android Open Source Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,6 +16,7 @@
 package com.meetingninja.csse.user;
 
 import objects.User;
+import objects.parcelable.UserParcel;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -46,14 +47,15 @@ public class ProfileActivity extends FragmentActivity {
 		FragmentManager fm = getSupportFragmentManager();
 		Bundle input = getIntent().getExtras();
 		if (input != null && input.containsKey(Keys.User.PARCEL)) {
-			displayedUser = (User) input.getParcelable(Keys.User.PARCEL);
+			displayedUser = ((UserParcel) input.getParcelable(Keys.User.PARCEL))
+					.getUser();
 		}
 		ProfileFragment profFrag = new ProfileFragment();
 		Bundle args = new Bundle();
 
 		if (displayedUser != null) {
 			// args.putString("userID", displayedUser.getID());
-			args.putParcelable(Keys.User.PARCEL, displayedUser);
+			args.putParcelable(Keys.User.PARCEL, new UserParcel(displayedUser));
 			args.putString("notMine", "yup");
 			profFrag.setArguments(args);
 			fm.beginTransaction().replace(R.id.profile_container, profFrag)

@@ -5,6 +5,7 @@ import org.joda.time.DateTime;
 import android.text.TextUtils;
 
 import com.meetingninja.csse.extras.MyDateUtils;
+import com.meetingninja.csse.extras.NinjaTextUtils;
 
 public abstract class Event implements Comparable<Event> {
 	protected String title;
@@ -26,7 +27,7 @@ public abstract class Event implements Comparable<Event> {
 	}
 
 	public String getTitle() {
-		return (!TextUtils.isEmpty(title)) ? title : "";
+		return (!NinjaTextUtils.isEmpty(title)) ? title : "";
 	}
 
 	public void setTitle(String title) {
@@ -34,12 +35,12 @@ public abstract class Event implements Comparable<Event> {
 	}
 
 	public String getStartTime() {
-		return (!TextUtils.isEmpty(startTime)) ? startTime
+		return (!NinjaTextUtils.isEmpty(startTime)) ? startTime
 				: MyDateUtils.JODA_SERVER_DATE_FORMAT.print(new DateTime(0L));
 	}
 
 	public long getStartTimeInMillis() {
-		return (!TextUtils.isEmpty(startTime)) ? Long.parseLong(startTime) : 0L;
+		return (!NinjaTextUtils.isEmpty(startTime)) ? Long.parseLong(startTime) : 0L;
 	}
 
 	public void setStartTime(String datetimeStart) {
@@ -51,12 +52,12 @@ public abstract class Event implements Comparable<Event> {
 	}
 
 	public String getEndTime() {
-		return (!TextUtils.isEmpty(endTime)) ? endTime
+		return (!NinjaTextUtils.isEmpty(endTime)) ? endTime
 				: MyDateUtils.JODA_SERVER_DATE_FORMAT.print(new DateTime(1L));
 	}
 
 	public long getEndTimeInMillis() {
-		return (!TextUtils.isEmpty(endTime)) ? Long.parseLong(endTime) : 0L;
+		return (!NinjaTextUtils.isEmpty(endTime)) ? Long.parseLong(endTime) : 0L;
 	}
 
 	public void setEndTime(String datetimeEnd) {
@@ -68,7 +69,7 @@ public abstract class Event implements Comparable<Event> {
 	}
 
 	public String getDescription() {
-		return (!TextUtils.isEmpty(description)) ? description : "";
+		return (!NinjaTextUtils.isEmpty(description)) ? description : "";
 	}
 
 	public void setDescription(String description) {

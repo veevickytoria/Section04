@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (C) 2014 The Android Open Source Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,6 +18,7 @@ package com.meetingninja.csse.user;
 import java.util.Map;
 
 import objects.User;
+import objects.parcelable.UserParcel;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -68,7 +69,7 @@ public class ProfileFragment extends Fragment {
 
 		if (extras != null && extras.containsKey(Keys.User.PARCEL)) {
 
-			displayedUser = (User) extras.getParcelable(Keys.User.PARCEL);
+			displayedUser = ((UserParcel) extras.getParcelable(Keys.User.PARCEL)).getUser();
 			try {
 				System.out.println(JsonUtils.getObjectMapper()
 						.writeValueAsString(displayedUser));
@@ -102,7 +103,7 @@ public class ProfileFragment extends Fragment {
 		switch (item.getItemId()) {
 		case R.id.edit_item_profile:
 			Intent i = new Intent(getActivity(), EditProfileActivity.class);
-			i.putExtra(Keys.User.PARCEL, displayedUser);
+			i.putExtra(Keys.User.PARCEL, new UserParcel(displayedUser));
 			startActivityForResult(i, 7);
 			return true;
 		default:
@@ -114,7 +115,7 @@ public class ProfileFragment extends Fragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == Activity.RESULT_OK) {
 			if (requestCode == 7) {
-				displayedUser = data.getParcelableExtra(Keys.User.PARCEL);
+				displayedUser = ((UserParcel) data.getParcelableExtra(Keys.User.PARCEL)).getUser();
 				setUser(displayedUser);
 			}
 		}

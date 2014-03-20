@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (C) 2014 The Android Open Source Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,6 +23,7 @@ import java.util.TimeZone;
 import objects.SerializableUser;
 import objects.Task;
 import objects.User;
+import objects.parcelable.UserParcel;
 
 import org.joda.time.format.DateTimeFormatter;
 
@@ -131,7 +132,7 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 		assignedUsers.clear();
 //		TODO: change to a loop when backend allows for multiple assigned to
 		assignedUsers.addAll(displayTask.getMembers());
-		
+
 		setCompletedViews();
 		// TODO: use string.xml
 
@@ -320,7 +321,7 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 			public void onItemClick(AdapterView<?> arg0, View v, int position,long id) {
 				User clicked = mUserAdapter.getItem(position);
 				Intent profileIntent = new Intent(v.getContext(),ProfileActivity.class);
-				profileIntent.putExtra(Keys.User.PARCEL, clicked);
+				profileIntent.putExtra(Keys.User.PARCEL, new UserParcel(clicked));
 				startActivity(profileIntent);
 
 			}
@@ -336,7 +337,7 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 		// for(int i = 0;i<mems.size();i++){
 		// loadUser(mems.get(i).toString(),false);
 		// }
-		
+
 		// TODO: change to a loop when backend catches up
 		String mem = displayTask.getAssignedTo();
 		loadUser(mem, false);
@@ -432,7 +433,7 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 				if (displayTask.getMembers().isEmpty()) {
 					displayTask.addMember(result);
 				}
-				
+
 				mUserAdapter.notifyDataSetChanged();
 			}
 		});

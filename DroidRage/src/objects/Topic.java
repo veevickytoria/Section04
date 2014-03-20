@@ -92,4 +92,9 @@ public class Topic implements Serializable {
 	public void addTopic(int index, Topic subTopic) {
 		this.subTopics.add(index, subTopic);
 	}
+
+	@Override
+	public String toString() {
+		return String.format("%s (%d)", this.topic, this.subTopics.size());
+	}
 }

@@ -17,11 +17,12 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.meetingninja.csse.database.Keys;
+import com.meetingninja.csse.extras.NinjaTextUtils;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "userID", "displayName", "email", "phone", "company",
 		"title", "location" })
-public class User extends AbstractJSONObject<User> implements Parcelable {
+public class User extends AbstractJSONObject<User> {
 	private String userID;
 	private String displayName;
 	private String email;
@@ -42,10 +43,6 @@ public class User extends AbstractJSONObject<User> implements Parcelable {
 		setCompany(copyUser.getCompany());
 		setTitle(copyUser.getTitle());
 		setLocation(getLocation());
-	}
-
-	public User(Parcel in) {
-		readFromParcel(in);
 	}
 
 	public User(Cursor crsr) {
@@ -128,7 +125,7 @@ public class User extends AbstractJSONObject<User> implements Parcelable {
 	/* Optional fields */
 
 	public String getPhone() {
-		return !TextUtils.isEmpty(phone) ? phone : "";
+		return !NinjaTextUtils.isEmpty(phone) ? phone : "";
 	}
 
 	public void setPhone(String phone) {
@@ -136,7 +133,7 @@ public class User extends AbstractJSONObject<User> implements Parcelable {
 	}
 
 	public String getCompany() {
-		return !TextUtils.isEmpty(company) ? company : "";
+		return !NinjaTextUtils.isEmpty(company) ? company : "";
 	}
 
 	public void setCompany(String company) {
@@ -144,7 +141,7 @@ public class User extends AbstractJSONObject<User> implements Parcelable {
 	}
 
 	public String getTitle() {
-		return !TextUtils.isEmpty(title) ? title : "";
+		return !NinjaTextUtils.isEmpty(title) ? title : "";
 	}
 
 	public void setTitle(String title) {
@@ -156,7 +153,7 @@ public class User extends AbstractJSONObject<User> implements Parcelable {
 	}
 
 	public String getLocation() {
-		return !TextUtils.isEmpty(location) ? location : "";
+		return !NinjaTextUtils.isEmpty(location) ? location : "";
 	}
 
 	public SerializableUser toSimpleUser() {
@@ -166,7 +163,7 @@ public class User extends AbstractJSONObject<User> implements Parcelable {
 		simple.setEmail(this.getEmail());
 		return simple;
 	}
-	
+
 	@Override
 	public boolean equals(Object u){
 		if(u instanceof User){
@@ -174,48 +171,6 @@ public class User extends AbstractJSONObject<User> implements Parcelable {
 		}
 		return false;
 	}
-
-	@Override
-	public int describeContents() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(getID());
-		dest.writeString(getDisplayName());
-		dest.writeString(getEmail());
-		dest.writeString(getPhone());
-		dest.writeString(getCompany());
-		dest.writeString(getTitle());
-		dest.writeString(getLocation());
-
-	}
-
-	private void readFromParcel(Parcel in) {
-		userID = in.readString();
-		displayName = in.readString();
-		email = in.readString();
-		phone = in.readString();
-		company = in.readString();
-		title = in.readString();
-		location = in.readString();
-	}
-
-	public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
-
-		@Override
-		public User createFromParcel(Parcel in) {
-			return new User(in);
-		}
-
-		@Override
-		public User[] newArray(int size) {
-			return new User[size];
-		}
-
-	};
 
 	@Override
 	public JsonNode toJSON() throws JsonGenerationException, IOException {

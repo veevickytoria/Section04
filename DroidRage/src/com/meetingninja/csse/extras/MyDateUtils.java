@@ -19,6 +19,8 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
+import android.R;
+
 public class MyDateUtils {
 	/* JodaTime Formatter */
 	public static final DateTimeFormatter ISO8601_FMT = ISODateTimeFormat

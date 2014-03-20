@@ -1,6 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="@dimen/activity_horizontal_margin"
     android:orientation="vertical" >
 
     <LinearLayout
@@ -17,58 +18,44 @@
                 android:id="@+id/meeting_title_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:enabled="true"
-                android:gravity="center"
-                android:hint="Event Name"
+                android:hint="Meeting Title"
                 android:textSize="25sp" />
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray" />
 
             <TextView
                 android:id="@+id/meeting_location_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/vertical_spacer"
-                android:ems="10"
                 android:hint="Location" />
 
             <TextView
                 android:id="@+id/meeting_desc_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/vertical_spacer"
-                android:hint="Description"
-                android:inputType="textAutoComplete" />
+                android:hint="Description" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/vertical_spacer"
                 android:orientation="vertical" >
 
                 <TextView
-                    android:id="@+id/profile_phone"
+                    android:id="@+id/from_label"
+                    style="@style/TextAppearance.EditEvent_LabelSmall"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="12dp"
-                    android:hint="FROM"
+                    android:text="From"
                     android:textColor="@android:color/secondary_text_dark" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin" >
+                    android:layout_height="wrap_content" >
 
                     <TextView
                         android:id="@+id/meeting_from_date_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
-                        android:hint="November 13, 2013"
+                        android:hint="January 1, 1970"
                         android:minHeight="32dp" />
 
                     <TextView
@@ -76,7 +63,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:hint="3:30 PM"
+                        android:hint="12:00 AM"
                         android:minHeight="32dip" />
                 </LinearLayout>
             </LinearLayout>
@@ -88,11 +75,11 @@
                 android:orientation="vertical" >
 
                 <TextView
-                    android:id="@+id/meetingTo_view"
+                    android:id="@+id/to_header"
+                    style="@style/TextAppearance.EditEvent_LabelSmall"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="12dp"
-                    android:hint="TO"
+                    android:text="To"
                     android:textColor="@android:color/secondary_text_dark" />
 
                 <LinearLayout
@@ -128,7 +115,7 @@
             android:orientation="vertical" >
 
             <TextView
-                android:id="@+id/response_label"
+                android:id="@+id/attending_header"
                 style="@style/TextAppearance.EditEvent_LabelSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -186,7 +173,7 @@
             android:orientation="vertical" >
 
             <TextView
-                android:id="@+id/emailGuestsView"
+                android:id="@+id/emailGuestsButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_newemail"
@@ -203,24 +190,23 @@
 
             <TextView
                 android:id="@+id/text_view_attending"
+                style="@style/TextAppearance.EditEvent_LabelSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
-                android:hint="ATTENDING (0)" />
+                android:hint="Attending (0)" />
 
             <ListView
                 android:id="@+id/guests_attending"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:ems="10" >
+                android:layout_height="0dp" >
             </ListView>
 
             <TextView
                 android:id="@+id/text_view_maybeattending"
+                style="@style/TextAppearance.EditEvent_LabelSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
-                android:hint="MAYBE (0)" />
+                android:hint="Maybe (0)" />
 
             <ListView
                 android:id="@+id/guests_notAttending"
@@ -230,10 +216,10 @@
 
             <TextView
                 android:id="@+id/text_view_notattending"
+                style="@style/TextAppearance.EditEvent_LabelSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
-                android:hint="NO (0)" />
+                android:hint="No (0)" />
 
             <ListView
                 android:id="@+id/guests_notResponded"
@@ -243,50 +229,6 @@
         </LinearLayout>
 
         <!-- REMINDERS -->
-
-        <LinearLayout
-            android:id="@+id/reminders_row"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:focusable="true"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/reminders_group_label"
-                style="@style/TextAppearance.EditEvent_LabelSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="0dip"
-                android:gravity="center_vertical"
-                android:text="@string/event_info_reminders_label" />
-
-            <LinearLayout
-                android:id="@+id/reminder_items_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dip"
-                android:layout_marginRight="8dip"
-                android:layout_marginTop="-8dip"
-                android:orientation="vertical" />
-
-            <Button
-                android:id="@+id/reminder_add"
-                style="@style/TextAppearance.EditEvent_LabelSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginBottom="0dip"
-                android:layout_marginTop="0dip"
-                android:background="?android:attr/selectableItemBackground"
-                android:contentDescription="@string/reminders_label"
-                android:gravity="top"
-                android:minHeight="20dip"
-                android:paddingBottom="12dp"
-                android:text="@string/reminders_label"
-                android:textAllCaps="false"
-                android:textColor="#FF777777"
-                android:textSize="18sp" />
-        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

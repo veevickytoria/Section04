@@ -7,6 +7,7 @@ import objects.Contact;
 import objects.Group;
 import objects.SerializableUser;
 import objects.User;
+import objects.parcelable.UserParcel;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -130,7 +131,7 @@ public class EditGroupActivity extends Activity implements TokenListener {
 				User clicked = mUserAdapter.getItem(position);
 				Intent profileIntent = new Intent(v.getContext(),
 						ProfileActivity.class);
-				profileIntent.putExtra(Keys.User.PARCEL, clicked);
+				profileIntent.putExtra(Keys.User.PARCEL, new UserParcel(clicked));
 				startActivity(profileIntent);
 
 			}
