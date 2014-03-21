@@ -86,7 +86,9 @@
 		0ACE33B117FD245B003B9C0A /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ACE33B017FD245B003B9C0A /* MobileCoreServices.framework */; };
 		0ACE33B317FD2461003B9C0A /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ACE33B217FD2461003B9C0A /* Security.framework */; };
 		0ACE33B517FD246F003B9C0A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ACE33B417FD246F003B9C0A /* SystemConfiguration.framework */; };
-		0AF556B6189F46A000422099 /* OpenEars.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79D3D671189EF9D9000C9194 /* OpenEars.framework */; };
+		0AEC8CBD189F74B200D72EAA /* AcousticModelEnglish.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0AEC8CB9189F74B200D72EAA /* AcousticModelEnglish.bundle */; };
+		0AEC8CBE189F74B200D72EAA /* AcousticModelSpanish.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0AEC8CBA189F74B200D72EAA /* AcousticModelSpanish.bundle */; };
+		0AEC8CC0189F74B200D72EAA /* Slt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AEC8CBC189F74B200D72EAA /* Slt.framework */; };
 		5B0ADDAA188D87510013753B /* iWinGroupTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B0ADDA9188D87510013753B /* iWinGroupTest.m */; };
 		5B2603D8189E7EF400C0A335 /* iWinViewAndCreateProjectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2603D6189E7EF400C0A335 /* iWinViewAndCreateProjectViewController.m */; };
 		5B2603D9189E7EF400C0A335 /* iWinViewAndCreateProjectViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B2603D7189E7EF400C0A335 /* iWinViewAndCreateProjectViewController.xib */; };
