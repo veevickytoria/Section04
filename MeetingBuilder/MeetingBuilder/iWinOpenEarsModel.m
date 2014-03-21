@@ -71,13 +71,49 @@
     double delayInSeconds = 0.45;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        [self.openEarsDelegate speechToText:hypothesis];
+        [self detectCommand:hypothesis];
     });
     
 }
 
+-(void) detectCommand:(NSString*)hypothesis
+{
+    if (([hypothesis rangeOfString:@"GO"].location != NSNotFound) && ([hypothesis rangeOfString:@"HOME"].location != NSNotFound))
+    {
+        [self.menuDelegate goToHomePage];
+    }
+    else if (([hypothesis rangeOfString:@"GO"].location != NSNotFound) && ([hypothesis rangeOfString:@"MEETINGS"].location != NSNotFound))
+    {
+        [self.menuDelegate goToMeetings];
+    }
+    else if (([hypothesis rangeOfString:@"GO"].location != NSNotFound) && ([hypothesis rangeOfString:@"PROFILE"].location != NSNotFound))
+    {
+        [self.menuDelegate goToProfile];
+    }
+    else if (([hypothesis rangeOfString:@"GO"].location != NSNotFound) && ([hypothesis rangeOfString:@"TASK"].location != NSNotFound))
+    {
+        [self.menuDelegate goToTasks];
+    }
+    else if (([hypothesis rangeOfString:@"GO"].location != NSNotFound) && ([hypothesis rangeOfString:@"NOTES"].location != NSNotFound))
+    {
+        [self.menuDelegate goToNotes];
+    }
+    else if (([hypothesis rangeOfString:@"GO"].location != NSNotFound) && ([hypothesis rangeOfString:@"SETTINGS"].location != NSNotFound))
+    {
+        [self.menuDelegate goToSettings];
+    }
+    else if (([hypothesis rangeOfString:@"LOG"].location != NSNotFound) && ([hypothesis rangeOfString:@"OUT"].location != NSNotFound))
+    {
+        [self.menuDelegate goToLogout];
+    }
+    [self.voiceCommand setTitle:@"Voice Command" forState:UIControlStateNormal];
+    self.voiceCommand.userInteractionEnabled = YES;
+}
+
 -(void) startListening
 {
+    [self disableVoiceCommandButtonInteraction];
+    [self.voiceCommand setTitle:@"Wait..." forState:UIControlStateNormal];
     [self.pocketsphinxController startListeningWithLanguageModelAtPath:self.lmPath dictionaryAtPath:self.dicPath acousticModelAtPath:[AcousticModel pathToModel:@"AcousticModelEnglish"] languageModelIsJSGF:NO];
 }
 
@@ -86,41 +122,47 @@
     double delayInSeconds = 0.15;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        //[self.fliteController say:[NSString stringWithFormat:@"Calibrating"] withVoice:self.slt];
-        [self.openEarsDelegate loading];
+        [self disableVoiceCommandButtonInteraction];
+        [self.voiceCommand setTitle:@"Wait..." forState:UIControlStateNormal];
     });
     
 }
 
 - (void) pocketsphinxDidCompleteCalibration {
-    [self.openEarsDelegate loading];
+    [self disableVoiceCommandButtonInteraction];
+    [self.voiceCommand setTitle:@"Wait..." forState:UIControlStateNormal];
 }
 
 - (void) pocketsphinxDidStartListening {
-    
+    [self disableVoiceCommandButtonInteraction];
     double delayInSeconds = 0.25;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
        // [self.fliteController say:[NSString stringWithFormat:@"Speak Now"] withVoice:self.slt];
-        [self.openEarsDelegate speakNow];
+        [self.voiceCommand setTitle:@"Speak Now" forState:UIControlStateNormal];
     });
     
     
 }
 
 - (void) pocketsphinxDidDetectSpeech {
-    [self.openEarsDelegate detecting];
+    [self disableVoiceCommandButtonInteraction];
+    [self.voiceCommand setTitle:@"Detecting" forState:UIControlStateNormal];
 }
 
 - (void) pocketsphinxDidDetectFinishedSpeech {
     
-    
+    [self disableVoiceCommandButtonInteraction];
     double delayInSeconds = 0.35;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
         //[self.fliteController say:[NSString stringWithFormat:@"Analyzing"] withVoice:self.slt];
-        [self.openEarsDelegate detecting];
+        [self.voiceCommand setTitle:@"Detecting" forState:UIControlStateNormal];
     });
+}
+
+-(void)disableVoiceCommandButtonInteraction{
+    self.voiceCommand.userInteractionEnabled = NO;
 }
 
 @end

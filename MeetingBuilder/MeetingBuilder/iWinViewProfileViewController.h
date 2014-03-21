@@ -9,15 +9,8 @@
 
 #import <UIKit/UIKit.h>
 
-//@protocol ProfileDelegate <NSObject>
-//-(void) onClickEditProfile;
-//-(void) onCancel;
-//
-//
-//@end
-
 @interface iWinViewProfileViewController : UIViewController
-//- (IBAction)onChangePicture:(id)sender;
+
 - (IBAction)onEditProfile:(id)sender;
 - (IBAction)onCancel:(id)sender;
 - (IBAction)onCreateGroup:(id)sender;
@@ -37,8 +30,6 @@
 @property (weak, nonatomic) IBOutlet UITextField *titleTextField;
 @property (weak, nonatomic) IBOutlet UITextField *locationTextField;
 @property (weak, nonatomic) IBOutlet UITableView *groupsTableView;
-
-//@property (nonatomic) id<ProfileDelegate> profileDelegate;
 
 
 @end

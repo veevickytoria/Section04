@@ -18,9 +18,9 @@
 #import "iWinOpenEarsModel.h"
 #import "TKCalendarDayView.h"
 #import "TKCalendarDayEventView.h"
+#import "iWinMenuViewController.h"
 
-
-@interface iWinMainViewController : UIViewController <iWinLoginDelegate, iWinRegisterVCDelegate, SettingsDelegate, OpenEarsDelegate, TKCalendarDayViewDelegate, TKCalendarDayViewDataSource, ReloadScheduleDelegate>
+@interface iWinMainViewController : UIViewController <iWinLoginDelegate, iWinRegisterVCDelegate, SettingsDelegate, TKCalendarDayViewDelegate, TKCalendarDayViewDataSource, ReloadScheduleDelegate, MenuDelegate>
 
 
 @property (weak, nonatomic) IBOutlet UIView *mainView;
@@ -32,13 +32,6 @@
 @property (weak, nonatomic) IBOutlet UIView *tapView;
 
 - (IBAction)onClickMenu;
-- (IBAction)onClickHome;
-- (IBAction)onClickLogOut;
-- (IBAction)onClickMeetings;
-- (IBAction)onClickNotes;
-- (IBAction)onClickTasks;
-- (IBAction)onClickSettings;
-- (IBAction)onClickProfile;
 - (IBAction)onClickSchedule;
 
 - (IBAction)startListening:(id)sender;
@@ -46,12 +39,5 @@
 @property (weak, nonatomic) IBOutlet UIButton *scheduleButton;
 @property (weak, nonatomic) IBOutlet UIView *rightSlideView;
 @property (weak, nonatomic) IBOutlet UIButton *menuButton;
-@property (weak, nonatomic) IBOutlet UIButton *homeButton;
-@property (weak, nonatomic) IBOutlet UIButton *meetingsButton;
-@property (weak, nonatomic) IBOutlet UIButton *notesButton;
-@property (weak, nonatomic) IBOutlet UIButton *tasksButton;
-@property (weak, nonatomic) IBOutlet UIButton *settingsButton;
-@property (weak, nonatomic) IBOutlet UIButton *logOutButton;
-@property (weak, nonatomic) IBOutlet UIButton *profileButton;
 
 @end

@@ -33,8 +33,8 @@
 @property (nonatomic) UISwipeGestureRecognizer *swiperight;
 @property (nonatomic) UISwipeGestureRecognizer *swipeleft;
 @property (nonatomic) UITapGestureRecognizer *tapGesture;
-@property (nonatomic) UIButton *lastClicked;
 @property (strong, nonatomic) iWinBackEndUtility *backendUtility;
+@property (strong, nonatomic) iWinMenuViewController *menuViewController;
 @end
 
 @implementation iWinMainViewController
@@ -104,17 +104,13 @@
     self.voiceCommand.hidden = YES;
     
     self.openEars = [[iWinOpenEarsModel alloc] init];
-    self.openEars.openEarsDelegate = self;
     [self.openEars initialize];
+    self.openEars.voiceCommand = self.voiceCommand;
     
-    self.menuView.hidden = YES;
-}
-
--(void)viewDidAppear:(BOOL)animated
-{
-    CGRect oldFrame = self.menuView.frame;
-    self.menuView.frame = CGRectMake(-200, oldFrame.origin.y, oldFrame.size.width, oldFrame.size.height);
-    self.menuView.hidden = NO;
+    self.menuViewController = [[iWinMenuViewController alloc] initWithNibName:@"iWinMenuViewController" bundle:nil];
+    self.menuViewController.menuDelegate = self;
+    [self.menuView addSubview:self.menuViewController.view];
+    [self.menuViewController.view setBounds:self.menuView.bounds];
 }
 
 - (void) viewDidUnload {
@@ -184,23 +180,6 @@
 	
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-- (void) updateSelectedMenu:(UIButton*)newButton
-{
-    if (self.lastClicked)
-    {
-        self.lastClicked.backgroundColor = [UIColor clearColor];
-        [self.lastClicked setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
-    }
-    newButton.backgroundColor = [UIColor whiteColor];
-    [newButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    self.lastClicked = newButton;
-}
 
 -(void) login:(NSInteger)userID
 {
@@ -212,9 +191,6 @@
     self.homeScreenViewController = [[iWinHomeScreenViewController alloc] initWithNibName:@"iWinHomeScreenViewController" bundle:nil withUserID:userID];
     [self.mainView  addSubview:self.homeScreenViewController.view];
     [self.homeScreenViewController.view setBounds:self.mainView.bounds];
-    
-    [self updateSelectedMenu:self.homeButton];
-    self.openEars.openEarsDelegate = self;
 }
 
 -(void) loadScheduleView {
@@ -309,8 +285,6 @@
     self.homeScreenViewController = [[iWinHomeScreenViewController alloc] initWithNibName:@"iWinHomeScreenViewController" bundle:nil withUserID:userID];
     [self.mainView  addSubview:self.homeScreenViewController.view];
     [self.homeScreenViewController.view setBounds:self.mainView.bounds];
-    [self updateSelectedMenu:self.homeButton];
-    self.openEars.openEarsDelegate = self;
 }
 
 -(void) onCancel
@@ -368,7 +342,7 @@
     self.movedRightView = !self.movedRightView;
 }
 
-- (IBAction)onClickHome
+- (void)goToHomePage
 {
     [self removeSubViews];
     [self enableSliding];
@@ -377,11 +351,10 @@
     [self.mainView  addSubview:self.homeScreenViewController.view];
     [self.homeScreenViewController.view setBounds:self.mainView.bounds];
     [self animateSlidingMenu:NO];
-    [self updateSelectedMenu:self.homeButton];
     [self resetSliding];
 }
 
-- (IBAction)onClickLogOut
+- (void)goToLogout
 {
     [self animateSlidingMenu:NO];
     [self removeSubViews];
@@ -397,7 +370,7 @@
     self.voiceCommand.hidden = YES;
 }
 
-- (IBAction)onClickMeetings
+- (void)goToMeetings
 {
     [self removeSubViews];
     [self enableSliding];
@@ -408,11 +381,10 @@
     [self.meetingListViewController.view setBounds:self.mainView.bounds];
     [self animateSlidingMenu:NO];
     
-    [self updateSelectedMenu:self.meetingsButton];
     [self resetSliding];
 }
 
-- (IBAction)onClickNotes
+- (void)goToNotes
 {
     [self removeSubViews];
     [self enableSliding];
@@ -421,24 +393,23 @@
     [self.mainView addSubview:self.noteViewController.view];
     [self.noteViewController.view setBounds:self.mainView.bounds];
     [self animateSlidingMenu:NO];
-    [self updateSelectedMenu:self.notesButton];
+
     [self resetSliding];
 }
 
-- (IBAction)onClickTasks
+- (void)goToTasks
 {
     [self removeSubViews];
     [self enableSliding];
     [self removeTapRecognizer];
     [self animateSlidingMenu:NO];
-    [self updateSelectedMenu:self.tasksButton];
     self.taskListViewController = [[iWinTaskListViewController alloc] initWithNibName:@"iWinTaskListViewController" bundle:nil userID:self.userID];
     [self.mainView  addSubview:self.taskListViewController.view];
     [self.taskListViewController.view setBounds:self.mainView.bounds];
     [self resetSliding];
 }
 
-- (IBAction)onClickSettings
+- (void)goToSettings
 {
     [self removeSubViews];
     [self enableSliding];
@@ -446,24 +417,20 @@
     self.settingsViewController = [[iWinViewAndChangeSettingsViewController alloc] initWithNibName:@"iWinViewAndChangeSettingsViewController" bundle:nil withID:self.userID];
     [self.mainView  addSubview:self.settingsViewController.view];
     [self.settingsViewController.view setBounds:self.mainView.bounds];
-    //self.settingsViewController.settingsDelegate = self;
+    self.settingsViewController.settingsDelegate = self;
     [self animateSlidingMenu:NO];
     
-    [self updateSelectedMenu:self.settingsButton];
     [self resetSliding];
 }
 
-- (IBAction)onClickProfile{
+- (void)goToProfile{
     [self removeSubViews];
     [self enableSliding];
     [self removeTapRecognizer];
     self.profileViewController = [[iWinViewProfileViewController alloc] initWithNibName:@"iWinViewProfileViewController" bundle:nil withID: self.userID];
     [self.mainView  addSubview:self.profileViewController.view];
     [self.profileViewController.view setBounds:self.mainView.bounds];
-   //self.profileViewController.profileDelegate = self;
     [self animateSlidingMenu:NO];
-    
-    [self updateSelectedMenu:self.profileButton];
     [self resetSliding];
 }
 
@@ -511,83 +478,13 @@
     [UIView commitAnimations];
 }
 
-
--(void) saveClicked
-{
-    [self onClickMeetings];
-}
-
--(void) cancelClicked
-{
-    [self onClickMeetings];
-}
-
--(void)viewScheduleClicked
-{
-    
-}
-
--(void) goToTaskList
-{
-    [self onClickTasks];
-}
-
 -(void) onDeleteAccount
 {
-    [self onClickLogOut];
-}
-
--(void)speechToText:(NSString *)hypothesis
-{
-    if (([hypothesis rangeOfString:@"GO"].location != NSNotFound) && ([hypothesis rangeOfString:@"HOME"].location != NSNotFound))
-    {
-        [self onClickHome];
-    }
-    else if (([hypothesis rangeOfString:@"GO"].location != NSNotFound) && ([hypothesis rangeOfString:@"MEETINGS"].location != NSNotFound))
-    {
-        [self onClickMeetings];
-    }
-    else if (([hypothesis rangeOfString:@"GO"].location != NSNotFound) && ([hypothesis rangeOfString:@"PROFILE"].location != NSNotFound))
-    {
-        [self onClickProfile];
-    }
-    else if (([hypothesis rangeOfString:@"GO"].location != NSNotFound) && ([hypothesis rangeOfString:@"TASK"].location != NSNotFound))
-    {
-        [self onClickTasks];
-    }
-    else if (([hypothesis rangeOfString:@"GO"].location != NSNotFound) && ([hypothesis rangeOfString:@"NOTES"].location != NSNotFound))
-    {
-        [self onClickNotes];
-    }
-    else if (([hypothesis rangeOfString:@"GO"].location != NSNotFound) && ([hypothesis rangeOfString:@"SETTINGS"].location != NSNotFound))
-    {
-        [self onClickSettings];
-    }
-    else if (([hypothesis rangeOfString:@"LOG"].location != NSNotFound) && ([hypothesis rangeOfString:@"OUT"].location != NSNotFound))
-    {
-        [self onClickLogOut];
-    }
-    [self.voiceCommand setTitle:@"Voice Command" forState:UIControlStateNormal];
-}
-
--(void) detecting
-{
-    [self.voiceCommand setTitle:@"Detecting" forState:UIControlStateNormal];
-}
-
--(void) speakNow
-{
-    [self.voiceCommand setTitle:@"Speak Now" forState:UIControlStateNormal];
-}
-
--(void) loading
-{
-    [self.voiceCommand setTitle:@"Wait..." forState:UIControlStateNormal];
+    [self goToLogout];
 }
 
 - (IBAction)startListening:(id)sender
 {
-    [self loading];
     [self.openEars startListening];
 }
 
