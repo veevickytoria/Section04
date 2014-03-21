@@ -8,6 +8,7 @@
 
 #import "iWinAppDelegate.h"
 #import "iWinMainViewController.h"
+#import <Parse/Parse.h>
 
 @implementation iWinAppDelegate
 
@@ -25,12 +26,9 @@
     self.window.rootViewController = mainViewController;
     [self.window makeKeyAndVisible];
     
-    //[application registerForRemoteNotificationTypes:UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound];
-    UILocalNotification *locationNotification = [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
-    if (locationNotification) {
-        // Set icon badge number to zero
-        application.applicationIconBadgeNumber = application.applicationIconBadgeNumber - 1;
-    }
+    [Parse setApplicationId:@"o4UYE8YSQMmLOcyTOv7pj2z9qYkNnUpKBaqezGWx" clientKey:@"MfwhwCpIweZmhpQa2Z1yrrrm7y6zAH9elHPfazyB"];
+    [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound];
+    
     
     return YES;
 }
@@ -159,21 +157,35 @@
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }
 
-- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
+//- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
+//{
+//    UIApplicationState state = [application applicationState];
+//    if (state == UIApplicationStateActive) {
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Reminder"
+//                                                        message:notification.alertBody
+//                                                       delegate:self cancelButtonTitle:@"OK"
+//                                              otherButtonTitles:nil];
+//        [alert show];
+//    }
+//    
+////    // Request to reload table view data
+////    [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadData" object:self];
+//    
+//    application.applicationIconBadgeNumber = application.applicationIconBadgeNumber - 1;
+//}
+
+- (void)application:(UIApplication *)application
+didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
-    UIApplicationState state = [application applicationState];
-    if (state == UIApplicationStateActive) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Reminder"
-                                                        message:notification.alertBody
-                                                       delegate:self cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
-        [alert show];
-    }
-    
-//    // Request to reload table view data
-//    [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadData" object:self];
-    
-    application.applicationIconBadgeNumber = application.applicationIconBadgeNumber - 1;
+    // Store the deviceToken in the current installation and save it to Parse.
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    [currentInstallation setDeviceTokenFromData:deviceToken];
+    [currentInstallation saveInBackground];
+}
+
+- (void)application:(UIApplication *)application
+didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    [PFPush handlePush:userInfo];
 }
 
 @end
