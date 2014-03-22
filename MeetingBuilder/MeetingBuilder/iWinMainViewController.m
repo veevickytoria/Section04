@@ -13,7 +13,8 @@
 #import "NSDate+TKCategory.h"
 #import "NSDate+CalendarGrid.h"
 #import "iWinBackEndUtility.h"
-
+#import "iWinScheduleViewController.h"
+#import "iWinMeetingViewController.h"
 
 @interface iWinMainViewController ()
 @property (strong, nonatomic) iWinLoginViewController *loginViewController;
@@ -35,6 +36,7 @@
 @property (nonatomic) UITapGestureRecognizer *tapGesture;
 @property (strong, nonatomic) iWinBackEndUtility *backendUtility;
 @property (strong, nonatomic) iWinMenuViewController *menuViewController;
+@property (strong, nonatomic) iWinScheduleViewController *scheduleController;
 @end
 
 @implementation iWinMainViewController
@@ -79,129 +81,93 @@
     iWinPopulateDatabase *db = [[iWinPopulateDatabase alloc] init];
     [db populateContacts];
     [db populateSettings];
+    [self initializeFields];
+    [self initializeRegisterPage];
+    [self initializeLogin];
+    [self initializeSwipeLeftGesture];
+    [self initializeSwipeRightGesture];
+    [self initializeTapGesture];
+    [self initializeOpenEars];
+    [self initializeMenu];
+    [self initializeSchedule];
+}
+
+-(void)initializeFields
+{
     self.backendUtility = [[iWinBackEndUtility alloc] init];
-    self.loginViewController = [[iWinLoginViewController alloc] initWithNibName:@"iWinLoginViewController" bundle:nil];
-    self.registerViewController = [[iWinRegisterViewController alloc] initWithNibName:@"iWinRegisterViewController" bundle:nil];
     self.movedView = NO;
     self.movedRightView = NO;
+}
+
+-(void)initializeRegisterPage
+{
+    self.registerViewController = [[iWinRegisterViewController alloc] initWithNibName:@"iWinRegisterViewController" bundle:nil];
     self.registerViewController.registerDelegate = self;
-    
+}
+
+-(void)initializeLogin
+{
+    self.loginViewController = [[iWinLoginViewController alloc] initWithNibName:@"iWinLoginViewController" bundle:nil];
     self.loginViewController.loginDelegate = self;
     [self.mainView  addSubview:self.loginViewController.view];
     [self.loginViewController.view setBounds:self.mainView.bounds];
     
-    self.swiperight=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swiperight:)];
-    self.swiperight.direction=UISwipeGestureRecognizerDirectionRight;
-    
-    
-    self.swipeleft=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeleft:)];
-    self.swipeleft.direction=UISwipeGestureRecognizerDirectionLeft;
-    
-    self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap:)];
-    
     self.menuButton.hidden = YES;
     self.scheduleButton.hidden = YES;
     self.voiceCommand.hidden = YES;
-    
+}
+
+-(void)initializeSwipeRightGesture
+{
+    self.swiperight=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swiperight:)];
+    self.swiperight.direction=UISwipeGestureRecognizerDirectionRight;
+}
+
+-(void)initializeSwipeLeftGesture
+{
+    self.swipeleft=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swipeleft:)];
+    self.swipeleft.direction=UISwipeGestureRecognizerDirectionLeft;
+}
+
+-(void)initializeTapGesture
+{
+    self.tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap:)];
+}
+
+-(void)initializeOpenEars
+{
     self.openEars = [[iWinOpenEarsModel alloc] init];
     [self.openEars initialize];
+    self.openEars.menuDelegate = self;
     self.openEars.voiceCommand = self.voiceCommand;
-    
+}
+
+-(void)initializeMenu
+{
     self.menuViewController = [[iWinMenuViewController alloc] initWithNibName:@"iWinMenuViewController" bundle:nil];
     self.menuViewController.menuDelegate = self;
     [self.menuView addSubview:self.menuViewController.view];
     [self.menuViewController.view setBounds:self.menuView.bounds];
 }
 
-- (void) viewDidUnload {
-	self.dayView = nil;
+-(void)initializeSchedule
+{
+    self.scheduleController = [[iWinScheduleViewController alloc] initWithNibName:@"iWinScheduleViewController" bundle:nil withUserID:self.userID];
+    [self.rightSlideView addSubview:self.scheduleController.view];
+    [self.scheduleController.view setBounds:self.rightSlideView.bounds];
 }
-
-#pragma mark TKCalendarDayViewDelegate
-- (NSArray *) calendarDayTimelineView:(TKCalendarDayView*)calendarDayTimeline eventsForDate:(NSDate *)eventDate{
-    //if([eventDate compare:[NSDate dateWithTimeIntervalSinceNow:-24*60*60]] == NSOrderedAscending) return @[];
-	//if([eventDate compare:[NSDate dateWithTimeIntervalSinceNow:24*60*60]] == NSOrderedDescending) return @[];
-    
-	NSDateComponents *info = [[NSDate date] dateComponentsWithTimeZone:calendarDayTimeline.timeZone];
-	info.second = 0;
-	NSMutableArray *ret = [NSMutableArray array];
-    
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Schedule/%d", self.userID];
-    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
-    
-    if (!deserializedDictionary)
-    {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Schedule not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
-        [alert show];
-    }
-    else
-    {
-        NSArray *jsonArray = [deserializedDictionary objectForKey:@"schedule"];
-        if (jsonArray.count > 0)
-        {
-            for (NSDictionary* meetings in jsonArray)
-            {
-                if ([[meetings objectForKey:@"type"] isEqualToString:@"meeting"]){
-                    TKCalendarDayEventView *event = [calendarDayTimeline dequeueReusableEventView];
-                    if(event == nil) event = [TKCalendarDayEventView eventView];
-                    
-                    event.identifier = nil;
-                    event.titleLabel.text = [meetings objectForKey:@"title"];
-                    event.locationLabel.text = [meetings objectForKey:@"description"];
-                    
-                    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-                    //Set the AM and PM symbols
-                    [dateFormatter setAMSymbol:@"AM"];
-                    [dateFormatter setPMSymbol:@"PM"];
-                    //Specify only 2 M for month, 2 d for day and 2 h for hour
-                    [dateFormatter setDateFormat:@"MM/dd/yyyy hh:mm a"];
-                    
-                    NSDate *date = [dateFormatter dateFromString:[meetings objectForKey:@"datetimeStart"]];
-                    event.startDate = date;
-                    
-                    date = [dateFormatter dateFromString:[meetings objectForKey:@"datetimeEnd"]];
-                    event.endDate = date;
-                    
-                    [ret addObject:event];
-                }
-
-            }
-        }
-    }
-        
-		return ret;
-}
-- (void) calendarDayTimelineView:(TKCalendarDayView*)calendarDayTimeline eventViewWasSelected:(TKCalendarDayEventView *)eventView{
-    
-}
-
-- (void) calendarDayTimelineView:(TKCalendarDayView*)calendarDayTimeline didMoveToDate:(NSDate*)eventDate{
-	
-}
-
 
 -(void) login:(NSInteger)userID
 {
     [self removeSubViews];
-    
     [self enableSliding];
-    
     self.userID = userID;
+    [self.scheduleController setUserID:self.userID];
+    [self.scheduleController loadScheduleView];
     self.homeScreenViewController = [[iWinHomeScreenViewController alloc] initWithNibName:@"iWinHomeScreenViewController" bundle:nil withUserID:userID];
     [self.mainView  addSubview:self.homeScreenViewController.view];
     [self.homeScreenViewController.view setBounds:self.mainView.bounds];
-}
-
--(void) loadScheduleView {
-    CGRect scheduleFrame = CGRectMake(self.rightSlideView.bounds.origin.x, self.rightSlideView.bounds.origin.y + 81, self.rightSlideView.bounds.size.width, self.rightSlideView.bounds.size.height - 95);
     
-    self.dayView = [[TKCalendarDayView alloc] initWithFrame:scheduleFrame];
-	self.dayView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.dayView.backgroundColor = [UIColor blackColor];
-	self.dayView.delegate = self;
-	self.dayView.dataSource = self;
-	[self.rightSlideView addSubview:self.dayView];
 }
 
 -(void)swipeleft:(UISwipeGestureRecognizer*)gestureRecognizer
@@ -223,7 +189,7 @@
 
 -(void)swiperight:(UISwipeGestureRecognizer*)gestureRecognizer
 {
-    [self loadScheduleView];
+    [self.scheduleController loadScheduleView];
     if (!self.movedView && !self.movedRightView)
     {
         [self animateSlidingMenu:YES];
@@ -328,7 +294,7 @@
 
 - (IBAction)onClickSchedule
 {
-    [self loadScheduleView];
+    [self.scheduleController loadScheduleView];
     if (!self.movedRightView)
     {
         [self animateRightSlidingMenu:YES];
@@ -344,14 +310,11 @@
 
 - (void)goToHomePage
 {
-    [self removeSubViews];
-    [self enableSliding];
-    [self removeTapRecognizer];
+    [self prepareForControllerChange];
     self.homeScreenViewController = [[iWinHomeScreenViewController alloc] initWithNibName:@"iWinHomeScreenViewController" bundle:nil];
     [self.mainView  addSubview:self.homeScreenViewController.view];
     [self.homeScreenViewController.view setBounds:self.mainView.bounds];
-    [self animateSlidingMenu:NO];
-    [self resetSliding];
+    [self.scheduleController setUserID:self.userID];
 }
 
 - (void)goToLogout
@@ -370,68 +333,54 @@
     self.voiceCommand.hidden = YES;
 }
 
-- (void)goToMeetings
+-(void)prepareForControllerChange
 {
     [self removeSubViews];
     [self enableSliding];
     [self removeTapRecognizer];
+    [self animateSlidingMenu:NO];
+    [self resetSliding];
+}
+
+- (void)goToMeetings
+{
+    [self prepareForControllerChange];
     self.meetingListViewController = [[iWinMeetingViewController alloc] initWithNibName:@"iWinMeetingViewController" bundle:nil withID:self.userID];
-    self.meetingListViewController.reloadScheduleDelegate = self;
     [self.mainView  addSubview:self.meetingListViewController.view];
     [self.meetingListViewController.view setBounds:self.mainView.bounds];
-    [self animateSlidingMenu:NO];
-    
-    [self resetSliding];
+    self.meetingListViewController.reloadScheduleDelegate = self.scheduleController;
 }
 
 - (void)goToNotes
 {
-    [self removeSubViews];
-    [self enableSliding];
-    [self removeTapRecognizer];
+    [self prepareForControllerChange];
     self.noteViewController = [[iWinNoteListViewController alloc] initWithNibName:@"iWinNoteListViewController" bundle:nil withUserID:self.userID];
     [self.mainView addSubview:self.noteViewController.view];
     [self.noteViewController.view setBounds:self.mainView.bounds];
-    [self animateSlidingMenu:NO];
-
-    [self resetSliding];
 }
 
 - (void)goToTasks
 {
-    [self removeSubViews];
-    [self enableSliding];
-    [self removeTapRecognizer];
-    [self animateSlidingMenu:NO];
+    [self prepareForControllerChange];
     self.taskListViewController = [[iWinTaskListViewController alloc] initWithNibName:@"iWinTaskListViewController" bundle:nil userID:self.userID];
     [self.mainView  addSubview:self.taskListViewController.view];
     [self.taskListViewController.view setBounds:self.mainView.bounds];
-    [self resetSliding];
 }
 
 - (void)goToSettings
 {
-    [self removeSubViews];
-    [self enableSliding];
-    [self removeTapRecognizer];
+    [self prepareForControllerChange];
     self.settingsViewController = [[iWinViewAndChangeSettingsViewController alloc] initWithNibName:@"iWinViewAndChangeSettingsViewController" bundle:nil withID:self.userID];
     [self.mainView  addSubview:self.settingsViewController.view];
     [self.settingsViewController.view setBounds:self.mainView.bounds];
     self.settingsViewController.settingsDelegate = self;
-    [self animateSlidingMenu:NO];
-    
-    [self resetSliding];
 }
 
 - (void)goToProfile{
-    [self removeSubViews];
-    [self enableSliding];
-    [self removeTapRecognizer];
+    [self prepareForControllerChange];
     self.profileViewController = [[iWinViewProfileViewController alloc] initWithNibName:@"iWinViewProfileViewController" bundle:nil withID: self.userID];
     [self.mainView  addSubview:self.profileViewController.view];
     [self.profileViewController.view setBounds:self.mainView.bounds];
-    [self animateSlidingMenu:NO];
-    [self resetSliding];
 }
 
 -(void)animateSlidingMenu:(BOOL)moveRight

@@ -62,6 +62,8 @@
 		0A91DC9C1835D7AB00741349 /* OCCalendarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91DC951835D7AB00741349 /* OCCalendarViewController.m */; };
 		0A91DC9D1835D7AB00741349 /* OCDaysView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91DC971835D7AB00741349 /* OCDaysView.m */; };
 		0A91DC9E1835D7AB00741349 /* OCSelectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A91DC991835D7AB00741349 /* OCSelectionView.m */; };
+		0A95247518DD0188001C28E1 /* iWinScheduleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A95247318DD0188001C28E1 /* iWinScheduleViewController.m */; };
+		0A95247618DD0188001C28E1 /* iWinScheduleViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A95247418DD0188001C28E1 /* iWinScheduleViewController.xib */; };
 		0A959DD81895F6E300CF19E3 /* RememberMe.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A959DD71895F6E300CF19E3 /* RememberMe.m */; };
 		0A959DDC1895F9A800CF19E3 /* iWinBackEndUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A959DDB1895F9A800CF19E3 /* iWinBackEndUtility.m */; };
 		0A95D1EE188787B900749438 /* Meeting.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A95D1ED188787B900749438 /* Meeting.m */; };
@@ -333,6 +335,9 @@
 		0A91DC981835D7AB00741349 /* OCSelectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCSelectionView.h; sourceTree = "<group>"; };
 		0A91DC991835D7AB00741349 /* OCSelectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCSelectionView.m; sourceTree = "<group>"; };
 		0A91DC9A1835D7AB00741349 /* OCTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCTypes.h; sourceTree = "<group>"; };
+		0A95247218DD0188001C28E1 /* iWinScheduleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinScheduleViewController.h; sourceTree = "<group>"; };
+		0A95247318DD0188001C28E1 /* iWinScheduleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iWinScheduleViewController.m; sourceTree = "<group>"; };
+		0A95247418DD0188001C28E1 /* iWinScheduleViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = iWinScheduleViewController.xib; sourceTree = "<group>"; };
 		0A959DD61895F6E300CF19E3 /* RememberMe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RememberMe.h; sourceTree = "<group>"; };
 		0A959DD71895F6E300CF19E3 /* RememberMe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RememberMe.m; sourceTree = "<group>"; };
 		0A959DDA1895F9A800CF19E3 /* iWinBackEndUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iWinBackEndUtility.h; sourceTree = "<group>"; };
@@ -632,6 +637,7 @@
 		0A04456117F3825D000FF2A0 /* MeetingBuilder */ = {
 			isa = PBXGroup;
 			children = (
+				0A95247118DD013D001C28E1 /* ScheduleController */,
 				0A65DEBE18DBCF540067CC23 /* MenuController */,
 				0A7F961218C545730010553D /* Framework */,
 				5B2603DD189E95C700C0A335 /* ProjectList */,
@@ -918,6 +924,16 @@
 				0A91DC9A1835D7AB00741349 /* OCTypes.h */,
 			);
 			path = OCCalendar;
+			sourceTree = "<group>";
+		};
+		0A95247118DD013D001C28E1 /* ScheduleController */ = {
+			isa = PBXGroup;
+			children = (
+				0A95247218DD0188001C28E1 /* iWinScheduleViewController.h */,
+				0A95247318DD0188001C28E1 /* iWinScheduleViewController.m */,
+				0A95247418DD0188001C28E1 /* iWinScheduleViewController.xib */,
+			);
+			name = ScheduleController;
 			sourceTree = "<group>";
 		};
 		0A959DD91895F97F00CF19E3 /* BackEndUtility */ = {
@@ -1317,6 +1333,7 @@
 				0A9C04F5189DAACE00C4BCE9 /* LargeDefaultCell.xib in Resources */,
 				79D513D1181F9F9E00C79B71 /* iWinNoteListViewController.xib in Resources */,
 				0A7E515C17FBEA9700A4B8B7 /* iWinMainViewController.xib in Resources */,
+				0A95247618DD0188001C28E1 /* iWinScheduleViewController.xib in Resources */,
 				0A1A727E1819E1F5009A49E5 /* iWinHomeScreenViewController.xib in Resources */,
 				0A1A728B1819F590009A49E5 /* iWinScheduleViewMeetingViewController.xib in Resources */,
 				79D513CB181F9F0D00C79B71 /* iWinViewAndAddNotesViewController.xib in Resources */,
@@ -1493,6 +1510,7 @@
 				0A7F1CDF185908790017209D /* iWinContact.m in Sources */,
 				0A1A7296181A1802009A49E5 /* iWinAgendaItemViewController.m in Sources */,
 				79753A7E1860F3B50015098B /* iWinMeeting.m in Sources */,
+				0A95247518DD0188001C28E1 /* iWinScheduleViewController.m in Sources */,
 				0A1A72A8181A2C5E009A49E5 /* iWinAddUsersViewController.m in Sources */,
 				0A91DC9B1835D7AB00741349 /* OCCalendarView.m in Sources */,
 				0A9C04E9189DA6D600C4BCE9 /* SmallDefaultCell.m in Sources */,
