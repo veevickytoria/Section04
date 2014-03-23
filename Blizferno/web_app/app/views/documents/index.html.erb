@@ -171,7 +171,10 @@
       <th>Type</th>
     </tr>
   </thead>
-
+  <tr>
+    <td colspan='2' style='cursor: pointer; text-align: center' href='#newAgendaModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New Agenda</span></td>
+    <td colspan='2' style='cursor: pointer; text-align: center' href='#newNoteModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New Note</span></td>
+  </tr>
   <!-- POPULATE AGENDAS -->
   <% for agenda in @agendasParsed %>
     <tr>
@@ -194,10 +197,4 @@
     </tr>
     </tr>
   <% end %>
-  <tfoot>
-    <tr>
-      <td colspan='2' style='cursor: pointer; text-align: center' href='#newAgendaModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New Agenda</span></td>
-      <td colspan='2' style='cursor: pointer; text-align: center' href='#newNoteModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New Note</span></td>
-    </tr>
-  </tfoot>
 </table>

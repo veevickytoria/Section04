@@ -3,6 +3,7 @@
 <strong><span class="viewLabel">Project Name:</span><strong>
 	<br />
 	<input type="text" id="titleE" name="title" class="form-control" />
+	<span id="titleER" class="required"> Required </span>
 
 <br />
 <br />
@@ -13,10 +14,12 @@
 	<option disabled>Select multiple by holding Ctrl/CMD></option>
 	<% for meeting in @userMeetings['meetings'] %>
 		<% if !meeting['title'].nil? %>
-		<option value="<%= meeting['id'] %>"><%= meeting['title'] %></option>
+			<option value="<%= meeting['id'] %>"><%= meeting['title'] %></option>
 		<% end %>
-		<% end %>
+	<% end %>
 </select>
+<span id="TableMeetingsER" class="required"> Required </span>
+
 
 <br />
 <br />
@@ -24,12 +27,13 @@
 <strong><span class="viewLabel">Members:</span></strong>
 <br />
 <select multiple id="TableMembersE" size="6" class="form-control">
-	<option diabled>Select multiple by holding Ctrl/CMD></option>
+	<option disabled>Select multiple by holding Ctrl/CMD></option>
 	<% for user in @allUsers['users'] %>
 		<% if !user['name'].nil? %>
-		<option value="<%= user['userID'] %>"><%= user['name'] %></option>
+			<option value="<%= user['userID'] %>"><%= user['name'] %></option>
 		<% end %>
-		<% end %>
+	<% end %>
 </select>
+<span id="TableMembersER" class="required"> Required </span>
 
 </form>

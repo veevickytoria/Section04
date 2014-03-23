@@ -104,6 +104,10 @@
       <th></th>
     </tr>
   </thead>
+  <!-- The create new meeting button at the bottom of the table. Notice the colspan='5' which tells the button to take up the 5 columns (date, title, location, delete, edit) -->
+  <tr>
+    <td colspan='5' style='cursor: pointer; text-align: center' href='#newMeetingModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
+  </tr>
 
 <!-- This is an example of how ruby code can be embedded in our files to provide support for logic such as loops or if statements. This loop generates the table of meetings by creating an individual row for each pass of the loop.
 -->
@@ -122,8 +126,5 @@
     </tr>
   <% end %>
 
-<!-- The create new meeting button at the bottom of the table. Notice the colspan='5' which tells the button to take up the 5 columns (date, title, location, delete, edit) -->
-  <tr>
-    <td colspan='5' style='cursor: pointer; text-align: center' href='#newMeetingModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
-  </tr>
+
 </table>

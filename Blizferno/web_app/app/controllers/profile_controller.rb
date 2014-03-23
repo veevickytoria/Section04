@@ -59,6 +59,7 @@ class ProfileController < ApplicationController
 		# end
 
 	end
+	
 	def editmyprofile 
 	end
 

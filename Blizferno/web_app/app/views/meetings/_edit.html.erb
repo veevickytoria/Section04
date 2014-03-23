@@ -6,7 +6,8 @@
 	<strong><span class="viewLabel">Topic:</span></strong>
 	<br />
 	<input type="text" id="titleE" name="title" class="form-control" />
-
+	<span id="titleER" class="required"> Required </span>
+	
 	<br />
 
 	<!-- Meeting Location -->
@@ -16,6 +17,8 @@
 		<tr>
 			<td>
 				<input type="text" id="locationE" name="location" placeholder="Location" class="form-control" />
+				<span id="locationER" class="required"> Required </span>
+	
 			</td>
 <!-- To be put back in if locations become connected to the back end
 			<td style="padding-left: 5px;">
@@ -31,6 +34,7 @@
 	<strong><span class="viewLabel">Date/Time:</span></strong>
 	<br />
 	<strong><span class="viewData formTitle">Start:</span></strong>
+<<<<<<< HEAD
 	<input type="date" id="dateStartE" name="dateStart" placeholder="mm/dd/yyyy" class="form-control formDate" />
 	<input type="time" id="timeStartE" name="timeStart" placeholder="HH:MM" class="form-control formTime" />
 	<br />
@@ -38,7 +42,21 @@
 	<strong><span class="viewData formTitle">End:</span></strong>
 	<input type="date" id="dateEndE" name="dateEnd" placeholder="mm/dd/yyyy" class="form-control formDate" />
 	<input type="time" id="timeEndE" name="timeEnd" placeholder="HH:MM" class="form-control formTime" />
+=======
+	<input type="text" id="dateStartE" name="dateStart" placeholder="mm/dd/yyyy" class="form-control formDate" />
+	<span id="dateStartER" class="required"> Required </span>
+	
+	<input type="text" id="timeStartE" name="timeStart" placeholder="HH:MM" class="form-control formTime" />
+	<span id="timeStartER" class="required"> Required </span>
+	<br />
+	<br />		
+	<strong><span class="viewData formTitle">End:</span></strong>
+	<input type="text" id="dateEndE" name="dateEnd" placeholder="mm/dd/yyyy" class="form-control formDate" />
+	<span id="dateEndER" class="required"> Required </span>
+>>>>>>> 7951096b8ae7b5e54a16be380e852711ea5408ea
 
+	<input type="text" id="timeEndE" name="timeEnd" placeholder="HH:MM" class="form-control formTime" />
+	<span id="timeEndER" class="required"> Required </span>
 	<br />
 	<br />
 
@@ -46,7 +64,8 @@
 	<strong><span class="viewLabel">Description:</span></strong>
 	<br />
 	<textarea class="form-control" id="descriptionE" name="description"></textarea>
-
+	<span id="descriptionER" class="required"> Required </span>
+	
 	<br />
 
 	<!-- Meeting Attendees -->
@@ -56,4 +75,5 @@
 	<select multiple id="attendanceE" size="6" class="form-control">
 		<option disabled>Select multiple by holding Ctrl/CMD</option>
 	</select>
+	<span id="attendanceER" class="required"> Required </span>
 </form>

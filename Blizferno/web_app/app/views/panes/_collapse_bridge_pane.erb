@@ -14,6 +14,9 @@
               <th>Completion Criteria</th>
             </tr>
           </thead>
+          <tr>
+            <td colspan='4' style='cursor: pointer; text-align: center' href='#newTaskModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
+          </tr>
           <% counter = 0; max = @taskVal.to_i; seenTasks = []; %>
           <% for task in @tasksParsed %>
             <% if counter >= max %>
@@ -30,9 +33,6 @@
               <% counter = counter + 1 %>
             <% end %>
           <% end %>
-          <tr>
-            <td colspan='4' style='cursor: pointer; text-align: center' href='#newTaskModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
-          </tr>
         </table>
       </div>
     </div>
@@ -50,6 +50,9 @@
               <th>Name</th>
             </tr>
           </thead>
+          <tr>
+            <td colspan='4' style='cursor: pointer; text-align: center' href='#newProjectModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
+          </tr>
           <% counter = 0; max = @projectVal.to_i; %>
           <% for project in @projectsParsed; if counter >= max; break; end; %>
           <tr>
@@ -57,11 +60,6 @@
           </tr>
           <% counter = counter + 1 %>
           <% end %>
-          <tfoot>
-          <tr>
-            <td colspan='4' style='cursor: pointer; text-align: center' href='#newProjectModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
-          </tr>
-          </tfoot>
         </table>
       </div>
     </div>
@@ -81,6 +79,9 @@
               <th>Where</th>
             </tr>
           </thead>
+          <tr>
+            <td colspan='5' style='cursor: pointer; text-align: center' href='#newMeetingModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
+          </tr>
           <% counter = 0; max = @meetingVal.to_i; %>
           <% for meeting in @meetingsParsed; if counter >= max; break; end; %>
 
@@ -92,12 +93,6 @@
 
           <% counter = counter + 1 %>
           <% end %>
-
-          <tfoot>
-          <tr>
-            <td colspan='5' style='cursor: pointer; text-align: center' href='#newMeetingModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
-          </tr>
-          </tfoot>
         </table>
 
       </div>
@@ -116,6 +111,9 @@
               <th>Group Name</th>
             </tr>
           </thead>
+          <tr>
+            <td colspan='4' style='cursor: pointer; text-align: center' href='#newGroupModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
+          </tr>
           <% counter = 0; max = @groupVal.to_i; %>
           <% for group in @groups; if counter >= max; break; end; %>
           <tr>
@@ -123,11 +121,6 @@
           </tr>
           <% counter = counter + 1 %>
           <% end %>
-          <tfoot>
-            <tr>
-              <td colspan='4' style='cursor: pointer; text-align: center' href='#newGroupModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
-            </tr>
-          </tfoot>
         </table>
       </div>
     </div>

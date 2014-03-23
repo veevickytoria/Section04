@@ -1,10 +1,49 @@
+function validateNewValues(JSONForm){
+  var invalidFields = false;
+
+  for (key in JSONForm){
+    if(document.getElementById(key+"R") != null){
+      if(JSONForm[key] == ""){
+        invalidFields = true;
+        document.getElementById(key+"R").style.display = "inline";
+      }
+      else{
+        document.getElementById(key+"R").style.display = "none";
+      }
+    }
+  }
+
+  if(document.getElementById("meetings") != null && document.getElementById("meetingsR") != null){
+    if(!hasSelectedValue("meetings")){
+      invalidFields = true;
+      document.getElementById("meetingsR").style.display = "inline";
+    }
+    else{
+      document.getElementById("meetingsR").style.display = "none";
+    }
+  }
+
+  if(document.getElementById("members") != null && document.getElementById("membersR") != null){
+    if(!hasSelectedValue("members")){
+      invalidFields = true;
+      document.getElementById("membersR").style.display = "inline";
+    }
+    else{
+      document.getElementById("membersR").style.display = "none";
+    }
+  }
+
+  return invalidFields
+}
+
 function submitCreateProject(){
-    $('#sCrProj').addClass('disabled');
-    $('#cCrProj').addClass('disabled');
-    var form = document.getElementById('createProject');
+  $('#sCrProj').addClass('disabled');
+  $('#cCrProj').addClass('disabled');
+  var form = document.getElementById('createProject');
 
-    var formJSON = new convertFormToJSON(form);
-
+  var formJSON = new convertFormToJSON(form);
+  var invalid = validateNewValues(formJSON);
+  if (!invalid){
     var projectTitle = formJSON.projectTitle;
     
     var meetings = getElements('meetings');
@@ -46,12 +85,13 @@ function submitCreateProject(){
         window.location.reload(true);
       }
     });
+  }
 }
 
 function getElements(id){
-    var elements = [];
-    $( '#' + id + ' :selected' ).each( function( i, selected ) {
-      elements[i] = $( selected ).val();
-    });
-    return elements;
-  }
+  var elements = [];
+  $( '#' + id + ' :selected' ).each( function( i, selected ) {
+    elements[i] = $( selected ).val();
+  });
+  return elements;
+}
