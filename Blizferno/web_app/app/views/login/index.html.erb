@@ -52,6 +52,7 @@ areCookiesEnabled()
             <div>
               <label class="sr-only" for='logPass'>Password</label>
               <input id='logPass' class='form-control' name="password" style='margin-left: 0%; margin-right: auto; width:52%' placeholder="Password" type="password" />
+              <span id="invalid" class="required"> Invalid Username or Password </span>
             </div>
             <br />
             <input class="btn btn-info" style="margin-left: 0%; margin-right: auto; font-size: 14px; cursor: pointer; visibility: none;" type="submit" value="Login" />
@@ -70,37 +71,47 @@ areCookiesEnabled()
             <table style="width: 100%">
               <div class="form-group">
                 <label class='sr-only' for='regName'>Full Name</label>
-                <input id='regName' class='form-control' name="name" placeholder="Full Name" type="text" required />
+                <input id='regName' class='form-control' name="name" placeholder="Full Name" type="text" />
+                <span id="nameR" class="required"> Required </span>
               </div>
               <div class="form-group">
                 <label class='sr-only' for='regEmail'>Email</label>
-                <input id='regEmail' class='form-control' name="email" placeholder="Email" type="email" required />
+                <input id='regEmail' class='form-control' name="email" placeholder="Email" type="email" />
+                <span id="emailR" class="required"> Required </span>
+                <span id="emailV" class="required"> Invalid Format XX@XXX.XXX</span>
               </div>
               <div class='row'>
                 <div class="col-md-6 form-group">
                   <label class='sr-only' for='p0'>Password</label>
-                  <input id='p0' class='form-control' name='password' placeholder='Password' type='password' required />
+                  <input id='p0' class='form-control' name='password' placeholder='Password' type='password' />
+                  <span id="p0R" class="required"> Required </span>
                 </div>
                 <div class="col-md-6 form-group">
                   <label class='sr-only' for='p1'>Confirm Password</label>
                   <input id="p1" class='form-control' name="passConfirm" placeholder="Confirm password" type="password" onchange="passCheck();" />
+                  <span id="p1R" class="required"> Required </span>
                 </div>
               </div>
               <div class="form-group">
                 <label class='sr-only' for='phone'>Phone</label>
                 <input id='phone' name="phone" class='form-control' placeholder="Phone #" type="text" />
+                <span id="phoneR" class="required"> Required </span>
+                <span id="phoneV" class="required"> Invalid Format XXX-XXX-XXXX </span>
               </div>
               <div class="form-group">
                 <label class='sr-only' for='company'>Company</label>
-                <input id='phone' name="company" class='form-control' placeholder="Company" type="text" />
+                <input id='company' name="company" class='form-control' placeholder="Company" type="text" />
+                <span id="companyR" class="required"> Required </span>
               </div>
               <div class="form-group">
                 <label class='sr-only' for='title'>Title</label>
-                <input id='phone' name="title" class='form-control' placeholder="Title" type="text" />
+                <input id='title' name="title" class='form-control' placeholder="Title" type="text" />
+                <span id="titleR" class="required"> Required </span>
               </div>
               <div class="form-group">
                 <label class='sr-only' for='location'>Location</label>
-                <input id='phone' name="location" class='form-control' placeholder="Location" type="text" />
+                <input id='location' name="location" class='form-control' placeholder="Location" type="text" />
+                <span id="locationR" class="required"> Required </span>
               </div>
               <input class="btn btn-info" type="submit" value="Sign Up" />
             </table>
