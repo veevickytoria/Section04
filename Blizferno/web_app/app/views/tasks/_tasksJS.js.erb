@@ -41,6 +41,43 @@ function showEditModal(){
 	$('#viewTaskModal').modal('hide');
 }
 
+function validateEditedValues(){
+	var editTaskID = tasksJSON[currentID]['taskID'].toString();
+	var invalidFields = false;
+
+	for (key in tasksJSON[currentID]){
+		if(document.getElementById(key+"E") != null && key != "isCompleted" && document.getElementById(key+"ER") != null){
+			if(document.getElementById(key+"E").value == ""){
+				invalidFields = true;
+				document.getElementById(key+"ER").style.display = "inline";
+			}
+			else{
+				document.getElementById(key+"ER").style.display = "none";
+			}
+		}
+	}
+
+	return invalidFields
+}
+
+function validateNewValues(JSONForm){
+	var invalidFields = false;
+
+	for (key in JSONForm){
+		if(document.getElementById(key+"R") != null){
+			if(JSONForm[key] == ""){
+				invalidFields = true;
+				document.getElementById(key+"R").style.display = "inline";
+			}
+			else{
+				document.getElementById(key+"R").style.display = "none";
+			}
+		}
+	}
+
+	return invalidFields
+}
+
 function updateEditedValues(){
 
 
@@ -53,7 +90,7 @@ function updateEditedValues(){
 	for (key in tasksJSON[currentID]){
 
 		if(document.getElementById(key+"E") != null){
-			if(key = "isCompleted" && document.getElementById(key+"E").checked != tasksJSON[currentID][key]){
+			if(key == "isCompleted" && document.getElementById(key+"E").checked != tasksJSON[currentID][key]){
 				tasksJSON[currentID][key] = document.getElementById(key+"E").checked;
 				editField = key;
 				editValue = tasksJSON[currentID][key];
@@ -66,7 +103,7 @@ function updateEditedValues(){
 				});
 			}
 			else if(tasksJSON[currentID][key] != document.getElementById(key+"E").value){
-				tasksJSON[currentID][key] = document.getElementById(key+"E").value;
+				tasksJSON[currentID][key] == document.getElementById(key+"E").value;
 
 				editField = key;
 				editValue = tasksJSON[currentID][key];
@@ -108,8 +145,11 @@ function hideDeleteModal(){
 }
 
 function showViewTaskModalNoID(){
-	updateEditedValues();
-	showViewTaskModal(currentID);
+	var invalid = validateEditedValues();
+	if (!invalid){
+		updateEditedValues();
+		showViewTaskModal(currentID);
+	}
 }
 
 function showViewTaskModal(ID){
@@ -209,14 +249,14 @@ function checkDeadlineFormat(deadline){
 }
 
 function submitCreateModal(){
-		
-		//grab the form from the html document
-		var form = document.getElementById('createTask');
-		//still testing validation
-		//if(validateMeetingForm(form)){
-		//parse it into a json object
-		var formJSON = new convertFormToJSON(form);
-
+	//grab the form from the html document
+	var form = document.getElementById('createTask');
+	//still testing validation
+	//if(validateMeetingForm(form)){
+	//parse it into a json object
+	var formJSON = new convertFormToJSON(form);
+	var invalid = validateNewValues(formJSON);
+	if (!invalid){
 		//manually grab the values for each field expected by the backend
 		var userID = <%=@userID%>;
 		var postTitle = formJSON.title;
@@ -262,6 +302,7 @@ function submitCreateModal(){
 				window.location.reload(true);
 			}
 		});
+	}
 }
 
 function getMembers(id){
@@ -282,10 +323,12 @@ function populateSelect(JSONArray, JSONDisplayColumn, JSONValueColumn, JSONSelec
     }
 
     for (var k in JSONArray){
-      var el = document.createElement("option");
-      el.textContent = JSONArray[k][JSONDisplayColumn];
-      el.value = JSONArray[k][JSONValueColumn];
-      select.appendChild(el);
+    	if (JSONArray[k][JSONDisplayColumn] != ""){
+		    var el = document.createElement("option");
+		    el.textContent = JSONArray[k][JSONDisplayColumn];
+		    el.value = JSONArray[k][JSONValueColumn];
+		    select.appendChild(el);
+  		}
     }
 
     for (var i in JSONSelectValues){

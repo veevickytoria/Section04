@@ -24,23 +24,23 @@ function showViewMeetingModal(ID){
 	document.getElementById("endDatetimeV").innerHTML = meetingsJSON[currentID]["endDatetime"];
 	document.getElementById("descriptionV").innerHTML = meetingsJSON[currentID]["description"];
 	//document.getElementById("attendanceV").innerHTML = meetingsJSON[currentID]["attendance"];
-//alert("meetingsJSON:"+JSON.stringify(meetingsJSON[currentID]));
-//for(attendee in meetingsJSON[currentID]["attendance"]){
-for(var i = 0; i < meetingsJSON[currentID]["attendance"].length; i++){
-//alert("attendance:"+JSON.stringify(meetingsJSON[currentID]["attendance"]));
-//alert("attendee:"+i);
+	//alert("meetingsJSON:"+JSON.stringify(meetingsJSON[currentID]));
+	//for(attendee in meetingsJSON[currentID]["attendance"]){
+	for(var i = 0; i < meetingsJSON[currentID]["attendance"].length; i++){
+	//alert("attendance:"+JSON.stringify(meetingsJSON[currentID]["attendance"]));
+	//alert("attendee:"+i);
 
-	  $.ajax({
-        type: 'GET',
-        url: "http://csse371-04.csse.rose-hulman.edu/User/" + meetingsJSON[currentID]["attendance"][i]["userID"],
-        success:function(data){
-          attendeeInfo = JSON.parse(data);
-          attends.push({'name':attendeeInfo['name']});
-        },
-        async: false
-      });
+		  $.ajax({
+	        type: 'GET',
+	        url: "http://csse371-04.csse.rose-hulman.edu/User/" + meetingsJSON[currentID]["attendance"][i]["userID"],
+	        success:function(data){
+	          attendeeInfo = JSON.parse(data);
+	          attends.push({'name':attendeeInfo['name']});
+	        },
+	        async: false
+	      });
 
-}
+	}
 
 	populateTableRows(attends, "name", "attendanceV");
 
@@ -48,13 +48,83 @@ for(var i = 0; i < meetingsJSON[currentID]["attendance"].length; i++){
 	$('#editMeetingModal').modal('hide');
 }
 
+function validateEditedValues(){
+	var editTaskID = meetingsJSON[currentID]['meetingID'].toString();
+	var invalidFields = false;
+
+	for (key in meetingsJSON[currentID]){
+		if(document.getElementById(key+"E") != null && document.getElementById(key+"ER") != null){
+			if(document.getElementById(key+"E").value == ""){
+				invalidFields = true;
+				document.getElementById(key+"ER").style.display = "inline";
+			}
+			else{
+				document.getElementById(key+"ER").style.display = "none";
+			}
+		}
+	}
+
+	additionalKeys = ["dateStart","dateEnd", "timeStart", "timeEnd"];
+	for (key in additionalKeys){
+		if(document.getElementById(additionalKeys[key]+"E") != null && document.getElementById(additionalKeys[key]+"ER") != null){
+			if(document.getElementById(additionalKeys[key]+"E").value == ""){
+				invalidFields = true;
+				document.getElementById(additionalKeys[key]+"ER").style.display = "inline";
+			}
+			else{
+				document.getElementById(additionalKeys[key]+"ER").style.display = "none";
+			}
+		}
+	}
+
+	if(document.getElementById("attendanceE") != null && document.getElementById("attendanceER") != null){
+		if(!hasSelectedValue("attendanceE")){
+			invalidFields = true;
+			document.getElementById("attendanceER").style.display = "inline";
+		}
+		else{
+			document.getElementById("attendanceER").style.display = "none";
+		}
+	}
+
+	return invalidFields
+}
+
+function validateNewValues(JSONForm){
+	var invalidFields = false;
+
+	for (key in JSONForm){
+		if(document.getElementById(key+"R") != null){
+			if(JSONForm[key] == ""){
+				invalidFields = true;
+				document.getElementById(key+"R").style.display = "inline";
+			}
+			else{
+				document.getElementById(key+"R").style.display = "none";
+			}
+		}
+	}
+
+	if(document.getElementById("attendees") != null && document.getElementById("attendeesR") != null){
+		if(!hasSelectedValue("attendees")){
+			invalidFields = true;
+			document.getElementById("attendeesR").style.display = "inline";
+		}
+		else{
+			document.getElementById("attendeesR").style.display = "none";
+		}
+	}
+
+	return invalidFields
+}
+
 //This function is called when a user submits an edit by clicking the "Save Changes" button. We cannot access our javascript variable, currentID, in the html file, index, when we set the functionality of the EditMeetingModal's "Save Changes" button so we use this as a proxy.
 function showViewMeetingModalNoID(){
-	//still testing validation
-	//if(validateMeetingForm(document.getElementById(#editMeetingForm))){
+	var invalid = validateEditedValues();
+	if (!invalid){
 		updateEditedValues();
-	//}
-	showViewMeetingModal(currentID);
+		showViewMeetingModal(currentID);
+	}
 }
 
 //This function is called when a user clicks on the edit icon to directly bring up the EditMeetingModal that corresponds to the index of the row they clicked which is passed in as ID.
@@ -104,21 +174,19 @@ function updateEditedValues(){
 	editForm['endDatetime'] = editForm['dateEnd'] +" "+ editForm['timeEnd'];
 
 	//get the meetingID associated with the current meeting from our table
-//alert("meetingsJSON[currentID]:"+JSON.stringify(meetingsJSON[currentID]));
+
 	var editMeetingID = meetingsJSON[currentID]['meetingID'].toString();
 	var editField = "";
 	var editValue = "";
 	var editData = "";
 
-//for each field in the edit form
+	//for each field in the edit form
 	for (key in meetingsJSON[currentID]){
 	//check to see if the value we just got from the edit form is the value we had before
-//alert("key:"+key+"\n[key]:"+meetingsJSON[currentID][key]+"\neditForm[key]"+editForm[key]);
 
 		if(editForm[key] != null && meetingsJSON[currentID][key] != editForm[key]){
 			//if not then change the value we had to the value we just got from the edit form
 			meetingsJSON[currentID][key] = editForm[key];
-//alert("meetingsJSON[currentID]:"+JSON.stringify(meetingsJSON[currentID]));
 
 			//set up the request data
 			editField = key;
@@ -140,8 +208,6 @@ function updateEditedValues(){
 	editValue = returnSelectValuesAsJSON("attendance", "name", "userID", "attendanceE");
 	editData = JSON.stringify({"meetingID":editMeetingID,"field":editField,"value":editValue});
 
-//alert("editData:"+editData);
-
 	$.ajax({
 		type: 'PUT',
 		url: 'http://csse371-04.csse.rose-hulman.edu/Meeting/',
@@ -150,60 +216,58 @@ function updateEditedValues(){
 			window.location.reload(true);
 		}
 	});
-
-
 }
 
 //This function is called when a user clicks the create button and sends a POST request to the backend
 function submitCreateModal(){
 		
-		//grab the form from the html document
-		var form = document.getElementById('createMeetingForm');
-		//still testing validation
-		//if(validateMeetingForm(form)){
-			//parse it into a json object
-			var formJSON = new convertFormToJSON(form);
+	//grab the form from the html document
+	var form = document.getElementById('createMeetingForm');
+	//still testing validation
+	//if(validateMeetingForm(form)){
+	//parse it into a json object
+	var formJSON = new convertFormToJSON(form);
+	var invalid = validateNewValues(formJSON);
+	if (!invalid){
+		//manually grab the values for each field expected by the backend
+		var postId = <%=@userID%>;
+		var postTitle = formJSON.title;
+		var postLocation = formJSON.location;
+		var postDatetime = formJSON.dateStart + " " + formJSON.timeStart;
+		var postEndDatetime = formJSON.dateEnd + " " + formJSON.timeEnd;
+		var postDescription = formJSON.description;
 
-			//manually grab the values for each field expected by the backend
-			var postId = <%=@userID%>;
-			var postTitle = formJSON.title;
-			var postLocation = formJSON.location;
-			var postDatetime = formJSON.dateStart + " " + formJSON.timeStart;
-			var postEndDatetime = formJSON.dateEnd + " " + formJSON.timeEnd;
-			var postDescription = formJSON.description;
 
+		var attendees = getMembers('attendees');
+		var postAttendance = [];
 
-			var attendees = getMembers('attendees');
-			var postAttendance = [];
+		for (var i = attendees.length - 1; i >= 0; i--) {
+		  postAttendance.push({"userID":attendees[i]});
+		};
 
-			for (var i = attendees.length - 1; i >= 0; i--) {
-			  postAttendance.push({"userID":attendees[i]});
-			};
-
-			//set up the data for the call
-			var postData = JSON.stringify({
-				"userID":postId,
-				"title":postTitle,
-				"location":postLocation,
-				"datetime":postDatetime,
-				"endDatetime":postEndDatetime,
-				"description":postDescription,
-				"attendance":postAttendance
-			});
-			
-			//make the POST request to the backend
-			$.ajax({
-				type: 'POST',
-				url: 'http://csse371-04.csse.rose-hulman.edu/Meeting/',
-				data: postData,
-				success:function(data){
-					//if successful then close the modal and reload the page
-					$('#newMeetingModal').modal('hide');
-					window.location.reload(true);
-				}
-			});
-
-		//}
+		//set up the data for the call
+		var postData = JSON.stringify({
+			"userID":postId,
+			"title":postTitle,
+			"location":postLocation,
+			"datetime":postDatetime,
+			"endDatetime":postEndDatetime,
+			"description":postDescription,
+			"attendance":postAttendance
+		});
+		
+		//make the POST request to the backend
+		$.ajax({
+			type: 'POST',
+			url: 'http://csse371-04.csse.rose-hulman.edu/Meeting/',
+			data: postData,
+			success:function(data){
+				//if successful then close the modal and reload the page
+				$('#newMeetingModal').modal('hide');
+				window.location.reload(true);
+			}
+		});
+	}
 }
 
 //This function is called when a user clicks on the delete icon
@@ -272,8 +336,7 @@ function validateMeetingForm(inputForm){
 }
 
 //This function validates a date string of the format "mm/dd/yyyy HH:MM" using regex and general string tomfoolery
-function isValidDate(dateString)
-{
+function isValidDate(dateString){
     // First check for the pattern
     if(!/^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}$/.test(dateString))
         return false;
@@ -304,15 +367,15 @@ function isValidDate(dateString)
     return day > 0 && day <= monthLength[month - 1];
 }
 
-  function getMembers(id){
+function getMembers(id){
     var newMembers = [];
     $( '#' + id + ' :selected' ).each( function( i, selected ) {
       newMembers[i] = $( selected ).val();
     });
     return newMembers;
-  }
+}
 
-  function populateTableRows(JSONArray, JSONDisplayColumn, tableID){
+function populateTableRows(JSONArray, JSONDisplayColumn, tableID){
     var table = document.getElementById(tableID);
     if(table.rows.length != 0){
       for(var i = table.rows.length - 1; i > -1; i--){
@@ -329,9 +392,9 @@ function isValidDate(dateString)
 
       cell.innerHTML = JSONArray[k][JSONDisplayColumn];
     }
-  }
+}
 
-  function populateSelect(JSONArray, JSONDisplayColumn, JSONValueColumn, JSONSelectValues, selectID){
+function populateSelect(JSONArray, JSONDisplayColumn, JSONValueColumn, JSONSelectValues, selectID){
     var select = document.getElementById(selectID);
 
     if(select.options.length != 0){
@@ -341,10 +404,12 @@ function isValidDate(dateString)
     }
 
     for (var k in JSONArray){
-      var el = document.createElement("option");
-      el.textContent = JSONArray[k][JSONDisplayColumn];
-      el.value = JSONArray[k][JSONValueColumn];
-      select.appendChild(el);
+    	if (JSONArray[k][JSONDisplayColumn] != ""){
+		    var el = document.createElement("option");
+		    el.textContent = JSONArray[k][JSONDisplayColumn];
+		    el.value = JSONArray[k][JSONValueColumn];
+		    select.appendChild(el);
+		}
     }
 
     for (var i in JSONSelectValues){
@@ -355,9 +420,9 @@ function isValidDate(dateString)
         }
       }
     }
-  }
+}
 
-  function returnSelectValuesAsJSON(JSONtype, JSONDisplayColumn, JSONValueColumn, selectID){
+function returnSelectValuesAsJSON(JSONtype, JSONDisplayColumn, JSONValueColumn, selectID){
     var select = document.getElementById(selectID);
     var newJSONString = "{" + "\"" + JSONtype + "\"" + ":[";
     
@@ -366,10 +431,24 @@ function isValidDate(dateString)
         newJSONString = newJSONString + "{" + "\"" + JSONValueColumn + "\":\"" + select.options[j].value + "\"},";
       }
     }
-
-    newJSONString = newJSONString.substring(0, newJSONString.length - 1);
+    if(newJSONString.length > (JSONtype + 5)){
+    	newJSONString = newJSONString.substring(0, newJSONString.length - 1);
+	}
     newJSONString = newJSONString + "]}";
-    // cookies[:testString] = newJSONString;
+
     var newJSON = JSON.parse(newJSONString);
     return newJSON[JSONtype];
-  }
+}
+
+function hasSelectedValue(selectID){
+	var select =document.getElementById(selectID);
+
+	for (var j in select.options){
+      if(select.options[j].selected){
+        return true
+      }
+    }
+
+    return false
+
+}

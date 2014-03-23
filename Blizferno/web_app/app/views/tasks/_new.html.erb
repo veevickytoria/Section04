@@ -2,27 +2,38 @@
 
 <form id="createTask" >
 	<h5>Topic:*</h5>
-	<input type="text" name="title" maxlength="50" class="form-control"/>
+	<input type="text" name="title" maxlength="50" class="form-control" />
+	<span id="titleR" class="required"> Required </span>
+	
 
 	<input type="hidden" name="isCompleted" value="false" class="form-control"/>
 
 	<h5>Description:*</h5>
-	<input type="text" name="description" maxlength="1000" class="form-control"/>
+	<input type="text" name="description" maxlength="1000" class="form-control" />
+	<span id="descriptionR" class="required"> Required </span>
+	
 	
 	<h5>Deadline:* (please use military time)</h5>
 	<input type="text" name="deadline" placeholder="mm/dd/yyyy HH:MM" maxLength="16" class="form-control"/>
+	<span id="deadlineR" class="required"> Required </span>
+	
 
 	<input type="hidden" name="dateCreated" value="<%= Time.now.strftime("%m/%d/%Y %H:%M") %>" />
 	<input type="hidden" name="dateAssigned" value="<%= Time.now.strftime("%m/%d/%Y %H:%M") %>" />
 
 	<h5>Completion Criteria:*</h5>
 	<input type="text" name="completionCriteria" maxLength="500" class="form-control"/>
+	<span id="completionCriteriaR" class="required"> Required </span>
+	
 
 	<h5>Assigned to:*</h5>
 	<select name="assignedTo" size='1' class="form-control">
   		<option disabled>Select multiple by holding Ctrl/CMD</option>
   		<% for user in @allUsers['users'] %>
-		<option value="<%= user['userID'] %>"><%= user['name'] %></option>
+  			<% if !user['name'].nil? %>
+				<option value="<%= user['userID'] %>"><%= user['name'] %></option>
+			<% end %>
 		<% end %>
 	</select>
+	<span id="assignedToR" class="required"> Required </span>
 </form>

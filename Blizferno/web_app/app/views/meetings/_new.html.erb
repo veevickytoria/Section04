@@ -6,7 +6,7 @@
 	<strong><span class="viewLabel">Topic:</span></strong>
 	<br />
 	<input type="text" id="title" name="title" class="form-control" />
-
+	<span id="titleR" class="required"> Required </span>
 	<br />
 
 	<!-- Meeting Location -->
@@ -16,6 +16,7 @@
 		<tr>
 			<td>
 				<input type="text" id="location" name="location" placeholder="Location" class="form-control" />
+				<span id="locationR" class="required"> Required </span>
 			</td>
 <!-- To be put back in if locations become connected to the back end
 			<td style="padding-left: 5px;">
@@ -32,12 +33,18 @@
 	<br />
 	<strong><span class="viewData formTitle">Start:</span></strong>
 	<input type="text" id="dateStart" name="dateStart" placeholder="mm/dd/yyyy" class="form-control formDate" />
+	<span id="dateStartR" class="required"> Required </span>
+
 	<input type="text" id="timeStart" name="timeStart" placeholder="HH:MM" class="form-control formTime" />
+	<span id="timeStartR" class="required"> Required </span>
 	<br />
 	<br />		
 	<strong><span class="viewData formTitle">End:</span></strong>
 	<input type="text" id="dateEnd" name="dateEnd" placeholder="mm/dd/yyyy" class="form-control formDate" />
+	<span id="dateEndR" class="required"> Required </span>
+
 	<input type="text" id="timeEnd" name="timeEnd" placeholder="HH:MM" class="form-control formTime" />
+	<span id="timeEndR" class="required"> Required </span>
 
 	<br />
 	<br />
@@ -46,6 +53,7 @@
 	<strong><span class="viewLabel">Description:</span></strong>
 	<br />
 	<textarea class="form-control" id="description" name="description"></textarea>
+	<span id="descriptionR" class="required"> Required </span>
 
 	<br />
 
@@ -56,7 +64,10 @@
 	<select multiple id="attendees" size="6" class="form-control">
 		<option disabled>Select multiple by holding Ctrl/CMD</option>
 		<% for user in @allUsers['users'] %>
-		<option value="<%= user['userID'] %>"><%= user['name'] %></option>
+			<% if !user['name'].nil? %>
+				<option value="<%= user['userID'] %>"><%= user['name'] %></option>
+			<% end %>
 		<% end %>
 	</select>
+	<span id="attendeesR" class="required"> Required </span>
 </form>

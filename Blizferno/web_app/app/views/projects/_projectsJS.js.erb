@@ -1,115 +1,149 @@
-  var currentID;
-  var deleteID;
-  var projectArray;
-  var projectsJSON = <%= raw @projects %>;
-  projectsJSON = JSON.parse("["+projectsJSON.toString()+"]");
+var currentID;
+var deleteID;
+var projectID;
+var projectArray;
+var projectsJSON = <%= raw @projects %>;
+projectsJSON = JSON.parse("["+projectsJSON.toString()+"]");
 
-  var allUsers = <%= raw @allUsersRaw %>;
-  allUsers = JSON.parse(JSON.stringify(allUsers));
+var allUsers = <%= raw @allUsersRaw %>;
+allUsers = JSON.parse(JSON.stringify(allUsers));
 
-  var allMeetings = <%= raw @userMeetingsRaw %>;
-  allMeetings = JSON.parse(JSON.stringify(allMeetings));
-  
+var allMeetings = <%= raw @userMeetingsRaw %>;
+allMeetings = JSON.parse(JSON.stringify(allMeetings));
 
-  function hideViewModal(){
-    $('#viewProjectModal').modal('hide');
-  }
 
-  function showDeleteModal(ID){
-    deleteID = ID;
-    $('#deleteProjectModal').modal('show');
-  }
+function hideViewModal(){
+  $('#viewProjectModal').modal('hide');
+}
 
-  function hideDeleteModal(){
-      $.ajax({
-        type: 'DELETE',
-        url: 'http://csse371-04.csse.rose-hulman.edu/Project/' + deleteID,
-        success:function(data){
-            if(JSON.parse(data)["valid"] == "true"){
-              $('#deleteProjectModal').modal('hide');
-              window.location.reload(true);
-            }
-        }
-      });
-  }
+function showDeleteModal(ID){
+  deleteID = projectsJSON[currentID]["projectID"].toString();
+  $('#deleteProjectModal').modal('show');
+}
 
-  function showEditModal(ID){
-    var meetingInfo, currentMeetings = new Array(), mid1;
-    var memberInfo, currentMembers = new Array(), mid2;
-
-    $('#editProjectModal').modal('hide');
-    $('#editProjectModal').on('hidden.bs.modal', function() {
-      $(this).removeData('bs.modal');
+function hideDeleteModal(){
+    $.ajax({
+      type: 'DELETE',
+      url: 'http://csse371-04.csse.rose-hulman.edu/Project/' + deleteID,
+      success:function(data){
+          if(JSON.parse(data)["valid"] == "true"){
+            $('#deleteProjectModal').modal('hide');
+            window.location.reload(true);
+          }
+      }
     });
+}
 
-    currentID = ID;
+function showEditModal(ID){
+  var meetingInfo, currentMeetings = new Array(), mid1;
+  var memberInfo, currentMembers = new Array(), mid2;
 
+  $('#editProjectModal').modal('hide');
+  $('#editProjectModal').on('hidden.bs.modal', function() {
+    $(this).removeData('bs.modal');
+  });
+
+  currentID = ID;
+  projectID = projectsJSON[currentID]["projectID"].toString();
+
+  $.ajax({
+    type: 'GET',
+    url: 'http://csse371-04.csse.rose-hulman.edu/Project/' + projectID,
+    success:function(data){
+      setProjectArray(data);
+    },
+    async: false
+  });
+
+  for (i in projectArray['meetings']){
+    mid1 = projectArray['meetings'][i]['meetingID'];
     $.ajax({
       type: 'GET',
-      url: 'http://csse371-04.csse.rose-hulman.edu/Project/' + currentID,
+      url: 'http://csse371-04.csse.rose-hulman.edu/Meeting/' + mid1,
       success:function(data){
-        setProjectArray(data);
+        meetingInfo = JSON.parse(data);
+        currentMeetings.push({'mid1':mid1,'title':meetingInfo['title']});
       },
       async: false
     });
+  }
 
-    for (i in projectArray['meetings']){
-      mid1 = projectArray['meetings'][i]['meetingID'];
-      $.ajax({
-        type: 'GET',
-        url: 'http://csse371-04.csse.rose-hulman.edu/Meeting/' + mid1,
-        success:function(data){
-          meetingInfo = JSON.parse(data);
-          currentMeetings.push({'mid1':mid1,'title':meetingInfo['title']});
-        },
-        async: false
-      });
+  for (i in projectArray['members']){
+    mid2 = projectArray['members'][i]['userID'];
+    $.ajax({
+      type: 'GET',
+      url: 'http://csse371-04.csse.rose-hulman.edu/User/' + mid2,
+      success:function(data){
+        memberInfo = JSON.parse(data);
+        currentMembers.push({'mid2':mid2,'name':memberInfo['name']});
+      },
+      async: false
+    });
+  }
+
+  document.getElementById("titleE").value = projectArray['projectTitle'];
+
+  populateSelect([], "title", "mid1", currentMeetings, "TableMeetingsE");
+  populateSelect([], "name", "mid2", currentMembers, "TableMembersE");
+
+  $('#editProjectModal').modal('show');
+}
+
+function setProjectArray(d){
+  projectArray = JSON.parse(d);
+}
+
+function showEditModalNoID(){
+  showEditModal(currentID);
+}
+
+function cancelEdit(){
+  showViewModal(currentID);
+}
+
+function validateEditedValues(){
+  var editTaskID = currentID;
+  var invalidFields = false;
+
+  if(document.getElementById("titleE") != null && document.getElementById("titleER") != null){
+    if(document.getElementById("titleE").value == ""){
+      invalidFields = true;
+      document.getElementById("titleER").style.display = "inline";
     }
-
-    for (i in projectArray['members']){
-      mid2 = projectArray['members'][i]['userID'];
-      $.ajax({
-        type: 'GET',
-        url: 'http://csse371-04.csse.rose-hulman.edu/User/' + mid2,
-        success:function(data){
-          memberInfo = JSON.parse(data);
-          currentMembers.push({'mid2':mid2,'name':memberInfo['name']});
-        },
-        async: false
-      });
+    else{
+      document.getElementById("titleER").style.display = "none";
     }
-
-    document.getElementById("titleE").value = projectArray['projectTitle'];
-
-    populateSelect([], "title", "mid1", currentMeetings, "TableMeetingsE");
-    populateSelect([], "name", "mid2", currentMembers, "TableMembersE");
-
-    $('#editProjectModal').modal('show');
-    //$('#viewProjectModal').modal('hide');
   }
 
-  function setProjectArray(d){
-    projectArray = JSON.parse(d);
+  if(document.getElementById("TableMeetingsE") != null && document.getElementById("TableMeetingsER") != null){
+    if(!hasSelectedValue("TableMeetingsE")){
+      invalidFields = true;
+      document.getElementById("TableMeetingsER").style.display = "inline";
+    }
+    else{
+      document.getElementById("TableMeetingsER").style.display = "none";
+    }
   }
 
-  function showEditModalNoID(){
-
-    showEditModal(currentID);
+  if(document.getElementById("TableMembersE") != null && document.getElementById("TableMembersER") != null){
+    if(!hasSelectedValue("TableMembersE")){
+      invalidFields = true;
+      document.getElementById("TableMembersER").style.display = "inline";
+    }
+    else{
+      document.getElementById("TableMembersER").style.display = "none";
+    }
   }
 
-  function cancelEdit(){
-    showViewModal(currentID);
-  }
+  return invalidFields
+}
 
-  function showViewModalNoID(){
-    updateEditedValues();
-    showViewModal(currentID);
-  }
-
-  function submitEditModal(){
-    var form = new convertFormToJSON(document.getElementById('editProjectForm'));
+function submitEditModal(){
+  var form = new convertFormToJSON(document.getElementById('editProjectForm'));
+  var invalid = validateEditedValues();
+  if (!invalid){
     var postTitle = form.title;
-  
+
     var meetings = getElements('TableMeetingsE');
     var members = getElements('TableMembersE');
 
@@ -124,9 +158,9 @@
       postMembers.push({"userID":members[i]});
     };
 
-    var updateTitle = JSON.stringify({"projectID":currentID,"field":"projectTitle","value":postTitle});
-    var updateMeetings = JSON.stringify({"projectID":currentID,"field":"meetings","value":postMeetings});
-    var updateMembers = JSON.stringify({"projectID":currentID,"field":"members","value":postMembers});
+    var updateTitle = JSON.stringify({"projectID":projectID,"field":"projectTitle","value":postTitle});
+    var updateMeetings = JSON.stringify({"projectID":projectID,"field":"meetings","value":postMeetings});
+    var updateMembers = JSON.stringify({"projectID":projectID,"field":"members","value":postMembers});
 
     $.ajax({
       type: 'PUT',
@@ -157,173 +191,127 @@
         window.location.reload(true);
       },
     });
+  }
 }
 
-  function showViewModal(ID){
-    var meetingInfo;
-    var memberInfo;
-    var projectMeetings = new Array();
-    var projectMembers = new Array();
+function showViewModal(ID){
+  var meetingInfo;
+  var memberInfo;
+  var projectMeetings = new Array();
+  var projectMembers = new Array();
 
-    $('#viewProjectModal').modal('hide');
-    $('#viewProjectModal').on('hidden.bs.modal', function() {
-      $(this).removeData('bs.modal');
-    });
+  $('#viewProjectModal').modal('hide');
+  $('#viewProjectModal').on('hidden.bs.modal', function() {
+    $(this).removeData('bs.modal');
+  });
 
-    currentID = ID;
+  currentID = ID;
+  projectID = projectsJSON[currentID]["projectID"].toString();
 
+  $.ajax({
+    type: 'GET',
+    url: 'http://csse371-04.csse.rose-hulman.edu/Project/' + projectID,
+    success:function(data){
+      projectArray = JSON.parse(data);
+    },
+    async: false
+  });
+
+  for (i in projectArray['meetings']){
     $.ajax({
       type: 'GET',
-      url: 'http://csse371-04.csse.rose-hulman.edu/Project/' + currentID,
+      url: 'http://csse371-04.csse.rose-hulman.edu/Meeting/' + projectArray['meetings'][i]['meetingID'],
       success:function(data){
-        projectArray = JSON.parse(data);
+        meetingInfo = JSON.parse(data);
+        projectMeetings.push({'title':meetingInfo['title']});
       },
       async: false
     });
-
-    for (i in projectArray['meetings']){
-      $.ajax({
-        type: 'GET',
-        url: 'http://csse371-04.csse.rose-hulman.edu/Meeting/' + projectArray['meetings'][i]['meetingID'],
-        success:function(data){
-          meetingInfo = JSON.parse(data);
-          projectMeetings.push({'title':meetingInfo['title']});
-        },
-        async: false
-      });
-    }
-
-    for (i in projectArray['members']){
-      $.ajax({
-        type: 'GET',
-        url: 'http://csse371-04.csse.rose-hulman.edu/User/' + projectArray['members'][i]['userID'],
-        success:function(data){
-          memberInfo = JSON.parse(data);
-          projectMembers.push({'name':memberInfo['name']});
-        },
-        async: false
-      });
-    }
-
-    document.getElementById("titleV").innerHTML = projectArray["projectTitle"];
-    populateTableRows(projectMeetings, "title", "TableMeetingsV");
-    populateTableRows(projectMembers, "name", "TableMembersV");
-
-    $('#viewProjectModal').modal('show');
-    $('#editProjectModal').modal('hide');
   }
 
-  function populateTableRows(JSONArray, JSONDisplayColumn, tableID){
-    var table = document.getElementById(tableID);
-
-    if(table.rows.length != 0){
-      for(var i = table.rows.length - 1; i > -1; i--){
-        table.deleteRow(i);
-      }
-    }
-
-    for (var k in JSONArray){
-      var rowCount = table.rows.length;
-      var row = table.insertRow(rowCount);
-
-      var cell = row.insertCell(0);
-     
-      cell.innerHTML = JSONArray[k][JSONDisplayColumn];
-    }
-  }
-
-  function populateSelect(JSONArray, JSONDisplayColumn, JSONValueColumn, JSONSelectValues, selectID){
-    var select = document.getElementById(selectID);
-
-    //if(select.length != 0){
-    //  for(var i = select.length - 1; i > -1; i--){
-    //    select.remove(i);
-    //  }
-    //}
-    if(select.options.length != 0){
-      for(var i = select.options - 1; i > -1; i--){
-        select.remove(i);
-      }
-    }
-
-    for (var k in JSONArray){
-      var el = document.createElement("option");
-      el.textContent = JSONArray[k][JSONDisplayColumn];
-      el.value = JSONArray[k][JSONValueColumn];
-      select.appendChild(el);
-    }
-
-    for (var i in JSONSelectValues){
-      for (var j in select.options){
-        if(JSONSelectValues[i][JSONValueColumn] == select.options[j].value){
-          select.options[j].selected = true;
-          break;
-        }
-      }
-    }
-  }
-
-  // TODO: This will probably be usless once connected to the back end
-  function returnSelectValuesAsJSON(JSONtype, JSONDisplayColumn, JSONValueColumn, selectID){
-    var select = document.getElementById(selectID);
-    var newJSONString = "{" + "\"" + JSONtype + "\"" + ":[";
-    
-    for (var j in select.options){
-      if(select.options[j].selected){
-        newJSONString = newJSONString + "{" + "\"" + JSONValueColumn + "\":\"" + select.options[j].value + "\",\"" + JSONDisplayColumn + "\":\"" + select.options[j].textContent + "\"},";
-      }
-    }
-
-    newJSONString = newJSONString.substring(0, newJSONString.length - 1);
-    newJSONString = newJSONString + "]}";
-    var newJSON = JSON.parse(newJSONString);
-    return newJSON[JSONtype];
-  }
-
-function submitCreateProject(){
-    var form = document.getElementById('createProject');
-
-    var formJSON = new convertFormToJSON(form);
-
-    var projectTitle = formJSON.projectTitle;
-    
-    var meetings = getElements('meetings');
-    var members = getElements('members');
-
-    var id = <%= raw @userID %>;
-
-    var postMeetings = new Array();
-    var postNotes = new Array();
-    var postMembers = new Array();
-
-    for (var i = meetings.length - 1; i>=0; i--){
-      postMeetings.push({"meetingID":meetings[i]});
-    };
-
-    postMembers.push({"userID":id});
-    for (var i = members.length - 1; i>= 0; i--) {
-      postMembers.push({"userID":members[i]});
-    };
-
-    var postData = JSON.stringify({
-        "projectTitle":projectTitle,
-        "meetings":postMeetings,
-        "notes":postNotes,
-        "members":postMembers
-      });
-
+  for (i in projectArray['members']){
     $.ajax({
-      type: 'POST',
-      url: 'http://csse371-04.csse.rose-hulman.edu/Project/',
-      data: postData,
+      type: 'GET',
+      url: 'http://csse371-04.csse.rose-hulman.edu/User/' + projectArray['members'][i]['userID'],
       success:function(data){
-        $('#newProjectModal').modal('hide');
-        window.location.reload(true);
-      }
+        memberInfo = JSON.parse(data);
+        projectMembers.push({'name':memberInfo['name']});
+      },
+      async: false
     });
+  }
 
+  document.getElementById("titleV").innerHTML = projectArray["projectTitle"];
+  populateTableRows(projectMeetings, "title", "TableMeetingsV");
+  populateTableRows(projectMembers, "name", "TableMembersV");
 
+  $('#viewProjectModal').modal('show');
+  $('#editProjectModal').modal('hide');
 }
+
+function populateTableRows(JSONArray, JSONDisplayColumn, tableID){
+  var table = document.getElementById(tableID);
+
+  if(table.rows.length != 0){
+    for(var i = table.rows.length - 1; i > -1; i--){
+      table.deleteRow(i);
+    }
+  }
+
+  for (var k in JSONArray){
+    var rowCount = table.rows.length;
+    var row = table.insertRow(rowCount);
+
+    var cell = row.insertCell(0);
+   
+    cell.innerHTML = JSONArray[k][JSONDisplayColumn];
+  }
+}
+
+function populateSelect(JSONArray, JSONDisplayColumn, JSONValueColumn, JSONSelectValues, selectID){
+  var select = document.getElementById(selectID);
+
+  if(select.options.length != 0){
+    for(var i = select.options - 1; i > -1; i--){
+      select.remove(i);
+    }
+  }
+
+  for (var k in JSONArray){
+    var el = document.createElement("option");
+    el.textContent = JSONArray[k][JSONDisplayColumn];
+    el.value = JSONArray[k][JSONValueColumn];
+    select.appendChild(el);
+  }
+
+  for (var i in JSONSelectValues){
+    for (var j in select.options){
+      if(JSONSelectValues[i][JSONValueColumn] == select.options[j].value){
+        select.options[j].selected = true;
+        break;
+      }
+    }
+  }
+}
+
+// TODO: This will probably be usless once connected to the back end
+function returnSelectValuesAsJSON(JSONtype, JSONDisplayColumn, JSONValueColumn, selectID){
+  var select = document.getElementById(selectID);
+  var newJSONString = "{" + "\"" + JSONtype + "\"" + ":[";
+  
+  for (var j in select.options){
+    if(select.options[j].selected){
+      newJSONString = newJSONString + "{" + "\"" + JSONValueColumn + "\":\"" + select.options[j].value + "\",\"" + JSONDisplayColumn + "\":\"" + select.options[j].textContent + "\"},";
+    }
+  }
+
+  newJSONString = newJSONString.substring(0, newJSONString.length - 1);
+  newJSONString = newJSONString + "]}";
+  var newJSON = JSON.parse(newJSONString);
+  return newJSON[JSONtype];
+}
+
+
 
 //This function takes a form element and creates a json object using the name of each input in the form as the field and the value of each input as the corresponding input
 function convertFormToJSON(form){
@@ -337,10 +325,22 @@ function convertFormToJSON(form){
   return json;
 }
 
-  function getElements(id){
-    var elements = [];
-    $( '#' + id + ' :selected' ).each( function( i, selected ) {
-      elements[i] = $( selected ).val();
-    });
-    return elements;
+function getElements(id){
+  var elements = [];
+  $( '#' + id + ' :selected' ).each( function( i, selected ) {
+    elements[i] = $( selected ).val();
+  });
+  return elements;
+}
+
+function hasSelectedValue(selectID){
+  var select =document.getElementById(selectID);
+
+  for (var j in select.options){
+    if(select.options[j].selected){
+      return true
+    }
   }
+
+    return false
+}

@@ -6,24 +6,28 @@ ADD THIS BACK IN WHEN BACKEND HAS PROJECT IMPLEMENTED
 <form id="createProject">
 	<h5>Project Title:*</h5>
 	<input type="text" name="projectTitle" id="projectTitle" maxlength="50" class='form-control'>
+	<span id="projectTitleR" class="required"> Required </span>
+
 	<h5>Associated Meetings:*</h5>
 	<select multiple id='meetings' name='meetings' size='6' class='form-control'>
 		<option disabled>Select multiple by holding Ctrl/CMD</option>
 		<% for meeting in @userMeetings['meetings'] %>
 			<% if !meeting['title'].nil? %>
-		<option value="<%= meeting['id'] %>"><%= meeting['title'] %></option>
-		<% end %>
+				<option value="<%= meeting['id'] %>"><%= meeting['title'] %></option>
+			<% end %>
 		<% end %>
 	</select>
+	<span id="meetingsR" class="required"> Required </span>
 
 	<h5>Members:*</h5>
 	<select multiple id='members' name="members" size='6' class='form-control'>
 		<option disabled>Select multiple by holding Ctrl/CMD</option>
 		<% for user in @allUsers['users'] %>
-		<% if !user['name'].nil? %>
-		<option value="<%= user['userID'] %>"><%= user['name'] %></option>
-		<% end %>
+			<% if !user['name'].nil? %>
+				<option value="<%= user['userID'] %>"><%= user['name'] %></option>
+			<% end %>
 		<% end %>
 	</select>
+	<span id="membersR" class="required"> Required </span>
 
 </form>

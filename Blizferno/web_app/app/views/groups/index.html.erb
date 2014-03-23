@@ -86,6 +86,9 @@
       <th></th>
     </tr>
   </thead>
+  <tr>
+    <td colspan='4' style='cursor: pointer; text-align: center' href='#newGroupModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
+  </tr>
   <% if !(@groups.any?) %>
   <tr><td colspan="3" style="text-align: center;">YOU ARE NOT A MEMBER OF ANY GROUPS</td></tr>
   <% else %>
@@ -103,9 +106,4 @@
       </tr>
     <% end %>
   <% end %>
-  <tfoot>
-  <tr>
-    <td colspan='4' style='cursor: pointer; text-align: center' href='#newGroupModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
-  </tr>
-  </tfoot>
 </table>

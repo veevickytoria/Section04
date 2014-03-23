@@ -3,6 +3,8 @@
 <form name='input' id='createGroupForm' onsubmit='validateGroup()'>
 	<h5>Group Title*</h5>
 	<input name='title' type='text' id='newTitle' class='form-control' placeholder='Title' />
+	<span id="titleR" class="required"> Required </span>
+
 	<h5>Group Members*</h5>
 	<select multiple id='groupMembers' size='6' class='form-control'>
 		<option disabled>Select multiple by holding Ctrl/CMD</option>
@@ -12,4 +14,5 @@
 			<% end %>
 		<% end %>
 	</select>
+	<span id="membersR" class="required"> Required </span>
 </form>
