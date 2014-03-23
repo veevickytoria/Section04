@@ -6,6 +6,8 @@ var allUsers = <%= raw @allUsersRaw %>;
 allUsers = JSON.parse(JSON.stringify(allUsers));
 
 //This funciton is called when a user clicks on a row in the table and is passed in the index of the row that was clicked
+
+
 function showViewMeetingModal(ID){
 	var attendeeInfo;
 	var attends = new Array();
@@ -20,27 +22,38 @@ function showViewMeetingModal(ID){
 	//Look up the meeting in our JSON object using the currentID and manually set each value to the appropriate element in the ViewMeetingModal
 	document.getElementById("titleV").innerHTML = meetingsJSON[currentID]["title"];
 	document.getElementById("locationV").innerHTML = meetingsJSON[currentID]["location"];
+
+	var startDateTime = meetingsJSON[currentID]["datetime"];
+	var endDateTime = meetingsJSON[currentID]["endDatetime"];
+
 	document.getElementById("datetimeV").innerHTML = meetingsJSON[currentID]["datetime"];
 	document.getElementById("endDatetimeV").innerHTML = meetingsJSON[currentID]["endDatetime"];
 	document.getElementById("descriptionV").innerHTML = meetingsJSON[currentID]["description"];
 	//document.getElementById("attendanceV").innerHTML = meetingsJSON[currentID]["attendance"];
 //alert("meetingsJSON:"+JSON.stringify(meetingsJSON[currentID]));
 //for(attendee in meetingsJSON[currentID]["attendance"]){
-for(var i = 0; i < meetingsJSON[currentID]["attendance"].length; i++){
+
+	var allIDs = new Array();
+	allIDs.push(<%=@userID%>);
+
+	for(var i = 0; i < meetingsJSON[currentID]["attendance"].length; i++){
+		allIDs.push(meetingsJSON[currentID]["attendance"][i]["userID"]);
+	}
+
+	for(var i = 0; i < allIDs.length; i++){
 //alert("attendance:"+JSON.stringify(meetingsJSON[currentID]["attendance"]));
 //alert("attendee:"+i);
-
 	  $.ajax({
         type: 'GET',
-        url: "http://csse371-04.csse.rose-hulman.edu/User/" + meetingsJSON[currentID]["attendance"][i]["userID"],
+        url: "http://csse371-04.csse.rose-hulman.edu/User/" + allIDs[i],
         success:function(data){
           attendeeInfo = JSON.parse(data);
           attends.push({'name':attendeeInfo['name']});
         },
         async: false
-      });
+      	});
 
-}
+	}
 
 	populateTableRows(attends, "name", "attendanceV");
 
@@ -71,9 +84,9 @@ function showEditModal(ID){
 	document.getElementById("titleE").value = meetingsJSON[currentID]["title"];
 	document.getElementById("locationE").value = meetingsJSON[currentID]["location"];
 	document.getElementById("dateStartE").value = meetingsJSON[currentID]["datetime"].substring(0,10);
-	document.getElementById("timeStartE").value = meetingsJSON[currentID]["datetime"].substring(11);
+	document.getElementById("timeStartE").value = meetingsJSON[currentID]["datetime"].substring(11,16);
 	document.getElementById("dateEndE").value = meetingsJSON[currentID]["endDatetime"].substring(0,10);
-	document.getElementById("timeEndE").value = meetingsJSON[currentID]["endDatetime"].substring(11);
+	document.getElementById("timeEndE").value = meetingsJSON[currentID]["endDatetime"].substring(11,16);
 	document.getElementById("descriptionE").value = meetingsJSON[currentID]["description"];
 	//document.getElementById("attendanceE").value = meetingsJSON[currentID]["attendance"];
 
@@ -100,8 +113,8 @@ function updateEditedValues(){
 
 
 	//concatenate the date and time together to meet the "mm/dd/yyyy HH:MM" format
-	editForm['datetime'] = editForm['dateStart'] +" "+ editForm['timeStart'];
-	editForm['endDatetime'] = editForm['dateEnd'] +" "+ editForm['timeEnd'];
+	editForm['datetime'] = editForm['dateStart'] +"T"+ editForm['timeStart'] + ":00Z";
+	editForm['endDatetime'] = editForm['dateEnd'] +"T"+ editForm['timeEnd'] + "00Z";
 
 	//get the meetingID associated with the current meeting from our table
 //alert("meetingsJSON[currentID]:"+JSON.stringify(meetingsJSON[currentID]));
@@ -109,7 +122,7 @@ function updateEditedValues(){
 	var editField = "";
 	var editValue = "";
 	var editData = "";
-
+	
 //for each field in the edit form
 	for (key in meetingsJSON[currentID]){
 	//check to see if the value we just got from the edit form is the value we had before
@@ -135,13 +148,16 @@ function updateEditedValues(){
 
 		}
 	}
-
+	
 	editField = "attendance";
-	editValue = returnSelectValuesAsJSON("attendance", "name", "userID", "attendanceE");
-	editData = JSON.stringify({"meetingID":editMeetingID,"field":editField,"value":editValue});
-
-//alert("editData:"+editData);
-
+	if(document.getElementById("attendanceE").value != 0){
+		editValue = returnSelectValuesAsJSON("attendance", "name", "userID", "attendanceE");
+		editData = JSON.stringify({"meetingID":editMeetingID,"field":editField,"value":editValue});
+	}
+	else{
+		editData = JSON.stringify({"meetingID":editMeetingID,"field":editField,"value":[]});
+	}
+	
 	$.ajax({
 		type: 'PUT',
 		url: 'http://csse371-04.csse.rose-hulman.edu/Meeting/',
@@ -151,7 +167,7 @@ function updateEditedValues(){
 		}
 	});
 
-
+//alert("editData:"+editData);
 }
 
 //This function is called when a user clicks the create button and sends a POST request to the backend
@@ -168,11 +184,19 @@ function submitCreateModal(){
 			var postId = <%=@userID%>;
 			var postTitle = formJSON.title;
 			var postLocation = formJSON.location;
-			var postDatetime = formJSON.dateStart + " " + formJSON.timeStart;
-			var postEndDatetime = formJSON.dateEnd + " " + formJSON.timeEnd;
+
+			var postDatetime = formJSON.dateStart + "T" + formJSON.timeStart + ":00Z";
+			var postEndDatetime = formJSON.dateEnd + "T" + formJSON.timeEnd + ":00Z";
+
+			var splitTime = formJSON.timeStart.split(":");
+			var splitDate = formJSON.dateStart.split("-");
+			var testDate = new Date(splitDate[0], splitDate[1]-1, splitDate[2], splitTime[0], splitTime[1]);
+			alert(testDate.getTime(testDate));
+
+			var x = new Date();
+			var currentTimeZone = x.getTimezoneOffset() / 60;
+
 			var postDescription = formJSON.description;
-
-
 			var attendees = getMembers('attendees');
 			var postAttendance = [];
 
@@ -356,6 +380,25 @@ function isValidDate(dateString)
       }
     }
   }
+
+  function returnSelectValuesAsJSON(JSONtype, JSONDisplayColumn, JSONValueColumn, selectID){
+    var select = document.getElementById(selectID);
+    var newJSONString = "{" + "\"" + JSONtype + "\"" + ":[";
+    
+    for (var j in select.options){
+      if(select.options[j].selected){
+        newJSONString = newJSONString + "{" + "\"" + JSONValueColumn + "\":\"" + select.options[j].value + "\"},";
+      }
+    }
+
+    newJSONString = newJSONString.substring(0, newJSONString.length - 1);
+    newJSONString = newJSONString + "]}";
+    // cookies[:testString] = newJSONString;
+    alert(newJSONString);
+    var newJSON = JSON.parse(newJSONString);
+    return newJSON[JSONtype];
+  }
+
 
   function returnSelectValuesAsJSON(JSONtype, JSONDisplayColumn, JSONValueColumn, selectID){
     var select = document.getElementById(selectID);
