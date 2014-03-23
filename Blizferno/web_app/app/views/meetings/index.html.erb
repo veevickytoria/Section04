@@ -116,7 +116,7 @@
     <tr>
 <!-- The onclick that is repeated on these three td tags is used to emulate click on the row itself. We can't just place a single onclick on the row because we wouldn't be able to click on the edit or delete icons without also counting as clicking on the row to bring up the view modal.
 -->
-      <td onclick="showViewMeetingModal(<%=@meetingsParsed.index(meeting)%>)" data-refresh="true" data-toggle="modal"><%= meeting['datetime'] %></td>
+      <td onclick="showViewMeetingModal(<%=@meetingsParsed.index(meeting)%>)" data-refresh="true" data-toggle="modal"><script>document.write(getStartDateTime(<%= meeting['datetime'] %>))</script></td>
       <td onclick="showViewMeetingModal(<%=@meetingsParsed.index(meeting)%>)" data-refresh="true" data-toggle="modal"><%= meeting['title'] %></td>
       <td onclick="showViewMeetingModal(<%=@meetingsParsed.index(meeting)%>)" data-refresh="true" data-toggle="modal"><%= meeting['location'] %></td>
 <!-- The delete icon -->

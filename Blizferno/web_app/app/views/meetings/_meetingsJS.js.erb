@@ -26,8 +26,11 @@ function showViewMeetingModal(ID){
 	var startDateTime = meetingsJSON[currentID]["datetime"];
 	var endDateTime = meetingsJSON[currentID]["endDatetime"];
 
-	document.getElementById("datetimeV").innerHTML = meetingsJSON[currentID]["datetime"];
-	document.getElementById("endDatetimeV").innerHTML = meetingsJSON[currentID]["endDatetime"];
+	var dtString = new Date(startDateTime * 1000);
+
+	document.getElementById("datetimeV").innerHTML = dtString.toLocaleString();
+	dtString = new Date(endDateTime * 1000);
+	document.getElementById("endDatetimeV").innerHTML = dtString.toLocaleString();
 	document.getElementById("descriptionV").innerHTML = meetingsJSON[currentID]["description"];
 	//document.getElementById("attendanceV").innerHTML = meetingsJSON[currentID]["attendance"];
 
@@ -149,14 +152,60 @@ function showEditModal(ID){
 
 	currentID = ID; //set the currentID to the ID we are currently looking at
 
-
 	//Look up the meeting in our JSON object using the currentID and manually set each value to the appropriate element's value in the EditMeetingModal
 	document.getElementById("titleE").value = meetingsJSON[currentID]["title"];
 	document.getElementById("locationE").value = meetingsJSON[currentID]["location"];
-	document.getElementById("dateStartE").value = meetingsJSON[currentID]["datetime"].substring(0,10);
-	document.getElementById("timeStartE").value = meetingsJSON[currentID]["datetime"].substring(11,16);
-	document.getElementById("dateEndE").value = meetingsJSON[currentID]["endDatetime"].substring(0,10);
-	document.getElementById("timeEndE").value = meetingsJSON[currentID]["endDatetime"].substring(11,16);
+
+	var dateTime = meetingsJSON[currentID]["datetime"];
+	dateTime = (new Date(dateTime * 1000)).toLocaleString();
+	dateTime = dateTime.split(" ");
+	
+	var date = dateTime[0].split("/");
+	var month;
+	var day;
+
+	if(date[0].length == 1) month = "0" + date[0];
+	else month = date[0];
+	if(date[1].length == 1) day = "0" + date[1];
+	else day = date[1];
+
+	date = date[2] + "-" + month + "-" + day;
+
+	var time = dateTime[1].split(":");
+	var intHour;
+	if(dateTime[2] == "PM"){
+		intHour = parseInt(time[0]) + 12;
+		time = intHour + ":" + time[1];
+	}
+	else{
+		time = time[0] + ":" + time[1];
+	}
+
+	document.getElementById("dateStartE").value = date;
+	document.getElementById("timeStartE").value = time;
+		
+	dateTime = meetingsJSON[currentID]["endDatetime"];
+	dateTime = (new Date(dateTime *1000)).toLocaleString();
+	dateTime = dateTime.split(" ");
+
+	date = dateTime[0].split("/");
+	if(date[0].length == 1) month = "0" + date[0];
+	else month = date[0];
+	if(date[1].length == 1) day = "0" + date[1];
+	else day = date[1];
+
+	date = date[2] + "-" + month + "-" + day;
+
+	time = dateTime[1].split(":");
+	if(dateTime[2] == "PM"){
+		intHour = parseInt(time[0]) + 12;
+		time = intHour + ":" + time[1];
+	}
+	else{
+		time = time[0] + ":" + time[1];
+	}
+	document.getElementById("dateEndE").value = date;
+	document.getElementById("timeEndE").value = time;
 	document.getElementById("descriptionE").value = meetingsJSON[currentID]["description"];
 	//document.getElementById("attendanceE").value = meetingsJSON[currentID]["attendance"];
 
@@ -181,10 +230,19 @@ function updateEditedValues(){
 	//convert the form into a JSON object for easy parsing
 	var editForm = convertFormToJSON(document.getElementById("editMeetingForm"));
 
+	// Start date/time
+	var splitTime = editForm.timeStart.split(":");
+	var splitDate = editForm.dateStart.split("-");
+	var startDateTime = new Date(splitDate[0], splitDate[1]-1, splitDate[2], splitTime[0], splitTime[1]);
+	startDateTime = startDateTime.getTime()/1000.0;
+	editForm['datetime'] = startDateTime;
 
-	//concatenate the date and time together to meet the "mm/dd/yyyy HH:MM" format
-	editForm['datetime'] = editForm['dateStart'] +"T"+ editForm['timeStart'] + ":00Z";
-	editForm['endDatetime'] = editForm['dateEnd'] +"T"+ editForm['timeEnd'] + "00Z";
+	// End date/time
+	splitTime = editForm.timeEnd.split(":");
+	splitDate = editForm.dateEnd.split("-");
+	var endDateTime = new Date(splitDate[0], splitDate[1]-1, splitDate[2], splitTime[0], splitTime[1]);
+	endDateTime = endDateTime.getTime()/1000.0;
+	editForm['endDatetime'] = endDateTime;
 
 	//get the meetingID associated with the current meeting from our table
 
@@ -253,16 +311,21 @@ function submitCreateModal(){
 			var postTitle = formJSON.title;
 			var postLocation = formJSON.location;
 
-			var postDatetime = formJSON.dateStart + "T" + formJSON.timeStart + ":00Z";
-			var postEndDatetime = formJSON.dateEnd + "T" + formJSON.timeEnd + ":00Z";
-
+			// Start date/time
 			var splitTime = formJSON.timeStart.split(":");
 			var splitDate = formJSON.dateStart.split("-");
-			var testDate = new Date(splitDate[0], splitDate[1]-1, splitDate[2], splitTime[0], splitTime[1]);
-			alert(testDate.getTime(testDate));
+			var startDateTime = new Date(splitDate[0], splitDate[1]-1, splitDate[2], splitTime[0], splitTime[1]);
+			startDateTime = startDateTime.getTime()/1000.0;
+			var postDatetime = startDateTime;
 
-			var x = new Date();
-			var currentTimeZone = x.getTimezoneOffset() / 60;
+			// End date/time
+			splitTime = formJSON.timeEnd.split(":");
+			splitDate = formJSON.dateEnd.split("-");
+			var endDateTime = new Date(splitDate[0], splitDate[1]-1, splitDate[2], splitTime[0], splitTime[1]);
+			endDateTime = endDateTime.getTime()/1000.0;
+			var postEndDatetime = endDateTime;
+			//var mydate = new Date(testDate * 1000);
+			//alert(mydate.toGMTString() + " " + mydate.toLocaleString());
 
 			var postDescription = formJSON.description;
 			var attendees = getMembers('attendees');
@@ -291,6 +354,7 @@ function submitCreateModal(){
 					success:function(data){
 						//if successful then close the modal and reload the page
 						$('#newMeetingModal').modal('hide');
+						alert("Meeting successfully created! Reloading page...");
 						window.location.reload(true);
 					}
 				});
@@ -458,9 +522,12 @@ function returnSelectValuesAsJSON(JSONtype, JSONDisplayColumn, JSONValueColumn, 
         newJSONString = newJSONString + "{" + "\"" + JSONValueColumn + "\":\"" + select.options[j].value + "\"},";
       }
     }
-    if(newJSONString.length > (JSONtype + 5)){
-    	newJSONString = newJSONString.substring(0, newJSONString.length - 1);
-	}
+
+    // NOT SURE WHY THIS IS IN THERE. WHY +5?
+    //if(newJSONString.length > (JSONtype + 5)){
+    //	newJSONString = newJSONString.substring(0, newJSONString.length - 1);
+	//}
+	newJSONString = newJSONString.substring(0, newJSONString.length - 1);
     newJSONString = newJSONString + "]}";
 
     var newJSON = JSON.parse(newJSONString);
@@ -480,3 +547,8 @@ function hasSelectedValue(selectID){
 
 }
 
+function getStartDateTime(datetime){
+	// Start date/time
+	var value = (new Date(datetime * 1000)).toLocaleString();
+	return value;
+}
