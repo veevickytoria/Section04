@@ -13,16 +13,16 @@
 	<span id="descriptionR" class="required"> Required </span>
 	
 	
-	<h5>Deadline:* (please use military time)</h5>
-	<input type="date" id="dateStart" name="dateStart" class="form-control formDate" />
+	<h5>Deadline:* </h5>
+	<input type="date" id="deadlinedate" name="deadlinedate" class="form-control formDate" />
 	<span id="dateR" class="required"> Required </span>
 
-	<input type="time" id="timeStart" name="timeStart" class="form-control formTime" />
+	<input type="time" id="deadlinetime" name="deadlinetime" class="form-control formTime" />
 	<span id="timeR" class="required"> Required </span>
 
 
-	<input type="hidden" name="dateCreated" value="<%= Time.now.strftime("%m/%d/%Y %H:%M") %>" />
-	<input type="hidden" name="dateAssigned" value="<%= Time.now.strftime("%m/%d/%Y %H:%M") %>" />
+	<input type="hidden" id="dateCreated" name="dateCreated" value="<%= Time.now.strftime("%Y-%m-%d %H:%M") %>" />
+	<input type="hidden" id="dateAssigned" name="dateAssigned" value="<%= Time.now.strftime("%Y-%m-%d %H:%M") %>" />
 
 	<h5>Completion Criteria:*</h5>
 	<input type="text" name="completionCriteria" maxLength="500" class="form-control"/>

@@ -32,7 +32,38 @@ function showEditModal(){
 	document.getElementById("titleE").value = tasksJSON[currentID]["title"];
 	document.getElementById("isCompletedE").checked = tasksJSON[currentID]["isCompleted"];
 	document.getElementById("descriptionE").value = tasksJSON[currentID]["description"];
-	document.getElementById("deadlineE").value = tasksJSON[currentID]["deadline"];
+
+	var dateTime = tasksJSON[currentID]["deadline"];
+	dateTime = (new Date(dateTime * 1000)).toLocaleString();
+	dateTime = dateTime.split(" ");
+	var date = dateTime[0].split("/");
+	var month;
+	var day;
+
+	if(date[0].length == 1) month = "0" + date[0];
+	else month = date[0];
+	if(date[1].length == 1) day = "0" + date[1];
+	else day = date[1];
+
+	date = date[2] + "-" + month + "-" + day;
+
+	var time = dateTime[1].split(":");
+	var intHour;
+	if(dateTime[2] == "PM"){
+		intHour = parseInt(time[0]) + 12;
+		time = intHour + ":" + time[1];
+	}
+	else{
+		intHour = parseInt(time[0]);
+		if(intHour < 10)
+			time = "0" + intHour + ":" + time[1];
+		else
+			time = intHour + ":" + time[1];
+	}
+
+	document.getElementById("deadlinedateE").value = date;
+	document.getElementById("deadlinetimeE").value = time;
+
 	document.getElementById("completionCriteriaE").value = tasksJSON[currentID]["completionCriteria"];
 	
 	//populateSelect(allUsers['users'], "name", "userID", tasksJSON[currentID]["assignedTo"], "grpMemSlct");
@@ -86,39 +117,59 @@ function updateEditedValues(){
 	var editValue = "";
 	var editData = "";
 
+	// Deadline date/time
+	var splitTime = document.getElementById("deadlinetimeE").value.split(":");
+	var splitDate = document.getElementById("deadlinedateE").value.split("-");
+	var datetime = new Date(splitDate[0], splitDate[1]-1, splitDate[2], splitTime[0], splitTime[1]);
+	datetime = datetime.getTime()/1000.0;
 
+	// Just the deadline...
+	editData = JSON.stringify({"taskID":editTaskID,"field":"deadline","value":datetime});
+	alert(editData);
+	$.ajax({
+		type: 'PUT',
+		url: 'http://csse371-04.csse.rose-hulman.edu/Task/',
+		data: editData,
+		success:function(data){
+			alert("successful");
+		}
+	});
+
+	// Everything else
 	for (key in tasksJSON[currentID]){
+		if(key != "deadline"){
+			if(document.getElementById(key+"E") != null){
+				if(key == "isCompleted" && document.getElementById(key+"E").checked != tasksJSON[currentID][key]){
+					tasksJSON[currentID][key] = document.getElementById(key+"E").checked;
+					editField = key;
+					editValue = tasksJSON[currentID][key];
+					editData = JSON.stringify({"taskID":editTaskID,"field":editField,"value":editValue});
 
-		if(document.getElementById(key+"E") != null){
-			if(key == "isCompleted" && document.getElementById(key+"E").checked != tasksJSON[currentID][key]){
-				tasksJSON[currentID][key] = document.getElementById(key+"E").checked;
-				editField = key;
-				editValue = tasksJSON[currentID][key];
-				editData = JSON.stringify({"taskID":editTaskID,"field":editField,"value":editValue});
+					$.ajax({
+						type: 'PUT',
+						url: 'http://csse371-04.csse.rose-hulman.edu/Task/',
+						data: editData
+					});
+				}
+				else if(tasksJSON[currentID][key] != document.getElementById(key+"E").value){
+					tasksJSON[currentID][key] == document.getElementById(key+"E").value;
 
-				$.ajax({
-					type: 'PUT',
-					url: 'http://csse371-04.csse.rose-hulman.edu/Task/',
-					data: editData
-				});
-			}
-			else if(tasksJSON[currentID][key] != document.getElementById(key+"E").value){
-				tasksJSON[currentID][key] == document.getElementById(key+"E").value;
+					editField = key;
+					editValue = tasksJSON[currentID][key];
+					editData = JSON.stringify({"taskID":editTaskID,"field":editField,"value":editValue});
 
-				editField = key;
-				editValue = tasksJSON[currentID][key];
-				editData = JSON.stringify({"taskID":editTaskID,"field":editField,"value":editValue});
+					$.ajax({
+						type: 'PUT',
+						url: 'http://csse371-04.csse.rose-hulman.edu/Task/',
+						data: editData
+					});
 
-				$.ajax({
-					type: 'PUT',
-					url: 'http://csse371-04.csse.rose-hulman.edu/Task/',
-					data: editData
-				});
-
+				}
 			}
 		}
 	}
-	$('#editTaskModal').modal('hide');
+
+	window.location.reload(true);
 }
 
 function showDeleteModal(ID){
@@ -169,9 +220,14 @@ function showViewTaskModal(ID){
 		document.getElementById("isCompletedV").innerHTML = tasksJSON[currentID]["isCompleted"]
 	}
 	document.getElementById("descriptionV").innerHTML = tasksJSON[currentID]["description"];
-	document.getElementById("deadlineV").innerHTML = tasksJSON[currentID]["deadline"];
-	document.getElementById("dateCreatedV").innerHTML = tasksJSON[currentID]["dateCreated"];
-	document.getElementById("dateAssignedV").innerHTML = tasksJSON[currentID]["dateAssigned"];
+	
+	var dt = tasksJSON[currentID]["deadline"];
+	dt = new Date(dt * 1000);
+	document.getElementById("deadlineV").innerHTML = dt.toLocaleString();
+	dt = tasksJSON[currentID]["dateCreated"];
+	dt = new Date(dt * 1000);
+	document.getElementById("dateCreatedV").innerHTML = dt.toLocaleString();
+
 	document.getElementById("completionCriteriaV").innerHTML = tasksJSON[currentID]["completionCriteria"];
 
 	$.ajax({
@@ -185,7 +241,7 @@ function showViewTaskModal(ID){
 
 	$.ajax({
 		type: 'GET',
-        url: "http://csse371-04.csse.rose-hulman.edu/User/" + tasksJSON[currentID]["assignedTo"],
+        url: "http://csse371-04.csse.rose-hulman.edu/User/" + tasksJSON[currentID]["assignedFrom"],
         success:function(data){
           assignedFrom = JSON.parse(data);
         },
@@ -194,7 +250,7 @@ function showViewTaskModal(ID){
 
 	$.ajax({
 		type: 'GET',
-        url: "http://csse371-04.csse.rose-hulman.edu/User/" + tasksJSON[currentID]["assignedTo"],
+        url: "http://csse371-04.csse.rose-hulman.edu/User/" + tasksJSON[currentID]["createdBy"],
         success:function(data){
           createdBy = JSON.parse(data);
         },
@@ -262,9 +318,27 @@ function submitCreateModal(){
 		var postTitle = formJSON.title;
 		var postisCompleted = false;
 		var postDescription = formJSON.description;
-		var postDeadline = formJSON.deadline;
-		var postDateCreated = formJSON.dateCreated;
-		var postDateAssigned = formJSON.dateAssigned;
+
+		var date = formJSON.deadlinedate.split("-");
+		var time = formJSON.deadlinetime.split(":");
+		datetime = new Date(date[0], date[1]-1, date[2], time[0], time[1]);
+		datetime = datetime.getTime()/1000.0;
+		var postDeadline = datetime;
+
+		var dt = formJSON.dateCreated.split(" ");
+		date = dt[0].split("-");
+		time = dt[1].split(":");
+		datetime = new Date(date[0], date[1]-1, date[2], time[0], time[1]);
+		datetime = datetime.getTime()/1000.0;
+		var postDateCreated = datetime;
+
+		dt = formJSON.dateAssigned.split(" ");
+		date = dt[0].split("-");
+		time = dt[1].split(":");
+		datetime = new Date(date[0], date[1]-1, date[2], time[0], time[1]);
+		datetime = datetime.getTime()/1000.0;
+		var postDateAssigned = datetime;
+
 		var postCompletionCriteria = formJSON.completionCriteria;
 		var postAssignedFrom = <%=@userID%>;
 		var postCreatedBy = <%=@userID%>;
@@ -299,6 +373,7 @@ function submitCreateModal(){
 			success:function(data){
 				// if successful then close the modal and reload the page
 				$('#newTaskModal').modal('hide');
+				alert("Task successfully created! Reloading page...")
 				window.location.reload(true);
 			}
 		});

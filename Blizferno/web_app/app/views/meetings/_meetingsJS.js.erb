@@ -178,7 +178,11 @@ function showEditModal(ID){
 		time = intHour + ":" + time[1];
 	}
 	else{
-		time = time[0] + ":" + time[1];
+		intHour = parseInt(time[0]);
+		if(intHour < 10)
+			time = "0" + intHour + ":" + time[1];
+		else
+			time = intHour + ":" + time[1];
 	}
 
 	document.getElementById("dateStartE").value = date;
