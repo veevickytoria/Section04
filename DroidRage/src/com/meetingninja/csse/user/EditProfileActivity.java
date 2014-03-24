@@ -3,6 +3,7 @@ package com.meetingninja.csse.user;
 import java.util.HashMap;
 
 import objects.User;
+import objects.parcelable.UserParcel;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -42,7 +43,7 @@ public class EditProfileActivity extends Activity {
 		displayedUser = new User();
 
 		if (extras != null && extras.containsKey(Keys.User.PARCEL)) {
-			displayedUser = (User) extras.getParcelable(Keys.User.PARCEL);
+			displayedUser = ((UserParcel) extras.getParcelable(Keys.User.PARCEL)).getUser();
 		} else {
 			Log.v(TAG, "Problem getting user info");
 			// displayedUser.setID(session.getUserID());
@@ -126,7 +127,7 @@ public class EditProfileActivity extends Activity {
 		dbSave();
 		session.createLoginSession(displayedUser);
 		Intent i = new Intent();
-		i.putExtra(Keys.User.PARCEL, displayedUser);
+		i.putExtra(Keys.User.PARCEL, new UserParcel(displayedUser));
 		setResult(RESULT_OK, i);
 		finish();
 	}

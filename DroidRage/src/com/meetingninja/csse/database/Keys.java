@@ -59,9 +59,10 @@ public interface Keys {
 		public final String LOCATION = "location";
 		public final String DATETIME = "datetime";
 		public final String START = "datetimeStart";
-		public final String END = "datetimeEnd";
+		public final String OTHEREND = "endDatetime";
 		public final String DESC = "description";
 		public final String ATTEND = "attendance";
+		public final String END = "datetimeEnd";
 	}
 
 	public interface Comment {

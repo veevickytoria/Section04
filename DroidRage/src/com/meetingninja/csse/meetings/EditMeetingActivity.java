@@ -15,10 +15,12 @@
  ******************************************************************************/
 package com.meetingninja.csse.meetings;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.TimeZone;
 
 import objects.Meeting;
+import objects.User;
 
 import org.joda.time.format.DateTimeFormatter;
 
@@ -65,6 +67,7 @@ public class EditMeetingActivity extends FragmentActivity implements
 	private MeetingSaveTask creater = null;
 	private DateTimeFormatter timeFormat;
 	private DateTimeFormatter dateFormat = MyDateUtils.JODA_APP_DATE_FORMAT;
+	private ArrayList<User> attendees;
 
 	private SQLiteMeetingAdapter mySQLiteAdapter;
 	private SessionManager session;
@@ -91,11 +94,13 @@ public class EditMeetingActivity extends FragmentActivity implements
 			edit_mode = extras.getBoolean(EXTRA_EDIT_MODE, true);
 			displayedMeeting = extras.getParcelable(EXTRA_MEETING);
 		}
+		session = SessionManager.getInstance();
+
 		is24 = android.text.format.DateFormat
 				.is24HourFormat(getApplicationContext());
-		session = SessionManager.getInstance();
 		timeFormat = is24 ? MyDateUtils.JODA_24_TIME_FORMAT
 				: MyDateUtils.JODA_12_TIME_FORMAT;
+
 		mySQLiteAdapter = new SQLiteMeetingAdapter(this);
 
 		setupViews();
@@ -126,11 +131,12 @@ public class EditMeetingActivity extends FragmentActivity implements
 			// end.set(Calendar.MINUTE, 0);
 		}
 
-		mFromDate.setOnClickListener(new DateClickListener(mFromDate, start, end, mToDate, true, mFromTime, mToTime));
+		mFromDate.setOnClickListener(new DateClickListener(mFromDate, start,
+				end, mToDate, true, mFromTime, mToTime));
 		mFromDate.setText(dateFormat.print(start.getTimeInMillis()));
 
-		mToDate.setOnClickListener(new DateClickListener(mToDate, end,
-				start, mFromDate, false, mToTime, mFromTime));
+		mToDate.setOnClickListener(new DateClickListener(mToDate, end, start,
+				mFromDate, false, mToTime, mFromTime));
 		mToDate.setText(dateFormat.print(end.getTimeInMillis()));
 
 		mFromTime.setOnClickListener(new TimeClickListener(mFromTime, start,
@@ -294,11 +300,21 @@ public class EditMeetingActivity extends FragmentActivity implements
 			newMeeting.setStartTime(start.getTimeInMillis());
 			newMeeting.setEndTime(end.getTimeInMillis());
 			newMeeting.setDescription(desc);
-
+			// TODO: newMeeting.setAttendance();
 			if (displayedMeeting != null) {
+				System.out.println("saving");
+				System.out.println(newMeeting.getStartTimeInMillis());
+				System.out.println(newMeeting.getEndTimeInMillis());
 				// mySQLiteAdapter.updateMeeting(newMeeting);
 				msgIntent.putExtra("method", "update");
 				newMeeting.setID(displayedMeeting.getID());
+				UpdateMeetingTask task = new UpdateMeetingTask();
+				task.updateMeeting(newMeeting);
+
+				// ??
+				displayedMeeting = newMeeting;
+				// ??
+
 			} else {
 				MeetingSaveTask task = new MeetingSaveTask(
 						EditMeetingActivity.this);
@@ -307,6 +323,8 @@ public class EditMeetingActivity extends FragmentActivity implements
 				displayedMeeting = newMeeting;
 				return;
 			}
+			Toast.makeText(this, String.format("Saving Meeting"),
+					Toast.LENGTH_SHORT).show();
 
 			msgIntent.putExtra(Keys.Meeting.PARCEL, newMeeting);
 			if (extras != null) {
@@ -325,8 +343,9 @@ public class EditMeetingActivity extends FragmentActivity implements
 		Calendar cal, other;
 		boolean start;
 
-		public DateClickListener(Button b, Calendar c, Calendar other, Button b1,
-				Boolean start, Button timeButton, Button otherTimeButton) {
+		public DateClickListener(Button b, Calendar c, Calendar other,
+				Button b1, Boolean start, Button timeButton,
+				Button otherTimeButton) {
 			this.button = b;
 			this.otherButton = b1;
 			this.other = other;
@@ -454,7 +473,8 @@ public class EditMeetingActivity extends FragmentActivity implements
 				}
 				button.setText(timeFormat.print(cal.getTimeInMillis()));
 			} else {
-				AlertDialogUtil.displayDialog(EditMeetingActivity.this, "Error",
+				AlertDialogUtil.displayDialog(EditMeetingActivity.this,
+						"Error",
 						"A Meeting can not be set to start or end before now",
 						"OK", null);
 			}

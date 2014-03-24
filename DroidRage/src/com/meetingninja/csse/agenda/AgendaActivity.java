@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import objects.Agenda;
 import objects.Task;
 import objects.Topic;
+import objects.parcelable.AgendaParcel;
 import pl.polidea.treeview.InMemoryTreeStateManager;
 import pl.polidea.treeview.TreeBuilder;
 import pl.polidea.treeview.TreeStateManager;
@@ -69,8 +70,8 @@ public class AgendaActivity extends FragmentActivity {
 			manager = (TreeStateManager<Topic>) savedInstanceState
 					.getSerializable("treeManager");
 			newCollapsible = savedInstanceState.getBoolean("collapsible");
-			displayedAgenda = savedInstanceState
-					.getParcelable(Keys.Agenda.PARCEL);
+			displayedAgenda = ((AgendaParcel) savedInstanceState
+					.getParcelable(Keys.Agenda.PARCEL)).getAgenda();
 		}
 
 		setupViews();
@@ -136,7 +137,7 @@ public class AgendaActivity extends FragmentActivity {
 		super.onSaveInstanceState(outState);
 		outState.putSerializable("treeManager", manager);
 		outState.putBoolean("collapsible", this.collapsible);
-		outState.putParcelable(Keys.Agenda.PARCEL, displayedAgenda);
+		outState.putParcelable(Keys.Agenda.PARCEL, new AgendaParcel(displayedAgenda));
 	}
 
 	protected final void setCollapsible(final boolean newCollapsible) {
@@ -235,7 +236,7 @@ public class AgendaActivity extends FragmentActivity {
 			break;
 		case R.id.Review:
 			Intent i = new Intent(this, ReviewAgendaActivity.class);
-			i.putExtra(Keys.Agenda.PARCEL, displayedAgenda);
+			i.putExtra(Keys.Agenda.PARCEL, new AgendaParcel(displayedAgenda));
 			startActivity(i);
 			break;
 		default:
@@ -243,6 +244,5 @@ public class AgendaActivity extends FragmentActivity {
 		}
 		return true;
 	}
-
 
 }

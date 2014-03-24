@@ -13,7 +13,7 @@
      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
      See the License for the specific language governing permissions and
      limitations under the License
-     
+
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -33,7 +33,7 @@
         android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/response_label"
+            android:id="@+id/attending_header"
             style="@style/TextAppearance.EditEvent_LabelSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -130,128 +130,10 @@
 
     <!-- REPEATS -->
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:focusable="true"
-        android:orientation="vertical"
-        android:paddingBottom="6dp" >
-
-        <TextView
-            android:id="@+id/repeats_label"
-            style="@style/TextAppearance.EditEvent_LabelSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/repeats_label" />
-
-        <Spinner
-            android:id="@+id/repeats"
-            style="@style/TextAppearance.EditEvent_Spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/repeats_label"
-            android:prompt="@string/repeats_label" />
-    </LinearLayout>
-
-    <View style="@style/EditEventSeparator" />
-
     <!-- REMINDERS -->
-
-    <LinearLayout
-        android:id="@+id/reminders_row"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:focusable="true"
-        android:orientation="vertical" >
-
-        <TextView
-            android:id="@+id/reminders_group_label"
-            style="@style/TextAppearance.EditEvent_LabelSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="0dip"
-            android:gravity="center_vertical"
-            android:text="@string/event_info_reminders_label" />
-
-        <LinearLayout
-            android:id="@+id/reminder_items_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dip"
-            android:layout_marginRight="8dip"
-            android:layout_marginTop="-8dip"
-            android:orientation="vertical" />
-
-        <Button
-            android:id="@+id/reminder_add"
-            style="@style/TextAppearance.EditEvent_LabelSmall"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginBottom="0dip"
-            android:layout_marginTop="0dip"
-            android:background="?android:attr/selectableItemBackground"
-            android:contentDescription="@string/reminders_label"
-            android:gravity="top"
-            android:minHeight="20dip"
-            android:paddingBottom="12dp"
-            android:text="@string/reminders_label"
-            android:textAllCaps="false"
-            android:textColor="#FF777777"
-            android:textSize="18sp" />
-    </LinearLayout>
 
     <!-- PRESENCE - Show me as [busy | available] -->
 
-    <LinearLayout
-        android:id="@+id/availability_row"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingBottom="6dp" >
-
-        <TextView
-            android:id="@+id/presence_label"
-            style="@style/TextAppearance.EditEvent_LabelSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingRight="4dip"
-            android:text="@string/presence_label" />
-
-        <Spinner
-            android:id="@+id/availability"
-            style="@style/TextAppearance.EditEvent_Spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/presence_label"
-            android:entries="@array/availability"
-            android:prompt="@string/presence_label" />
-    </LinearLayout>
-
     <!-- PRIVACY -->
-
-    <LinearLayout
-        android:id="@+id/visibility_row"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingBottom="6dp" >
-
-        <TextView
-            android:id="@+id/privacy_label"
-            style="@style/TextAppearance.EditEvent_LabelSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/privacy_label" />
-
-        <Spinner
-            android:id="@+id/visibility"
-            style="@style/TextAppearance.EditEvent_Spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/privacy_label"
-            android:entries="@array/visibility"
-            android:prompt="@string/privacy_label" />
-    </LinearLayout>
 
 </LinearLayout>

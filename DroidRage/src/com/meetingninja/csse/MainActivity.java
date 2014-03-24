@@ -65,12 +65,11 @@ import com.parse.ParseUser;
 
 /**
  * Main Activity Window.
- * 
+ *
  * @author moorejm
- * 
+ *
  */
-public class MainActivity extends FragmentActivity implements
-		BaseFragment.TaskCallbacks {
+public class MainActivity extends FragmentActivity {
 
 	private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -116,7 +115,6 @@ public class MainActivity extends FragmentActivity implements
 	// private ProjectsFragment frag_projects;
 	// private ContactsFragment frag_contacts;
 	private UserListFragment frag_contacts;
-	private SearchableUserFragment frag_settings;
 
 	// Fields local to this activity
 	private Bundle icicle;
@@ -333,16 +331,16 @@ public class MainActivity extends FragmentActivity implements
 			// fragment.setArguments(args);
 			nextPage = new UserListFragment();
 			break;
-//		case SETTINGS:
-//			nextPage = SearchableUserFragment.getInstance();
-//			// args.putString("Content", "TODO: Settings Page");
-//			// fragment.setArguments(args);
-//			break;
-//		case ABOUT:
-//			nextPage = new DummyFragment();
-//			args.putString("Content", "TODO: About Page");
-//			nextPage.setArguments(args);
-//			break;
+		// case SETTINGS:
+		// nextPage = SearchableUserFragment.getInstance();
+		// // args.putString("Content", "TODO: Settings Page");
+		// // fragment.setArguments(args);
+		// break;
+		// case ABOUT:
+		// nextPage = new DummyFragment();
+		// args.putString("Content", "TODO: About Page");
+		// nextPage.setArguments(args);
+		// break;
 		case LOGOUT:
 			logout();
 			break;
@@ -530,29 +528,4 @@ public class MainActivity extends FragmentActivity implements
 			selectItem(position);
 		}
 	}
-
-	@Override
-	public void onPreExecute() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onProgressUpdate(int percent) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onCancelled() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onPostExecute() {
-		// TODO Auto-generated method stub
-
-	}
-
 }

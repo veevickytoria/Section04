@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (C) 2014 The Android Open Source Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import objects.Agenda;
 import objects.Topic;
+import objects.parcelable.AgendaParcel;
 import pl.polidea.treeview.InMemoryTreeStateManager;
 import pl.polidea.treeview.TreeBuilder;
 import pl.polidea.treeview.TreeStateManager;
@@ -68,14 +69,14 @@ public class ReviewAgendaActivity extends FragmentActivity {
 		if (savedInstanceState == null) {
 			manager = new InMemoryTreeStateManager<Topic>();
 			newCollapsible = false;
-			displayedAgenda = getIntent()
-					.getParcelableExtra(Keys.Agenda.PARCEL);
+			displayedAgenda = ((AgendaParcel) getIntent()
+					.getParcelableExtra(Keys.Agenda.PARCEL)).getAgenda();
 		} else {
 			manager = (TreeStateManager<Topic>) savedInstanceState
 					.getSerializable("treeManager");
 			newCollapsible = savedInstanceState.getBoolean("collapsible");
-			displayedAgenda = savedInstanceState
-					.getParcelable(Keys.Agenda.PARCEL);
+			displayedAgenda = ((AgendaParcel) savedInstanceState
+					.getParcelable(Keys.Agenda.PARCEL)).getAgenda();
 		}
 
 		setupViews();
@@ -141,7 +142,7 @@ public class ReviewAgendaActivity extends FragmentActivity {
 		super.onSaveInstanceState(outState);
 		outState.putSerializable("treeManager", manager);
 		outState.putBoolean("collapsible", this.collapsible);
-		outState.putParcelable(Keys.Agenda.PARCEL, displayedAgenda);
+		outState.putParcelable(Keys.Agenda.PARCEL, new AgendaParcel(displayedAgenda));
 	}
 
 	protected final void setCollapsible(final boolean newCollapsible) {

@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import objects.Meeting;
+import objects.User;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
@@ -33,6 +34,7 @@ import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.meetingninja.csse.database.BaseDatabaseAdapter.IRequest;
 
 public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 	private final static String TAG = MeetingDatabaseAdapter.class
@@ -67,9 +69,80 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 		ret.setID(meetingID);
 		return ret;
 	}
+	public static Meeting editMeeting(Meeting meeting) throws IOException{
+		String meetingID = meeting.getID();
+		String titlePayload = getEditPayload(meetingID, Keys.Meeting.TITLE,	meeting.getTitle());
+		String startdateTimePayload = getEditPayload(meetingID,	Keys.Meeting.DATETIME, meeting.getStartTime());
+		String locationPayload = getEditPayload(meetingID,Keys.Meeting.LOCATION,meeting.getLocation());
+		String endDateTimePayload = getEditPayload(meetingID,Keys.Meeting.OTHEREND,meeting.getEndTime());
+		String descPayload = getEditPayload(meetingID, Keys.Meeting.DESC, meeting.getDescription());
+		System.out.println("heya");
+		System.out.println(startdateTimePayload);
+		System.out.println(endDateTimePayload);
+//		String attendancePayload = getEditPayload(meetingID,Keys.Meeting.ATTEND,meeting.getAttendance());
+		
+//TODO:		ByteArrayOutputStream json = new ByteArrayOutputStream();
+//		PrintStream ps = new PrintStream(json);
+//		JsonGenerator jgen = JFACTORY.createGenerator(ps, JsonEncoding.UTF8);
+//		
+//		jgen = JFACTORY.createGenerator(ps, JsonEncoding.UTF8);
+//		jgen.writeStartObject();
+//		jgen.writeStringField(Keys.Meeting.ID,meetingID);
+//		jgen.writeStringField("field",Keys.Meeting.ATTEND);
+//		jgen.writeArrayFieldStart("value");
+//		for (User member : meeting.getAttendance()){
+//			jgen.writeStartObject();
+//			jgen.writeStringField(Keys.User.ID,member.getID());
+//			jgen.writeEndObject();
+//		}
+//		jgen.writeEndArray();
+//		jgen.writeEndObject();
+//		jgen.close();
+//		String attendancePayload = json.toString("UTF8");
+//TODO:		ps.close();
 
-	public static Meeting createMeeting(String userID, Meeting m)
-			throws IOException, MalformedURLException {
+		// Get server response
+		sendSingleEdit(meetingID, titlePayload);
+		sendSingleEdit(meetingID, startdateTimePayload);
+		sendSingleEdit(meetingID, locationPayload);
+		sendSingleEdit(meetingID, endDateTimePayload);
+		String response = sendSingleEdit(meetingID, descPayload);//TODO
+//TODO:		String response  = sendSingleEdit(attendancePayload);
+		final JsonNode meetingNode = MAPPER.readTree(response);
+		Meeting m = parseMeeting(meetingNode);
+		System.out.println("made it this far");
+		return m;
+	}
+	private static String getEditPayload(String meetingID, String field,
+			String value) throws IOException {
+		ByteArrayOutputStream json = new ByteArrayOutputStream();
+		// this type of print stream allows us to get a string easily
+		PrintStream ps = new PrintStream(json);
+		// Create a generator to build the JSON string
+		JsonGenerator jgen = JFACTORY.createGenerator(ps, JsonEncoding.UTF8);
+		// Build JSON Object for Title
+		jgen.writeStartObject();
+		jgen.writeStringField(Keys.Meeting.ID, meetingID);
+		jgen.writeStringField("field", field);
+		jgen.writeStringField("value", value);
+		jgen.writeEndObject();
+		jgen.close();
+		String payload = json.toString("UTF8");
+		ps.close();
+		return payload;
+	}
+	private static String sendSingleEdit(String meetingID, String payload) throws IOException {
+		String _url = getBaseUri().appendPath(meetingID).build().toString();
+		URL url = new URL(_url);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setRequestMethod(IRequest.PUT);
+		addRequestHeader(conn, false);
+		sendPostPayload(conn, payload);
+		return getServerResponse(conn);
+
+	}
+
+	public static Meeting createMeeting(String userID, Meeting m) throws IOException, MalformedURLException {
 		// Server URL setup
 		String _url = getBaseUri().appendPath(userID).build().toString();
 
@@ -93,7 +166,7 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 		jgen.writeStringField(Keys.Meeting.TITLE, m.getTitle());
 		jgen.writeStringField(Keys.Meeting.LOCATION, m.getLocation());
 		jgen.writeStringField(Keys.Meeting.DATETIME, m.getStartTime());
-		jgen.writeStringField("endDatetime", m.getEndTime());
+		jgen.writeStringField(Keys.Meeting.OTHEREND, m.getEndTime());
 		jgen.writeStringField(Keys.Meeting.DESC, m.getDescription());
 		jgen.writeArrayFieldStart(Keys.Meeting.ATTEND);
 		// TODO: Add attendees to meeting
@@ -145,7 +218,7 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 		m.setTitle(node.get(Keys.Meeting.TITLE).asText());
 		m.setLocation(node.get(Keys.Meeting.LOCATION).asText());
 		m.setStartTime(node.get(Keys.Meeting.DATETIME).asText());
-		m.setEndTime(node.get("endDatetime").asText());
+		m.setEndTime(node.get(Keys.Meeting.OTHEREND).asText());
 		m.setDescription(node.get(Keys.Meeting.DESC).asText());
 		JsonNode attendance = node.get(Keys.Meeting.ATTEND);
 		if (attendance != null && attendance.isArray()) {
