@@ -14,9 +14,12 @@
 	
 	
 	<h5>Deadline:* (please use military time)</h5>
-	<input type="text" name="deadline" placeholder="mm/dd/yyyy HH:MM" maxLength="16" class="form-control"/>
-	<span id="deadlineR" class="required"> Required </span>
-	
+	<input type="date" id="dateStart" name="dateStart" class="form-control formDate" />
+	<span id="dateR" class="required"> Required </span>
+
+	<input type="time" id="timeStart" name="timeStart" class="form-control formTime" />
+	<span id="timeR" class="required"> Required </span>
+
 
 	<input type="hidden" name="dateCreated" value="<%= Time.now.strftime("%m/%d/%Y %H:%M") %>" />
 	<input type="hidden" name="dateAssigned" value="<%= Time.now.strftime("%m/%d/%Y %H:%M") %>" />
