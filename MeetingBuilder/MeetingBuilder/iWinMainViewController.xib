@@ -1,25 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="4514" systemVersion="13A603" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="3.0" toolsVersion="5053" systemVersion="13A603" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3747"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="iWinMainViewController">
             <connections>
-                <outlet property="homeButton" destination="Ho1-6h-niW" id="lrU-SI-J9c"/>
-                <outlet property="logOutButton" destination="L1U-1Y-Etp" id="mib-cj-Aml"/>
                 <outlet property="mainView" destination="f5u-jS-1Ry" id="NXZ-sa-kPA"/>
-                <outlet property="meetingsButton" destination="LoC-l5-Uwv" id="56w-u7-P6k"/>
                 <outlet property="menuButton" destination="Zce-7x-x4u" id="2g0-0I-hHg"/>
                 <outlet property="menuView" destination="WaV-H7-LyS" id="r7R-ze-QaG"/>
-                <outlet property="notesButton" destination="2xd-Pb-JAD" id="dxH-Ni-RPw"/>
-                <outlet property="profileButton" destination="MsK-IG-1Dz" id="8WM-cN-iqV"/>
                 <outlet property="rightSlideView" destination="utD-xp-KQ1" id="Yd1-4t-BhU"/>
                 <outlet property="scheduleButton" destination="0DF-sA-4sd" id="d3p-Gy-mvh"/>
-                <outlet property="settingsButton" destination="IgH-Cm-XhZ" id="Pca-bS-Xrj"/>
                 <outlet property="slideView" destination="m5R-sX-3Nh" id="ZHD-W4-pcK"/>
                 <outlet property="tapView" destination="DIM-Ik-9SD" id="BgT-E8-Mb7"/>
-                <outlet property="tasksButton" destination="2WB-b2-TFd" id="PKp-TF-ar7"/>
                 <outlet property="view" destination="2" id="3"/>
                 <outlet property="voiceCommand" destination="7rB-hP-eje" id="Tga-ga-b9b"/>
             </connections>
@@ -90,100 +83,14 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                 </view>
-                <view alpha="0.94999998807907104" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="utD-xp-KQ1">
-                    <rect key="frame" x="768" y="-20" width="350" height="1064"/>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="utD-xp-KQ1">
+                    <rect key="frame" x="768" y="0.0" width="350" height="1024"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                 </view>
                 <view alpha="0.94999997615814213" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WaV-H7-LyS">
-                    <rect key="frame" x="0.0" y="0.0" width="200" height="1024"/>
+                    <rect key="frame" x="-200" y="0.0" width="200" height="1024"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ho1-6h-niW">
-                            <rect key="frame" x="0.0" y="61" width="200" height="38"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="21"/>
-                            <state key="normal" title="   Home Page">
-                                <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                            </state>
-                            <connections>
-                                <action selector="onClickHome" destination="-1" eventType="touchUpInside" id="9du-10-V5R"/>
-                            </connections>
-                        </button>
-                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MsK-IG-1Dz" userLabel="Button -    Profile">
-                            <rect key="frame" x="0.0" y="158" width="200" height="43"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="21"/>
-                            <state key="normal" title="   Profile">
-                                <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                            </state>
-                            <connections>
-                                <action selector="onClickProfile" destination="-1" eventType="touchUpInside" id="2vk-9b-blN"/>
-                            </connections>
-                        </button>
-                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LoC-l5-Uwv">
-                            <rect key="frame" x="0.0" y="107" width="200" height="43"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="21"/>
-                            <state key="normal" title="   Meetings">
-                                <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                            </state>
-                            <connections>
-                                <action selector="onClickMeetings" destination="-1" eventType="touchUpInside" id="owc-WU-GuI"/>
-                            </connections>
-                        </button>
-                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2xd-Pb-JAD">
-                            <rect key="frame" x="0.0" y="256" width="200" height="41"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="21"/>
-                            <state key="normal" title="   Notes">
-                                <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                            </state>
-                            <connections>
-                                <action selector="onClickNotes" destination="-1" eventType="touchUpInside" id="3AG-Fz-J2t"/>
-                            </connections>
-                        </button>
-                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2WB-b2-TFd">
-                            <rect key="frame" x="0.0" y="209" width="200" height="39"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="21"/>
-                            <state key="normal" title="   Tasks">
-                                <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                            </state>
-                            <connections>
-                                <action selector="onClickTasks" destination="-1" eventType="touchUpInside" id="taV-AW-IvO"/>
-                            </connections>
-                        </button>
-                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IgH-Cm-XhZ">
-                            <rect key="frame" x="0.0" y="305" width="200" height="41"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="21"/>
-                            <state key="normal" title="   Settings">
-                                <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                            </state>
-                            <connections>
-                                <action selector="onClickSettings" destination="-1" eventType="touchUpInside" id="nRp-po-KYk"/>
-                            </connections>
-                        </button>
-                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="L1U-1Y-Etp">
-                            <rect key="frame" x="0.0" y="354" width="200" height="41"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="21"/>
-                            <state key="normal" title="   Log Out">
-                                <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                            </state>
-                            <connections>
-                                <action selector="onClickLogOut" destination="-1" eventType="touchUpInside" id="gbt-1F-ehn"/>
-                            </connections>
-                        </button>
-                    </subviews>
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                 </view>
             </subviews>

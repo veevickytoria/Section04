@@ -63,7 +63,7 @@
     
     
     //For meetingFeed and taskFeed
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Schedule/%@", [[NSUserDefaults standardUserDefaults] objectForKey:@"userID"]];
+    NSString *url = [NSString stringWithFormat:@"%@/User/Schedule/%@", DATABASE_URL,[[NSUserDefaults standardUserDefaults] objectForKey:@"userID"]];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
     
@@ -85,7 +85,7 @@
             else {
                 NSInteger taskID =[[element objectForKey:@"id"] integerValue];
                 
-                url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Task/%@", [[NSNumber numberWithInt:taskID] stringValue]];
+                url = [NSString stringWithFormat:@"%@/Task/%@", DATABASE_URL,[[NSNumber numberWithInt:taskID] stringValue]];
                 url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
                 deserializedDictionary = [self.backendUtility getRequestForUrl:url];
                 
@@ -98,7 +98,7 @@
     
     
     //For notificationFeed
-    NSString *urlNotification = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Notification/%@", [[NSUserDefaults standardUserDefaults] objectForKey:@"userID"]];
+    NSString *urlNotification = [NSString stringWithFormat:@"%@/User/Notification/%@", DATABASE_URL,[[NSUserDefaults standardUserDefaults] objectForKey:@"userID"]];
 
     urlNotification = [urlNotification stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *deserializedDictionaryNotification = [self.backendUtility getRequestForUrl:urlNotification];

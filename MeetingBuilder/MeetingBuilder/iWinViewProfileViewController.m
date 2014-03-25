@@ -69,7 +69,7 @@
 }
 -(void)updateTextUI
 {
-    NSString *url = [NSString stringWithFormat: @"http://csse371-04.csse.rose-hulman.edu/User/%d", self.userID];
+    NSString *url = [NSString stringWithFormat: @"%@/User/%d", DATABASE_URL,self.userID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 
     NSDictionary *userInfo = [self.backEndUtility getRequestForUrl:url];
@@ -97,7 +97,7 @@
 
 -(void) saveChanges
 {
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/"];
+    NSString *url = [NSString stringWithFormat:@"%@/User/", DATABASE_URL];
     NSArray *fields = [NSArray arrayWithObjects:@"name", @"email", @"phone", @"company", @"title", @"location",nil];
     NSArray *values = [NSArray arrayWithObjects:self.displayNameTextField.text, self.emailTextField.text, self.phoneTextField.text, self.companyTextField.text, self.titleTextField.text, self.locationTextField.text,nil];
     NSArray *keys = [NSArray arrayWithObjects:@"userID", @"field", @"value", nil];
@@ -130,7 +130,7 @@
     
     self.createGroupVC.groupDelegate = self;
     [self presentViewController:self.createGroupVC animated:YES completion:nil];
-    self.createGroupVC.view.superview.bounds = CGRectMake(0,0,768,1003);
+    self.createGroupVC.view.superview.bounds = CGRectMake(MODAL_XOFFSET, MODAL_YOFFSET, MODAL_WIDTH, MODAL_HEIGHT);
 }
 
 - (IBAction)onViewProjects:(id)sender {
@@ -140,7 +140,7 @@
     [self.viewProjectsVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     
     [self presentViewController:self.viewProjectsVC animated:YES completion:nil];
-    self.viewProjectsVC.view.superview.bounds = CGRectMake(0,0,768,1003);
+    self.viewProjectsVC.view.superview.bounds = CGRectMake(MODAL_XOFFSET, MODAL_YOFFSET, MODAL_WIDTH, MODAL_HEIGHT);
 }
 
 -(IBAction)onEditProfile:(id)sender
@@ -216,7 +216,7 @@
 
 -(void)populateGroupList
 {
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Groups/%d", self.userID];
+    NSString *url = [NSString stringWithFormat:@"%@/Groups/%d", DATABASE_URL,self.userID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *deserializedDictionary = [self.backEndUtility getRequestForUrl:url];
     
@@ -243,7 +243,7 @@
 {
     for (int i = 0; i < [self.groupID count]; i++)
     {
-        NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Group/%d", [self.groupID[i] integerValue]];
+        NSString *url = [NSString stringWithFormat:@"%@/Group/%d", DATABASE_URL,[self.groupID[i] integerValue]];
         url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         NSDictionary *deserializedDictionary = [self.backEndUtility getRequestForUrl:url];
         

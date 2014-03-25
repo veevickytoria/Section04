@@ -11,6 +11,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "iWinAppDelegate.h"
 #import "iWinBackEndUtility.h"
+#import "iWinConstants.h"
 
 @interface iWinTaskListViewController ()
 @property (strong, nonatomic) NSMutableArray *itemList;
@@ -64,7 +65,7 @@
 
 -(void)populateTaskList
 {
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Tasks/%d", self.userID];
+    NSString *url = [NSString stringWithFormat:@"%@/User/Tasks/%d", DATABASE_URL,self.userID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:30];
     [urlRequest setHTTPMethod:@"GET"];
@@ -104,7 +105,7 @@
 {
     for (int i = 0; i < [self.taskIDs count]; i++)
     {
-        NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Task/%d", [self.taskIDs[i] integerValue]];
+        NSString *url = [NSString stringWithFormat:@"%@/Task/%d", DATABASE_URL,[self.taskIDs[i] integerValue]];
         url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:30];
         [urlRequest setHTTPMethod:@"GET"];
@@ -178,7 +179,7 @@
     self.addViewTaskViewController.viewTaskDelegate = self;
     
     [self presentViewController:self.addViewTaskViewController animated:YES completion:nil];
-    self.addViewTaskViewController.view.superview.bounds = CGRectMake(0,0,768,1003);
+    self.addViewTaskViewController.view.superview.bounds = CGRectMake(MODAL_XOFFSET, MODAL_YOFFSET, MODAL_WIDTH, MODAL_HEIGHT);
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -233,7 +234,7 @@
 {
     if (buttonIndex == 1)
     {
-        NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Task/%d", [[self.taskIDs objectAtIndex:self.selectedTask] integerValue]];
+        NSString *url = [NSString stringWithFormat:@"%@/Task/%d", DATABASE_URL,[[self.taskIDs objectAtIndex:self.selectedTask] integerValue]];
         NSError *error = [self.backendUtility deleteRequestForUrl:url];
         if (!error)
         {

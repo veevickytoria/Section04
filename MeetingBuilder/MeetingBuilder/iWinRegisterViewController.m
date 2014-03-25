@@ -11,6 +11,7 @@
 #import "iWinAppDelegate.h"
 #import "iWinBackEndUtility.h"
 #import "Contact.h"
+#import "iWinConstants.h"
 
 @interface iWinRegisterViewController ()
 @property (strong, nonatomic) iWinAppDelegate *appDelegate;
@@ -89,7 +90,7 @@
     {
         NSString *email = [[self.emailField text] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
         NSString *password = [self sha256HashFor: [self.passwordField text]];
-        NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/"];
+        NSString *url = [NSString stringWithFormat:@"%@/User/", DATABASE_URL];
         //register
         NSArray *keys = [NSArray arrayWithObjects:@"name", @"password", @"email", @"phone", @"company", @"title", @"location", nil];
         NSArray *objects = [NSArray arrayWithObjects:self.nameField.text, password, email, self.phoneNumberField.text, self.companyField.text, self.titleField.text, self.locationField.text,nil];
