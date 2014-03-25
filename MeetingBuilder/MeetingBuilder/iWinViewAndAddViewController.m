@@ -17,7 +17,8 @@
 @property (nonatomic) iWinAgendaItemViewController *agendaItemViewController;
 @property (nonatomic) iWinAddUsersViewController *userViewController;
 @property (strong, nonatomic) iWinBackEndUtility *backendUtility;
-
+@property (weak, nonatomic) IBOutlet UILabel *timerLabel;
+@property (weak, nonatomic) IBOutlet UILabel *currentAgendaItemLabel;
 @end
 
 
