@@ -185,7 +185,8 @@ didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 
 - (void)application:(UIApplication *)application
 didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    [PFPush handlePush:userInfo];
+    //[PFPush handlePush:userInfo];
+    [[[UIAlertView alloc] initWithTitle:@"Push Notification" message:@"Received" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil] show];
 }
 
 @end
