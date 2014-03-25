@@ -8,9 +8,11 @@
             <connections>
                 <outlet property="addItemButton" destination="WZz-0x-JLq" id="dXl-cT-Sp9"/>
                 <outlet property="cancelButton" destination="xrC-VJ-O69" id="cLh-0U-NyA"/>
+                <outlet property="currentAgendaItemLabel" destination="bZz-BV-QDm" id="7Ie-PC-MWi"/>
                 <outlet property="headerLabel" destination="npF-Qr-M7u" id="TtW-Zr-bzW"/>
                 <outlet property="itemTableView" destination="gqS-5J-CFa" id="N89-sG-HPj"/>
                 <outlet property="saveButton" destination="Sg0-cf-uz5" id="dU8-Vr-xGL"/>
+                <outlet property="timerLabel" destination="inz-7E-fVq" id="iQU-pb-UbG"/>
                 <outlet property="titleTextField" destination="0YU-3m-7Et" id="WmW-7T-Fm4"/>
                 <outlet property="view" destination="2" id="3"/>
             </connections>
@@ -100,7 +102,7 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Current Agenda Item" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bZz-BV-QDm">
-                    <rect key="frame" x="140" y="889" width="446" height="21"/>
+                    <rect key="frame" x="132" y="889" width="446" height="21"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                     <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>

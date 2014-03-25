@@ -14,6 +14,8 @@
 @interface iWinViewAndAddViewController ()
 @property (nonatomic) NSMutableArray *itemList;
 @property (nonatomic) BOOL isEditing;
+@property (nonatomic) NSDate *startDate;
+@property (nonatomic) NSDate *endDate;
 @property (nonatomic) iWinAgendaItemViewController *agendaItemViewController;
 @property (nonatomic) iWinAddUsersViewController *userViewController;
 @property (strong, nonatomic) iWinBackEndUtility *backendUtility;
@@ -24,9 +26,11 @@
 
 @implementation iWinViewAndAddViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil startDate:(NSDate *)startDate endDate:(NSDate *)endDate
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self.startDate = startDate;
+    self.endDate  = endDate;
     if (self) {
         // Custom initialization
 //        self.isEditing = isEditing;
@@ -41,6 +45,7 @@
     // Do any additional setup after loading the view from its nib.
     self.backendUtility = [[iWinBackEndUtility alloc] init];
     self.itemList = [[NSMutableArray alloc] init];
+    [self trySetupAgendaTimer];
 
     if (!self.isAgendaCreated) {
         self.headerLabel.text = @"Create Agenda";
@@ -67,6 +72,46 @@
     }
 }
 
+-(void)trySetupAgendaTimer
+{
+    if ([self getElapsedAgendaTime] > 0 && [self getEpochTimeFromDate:[NSDate date]] < [self getEpochTimeFromDate:self.endDate]) {
+        [self setTimerControlsToCurrentItem];
+    }
+    else {
+        [self hideTimerControls];
+    }
+}
+
+-(void)setTimerControlsToCurrentItem
+{
+    
+    // find current item
+    for (NSDictionary *item in self.itemList) {
+        
+    }
+//    NSString *agendaItemName = [agendaItem objectForKey:@"title"];
+//    NSString *agendaItemDuration = [agendaItem objectForKey:@"time"];
+}
+
+
+-(void)hideTimerControls
+{
+    self.timerLabel.hidden = YES;
+    self.currentAgendaItemLabel.hidden = YES;
+}
+
+-(NSInteger)getElapsedAgendaTime
+{
+    NSInteger elapsedTime = 0;
+    return elapsedTime;
+}
+
+
+-(NSTimeInterval)getEpochTimeFromDate:(NSDate *)date
+{
+    
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -90,6 +135,7 @@
 {
     return self.itemList.count;
 }
+
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {

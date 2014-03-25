@@ -330,14 +330,7 @@
 
 - (IBAction)onAddAgenda
 {
-    //    if ([self.addAgendaButton.titleLabel.text isEqualToString:@"Add Agenda"])
-    //    {
-    //        self.agendaController = [[iWinViewAndAddViewController alloc] initWithNibName:@"iWinViewAndAddViewController" bundle:nil];
-    //    }
-    //    else
-    //    {
-    self.agendaController = [[iWinViewAndAddViewController alloc] initWithNibName:@"iWinViewAndAddViewController" bundle:nil];
-    // }
+    self.agendaController = [[iWinViewAndAddViewController alloc] initWithNibName:@"iWinViewAndAddViewController" bundle:nil startDate:self.startDate endDate:self.endDate];
     self.agendaController.meetingID = self.meetingID;
     self.agendaController.userID = self.userID;
     self.agendaController.agendaID = self.agendaID;
