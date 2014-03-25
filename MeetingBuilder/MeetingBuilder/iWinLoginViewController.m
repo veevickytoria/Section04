@@ -14,6 +14,7 @@
 #import "RememberMe.h"
 #import "iWinBackEndUtility.h"
 #include <CommonCrypto/CommonDigest.h>
+#import "iWinConstants.h"
 
 @interface iWinLoginViewController ()
 @property (strong, nonatomic) iWinAppDelegate *appDelegate;
@@ -79,7 +80,7 @@
         NSArray *objects = [NSArray arrayWithObjects:email, password,nil];
         NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
         
-        NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Login"];
+        NSString *url = [NSString stringWithFormat:@"%@/User/Login", DATABASE_URL];
         NSDictionary *deserializedDictionary = [self.backendUtility postRequestForUrl:url withDictionary:jsonDictionary];
 
         NSInteger userID = -1;

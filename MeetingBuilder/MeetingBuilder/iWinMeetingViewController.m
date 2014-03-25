@@ -53,7 +53,7 @@
 
 -(void)populateMeetingList
 {
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Meetings/%d", self.userID];
+    NSString *url = [NSString stringWithFormat:@"%@/Meetings/%d", DATABASE_URL,self.userID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
     
@@ -83,7 +83,7 @@
 {
     for (int i = 0; i < [self.meetingID count]; i++)
     {
-        NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Meeting/%d", [self.meetingID[i] integerValue]];
+        NSString *url = [NSString stringWithFormat:@"%@/Meeting/%d", DATABASE_URL,[self.meetingID[i] integerValue]];
         url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
         
@@ -216,7 +216,7 @@
 {
     if (buttonIndex == 1)
     {
-        NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Meeting/%d", [[self.meetingID objectAtIndex:self.selectedMeeting] integerValue]];
+        NSString *url = [NSString stringWithFormat:@"%@/Meeting/%d", DATABASE_URL,[[self.meetingID objectAtIndex:self.selectedMeeting] integerValue]];
         NSError *error = [self.backendUtility deleteRequestForUrl:url];
         if (!error)
         {

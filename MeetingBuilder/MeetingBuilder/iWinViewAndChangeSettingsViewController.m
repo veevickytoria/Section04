@@ -12,6 +12,7 @@
 #import "Settings.h"
 #import "iWinBackEndUtility.h"
 #import <QuartzCore/QuartzCore.h>
+#import "iWinConstants.h"
 #include <CommonCrypto/CommonDigest.h>
 
 @interface iWinViewAndChangeSettingsViewController ()
@@ -166,7 +167,7 @@
     if (buttonIndex == 1)
     {
             //Perform deletion
-        NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/%d", self.userID];
+        NSString *url = [NSString stringWithFormat:@"%@/User/%d", DATABASE_URL,self.userID];
         NSError * error = [self.backEndUtility deleteRequestForUrl:url];
         
         if (!error)
@@ -264,7 +265,7 @@
     NSArray *keys = [NSArray arrayWithObjects:@"userID", @"field", @"value", nil];
     NSArray *objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.userID] stringValue], @"email", self.emailTextField.text,nil];
     NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/"];
+    NSString *url = [NSString stringWithFormat:@"%@/User/", DATABASE_URL];
     NSDictionary *deserializedDictionary = [self.backEndUtility putRequestForUrl:url withDictionary:jsonDictionary];
     
     objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.userID] stringValue], @"password", [self sha256HashFor: self.passwordTextField.text],nil];

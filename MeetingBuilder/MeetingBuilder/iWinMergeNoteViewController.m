@@ -8,6 +8,7 @@
 
 #import "iWinMergeNoteViewController.h"
 #import "iWinBackEndUtility.h"
+#import "iWinConstants.h"
 
 @interface iWinMergeNoteViewController ()
 @property (nonatomic) iWinBackEndUtility *backendUtility;
@@ -112,7 +113,7 @@
         NSInteger noteID = [[[noteDictionaries objectAtIndex:indexPath.row] objectForKey:@"noteID"] integerValue];
         
         // first get note content of the note to merge with
-        NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Note/%d", noteID];
+        NSString *url = [NSString stringWithFormat:@"%@/Note/%d", DATABASE_URL, noteID];
         NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
         NSString *mergerNoteContent = [deserializedDictionary objectForKey:@"content"];
         
@@ -125,14 +126,14 @@
         NSArray *objects = [NSArray arrayWithObjects:[NSString stringWithFormat:@"%d", self.currentNoteID], @"content", merged, nil];
         NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
         
-        NSDictionary *deserializedDictionary2 = [self.backendUtility putRequestForUrl:@"http://csse371-04.csse.rose-hulman.edu/Note/" withDictionary:jsonDictionary];
+        NSDictionary *deserializedDictionary2 = [self.backendUtility putRequestForUrl:[NSString stringWithFormat: @"%@/Note/", DATABASE_URL] withDictionary:jsonDictionary];
         if (deserializedDictionary2) {
             [self.mergeNoteDelegate loadNoteIntoView];
             [self dismissViewControllerAnimated:YES completion:Nil];
         }
         
         // remove shared note from user
-        NSString *unshareUrl = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Note/Sharing/%d/%d", noteID, self.userID];
+        NSString *unshareUrl = [NSString stringWithFormat:@"%@/Note/Sharing/%d/%d", DATABASE_URL, noteID, self.userID];
         [self.backendUtility deleteRequestForUrl:unshareUrl];
 
     }

@@ -14,6 +14,7 @@
 #import "iWinAppDelegate.h"
 #import "iWinBackEndUtility.h"
 #import "Settings.h"
+#import "iWinConstants.h"
 
 @interface iWinAddAndViewTaskViewController ()
 @property (nonatomic) NSInteger taskID;
@@ -124,7 +125,7 @@
                                                   error:&error];
     self.task = (Task*)[result objectAtIndex:0];
     
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Task/%d", self.taskID];
+    NSString *url = [NSString stringWithFormat:@"%@/Task/%d", DATABASE_URL,self.taskID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
     
@@ -164,7 +165,7 @@
 
 -(Contact *)getContactForID:(NSString*)userID
 {
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/%@", userID];
+    NSString *url = [NSString stringWithFormat:@"%@/User/%@", DATABASE_URL,userID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:30];
     [urlRequest setHTTPMethod:@"GET"];
@@ -392,7 +393,7 @@
         jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:nil];
         jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     }
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Task/"];
+    NSString *url = [NSString stringWithFormat:@"%@/Task/", DATABASE_URL];
     
     NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
     [urlRequest setHTTPMethod:@"PUT"];
@@ -448,7 +449,7 @@
         jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:nil];
         jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     }
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Task/"];
+    NSString *url = [NSString stringWithFormat:@"%@/Task/", DATABASE_URL];
     
     NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
     [urlRequest setHTTPMethod:@"POST"];

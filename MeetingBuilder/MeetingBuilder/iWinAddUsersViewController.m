@@ -10,6 +10,7 @@
 #import "Contact.h"
 #import <QuartzCore/QuartzCore.h>
 #import "iWinAppDelegate.h"
+#import "iWinConstants.h"
 #import "iWinBackEndUtility.h"
 
 @interface iWinAddUsersViewController ()
@@ -51,7 +52,7 @@
     self.backendUtility = [[iWinBackEndUtility alloc] init];
 
     //for backend connection
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Users"];
+    NSString *url = [NSString stringWithFormat:@"%@/User/Users", DATABASE_URL];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
     

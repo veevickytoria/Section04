@@ -13,6 +13,7 @@
 #import "iWinAppDelegate.h"
 #import "Settings.h"
 #import "Group.h"
+#import "iWinConstants.h"
 
 @interface iWinViewAndCreateGroupViewController ()
 @property (nonatomic) BOOL isEditing;
@@ -92,7 +93,7 @@
         jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:nil];
         jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     }
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Group/"];
+    NSString *url = [NSString stringWithFormat:@"%@/Group/", DATABASE_URL];
     
     NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
     [urlRequest setHTTPMethod:@"POST"];
@@ -125,7 +126,7 @@
     [self.userViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     self.userViewController.userDelegate = self;
     [self presentViewController:self.userViewController animated:YES completion:nil];
-    self.userViewController.view.superview.bounds = CGRectMake(0,0,768,1003);
+    self.userViewController.view.superview.bounds = CGRectMake(MODAL_XOFFSET, MODAL_YOFFSET, MODAL_WIDTH, MODAL_HEIGHT);
 }
 
 -(void)initView
@@ -137,7 +138,7 @@
 
 -(void)populateMembers
 {
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Group/%d", self.groupID];
+    NSString *url = [NSString stringWithFormat:@"%@/Group/%d", DATABASE_URL,self.groupID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *deserializedDictionary = [self.backEndUtility getRequestForUrl:url];
     
@@ -165,7 +166,7 @@
 {
     for (int i = 0; i < [self.userIDList count]; i++)
     {
-        NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/%d", [self.userIDList[i] integerValue]];
+        NSString *url = [NSString stringWithFormat:@"%@/User/%d",DATABASE_URL ,[self.userIDList[i] integerValue]];
         url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         NSDictionary *deserializedDictionary = [self.backEndUtility getRequestForUrl:url];
         
@@ -234,7 +235,7 @@
 
 -(Contact *)getContactForID:(NSString*)userID
 {
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/%@", userID];
+    NSString *url = [NSString stringWithFormat:@"%@/User/%@", DATABASE_URL,userID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *deserializedDictionary = [self.backEndUtility getRequestForUrl:url];
     if (!deserializedDictionary)

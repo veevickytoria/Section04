@@ -10,6 +10,7 @@
 #import "iWinAddUsersViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "iWinBackEndUtility.h"
+#import "iWinConstants.h"
 
 @interface iWinViewAndAddViewController ()
 @property (nonatomic) NSMutableArray *itemList;
@@ -53,7 +54,7 @@
             self.headerLabel.text = @"View Agenda";
         }
     } else {
-        NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Agenda/%d", self.agendaID];
+        NSString *url = [NSString stringWithFormat:@"%@/Agenda/%d", DATABASE_URL,self.agendaID];
         url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
         self.titleTextField.text = [deserializedDictionary objectForKey:@"title"];
@@ -134,7 +135,7 @@
 
 -(void) updateAgendaInfo
 {
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Agenda/"];
+    NSString *url = [NSString stringWithFormat:@"%@/Agenda/", DATABASE_URL];
     
     NSArray *keys = [NSArray arrayWithObjects:@"agendaID", @"title", @"meeting", @"user", @"content", nil];
     NSArray *objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.agendaID] stringValue], self.titleTextField.text, [[NSNumber numberWithInt:self.meetingID] stringValue], [[NSNumber numberWithInt:self.userID] stringValue], self.itemList, nil];
@@ -150,7 +151,7 @@
     NSArray *objects = [NSArray arrayWithObjects: self.titleTextField.text,[[NSNumber numberWithInt:self.userID] stringValue], self.itemList, nil];
     
     NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Agenda/"];
+    NSString *url = [NSString stringWithFormat:@"%@/Agenda/", DATABASE_URL];
     NSDictionary *deserializedDictionary = [self.backendUtility postRequestForUrl:url withDictionary:jsonDictionary];
     self.agendaID = [[deserializedDictionary objectForKey:@"agendaID"] integerValue];
 }
@@ -181,7 +182,7 @@
     [self.userViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
   //  self.userViewController.userDelegate = self;
     [self presentViewController:self.userViewController animated:YES completion:nil];
-    self.userViewController.view.superview.bounds = CGRectMake(0,0,768,1003);
+    self.userViewController.view.superview.bounds = CGRectMake(MODAL_XOFFSET, MODAL_YOFFSET, MODAL_WIDTH, MODAL_HEIGHT);
 }
 
 -(void)saveItem:(NSString *)name duration: (NSString*) duration description:(NSString*)
