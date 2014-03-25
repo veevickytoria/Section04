@@ -36,6 +36,7 @@
 //        // Set icon badge number to zero
 //        application.applicationIconBadgeNumber = application.applicationIconBadgeNumber - 1;
 //    }
+
     
     return YES;
 }

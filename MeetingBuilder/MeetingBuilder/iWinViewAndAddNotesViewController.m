@@ -10,6 +10,7 @@
 #import "iWinBackEndUtility.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Contact.h"
+#import "iWinConstants.h"
 
 @interface iWinViewAndAddNotesViewController ()
 @property (nonatomic) NSInteger noteID;
@@ -97,7 +98,7 @@
 {
     // retreive notes from db
     
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Note/%d", self.noteID];
+    NSString *url = [NSString stringWithFormat:@"%@/Note/%d", DATABASE_URL,self.noteID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
     
@@ -152,7 +153,7 @@
 
 -(void)deleteNote
 {
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Note/%d", self.noteID];
+    NSString *url = [NSString stringWithFormat:@"%@/Note/%d", DATABASE_URL,self.noteID];
     NSError * error = [self.backendUtility deleteRequestForUrl:url];
     
     if (!error)
@@ -177,7 +178,7 @@
     NSArray *objects = [NSArray arrayWithObjects:[NSNumber numberWithInt:self.userID], title, @"HOLDER", content, date, nil];
     NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
     
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Note/"];
+    NSString *url = [NSString stringWithFormat:@"%@/Note/", DATABASE_URL];
     
     NSDictionary *deserializedDictionary = [self.backendUtility postRequestForUrl:url withDictionary:jsonDictionary];
     
@@ -201,7 +202,7 @@
     NSArray *objects = [NSArray arrayWithObjects:[NSNumber numberWithInt:self.noteID], field, value, nil];
     NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
     
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Note/"];
+    NSString *url = [NSString stringWithFormat:@"%@/Note/", DATABASE_URL];
     
     NSDictionary *deserializedDictionary = [self.backendUtility putRequestForUrl:url withDictionary:jsonDictionary];
     
@@ -233,7 +234,7 @@
     [self.userViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     self.userViewController.userDelegate = self;
     [self presentViewController:self.userViewController animated:YES completion:nil];
-    self.userViewController.view.superview.bounds = CGRectMake(0,0,768,1003);
+    self.userViewController.view.superview.bounds = CGRectMake(MODAL_XOFFSET, MODAL_YOFFSET, MODAL_WIDTH, MODAL_HEIGHT);
 }
 
 
@@ -241,7 +242,7 @@
     NSMutableArray *names = [[NSMutableArray alloc] init];
     NSMutableArray *notes = [[NSMutableArray alloc] init];
     
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Sharing/%d", self.userID];
+    NSString *url = [NSString stringWithFormat:@"%@/User/Sharing/%d", DATABASE_URL,self.userID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
@@ -260,7 +261,7 @@
     [self.mergeViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     self.mergeViewController.mergeNoteDelegate = self;
     [self presentViewController:self.mergeViewController animated:YES completion:nil];
-    self.mergeViewController.view.superview.bounds = CGRectMake(0,0,768,1003);
+    self.mergeViewController.view.superview.bounds = CGRectMake(MODAL_XOFFSET, MODAL_YOFFSET, MODAL_WIDTH, MODAL_HEIGHT);
 }
 
 
@@ -292,7 +293,7 @@
     
     NSArray *objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.noteID] stringValue], users, nil];
     NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-    [self.backendUtility postRequestForUrl:@"http://csse371-04.csse.rose-hulman.edu/Note/Sharing/" withDictionary: jsonDictionary];
+    [self.backendUtility postRequestForUrl:[NSString stringWithFormat:@"%@/Note/Sharing/", DATABASE_URL] withDictionary: jsonDictionary];
 }
 
 @end

@@ -10,9 +10,10 @@
 
 @implementation iWinConstants
 
-const int MODAL_XOFFSET = 36;
-const int MODAL_YOFFSET = 15;
-const int MODAL_HEIGHT = 1018;
-const int MODAL_WIDTH = 804;
+const int MODAL_XOFFSET = 0;
+const int MODAL_YOFFSET = 20;
+const int MODAL_HEIGHT = 1003;
+const int MODAL_WIDTH = 768;
+const NSString *DATABASE_URL = @"http://csse371-04.csse.rose-hulman.edu";
 
 @end

@@ -14,6 +14,7 @@
 #import "iWinBackEndUtility.h"
 #import "Contact.h"
 #import "Settings.h"
+#import "iWinConstants.h"
 
 @interface iWinScheduleViewMeetingViewController ()
 @property (nonatomic) BOOL isEditing;
@@ -142,7 +143,7 @@
 //                                                  error:&error];
     
     
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Meeting/%d", self.meetingID];
+    NSString *url = [NSString stringWithFormat:@"%@/Meeting/%d", DATABASE_URL,self.meetingID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
     
@@ -160,16 +161,14 @@
     self.titleField.text = [self.existMeeting objectForKey:@"title"];
     self.placeField.text = [self.existMeeting objectForKey:@"location"];
     
-     NSString *agendaTitle = [self getAgendaTitle];
-     [self.addAgendaButton setTitle:agendaTitle forState:UIControlStateNormal];
-    
+    [self setAgendaTitle];
     [self initDateTimeLabels];
     [self initAttendees];
 }
 
--(NSString *) getAgendaTitle
+-(void) setAgendaTitle
 {
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Meeting/Agenda/%d", self.meetingID];
+    NSString *url = [NSString stringWithFormat:@"%@/Meeting/Agenda/%d", DATABASE_URL,self.meetingID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
     NSString *agendaTitle;
@@ -179,11 +178,17 @@
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Meeting agenda not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
         [alert show];
     }
+    else if([deserializedDictionary objectForKey:@"errorID"]){
+        [self.addAgendaButton setTitle:@"Add Agenda" forState:UIControlStateNormal];
+    }
+    
     else
     {
         agendaTitle =  [deserializedDictionary objectForKey:@"title"];
+        [self.addAgendaButton setTitle:agendaTitle forState:UIControlStateNormal];
     }
-    return agendaTitle;
+    
+    self.agendaID = [[deserializedDictionary objectForKey:@"agendaID"] integerValue];
 }
 
 
@@ -213,7 +218,7 @@
 
 -(Contact *)getContactForID:(NSString*)userID
 {
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/%@", userID];
+    NSString *url = [NSString stringWithFormat:@"%@/User/%@", DATABASE_URL,userID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
     if (!deserializedDictionary)
@@ -296,7 +301,7 @@
         if (buttonIndex == 1)
         {
             //Perform deletion
-            NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Meeting/%d", self.meetingID];
+            NSString *url = [NSString stringWithFormat:@"%@/Meeting/%d", DATABASE_URL,self.meetingID];
             NSError * error = [self.backendUtility deleteRequestForUrl:url];
             if (!error)
             {
@@ -326,23 +331,24 @@
 
 - (IBAction)onAddAgenda
 {
-//    if ([self.addAgendaButton.titleLabel.text isEqualToString:@"Add Agenda"])
-//    {
-//        self.agendaController = [[iWinViewAndAddViewController alloc] initWithNibName:@"iWinViewAndAddViewController" bundle:nil];
-//    }
-//    else
-//    {
-        self.agendaController = [[iWinViewAndAddViewController alloc] initWithNibName:@"iWinViewAndAddViewController" bundle:nil];
-   // }
+    //    if ([self.addAgendaButton.titleLabel.text isEqualToString:@"Add Agenda"])
+    //    {
+    //        self.agendaController = [[iWinViewAndAddViewController alloc] initWithNibName:@"iWinViewAndAddViewController" bundle:nil];
+    //    }
+    //    else
+    //    {
+    self.agendaController = [[iWinViewAndAddViewController alloc] initWithNibName:@"iWinViewAndAddViewController" bundle:nil];
+    // }
     self.agendaController.meetingID = self.meetingID;
     self.agendaController.userID = self.userID;
+    self.agendaController.agendaID = self.agendaID;
     
     [self.agendaController setModalPresentationStyle:UIModalPresentationPageSheet];
     [self.agendaController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     self.agendaController.agendaDelegate = self;
     self.agendaController.isAgendaCreated = [self.addAgendaButton.titleLabel.text isEqualToString:@"Add Agenda"] ? NO : YES;
     [self presentViewController:self.agendaController animated:YES completion:nil];
-    self.agendaController.view.superview.bounds = CGRectMake(0,0,768,1003);
+    self.agendaController.view.superview.bounds = CGRectMake(MODAL_XOFFSET, MODAL_YOFFSET, MODAL_WIDTH, MODAL_HEIGHT);
 }
 
 - (IBAction)onAddAttendees
@@ -353,7 +359,7 @@
     self.userViewController.userDelegate = self;
     [self.userViewController initAttendeesList:self.userList];
     [self presentViewController:self.userViewController animated:YES completion:nil];
-    self.userViewController.view.superview.bounds = CGRectMake(0,0,768,1003);
+    self.userViewController.view.superview.bounds = CGRectMake(MODAL_XOFFSET, MODAL_YOFFSET, MODAL_WIDTH, MODAL_HEIGHT);
 }
 
 - (IBAction)onViewMySchedule {
@@ -375,7 +381,7 @@
     }
     
     for (Contact *c in self.userList){
-        NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Schedule/%d", [c.userID intValue]];
+        NSString *url = [NSString stringWithFormat:@"%@/User/Schedule/%d", DATABASE_URL,[c.userID intValue]];
         url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
         
@@ -476,9 +482,33 @@
     NSArray *keys = [NSArray arrayWithObjects:@"userID", @"title", @"location", @"datetime", @"endDatetime", @"description", @"attendance", nil];
     NSArray *objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.userID] stringValue], self.titleField.text, self.placeField.text, [NSString stringWithFormat:@"%@ %@", self.startDateLabel.text, self.startTimeLabel.text],[NSString stringWithFormat:@"%@ %@", self.endDateLabel.text, self.endTimeLabel.text], @"Test Meeting", userIDJsonDictionary, nil];
     NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Meeting/"];
+    NSString *url = [NSString stringWithFormat:@"%@/Meeting/", DATABASE_URL];
     NSDictionary *deserializedDictionary = [self.backendUtility postRequestForUrl:url withDictionary:jsonDictionary];
     self.meetingID = [[deserializedDictionary objectForKey:@"meetingID"] integerValue];
+}
+
+-(void) saveNewAgenda
+{
+    
+    NSString *url = [NSString stringWithFormat:@"%@/Agenda/%d", DATABASE_URL,self.agendaID];
+    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *getAgenda = [self.backendUtility getRequestForUrl:url];
+    
+    if (!getAgenda)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Meetings not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alert show];
+    }
+    
+    
+    
+    NSArray *keys = [NSArray arrayWithObjects:@"user", @"title", @"meeting", @"content", nil];
+    NSArray *objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.userID] stringValue], [getAgenda objectForKey:@"title"], [[NSNumber numberWithInt:self.meetingID] stringValue], [getAgenda objectForKey:@"content"], nil];
+    NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+    url = [NSString stringWithFormat:@"%@/Agenda/", DATABASE_URL];
+    NSDictionary *deserializedDictionary = [self.backendUtility postRequestForUrl:url withDictionary:jsonDictionary];
+    self.agendaID = [[deserializedDictionary objectForKey:@"agendaID"] integerValue];
+    
 }
 
 - (IBAction)onClickSave
@@ -486,10 +516,16 @@
     if (!self.isEditing)
     {
         [self saveNewMeeting];
+        if(self.agendaID > 0){
+            [self saveNewAgenda];
+        }
     }
     else
     {
         [self updateMeetingInfo];
+        if(self.agendaID > 0){
+            [self updateAgendaInfo];
+        }
     }
     [self scheduleNotification];
     NSLog(@"%@", NSStringFromClass([self.viewMeetingDelegate class]));
@@ -498,7 +534,7 @@
 
 -(void) updateMeetingInfo
 {
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Meeting/"];
+    NSString *url = [NSString stringWithFormat:@"%@/Meeting/", DATABASE_URL];
     
     NSArray *keys = [NSArray arrayWithObjects:@"meetingID", @"field", @"value", nil];
     NSArray *objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.meetingID] stringValue], @"title", self.titleField.text,nil];
@@ -518,6 +554,35 @@
     jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
     [self.backendUtility putRequestForUrl:url withDictionary:jsonDictionary];
 }
+
+-(void) updateAgendaInfo
+{
+    NSString *url = [NSString stringWithFormat:@"%@/Agenda/%d", DATABASE_URL,self.agendaID];
+    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *getAgenda = [self.backendUtility getRequestForUrl:url];
+    bool checkupdateAgenda = [[getAgenda objectForKey:@"meetingID"] integerValue] == self.meetingID;
+    
+    
+    if (!getAgenda)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Meetings not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alert show];
+    }
+    
+    else if(checkupdateAgenda){
+        NSArray *keys = [NSArray arrayWithObjects:@"user", @"title", @"meeting", @"content", @"agendaID", nil];
+        NSArray *objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.userID] stringValue], [getAgenda objectForKey:@"title"], [[NSNumber numberWithInt:self.meetingID] stringValue], [getAgenda objectForKey:@"content"], [[NSNumber numberWithInt:self.agendaID] stringValue], nil];
+        NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+        url = [NSString stringWithFormat:@"%@/Agenda/", DATABASE_URL];
+        NSDictionary *deserializedDictionary = [self.backendUtility putRequestForUrl:url withDictionary:jsonDictionary];
+        self.agendaID = [[deserializedDictionary objectForKey:@"agendaID"] integerValue];
+    }
+    
+    else{
+        [self saveNewAgenda];
+    }
+}
+
 
 -(void) scheduleNotification
 {
@@ -799,7 +864,17 @@
 -(void) onSaveAgenda:(NSInteger)agendaID
 {
     self.agendaID = agendaID;
+    
+    NSString *url = [NSString stringWithFormat:@"%@/Agenda/%d", DATABASE_URL,self.agendaID];
+    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
+    
+    NSString *agendaTitle = [deserializedDictionary objectForKey:@"title"];
+    [self.addAgendaButton setTitle:agendaTitle forState:UIControlStateNormal];
+    
+    
     [self.agendaController dismissViewControllerAnimated:YES completion:nil];
+    
 }
 
 @end

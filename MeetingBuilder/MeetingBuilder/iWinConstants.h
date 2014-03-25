@@ -14,5 +14,5 @@ extern const int MODAL_XOFFSET;
 extern const int MODAL_YOFFSET;
 extern const int MODAL_HEIGHT;
 extern const int MODAL_WIDTH;
-
+extern const NSString *DATABASE_URL;
 @end

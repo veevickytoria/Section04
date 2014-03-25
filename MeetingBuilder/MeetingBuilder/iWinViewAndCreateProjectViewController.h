@@ -8,13 +8,16 @@
 
 #import <UIKit/UIKit.h>
 #import "iWinAddUsersViewController.h"
-@protocol ViewProjectDelegate <NSObject>
 
--(void)refreshMeetingList;
+@protocol ProjectDelegate <NSObject>
+
+-(void) refreshProjectList;
 
 @end
 
-@interface iWinViewAndCreateProjectViewController : UIViewController <UserDelegate, UITableViewDelegate, UITableViewDataSource>
+
+@interface iWinViewAndCreateProjectViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UserDelegate>
+@property (nonatomic) id<ProjectDelegate> projectDelegate;
 - (IBAction)onClickSave:(id)sender;
 - (IBAction)onClickCancel:(id)sender;
 - (IBAction)onClickAddMembers:(id)sender;

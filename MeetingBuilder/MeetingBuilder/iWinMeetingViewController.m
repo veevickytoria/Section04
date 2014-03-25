@@ -53,7 +53,7 @@
 
 -(void)populateMeetingList
 {
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/Meetings/%d", self.userID];
+    NSString *url = [NSString stringWithFormat:@"%@/Meetings/%d", DATABASE_URL,self.userID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
     
@@ -83,7 +83,7 @@
 {
     for (int i = 0; i < [self.meetingID count]; i++)
     {
-        NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Meeting/%d", [self.meetingID[i] integerValue]];
+        NSString *url = [NSString stringWithFormat:@"%@/Meeting/%d", DATABASE_URL,[self.meetingID[i] integerValue]];
         url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
         
@@ -107,7 +107,10 @@
                 }
             }
             
-            [attendeeList deleteCharactersInRange:NSMakeRange([attendeeList length]-1, 1)];
+            if (attendeeList.length > 0)
+            {
+                [attendeeList deleteCharactersInRange:NSMakeRange([attendeeList length]-1, 1)];
+            }
             
             //add it to local database so accessing the info for a meeting is faster.
             iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
@@ -155,6 +158,7 @@
     self.meetingLocations = [[NSMutableArray alloc] init];
     [self populateMeetingList];
     [self.projectTable reloadData];
+    [self.reloadScheduleDelegate loadScheduleView];
 }
 
 -(IBAction) onScheduleNewMeeting
@@ -212,7 +216,7 @@
 {
     if (buttonIndex == 1)
     {
-        NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Meeting/%d", [[self.meetingID objectAtIndex:self.selectedMeeting] integerValue]];
+        NSString *url = [NSString stringWithFormat:@"%@/Meeting/%d", DATABASE_URL,[[self.meetingID objectAtIndex:self.selectedMeeting] integerValue]];
         NSError *error = [self.backendUtility deleteRequestForUrl:url];
         if (!error)
         {

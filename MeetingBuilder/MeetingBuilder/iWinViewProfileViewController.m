@@ -13,6 +13,8 @@
 #import "iWinBackEndUtility.h"
 #import "iWinAppDelegate.h"
 #import "Contact.h"
+#import "Group.h"
+#import "iWinConstants.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface iWinViewProfileViewController ()
@@ -22,6 +24,10 @@
 @property (strong, nonatomic) iWinViewAndCreateGroupViewController *createGroupVC;
 @property (strong, nonatomic) iWinProjectListViewController *viewProjectsVC;
 @property (nonatomic) iWinBackEndUtility *backEndUtility;
+@property (nonatomic) NSInteger selectedGroup;
+@property (strong, nonatomic) NSMutableArray *groupID;
+@property (strong, nonatomic) NSMutableArray *groupList;
+@property (strong, nonatomic) NSMutableArray *groupDetail;
 @end
 
 @implementation iWinViewProfileViewController
@@ -44,11 +50,26 @@
     self.isEditing = NO;
     self.cancel.hidden = YES;
     [self updateTextUI];
+    [self.displayNameTextField setBorderStyle:UITextBorderStyleNone];
+    [self.companyTextField setBorderStyle:UITextBorderStyleNone];
+    [self.titleTextField setBorderStyle:UITextBorderStyleNone];
+    [self.emailTextField setBorderStyle:UITextBorderStyleNone];
+    [self.phoneTextField setBorderStyle:UITextBorderStyleNone];
+    [self.locationTextField setBorderStyle:UITextBorderStyleNone];
+    
+    self.groupList = [[NSMutableArray alloc] init];
+    self.groupDetail = [[NSMutableArray alloc] init];
+    self.groupID = [[NSMutableArray alloc] init];
+    self.selectedGroup = -1;
+    [self.groupsTableView registerNib:[UINib nibWithNibName:@"CustomSubtitledCell" bundle:nil] forCellReuseIdentifier:@"ProjectCell"];
+    
+    [self populateGroupList];
+    
     [self withBorders:NO];
 }
 -(void)updateTextUI
 {
-    NSString *url = [NSString stringWithFormat: @"http://csse371-04.csse.rose-hulman.edu/User/%d", self.userID];
+    NSString *url = [NSString stringWithFormat: @"%@/User/%d", DATABASE_URL,self.userID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 
     NSDictionary *userInfo = [self.backEndUtility getRequestForUrl:url];
@@ -76,7 +97,7 @@
 
 -(void) saveChanges
 {
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/"];
+    NSString *url = [NSString stringWithFormat:@"%@/User/", DATABASE_URL];
     NSArray *fields = [NSArray arrayWithObjects:@"name", @"email", @"phone", @"company", @"title", @"location",nil];
     NSArray *values = [NSArray arrayWithObjects:self.displayNameTextField.text, self.emailTextField.text, self.phoneTextField.text, self.companyTextField.text, self.titleTextField.text, self.locationTextField.text,nil];
     NSArray *keys = [NSArray arrayWithObjects:@"userID", @"field", @"value", nil];
@@ -107,8 +128,9 @@
     [self.createGroupVC setModalPresentationStyle:UIModalPresentationPageSheet];
     [self.createGroupVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     
+    self.createGroupVC.groupDelegate = self;
     [self presentViewController:self.createGroupVC animated:YES completion:nil];
-    self.createGroupVC.view.superview.bounds = CGRectMake(0,0,768,1003);
+    self.createGroupVC.view.superview.bounds = CGRectMake(MODAL_XOFFSET, MODAL_YOFFSET, MODAL_WIDTH, MODAL_HEIGHT);
 }
 
 - (IBAction)onViewProjects:(id)sender {
@@ -118,7 +140,7 @@
     [self.viewProjectsVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     
     [self presentViewController:self.viewProjectsVC animated:YES completion:nil];
-    self.viewProjectsVC.view.superview.bounds = CGRectMake(0,0,768,1003);
+    self.viewProjectsVC.view.superview.bounds = CGRectMake(MODAL_XOFFSET, MODAL_YOFFSET, MODAL_WIDTH, MODAL_HEIGHT);
 }
 
 -(IBAction)onEditProfile:(id)sender
@@ -192,6 +214,123 @@
     }
 }
 
+-(void)populateGroupList
+{
+    NSString *url = [NSString stringWithFormat:@"%@/Groups/%d", DATABASE_URL,self.userID];
+    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *deserializedDictionary = [self.backEndUtility getRequestForUrl:url];
+    
+    if (!deserializedDictionary)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Group not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alert show];
+    }
+    else
+    {
+        NSArray *jsonArray = [deserializedDictionary objectForKey:@"groups"];
+        if (jsonArray.count > 0)
+        {
+            for (NSDictionary* groups in jsonArray)
+            {
+                [self.groupID addObject:[groups objectForKey:@"groupID"]];
+            }
+            [self populateGroupDetails];
+        }
+    }
+}
+
+-(void)populateGroupDetails
+{
+    for (int i = 0; i < [self.groupID count]; i++)
+    {
+        NSString *url = [NSString stringWithFormat:@"%@/Group/%d", DATABASE_URL,[self.groupID[i] integerValue]];
+        url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSDictionary *deserializedDictionary = [self.backEndUtility getRequestForUrl:url];
+        
+        if (!deserializedDictionary)
+        {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Group details not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+            [alert show];
+        }
+        else
+        {
+            [self.groupList addObject:[deserializedDictionary objectForKey:@"groupTitle"]];
+            iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+            
+            NSManagedObjectContext *context = [appDelegate managedObjectContext];
+            NSManagedObject * newGroup = [NSEntityDescription insertNewObjectForEntityForName:@"Group" inManagedObjectContext:context];
+            NSError *error;
+            [newGroup setValue:[deserializedDictionary objectForKey:@"groupTitle"] forKey:@"groupTitle"];
+            [newGroup setValue:self.groupID[i] forKey:@"groupID"];
+            [context save:&error];
+        }
+    }
+}
+
+-(NSArray*)getDataFromDatabase
+{
+    iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    
+    NSManagedObjectContext *context = [appDelegate managedObjectContext];
+    
+    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Group" inManagedObjectContext:context];
+    
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDesc];
+    
+    NSError *error;
+    NSArray *result = [context executeFetchRequest:request
+                                             error:&error];
+    return result;
+}
+
+-(void) refreshGroupList
+{
+    [self.createGroupVC dismissViewControllerAnimated:YES completion:nil];
+    self.groupList = [[NSMutableArray alloc] init];
+    self.groupID = [[NSMutableArray alloc] init];
+    [self populateGroupList];
+    [self.groupsTableView reloadData];
+}
+
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    CustomSubtitledCell *cell = (CustomSubtitledCell *)[tableView dequeueReusableCellWithIdentifier:@"AttendeeCell"];
+    if (cell == nil)
+    {
+        cell = [[CustomSubtitledCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AttendeeCell"];
+    }
+    [cell initCell];
+    //cell.subTitledDelegate = self;
+    cell.textLabel.text =  (NSString *)[self.groupList objectAtIndex:indexPath.row];
+    cell.detailTextLabel.text = @"";
+    [cell.deleteButton setTag:indexPath.row];
+    return cell;
+}
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return self.groupList.count;
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    self.createGroupVC = [[iWinViewAndCreateGroupViewController alloc] initWithNibName:@"iWinViewAndCreateGroupViewController" bundle:nil withUserID:self.userID withGroupID:[self.groupID[indexPath.row] integerValue]];
+    //self.viewProjectVC.viewProjectDelegate = self;
+    [self.createGroupVC setModalPresentationStyle:UIModalPresentationPageSheet];
+    [self.createGroupVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+    
+    [self presentViewController:self.createGroupVC animated:YES completion:nil];
+    self.createGroupVC.view.superview.bounds = CGRectMake(MODAL_XOFFSET,MODAL_YOFFSET,MODAL_WIDTH,MODAL_HEIGHT);
+}
+
+
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    return NO;
+}
 
 
 @end

@@ -16,6 +16,7 @@
 @property (strong, nonatomic) OpenEarsEventsObserver *openEarsEventsObserver;
 @property (strong, nonatomic) FliteController *fliteController;
 @property (nonatomic, strong) Slt *slt;
+@property (nonatomic) NSMutableArray *words;
 @end
 
 @implementation iWinOpenEarsModel
@@ -29,15 +30,18 @@
     self.slt = [[Slt alloc] init];
     self.fliteController = [[FliteController alloc] init];
     
-    NSArray *words = [NSArray arrayWithObjects:@"GO", @"TO", @"HOME", @"MEETINGS", @"PROFILE", @"TASK", @"NOTES", @"SETTINGS", @"LOG", @"OUT", @"MENU", @"SCHEDULE", @"CREATE", @"EDIT",  nil];
+    self.words = [[NSMutableArray alloc] initWithObjects:@"GO", @"TO", @"HOME", @"MEETINGS", @"PROFILE", @"TASK", @"NOTES", @"SETTINGS", @"LOG", @"OUT", @"MENU", @"SCHEDULE", @"CREATE", @"EDIT",  nil];
 
-    //NSError *error;
-    //NSString *x = [NSString stringWithContentsOfFile:myCorpus encoding:NSUTF8StringEncoding error:&error];
     
-    //NSArray *words = [x componentsSeparatedByString:@"\n"];
+    [self initOpenEars];
+    [self.openEarsEventsObserver setDelegate:self];
+}
+
+-(void) initOpenEars
+{
     NSString *name = @"MyLanguageModelFiles";
     
-    NSError *err = [self.lmGenerator generateLanguageModelFromArray:[NSArray arrayWithArray:words] withFilesNamed:name forAcousticModelAtPath:[AcousticModel pathToModel:@"AcousticModelEnglish"]];
+    NSError *err = [self.lmGenerator generateLanguageModelFromArray:[NSArray arrayWithArray:self.words] withFilesNamed:name forAcousticModelAtPath:[AcousticModel pathToModel:@"AcousticModelEnglish"]];
     
     NSDictionary *languageGeneratorResults = nil;
     self.lmPath = nil;
@@ -53,8 +57,12 @@
     } else {
         NSLog(@"Error: %@",[err localizedDescription]);
     }
-    
-    [self.openEarsEventsObserver setDelegate:self];
+}
+
+-(void)addNavWord:(NSString*) word
+{
+    [self.words addObject:word];
+    [self initOpenEars];
 }
 
 - (void) pocketsphinxDidReceiveHypothesis:(NSString *)hypothesis recognitionScore:(NSString *)recognitionScore utteranceID:(NSString *)utteranceID {
@@ -63,13 +71,49 @@
     double delayInSeconds = 0.45;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        [self.openEarsDelegate speechToText:hypothesis];
+        [self detectCommand:hypothesis];
     });
     
 }
 
+-(void) detectCommand:(NSString*)hypothesis
+{
+    if (([hypothesis rangeOfString:@"GO"].location != NSNotFound) && ([hypothesis rangeOfString:@"HOME"].location != NSNotFound))
+    {
+        [self.menuDelegate goToHomePage];
+    }
+    else if (([hypothesis rangeOfString:@"GO"].location != NSNotFound) && ([hypothesis rangeOfString:@"MEETINGS"].location != NSNotFound))
+    {
+        [self.menuDelegate goToMeetings];
+    }
+    else if (([hypothesis rangeOfString:@"GO"].location != NSNotFound) && ([hypothesis rangeOfString:@"PROFILE"].location != NSNotFound))
+    {
+        [self.menuDelegate goToProfile];
+    }
+    else if (([hypothesis rangeOfString:@"GO"].location != NSNotFound) && ([hypothesis rangeOfString:@"TASK"].location != NSNotFound))
+    {
+        [self.menuDelegate goToTasks];
+    }
+    else if (([hypothesis rangeOfString:@"GO"].location != NSNotFound) && ([hypothesis rangeOfString:@"NOTES"].location != NSNotFound))
+    {
+        [self.menuDelegate goToNotes];
+    }
+    else if (([hypothesis rangeOfString:@"GO"].location != NSNotFound) && ([hypothesis rangeOfString:@"SETTINGS"].location != NSNotFound))
+    {
+        [self.menuDelegate goToSettings];
+    }
+    else if (([hypothesis rangeOfString:@"LOG"].location != NSNotFound) && ([hypothesis rangeOfString:@"OUT"].location != NSNotFound))
+    {
+        [self.menuDelegate goToLogout];
+    }
+    [self.voiceCommand setTitle:@"Voice Command" forState:UIControlStateNormal];
+    self.voiceCommand.userInteractionEnabled = YES;
+}
+
 -(void) startListening
 {
+    [self disableVoiceCommandButtonInteraction];
+    [self.voiceCommand setTitle:@"Wait..." forState:UIControlStateNormal];
     [self.pocketsphinxController startListeningWithLanguageModelAtPath:self.lmPath dictionaryAtPath:self.dicPath acousticModelAtPath:[AcousticModel pathToModel:@"AcousticModelEnglish"] languageModelIsJSGF:NO];
 }
 
@@ -77,39 +121,47 @@
     double delayInSeconds = 0.15;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        //[self.fliteController say:[NSString stringWithFormat:@"Calibrating"] withVoice:self.slt];
-        [self.openEarsDelegate loading];
+        [self disableVoiceCommandButtonInteraction];
+        [self.voiceCommand setTitle:@"Wait..." forState:UIControlStateNormal];
     });
     
 }
 
 - (void) pocketsphinxDidCompleteCalibration {
-    [self.openEarsDelegate loading];
+    [self disableVoiceCommandButtonInteraction];
+    [self.voiceCommand setTitle:@"Wait..." forState:UIControlStateNormal];
 }
 
 - (void) pocketsphinxDidStartListening {
+    [self disableVoiceCommandButtonInteraction];
     double delayInSeconds = 0.25;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
        // [self.fliteController say:[NSString stringWithFormat:@"Speak Now"] withVoice:self.slt];
-        [self.openEarsDelegate speakNow];
+        [self.voiceCommand setTitle:@"Speak Now" forState:UIControlStateNormal];
     });
     
     
 }
 
 - (void) pocketsphinxDidDetectSpeech {
-    [self.openEarsDelegate detecting];
+    [self disableVoiceCommandButtonInteraction];
+    [self.voiceCommand setTitle:@"Detecting" forState:UIControlStateNormal];
 }
 
 - (void) pocketsphinxDidDetectFinishedSpeech {
     
+    [self disableVoiceCommandButtonInteraction];
     double delayInSeconds = 0.35;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
         //[self.fliteController say:[NSString stringWithFormat:@"Analyzing"] withVoice:self.slt];
-        [self.openEarsDelegate detecting];
+        [self.voiceCommand setTitle:@"Detecting" forState:UIControlStateNormal];
     });
+}
+
+-(void)disableVoiceCommandButtonInteraction{
+    self.voiceCommand.userInteractionEnabled = NO;
 }
 
 @end

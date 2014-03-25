@@ -9,17 +9,22 @@
 #import "iWinViewAndCreateGroupViewController.h"
 #import "iWinAddUsersViewController.h"
 #import "Contact.h"
+#import "iWinBackEndUtility.h"
+#import "iWinAppDelegate.h"
 #import "Settings.h"
 #import "Group.h"
+#import "iWinConstants.h"
 
 @interface iWinViewAndCreateGroupViewController ()
 @property (nonatomic) BOOL isEditing;
 @property (strong, nonatomic) iWinAddUsersViewController *userViewController;
 @property (strong, nonatomic) NSMutableArray *userList;
+@property (strong, nonatomic) NSMutableArray *userIDList;
+@property (nonatomic) iWinBackEndUtility *backEndUtility;
 @property (nonatomic) NSInteger userID;
 @property (nonatomic) NSInteger groupID;
 @property (nonatomic) NSUInteger rowToDelete;
-
+@property (strong, nonatomic) NSManagedObjectContext *context;
 @end
 
 @implementation iWinViewAndCreateGroupViewController
@@ -46,8 +51,15 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.backEndUtility = [[iWinBackEndUtility alloc] init];
 	// Do any additional setup after loading the view.
     self.userList = [[NSMutableArray alloc] init];
+    self.userIDList = [[NSMutableArray alloc] init];
+    iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    self.context = [appDelegate managedObjectContext];
+    if(self.groupID != -1){
+        [self initView];
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -81,7 +93,7 @@
         jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:nil];
         jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     }
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Group/"];
+    NSString *url = [NSString stringWithFormat:@"%@/Group/", DATABASE_URL];
     
     NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
     [urlRequest setHTTPMethod:@"POST"];
@@ -101,6 +113,7 @@
 
 - (IBAction)onClickSave:(UIButton *)sender {
     [self saveNewGroup];
+    [self.groupDelegate refreshGroupList];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -113,25 +126,100 @@
     [self.userViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     self.userViewController.userDelegate = self;
     [self presentViewController:self.userViewController animated:YES completion:nil];
-    self.userViewController.view.superview.bounds = CGRectMake(0,0,768,1003);
+    self.userViewController.view.superview.bounds = CGRectMake(MODAL_XOFFSET, MODAL_YOFFSET, MODAL_WIDTH, MODAL_HEIGHT);
+}
+
+-(void)initView
+{
+    self.saveButton.hidden = TRUE;
+    self.addMembersButton.hidden = TRUE;
+    [self populateMembers];
+}
+
+-(void)populateMembers
+{
+    NSString *url = [NSString stringWithFormat:@"%@/Group/%d", DATABASE_URL,self.groupID];
+    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *deserializedDictionary = [self.backEndUtility getRequestForUrl:url];
+    
+    if (!deserializedDictionary)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Group not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alert show];
+    }
+    else
+    {
+        self.groupTitleField.text = [deserializedDictionary objectForKey:@"groupTitle"];
+        NSArray *jsonArray = [deserializedDictionary objectForKey:@"members"];
+        if (jsonArray.count > 0)
+        {
+            for (NSDictionary* users in jsonArray)
+            {
+                [self.userIDList addObject:[users objectForKey:@"userID"]];
+            }
+            [self populateMemberDetails];
+        }
+    }
+}
+
+-(void)populateMemberDetails
+{
+    for (int i = 0; i < [self.userIDList count]; i++)
+    {
+        NSString *url = [NSString stringWithFormat:@"%@/User/%d",DATABASE_URL ,[self.userIDList[i] integerValue]];
+        url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSDictionary *deserializedDictionary = [self.backEndUtility getRequestForUrl:url];
+        
+        if (!deserializedDictionary)
+        {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Group details not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+            [alert show];
+        }
+        else
+        {
+            [self.userList addObject:[self getContactForID:self.userIDList[i]]];
+            iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+            
+            NSManagedObjectContext *context = [appDelegate managedObjectContext];
+            NSManagedObject * newUser = [NSEntityDescription insertNewObjectForEntityForName:@"Group" inManagedObjectContext:context];
+            NSError *error;
+            [newUser setValue:[deserializedDictionary objectForKey:@"name"] forKey:@"groupTitle"];
+            [newUser setValue:self.userIDList[i] forKey:@"groupID"];
+            [context save:&error];
+        }
+    }
+}
+
+-(NSArray*)getDataFromDatabase
+{
+    iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    
+    NSManagedObjectContext *context = [appDelegate managedObjectContext];
+    
+    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Group" inManagedObjectContext:context];
+    
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDesc];
+    
+    NSError *error;
+    NSArray *result = [context executeFetchRequest:request
+                                             error:&error];
+    return result;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"AttendeeCell"];
+    CustomSubtitledCell *cell = (CustomSubtitledCell *)[tableView dequeueReusableCellWithIdentifier:@"AttendeeCell"];
     if (cell == nil)
     {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"AttendeeCell"];
+        cell = [[CustomSubtitledCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AttendeeCell"];
     }
-    
-    Contact *c = (Contact *)[self.userList objectAtIndex:indexPath.row];
-    
+    [cell initCell];
+    //cell.subTitledDelegate = self;
+    Contact * c = (Contact *)[self.userList objectAtIndex:indexPath.row];
     cell.textLabel.text =  c.name;
-    if (c.name.length == 0){
-        cell.textLabel.text = c.email;
-    }
-    cell.detailTextLabel.text = c.email;
+    cell.detailTextLabel.text = @"";
+    [cell.deleteButton setTag:indexPath.row];
     return cell;
 }
 
@@ -141,16 +229,35 @@
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    return YES;
+    return NO;
 }
 
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        self.rowToDelete = indexPath.row;
-        UIAlertView *deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
-        [deleteAlertView show];
+
+-(Contact *)getContactForID:(NSString*)userID
+{
+    NSString *url = [NSString stringWithFormat:@"%@/User/%@", DATABASE_URL,userID];
+    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *deserializedDictionary = [self.backEndUtility getRequestForUrl:url];
+    if (!deserializedDictionary)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Project not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alert show];
     }
+    else
+    {
+        if (deserializedDictionary.count > 0)
+        {
+            
+            NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Contact" inManagedObjectContext:self.context];
+            Contact *c = [[Contact alloc] initWithEntity:entityDesc insertIntoManagedObjectContext:self.context];
+            c.userID = (NSNumber*)[deserializedDictionary objectForKey:@"userID"];
+            c.name = (NSString *)[deserializedDictionary objectForKey:@"name"];
+            c.email = (NSString *)[deserializedDictionary objectForKey:@"email"];
+            return c;
+            
+        }
+    }
+    
+    return nil;
 }
-
 @end
