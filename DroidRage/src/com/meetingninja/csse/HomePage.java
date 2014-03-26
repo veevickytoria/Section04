@@ -23,6 +23,7 @@ import com.meetingninja.csse.meetings.MeetingItemAdapter;
 import com.meetingninja.csse.meetings.ViewMeetingActivity;
 import com.meetingninja.csse.tasks.TaskItemAdapter;
 import com.meetingninja.csse.tasks.ViewTaskActivity;
+import com.meetingninja.csse.tasks.tasks.GetTaskInfoTask;
 
 import android.content.Context;
 import android.content.Intent;
@@ -68,22 +69,26 @@ public class HomePage extends Fragment {
 	}
 	private void loadMeeting(Meeting meeting) {
 		MeetingVolleyAdapter.fetchMeetingInfo(meeting.getID(),new AsyncResponse<Meeting>(){
-
 			@Override
 			public void processFinish(Meeting result) {
 				viewMeeting(result);
-				
 			}
-			
 		});
-
 	}
-
-	private void loadTask(Task task) {
+	public void viewTask(Task task){
 		while (task.getEndTimeInMillis() == 0L);
 		Intent viewTask = new Intent(getActivity(), ViewTaskActivity.class);
 		viewTask.putExtra(Keys.Task.PARCEL, task);
 		startActivityForResult(viewTask, 6);
+	}
+	
+	private void loadTask(Task task) {
+		new GetTaskInfoTask(new AsyncResponse<Task>() {
+			@Override
+			public void processFinish(Task result) {
+				viewTask(result);
+			}
+		}).execute(task.getID());
 	}
 
 	private void setUp(Schedule sched) {
