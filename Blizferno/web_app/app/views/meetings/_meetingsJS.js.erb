@@ -91,6 +91,8 @@ function validateEditedValues(){
 	var endDateTime = new Date(splitDate[0], splitDate[1]-1, splitDate[2], splitTime[0], splitTime[1]);
 	endDateTime = endDateTime.getTime()/1000.0;
 
+	var dateNow = (new Date).getTime();
+
 	additionalKeys = ["dateStart","dateEnd", "timeStart", "timeEnd"];
 	for (key in additionalKeys){
 		if(document.getElementById(additionalKeys[key]+"E") != null && document.getElementById(additionalKeys[key]+"ER") != null){
@@ -104,7 +106,7 @@ function validateEditedValues(){
 		}
 	}
 
-	if(!(startDateTime < endDateTime)) {
+	if(!invalidFields && (!(startDateTime < endDateTime) ||!(startDateTime*1000 > dateNow) || !(endDateTime*1000 > dateNow))){
 		alert("Invalid start and end date/time.");
 		invalidFields = true;
 	}
@@ -409,7 +411,7 @@ function validateMeetingForm(inputForm){
 			document.getElementById(field+"R").style.display = "inline";
 			filledOut = false;
 		}
-		else if(field = "attendees"){
+		if(field = "attendees"){
 			if(!hasSelectedValue("attendees")){
 				document.getElementById(field+"R").style.display ="inline";
 				filledOut = false;
@@ -430,9 +432,11 @@ function validateMeetingForm(inputForm){
 	splitDate = form.dateEnd.split("-");
 	var endDateTime = new Date(splitDate[0], splitDate[1]-1, splitDate[2], splitTime[0], splitTime[1]);
 	endDateTime = endDateTime.getTime()/1000.0;
+
+	var dateNow = (new Date).getTime();
 	
-	//if(!isValidDate(form["dateStart"] + " " + form["timeStart"])){
-	if(!(startDateTime < endDateTime) && filledOut){
+	
+	if(filledOut && (!(startDateTime < endDateTime) ||!(startDateTime*1000 > dateNow) || !(endDateTime*1000 > dateNow))){
 		alert("Invalid starting and ending date/time");
 		return false;
 	}
