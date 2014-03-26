@@ -12,7 +12,7 @@
 
 const int MODAL_XOFFSET = 0;
 const int MODAL_YOFFSET = 20;
-const int MODAL_HEIGHT = 1003;
+const int MODAL_HEIGHT = 1040;
 const int MODAL_WIDTH = 768;
 const NSString *DATABASE_URL = @"http://csse371-04.csse.rose-hulman.edu";
 
