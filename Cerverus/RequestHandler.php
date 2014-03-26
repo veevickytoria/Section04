@@ -170,8 +170,6 @@ abstract class RequestHandler{
         $this->index = new Index\NodeIndex($client, $indexName);
         $this->index->save();
         $this->indexKey = $indexKey;
-         
-        echo ("IM A HANDLER\n");
     }
     
     //returns a json string of the contents of the node
@@ -243,7 +241,7 @@ abstract class RequestHandler{
         NodeUtility::storeNodeInDatabase($node);
         $this->setNodeRelationships($node, $postList, $this->client);
         $this->index->add($node, 'ID', $node->getId());
-        return nodeToOutput($node);
+        return $this->nodeToOutput($node);
     }
     
     /**

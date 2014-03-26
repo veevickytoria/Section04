@@ -39,8 +39,9 @@ class Note extends RequestHandler {
         //relate the Note to the user who created it        
     }
 
-    protected function setNodeRelationships($node, $postList) {        
-        $creatorNode = NodeUtility::getNodeByID($postList['createdBy'], $this->client);                
+    protected function setNodeRelationships($node, $postList) {    
+        $creator = $postList->createdBy;
+        $creatorNode = NodeUtility::getNodeByID($creator, $this->client);
         $creatorNode->relateTo($node, 'CREATED')->save();
     }
 

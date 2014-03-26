@@ -8,30 +8,66 @@
 ///require_once("RequestHandlers/Contact.php");
 
 namespace Everyman\Neo4j;
-require("phar://neo4jphp.phar");
+require "phar://neo4jphp.phar";
 
 require_once "RequestHandlers\Contact.php";
 require_once "RequestHandlers\Note.php";
-echo "WoAH DUDE\n";
 
 class Controller {
     
     public static function parse($class, $id, $type, $postContent){
     
         $aClient = new Client();
-     
-        $ch = new Contact($aClient);
-        $getContactResult = $ch->GET(431);
-        if (!$getContactResult) {echo "GET CONTACT WAS FALSE";} else {
-            echo json_encode($getContactResult);
-        }
-
-        $nh = new Note($aClient);
-        $getNoteResult =  $nh->GET(430);
-        if (!$getNoteResult) {echo "GET NOTE WAS FALSE";} else {
-            echo json_encode($getNoteResult);
+        
+        $handler;
+        
+        switch ($class) {
+            case "Note":
+                $handler = new Note($aClient);
+                break;
+            case "Contact":
+                $handler = new Contact($aClient);
+                break;
+            case "Meeting":
+                echo "Not yet implemented.";
+                break;
+            case "User":
+                echo "Not yet implemented.";
+                break;
+            case "Agenda":
+                echo "Not yet implemented.";
+                break;
+            case "Comment":
+                echo "Not yet implemented.";
+                break;
+            case "Group":
+                echo "Not yet implemented.";
+                break;
+            case "Project":
+                echo "Not yet implemented.";
+                break;
+            case "Notification":
+                echo "Not yet implemented.";
+                break;
         }
         
+        if ($type == "GET" || $type == "DELETE")
+            {$requestResult =  $handler->$type($id);}
+        else {
+            $requestResult =  $handler->$type($postContent);
+        }
+        if (!$requestResult) {echo "REQUEST RESULT WAS FALSE";} else {
+            echo json_encode($requestResult);
+        }
+        
+        /*
+        echo ($class);
+        $genericHeader = new $class($aClient);
+        $getGenericResult = $genericHeader->GET($id);
+        if (!$getGenericResult) {echo "GET GENERIC WAS FALSE";} else {
+            echo json_encode($getGenericResult);
+        }
+         */        
         /*
         //parse normal request
         if(class_exists($class)){
