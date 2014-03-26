@@ -9,10 +9,10 @@ import android.util.Log;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.GroupDatabaseAdapter;
 
-public class GroupUpdater implements AsyncResponse<Group> {
+public class GroupUpdaterTask implements AsyncResponse<Group> {
 	private GroupUpdateTask updater;
 
-	public GroupUpdater() {
+	public GroupUpdaterTask() {
 		this.updater = new GroupUpdateTask(this);
 	}
 

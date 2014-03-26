@@ -64,6 +64,7 @@ public class ViewMeetingActivity extends Activity {
 				.is24HourFormat(getApplicationContext());
 		timeFormat = is24 ? MyDateUtils.JODA_24_TIME_FORMAT
 				: MyDateUtils.JODA_12_TIME_FORMAT;
+		System.out.println("got to this???");
 		setupViews();
 		setMeeting();
 	}
@@ -96,15 +97,15 @@ public class ViewMeetingActivity extends Activity {
 			endTime.setText(format);
 			location.setText(displayedMeeting.getLocation());
 			description.setText(displayedMeeting.getDescription());
-			attendeesCount.setText("Attending("
-					+ displayedMeeting.getAttendance().size() + ")");
+//			attendeesCount.setText("Attending("
+//					+ displayedMeeting.getAttendance().size() + ")");
 			setAttendees(displayedMeeting.getAttendance());
 		}
 	}
 
 	private void setAttendees(ArrayList<User> attendance) {
 		this.attendance.clear();
-		this.attendance.addAll(attendance);
+//		this.attendance.addAll(attendance);
 		this.adpt.notifyDataSetChanged();
 	}
 

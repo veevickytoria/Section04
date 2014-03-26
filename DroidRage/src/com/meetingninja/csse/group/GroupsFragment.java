@@ -139,38 +139,34 @@ public class GroupsFragment extends Fragment implements
 	}
 
 	public void deleteGroup(String groupID) {
-		String url = GroupDatabaseAdapter.getBaseUri().appendPath(groupID)
-				.build().toString();
-		StringRequest dr = new StringRequest(
-				com.android.volley.Request.Method.DELETE, url,
-				new Response.Listener<String>() {
-					@Override
-					public void onResponse(String response) {
-						// response
-						Toast.makeText(getActivity(), response,
-								Toast.LENGTH_SHORT).show();
-					}
-				}, new Response.ErrorListener() {
-					@Override
-					public void onErrorResponse(VolleyError error) {
-						// error.
-
-					}
-
-				});
-		ApplicationController.getInstance().addToRequestQueue(dr);
+		GroupDeleteTask deltask = new GroupDeleteTask();
+		deltask.deleteGroup(groupID);
+//		String url = GroupDatabaseAdapter.getBaseUri().appendPath(groupID)
+//				.build().toString();
+//		StringRequest dr = new StringRequest(
+//				com.android.volley.Request.Method.DELETE, url,
+//				new Response.Listener<String>() {
+//					@Override
+//					public void onResponse(String response) {
+//						// response
+//						Toast.makeText(getActivity(), response,
+//								Toast.LENGTH_SHORT).show();
+//					}
+//				}, new Response.ErrorListener() {
+//					@Override
+//					public void onErrorResponse(VolleyError error) {
+//						// error.
+//
+//					}
+//
+//				});
+//		ApplicationController.getInstance().addToRequestQueue(dr);
 	}
 
 	@Override
 	public void processFinish(List<Group> result) {
 		groups.clear();
 		groupAdpt.clear();
-		// Collections.sort(result, new Comparator<Group>() {
-		// @Override
-		// public int compare(Group lhs, Group rhs) {
-		// return lhs.compareTo(lhs);
-		// }
-		// });
 
 		groups.addAll(result);
 

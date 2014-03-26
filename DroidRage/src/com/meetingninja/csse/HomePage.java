@@ -12,9 +12,13 @@ import objects.Task;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
+import com.meetingninja.csse.database.MeetingDatabaseAdapter;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
+import com.meetingninja.csse.database.volley.MeetingVolleyAdapter;
 import com.meetingninja.csse.extras.MyDateUtils;
+import com.meetingninja.csse.meetings.MeetingFetcherTask;
 import com.meetingninja.csse.meetings.MeetingItemAdapter;
 import com.meetingninja.csse.meetings.ViewMeetingActivity;
 import com.meetingninja.csse.tasks.TaskItemAdapter;
@@ -52,47 +56,58 @@ public class HomePage extends Fragment {
 
 		session = SessionManager.getInstance();
 		getSchedule();
-		
 
 		return v;
 	}
 
-	private void loadMeeting (Meeting meeting) {
+	public void viewMeeting(Meeting meeting){
 		while (meeting.getEndTimeInMillis() == 0L);
-		Intent viewMeeting = new Intent(getActivity(), ViewMeetingActivity.class);
+		Intent viewMeeting = new Intent(getActivity(),ViewMeetingActivity.class);
 		viewMeeting.putExtra(Keys.Meeting.PARCEL, meeting);
 		startActivityForResult(viewMeeting, 6);
 	}
+	private void loadMeeting(Meeting meeting) {
+		MeetingVolleyAdapter.fetchMeetingInfo(meeting.getID(),new AsyncResponse<Meeting>(){
+
+			@Override
+			public void processFinish(Meeting result) {
+				viewMeeting(result);
+				
+			}
+			
+		});
+
+	}
+
 	private void loadTask(Task task) {
 		while (task.getEndTimeInMillis() == 0L);
 		Intent viewTask = new Intent(getActivity(), ViewTaskActivity.class);
 		viewTask.putExtra(Keys.Task.PARCEL, task);
 		startActivityForResult(viewTask, 6);
 	}
-	
+
 	private void setUp(Schedule sched) {
 		meetingList = (ListView) v.findViewById(R.id.homepage_meetings);
 		taskList = (ListView) v.findViewById(R.id.homepage_tasks);
-		taskAdpt = new TaskItemAdapter(getActivity(),R.layout.list_item_task,tasks,false);
-		meetingAdpt = new MeetingItemAdapter(getActivity(), R.layout.list_item_meeting, meetings);
+		taskAdpt = new TaskItemAdapter(getActivity(), R.layout.list_item_task,tasks, false);
+		meetingAdpt = new MeetingItemAdapter(getActivity(),	R.layout.list_item_meeting, meetings);
 
 		taskList.setAdapter(taskAdpt);
 		taskAdpt.addAll(sched.getTasks());
 		taskAdpt.notifyDataSetChanged();
-		
+
 		meetingList.setAdapter(meetingAdpt);
 		meetingAdpt.addAll(sched.getMeetings());
 		meetingAdpt.notifyDataSetChanged();
-		
-		meetingList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
+		meetingList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> parentAdapter, View v, int position, long id) {
+			public void onItemClick(AdapterView<?> parentAdapter,View v, int position, long id) {
 				Meeting clicked = meetingAdpt.getItem(position);
 				loadMeeting(clicked);
 			}
 		});
-		
+
 		taskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			@Override
@@ -100,9 +115,8 @@ public class HomePage extends Fragment {
 				Task t = taskAdpt.getItem(position);
 				loadTask(t);
 			}
-		});	
+		});
 	}
-	
 
 	private void getSchedule() {
 		new AsyncTask<Void, Void, Schedule>() {
@@ -110,8 +124,7 @@ public class HomePage extends Fragment {
 			protected Schedule doInBackground(Void... arg0) {
 				Schedule sched = new Schedule();
 				try {
-					sched = UserDatabaseAdapter.getSchedule(SessionManager
-							.getInstance().getUserID());
+					sched = UserDatabaseAdapter.getSchedule(SessionManager.getInstance().getUserID());
 				} catch (JsonParseException e) {
 					e.printStackTrace();
 				} catch (JsonMappingException e) {
@@ -127,5 +140,12 @@ public class HomePage extends Fragment {
 				setUp(result);
 			}
 		}.execute();
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		meetingAdpt.clear();
+		taskAdpt.clear();
+		getSchedule();
 	}
 }

@@ -76,9 +76,6 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 		String locationPayload = getEditPayload(meetingID,Keys.Meeting.LOCATION,meeting.getLocation());
 		String endDateTimePayload = getEditPayload(meetingID,Keys.Meeting.OTHEREND,meeting.getEndTime());
 		String descPayload = getEditPayload(meetingID, Keys.Meeting.DESC, meeting.getDescription());
-		System.out.println("heya");
-		System.out.println(startdateTimePayload);
-		System.out.println(endDateTimePayload);
 //		String attendancePayload = getEditPayload(meetingID,Keys.Meeting.ATTEND,meeting.getAttendance());
 		
 //TODO:		ByteArrayOutputStream json = new ByteArrayOutputStream();
@@ -110,7 +107,6 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 //TODO:		String response  = sendSingleEdit(attendancePayload);
 		final JsonNode meetingNode = MAPPER.readTree(response);
 		Meeting m = parseMeeting(meetingNode);
-		System.out.println("made it this far");
 		return m;
 	}
 	private static String getEditPayload(String meetingID, String field,

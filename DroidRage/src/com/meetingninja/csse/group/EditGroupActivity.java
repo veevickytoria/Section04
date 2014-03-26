@@ -299,17 +299,4 @@ public class EditGroupActivity extends Activity implements TokenListener {
 
 	}
 
-	// @Override
-	// public ListView getListView() {
-	// return l;
-	// }
-
-	// @Override
-	// public void onItemClickListener(ListAdapter adapter, int position) {
-	// User clicked = mUserAdapter.getItem(position);
-	// Intent profileIntent = new Intent(this, ProfileActivity.class);
-	// profileIntent.putExtra(Keys.User.PARCEL, clicked);
-	// startActivity(profileIntent);
-	// }
-
 }

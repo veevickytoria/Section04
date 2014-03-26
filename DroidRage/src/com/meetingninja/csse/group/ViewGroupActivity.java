@@ -106,7 +106,7 @@ public class ViewGroupActivity extends Activity {
 		if (resultCode == Activity.RESULT_OK) {
 			if (requestCode == 8) {
 				group = data.getParcelableExtra(Keys.Group.PARCEL);
-				GroupUpdater updater = new GroupUpdater();
+				GroupUpdaterTask updater = new GroupUpdaterTask();
 				updater.updateGroup(group);
 				setGroup();
 			}

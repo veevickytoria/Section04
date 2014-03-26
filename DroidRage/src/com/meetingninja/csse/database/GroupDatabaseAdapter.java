@@ -60,8 +60,7 @@ public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
 		return parseGroup(groupNode, new Group());
 	}
 
-	public static Group createGroup(Group g) throws IOException,
-			MalformedURLException {
+	public static Group createGroup(Group g) throws IOException, MalformedURLException {
 		// Server URL setup
 		String _url = getBaseUri().build().toString();
 
@@ -104,14 +103,8 @@ public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
 		// prepare to get the id of the created Meeting
 		// Map<String, String> responseMap = new HashMap<String, String>();
 
-		/*
-		 * result should get valid={"meetingID":"##"}
-		 */
 		String result = new String();
 		if (!response.isEmpty()) {
-			// responseMap = MAPPER.readValue(response,
-			// new TypeReference<HashMap<String, String>>() {
-			// });
 			JsonNode groupNode = MAPPER.readTree(response);
 			if (!groupNode.has(Keys.Group.ID)) {
 				result = "invalid";
@@ -167,6 +160,30 @@ public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
 		JsonNode groupNode = MAPPER.readTree(response);
 
 		return parseGroup(groupNode, new Group());
+	}
+	
+	public static Boolean deleteGroup(String groupID) throws IOException{
+		String _url = getBaseUri().appendPath(groupID).build().toString();
+		URL url = new URL(_url);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		
+		conn.setRequestMethod(IRequest.DELETE);
+		addRequestHeader(conn,false);
+		int responseCode = conn.getResponseCode();
+		String response = getServerResponse(conn);
+		boolean result = false;
+		JsonNode tree = MAPPER.readTree(response);
+		if(!response.isEmpty()){
+			if(!tree.has(Keys.DELETED)){
+				result=true;
+			}
+		}
+		conn.disconnect();
+		return result;
+		
+		
+		
+		
 	}
 
 	private static String sendSingleEdit(String payload) throws IOException {

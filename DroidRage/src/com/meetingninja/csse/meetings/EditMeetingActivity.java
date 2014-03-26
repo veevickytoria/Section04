@@ -51,9 +51,12 @@ import com.meetingninja.csse.agenda.AgendaActivity;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.MeetingDatabaseAdapter;
+import com.meetingninja.csse.database.UserDatabaseAdapter;
 import com.meetingninja.csse.database.local.SQLiteMeetingAdapter;
+import com.meetingninja.csse.database.volley.UserVolleyAdapter;
 import com.meetingninja.csse.extras.AlertDialogUtil;
 import com.meetingninja.csse.extras.MyDateUtils;
+import com.meetingninja.csse.user.ProfileFragment;
 
 public class EditMeetingActivity extends FragmentActivity implements
 		AsyncResponse<String> {
@@ -67,7 +70,7 @@ public class EditMeetingActivity extends FragmentActivity implements
 	private MeetingSaveTask creater = null;
 	private DateTimeFormatter timeFormat;
 	private DateTimeFormatter dateFormat = MyDateUtils.JODA_APP_DATE_FORMAT;
-	private ArrayList<User> attendees;
+	private static ArrayList<User> attendees;	
 
 	private SQLiteMeetingAdapter mySQLiteAdapter;
 	private SessionManager session;
@@ -264,8 +267,7 @@ public class EditMeetingActivity extends FragmentActivity implements
 
 	private void save() {
 		if (TextUtils.isEmpty(mTitle.getText())) {
-			Toast.makeText(this, "Empty meeting not created",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Empty meeting not created", Toast.LENGTH_SHORT).show();
 			setResult(RESULT_CANCELED);
 			finish();
 		} else {
@@ -277,21 +279,51 @@ public class EditMeetingActivity extends FragmentActivity implements
 			title = mTitle.getText().toString();
 			location = mLocation.getText().toString();
 			desc = mDescription.getText().toString();
+			
 
 			newMeeting.setTitle(title);
 			newMeeting.setLocation(location);
 			newMeeting.setStartTime(start.getTimeInMillis());
 			newMeeting.setEndTime(end.getTimeInMillis());
 			newMeeting.setDescription(desc);
+			
+	
 			// TODO: newMeeting.setAttendance();
 			if (displayedMeeting != null) {
-				System.out.println("saving");
-				System.out.println(newMeeting.getStartTimeInMillis());
-				System.out.println(newMeeting.getEndTimeInMillis());
+				
+				
+				
+				
+				
+//				UserVolleyAdapter.fetchUserInfo(session.getUserID(), new AsyncResponse<User>() {
+//					@Override
+//					public void processFinish(User result) {
+//						EditMeetingActivity.addUser(result);
+//					}
+//				});
+//				
+//				System.out.println("mattend: "+mattend);
+//				String userID = mattend.getText().toString();
+//				
+//				UserVolleyAdapter.fetchUserInfo(userID, new AsyncResponse<User>() {
+//					@Override
+//					public void processFinish(User result) {
+//						EditMeetingActivity.addUser(result);
+//					}
+//				});				
+				
+				
+				
+				
+				
+				
+				
 				// mySQLiteAdapter.updateMeeting(newMeeting);
 				msgIntent.putExtra("method", "update");
 				newMeeting.setID(displayedMeeting.getID());
 				UpdateMeetingTask task = new UpdateMeetingTask();
+				System.out.println("plz be second");
+				newMeeting.setAttendance(attendees);
 				task.updateMeeting(newMeeting);
 
 				// ??
@@ -306,18 +338,24 @@ public class EditMeetingActivity extends FragmentActivity implements
 				displayedMeeting = newMeeting;
 				return;
 			}
-			Toast.makeText(this, String.format("Saving Meeting"),
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, String.format("Saving Meeting"), Toast.LENGTH_SHORT).show();
 
 			msgIntent.putExtra(Keys.Meeting.PARCEL, newMeeting);
 			if (extras != null) {
-				msgIntent.putExtra("listPosition",
-						extras.getInt("listPosition", -1));
+				msgIntent.putExtra("listPosition", extras.getInt("listPosition", -1));
 			}
 			setResult(RESULT_OK, msgIntent);
 			finish();
 		}
 	}
+//	private static void addUser(User user){
+//		attendees.add(user);
+//		System.out.println("i hope it happens twice first");
+//	}
+//	private static void setUser(User newuser){
+//		System.out.println("got the user: "+newuser);
+//		user = newuser;
+//	}
 
 	// TODO: abstract date click listener and timeclick listener
 	private class DateClickListener implements OnClickListener,

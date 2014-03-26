@@ -252,6 +252,9 @@ public class MeetingsFragment extends Fragment implements
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+		System.out.println("getting here");
+		fetchMeetings();
+		
 		if (requestCode == 2) {
 			if (resultCode == Activity.RESULT_OK) {
 				if (data != null) {
@@ -261,10 +264,12 @@ public class MeetingsFragment extends Fragment implements
 
 					if (data.getStringExtra("method").equals("update")) {
 						Log.d(TAG, "Updating Meeting");
-						if (listPosition != -1)
+						if (listPosition != -1){
 							updateMeeting(listPosition, created);
-						else
+						}else{
 							updateMeeting(created);
+						}
+						
 					} else if (data.getStringExtra("method").equals("insert")) {
 						 Log.d(TAG, "Inserting Meeting");
 						// created = mySQLiteAdapter.insertMeeting(created);
