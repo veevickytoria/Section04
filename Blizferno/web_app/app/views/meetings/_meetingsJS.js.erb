@@ -80,6 +80,16 @@ function validateEditedValues(){
 			}
 		}
 	}
+	var splitTime = document.getElementById("timeStartE").value.split(":");
+	var splitDate = document.getElementById("dateStartE").value.split("-");
+	var startDateTime = new Date(splitDate[0], splitDate[1]-1, splitDate[2], splitTime[0], splitTime[1]);
+	startDateTime = startDateTime.getTime()/1000.0;
+
+	// End date/time
+	splitTime = document.getElementById("timeEndE").value.split(":");
+	splitDate = document.getElementById("dateEndE").value.split("-");
+	var endDateTime = new Date(splitDate[0], splitDate[1]-1, splitDate[2], splitTime[0], splitTime[1]);
+	endDateTime = endDateTime.getTime()/1000.0;
 
 	additionalKeys = ["dateStart","dateEnd", "timeStart", "timeEnd"];
 	for (key in additionalKeys){
@@ -94,6 +104,12 @@ function validateEditedValues(){
 		}
 	}
 
+	if(!(startDateTime < endDateTime)) {
+		alert("Invalid start and end date/time.");
+		invalidFields = true;
+	}
+
+
 	if(document.getElementById("attendanceE") != null && document.getElementById("attendanceER") != null){
 		if(!hasSelectedValue("attendanceE")){
 			invalidFields = true;
@@ -101,34 +117,6 @@ function validateEditedValues(){
 		}
 		else{
 			document.getElementById("attendanceER").style.display = "none";
-		}
-	}
-
-	return invalidFields
-}
-
-function validateNewValues(JSONForm){
-	var invalidFields = false;
-
-	for (key in JSONForm){
-		if(document.getElementById(key+"R") != null){
-			if(JSONForm[key] == ""){
-				invalidFields = true;
-				document.getElementById(key+"R").style.display = "inline";
-			}
-			else{
-				document.getElementById(key+"R").style.display = "none";
-			}
-		}
-	}
-
-	if(document.getElementById("attendees") != null && document.getElementById("attendeesR") != null){
-		if(!hasSelectedValue("attendees")){
-			invalidFields = true;
-			document.getElementById("attendeesR").style.display = "inline";
-		}
-		else{
-			document.getElementById("attendeesR").style.display = "none";
 		}
 	}
 
@@ -268,7 +256,6 @@ function updateEditedValues(){
 			editField = key;
 			editValue = meetingsJSON[currentID][key];
 			editData = JSON.stringify({"meetingID":editMeetingID,"field":editField,"value":editValue});
-			alert(editData);
 			//make a PUT request with the backend to change the specified field for the specified meeting to the specified value
 			$.ajax({
 				type: 'PUT',
@@ -305,11 +292,10 @@ function submitCreateModal(){
 	//grab the form from the html document
 	var form = document.getElementById('createMeetingForm');
 	//still testing validation
-	//if(validateMeetingForm(form)){
+	if(validateMeetingForm(form)){
 	//parse it into a json object
 	var formJSON = new convertFormToJSON(form);
-	var invalid = validateNewValues(formJSON);
-	if (!invalid){
+
 	//manually grab the values for each field expected by the backend
 	var postId = <%=@userID%>;
 	var postTitle = formJSON.title;
@@ -362,7 +348,7 @@ function submitCreateModal(){
 				window.location.reload(true);
 			}
 		});
-	}
+}
 }
 
 //This function is called when a user clicks on the delete icon
@@ -415,18 +401,44 @@ function convertFormToJSON(form){
 
 //This function is still being tested but will do simple validation of user input to make sure they do not leave any field blank and that they gave dates in the correct format. This can be expanded in the future with additional validations.
 function validateMeetingForm(inputForm){
+
 	var form = convertFormToJSON(inputForm);
+	var filledOut = true;
 	for(field in form){
-		if(form[field] == null || form[field] === ""){
-			return false;
+		if(form[field] == null || form[field] === "") {
+			document.getElementById(field+"R").style.display = "inline";
+			filledOut = false;
 		}
+		else if(field = "attendees"){
+			if(!hasSelectedValue("attendees")){
+				document.getElementById(field+"R").style.display ="inline";
+				filledOut = false;
+			}
+			else document.getElementById(field+"R").style.displahy = "none";
+		}
+		else document.getElementById(field+"R").style.display = "none";
 	}
-	if(!isValidDate(form["dateStart"] + " " + form["timeStart"])){
+	if(!filledOut) return false;
+	// Start date/time
+	var splitTime = form.timeStart.split(":");
+	var splitDate = form.dateStart.split("-");
+	var startDateTime = new Date(splitDate[0], splitDate[1]-1, splitDate[2], splitTime[0], splitTime[1]);
+	startDateTime = startDateTime.getTime()/1000.0;
+
+	// End date/time
+	splitTime = form.timeEnd.split(":");
+	splitDate = form.dateEnd.split("-");
+	var endDateTime = new Date(splitDate[0], splitDate[1]-1, splitDate[2], splitTime[0], splitTime[1]);
+	endDateTime = endDateTime.getTime()/1000.0;
+	
+	//if(!isValidDate(form["dateStart"] + " " + form["timeStart"])){
+	if(!(startDateTime < endDateTime) && filledOut){
+		alert("Invalid starting and ending date/time");
 		return false;
 	}
-	if(!isValidDate(form["dateEnd"] + " " + form["timeEnd"])){
-		return false;
-	}
+	//if(!isValidDate(form["dateEnd"] + " " + form["timeEnd"])){
+	//	return false;
+	//}
 	return true;
 }
 
@@ -460,6 +472,7 @@ function isValidDate(dateString){
 
     // Check the range of the day
     return day > 0 && day <= monthLength[month - 1];
+
 }
 
 function getMembers(id){

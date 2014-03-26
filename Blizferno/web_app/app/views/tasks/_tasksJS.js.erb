@@ -100,13 +100,28 @@ function validateEditedValues(){
 			}
 		}
 	}
+	alert('in validate edit');
+	// Check dates
+	var date = document.getElementById("deadlinedateE").value.split("-");
+	var time = document.getElementById("deadlinetimeE").value.split(":");
+	var datetime = new Date(date[0], date[1]-1, date[2], time[0], time[1]);
+	datetime = datetime.getTime()/1000.0;
+	var deadline = datetime;
+
+	var dateNow = (new Date).getTime();
+
+	if(!(deadline*1000 > dateNow)){
+		invalidFields = true;
+		alert("Invalid deadline date/time");
+	}
 
 	return invalidFields
 }
 
-function validateNewValues(JSONForm){
-	var invalidFields = false;
+function validateNewfasdfsadfasdfalues(JSONForm){
 
+	var invalidFields = false;
+	alert('hasdlhast');
 	for (key in JSONForm){
 		if(document.getElementById(key+"R") != null){
 			if(JSONForm[key] == ""){
@@ -119,7 +134,7 @@ function validateNewValues(JSONForm){
 		}
 	}
 
-	var additionalkeys = ["deadlinetime","deadlinedate"]
+	var additionalkeys = ["deadlinetime","deadlinedate"];
 	for (key in additionalkeys){
 		if(document.getElementById(additionalkeys[key]) != null && document.getElementById(additionalkeys[key]+"R") != null){
 			if(document.getElementById(additionalkeys[key]).value == ""){
@@ -131,8 +146,22 @@ function validateNewValues(JSONForm){
 			}
 		}
 	}
+	alert('yep');
+	// Check dates
+	// var date = document.getElementById("deadlinedate").value.split("-");
+	// var time = document.getElementById("deadlinetime").value.split(":");
+	// var datetime = new Date(date[0], date[1]-1, date[2], time[0], time[1]);
+	// datetime = datetime.getTime()/1000.0;
+	// var deadline = datetime;
 
-	return invalidFields
+	// var dateNow = (new Date).getTime();
+
+	// if(!(deadline*1000 > dateNow)){
+	// 	invalidFields = true;
+	// 	alert("Invalid deadline date/time");
+	// }
+
+	return invalidFields;
 }
 
 function updateEditedValues(){
@@ -151,10 +180,12 @@ function updateEditedValues(){
 
 	// Just the deadline...
 	editData = JSON.stringify({"taskID":editTaskID,"field":"deadline","value":datetime});
+
 	$.ajax({
 		type: 'PUT',
 		url: 'http://csse371-04.csse.rose-hulman.edu/Task/',
-		data: editData
+		data: editData,
+		async:false
 	});
 
 	// Everything else
@@ -332,7 +363,7 @@ function submitCreateModal(){
 	//grab the form from the html document
 	var form = document.getElementById('createTask');
 	//still testing validation
-	//if(validateMeetingForm(form)){
+
 	//parse it into a json object
 	var formJSON = new convertFormToJSON(form);
 	var invalid = validateNewValues(formJSON);
@@ -345,7 +376,7 @@ function submitCreateModal(){
 
 		var date = formJSON.deadlinedate.split("-");
 		var time = formJSON.deadlinetime.split(":");
-		datetime = new Date(date[0], date[1]-1, date[2], time[0], time[1]);
+		var datetime = new Date(date[0], date[1]-1, date[2], time[0], time[1]);
 		datetime = datetime.getTime()/1000.0;
 		var postDeadline = datetime;
 
