@@ -1,17 +1,27 @@
 <?php
 
-class User{
-	$userIndex;
-	
-	public function __construct($client){	
-		$userIndex= new Index\NodeIndex($client, 'Users');
-		$userIndex->save();
+class User extends RequestHandler{
+		
+	function __construct($client){	
+		parent::__construct($client, "Users", "email");
 	}
 	
+	protected function nodeToOutput($node) {
+        if ($node == NULL) {return false;} //make pretty exception
+        $nodeInfo = array();
+        $nodeInfo['email'] = $node['email'];
+        $nodeInfo['phone'] = $node['phone'];
+        $nodeInfo['title'] = $node['title'];
+        $nodeInfo['company'] = $node['company'];
+        $nodeInfo['name'] = $node['name'];
+		$nodeInfo['location'] = $node['location'];
+		$nodeInfo['userID'] = $node->getId();
+        return $nodeInfo;
+    }
 	
 	function login($email, $password){
-		$userNode=$userIndex->findOne('email', $email)
-		if(sizeof($userNode!=0){
+		$userNode=$userIndex->findOne('email', $email);
+		if(sizeof($userNode!=0)){
 			$userNode->getProperties();
 			
 			if(strcasecmp($password, $properties['password']) == 0){
@@ -24,7 +34,18 @@ class User{
 		}
 	}
 	
-	function register($email, $password, $phone='', $company='', $title='', $location='', $name=''){
+	/*
+	 * register a user
+	 */
+	function POST($postContent){
+		$email= $postContent['email'];
+		$password= $postContent['password'];
+		$phone= $postContent['phone'];
+		$company= $postContent['company'];
+		$title= $postContent['title'];
+		$location= $postContent['location'];
+		$name= $postContent['name'];
+		
 		if($userIndex->findOne('email', $email)){
 			$tempUserNode= $client->makeNode();
 			
@@ -36,12 +57,12 @@ class User{
 			$tempUserNode->setProperty('location',$location);
 			$tempUserNode->setProperty('name',$name);
 						
-			$tempUserNode->save();
+			NodeUtility::storeNodeInDatabase($tempUserNode);        
 			$userIndex->add($tempUserNode, 'email', $email);
 			
 			createSettings($tempUserNode->getId());
 			
-			return echo json_encode(array("userID"=>$tempUserNode->getId()));
+			return json_encode(array("userID"=>$tempUserNode->getId()));
 			
 		}
 	}
@@ -52,51 +73,54 @@ class User{
         for($ii=0;$ii<sizeof($users);$ii++){
                 $array=$users[$ii]->getProperties();
                 $array['userID']=$users[$ii]->getId();
-           //     unset($array['nodeType']);
                 unset($array['password']);
                 $results[$ii]= $array;
         }
-        echo json_encode(array("users"=>$results));
+        return json_encode(array("users"=>$results));
 	}
 	
 	function getUserInfo($userId){
 		$userNode=$client->getNode($userId);
          
         if($userIndex->findOne('user', $userId) != null){
-                        echo json_encode(array('errorID'=>'11', 'errorMessage'=>$userId.' is an not a user node.'));
+			return json_encode(array('errorID'=>'11', 'errorMessage'=>$userId.' is an not a user node.'));
         }
 		
 		$array = $userNode->getProperties();
-         //unset($array['nodeType']);
          unset($array['password']);
 		 
          return json_encode($array);
 	}
 	
-	function updateUser($userId, $field, $value){       
+	function PUT($putList){
+		$userId= $pustList["userID"];
+		$field= $putList["field"];
+		$value= $putList["value"];
+		
 		$userNode=$client->getNode($userId);
 		
-		if(isValidField($userNode, $field)){	
-			$array = array('userID'=>$user->getId());
+		if(NodeUtility::isValidField($userNode, $field)){	
+			$resultsArr = array('userID'=>$userNode->getId());
 			
 			if(strcasecmp($field, 'email') == 0){
-					updateUserEmail($value)
+					updateUserEmail($value);
 			}
 			
 			$userNode->setProperty($field, $value);
-			$userNode->save();
+			NodeUtility::storeNodeInDatabase($userNode);        
 
-			$array = array_merge($array, $user->getProperties());
-			unset($array['password']);
-			//unset($array['nodeType']);
-			echo json_encode($array);			
+			$resultsArr = array_merge($resultsArr, $userNode->getProperties());
+			unset($resultsArr['password']);
+			echo json_encode($resultsArr);	
+			
+			return nodeToOutPut($userNode);			
 		}        
 	}
 	
 	function deleteUser($userId){
 		$userNode = $client->getNode($id);
 		if(isUserNode($userNode)){
-			deleteSettings($client, $user->getId());
+			deleteSettings($client, $userNode->getId());
 			
 			deleteRelationships($userNode);
 			
@@ -125,7 +149,7 @@ class User{
 						$userIndex->remove($userNode);
 						$userIndex->add($userNode, 'email', $value);
 				} else {
-						return echo json_encode(array('errorID'=>'11', 'errorMessage'=>'Email already linked to another account'));
+						return json_encode(array('errorID'=>'11', 'errorMessage'=>'Email already linked to another account'));
 				}
 	}
 	
@@ -147,22 +171,7 @@ class User{
 		}
 	}
 	
-	//TODO: move to Request class
-	function isValidField($node){
-		$node= $node->getProperties();
-		if(array_key_exists($field, $node->getProperties()){
-			//TODO finish this method
-			//check indexes for the node. then return the keys in the index
-			//also error on invalide node
-			return true;
-		}else{
-			echo json_encode(array('errorID'=>'9', 'errorMessage'=>$field.'is an unknown field'));
-			return false;
-		}
-	}
-	
-	
-	function updateSettings($userID, $shouldNotify, $whenToNotify, $tasks, $groups, $meetings, $projects){
+		function updateSettings($userID, $shouldNotify, $whenToNotify, $tasks, $groups, $meetings, $projects){
 		$settiIndex = new Index\NodeIndex($client, 'UserSettings');
 		$settiIndex->save();
 
@@ -218,7 +227,7 @@ class User{
 		if(isUserNode($userNode)){
 			$relationArray = $node->getRelationships(array('SETFOR'), Relationship::DirectionIn);
 			
-			load up the notifications into an array
+			//load up the notifications into an array
 			$setti = $relationArray[0]->getStartNode();
                                   
             //only delete the node if it's a notification
@@ -236,7 +245,7 @@ class User{
 			} else {
 				//return an error otherwise
 				$errorArr = array('errorID' => '4', 'errorMessage'=>'Given node ID is not a notification node');
-				return echo json_encode($errorArr);
+				return json_encode($errorArr);
 			}
 		}
 }
@@ -251,12 +260,12 @@ class User{
 //================this section handles parsing the input to call the appropriate method==========
 $postContent= json_decode(file_get_contents('php://input'));
 
-if ($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'Login')==0) {
+if (strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'Login')==0) {
     User::login($postContent->email,$postContent->password);
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'push')==0){
-	User::push($postContent->message));
+	User::push($postContent->message);
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'Users')==0){
-	User::getAllUsers());
+	User::getAllUsers();
 }else if( strcasecmp($_SERVER['REQUEST_METHOD'],'GET') == 0){
 	User::getUserInfo($_GET['id']);
 }else if( strcasecmp($_SERVER['REQUEST_METHOD'],'PUT') == 0){
