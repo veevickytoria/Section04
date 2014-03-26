@@ -50,7 +50,8 @@ class NodeUtility{
         
         foreach ($relationArray as $rel){
             if ($relationName == $rel->getType()) {
-                $specifiedRelation->add($rel);
+                array_push($specifiedRelation, $rel);
+                //$specifiedRelation->add($rel);
             }
         }
         
@@ -178,7 +179,7 @@ abstract class RequestHandler{
     // sets a node's properties from a list (for creating a new node)
     protected abstract function setNodeProperties($node, $postList);
     // sets a node's relationships from a list (for creating a new node)
-    protected abstract function setNodeRelationships($node, $postList, $client);
+    protected abstract function setNodeRelationships($node, $postList);
     
     /**
      * The request for retrieving a node from the database and returning its

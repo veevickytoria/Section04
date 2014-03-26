@@ -1,5 +1,7 @@
 <?php
-namespace RequestHandlers;
+//namespace RequestHandlers;
+namespace Everyman\Neo4j;
+require_once "RequestHandler.php";
 
 //TODO implement /User/Relationship/#/
 class Contact extends RequestHandler{ 
@@ -13,7 +15,7 @@ class Contact extends RequestHandler{
     protected function nodeToOutput($node) {
         $output['userID']=$node->getId();
         $contacts = array();
-        foreach(NodeUtility::getNodeRelations($node, CONTACT_RELATION, Relationship::DirectionOut) as $rel){
+        foreach(NodeUtility::getNodeRelations($node, Contact::CONTACT_RELATION, Relationship::DirectionOut) as $rel){
             $friend = $rel->getEndNode();
             array_push($contacts, array("contactID"=>$friend->getId(), "relationID"=>$rel->getId()));
         }
@@ -32,7 +34,7 @@ class Contact extends RequestHandler{
         }
         //map the new 
         foreach($postList['contacts'] as $newFriend){
-            $node->relateTo(NodeUtility::getNodeByID($newFriend['contactID'], $this->client), CONTACT_RELATION);
+            $node->relateTo(NodeUtility::getNodeByID($newFriend['contactID'], $this->client), Contact::CONTACT_RELATION);
         }
         
     }
@@ -45,7 +47,7 @@ class Contact extends RequestHandler{
     
     public function POST($postList) {
         $node = NodeUtility::getNodeByID($postList['userID'], $this->client);
-        NodeUtility::deleteSpecificNodeRelations($node, array(CONTACT_RELATION), Relationship::DirectionOut);
+        NodeUtility::deleteSpecificNodeRelations($node, array(Contact::CONTACT_RELATION), Relationship::DirectionOut);
         setNodeRelationships($node, $postList);
         return $this->nodeToOutput($node);
     }

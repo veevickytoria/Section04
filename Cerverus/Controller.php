@@ -3,14 +3,37 @@
 /**
  *  Calls the request and returns the request
  */
-spl_autoload_extensions(".php");
-spl_autoload_register();
+// spl_autoload_extensions(".php");
+// spl_autoload_register();
+///require_once("RequestHandlers/Contact.php");
+
+namespace Everyman\Neo4j;
+require("phar://neo4jphp.phar");
+
+require_once "RequestHandlers\Contact.php";
+require_once "RequestHandlers\Note.php";
+echo "WoAH DUDE\n";
 
 class Controller {
     
     public static function parse($class, $id, $type, $postContent){
+    
+        $aClient = new Client();
+     
+        $ch = new Contact($aClient);
+        $getContactResult = $ch->GET(431);
+        if (!$getContactResult) {echo "GET CONTACT WAS FALSE";} else {
+            echo json_encode($getContactResult);
+        }
 
-    //parse normal request
+        $nh = new Note($aClient);
+        $getNoteResult =  $nh->GET(430);
+        if (!$getNoteResult) {echo "GET NOTE WAS FALSE";} else {
+            echo json_encode($getNoteResult);
+        }
+        
+        /*
+        //parse normal request
         if(class_exists($class)){
             $instnace = new $class(new Client);
             //if id==null, assume /Class/ so PUT or POST and pass postcontent
@@ -19,6 +42,8 @@ class Controller {
         }else{
             echo "Error: file not recognized";
         }
+        */
+         
     }
     public static function parseSpecial($class1, $class2, $id1, $id2, $type, $postContent){
         //parse special request
@@ -57,6 +82,7 @@ class Controller {
     }
 }
 
+
 Controller::initHeaders();
 
 if (isset($_REQUEST['class2'])) {
@@ -67,7 +93,7 @@ if (isset($_REQUEST['class2'])) {
                             $_SERVER['REQUEST_METHOD'], 
                             json_decode(file_get_contents('php://input')));
 } else {
-    Controller::parse($_GET['class1'].'Handler', 
+    Controller::parse($_GET['class1'],//.'Handler', 
                     (isset($_GET['id1']) ? $_GET['id1'] : null), 
                     $_SERVER['REQUEST_METHOD'], 
                     json_decode(file_get_contents('php://input')));
