@@ -53,7 +53,7 @@
 
 -(void)populateMeetingList
 {
-    NSString *url = [NSString stringWithFormat:@"%@/Meetings/%d", DATABASE_URL,self.userID];
+    NSString *url = [NSString stringWithFormat:@"%@/User/Meetings/%d", DATABASE_URL,self.userID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
     
