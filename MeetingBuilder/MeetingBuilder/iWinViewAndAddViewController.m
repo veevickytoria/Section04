@@ -76,7 +76,7 @@
 
 -(void)trySetupAgendaTimer
 {
-    if ( [self meetingHasStarted]) {
+    if ( [self meetingInProgress]) {
         [self setTimerControlsToCurrentItem];
     }
     else {
@@ -86,26 +86,26 @@
 
 -(void)setTimerControlsToCurrentItem
 {
- 
     NSInteger pastMinutes = 0;
     NSInteger itemMinutes;
-    NSInteger itemMinutesRemaining = 0;
+    NSInteger itemMinutesRemaining;
+    NSInteger secRemaining;
     // find current item
     for (NSDictionary *item in self.itemList) {
         itemMinutes = [[item objectForKey:@"time"] doubleValue];
         pastMinutes += itemMinutes;
         itemMinutesRemaining = pastMinutes - [self getElapsedAgendaTimeInMinutes];
-        if (itemMinutesRemaining > 0) {
-            [self setTimerControlFields:[self getTimerTextRemaining:itemMinutesRemaining] currentItemText:[item objectForKey:@"title"]];
+        secRemaining = 60 - [self getElapsedAgendaTimeInSeconds] % 60;
+        if (itemMinutesRemaining >= 0  && secRemaining >= 0) {
+            [self setTimerControlFields:[self getTimerTextRemaining:itemMinutesRemaining :secRemaining] currentItemText:[item objectForKey:@"title"]];
             [self showTimerControls];
             break;
         }
     }
 }
 
--(NSString *)getTimerTextRemaining:(NSInteger)itemMinutesRemaining
+-(NSString *)getTimerTextRemaining:(NSInteger)itemMinutesRemaining :(NSInteger)secRemaining
 {
-    NSInteger secRemaining = 60 - [self getElapsedAgendaTimeInSeconds] % 60;
     NSString *secRemainingZeroHolder = @"";
     if (secRemaining < 10) {
         secRemainingZeroHolder = @"0";
@@ -135,7 +135,7 @@
     self.currentAgendaItemLabel.hidden = NO;
 }
 
--(BOOL)meetingHasStarted
+-(BOOL)meetingInProgress
 {
     return [self getElapsedAgendaTimeInSeconds] > 0 && [NSDate timeIntervalSinceReferenceDate] < [self.endDate timeIntervalSince1970];
 }
