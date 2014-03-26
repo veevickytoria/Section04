@@ -34,9 +34,35 @@ function showViewAgendaModal(){
 	document.getElementById("AcontentTimeV").innerHTML = agendasJSON[currentID]["content"]["1"]["time"];
 	document.getElementById("AcontentDescriptionV").innerHTML = agendasJSON[currentID]["content"]["1"]["description"];
 
+createAgendaStructure(agendasJSON[currentID]["content"], document.getElementById("AcontentTitleV"));
+
+
+
 $('#editAgendaModal').modal('hide');
 $('#viewAgendaModal').modal('show');	
 }
+
+
+
+function createAgendaStructure(contents, element){
+alert("here");
+	if(contents.valueOf != null){
+		for(var i=0; i < contents.length; i++){
+			var title = element.appendChild(document.createElement(contents[i][title]));
+			var time = element.appendChild(document.createElement(contents[i][time]));
+			var description = element.appendChild(document.createElement(contents[i][description]));
+			var contentElement = element.appendChild(document.createElement("Content:"));
+
+			createAgendaStructure(contents[i]["contents"], contentElement);
+		}
+	}
+}
+
+
+
+
+
+
 
 function showViewModalNoID(type){
 	updateEditedValues(type);
