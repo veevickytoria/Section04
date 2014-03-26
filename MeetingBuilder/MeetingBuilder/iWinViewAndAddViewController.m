@@ -46,7 +46,6 @@
     // Do any additional setup after loading the view from its nib.
     self.backendUtility = [[iWinBackEndUtility alloc] init];
     self.itemList = [[NSMutableArray alloc] init];
-    [self trySetupAgendaTimer];
 
     if (!self.isAgendaCreated) {
         self.headerLabel.text = @"Create Agenda";
@@ -70,12 +69,14 @@
             NSDictionary *item = [[deserializedDictionary objectForKey:@"content"] objectForKey:[[NSNumber numberWithInt:i] stringValue]];
             [self.itemList addObject:item];
         }
+        // setup timer
+        [NSTimer scheduledTimerWithTimeInterval:0.25 target:self selector:@selector(trySetupAgendaTimer) userInfo:nil repeats:YES];
     }
 }
 
 -(void)trySetupAgendaTimer
 {
-    if ([self getElapsedAgendaTime] > 0 && [self getEpochTimeFromDate:[NSDate date]] < [self getEpochTimeFromDate:self.endDate]) {
+    if ( [self meetingHasStarted]) {
         [self setTimerControlsToCurrentItem];
     }
     else {
@@ -85,13 +86,39 @@
 
 -(void)setTimerControlsToCurrentItem
 {
-    
+ 
+    NSInteger pastMinutes = 0;
+    NSInteger itemMinutes;
+    NSInteger itemMinutesRemaining = 0;
     // find current item
     for (NSDictionary *item in self.itemList) {
-        
+        itemMinutes = [[item objectForKey:@"time"] doubleValue];
+        pastMinutes += itemMinutes;
+        itemMinutesRemaining = pastMinutes - [self getElapsedAgendaTimeInMinutes];
+        if (itemMinutesRemaining > 0) {
+            [self setTimerControlFields:[self getTimerTextRemaining:itemMinutesRemaining] currentItemText:[item objectForKey:@"title"]];
+            [self showTimerControls];
+            break;
+        }
     }
-//    NSString *agendaItemName = [agendaItem objectForKey:@"title"];
-//    NSString *agendaItemDuration = [agendaItem objectForKey:@"time"];
+}
+
+-(NSString *)getTimerTextRemaining:(NSInteger)itemMinutesRemaining
+{
+    NSInteger secRemaining = 60 - [self getElapsedAgendaTimeInSeconds] % 60;
+    NSString *secRemainingZeroHolder = @"";
+    if (secRemaining < 10) {
+        secRemainingZeroHolder = @"0";
+    }
+    
+    NSString *timerTextRemaining = [NSString stringWithFormat:@"%d:%@%d", itemMinutesRemaining, secRemainingZeroHolder, secRemaining];
+    return timerTextRemaining;
+}
+
+-(void)setTimerControlFields:(NSString *)timerLabelText currentItemText:(NSString *)currentItemText
+{
+    self.timerLabel.text = timerLabelText;
+    self.currentAgendaItemLabel.text = currentItemText;
 }
 
 
@@ -101,16 +128,27 @@
     self.currentAgendaItemLabel.hidden = YES;
 }
 
--(NSInteger)getElapsedAgendaTime
+
+-(void)showTimerControls
 {
-    NSInteger elapsedTime = 0;
-    return elapsedTime;
+    self.timerLabel.hidden = NO;
+    self.currentAgendaItemLabel.hidden = NO;
+}
+
+-(BOOL)meetingHasStarted
+{
+    return [self getElapsedAgendaTimeInSeconds] > 0 && [NSDate timeIntervalSinceReferenceDate] < [self.endDate timeIntervalSince1970];
 }
 
 
--(NSTimeInterval)getEpochTimeFromDate:(NSDate *)date
+-(NSInteger)getElapsedAgendaTimeInMinutes
 {
-    
+    return [self getElapsedAgendaTimeInSeconds] / 60;
+}
+
+-(NSInteger)getElapsedAgendaTimeInSeconds
+{
+    return [[NSDate date] timeIntervalSince1970] - [self.startDate timeIntervalSince1970];
 }
 
 - (void)didReceiveMemoryWarning

@@ -331,7 +331,7 @@
 
 - (IBAction)onAddAgenda
 {
-    self.agendaController = [[iWinViewAndAddViewController alloc] initWithNibName:@"iWinViewAndAddViewController" bundle:nil startDate:self.startDate endDate:self.endDate];
+    self.agendaController = [[iWinViewAndAddViewController alloc] initWithNibName:@"iWinViewAndAddViewController" bundle:nil startDate:[self makeDateFromText:self.startDateLabel.text timeText:self.startTimeLabel.text] endDate:[self makeDateFromText:self.endDateLabel.text timeText:self.endTimeLabel.text]];
     self.agendaController.meetingID = self.meetingID;
     self.agendaController.userID = self.userID;
     self.agendaController.agendaID = self.agendaID;
@@ -546,6 +546,14 @@
     objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.meetingID] stringValue], @"endDatetime", [NSString stringWithFormat:@"%@ %@", self.endDateLabel.text, self.endTimeLabel.text], nil];
     jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
     [self.backendUtility putRequestForUrl:url withDictionary:jsonDictionary];
+}
+
+-(NSDate *)makeDateFromText:(NSString *)dateText timeText:(NSString *)timeText
+{
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.dateFormat = @"MM/dd/yyyy h:mm a";
+    NSString *dateTime = [NSString stringWithFormat:@"%@ %@", dateText, timeText];
+    return [dateFormatter dateFromString:dateTime];
 }
 
 -(void) updateAgendaInfo
