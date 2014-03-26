@@ -77,7 +77,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
     iWinPopulateDatabase *db = [[iWinPopulateDatabase alloc] init];
     [db populateContacts];
     [db populateSettings];

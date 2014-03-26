@@ -112,31 +112,38 @@
         noteDictionaries = [self.notes objectAtIndex:self.currentUserRowIndex];
         NSInteger noteID = [[[noteDictionaries objectAtIndex:indexPath.row] objectForKey:@"noteID"] integerValue];
         
-        // first get note content of the note to merge with
-        NSString *url = [NSString stringWithFormat:@"%@/Note/%d", DATABASE_URL, noteID];
-        NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
-        NSString *mergerNoteContent = [deserializedDictionary objectForKey:@"content"];
-        
-        // merge strings
-        NSString *merged = [NSString stringWithFormat:@"%@\n\n-----\n\n%@",self.noteContent, mergerNoteContent];
-        
-    
-        // next update the orignal note
-        NSArray *keys = [NSArray arrayWithObjects:@"noteID", @"field", @"value", nil];
-        NSArray *objects = [NSArray arrayWithObjects:[NSString stringWithFormat:@"%d", self.currentNoteID], @"content", merged, nil];
-        NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-        
-        NSDictionary *deserializedDictionary2 = [self.backendUtility putRequestForUrl:[NSString stringWithFormat: @"%@/Note/", DATABASE_URL] withDictionary:jsonDictionary];
-        if (deserializedDictionary2) {
-            [self.mergeNoteDelegate loadNoteIntoView];
-            [self dismissViewControllerAnimated:YES completion:Nil];
-        }
+        NSString *mergedContent = [self mergeNote:noteID];
+        [self updateOriginalNote:mergedContent];
         
         // remove shared note from user
         NSString *unshareUrl = [NSString stringWithFormat:@"%@/Note/Sharing/%d/%d", DATABASE_URL, noteID, self.userID];
         [self.backendUtility deleteRequestForUrl:unshareUrl];
 
     }
+}
+
+-(void)updateOriginalNote:(NSString *)mergedNoteContent
+{
+    NSArray *keys = [NSArray arrayWithObjects:@"noteID", @"field", @"value", nil];
+    NSArray *objects = [NSArray arrayWithObjects:[NSString stringWithFormat:@"%d", self.currentNoteID], @"content", mergedNoteContent, nil];
+    NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+    
+    NSDictionary *deserializedDictionary2 = [self.backendUtility putRequestForUrl:[NSString stringWithFormat: @"%@/Note/", DATABASE_URL] withDictionary:jsonDictionary];
+    if (deserializedDictionary2) {
+        [self.mergeNoteDelegate loadNoteIntoView];
+        [self dismissViewControllerAnimated:YES completion:Nil];
+    }
+}
+
+-(NSString *)mergeNote:(NSInteger)noteID
+{
+    // first get note content of the note to merge with
+    NSString *url = [NSString stringWithFormat:@"%@/Note/%d", DATABASE_URL, noteID];
+    NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
+    NSString *mergerNoteContent = [deserializedDictionary objectForKey:@"content"];
+    
+    // merge strings
+    return [NSString stringWithFormat:@"%@\n\n-----\n\n%@",self.noteContent, mergerNoteContent];
 }
 
 

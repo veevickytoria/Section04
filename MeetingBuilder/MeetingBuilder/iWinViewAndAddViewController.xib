@@ -8,9 +8,11 @@
             <connections>
                 <outlet property="addItemButton" destination="WZz-0x-JLq" id="dXl-cT-Sp9"/>
                 <outlet property="cancelButton" destination="xrC-VJ-O69" id="cLh-0U-NyA"/>
+                <outlet property="currentAgendaItemLabel" destination="bZz-BV-QDm" id="7Ie-PC-MWi"/>
                 <outlet property="headerLabel" destination="npF-Qr-M7u" id="TtW-Zr-bzW"/>
                 <outlet property="itemTableView" destination="gqS-5J-CFa" id="N89-sG-HPj"/>
                 <outlet property="saveButton" destination="Sg0-cf-uz5" id="dU8-Vr-xGL"/>
+                <outlet property="timerLabel" destination="inz-7E-fVq" id="iQU-pb-UbG"/>
                 <outlet property="titleTextField" destination="0YU-3m-7Et" id="WmW-7T-Fm4"/>
                 <outlet property="view" destination="2" id="3"/>
             </connections>
@@ -92,6 +94,20 @@
                         <action selector="onClickCancel" destination="-1" eventType="touchUpInside" id="y7v-qG-Kv5"/>
                     </connections>
                 </button>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="000:00" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="inz-7E-fVq">
+                    <rect key="frame" x="20" y="882" width="97" height="35"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                    <color key="textColor" red="0.0" green="0.1096666174" blue="0.69000509509999997" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Current Agenda Item" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bZz-BV-QDm">
+                    <rect key="frame" x="132" y="889" width="446" height="21"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="19"/>
+                    <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>

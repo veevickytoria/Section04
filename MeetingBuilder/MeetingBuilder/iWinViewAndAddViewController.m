@@ -15,18 +15,23 @@
 @interface iWinViewAndAddViewController ()
 @property (nonatomic) NSMutableArray *itemList;
 @property (nonatomic) BOOL isEditing;
+@property (nonatomic) NSDate *startDate;
+@property (nonatomic) NSDate *endDate;
 @property (nonatomic) iWinAgendaItemViewController *agendaItemViewController;
 @property (nonatomic) iWinAddUsersViewController *userViewController;
 @property (strong, nonatomic) iWinBackEndUtility *backendUtility;
-
+@property (weak, nonatomic) IBOutlet UILabel *timerLabel;
+@property (weak, nonatomic) IBOutlet UILabel *currentAgendaItemLabel;
 @end
 
 
 @implementation iWinViewAndAddViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil startDate:(NSDate *)startDate endDate:(NSDate *)endDate
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self.startDate = startDate;
+    self.endDate  = endDate;
     if (self) {
         // Custom initialization
 //        self.isEditing = isEditing;
@@ -64,7 +69,86 @@
             NSDictionary *item = [[deserializedDictionary objectForKey:@"content"] objectForKey:[[NSNumber numberWithInt:i] stringValue]];
             [self.itemList addObject:item];
         }
+        // setup timer
+        [NSTimer scheduledTimerWithTimeInterval:0.25 target:self selector:@selector(trySetupAgendaTimer) userInfo:nil repeats:YES];
     }
+}
+
+-(void)trySetupAgendaTimer
+{
+    if ( [self meetingInProgress]) {
+        [self setTimerControlsToCurrentItem];
+    }
+    else {
+        [self hideTimerControls];
+    }
+}
+
+-(void)setTimerControlsToCurrentItem
+{
+    NSInteger pastMinutes = 0;
+    NSInteger itemMinutes;
+    NSInteger itemMinutesRemaining;
+    NSInteger secRemaining;
+    // find current item
+    for (NSDictionary *item in self.itemList) {
+        itemMinutes = [[item objectForKey:@"time"] doubleValue];
+        pastMinutes += itemMinutes;
+        itemMinutesRemaining = pastMinutes - [self getElapsedAgendaTimeInMinutes];
+        secRemaining = 60 - [self getElapsedAgendaTimeInSeconds] % 60;
+        if (itemMinutesRemaining >= 0  && secRemaining >= 0) {
+            [self setTimerControlFields:[self getTimerTextRemaining:itemMinutesRemaining :secRemaining] currentItemText:[item objectForKey:@"title"]];
+            [self showTimerControls];
+            break;
+        }
+    }
+}
+
+-(NSString *)getTimerTextRemaining:(NSInteger)itemMinutesRemaining :(NSInteger)secRemaining
+{
+    NSString *secRemainingZeroHolder = @"";
+    if (secRemaining < 10) {
+        secRemainingZeroHolder = @"0";
+    }
+    
+    NSString *timerTextRemaining = [NSString stringWithFormat:@"%d:%@%d", itemMinutesRemaining, secRemainingZeroHolder, secRemaining];
+    return timerTextRemaining;
+}
+
+-(void)setTimerControlFields:(NSString *)timerLabelText currentItemText:(NSString *)currentItemText
+{
+    self.timerLabel.text = timerLabelText;
+    self.currentAgendaItemLabel.text = currentItemText;
+}
+
+
+-(void)hideTimerControls
+{
+    self.timerLabel.hidden = YES;
+    self.currentAgendaItemLabel.hidden = YES;
+}
+
+
+-(void)showTimerControls
+{
+    self.timerLabel.hidden = NO;
+    self.currentAgendaItemLabel.hidden = NO;
+}
+
+-(BOOL)meetingInProgress
+{
+    return [self getElapsedAgendaTimeInSeconds] > 0 && [NSDate timeIntervalSinceReferenceDate] < [self.endDate timeIntervalSince1970];
+}
+
+
+-(NSInteger)getElapsedAgendaTimeInMinutes
+{
+    return [self getElapsedAgendaTimeInSeconds] / 60;
+}
+
+-(NSInteger)getElapsedAgendaTimeInSeconds
+{
+    return [[NSDate date] timeIntervalSince1970] - [self.startDate timeIntervalSince1970];
 }
 
 - (void)didReceiveMemoryWarning
@@ -90,6 +174,7 @@
 {
     return self.itemList.count;
 }
+
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {

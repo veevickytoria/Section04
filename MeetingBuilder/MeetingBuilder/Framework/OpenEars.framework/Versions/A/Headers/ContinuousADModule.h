@@ -305,9 +305,10 @@ int32 cont_ad_read (cont_ad_t *r,	/**< In: Object pointer returned by cont_ad_in
 		    int16 *buf,		/**< In/Out: In block mode, contains input data.
                                            On return, buf contains A/D data returned
 					   by this function, if any. */
-		    int32 max		/**< In: Maximum number of samples to be filled into buf.
+		    int32 max,		/**< In: Maximum number of samples to be filled into buf.
 					   NOTE: max must be at least 256; otherwise
 					   the functions returns -1. */
+int isFirstFrameAfterSuspension
 	);
 
 /**
