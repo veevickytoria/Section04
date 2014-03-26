@@ -165,16 +165,19 @@
 
 <table class='table table-hover table-striped' style='width: 70%; margin-left: 15%; margin-right: auto;'>
   <thead>
+  <tr>
+    <td colspan='2' style='cursor: pointer; text-align: center' href='#newAgendaModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New Agenda</span></td>
+    <td colspan='3' style='cursor: pointer; text-align: center' href='#newNoteModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New Note</span></td>
+  </tr>
     <tr>
       <th>Title</th>
       <th>Initial Topic</th>
       <th>Type</th>
+	  <th></th>
+	  <th></th>
     </tr>
   </thead>
-  <tr>
-    <td colspan='2' style='cursor: pointer; text-align: center' href='#newAgendaModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New Agenda</span></td>
-    <td colspan='2' style='cursor: pointer; text-align: center' href='#newNoteModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New Note</span></td>
-  </tr>
+
   <!-- POPULATE AGENDAS -->
   <% for agenda in @agendasParsed %>
     <tr>

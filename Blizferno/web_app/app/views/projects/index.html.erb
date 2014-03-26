@@ -84,14 +84,16 @@
 
 <table class='table table-hover table-striped' style='width: 70%; margin-left: 15%; margin-right: auto;'>
   <thead>
-    <tr >
-      <th>Name</th>
-      <th></th>
-    </tr>
-  </thead>
   <tr>
     <td colspan='4' style='cursor: pointer; text-align: center' href='#newProjectModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
   </tr>
+    <tr >
+      <th>Name</th>
+      <th></th>
+	  <th></th>
+    </tr>
+  </thead>
+
   <% for project in @projectsParsed %>
     <tr>
       <td onClick="showViewModal(<%= @projectsParsed.index(project) %>)" data-refresh="true" data-toggle="modal"><%= project['projectTitle'] %></td>
