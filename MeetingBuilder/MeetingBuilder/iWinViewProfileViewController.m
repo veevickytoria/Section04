@@ -216,7 +216,7 @@
 
 -(void)populateGroupList
 {
-    NSString *url = [NSString stringWithFormat:@"%@/Groups/%d", DATABASE_URL,self.userID];
+    NSString *url = [NSString stringWithFormat:@"%@/User/Groups/%d", DATABASE_URL,self.userID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *deserializedDictionary = [self.backEndUtility getRequestForUrl:url];
     
