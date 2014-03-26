@@ -6,12 +6,15 @@
  * and open the template in the editor.
  */
 
+namespace Everyman\Neo4j;
+require_once "RequestHandler.php";
+
 /**
  * Description of NoteHandler
  *
  * @author millerns
  */
-class NoteHandler extends RequestHandler {
+class Note extends RequestHandler {
     
     function __construct($client){
         parent::__construct($client, "Note", "ID");
@@ -20,10 +23,10 @@ class NoteHandler extends RequestHandler {
     protected function nodeToOutput($node) {
         if ($node == NULL) {return false;} //make pretty exception
         $nodeInfo = array();
-        $nodeInfo['title'] = $node['title'];
-        $nodeInfo['description'] = $node['description'];
-        $nodeInfo['dateCreated'] = $node['dateCreated'];
-        $nodeInfo['content'] = $node['content'];
+        $nodeInfo['title'] = $node->getProperty('title');
+        $nodeInfo['description'] = $node->getProperty('description');
+        $nodeInfo['dateCreated'] = $node->getProperty('dateCreated');
+        $nodeInfo['content'] = $node->getProperty('content');
         $nodeInfo['noteID'] = $node->getId();
         return $nodeInfo;
     }
@@ -36,8 +39,8 @@ class NoteHandler extends RequestHandler {
         //relate the Note to the user who created it        
     }
 
-    protected function setNodeRelationships($node, $postList, $client) {        
-        $creatorNode = NodeUtility::getNodeByID($postList['createdBy'], $client);                
+    protected function setNodeRelationships($node, $postList) {        
+        $creatorNode = NodeUtility::getNodeByID($postList['createdBy'], $this->client);                
         $creatorNode->relateTo($node, 'CREATED')->save();
     }
 
