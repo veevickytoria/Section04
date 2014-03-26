@@ -1,4 +1,5 @@
 <?php
+namespace Everyman\Neo4j;
 
 class NodeUtility{
     
@@ -93,7 +94,7 @@ class NodeUtility{
     }
     
     public static function checkInIndex($node, $index, $indexKey="ID"){
-        $match= $index->findOne($indexKey, $node->getId);
+        $match= $index->findOne($indexKey, $node->getId());
         return ($match != null);
     }
     
@@ -167,7 +168,9 @@ abstract class RequestHandler{
         $this->client = $client;
         $this->index = new Index\NodeIndex($client, $indexName);
         $this->index->save();
-        $this->indexKey = $indexKey;        
+        $this->indexKey = $indexKey;
+         
+        echo ("IM A HANDLER\n");
     }
     
     //returns a json string of the contents of the node
@@ -175,7 +178,7 @@ abstract class RequestHandler{
     // sets a node's properties from a list (for creating a new node)
     protected abstract function setNodeProperties($node, $postList);
     // sets a node's relationships from a list (for creating a new node)
-    protected abstract function setNodeRelationships($node, $postList);
+    protected abstract function setNodeRelationships($node, $postList, $client);
     
     /**
      * The request for retrieving a node from the database and returning its
@@ -185,10 +188,12 @@ abstract class RequestHandler{
      * @return array 
      */
     public function GET($id){
-        $node = NodeUtility::getNodeByID($id);
+        $node = NodeUtility::getNodeByID($id, $this->client);
+        /*
         if (!NodeUtility::checkInIndex($node, $this->index, $this->indexKey))
             {return false;} //!!Use fancier error message
-        return nodeToOutput($node);
+        */
+        return $this->nodeToOutput($node);
     }
     
     /**
@@ -261,81 +266,5 @@ abstract class RequestHandler{
     
     
 }
-
-class UserHandler extends RequestHandler{
-    
-    function __construct($client){
-        parent::__construct($client);
-        $this->nodeType = "USER";
-    }
-          
-    protected function nodeToOutput(){
-        
-    }
-            
-    protected function setNodeProperties($node, $postList){
-        
-    }
-
-    protected function setNodeRelationships($node, $postList) {
-        
-    }
-
-    public function PUT($putList) {
-        
-    }
-
-}
-
-class UserHandlerALL extends UserHandler{
-    
-    public function GET($id, $nodeType){
-        /*
-        $node = NodeUtility::getNodeByID($id);
-        if (!NodeUtility::nodeTypeCheck($node, $nodeType)) {return false;} //make fancier message
-        return nodeToOutput($node);
-        */
-        
-        
-    }
-    
-}
-
-
-class UserContainer extends NodeContainer{
-    
-    protected function nodeToOutput(){}
-
-    public function handlePutRequest($putList){}
-    public function handlePostRequest($postList){
-        //assume putList is a list of stuff
-        //$userNode = $client->makeNode();
-        $userNode;
-        setPropertyFromList($userNode, 'email', 'email', $postList);
-        setPropertyFromList($userNode, 'password', 'password', $postList);
-        setPropertyFromList($userNode, 'phone', 'phone', $postList);
-        setPropertyFromList($userNode, 'company', 'company', $postList);
-        setPropertyFromList($userNode, 'title', 'title', $postList);
-        setPropertyFromList($userNode, 'location', 'location', $postList);
-        setPropertyFromList($userNode, 'name', 'name', $postList);
-        $userNode->setProperty('nodeType','User');
-        storeNodeInDatabase($userNode);
-        return true;
-    }
-    public function handleDeleteRequest($id, $nodeType){}
-    
-}
-
-class MeetingContainer extends NodeContainer{
-    
-    protected function nodeToOutput(){}
-    
-    public function handlePutRequest($putList){}
-    public function handlePostRequest($postList){}
-    public function handleDeleteRequest($id, $nodeType){}
-    
-}
-    
-    echo("Hello\n");
 
 ?>
