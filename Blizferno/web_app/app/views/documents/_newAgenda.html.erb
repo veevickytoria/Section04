@@ -3,10 +3,16 @@
 <form name='input' id='createAgenda' onsubmit='validateDocument()'>
 	<h5>Agenda Title</h5>
 	<input name='title' type='text' id='newTitle' class='form-control' placeholder='Title' />
+	<span id="titleR" class="required"> Required </span>
 	<h5>Content</h5>
 	<input name='contentTitle' type='text' id='contentTitle' class='form-control' placeholder="Content Title" />
+	<span id="contentTitleR" class="required"> Required </span>
+
 	<input name='contentTime' type='text' id='contentTime' class='form-control' placeholder="mm/dd/yyyy HH:mm" />
+	<span id="contentTimeR" class="required"> Required </span>
+
 	<input name='contentDescription' type='text' id='contentDescription' class='form-control' placeholder="Content Description" />
+	<span id="contentDescriptionR" class="required"> Required </span>
 	<!--<input name='content' type='text' id='content' class='form-control' placeholder='Content' />-->
 	<h5>Related Meeting</h5>
 	<!--<input name='type' type='text' id='newType' class='form-control' placeholder='Meeting' />-->
