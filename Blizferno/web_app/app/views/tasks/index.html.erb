@@ -103,9 +103,9 @@
         <% next %>
       <% else %>
         <tr>
-          <td><%= task['deadline'] %></td>
-          <td><a onClick="showViewTaskModal(<%= @tasksParsed.index(task) %>)" href = '#viewTaskModal' data-refresh="true" data-toggle='modal'><%= task['title'] %></a></td>
-          <td><%= task['completionCriteria'] %></td>
+          <td onClick="showViewTaskModal(<%= @tasksParsed.index(task) %>)" data-refresh="true" data-toggle='modal'><%= Time.at(task['deadline']) %></td>
+          <td onClick="showViewTaskModal(<%= @tasksParsed.index(task) %>)" data-refresh="true" data-toggle='modal'><%= task['title'] %></td>
+          <td onClick="showViewTaskModal(<%= @tasksParsed.index(task) %>)" data-refresh="true" data-toggle='modal'><%= task['completionCriteria'] %></td>
           <td colspan='1' style='cursor: pointer; text-align: center' onClick="showDeleteModal(<%= @tasksParsed.index(task)%>)"  data-refresh="true" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'></span></td>
         </tr>
         <% seenTasks.push(task['taskID']) %>
