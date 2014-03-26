@@ -145,8 +145,8 @@ if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') == 0){
                 }else if(strcasecmp($postContent->field, 'datetime') ==0){
                         $meeting->setProperty('datetime', $postContent->value);
                         $meeting->save();
-                }else if(strcasecmp($postContent->field, 'duration') ==0){
-                        $meeting->setProperty('duration', $postContent->value);
+                }else if(strcasecmp($postContent->field, 'endDatetime') ==0){
+                        $meeting->setProperty('endDatetime', $postContent->value);
                         $meeting->save();
                 }else if(strcasecmp($postContent->field, 'location') ==0){
                         $meeting->setProperty('location', $postContent->value);
