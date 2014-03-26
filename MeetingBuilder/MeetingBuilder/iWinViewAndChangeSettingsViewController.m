@@ -257,7 +257,9 @@
     [self.settings setValue:[self getNotificationOption] forKey:@"whenToNotify"];
     NSError *error;
     [self.context save:&error];
-    [self saveToServer];
+    if (self.passwordEdited){
+        [self saveToServer];
+    }
 }
 
 -(void)saveToServer
