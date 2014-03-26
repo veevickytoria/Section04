@@ -85,35 +85,91 @@ class NodeUtility{
     public static function setPropertyFromList($node, $nodeProperty, $listProperty, $list){
         $node->setProperty($nodeProperty, $list->$listProperty);
     }
+    
+    public static function checkInIndex($node, $index, $indexKey="ID"){
+        $match= $index->findOne($indexKey, $node->getId);
+        return ($match != null);
+    }
+    
+    public static function updateRelation($node, $relation, $direction, $newValues){
+        
+    }
 }
 
 abstract class RequestHandler{
     
-    //properties
-    protected $me;  //represents the node; is this necessary, or do nodes only
-                    //exist for the duration of a single handleRequest?
+    /**
+     * The client to be used for database requests.
+     * 
+     * @var Client 
+     */
     protected $client;
     
-    protected $nodeType;
-                            
-    function __construct($client){
+    /**
+     * The index used to keep track of nodes of this type.
+     * 
+     * @var Index
+     */
+    protected $index;
+    
+    /**
+     * The name of the value used as a key to the index.
+     * 
+     * @var String
+     */
+    protected $indexKey;
+    
+    /**
+     * 
+     * Creates a new request handler given a client, name for the index, and
+     * key for the index
+     * 
+     * @param Client $client    Client to be used
+     * @param String $indexName Name of the index
+     * @param String $indexKey  Key to the index
+     */
+    function __construct($client, $indexName, $indexKey){
         $this->client = $client;
+        $this->index = new Index\NodeIndex($client, $indexName);
+        $this->index->save();
+        $this->indexKey = $indexKey;        
     }
     
     //returns a json string of the contents of the node
-    protected abstract function nodeToOutput();
-    // sets the properties of a node from a list (for creating a new node)
+    protected abstract function nodeToOutput($node);
+    // sets a node's properties from a list (for creating a new node)
     protected abstract function setNodeProperties($node, $postList);
+    // sets a node's relationships from a list (for creating a new node)
+    protected abstract function setNodeRelationships($node, $postList);
     
-    //requests
+    /**
+     * The request for retrieving a node from the database and returning its
+     * information.
+     * 
+     * @param int $id The id of the node to retrieve.
+     * @return array 
+     */
     public function GET($id){
         $node = NodeUtility::getNodeByID($id);
-        if (!NodeUtility::nodeTypeCheck($node, $this->nodeType)) {return false;} //make fancier message
+        if (!NodeUtility::checkInIndex($node, $this->index, $this->indexKey))
+            {return false;} //!!Use fancier error message
         return nodeToOutput($node);
     }
     
-    // does not store relationships; overwrite 
-    public function PUT($putList)
+    /**
+     * The request for editing a node which already exists in the database.
+     * 
+     * !Is currently not finished. We need to determine how to handle differen-
+     * tiating between editing simple fields and editing relationships. In the
+     * mean time, subclasses should overwrite this method and specify their
+     * specific implementation.
+     * 
+     * @param array $putList The node to edit, the field to edit, and the value
+     *      it will be edited to.
+     * @return array Information about the edited node.
+     */
+    public abstract function PUT($putList);
+    /*
     {
         $id = $putList["id"];
         $field = $putList["field"];
@@ -127,23 +183,47 @@ abstract class RequestHandler{
         }
         return false; //TODO fancy error message / exception
     }
+    */
     
+    /**
+     * The request for adding a new node to the database. Uses the template
+     * pattern to allow sub-classes to specify their class-specific behavior.
+     * The methods setNodeProperties and setNodeRelationships are used in this
+     * way.
+     * 
+     * @param array $postList The parameters used to specify the node.
+     * @return array Information about the newly created node.
+     */
     public function POST($postList)
     {
         $node = $this->client->makeNode();
-        // make sure it passes by reference
-        NodeUtility::setNodeProperties($node, $postList);
+        // make sure methods pass $node by reference
+        $this->setNodeProperties($node, $postList);
         NodeUtility::storeNodeInDatabase($node);
+        $this->setNodeRelationships($node, $postList, $this->client);
+        $this->index->add($node, 'ID', $node->getId());
         return nodeToOutput($node);
     }
     
-    public function DELETE($id, $nodeType)
+    /**
+     * Deletes a node from the database. First deletes all relationships related
+     * to this node, then removes the node from the index, and finally deletes
+     * the node itself.
+     * 
+     * @param int $id   ID of node to be deleted.
+     * @return boolean  Indicates success or failure.
+     */
+    public function DELETE($id)
     {
         $node = getNodeByID($id);
-        if (!nodeTypeCheck($node, $nodeType)) {return false;} //make fancier message        
-        deleteNodeFromDatabase(NodeUtility::getNodeByID($id));
+        if (!NodeUtility::checkInIndex($node, $this->index, $this->indexKey))
+            {return false;} //!!Use fancier error message   
+        $this->index->remove($node);
+        NodeUtility::deleteNodeFromDatabase(NodeUtility::getNodeByID($id));
         return true; //make fancy delete message
     }
+    
+    
     
 }
 
@@ -161,6 +241,15 @@ class UserHandler extends RequestHandler{
     protected function setNodeProperties($node, $postList){
         
     }
+
+    protected function setNodeRelationships($node, $postList) {
+        
+    }
+
+    public function PUT($putList) {
+        
+    }
+
 }
 
 class UserHandlerALL extends UserHandler{
