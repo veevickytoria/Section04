@@ -143,7 +143,7 @@
 //                                                  error:&error];
     
     
-    NSString *url = [NSString stringWithFormat:@"%@/Meeting/%d", DATABASE_URL,self.meetingID];
+    NSString *url = [NSString stringWithFormat:@"%@/Meeting/%d",DATABASE_URL,self.meetingID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
     
@@ -301,7 +301,7 @@
         if (buttonIndex == 1)
         {
             //Perform deletion
-            NSString *url = [NSString stringWithFormat:@"%@/Meeting/%d", DATABASE_URL,self.meetingID];
+            NSString *url = [NSString stringWithFormat:@"%@/Meeting/%d",DATABASE_URL,self.meetingID];
             NSError * error = [self.backendUtility deleteRequestForUrl:url];
             if (!error)
             {
