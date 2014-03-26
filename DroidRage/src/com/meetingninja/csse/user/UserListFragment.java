@@ -239,7 +239,6 @@ public class UserListFragment extends Fragment implements TokenListener {
 	}
 
 	private void populateList(boolean add) {
-		// UserVolleyAdapter.fetchAllUsers(this);
 		SessionManager session = SessionManager.getInstance();
 		fetcher = new RetContactsObj(add);
 		fetcher.execute(session.getUserID());
@@ -264,15 +263,13 @@ public class UserListFragment extends Fragment implements TokenListener {
 			}
 
 			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
+			public void beforeTextChanged(CharSequence s, int start, int count,	int after) {
 				// TODO Auto-generated method stub
 
 			}
 
 			@Override
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
 				// TODO Auto-generated method stub
 
 			}
@@ -287,15 +284,11 @@ public class UserListFragment extends Fragment implements TokenListener {
 						.getItem(position);
 				tempDeletedContacts.add(item);
 				contacts.remove(item);
-				// for(int i=0;i<contacts.size();i++){
-				// System.out.println("this one: "+contacts.get(i).getContact().getDisplayName());
-				// }
 				mContactAdapter.remove(item);
 
 				return new EnhancedListView.Undoable() {
 					@Override
 					public void undo() {
-						// mContactAdapter.insert(item, position);
 						contacts.add(item);
 						tempDeletedContacts.remove(item);
 						mContactAdapter.notifyDataSetChanged();

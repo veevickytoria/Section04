@@ -37,6 +37,7 @@ import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.volley.UserVolleyAdapter;
 import com.meetingninja.csse.extras.MyDateUtils;
 import com.meetingninja.csse.tasks.tasks.DeleteTaskTask;
+import com.meetingninja.csse.tasks.tasks.GetTaskInfoTask;
 import com.meetingninja.csse.tasks.tasks.UpdateTaskTask;
 
 public class ViewTaskActivity extends Activity {
@@ -48,7 +49,8 @@ public class ViewTaskActivity extends Activity {
 	private Task displayedTask;
 	private DateTimeFormatter dateFormat = MyDateUtils.JODA_APP_DATE_FORMAT;
 	private int resultCode = Activity.RESULT_CANCELED;
-
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -62,7 +64,10 @@ public class ViewTaskActivity extends Activity {
 			Log.w(TAG, "Error: Unable to find Task Parcel");
 		}
 		setupViews();
-		setTask();
+		if(displayedTask != null){
+			setTask();
+		}
+		
 	}
 
 	@Override
@@ -152,20 +157,36 @@ public class ViewTaskActivity extends Activity {
 			isCompleted.setText("No"); // TODO: change this to use string xml
 			taskCompleteButton.setVisibility(View.VISIBLE);
 		}
-
-		if (displayedTask.getType().equals("ASSIGNED_TO")) {
-			assignedLabel.setText("Assigned From:");
-			// assignedText.setText(task.getAssignedFrom());
-			fetchUserName(displayedTask.getAssignedFrom());
-		} else {
-			assignedLabel.setText("Assigned To:");
-			// assignedText.setText(task.getAssignedTo());
-			if(!displayedTask.getAssignedTo().toString().equals("")){
-				fetchUserName(displayedTask.getAssignedTo());
-			}else{
-				assignedText.setText("Unassigned");
+		if(displayedTask.getType()!=null){
+			if (displayedTask.getType().equals("ASSIGNED_TO")) {
+				assignedLabel.setText("Assigned From:");
+				// assignedText.setText(task.getAssignedFrom());
+				fetchUserName(displayedTask.getAssignedFrom());
+			} else {
+				assignedLabel.setText("Assigned To:");
+				// assignedText.setText(task.getAssignedTo());
+				if (!displayedTask.getAssignedTo().toString().equals("")) {
+					fetchUserName(displayedTask.getAssignedTo());
+				} else {
+					assignedText.setText("Unassigned");
+				}
 			}
+		} else{
+			//TODO:
+			
+			new GetTaskInfoTask(new AsyncResponse<Task>() {
+
+				@Override
+				public void processFinish(Task result) {
+					displayedTask = result;
+					setTask();
+					// TODO Auto-generated method stub			
+				}
+
+			}).execute(displayedTask.getID());
+
 		}
+		
 	}
 
 	private void fetchUserName(String userID) {

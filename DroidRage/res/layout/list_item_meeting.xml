@@ -6,7 +6,8 @@
     android:layout_gravity="center_vertical|fill_horizontal"
     android:layout_marginRight="4dip"
     android:minHeight="64dip"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft">
 
     <TextView
         android:id="@+id/title"

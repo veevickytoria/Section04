@@ -124,7 +124,7 @@ public class TasksFragment extends Fragment implements	AsyncResponse<List<Task>>
 
 		ListView lv = (ListView) v.findViewById(R.id.task_list);
 		lv.setEmptyView(v.findViewById(android.R.id.empty));
-		taskAdpt = new TaskItemAdapter(getActivity(), R.layout.list_item_task,taskLists.get(iAssigned));
+		taskAdpt = new TaskItemAdapter(getActivity(), R.layout.list_item_task,taskLists.get(iAssigned),true);
 
 		lv.setAdapter(taskAdpt);
 		registerForContextMenu(lv);
@@ -133,9 +133,6 @@ public class TasksFragment extends Fragment implements	AsyncResponse<List<Task>>
 
 			@Override
 			public void onItemClick(AdapterView<?> parentAdapter, View v,int position, long id) {
-				// Intent viewTask = new Intent(getActivity(),
-				// ViewTaskActivity.class);
-				// startActivity(viewTask);
 				Task t = taskAdpt.getItem(position);
 				loadTask(t);
 			}
@@ -204,7 +201,6 @@ public class TasksFragment extends Fragment implements	AsyncResponse<List<Task>>
 	public void refreshTasks() {
 		taskListfetcher = new GetTaskListTask(this);
 		taskListfetcher.execute(session.getUserID());
-		taskInfoFetcher = new GetTaskInfoTask(this);
 	}
 
 	private void setTaskList(int type) {
@@ -229,8 +225,6 @@ public class TasksFragment extends Fragment implements	AsyncResponse<List<Task>>
 		taskLists.get(iCreated).clear();
 		Collections.sort(result);
 		for (Task task : result) {
-			// new TaskFetcherResp(this).loadTask(task);
-			// numLoading++;
 			if (task.getType().equals("ASSIGNED_TO")) {
 				taskLists.get(assignedToMe).add(task);
 			} else if (task.getType().equals("ASSIGNED_FROM")) {
@@ -243,7 +237,6 @@ public class TasksFragment extends Fragment implements	AsyncResponse<List<Task>>
 	}
 
 	public void notifyAdapter() {
-		// taskAdpt.notifyDataSetChanged();
 		numLoading--;
 		if (numLoading == 0) {
 			taskAdpt.notifyDataSetChanged();
@@ -324,87 +317,6 @@ class TaskTypeAdapter implements SpinnerAdapter {
 	public View getDropDownView(int position, View convertView, ViewGroup parent) {
 		TextView rowView = (TextView) getView(position, convertView, parent);
 		rowView.setPadding((int) this.context.getResources().getDimension(R.dimen.activity_horizontal_margin),(int) this.context.getResources().getDimension(R.dimen.activity_vertical_margin),(int) this.context.getResources().getDimension(R.dimen.activity_horizontal_margin),	(int) this.context.getResources().getDimension(R.dimen.activity_vertical_margin));
-		return rowView;
-	}
-
-}
-
-class TaskItemAdapter extends ArrayAdapter<Task> {
-	private List<Task> tasks;
-	private Context context;
-
-	public TaskItemAdapter(Context context, int textViewResourceId,
-			List<Task> tasks) {
-		super(context, textViewResourceId, tasks);
-		this.context = context;
-		this.tasks = tasks;
-	}
-
-	public void setTasks(List<Task> tasks) {
-		this.tasks = tasks;
-	}
-
-	@Override
-	public void sort(Comparator<? super Task> c) {
-		Collections.sort(tasks);
-	}
-
-	@Override
-	public int getCount() {
-		return this.tasks.size();
-	}
-
-	@Override
-	public Task getItem(int position) {
-		return this.tasks.get(position);
-	}
-
-	private class ViewHolder {
-		TextView title, deadline;
-		View background;
-	}
-
-	ViewHolder viewHolder;
-
-	/*
-	 * we are overriding the getView method here - this is what defines how each
-	 * list item will look.
-	 */
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		View rowView = convertView;
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		if (rowView == null) {
-			rowView = inflater.inflate(R.layout.list_item_task, null);
-			viewHolder = new ViewHolder();
-
-			viewHolder.title = (TextView) rowView.findViewById(R.id.list_task_title);
-			viewHolder.deadline = (TextView) rowView.findViewById(R.id.list_task_deadline);
-			viewHolder.background = rowView.findViewById(R.id.list_task_holder);
-
-			rowView.setTag(viewHolder);
-		} else
-			viewHolder = (ViewHolder) rowView.getTag();
-
-		// Setup from the meeting_item XML file
-		Task task = tasks.get(position);
-
-		viewHolder.title.setText(task.getTitle());
-		viewHolder.deadline.setText("Deadline:  "+ MyDateUtils.JODA_APP_DATE_FORMAT.print(task.getEndTimeInMillis()));
-
-		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(task.getEndTimeInMillis());
-		cal.add(Calendar.DAY_OF_MONTH, -1);
-		if (task.getEndTimeInMillis() == 0L) {
-
-		} else if (task.getIsCompleted()) {
-			viewHolder.background.setBackgroundColor(Color.rgb(53, 227, 111));
-		} else if (cal.before(Calendar.getInstance())) {
-			viewHolder.background.setBackgroundColor(Color.rgb(255, 51, 51));
-		} else {
-			viewHolder.background.setBackground(null);
-		}
-
 		return rowView;
 	}
 

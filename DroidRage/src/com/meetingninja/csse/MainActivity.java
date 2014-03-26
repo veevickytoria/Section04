@@ -90,8 +90,8 @@ public class MainActivity extends FragmentActivity {
 	private ScheduleAdapter rightDrawerAdapter;
 
 	public enum DrawerLabel {
-		MEETINGS(0), NOTES(1), TASKS(2), PROFILE(3), GROUPS(4), PROJECTS(5), CONTACTS(
-				6), LOGOUT(9);
+		HOMEPAGE(0), MEETINGS(1), NOTES(2), TASKS(3), PROFILE(4), GROUPS(5), PROJECTS(6), CONTACTS(
+				7), LOGOUT(8);
 
 		private int position;
 
@@ -106,14 +106,13 @@ public class MainActivity extends FragmentActivity {
 	}
 
 	// Instances of fragments contained within this activity
+	private HomePage homepage;
 	private MeetingsFragment frag_meetings;
 	private NotesFragment frag_notes;
 	private TasksFragment frag_tasks;
 	private ProfileFragment frag_profile;
 	private GroupsFragment frag_groups;
 	private ProjectFragment frag_project;
-	// private ProjectsFragment frag_projects;
-	// private ContactsFragment frag_contacts;
 	private UserListFragment frag_contacts;
 
 	// Fields local to this activity
@@ -146,10 +145,12 @@ public class MainActivity extends FragmentActivity {
 			finish(); // close main activity
 		} else { // Else continue
 			Log.v(TAG, "UserID " + session.getUserID() + " is logged in");
+			
 			setContentView(R.layout.activity_main);
 			setupActionBar();
 			setupViews();
 
+			
 			// on first time display view for first nav item
 			selectItem(session.getPage());
 
@@ -298,6 +299,10 @@ public class MainActivity extends FragmentActivity {
 
 		DrawerLabel clickedLabel = DrawerLabel.values()[position];
 		switch (clickedLabel) {
+		case HOMEPAGE:
+			nextPage = new HomePage();
+			homepage = (HomePage) nextPage;
+			break;
 		case MEETINGS:
 			nextPage = new MeetingsFragment();
 			frag_meetings = (MeetingsFragment) nextPage;
@@ -392,7 +397,9 @@ public class MainActivity extends FragmentActivity {
 				&& resultCode == RESULT_OK) {
 			ArrayList<String> thingsYouSaid = data
 					.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-			if (thingsYouSaid.contains("meetings")) {
+			if (thingsYouSaid.contains("home")){
+				selectItem(DrawerLabel.HOMEPAGE.getPosition());
+			} else if (thingsYouSaid.contains("meetings")) {
 				selectItem(DrawerLabel.MEETINGS.getPosition());
 			} else if (thingsYouSaid.contains("groups")) {
 				selectItem(DrawerLabel.GROUPS.getPosition());

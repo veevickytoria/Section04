@@ -96,8 +96,7 @@ public class EditMeetingActivity extends FragmentActivity implements
 		}
 		session = SessionManager.getInstance();
 
-		is24 = android.text.format.DateFormat
-				.is24HourFormat(getApplicationContext());
+		is24 = android.text.format.DateFormat.is24HourFormat(getApplicationContext());
 		timeFormat = is24 ? MyDateUtils.JODA_24_TIME_FORMAT
 				: MyDateUtils.JODA_12_TIME_FORMAT;
 
@@ -115,36 +114,20 @@ public class EditMeetingActivity extends FragmentActivity implements
 		// init the date-time pickers
 		start = Calendar.getInstance();
 		end = Calendar.getInstance();
-		start.setTimeZone(TimeZone.getTimeZone("UTC"));
-		end.setTimeZone(TimeZone.getTimeZone("UTC"));
 		if (displayedMeeting != null) {
 			start.setTimeInMillis(displayedMeeting.getStartTimeInMillis());
-			// start.set(Calendar.HOUR_OF_DAY,
-			// Integer.parseInt(mFromTime.getText().toString()));
 			end.setTimeInMillis(displayedMeeting.getEndTimeInMillis());
-		} else {
-			System.out.println("display metting is null");
-			// start.add(Calendar.HOUR_OF_DAY, 1);
-			// start.set(Calendar.MINUTE, 0);
-			//
-			// //end.add(Calendar.HOUR_OF_DAY, 2);
-			// end.set(Calendar.MINUTE, 0);
 		}
-
-		mFromDate.setOnClickListener(new DateClickListener(mFromDate, start,
-				end, mToDate, true, mFromTime, mToTime));
+		mFromDate.setOnClickListener(new DateClickListener(mFromDate, start,end, mToDate, true, mFromTime, mToTime));
 		mFromDate.setText(dateFormat.print(start.getTimeInMillis()));
 
-		mToDate.setOnClickListener(new DateClickListener(mToDate, end, start,
-				mFromDate, false, mToTime, mFromTime));
+		mToDate.setOnClickListener(new DateClickListener(mToDate, end, start,mFromDate, false, mToTime, mFromTime));
 		mToDate.setText(dateFormat.print(end.getTimeInMillis()));
 
-		mFromTime.setOnClickListener(new TimeClickListener(mFromTime, start,
-				this, end, mToTime, true));
+		mFromTime.setOnClickListener(new TimeClickListener(mFromTime, start,this, end, mToTime, true));
 		mFromTime.setText(timeFormat.print(start.getTimeInMillis()));
 
-		mToTime.setOnClickListener(new TimeClickListener(mToTime, end, this,
-				start, mFromTime, false));
+		mToTime.setOnClickListener(new TimeClickListener(mToTime, end, this,start, mFromTime, false));
 		mToTime.setText(timeFormat.print(end.getTimeInMillis()));
 	}
 
@@ -374,7 +357,7 @@ public class EditMeetingActivity extends FragmentActivity implements
 			tempcal.set(year, monthOfYear, dayOfMonth,
 					cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE));
 			Calendar now = Calendar.getInstance();
-			now.setTimeZone(TimeZone.getTimeZone("UTC"));
+//			now.setTimeZone(TimeZone.getTimeZone("UTC"));
 			now = Calendar.getInstance();
 			if (tempcal.after(now)) {
 				cal.set(year, monthOfYear, dayOfMonth);
@@ -458,7 +441,7 @@ public class EditMeetingActivity extends FragmentActivity implements
 			tempcal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
 					cal.get(Calendar.DAY_OF_MONTH), hourOfDay, minute);
 			Calendar now = Calendar.getInstance();
-			now.setTimeZone(TimeZone.getTimeZone("UTC"));
+//			now.setTimeZone(TimeZone.getTimeZone("UTC"));
 			now = Calendar.getInstance();
 
 			if (tempcal.after(now)) {

@@ -395,7 +395,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 
 		conn.disconnect();
 		for (Task t : taskList) {
-			TaskDatabaseAdapter.getTask(t);
+			TaskDatabaseAdapter.getTask(t.getID());
 		}
 		return taskList;
 	}

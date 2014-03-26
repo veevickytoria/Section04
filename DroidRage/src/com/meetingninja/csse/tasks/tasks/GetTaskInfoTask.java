@@ -25,56 +25,26 @@ import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.TaskDatabaseAdapter;
 import com.meetingninja.csse.tasks.TasksFragment;
 
-public class GetTaskInfoTask implements AsyncResponse<Void> {
+public class GetTaskInfoTask extends AsyncTask<String, Void, Task> {
+	private AsyncResponse<Task> delegate;
 
-	private TasksFragment frag;
-	private TaskFetcherTask fetcher;
-	private Task task;
-
-	// private Task task;
-
-	public GetTaskInfoTask(TasksFragment frag) {
-		this.frag = frag;
-		this.fetcher = new TaskFetcherTask(this);
-		// this.task = task;
-	}
-
-	public void loadTask(Task task) {
-		this.task = task;
-		this.fetcher.execute(task);
-	}
-
-	@Override
-	public void processFinish(Void result) {
-		// Intent viewTask = new Intent(this.frag.getActivity(),
-		// ViewTaskActivity.class);
-		// viewTask.putExtra("task", this.task);
-		// this.frag.startActivityForResult(viewTask, 6);// (viewTask);
-		this.frag.notifyAdapter();
-	}
-
-}
-
-class TaskFetcherTask extends AsyncTask<Task, Void, Void> {
-	private AsyncResponse<Void> delegate;
-
-	public TaskFetcherTask(AsyncResponse<Void> delegate) {
+	public GetTaskInfoTask(AsyncResponse<Task> delegate) {
 		this.delegate = delegate;
 	}
 
 	@Override
-	protected Void doInBackground(Task... params) {
+	protected Task doInBackground(String... params) {
+		Task t = null;
 		try {
-			TaskDatabaseAdapter.getTask(params[0]);
+			t= TaskDatabaseAdapter.getTask(params[0]);
 		} catch (IOException e) {
 			Log.e("TaskFetch", "Error: Unable to get task info");
 			Log.e("TASKS_ERR", e.getLocalizedMessage());
 		}
-		return null;
+		return t;
 	}
 
-	@Override
-	protected void onPostExecute(Void v) {
+	protected void onPostExecute(Task v) {
 		super.onPostExecute(v);
 		delegate.processFinish(v);
 	}

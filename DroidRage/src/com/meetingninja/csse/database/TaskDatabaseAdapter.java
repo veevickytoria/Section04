@@ -45,10 +45,9 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 		return Uri.parse(getBaseUrl()).buildUpon();
 	}
 
-	public static void getTask(Task t) throws JsonParseException,
-			JsonMappingException, IOException {
+	public static Task getTask(String id) throws JsonParseException, JsonMappingException, IOException {
 		// Server URL setup
-		String _url = getBaseUri().appendPath(t.getID()).build().toString();
+		String _url = getBaseUri().appendPath(id).build().toString();
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
@@ -61,21 +60,14 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 		String response = getServerResponse(conn);
 
 		// Initialize ObjectMapper
-		// List<Task> taskList = new ArrayList<Task>();
 		final JsonNode taskNode = MAPPER.readTree(response);
-
-		// if(taskArray.isArray()){
-		// for(final JsonNode taskNode : taskArray){
+		Task t = new Task();
+		t.setID(id);
 		parseTask(taskNode, t);
 
-		// if(t!=null){
-		// taskList.add(t);
-		// }
-		// }
-		// }
 		conn.disconnect();
-		// return void;
-
+		
+		return t;
 	}
 
 	public static Task createTask(Task t) throws IOException {
@@ -219,24 +211,6 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 		t.setAssignedTo(JsonUtils.getJSONValue(node, Keys.Task.ASSIGNED_TO));
 		t.setAssignedTo(JsonUtils.getJSONValue(node, Keys.Task.ASSIGNED_FROM));
 		t.setCreatedBy(JsonUtils.getJSONValue(node, Keys.Task.CREATED_BY));
-//		t.setDescription(node.hasNonNull(Keys.Task.DESC) ? node.get(
-//				Keys.Task.DESC).asText() : "");
-//		t.setTitle(node.hasNonNull(Keys.Task.TITLE) ? node.get(Keys.Task.TITLE)
-//				.asText() : "");
-//		t.setEndTime(node.hasNonNull(Keys.Task.DEADLINE) ? node.get(
-//				Keys.Task.DEADLINE).asText() : "");
-//		t.setDateCreated(node.hasNonNull(Keys.Task.DATE_CREATED) ? node.get(
-//				Keys.Task.DATE_CREATED).asText() : "");
-//		t.setDateAssigned(node.hasNonNull(Keys.Task.DATE_ASSIGNED) ? node.get(
-//				Keys.Task.DATE_ASSIGNED).asText() : "");
-//		t.setCompletionCriteria(node.hasNonNull(Keys.Task.CRITERIA) ? node.get(
-//				Keys.Task.CRITERIA).asText() : "");
-//		t.setAssignedTo(node.hasNonNull(Keys.Task.ASSIGNED_TO) ? node.get(
-//				Keys.Task.ASSIGNED_TO).asText() : "");
-//		t.setAssignedFrom(node.hasNonNull(Keys.Task.ASSIGNED_FROM) ? node.get(
-//				Keys.Task.ASSIGNED_FROM).asText() : "");
-//		t.setCreatedBy(node.hasNonNull(Keys.Task.CREATED_BY) ? node.get(
-//				Keys.Task.CREATED_BY).asText() : "");
 		t.setIsCompleted(node.hasNonNull(Keys.Task.COMPLETED) ? node.get(
 				Keys.Task.COMPLETED).asBoolean() : false);
 

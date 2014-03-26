@@ -26,17 +26,18 @@ public class MyDateUtils {
 	public static final DateTimeFormatter ISO8601_FMT = ISODateTimeFormat
 			.dateTime();
 	public static final DateTimeFormatter JODA_SERVER_DATE_FORMAT = DateTimeFormat
-			.forPattern("EEEE, dd-MMM-yy HH:mm:ss zzz").withZoneUTC();
+			.forPattern("EEEE, dd-MMM-yy HH:mm:ss zzz");
 //	DateTimeParser[] parsers = {
 //	        DateTimeFormat.forPattern( "yyyy-MM-dd HH" ).getParser(),
 //	        DateTimeFormat.forPattern( "yyyy-MM-dd" ).getParser() };
 //	DateTimeFormatter formatter = new DateTimeFormatterBuilder().append( null, parsers ).toFormatter();
 
 	public static final DateTimeFormatter JODA_APP_DATE_FORMAT = DateTimeFormat
-			.forPattern("EEE, MMM dd, yyyy").withZoneUTC();
+			.forPattern("EEE, MMM dd, yyyy");
+	
 	public static final DateTimeFormatter JODA_24_TIME_FORMAT = DateTimeFormat
-			.forPattern("HH:mm").withZoneUTC();
+			.forPattern("HH:mm");
 	public static final DateTimeFormatter JODA_12_TIME_FORMAT = DateTimeFormat
-			.forPattern("hh:mma").withZoneUTC();
+			.forPattern("hh:mma");
 
 }

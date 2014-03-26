@@ -212,6 +212,10 @@
             android:name="com.meetingninja.csse.projects.ProjectCustomDialog"
             android:label="@string/title_activity_project_custom_dialog" >
         </activity>
+        <activity
+            android:name="com.meetingninja.csse.HomePage"
+            android:label="@string/title_activity_home_page" >
+        </activity>
     </application>
 
 </manifest>
