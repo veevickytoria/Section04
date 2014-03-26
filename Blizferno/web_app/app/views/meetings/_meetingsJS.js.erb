@@ -30,6 +30,7 @@ function showViewMeetingModal(ID){
 
 	document.getElementById("datetimeV").innerHTML = dtString.toLocaleString();
 	dtString = new Date(endDateTime * 1000);
+	
 	document.getElementById("endDatetimeV").innerHTML = dtString.toLocaleString();
 	document.getElementById("descriptionV").innerHTML = meetingsJSON[currentID]["description"];
 	//document.getElementById("attendanceV").innerHTML = meetingsJSON[currentID]["attendance"];
@@ -247,7 +248,6 @@ function updateEditedValues(){
 	var endDateTime = new Date(splitDate[0], splitDate[1]-1, splitDate[2], splitTime[0], splitTime[1]);
 	endDateTime = endDateTime.getTime()/1000.0;
 	editForm['endDatetime'] = endDateTime;
-
 	//get the meetingID associated with the current meeting from our table
 
 	var editMeetingID = meetingsJSON[currentID]['meetingID'].toString();
@@ -268,7 +268,7 @@ function updateEditedValues(){
 			editField = key;
 			editValue = meetingsJSON[currentID][key];
 			editData = JSON.stringify({"meetingID":editMeetingID,"field":editField,"value":editValue});
-
+			alert(editData);
 			//make a PUT request with the backend to change the specified field for the specified meeting to the specified value
 			$.ajax({
 				type: 'PUT',
