@@ -44,7 +44,7 @@ class NodeUtility{
         } else {return false;}
         */
         
-        $relationArray = $node->getRelationships(array(), Relationship::$direction);
+        $relationArray = $node->getRelationships(array(), $direction);
         $specifiedRelation = array();
         
         foreach ($relationArray as $rel){
@@ -73,6 +73,12 @@ class NodeUtility{
     
     public static function deleteAllNodeRelations($node){
         $relationArray = $node->getRelationships();
+	foreach($relationArray as $rel) {
+			$rel->delete();
+	}
+    }
+    public static function deleteSpecificNodeRelations($node, $relationshipTypes, $direction){
+        $relationArray = $node->getRelationships($relationshipTypes, $direction);
 	foreach($relationArray as $rel) {
 			$rel->delete();
 	}
