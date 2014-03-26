@@ -79,11 +79,9 @@ function submitCreateTaskModal(){
 
 
 function validateNewValues(JSONForm){
-	alert("validating")
 	var invalidFields = false;
 
 	for (key in JSONForm){
-		alert(key)
 		if(document.getElementById(key+"R") != null){
 			if(JSONForm[key] == ""){
 				invalidFields = true;
@@ -91,6 +89,19 @@ function validateNewValues(JSONForm){
 			}
 			else{
 				document.getElementById(key+"R").style.display = "none";
+			}
+		}
+	}
+
+	var additionalkeys = ["deadlinetime","deadlinedate"]
+	for (key in additionalkeys){
+		if(document.getElementById(additionalkeys[key]) != null && document.getElementById(additionalkeys[key]+"R") != null){
+			if(document.getElementById(additionalkeys[key]).value == ""){
+				invalidFields = true;
+				document.getElementById(additionalkeys[key]+"R").style.display = "inline";
+			}
+			else{
+				document.getElementById(additionalkeys[key]+"R").style.display = "none";
 			}
 		}
 	}
