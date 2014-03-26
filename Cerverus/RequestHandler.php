@@ -91,8 +91,37 @@ class NodeUtility{
         return ($match != null);
     }
     
-    public static function updateRelation($node, $relation, $direction, $newValues){
-        
+    /**
+     * Updates the specified relation type of a given node. Deletes the old
+     * relations of the given type, then adds new relations of the given type
+     * with the given values
+     * 
+     * @param node $node    Node to update
+     * @param String $relation  Type of relation to update
+     * @param String $direction DirectionIn or DirectionOut
+     * @param array $newValues  Array of nodes to be related with the given node
+     * @return Boolean  True if successful
+     */
+    public static function updateRelation($node, $relationName, $direction, $newValues, $client){
+        //delete old relations
+        $relationArray = $node->getRelationships(array('relation'), Relationship::$direction);
+        foreach($relationArray as $rel) {
+            $rel->delete();
+        }        
+        //turn new values into an array if it is not already
+        if (!is_array($newValues)){
+            $newValues = array($newValues);
+        }
+        //add new relations
+        foreach($newValues as $newVal){
+          $relatedNode = NodeUtility::getNodeByID($newVal, $client);
+          if ($direction == "DirectionIn"){              
+              $relatedNode->relateTo($node, $relationName)->save();
+          } else if ($direction == "DirectionOut"){
+              $node->relateTo($relatedNode, $relationName)->save();
+          }
+        }
+        return true;
     }
 }
 

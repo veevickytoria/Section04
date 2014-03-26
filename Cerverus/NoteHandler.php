@@ -54,12 +54,7 @@ class NoteHandler extends RequestHandler {
                 NodeUtility::storeNodeInDatabase($node);        
                 return nodeToOutput($node);   
             } else if ($field == "created") {
-                $relationArray = $node->getRelationships(array('CREATED'), Relationship::DirectionIn);
-                foreach($relationArray as $rel) {
-                    $rel->delete();
-		}
-                $creator = NodeUtility::getNodeByID($value, $this->client);
-                $creator->relateTo($node, "CREATED")->save();
+                NodeUtility::updateRelation($node, "created", "DirectionIn", $value, $this->client);
                 return nodeToOutput($node);
             } else {
                 return false;
