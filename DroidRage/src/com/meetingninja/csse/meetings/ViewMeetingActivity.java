@@ -74,7 +74,6 @@ public class ViewMeetingActivity extends Activity {
 		startDate = (TextView) this.findViewById(R.id.meeting_from_date_view);
 		endDate = (TextView) this.findViewById(R.id.meeting_to_date_view);
 		description = (TextView) this.findViewById(R.id.meeting_desc_view);
-		attendeesCount = (TextView) this.findViewById(R.id.text_view_attending);
 		location = (TextView) this.findViewById(R.id.meeting_location_view);
 		startTime = (TextView) this.findViewById(R.id.meeting_from_time_view);
 		endTime = (TextView) this.findViewById(R.id.meeting_to_time_view);
@@ -97,15 +96,13 @@ public class ViewMeetingActivity extends Activity {
 			endTime.setText(format);
 			location.setText(displayedMeeting.getLocation());
 			description.setText(displayedMeeting.getDescription());
-//			attendeesCount.setText("Attending("
-//					+ displayedMeeting.getAttendance().size() + ")");
 			setAttendees(displayedMeeting.getAttendance());
 		}
 	}
 
 	private void setAttendees(ArrayList<User> attendance) {
 		this.attendance.clear();
-//		this.attendance.addAll(attendance);
+		this.attendance.addAll(attendance);
 		this.adpt.notifyDataSetChanged();
 	}
 

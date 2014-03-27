@@ -64,18 +64,17 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:hint="12:00 AM"
-                        android:minHeight="32dip" />
+                        android:minHeight="32dp" />
                 </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/vertical_spacer"
                 android:orientation="vertical" >
 
                 <TextView
-                    android:id="@+id/to_header"
+                    android:id="@+id/to_label"
                     style="@style/TextAppearance.EditEvent_LabelSmall"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -84,8 +83,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin" >
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:id="@+id/meeting_to_date_view"
@@ -107,65 +105,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/response_row"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:focusable="true"
-            android:minHeight="64dip"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/attending_header"
-                style="@style/TextAppearance.EditEvent_LabelSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:text="@string/view_event_response_label" />
-
-            <RadioGroup
-                android:id="@+id/response_value"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dip"
-                android:layout_marginRight="8dip"
-                android:orientation="horizontal"
-                android:paddingTop="5dip" >
-
-                <RadioButton
-                    android:id="@+id/response_yes"
-                    style="@style/TextAppearance.EditEvent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:maxWidth="128dip"
-                    android:text="@string/response_yes" />
-
-                <RadioButton
-                    android:id="@+id/response_maybe"
-                    style="@style/TextAppearance.EditEvent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:maxWidth="128dip"
-                    android:text="@string/response_maybe" />
-
-                <RadioButton
-                    android:id="@+id/response_no"
-                    style="@style/TextAppearance.EditEvent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:maxWidth="128dip"
-                    android:text="@string/response_no" />
-            </RadioGroup>
-
-            <View style="@style/EditEventSeparator" />
-        </LinearLayout>
-
-        <LinearLayout
             android:id="@+id/email_guests_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -182,51 +121,11 @@
                 android:textSize="16sp" />
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/text_view_attending"
-                style="@style/TextAppearance.EditEvent_LabelSmall"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Attending (0)" />
-
-            <ListView
+        <ListView
                 android:id="@+id/guests_attending"
                 android:layout_width="match_parent"
                 android:layout_height="0dp" >
-            </ListView>
-
-            <TextView
-                android:id="@+id/text_view_maybeattending"
-                style="@style/TextAppearance.EditEvent_LabelSmall"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Maybe (0)" />
-
-            <ListView
-                android:id="@+id/guests_notAttending"
-                android:layout_width="match_parent"
-                android:layout_height="0dp" >
-            </ListView>
-
-            <TextView
-                android:id="@+id/text_view_notattending"
-                style="@style/TextAppearance.EditEvent_LabelSmall"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="No (0)" />
-
-            <ListView
-                android:id="@+id/guests_notResponded"
-                android:layout_width="match_parent"
-                android:layout_height="0dp" >
-            </ListView>
-        </LinearLayout>
+        </ListView>
 
         <!-- REMINDERS -->
     </LinearLayout>
