@@ -28,6 +28,7 @@
 @property (strong, nonatomic) NSMutableArray *groupID;
 @property (strong, nonatomic) NSMutableArray *groupList;
 @property (strong, nonatomic) NSMutableArray *groupDetail;
+@property (strong, nonatomic) NSMutableArray *textFields;
 @end
 
 @implementation iWinViewProfileViewController
@@ -50,13 +51,7 @@
     self.isEditing = NO;
     self.cancel.hidden = YES;
     [self updateTextUI];
-    [self.displayNameTextField setBorderStyle:UITextBorderStyleNone];
-    [self.companyTextField setBorderStyle:UITextBorderStyleNone];
-    [self.titleTextField setBorderStyle:UITextBorderStyleNone];
-    [self.emailTextField setBorderStyle:UITextBorderStyleNone];
-    [self.phoneTextField setBorderStyle:UITextBorderStyleNone];
-    [self.locationTextField setBorderStyle:UITextBorderStyleNone];
-    
+    self.textFields = [NSMutableArray arrayWithObjects:self.displayNameTextField,self.companyTextField,self.titleTextField,self.emailTextField,self.phoneTextField,self.locationTextField, nil];
     self.groupList = [[NSMutableArray alloc] init];
     self.groupDetail = [[NSMutableArray alloc] init];
     self.groupID = [[NSMutableArray alloc] init];
@@ -65,7 +60,7 @@
     
     [self populateGroupList];
     
-    [self withBorders:NO];
+    [self withBorderStyle:UITextBorderStyleNone];
 }
 -(void)updateTextUI
 {
@@ -113,8 +108,8 @@
 
 -(IBAction)onCancel:(id)sender
 {
-    [self userInteraction:NO];
-    [self withBorders:NO];
+    [self userInteractionEnable:NO];
+    [self withBorderStyle:UITextBorderStyleNone];
     [self updateTextUI];
     [self.editProfile setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
     self.isEditing = NO;
@@ -150,8 +145,8 @@
         [self saveChanges];
         
         self.isEditing = NO;
-        [self userInteraction:NO];
-        [self withBorders:NO];
+        [self userInteractionEnable:NO];
+        [self withBorderStyle:UITextBorderStyleNone];
         [self.editProfile setTitle:@"Edit Profile" forState:UIControlStateNormal];
         [self.editProfile setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
         self.cancel.hidden = YES;
@@ -159,8 +154,8 @@
     } else{
         
         self.isEditing = YES;
-        [self userInteraction:YES];
-        [self withBorders:YES];
+        [self userInteractionEnable:YES];
+        [self withBorderStyle:UITextBorderStyleRoundedRect];
         [self.editProfile setTitle:@"Save" forState:UIControlStateNormal];
         [self.editProfile setTitleColor:[UIColor greenColor] forState:UIControlStateNormal];
         self.cancel.hidden = NO;
@@ -168,49 +163,22 @@
     }
 }
 
-- (void) userInteraction: (BOOL) enable
+- (void) userInteractionEnable: (BOOL) enable
 {
-    if (enable) {
-        
-        self.displayNameTextField.userInteractionEnabled = YES;
-        self.companyTextField.userInteractionEnabled = YES;
-        self.titleTextField.userInteractionEnabled = YES;
-        self.emailTextField.userInteractionEnabled = YES;
-        self.phoneTextField.userInteractionEnabled = YES;
-        self.locationTextField.userInteractionEnabled = YES;
-        
-    } else {
-        
-        self.displayNameTextField.userInteractionEnabled = NO;
-        self.companyTextField.userInteractionEnabled = NO;
-        self.titleTextField.userInteractionEnabled = NO;
-        self.emailTextField.userInteractionEnabled = NO;
-        self.phoneTextField.userInteractionEnabled = NO;
-        self.locationTextField.userInteractionEnabled = NO;
-        
+    UITextField *currentTextField;
+    for (int i = 0; i < [self.textFields count]; i++) {
+        currentTextField = [self.textFields objectAtIndex:i];
+        currentTextField.userInteractionEnabled = enable;
     }
+
 }
 
-- (void) withBorders: (BOOL) enable
+- (void) withBorderStyle: (UITextBorderStyle) borderStyle
 {
-    if (enable) {
-        
-        [self.displayNameTextField setBorderStyle:UITextBorderStyleRoundedRect];
-        [self.companyTextField setBorderStyle:UITextBorderStyleRoundedRect];
-        [self.titleTextField setBorderStyle:UITextBorderStyleRoundedRect];
-        [self.emailTextField setBorderStyle:UITextBorderStyleRoundedRect];
-        [self.phoneTextField setBorderStyle:UITextBorderStyleRoundedRect];
-        [self.locationTextField setBorderStyle:UITextBorderStyleRoundedRect];
-        
-    } else {
-        
-        [self.displayNameTextField setBorderStyle:UITextBorderStyleNone];
-        [self.companyTextField setBorderStyle:UITextBorderStyleNone];
-        [self.titleTextField setBorderStyle:UITextBorderStyleNone];
-        [self.emailTextField setBorderStyle:UITextBorderStyleNone];
-        [self.phoneTextField setBorderStyle:UITextBorderStyleNone];
-        [self.locationTextField setBorderStyle:UITextBorderStyleNone];
-        
+    UITextField *currentTextField;
+    for (int i = 0; i < [self.textFields count]; i++) {
+        currentTextField = [self.textFields objectAtIndex:i];
+        [currentTextField setBorderStyle:borderStyle];
     }
 }
 
