@@ -187,47 +187,73 @@
     self.passwordEdited = YES;
 }
 
-- (IBAction)onSaveSwitch:(id)sender
+- (void)saveShouldNotifySwitchSetting
 {
-   
-    //Save should notify switch
     if([self.shouldNotifySwitch isOn]){
         [self.settings setValue:[NSNumber numberWithInt:1] forKey:@"shouldNotify"];
     } else {
         [self.settings setValue:[NSNumber numberWithInt:0] forKey:@"shouldNotify"];
     }
-    
-    //Save when to notify table
+}
+
+- (void)saveWhenToNotifySwitchSetting
+{
     [self.settings setValue:self.tableIndex forKey:@"whenToNotify"];
-    
-    
-    
+}
+
+- (void)raiseError:(NSString *)errorMessage
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:errorMessage delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+    [alert show];
+    [self clearFields];
+}
+
+- (BOOL)validatePassword
+{
     NSString *errorMessage = @"";
     if (self.passwordEdited)
     {
         errorMessage = [self validateSettings];
     }
-    //Save the rest
-    if (errorMessage.length == 0) {
-        [self showFields:NO];
-        [self.saveAndEditButton setTitle:@"Change Email/Password" forState:UIControlStateNormal];
-        [self.saveAndEditButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-        [self saveChanges];
-        [self enableInteraction:NO];
-        self.isEditing = NO;
-        self.saveAndEditButton.hidden = NO;
-        self.passwordEdited = NO;
-        self.oldPasswordTextField.text = @"********";
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Successful" message:@"Settings were successfully saved!" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
-        [alert show];
-        
-    } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:errorMessage delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
-        [alert show];
-        [self clearFields];
-    }
-    self.isEditing = NO;
     
+    if (errorMessage.length == 0){
+        return YES;
+    }else{
+        [self raiseError:errorMessage];
+    }
+    return NO;
+}
+
+- (void)launchSuccessfulSaveMessage
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Successful" message:@"Settings were successfully saved!" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+    [alert show];
+}
+
+- (void)savePasswordAndEmail
+{
+    [self showFields:NO];
+    [self.saveAndEditButton setTitle:@"Change Email/Password" forState:UIControlStateNormal];
+    [self.saveAndEditButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    [self saveChanges];
+    [self enableInteraction:NO];
+    self.isEditing = NO;
+    self.saveAndEditButton.hidden = NO;
+    self.passwordEdited = NO;
+    self.oldPasswordTextField.text = @"********";
+}
+
+- (IBAction)onSaveSwitch:(id)sender
+{
+    [self saveShouldNotifySwitchSetting];
+    [self saveWhenToNotifySwitchSetting];
+    
+    BOOL validPassword = [self validatePassword];
+    
+    if (validPassword) {
+        [self savePasswordAndEmail];
+        [self launchSuccessfulSaveMessage];
+    }
 }
 - (IBAction)onSaveTable:(id)sender
 {
