@@ -30,17 +30,75 @@ function showViewAgendaModal(){
 	document.getElementById("AtitleV").innerHTML = agendasJSON[currentID]["title"];
 	document.getElementById("AuserIDV").innerHTML = agendasJSON[currentID]["userID"];
 	document.getElementById("AmeetingIDV").innerHTML = agendasJSON[currentID]["meetingID"];
-	document.getElementById("AcontentTitleV").innerHTML = agendasJSON[currentID]["content"]["1"]["title"];
+	/*document.getElementById("AcontentTitleV").innerHTML = agendasJSON[currentID]["content"]["1"]["title"];
 	document.getElementById("AcontentTimeV").innerHTML = agendasJSON[currentID]["content"]["1"]["time"];
 	document.getElementById("AcontentDescriptionV").innerHTML = agendasJSON[currentID]["content"]["1"]["description"];
+*/
+createAgendaStructure(agendasJSON[currentID]["content"], document.getElementById("AmeetingIDV").parentNode);
 
-$('#editAgendaModal').modal('hide');
-$('#viewAgendaModal').modal('show');	
+	$('#editAgendaModal').modal('hide');
+	$('#viewAgendaModal').modal('show');	
 }
+
+function jsonLength(json){
+	var key, count = 0;
+	for(key in json) {
+	  if(json.hasOwnProperty(key)) {
+		count++;
+	  }
+	}
+	return count;
+}
+
+
+function createAgendaStructure(contents, element){
+//alert("contents="+JSON.stringify(contents));
+//alert("count="+jsonLength(contents));
+
+
+	if(typeof contents != 'undefined'){
+		for(var i = 1; i <= jsonLength(contents); i++){
+//alert("description="+contents[i]['description']);
+//alert("contents[i]="+JSON.stringify(contents[i]));
+
+			var contentElement = element.appendChild(document.createElement("div"));
+				contentElement.setAttribute("style", "margin-left:"+10*i+"%");
+				contentElement.appendChild(document.createTextNode("Content: "));
+
+			contentElement.appendChild(document.createElement("br"));
+			contentElement.appendChild(document.createElement("br"));
+
+			var titleElement = contentElement.appendChild(document.createElement("div").appendChild(document.createTextNode("Title: ")));
+			var title = contentElement.appendChild(document.createElement("div").appendChild(document.createTextNode(contents[i]['title'])));
+
+			contentElement.appendChild(document.createElement("br"));
+			contentElement.appendChild(document.createElement("br"));
+
+			var timeElement = contentElement.appendChild(document.createElement("div").appendChild(document.createTextNode("Time: ")));
+			var time = contentElement.appendChild(document.createElement("div").appendChild(document.createTextNode(contents[i]['time'])));
+
+			contentElement.appendChild(document.createElement("br"));
+			contentElement.appendChild(document.createElement("br"));
+
+			var descriptionElement = contentElement.appendChild(document.createElement("div").appendChild(document.createTextNode("Description: ")));
+			var description = contentElement.appendChild(document.createElement("div").appendChild(document.createTextNode(contents[i]['description'])));
+
+			contentElement.appendChild(document.createElement("br"));
+			contentElement.appendChild(document.createElement("br"));
+
+			createAgendaStructure(contents[i]["content"], contentElement);
+		}
+	}
+}
+
+
+
+
+
+
 
 function showViewModalNoID(type){
 	updateEditedValues(type);
-	showViewModal(currentID, type);
 }
 
 function showEditModal(ID, type){
@@ -98,15 +156,24 @@ function cancelEdit(type){
 
 function updateEditedValues(type){
 	if(type == 'note'){
-		updateEditedNoteValues();
+		var editForm = convertFormToJSON(document.getElementById("editNoteForm"));
+		var invalid = validateEditedNoteValues(editForm);
+		if(!invalid){	
+			updateEditedNoteValues(editForm);
+			showViewModal(currentID, type);
+		}
 	}else if(type =='agenda'){
-		updateEditedAgendaValues();
+		var form = document.getElementById('editAgendaForm');
+		var formJSON = new convertFormToJSON(form);
+		var invalid = validateEditedAgendaValues(formJSON);
+		if (!invalid){
+			updateEditedAgendaValues(formJSON);
+			showViewModal(currentID, type);
+		}
 	}
 }
 
 function updateEditedNoteValues(){
-	var editForm = convertFormToJSON(document.getElementById("editNoteForm"));
-
 	var editNoteID = noteJSON[currentID]['noteID'].toString();
 	var editField = "";
 	var editValue = "";
@@ -131,9 +198,25 @@ function updateEditedNoteValues(){
 	}
 }
 
-function updateEditedAgendaValues(){
-		var form = document.getElementById('editAgendaForm');
-		var formJSON = new convertFormToJSON(form);
+function validateEditedNoteValues(editForm){
+	var invalidFields = false;
+
+	for (key in notesJSON[currentID]){
+		if(document.getElementById("N" + key + "ER") != null){
+			if(editForm[key] == ""){
+				invalidFields = true;
+				document.getElementById("N" + key+"ER").style.display = "inline";
+			}
+			else{
+				document.getElementById("N" + key+"ER").style.display = "none";
+			}
+		}
+	}
+
+	return invalidFields
+}
+
+function updateEditedAgendaValues(formJSON){
 
 		var postTitle = formJSON.title;
 		var postMeeting = formJSON.meeting;
@@ -163,10 +246,38 @@ function updateEditedAgendaValues(){
 				window.location.reload(true);
 			}
 		});
-
-
 }
 
+function validateEditedAgendaValues(editForm){
+	var invalidFields = false;
+
+	for (key in agendasJSON[currentID]){
+		if(document.getElementById("A" + key + "ER") != null){
+			if(editForm[key] == ""){
+				invalidFields = true;
+				document.getElementById("A" + key+"ER").style.display = "inline";
+			}
+			else{
+				document.getElementById("A" + key+"ER").style.display = "none";
+			}
+		}
+	}
+
+	var additionalkeys = ["contentTitle","contentTime","contentDescription"];
+	for (key in additionalkeys){
+		if(document.getElementById("A" + additionalkeys[key] + "ER") != null){
+			if(editForm[additionalkeys[key]] == ""){
+				invalidFields = true;
+				document.getElementById("A" + additionalkeys[key]+"ER").style.display = "inline";
+			}
+			else{
+				document.getElementById("A" + additionalkeys[key]+"ER").style.display = "none";
+			}
+		}
+	}
+
+	return invalidFields
+}
 
 function submitCreateModal(type){
 	if(type == 'note'){
@@ -174,6 +285,24 @@ function submitCreateModal(type){
 	}else if(type == 'agenda'){
 		submitCreateAgendaModal();
 	}
+}
+
+function validateNewNoteValues(JSONForm){
+	var invalidFields = false;
+
+	for (key in JSONForm){
+		if(document.getElementById("N" + key+"R") != null){
+			if(JSONForm[key] == ""){
+				invalidFields = true;
+				document.getElementById("N" + key+"R").style.display = "inline";
+			}
+			else{
+				document.getElementById("N" + key+"R").style.display = "none";
+			}
+		}
+	}
+
+	return invalidFields
 }
 
 function submitCreateNoteModal(){
@@ -190,46 +319,65 @@ function submitCreateNoteModal(){
 		var form = document.getElementById('createDocument');
 		//still testing validation
 		//if(validateMeetingForm(form)){
-			//parse it into a json object
-			var formJSON = new convertFormToJSON(form);
+		//parse it into a json object
+		var formJSON = new convertFormToJSON(form);
+		var invalid = validateNewNoteValues(formJSON);
+		if(!invalid){
 
-			//manually grab the values for each field expected by the backend
-			var postCreator = <%=@userID%>;
-			var postTitle = formJSON.title;
-			var postDescription = formJSON.description;
-			var postDatetime = today;
-			var postContent = formJSON.content;
+		//manually grab the values for each field expected by the backend
+		var postCreator = <%=@userID%>;
+		var postTitle = formJSON.title;
+		var postDescription = formJSON.description;
+		var postDatetime = today;
+		var postContent = formJSON.content;
 
-			//set up the data for the call
-			var postData = JSON.stringify({
-				"createdBy":postCreator,
-				"title":postTitle,
-				"description":postDescription,
-				"dateCreated":postDatetime,
-				"content":postContent
-			});
-			
-			//make the POST request to the backend
-			$.ajax({
-				type: 'POST',
-				url: 'http://csse371-04.csse.rose-hulman.edu/Note/',
-				data: postData,
-				success:function(data){
-					//if successful then close the modal and reload the page
-					$('#newNoteModal').modal('hide');
-					window.location.reload(true);
-				}
-			});
+		//set up the data for the call
+		var postData = JSON.stringify({
+			"createdBy":postCreator,
+			"title":postTitle,
+			"description":postDescription,
+			"dateCreated":postDatetime,
+			"content":postContent
+		});
+		
+		//make the POST request to the backend
+		$.ajax({
+			type: 'POST',
+			url: 'http://csse371-04.csse.rose-hulman.edu/Note/',
+			data: postData,
+			success:function(data){
+				//if successful then close the modal and reload the page
+				$('#newNoteModal').modal('hide');
+				window.location.reload(true);
+			}
+		});
+	}
+}
 
-		//}
+function validateNewAgendaValues(JSONForm){
+	var invalidFields = false;
+
+	for (key in JSONForm){
+		if(document.getElementById(key+"R") != null){
+			if(JSONForm[key] == ""){
+				invalidFields = true;
+				document.getElementById(key+"R").style.display = "inline";
+			}
+			else{
+				document.getElementById(key+"R").style.display = "none";
+			}
+		}
+	}
+
+	return invalidFields
 }
 
 function submitCreateAgendaModal(){
+	var form = document.getElementById('createAgenda');
+	var formJSON = new convertFormToJSON(form);
 
-
-		var form = document.getElementById('createAgenda');
-		var formJSON = new convertFormToJSON(form);
-
+	var invalid = validateNewAgendaValues(formJSON);
+	if(!invalid){
 		var postTitle = formJSON.title;
 		var postMeeting = document.getElementById("meeting").value;
 		var postUser = <%=@userID%>;
@@ -257,6 +405,7 @@ function submitCreateAgendaModal(){
 				window.location.reload(true);
 			}
 		});
+	}
 }
 
 function showDeleteModal(ID, type){
@@ -316,22 +465,22 @@ function convertFormToJSON(form){
 	return json;
 }
 
-  function getMembers(id){
+function getMembers(id){
     var newMembers = [];
     $( '#' + id + ' :selected' ).each( function( i, selected ) {
       newMembers[i] = $( selected ).val();
     });
     return newMembers;
-  }
+}
 
-  function populateSelect(JSONArray, JSONDisplayColumn, JSONValueColumn, JSONSelectValues, selectID){
+function populateSelect(JSONArray, JSONDisplayColumn, JSONValueColumn, JSONSelectValues, selectID){
     var select = document.getElementById(selectID);
 
     if(select.options.length != 0){
       for(var i = select.options - 1; i > -1; i--){
         select.remove(i);
       }
-    }
+	}
 
     for (var k in JSONArray){
       var el = document.createElement("option");
@@ -348,4 +497,4 @@ function convertFormToJSON(form){
         }
       }
     }
-  }
+}

@@ -95,3 +95,15 @@ function getElements(id){
   });
   return elements;
 }
+
+function hasSelectedValue(selectID){
+  var select =document.getElementById(selectID);
+
+  for (var j in select.options){
+    if(select.options[j].selected){
+      return true
+    }
+  }
+
+    return false
+}
