@@ -61,27 +61,35 @@ function createAgendaStructure(contents, element){
 //alert("description="+contents[i]['description']);
 //alert("contents[i]="+JSON.stringify(contents[i]));
 
-			var contentElement = element.appendChild(document.createElement("div"));
+			var contentElement = document.createElement("div");
 				contentElement.setAttribute("style", "margin-left:"+10*i+"%");
-				contentElement.appendChild(document.createTextNode("Content: "));
+			var contentElementText = document.createTextNode("Content: ");
+				contentElement.appendChild(contentElementText);
+				element.appendChild(contentElement);
 
 			contentElement.appendChild(document.createElement("br"));
 			contentElement.appendChild(document.createElement("br"));
 
-			var titleElement = contentElement.appendChild(document.createElement("div").appendChild(document.createTextNode("Title: ")));
-			var title = contentElement.appendChild(document.createElement("div").appendChild(document.createTextNode(contents[i]['title'])));
+			var title = document.createElement("div");
+			var titleText = document.createTextNode("Title: " + contents[i]['title']);
+				title.appendChild(titleText);
+				contentElement.appendChild(title);
 
 			contentElement.appendChild(document.createElement("br"));
 			contentElement.appendChild(document.createElement("br"));
 
-			var timeElement = contentElement.appendChild(document.createElement("div").appendChild(document.createTextNode("Time: ")));
-			var time = contentElement.appendChild(document.createElement("div").appendChild(document.createTextNode(contents[i]['time'])));
+			var time = document.createElement("div");
+			var timeText = document.createTextNode("Time: " + contents[i]['time']);
+				time.appendChild(timeText);
+				contentElement.appendChild(time);
 
 			contentElement.appendChild(document.createElement("br"));
 			contentElement.appendChild(document.createElement("br"));
 
-			var descriptionElement = contentElement.appendChild(document.createElement("div").appendChild(document.createTextNode("Description: ")));
-			var description = contentElement.appendChild(document.createElement("div").appendChild(document.createTextNode(contents[i]['description'])));
+			var description = document.createElement("div");
+			var descriptionText = document.createTextNode("Description: " + contents[i]['description']);
+				description.appendChild(descriptionText);
+				contentElement.appendChild(description);
 
 			contentElement.appendChild(document.createElement("br"));
 			contentElement.appendChild(document.createElement("br"));
@@ -92,6 +100,75 @@ function createAgendaStructure(contents, element){
 }
 
 
+
+
+
+function createEditAgendaStructure(contents, element){
+//alert("contents="+JSON.stringify(contents));
+//alert("count="+jsonLength(contents));
+
+
+	if(typeof contents != 'undefined'){
+		for(var i = 1; i <= jsonLength(contents); i++){
+//alert("description="+contents[i]['description']);
+//alert("contents[i]="+JSON.stringify(contents[i]));
+
+			var contentElement = document.createElement("div");
+				contentElement.setAttribute("style", "margin-left:"+10*i+"%");
+			var contentElementText = document.createTextNode("Content: ");
+				contentElement.appendChild(contentElementText);
+				element.appendChild(contentElement);
+
+			contentElement.appendChild(document.createElement("br"));
+			contentElement.appendChild(document.createElement("br"));
+
+
+			var titleElement = document.createElement("input");
+				titleElement.setAttribute("type", "text");
+				titleElement.setAttribute("class", "form-control");
+				titleElement.value = contents[i]['title'];
+			var titleDiv = document.createElement("div");
+			var titleText = document.createTextNode("Title: ");
+				titleDiv.appendChild(titleText);
+				titleDiv.appendChild(titleElement);
+				contentElement.appendChild(titleDiv);
+
+
+			contentElement.appendChild(document.createElement("br"));
+			contentElement.appendChild(document.createElement("br"));
+
+			var timeElement = document.createElement("input");
+				timeElement.setAttribute("type", "text");
+				timeElement.setAttribute("class", "form-control");
+				timeElement.value = contents[i]['time'];
+			var timeDiv = document.createElement("div");
+			var timeText = document.createTextNode("Time: ");
+				timeDiv.appendChild(timeText);
+				timeDiv.appendChild(timeElement);
+				contentElement.appendChild(timeDiv);		
+
+
+
+			contentElement.appendChild(document.createElement("br"));
+			contentElement.appendChild(document.createElement("br"));
+
+			var descriptionElement = document.createElement("input");
+				descriptionElement.setAttribute("type", "textarea");
+				descriptionElement.setAttribute("class", "form-control");
+				descriptionElement.value = contents[i]['description'];
+			var descriptionDiv = document.createElement("div");
+			var descriptionText = document.createTextNode("Description: ");
+				descriptionDiv.appendChild(descriptionText);
+				descriptionDiv.appendChild(descriptionElement);
+				contentElement.appendChild(descriptionDiv);
+
+			contentElement.appendChild(document.createElement("br"));
+			contentElement.appendChild(document.createElement("br"));
+
+			createEditAgendaStructure(contents[i]["content"], contentElement);
+		}
+	}
+}
 
 
 
@@ -123,10 +200,12 @@ function showEditNoteModal(){
 function showEditAgendaModal(){
 	document.getElementById("AtitleE").value = agendasJSON[currentID]["title"];
 	document.getElementById("AuserIDE").innerHTML = agendasJSON[currentID]["userID"];
-	document.getElementById("AcontentTitleE").value = agendasJSON[currentID]["content"]["1"]["title"];
+/*	document.getElementById("AcontentTitleE").value = agendasJSON[currentID]["content"]["1"]["title"];
 	document.getElementById("AcontentTimeE").value = agendasJSON[currentID]["content"]["1"]["time"];
 	document.getElementById("AcontentDescriptionE").value = agendasJSON[currentID]["content"]["1"]["description"];
+*/
 
+createEditAgendaStructure(agendasJSON[currentID]["content"], document.getElementById("AuserIDE").parentNode);
 
 		 	meetingIDs = [];
 			possibleMeetings = [{"meetingID":agendasJSON[currentID]["meetingID"],"title":agendasJSON[currentID]["meetingID"]}]
