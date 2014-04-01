@@ -1,3 +1,5 @@
+require 'preferences_api_wrapper'
+
 class PreferencesController < ApplicationController
 
 before_filter :home
@@ -8,20 +10,11 @@ before_filter :getUserSettings
 		redirect_to '/login/index'
 		return
 	end
-  end
 
   def getUserSettings
-    if (!cookies[:userID].blank?)
-      require 'net/http'
-      @userID = cookies[:userID]
+      preferences_api_wrapper = PreferencesApiWrapper.new
 
-      url = URI.parse('http://csse371-04.csse.rose-hulman.edu/UserSettings/' + @userID)
-      req = Net::HTTP::Get.new(url.path)
-      res = Net::HTTP.start(url.host, url.port) {|http|
-        http.request(req)
-      }
-
-      settings = JSON.parse(res.body);
+      settings = JSON.parse(preferences_api_wrapper.get_user_preferences(@userID))
 
       @curTask = settings['tasks']
       @curGroup = settings['groups']

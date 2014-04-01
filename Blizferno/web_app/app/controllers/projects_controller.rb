@@ -1,3 +1,5 @@
+require 'project_api_wrapper'
+
 class ProjectsController < ApplicationController
 
 	before_filter :index
@@ -17,14 +19,9 @@ class ProjectsController < ApplicationController
   end
 
   def getProjects
-  	require 'net/http'
-	url = URI.parse('http://csse371-04.csse.rose-hulman.edu/User/Projects/' + @userID)
-	req = Net::HTTP::Get.new(url.path)
-	res = Net::HTTP.start(url.host, url.port) {|http|
-		http.request(req)
-	}
+ 	project_api_wrapper = ProjectApiWrapper.new
 
-	getUserProjects = JSON.parse(res.body)
+	getUserProjects = JSON.parse(project_api_wrapper.get_user_projects(@userID))
 
 	@projects = Array.new
 	@projectsParsed = Array.new
@@ -32,14 +29,11 @@ class ProjectsController < ApplicationController
 
 
 	getUserProjects['projects'].each do |project|
-		url = URI.parse('http://csse371-04.csse.rose-hulman.edu/Project/' + project['projectID'].to_s)
-		req = Net::HTTP::Get.new(url.path)
-		res = Net::HTTP.start(url.host, url.port) {|http|
-			http.request(req)
-		}
-		projectString = res.body
+		projectID = project['projectID'].to_s
 
-		projectIdString = ',"projectID":"'+project['projectID'].to_s+'"}';
+		projectString = project_api_wrapper.get_project(projectID)
+
+		projectIdString = ',"projectID":"' + projectID + '"}';
 		projectString = projectString[0..-2] + projectIdString;
 
 

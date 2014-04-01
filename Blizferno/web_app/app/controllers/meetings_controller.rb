@@ -1,4 +1,4 @@
-require 'lib/meeting_api_wrapper'
+require 'meeting_api_wrapper'
 
 class MeetingsController < ApplicationController
 
@@ -17,12 +17,10 @@ class MeetingsController < ApplicationController
 
 	#This function gets all meetings attached to a user and stores them as a JSON object that we can then access in our html and js files. 
 	def getMeetings
-		user_meetings_path = '/User/Meetings/'
-		meeting_info_path = '/Meeting/'
 
 		meeting_api_wrapper = MeetingApiWrapper.new
 
-		getUserMeetings = meeting_api_wrapper.get_user_meetings(user_meetings_path, @userID)
+		getUserMeetings = JSON.parse(meeting_api_wrapper.get_user_meetings(@userID))
 
 		#The @ makes the variable accessible by our other files
 		@meetings = Array.new
@@ -37,7 +35,7 @@ class MeetingsController < ApplicationController
 		getUserMeetings['meetings'].each do |meeting|
 			meetingID = meeting['id'].to_s
 
-			meetingString = meeting_api_wrapper.get_meeting(meeting_info_path, meetingID)
+			meetingString = meeting_api_wrapper.get_meeting(meetingID)
 
 			#Here we are attaching the meetingID to the JSON string the backend gives us so that later in our javascript we can know what meeting we are looking at. The [0..-2] is removing the last character in the string which is the closing brace '}' that indicates the end of the json object when we parse it in the next step.
 			meetingIdString = ',"meetingID":"'+meeting['id'].to_s+'"}';
