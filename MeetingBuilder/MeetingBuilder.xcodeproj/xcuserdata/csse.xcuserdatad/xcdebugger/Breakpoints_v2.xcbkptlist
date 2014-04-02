@@ -154,11 +154,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MeetingBuilder/iWinScheduleViewMeetingViewController.m"
-            timestampString = "418148212.971651"
+            timestampString = "418153341.735632"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "240"
-            endingLineNumber = "240"
+            startingLineNumber = "245"
+            endingLineNumber = "245"
             landmarkName = "-getContactForID:"
             landmarkType = "5">
          </BreakpointContent>
@@ -186,11 +186,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MeetingBuilder/iWinScheduleViewMeetingViewController.m"
-            timestampString = "418148212.971651"
+            timestampString = "418153341.735632"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "564"
-            endingLineNumber = "564"
+            startingLineNumber = "569"
+            endingLineNumber = "569"
             landmarkName = "-updateMeetingInfo"
             landmarkType = "5">
          </BreakpointContent>
@@ -218,11 +218,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MeetingBuilder/iWinScheduleViewMeetingViewController.m"
-            timestampString = "418148212.971651"
+            timestampString = "418153341.735632"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "589"
-            endingLineNumber = "589"
+            startingLineNumber = "594"
+            endingLineNumber = "594"
             landmarkName = "-makeDateFromText:timeText:"
             landmarkType = "5">
          </BreakpointContent>
@@ -314,11 +314,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MeetingBuilder/iWinScheduleViewMeetingViewController.m"
-            timestampString = "418148212.971651"
+            timestampString = "418153341.735632"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "219"
-            endingLineNumber = "219"
+            startingLineNumber = "224"
+            endingLineNumber = "224"
             landmarkName = "-initDateTimeLabels"
             landmarkType = "5">
          </BreakpointContent>

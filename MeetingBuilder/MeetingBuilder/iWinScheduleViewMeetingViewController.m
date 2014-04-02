@@ -211,6 +211,11 @@
     return [formatter stringFromDate:date];
 }
 
+-(NSString *)getStringDateTimeFromDate:(NSDate *)date
+{
+    return [NSString stringWithFormat:@"%@ %@", [self getStringDateFromDate:date], [self getStringTimeFromDate:date]];
+}
+
 
 -(void) initDateTimeLabels
 {
