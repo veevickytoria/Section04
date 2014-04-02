@@ -94,7 +94,10 @@
         }
         else
         {
-            [self.meetingDetail addObject:[deserializedDictionary objectForKey:@"datetime"]];
+            
+            NSDate *dateTime = [NSDate dateWithTimeIntervalSince1970:[[deserializedDictionary objectForKey:@"datetime"] doubleValue]];
+            NSString *dateTimeString = [iWinScheduleViewMeetingViewController getStringDateTimeFromDate:dateTime]; //THIS LINE IS WHAT BREAKS --- its the static call to the method from that controller
+            [self.meetingDetail addObject:dateTimeString];
             [self.meetingLocations addObject:[deserializedDictionary objectForKey:@"location"]];
             
             NSArray *jsonArray = [deserializedDictionary objectForKey:@"attendance"];

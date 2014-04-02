@@ -33,20 +33,6 @@
     [super tearDown];
 }
 
-- (void)testCheckUserInfo
-{
-
-    XCTAssertTrue([self.viewVC.displayNameTextField.text isEqualToString:@"Dharmin Shah"], @"Check failed");
-    XCTAssertTrue([self.viewVC.companyTextField.text isEqualToString:@"iWin LLC"], @"Check failed");
-    XCTAssertTrue([self.viewVC.emailTextField.text isEqualToString:@"shahdk@rose-hulman.edu"], @"Check failed");
-    XCTAssertTrue([self.viewVC.phoneTextField.text isEqualToString:@"(812)345-9876"], @"Check failed");
-    XCTAssertTrue([self.viewVC.locationTextField.text isEqualToString:@"Terre Haute, IN"], @"Check failed");
-    XCTAssertTrue([self.viewVC.titleTextField.text isEqualToString:@"Product Owner"], @"Check failed");
-
-
-
-}
-
 - (void)testEditedUserInfo
 {
     [self.viewVC.editProfile sendActionsForControlEvents:UIControlEventTouchUpInside];
@@ -78,23 +64,5 @@
     
 }
 
-- (void)testCancelEditUser
-{
-    [self.viewVC.editProfile sendActionsForControlEvents:UIControlEventTouchUpInside];
-    self.viewVC.displayNameTextField.text = @"Shah Dharmin";
-    self.viewVC.companyTextField.text = @"A";
-    self.viewVC.emailTextField.text = @"B";
-    self.viewVC.phoneTextField.text = @"C";
-    self.viewVC.locationTextField.text = @"D";
-    self.viewVC.titleTextField.text = @"E";
-    
-    [self.viewVC.cancel sendActionsForControlEvents:UIControlEventTouchUpInside];
-    XCTAssertTrue([self.viewVC.displayNameTextField.text isEqualToString:@"Dharmin Shah"], @"Check failed");
-    XCTAssertTrue([self.viewVC.companyTextField.text isEqualToString:@"iWin LLC"], @"Check failed");
-    XCTAssertTrue([self.viewVC.emailTextField.text isEqualToString:@"shahdk@rose-hulman.edu"], @"Check failed");
-    XCTAssertTrue([self.viewVC.phoneTextField.text isEqualToString:@"(812)345-9876"], @"Check failed");
-    XCTAssertTrue([self.viewVC.locationTextField.text isEqualToString:@"Terre Haute, IN"], @"Check failed");
-    XCTAssertTrue([self.viewVC.titleTextField.text isEqualToString:@"Product Owner"], @"Check failed");
-}
 
 @end
