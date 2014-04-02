@@ -192,7 +192,7 @@
 }
 
 
--(NSString *)getStringTimeFromDate:(NSDate *)date
++(NSString *)getStringTimeFromDate:(NSDate *)date
 {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     //Set the AM and PM symbols
@@ -203,7 +203,7 @@
     return [formatter stringFromDate:date];
 }
 
--(NSString *)getStringDateFromDate:(NSDate *)date
++(NSString *)getStringDateFromDate:(NSDate *)date
 {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     //Specify only 2 M for month, 2 d for day and 2 h for hour
@@ -211,7 +211,7 @@
     return [formatter stringFromDate:date];
 }
 
--(NSString *)getStringDateTimeFromDate:(NSDate *)date
++(NSString *)getStringDateTimeFromDate:(NSDate *)date
 {
     return [NSString stringWithFormat:@"%@ %@", [self getStringDateFromDate:date], [self getStringTimeFromDate:date]];
 }
@@ -222,11 +222,11 @@
     NSDate* startDateAndTime = [NSDate dateWithTimeIntervalSince1970:[[self.existMeeting objectForKey:@"datetime"] doubleValue]];
     NSDate* endDateAndTime = [NSDate dateWithTimeIntervalSince1970:[[self.existMeeting objectForKey:@"endDatetime"] doubleValue]];
     
-    NSString *startdate = [self getStringDateFromDate:startDateAndTime];
-    NSString *starttime = [self getStringTimeFromDate:startDateAndTime];
+    NSString *startdate = [iWinScheduleViewMeetingViewController getStringDateFromDate:startDateAndTime];
+    NSString *starttime = [iWinScheduleViewMeetingViewController getStringTimeFromDate:startDateAndTime];
     
-    NSString *enddate = [self getStringDateFromDate:endDateAndTime];
-    NSString *endtime = [self getStringTimeFromDate:endDateAndTime];
+    NSString *enddate = [iWinScheduleViewMeetingViewController getStringDateFromDate:endDateAndTime];
+    NSString *endtime = [iWinScheduleViewMeetingViewController getStringTimeFromDate:endDateAndTime];
     
     self.startDateLabel.text = startdate;
     self.endDateLabel.text = enddate;
