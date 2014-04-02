@@ -69,6 +69,7 @@
             NSDictionary *item = [[deserializedDictionary objectForKey:@"content"] objectForKey:[[NSNumber numberWithInt:i] stringValue]];
             [self.itemList addObject:item];
         }
+        
         // setup timer
         [NSTimer scheduledTimerWithTimeInterval:0.25 target:self selector:@selector(trySetupAgendaTimer) userInfo:nil repeats:YES];
     }
@@ -166,6 +167,12 @@
     }
     
     NSString *agendaItemName = [[self.itemList objectAtIndex:indexPath.row] objectForKey:@"title"];
+    
+//    for(int i = 0; i < self.itemList.count; i++){
+//        NSString *agendaItemName = [[self.itemList objectAtIndex:i] objectForKey:@"title"];
+//        NSLog(@"item is: %@\n", agendaItemName);
+//    }
+    
     cell.textLabel.text = agendaItemName;
     return cell;
 }
@@ -180,6 +187,7 @@
 {
     //This is where edit on a row happen: indexPath.row
     
+    //int index = (self.itemList.count - 1) - indexPath.row;
     NSDictionary *agendaItem = [self.itemList objectAtIndex:indexPath.row];
     NSString *agendaItemName = [agendaItem objectForKey:@"title"];
     NSString *agendaItemDuration = [agendaItem objectForKey:@"time"];
