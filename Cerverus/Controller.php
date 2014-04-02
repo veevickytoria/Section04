@@ -28,33 +28,36 @@ class Controller {
             case "Contact":
                 $handler = new Contact($aClient);
                 break;
-            case "Meeting":
-                echo "Not yet implemented.";
-                break;
-            case "User":
-                echo "Not yet implemented.";
-                break;
-            case "Agenda":
-                echo "Not yet implemented.";
-                break;
-            case "Comment":
-                echo "Not yet implemented.";
-                break;
-            case "Group":
-                echo "Not yet implemented.";
-                break;
-            case "Project":
-                echo "Not yet implemented.";
-                break;
-            case "Notification":
-                echo "Not yet implemented.";
-                break;
+            case "Meeting":        
+                echo json_encode("This call is not implemented");
+                return;
+            case "User":        
+                echo json_encode("This call is not implemented");
+                return;
+            case "Agenda":        
+                echo json_encode("This call is not implemented");
+                return;
+            case "Comment":        
+                echo json_encode("This call is not implemented");
+                return;
+            case "Group":        
+                echo json_encode("This call is not implemented");
+                return;
+            case "Project":        
+                echo json_encode("This call is not implemented");
+                return;
+            case "Notification":        
+                echo json_encode("This call is not implemented");
+                return;
+            default:        
+                echo json_encode("This call is not implemented");
+                return;
         }
         
         if ($type == "GET" || $type == "DELETE")
             {$requestResult =  $handler->$type($id);}
         else {
-            $requestResult =  $handler->$type($postContent);
+            $requestResult =  $handler->$type((array)$postContent);
         }
         if (!$requestResult) {echo "REQUEST RESULT WAS FALSE";} else {
             echo json_encode($requestResult);
@@ -81,6 +84,7 @@ class Controller {
         */
          
     }
+    
     public static function parseSpecial($class1, $class2, $id1, $id2, $type, $postContent){
         //parse special request
         

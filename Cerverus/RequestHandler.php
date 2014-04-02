@@ -1,137 +1,6 @@
 <?php
 namespace Everyman\Neo4j;
-
-class NodeUtility{
-    
-    public static function getNodeByID($id, $client){
-        $node = $client->getNode($id);
-	if ($node == NULL)  {
-            /* Should we handle errors elsewhere? */
-            echo json_encode(array('errorID'=>'XX', 'errorMessage'=>$id . ' is an unrecognized node ID in the database'));
-            return NULL;
-	} else {
-            return $node;
-	}
-    }
-    
-    public static function storeNodeInDatabase($node){
-        if ($node == NULL) {return false;}
-        $node->save();
-    }
-    
-    public static function deleteNodeFromDatabase($node){
-        if ($node == NULL) {return false;}
-        $this->deleteAllNodeRelationships($node); 
-        $node->delete();
-        return true;
-    }
-    
-    public static function getAllNodeRelations($node){
-        if ($node == NULL) {return false;}
-        $relations = array();
-        foreach($node->getRelations() as $rel){
-            $relations->add($rel);
-        }
-        return $relations;        
-    }
-    
-    public static function getNodeRelations($node, $relationName, $direction){
-        /*
-        $relationArray = array();
-        if ($direction == "IN") {
-            $relationArray = $node->getRelationships(array(), Relationship::DirectionIn);
-        } else if ($direction == "OUT") {
-            $relationArray = $node->getRelationships(array(), Relationship::DirectionOut);
-        } else {return false;}
-        */
-        
-        $relationArray = $node->getRelationships(array(), $direction);
-        $specifiedRelation = array();
-        
-        foreach ($relationArray as $rel){
-            if ($relationName == $rel->getType()) {
-                array_push($specifiedRelation, $rel);
-                //$specifiedRelation->add($rel);
-            }
-        }
-        
-        return $specifiedRelation;
-   }
-    
-    public static function getNodesFromRelations($relations, $direction){
-        $nodeToRetrieve;
-        if ($direction == "DirectionIn") {
-            $nodeToRetrieve = getStartNode();
-        } else if ($direction == "DirectionOut"){
-            $nodeToRetrieve = getEndNode();
-        } else {return false;}
-        
-        $relatedNodes = array();
-        foreach ($relations as $rel){
-            $relatedNodes->add($rel->nodeToRetrieve);
-        }
-        return $relatedNodes;
-    }
-    
-    public static function deleteAllNodeRelations($node){
-        $relationArray = $node->getRelationships();
-	foreach($relationArray as $rel) {
-			$rel->delete();
-	}
-    }
-    public static function deleteSpecificNodeRelations($node, $relationshipTypes, $direction){
-        $relationArray = $node->getRelationships($relationshipTypes, $direction);
-	foreach($relationArray as $rel) {
-			$rel->delete();
-	}
-    }
-    
-    public static function nodeTypeCheck($node, $nodeTypeShouldBe){
-        return ($node == $nodeTypeShouldBe);
-    }
-    
-    public static function setPropertyFromList($node, $nodeProperty, $listProperty, $list){
-        $node->setProperty($nodeProperty, $list->$listProperty);
-    }
-    
-    public static function checkInIndex($node, $index, $indexKey="ID"){
-        $match= $index->findOne($indexKey, $node->getId());
-        return ($match != null);
-    }
-    
-    /**
-     * Updates the specified relation type of a given node. Deletes the old
-     * relations of the given type, then adds new relations of the given type
-     * with the given values
-     * 
-     * @param node $node    Node to update
-     * @param String $relation  Type of relation to update
-     * @param String $direction DirectionIn or DirectionOut
-     * @param array $newValues  Array of nodes to be related with the given node
-     * @return Boolean  True if successful
-     */
-    public static function updateRelation($node, $relationName, $direction, $newValues, $client){
-        //delete old relations
-        $relationArray = $node->getRelationships(array('relation'), Relationship::$direction);
-        foreach($relationArray as $rel) {
-            $rel->delete();
-        }        
-        //turn new values into an array if it is not already
-        if (!is_array($newValues)){
-            $newValues = array($newValues);
-        }
-        //add new relations
-        foreach($newValues as $newVal){
-          $relatedNode = NodeUtility::getNodeByID($newVal, $client);
-          if ($direction == "DirectionIn"){              
-              $relatedNode->relateTo($node, $relationName)->save();
-          } else if ($direction == "DirectionOut"){
-              $node->relateTo($relatedNode, $relationName)->save();
-          }
-        }
-        return true;
-    }
-}
+require_once "NodeUtility.php";
 
 abstract class RequestHandler{
     
@@ -157,7 +26,25 @@ abstract class RequestHandler{
     protected $indexKey;
     
     /**
-     * 
+     * The list of properties to be stored in the node (e.g. title, description)
+     * @var array<string>
+     */
+    protected $propertyList = array();
+    
+    /**
+     * The list of relationships to be stored with the node (e.g. createdBy,
+     * memberOf)
+     * @var array<string>
+     */
+    protected $relationList = array();
+    
+    /**
+     * The name of the ID field for this node (e.g. userID, noteID)
+     * @var String
+     */
+    protected $idName;
+    
+    /**
      * Creates a new request handler given a client, name for the index, and
      * key for the index
      * 
@@ -172,12 +59,55 @@ abstract class RequestHandler{
         $this->indexKey = $indexKey;
     }
     
-    //returns a json string of the contents of the node
-    protected abstract function nodeToOutput($node);
-    // sets a node's properties from a list (for creating a new node)
-    protected abstract function setNodeProperties($node, $postList);
-    // sets a node's relationships from a list (for creating a new node)
-    protected abstract function setNodeRelationships($node, $postList);
+    /**
+     * Like a toString method, this function takes in a node and returns an
+     * array of information about the given node. Includes properties and
+     * related nodes. !TODO FINISH. CURRENTLY DOES NOT DEAL WITH RELATIONS
+     * @param Node $node
+     * @return array if successful, false if node is null
+     */
+    protected function nodeToOutput($node){
+        if ($node == NULL) {return false;} //make pretty exception
+        $nodeInfo = array();
+        
+        foreach($this->propertyList as $property){
+            $nodeInfo[$property] = $node->getProperty($property);
+        }
+        $nodeInfo[$this->idName] = $node->getId();
+        /*
+        foreach ($this->relationList as $relation){
+            $nodeInfor[$relation] = NodeUtility::getNodesFromRelations($relations, $direction)
+        }
+         * 
+         */
+        //$nodeInfo['createdBy'] = $node->getRe
+        
+        return $nodeInfo;
+    }
+    
+    /**
+     * sets a node's properties from a list (for creating a new node)
+     * @param Node $node
+     * @param array $postList
+     */
+    protected function setNodeProperties($node, $postList){
+        foreach ($this->propertyList as $property){
+            $node->setProperty($property, $postList->$property);
+        }  
+    }
+    
+    /**
+     * Sets a node's relationships from a list (for creating a new node)
+     * @param Node $node
+     * @param array $postList
+     */
+    protected function setNodeRelationships($node, $postList){
+        foreach  ($this->relationList as $relation){
+            $relatedID = $postList->$relation;
+            $relatedNode = NodeUtility::getNodeByID($relatedID, $this->client);
+            $node->relateTo($relatedNode, $relation)->save();
+        }
+    }
     
     /**
      * The request for retrieving a node from the database and returning its
@@ -207,22 +137,22 @@ abstract class RequestHandler{
      *      it will be edited to.
      * @return array Information about the edited node.
      */
-    public abstract function PUT($putList);
-    /*
-    {
-        $id = $putList["id"];
+    public function PUT($putList){
+        $id = $putList[$this->idName];
         $field = $putList["field"];
         $value = $putList["value"];
+        $node = NodeUtility::getNodeByID($id, $this->client);
         
-        $node = NodeUtility::getNodeByID($id);
-        if (NodeUtility::isValidField($node, $field)){
+        if (in_array($field, $this->propertyList)){
             $node->setProperty($field, $value);
-            NodeUtility::storeNodeInDatabase($node);        
-            return nodeToOutput($node);
+            NodeUtility::storeNodeInDatabase($node);
+        } else if (in_array($field, $this->relationList)){
+            NodeUtility::updateRelation($node, $field, "DirectionOut", $value, $this->client);
+        } else {
+            return false;
         }
-        return false; //TODO fancy error message / exception
+        return $this->nodeToOutput($node);
     }
-    */
     
     /**
      * The request for adding a new node to the database. Uses the template
@@ -261,8 +191,6 @@ abstract class RequestHandler{
         NodeUtility::deleteNodeFromDatabase(NodeUtility::getNodeByID($id));
         return true; //make fancy delete message
     }
-    
-    
     
 }
 
