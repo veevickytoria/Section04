@@ -1,0 +1,197 @@
+  function convertFormToJSON(form){
+    var array = jQuery(form).serializeArray();
+    var json = {};
+
+    jQuery.each(array, function() {
+      json[this.name] = this.value || '';
+    });
+
+    return json;
+  }
+
+
+  function showEditModal(){
+    $('#editProfileModal').modal('hide');
+    $('#editProfileModal').on('hidden.bs.modal', function() {
+      $(this).removeData('bs.modal');
+    });
+
+  document.getElementById("nameE").value = "<%= @userInfo['name'] %>";
+  document.getElementById("companyE").value = "<%= @userInfo['company'] %>";
+  document.getElementById("titleE").value = "<%= @userInfo['title'] %>";
+  document.getElementById("locationE").value = "<%= @userInfo['location'] %>";
+  document.getElementById("emailE").value = "<%= @userInfo['email'] %>";
+  document.getElementById("phoneE").value = "<%= @userInfo['phone'] %>";
+  
+    $('#editProfileModal').modal('show');
+  }
+
+  function validateEditedValues(){
+    var invalidFields = false;
+
+    if(document.getElementById("nameE") != null && document.getElementById("nameER") != null){
+      if(document.getElementById("nameE").value == ""){
+        invalidFields = true;
+        document.getElementById("nameER").style.display = "inline";
+      }
+      else{
+        document.getElementById("nameER").style.display = "none";
+      }
+    }
+
+    if(document.getElementById("companyE") != null && document.getElementById("companyER") != null){
+      if(document.getElementById("companyE").value == ""){
+        invalidFields = true;
+        document.getElementById("companyER").style.display = "inline";
+      }
+      else{
+        document.getElementById("companyER").style.display = "none";
+      }
+    }
+
+    if(document.getElementById("titleE") != null && document.getElementById("titleER") != null){
+      if(document.getElementById("titleE").value == ""){
+        invalidFields = true;
+        document.getElementById("titleER").style.display = "inline";
+      }
+      else{
+        document.getElementById("titleER").style.display = "none";
+      }
+    }
+
+    if(document.getElementById("locationE") != null && document.getElementById("locationER") != null){
+      if(document.getElementById("locationE").value == ""){
+        invalidFields = true;
+        document.getElementById("locationER").style.display = "inline";
+      }
+      else{
+        document.getElementById("locationER").style.display = "none";
+      }
+    }
+
+    if(document.getElementById("emailE") != null && document.getElementById("emailER") != null){
+      if(document.getElementById("emailE").value == ""){
+        invalidFields = true;
+        document.getElementById("emailER").style.display = "inline";
+      }
+      else{
+        document.getElementById("emailER").style.display = "none";
+      }
+    }
+
+    if(document.getElementById("phoneE") != null && document.getElementById("phoneER") != null){
+      if(document.getElementById("phoneE").value == ""){
+        invalidFields = true;
+        document.getElementById("phoneER").style.display = "inline";
+      }
+      else{
+        document.getElementById("phoneER").style.display = "none";
+      }
+    }
+
+    return invalidFields
+  }
+
+  function validateEmail(){
+    var x= document.getElementById("emailE").value;
+    var atpos=x.indexOf("@");
+    var dotpos=x.lastIndexOf(".");
+    if (atpos<1 || dotpos<atpos+2 || dotpos+2>=x.length)
+    {
+      document.getElementById("emailEV").style.display = "inline";
+      return false;
+    }else{
+      document.getElementById("emailEV").style.display = "none";
+      return true;
+    }
+  }
+
+  function validatePhone(){  
+    var x= document.getElementById("phoneE").value;
+    var phoneno = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;  
+    if(x.match(phoneno))  
+    {  
+      document.getElementById("phoneEV").style.display = "none";
+      return true;  
+    }  
+    else  
+    {  
+      document.getElementById("phoneEV").style.display = "inline"; 
+      return false;  
+    }  
+  }
+
+  function submitEdit(){
+    var invalid = validateEditedValues();
+    if(!invalid){
+      var emailValid = validateEmail();
+      var phoneValid = validatePhone();
+      if(emailValid && phoneValid){
+        var form = new convertFormToJSON(document.getElementById('EditProfile'));
+
+        var uid = getCookie('userID');
+
+        var name = form.name;
+        var title = form.title;
+        var company = form.company;
+        var location = form.location;
+        var email = form.email;
+        var phone = form.phone;
+
+        $.ajax({
+          type: "PUT",
+          url: "http://csse371-04.csse.rose-hulman.edu/User/",
+          data: JSON.stringify({"userID": uid, "field":"name", "value":name}),
+          success:function(data){
+          }, async: false
+        });
+
+        $.ajax({
+          type: "PUT",
+          url: "http://csse371-04.csse.rose-hulman.edu/User/",
+          data: JSON.stringify({"userID": uid, "field":"title", "value":title}),
+          success:function(data){
+          }, async: false
+        });
+
+        $.ajax({
+          type: "PUT",
+          url: "http://csse371-04.csse.rose-hulman.edu/User/",
+          data: JSON.stringify({"userID": uid, "field":"company", "value":company}),
+          success:function(data){
+          }, async: false
+        });
+
+        $.ajax({
+          type: "PUT",
+          url: "http://csse371-04.csse.rose-hulman.edu/User/",
+          data: JSON.stringify({"userID": uid, "field":"location", "value":location}),
+          success:function(data){
+          }, async: false
+        });
+
+        $.ajax({
+          type: "PUT",
+          url: "http://csse371-04.csse.rose-hulman.edu/User/",
+          data: JSON.stringify({"userID": uid, "field":"email", "value":email}),
+          success:function(data){
+          }, async: false
+        });
+
+        $.ajax({
+          type: "PUT",
+          url: "http://csse371-04.csse.rose-hulman.edu/User/",
+          data: JSON.stringify({"userID": uid, "field":"phone", "value":phone}),
+          success:function(data){
+            window.location.reload(true);
+          }
+        });
+
+        $('#editProfileModal').modal('hide');
+      }
+    }    
+  }
+
+  function grabUserID(userID){
+    setCookie("otherUserID", userID, "1");
+  }
