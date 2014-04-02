@@ -386,20 +386,10 @@
 {
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:0.4];
-    
-    CGRect oldFrame = self.menuView.frame;
-    CGRect oldFrameMain = self.slideView.frame;
-    
     if (moveRight)
-    {
-        self.menuView.frame = CGRectMake(0, oldFrame.origin.y, oldFrame.size.width, oldFrame.size.height);
-        self.slideView.frame = CGRectMake(oldFrameMain.origin.x+200,oldFrameMain.origin.y,oldFrameMain.size.width,oldFrameMain.size.height);
-    }
+        [self slideForView:self.menuView withOffset:200];
     else
-    {
-        self.menuView.frame = CGRectMake(-200, oldFrame.origin.y, oldFrame.size.width, oldFrame.size.height);
-        self.slideView.frame = CGRectMake(0,oldFrameMain.origin.y,oldFrameMain.size.width,oldFrameMain.size.height);
-    }
+        [self slideForView:self.menuView withOffset:-200];
     [UIView commitAnimations];
 }
 
@@ -407,23 +397,20 @@
 {
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:0.4];
-    
-    CGRect oldFrame = self.rightSlideView.frame;
+    if (moveLeft)
+        [self slideForView:self.rightSlideView withOffset:-350];
+    else
+        [self slideForView:self.rightSlideView withOffset:350];
+    [UIView commitAnimations];
+}
+
+-(void) slideForView:(UIView*)view withOffset:(NSInteger)offset
+{
+    CGRect oldFrame = view.frame;
     CGRect oldFrameMain = self.slideView.frame;
     
-    if (moveLeft)
-    {
-        self.rightSlideView.frame = CGRectMake(oldFrame.origin.x - 350, oldFrame.origin.y, oldFrame.size.width, oldFrame.size.height);
-        self.slideView.frame = CGRectMake(oldFrameMain.origin.x-350,oldFrameMain.origin.y,oldFrameMain.size.width,oldFrameMain.size.height);
-        
-    }
-    else
-    {
-        self.rightSlideView.frame = CGRectMake(oldFrame.origin.x + 350, oldFrame.origin.y, oldFrame.size.width, oldFrame.size.height);
-        self.slideView.frame = CGRectMake(oldFrameMain.origin.x + 350,oldFrameMain.origin.y,oldFrameMain.size.width,oldFrameMain.size.height);
-        
-    }
-    [UIView commitAnimations];
+    view.frame = CGRectMake(oldFrame.origin.x + offset, oldFrame.origin.y, oldFrame.size.width, oldFrame.size.height);
+    self.slideView.frame = CGRectMake(oldFrameMain.origin.x + offset,oldFrameMain.origin.y,oldFrameMain.size.width,oldFrameMain.size.height);
 }
 
 -(void) onDeleteAccount
