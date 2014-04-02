@@ -1,0 +1,26 @@
+
+var userCookie = getCookie("otherUserID");
+  
+
+getOtherUser(userCookie);
+
+function getUserID(userID){
+  setCookie("otherUserID", userID, "1");
+}
+function getOtherUser(userID){
+   $.ajax({
+        type: 'GET',
+        url: 'http://csse371-04.csse.rose-hulman.edu/User/' + userID,
+        success:function(data){
+          userInfo = JSON.parse(data);
+          document.getElementById("otherName").innerHTML = userInfo["name"];
+          document.getElementById("otherCompany").innerHTML = userInfo["company"];
+      document.getElementById("otherTitle").innerHTML = userInfo["title"];
+      document.getElementById("otherLocation").innerHTML = userInfo["location"];
+      document.getElementById("otherEmail").innerHTML = userInfo["email"];
+      document.getElementById("otherPhone").innerHTML = userInfo["phone"];
+
+        },
+        async: false
+      });
+  }
