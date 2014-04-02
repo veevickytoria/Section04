@@ -40,6 +40,24 @@
 }
 
 
+
+- (void)initNotificationFeed
+{
+    NSString *urlNotification = [NSString stringWithFormat:@"%@/User/Notification/%@", DATABASE_URL,[[NSUserDefaults standardUserDefaults] objectForKey:@"userID"]];
+    
+    urlNotification = [urlNotification stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *deserializedDictionaryNotification = [self.backendUtility getRequestForUrl:urlNotification];
+    
+    if (deserializedDictionaryNotification)
+    {
+        NSArray *jsonArray = [deserializedDictionaryNotification objectForKey:@"notifications"];
+        for(int i = 0; i < [jsonArray count]; i++){
+            NSDictionary* element = [jsonArray objectAtIndex:i];
+            [self.notificationFeed addObject:element];
+        }
+    }
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -55,68 +73,45 @@
     [self.headers addObject:@"Task"];
     [self.headers addObject:@"Miscellaneous"];
     
-//    [self.taskFeed addObject:@"Jim has invited you to Sprint Planning."];
-//    [self.taskFeed addObject:@"12:00 - 13:00, 10/25/13"];
-//    [self.meetingFeed addObject:@"Steve has assigned you Research Libraries"];
-//    [self.meetingFeed addObject:@"Due: 12:00, 10/26/13"];
-//    [self.notificationFeed addObject:@"Mary shared Meeting Minutes 9/21/13"];
+    [self initMeetingAndTaskFeed];
+    [self initNotificationFeed];
     
+}
+
+- (void)addTast:(NSDictionary *)element
+{
+    NSString *url;
+    NSInteger taskID =[[element objectForKey:@"id"] integerValue];
     
-    //For meetingFeed and taskFeed
+    url = [NSString stringWithFormat:@"%@/Task/%@", DATABASE_URL,[[NSNumber numberWithInt:taskID] stringValue]];
+    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *tastDeserializedDictionary = [self.backendUtility getRequestForUrl:url];
+    
+    if([tastDeserializedDictionary objectForKey:@"isCompleted"]){
+        [self.taskFeed addObject:element];
+    }
+}
+
+- (void)initMeetingAndTaskFeed
+{
     NSString *url = [NSString stringWithFormat:@"%@/User/Schedule/%@", DATABASE_URL,[[NSUserDefaults standardUserDefaults] objectForKey:@"userID"]];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
     
-    if (!deserializedDictionary)
-    {
-//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"schedule not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
-//        [alert show];
-    }
-    else
+    if (deserializedDictionary)
     {
         NSArray *jsonArray = [deserializedDictionary objectForKey:@"schedule"];
         for(int i = 0; i < [jsonArray count]; i++){
             NSDictionary* element = [jsonArray objectAtIndex:i];
-            
             if([[element objectForKey:@"type"] isEqualToString:@"meeting"]){
                 [self.meetingFeed addObject:element];
             }
             
             else {
-                NSInteger taskID =[[element objectForKey:@"id"] integerValue];
-                
-                url = [NSString stringWithFormat:@"%@/Task/%@", DATABASE_URL,[[NSNumber numberWithInt:taskID] stringValue]];
-                url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-                deserializedDictionary = [self.backendUtility getRequestForUrl:url];
-                
-                if([deserializedDictionary objectForKey:@"isCompleted"]){
-                    [self.taskFeed addObject:element];
-                }
+                [self addTast:element];
             }
         }
     }
-    
-    
-    //For notificationFeed
-    NSString *urlNotification = [NSString stringWithFormat:@"%@/User/Notification/%@", DATABASE_URL,[[NSUserDefaults standardUserDefaults] objectForKey:@"userID"]];
-
-    urlNotification = [urlNotification stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSDictionary *deserializedDictionaryNotification = [self.backendUtility getRequestForUrl:urlNotification];
-    
-    if (!deserializedDictionaryNotification)
-    {
-//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"notification not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
-//        [alert show];
-    }
-    else
-    {
-        NSArray *jsonArray = [deserializedDictionaryNotification objectForKey:@"notifications"];
-        for(int i = 0; i < [jsonArray count]; i++){
-            NSDictionary* element = [jsonArray objectAtIndex:i];
-            [self.notificationFeed addObject:element];
-        }
-    }
-    
 }
 
 

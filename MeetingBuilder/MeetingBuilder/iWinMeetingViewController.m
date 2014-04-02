@@ -69,12 +69,12 @@
         {
             for (NSDictionary* meetings in jsonArray)
             {
-                [self.meetingList addObject:[meetings objectForKey:@"title"]];
-                [self.meetingID addObject:[meetings objectForKey:@"id"]];
+                if(![self.meetingID containsObject:[meetings objectForKey:@"id"]]){
+                    [self.meetingList addObject:[meetings objectForKey:@"title"]];
+                    [self.meetingID addObject:[meetings objectForKey:@"id"]];
+                }
             }
             [self populateMeetingDetails];
-            
-            
         }
     }
 }

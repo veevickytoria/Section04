@@ -185,9 +185,6 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    //This is where edit on a row happen: indexPath.row
-    
-    //int index = (self.itemList.count - 1) - indexPath.row;
     NSDictionary *agendaItem = [self.itemList objectAtIndex:indexPath.row];
     NSString *agendaItemName = [agendaItem objectForKey:@"title"];
     NSString *agendaItemDuration = [agendaItem objectForKey:@"time"];
@@ -229,7 +226,6 @@
 -(void) updateAgendaInfo
 {
     NSString *url = [NSString stringWithFormat:@"%@/Agenda/", DATABASE_URL];
-    
     NSArray *keys = [NSArray arrayWithObjects:@"agendaID", @"title", @"meeting", @"user", @"content", nil];
     NSArray *objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.agendaID] stringValue], self.titleTextField.text, [[NSNumber numberWithInt:self.meetingID] stringValue], [[NSNumber numberWithInt:self.userID] stringValue], self.itemList, nil];
     NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
@@ -240,11 +236,10 @@
 
 -(void) saveNewAgenda
 {
+    NSString *url = [NSString stringWithFormat:@"%@/Agenda/", DATABASE_URL];
     NSArray *keys = [NSArray arrayWithObjects:@"title", @"user", @"content",nil];
     NSArray *objects = [NSArray arrayWithObjects: self.titleTextField.text,[[NSNumber numberWithInt:self.userID] stringValue], self.itemList, nil];
-    
     NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-    NSString *url = [NSString stringWithFormat:@"%@/Agenda/", DATABASE_URL];
     NSDictionary *deserializedDictionary = [self.backendUtility postRequestForUrl:url withDictionary:jsonDictionary];
     self.agendaID = [[deserializedDictionary objectForKey:@"agendaID"] integerValue];
 }
