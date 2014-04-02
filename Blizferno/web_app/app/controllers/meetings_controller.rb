@@ -1,3 +1,5 @@
+require 'meeting_api_wrapper'
+
 class MeetingsController < ApplicationController
 
 	before_filter :index
@@ -16,16 +18,9 @@ class MeetingsController < ApplicationController
 	#This function gets all meetings attached to a user and stores them as a JSON object that we can then access in our html and js files. 
 	def getMeetings
 
-		#This section of the function is making a call to the backend (a GET request) the so called "Rails way". First make sure there is access to the appropriate library. Then set the URL, send the request, and recieve the response.
-		require 'net/http'
-		url = URI.parse('http://csse371-04.csse.rose-hulman.edu/User/Meetings/' + @userID)
-		req = Net::HTTP::Get.new(url.path)
-		res = Net::HTTP.start(url.host, url.port) {|http|
-			http.request(req)
-		}
+		meeting_api_wrapper = MeetingApiWrapper.new
 
-		#This line is taking the response recieved from the backend (a json string) and parsing it into a json object.
-		getUserMeetings = JSON.parse(res.body)
+		getUserMeetings = JSON.parse(meeting_api_wrapper.get_user_meetings(@userID))
 
 		#The @ makes the variable accessible by our other files
 		@meetings = Array.new
@@ -38,12 +33,9 @@ class MeetingsController < ApplicationController
 
 		#A java version of the loop would look like this for(Object meeting : getUserMeetings['meetings'])
 		getUserMeetings['meetings'].each do |meeting|
-			url = URI.parse('http://csse371-04.csse.rose-hulman.edu/Meeting/' + meeting['id'].to_s)
-			req = Net::HTTP::Get.new(url.path)
-			res = Net::HTTP.start(url.host, url.port) {|http|
-				http.request(req)
-			}
-			meetingString = res.body
+			meetingID = meeting['id'].to_s
+
+			meetingString = meeting_api_wrapper.get_meeting(meetingID)
 
 			#Here we are attaching the meetingID to the JSON string the backend gives us so that later in our javascript we can know what meeting we are looking at. The [0..-2] is removing the last character in the string which is the closing brace '}' that indicates the end of the json object when we parse it in the next step.
 			meetingIdString = ',"meetingID":"'+meeting['id'].to_s+'"}';
@@ -59,3 +51,4 @@ class MeetingsController < ApplicationController
 
 	layout 'slate'
 end
+# in web_app/app/controllers

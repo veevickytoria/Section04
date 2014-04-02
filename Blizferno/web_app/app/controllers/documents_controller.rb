@@ -1,3 +1,5 @@
+require 'documents_api_wrapper'
+
 class DocumentsController < ApplicationController
 
 before_filter :index
@@ -11,45 +13,27 @@ before_filter :getDocuments
 	end
 
 	def getDocuments
+		documents_api_wrapper = DocumentsApiWrapper.new
 
-		require 'net/http'
-		userID = cookies[:userID]
-
-		url = URI.parse('http://csse371-04.csse.rose-hulman.edu/User/Agenda/' + userID)
-		req = Net::HTTP::Get.new(url.path)
-		res = Net::HTTP.start(url.host, url.port) {|http|
-			http.request(req)
-		}
-
-		@agendas = res.body
-		@agendasParsed = JSON.parse(res.body)
+		@agendas = documents_api_wrapper.get_user_agendas(@userID);
+		@agendasParsed = JSON.parse(@agendas)
 
 		userAgendaIDs = Array.new
 		@agendasParsed.each do |agenda|
 			userAgendaIDs.push(agenda['agendaID'])
 		end
 
-
-
-		url = URI.parse('http://csse371-04.csse.rose-hulman.edu/User/Notes/' + userID)
-		req = Net::HTTP::Get.new(url.path)
-		res = Net::HTTP.start(url.host, url.port) {|http|
-			http.request(req)
-		}
-
-		userNoteIDs = JSON.parse(res.body)
+		userNoteIDs = JSON.parse(documents_api_wrapper.get_user_notes(@userID))
 		@notes = Array.new
 		@notesParsed = Array.new
 
 		noteString = ''
 
 		userNoteIDs['notes'].each do |note|
-			url = URI.parse('http://csse371-04.csse.rose-hulman.edu/Note/' + note['noteID'].to_s)
-			req = Net::HTTP::Get.new(url.path)
-			res = Net::HTTP.start(url.host, url.port) {|http|
-				http.request(req)
-			}
-			noteString = res.body
+			noteID = note['noteID'].to_s
+
+			noteString = documents_api_wrapper.get_note(noteID)
+			
 			if !userAgendaIDs.include? note['noteID']
 				@notes.push(noteString)
 				@notesParsed.push(JSON.parse(noteString))

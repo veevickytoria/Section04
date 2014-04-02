@@ -113,7 +113,6 @@
 
 <!-- This is an example of how ruby code can be embedded in our files to provide support for logic such as loops or if statements. This loop generates the table of meetings by creating an individual row for each pass of the loop.
 -->
-
   <% for meeting in @meetingsParsed %>
     <tr>
 <!-- The onclick that is repeated on these three td tags is used to emulate click on the row itself. We can't just place a single onclick on the row because we wouldn't be able to click on the edit or delete icons without also counting as clicking on the row to bring up the view modal.

@@ -1,3 +1,5 @@
+require 'task_api_wrapper'
+
 class TasksController < ApplicationController
 
 	before_filter :index
@@ -11,30 +13,23 @@ class TasksController < ApplicationController
 	end
 
 	def getTasks
-		require 'net/http'
-		url = URI.parse('http://csse371-04.csse.rose-hulman.edu/User/Tasks/' + @userID)
-		req = Net::HTTP::Get.new(url.path)
-		res = Net::HTTP.start(url.host, url.port) {|http|
-			http.request(req)
-		}
-		getUserTasks = JSON.parse(res.body)
+		task_api_wrapper = TaskApiWrapper.new
+
+		getUserTasks = JSON.parse(task_api_wrapper.get_user_tasks(@userID))
 		@tasks = Array.new
 		@tasksParsed = Array.new
-		@taskString = ''
+		taskString = ''
 
 		getUserTasks['tasks'].each do |task|
-			url = URI.parse('http://csse371-04.csse.rose-hulman.edu/Task/' + task['id'].to_s)
-			req = Net::HTTP::Get.new(url.path)
-			res = Net::HTTP.start(url.host, url.port) {|http|
-				http.request(req)
-			}
-			@taskString = res.body
+			taskID = task['id'].to_s
+
+			taskString = task_api_wrapper.get_task(taskID)
 			taskIdString = ',"taskID":"'+task['id'].to_s+'"}';
 
-			@taskString = @taskString[0..-2] + taskIdString;
+			taskString = taskString[0..-2] + taskIdString;
 
-			@tasks.push(@taskString)
-			@tasksParsed.push(JSON.parse(@taskString))
+			@tasks.push(taskString)
+			@tasksParsed.push(JSON.parse(taskString))
 		end	
 	end
 

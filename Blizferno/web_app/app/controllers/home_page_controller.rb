@@ -1,3 +1,9 @@
+require 'preferences_api_wrapper'
+require 'meeting_api_wrapper'
+require 'task_api_wrapper'
+require 'group_api_wrapper'
+require 'project_api_wrapper'
+
 class HomePageController < ApplicationController
 
 	before_filter :index
@@ -18,45 +24,26 @@ class HomePageController < ApplicationController
 	end
 
   def getSettings
-    if (!cookies[:userID].blank?)
-      require 'net/http'
-      @userID = cookies[:userID]
+  	preferences_api_wrapper = PreferencesApiWrapper.new
+    settings = JSON.parse(preferences_api_wrapper.get_user_preferences(@userID))
 
-      url = URI.parse('http://csse371-04.csse.rose-hulman.edu/UserSettings/' + @userID)
-      req = Net::HTTP::Get.new(url.path)
-      res = Net::HTTP.start(url.host, url.port) {|http|
-        http.request(req)
-      }
-
-      settings = JSON.parse(res.body);
-
-      @taskVal = settings['tasks']
-      @groupVal = settings['groups']
-      @projectVal = settings['projects']
-      @meetingVal = settings['meetings']
-    end
+    @taskVal = settings['tasks']
+    @groupVal = settings['groups']
+    @projectVal = settings['projects']
+    @meetingVal = settings['meetings']
   end
 
 	def getTasks
-		require 'net/http'
-		url = URI.parse('http://csse371-04.csse.rose-hulman.edu/User/Tasks/' + @userID)
-		req = Net::HTTP::Get.new(url.path)
-		res = Net::HTTP.start(url.host, url.port) {|http|
-			http.request(req)
-		}
-		getUserTasks = JSON.parse(res.body)
+		task_api_wrapper = TaskApiWrapper.new
+		getUserTasks = JSON.parse(task_api_wrapper.get_user_tasks(@userID))
 		@tasks = Array.new
 		@tasksParsed = Array.new
 		@taskString = ''
 
 		getUserTasks['tasks'].each do |task|
-			url = URI.parse('http://csse371-04.csse.rose-hulman.edu/Task/' + task['id'].to_s)
-			req = Net::HTTP::Get.new(url.path)
-			res = Net::HTTP.start(url.host, url.port) {|http|
-				http.request(req)
-			}
-			@taskString = res.body
-			taskIdString = ',"taskID":"'+task['id'].to_s+'"}';
+			taskID = task['id'].to_s
+			@taskString = task_api_wrapper.get_task(taskID)
+			taskIdString = ',"taskID":"'+ taskID +'"}';
 
 			@taskString = @taskString[0..-2] + taskIdString;
 
@@ -66,42 +53,23 @@ class HomePageController < ApplicationController
 	end
 
 	def getGroups
-		# GET USER GROUPS
-		require 'net/http'
-		@UserID = cookies[:userID]
-
-		# get group IDs
-		url = URI.parse('http://csse371-04.csse.rose-hulman.edu/User/Groups/' + @UserID)
-		req = Net::HTTP::Get.new(url.path)
-		res = Net::HTTP.start(url.host, url.port) {|http|
-			http.request(req)
-		}
-
-		@groupIDs = JSON.parse(res.body)
+		group_api_wrapper = GroupApiWrapper.new
+		@groupIDs = JSON.parse(group_api_wrapper.get_user_groups(@userID))
 		@groups = Array.new
 
 		groupString = ''
 
 		@groupIDs['groups'].each do |group|
-			url = URI.parse('http://csse371-04.csse.rose-hulman.edu/Group/' + group['groupID'].to_s)
-			req = Net::HTTP::Get.new(url.path)
-			res = Net::HTTP.start(url.host, url.port) {|http|
-				http.request(req)
-			}
-			groupString = res.body
+			groupID = group['groupID'].to_s
+			groupString = group_api_wrapper.get_group(groupID)
 
 			@groups.push(JSON.parse(groupString))
 		end
 	end
 
 	def getMeetings
-		require 'net/http'
-		url = URI.parse('http://csse371-04.csse.rose-hulman.edu/User/Meetings/' + @userID)
-		req = Net::HTTP::Get.new(url.path)
-		res = Net::HTTP.start(url.host, url.port) {|http|
-			http.request(req)
-		}
-		getUserMeetings = JSON.parse(res.body)
+		meeting_api_wrapper = MeetingApiWrapper.new
+		getUserMeetings = JSON.parse(meeting_api_wrapper.get_user_meetings(@userID))
 		@meetings = Array.new
 		@meetingsParsed = Array.new
 		@meetingString = ''
@@ -109,13 +77,9 @@ class HomePageController < ApplicationController
 		
 
 		getUserMeetings['meetings'].each do |meeting|
-			url = URI.parse('http://csse371-04.csse.rose-hulman.edu/Meeting/' + meeting['id'].to_s)
-			req = Net::HTTP::Get.new(url.path)
-			res = Net::HTTP.start(url.host, url.port) {|http|
-				http.request(req)
-			}
-			@meetingString = res.body
-			meetingIdString = ',"meetingID":"'+meeting['id'].to_s+'"}';
+			meetingID = meeting['id'].to_s
+			@meetingString = meeting_api_wrapper.get_meeting(meetingID)
+			meetingIdString = ',"meetingID":"'+ meetingID +'"}';
 
 			@meetingString = @meetingString[0..-2] + meetingIdString;
 
@@ -127,14 +91,8 @@ class HomePageController < ApplicationController
 	end
 
 	def getProjects
-  	require 'net/http'
-	url = URI.parse('http://csse371-04.csse.rose-hulman.edu/User/Projects/' + @userID)
-	req = Net::HTTP::Get.new(url.path)
-	res = Net::HTTP.start(url.host, url.port) {|http|
-		http.request(req)
-	}
-
-	getUserProjects = JSON.parse(res.body)
+  	project_api_wrapper = ProjectApiWrapper.new
+	getUserProjects = JSON.parse(project_api_wrapper.get_user_projects(@userID))
 
 	@projects = Array.new
 	@projectsParsed = Array.new
@@ -142,14 +100,10 @@ class HomePageController < ApplicationController
 
 
 	getUserProjects['projects'].each do |project|
-		url = URI.parse('http://csse371-04.csse.rose-hulman.edu/Project/' + project['projectID'].to_s)
-		req = Net::HTTP::Get.new(url.path)
-		res = Net::HTTP.start(url.host, url.port) {|http|
-			http.request(req)
-		}
-		projectString = res.body
+		projectID = project['projectID'].to_s
+		projectString = project_api_wrapper.get_project(projectID)
 
-		projectIdString = ',"projectID":"'+project['projectID'].to_s+'"}';
+		projectIdString = ',"projectID":"'+ projectID +'"}';
 		projectString = projectString[0..-2] + projectIdString;
 
 
