@@ -69,13 +69,11 @@
     
     NSString *email = [[self.userNameField text] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     NSString *password = [self sha256HashFor:[self.passwordField text]];
-//    [self.loginDelegate login:1];
     
     
     
     if (password.length > 0 && email.length>0)
     {
-        //register
         NSArray *keys = [NSArray arrayWithObjects:@"email", @"password", nil];
         NSArray *objects = [NSArray arrayWithObjects:email, password,nil];
         NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
