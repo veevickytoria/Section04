@@ -40,7 +40,7 @@ public class ViewMeetingActivity extends Activity {
 	private static final String TAG = ViewMeetingActivity.class.getSimpleName();
 	private Meeting displayedMeeting;
 	private TextView meetingName, location, startDate, endDate, startTime,
-			endTime, description, attendeesCount;
+			endTime, description;
 	private ListView attendeesList;
 	private DateTimeFormatter dateFormat = MyDateUtils.JODA_APP_DATE_FORMAT;
 	private DateTimeFormatter timeFormat;

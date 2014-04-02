@@ -17,8 +17,6 @@ package com.meetingninja.csse.meetings;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.TimeZone;
-
 import objects.Meeting;
 import objects.User;
 
@@ -26,12 +24,10 @@ import org.joda.time.format.DateTimeFormatter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -50,13 +46,8 @@ import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.agenda.AgendaActivity;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
-import com.meetingninja.csse.database.MeetingDatabaseAdapter;
-import com.meetingninja.csse.database.UserDatabaseAdapter;
-import com.meetingninja.csse.database.local.SQLiteMeetingAdapter;
-import com.meetingninja.csse.database.volley.UserVolleyAdapter;
 import com.meetingninja.csse.extras.AlertDialogUtil;
 import com.meetingninja.csse.extras.MyDateUtils;
-import com.meetingninja.csse.user.ProfileFragment;
 
 public class EditMeetingActivity extends FragmentActivity implements
 		AsyncResponse<String> {
@@ -67,12 +58,10 @@ public class EditMeetingActivity extends FragmentActivity implements
 	private Button mFromTime;
 	private boolean is24, edit_mode;
 	private Calendar start, end;
-	private MeetingSaveTask creater = null;
 	private DateTimeFormatter timeFormat;
 	private DateTimeFormatter dateFormat = MyDateUtils.JODA_APP_DATE_FORMAT;
-	private static ArrayList<User> attendees;	
+	private static ArrayList<User> attendees;
 
-	private SQLiteMeetingAdapter mySQLiteAdapter;
 	private SessionManager session;
 	private Meeting displayedMeeting;
 
@@ -81,8 +70,6 @@ public class EditMeetingActivity extends FragmentActivity implements
 	public static final String EXTRA_DESCRIPTION = "description";
 	public static final String EXTRA_EDIT_MODE = "editing";
 	public static final String EXTRA_MEETING = Keys.Meeting.PARCEL;
-
-	private static final String TAG = EditMeetingActivity.class.getSimpleName();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -99,11 +86,10 @@ public class EditMeetingActivity extends FragmentActivity implements
 		}
 		session = SessionManager.getInstance();
 
-		is24 = android.text.format.DateFormat.is24HourFormat(getApplicationContext());
+		is24 = android.text.format.DateFormat
+				.is24HourFormat(getApplicationContext());
 		timeFormat = is24 ? MyDateUtils.JODA_24_TIME_FORMAT
 				: MyDateUtils.JODA_12_TIME_FORMAT;
-
-		mySQLiteAdapter = new SQLiteMeetingAdapter(this);
 
 		setupViews();
 
@@ -121,16 +107,20 @@ public class EditMeetingActivity extends FragmentActivity implements
 			start.setTimeInMillis(displayedMeeting.getStartTimeInMillis());
 			end.setTimeInMillis(displayedMeeting.getEndTimeInMillis());
 		}
-		mFromDate.setOnClickListener(new DateClickListener(mFromDate, start,end, mToDate, true, mFromTime, mToTime));
+		mFromDate.setOnClickListener(new DateClickListener(mFromDate, start,
+				end, mToDate, true, mFromTime, mToTime));
 		mFromDate.setText(dateFormat.print(start.getTimeInMillis()));
 
-		mToDate.setOnClickListener(new DateClickListener(mToDate, end, start,mFromDate, false, mToTime, mFromTime));
+		mToDate.setOnClickListener(new DateClickListener(mToDate, end, start,
+				mFromDate, false, mToTime, mFromTime));
 		mToDate.setText(dateFormat.print(end.getTimeInMillis()));
 
-		mFromTime.setOnClickListener(new TimeClickListener(mFromTime, start,this, end, mToTime, true));
+		mFromTime.setOnClickListener(new TimeClickListener(mFromTime, start,
+				this, end, mToTime, true));
 		mFromTime.setText(timeFormat.print(start.getTimeInMillis()));
 
-		mToTime.setOnClickListener(new TimeClickListener(mToTime, end, this,start, mFromTime, false));
+		mToTime.setOnClickListener(new TimeClickListener(mToTime, end, this,
+				start, mFromTime, false));
 		mToTime.setText(timeFormat.print(end.getTimeInMillis()));
 	}
 
@@ -267,7 +257,8 @@ public class EditMeetingActivity extends FragmentActivity implements
 
 	private void save() {
 		if (TextUtils.isEmpty(mTitle.getText())) {
-			Toast.makeText(this, "Empty meeting not created", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Empty meeting not created",
+					Toast.LENGTH_SHORT).show();
 			setResult(RESULT_CANCELED);
 			finish();
 		} else {
@@ -279,46 +270,35 @@ public class EditMeetingActivity extends FragmentActivity implements
 			title = mTitle.getText().toString();
 			location = mLocation.getText().toString();
 			desc = mDescription.getText().toString();
-			
 
 			newMeeting.setTitle(title);
 			newMeeting.setLocation(location);
 			newMeeting.setStartTime(start.getTimeInMillis());
 			newMeeting.setEndTime(end.getTimeInMillis());
 			newMeeting.setDescription(desc);
-			
-	
+
 			// TODO: newMeeting.setAttendance();
 			if (displayedMeeting != null) {
-				
-				
-				
-				
-				
-//				UserVolleyAdapter.fetchUserInfo(session.getUserID(), new AsyncResponse<User>() {
-//					@Override
-//					public void processFinish(User result) {
-//						EditMeetingActivity.addUser(result);
-//					}
-//				});
-//				
-//				System.out.println("mattend: "+mattend);
-//				String userID = mattend.getText().toString();
-//				
-//				UserVolleyAdapter.fetchUserInfo(userID, new AsyncResponse<User>() {
-//					@Override
-//					public void processFinish(User result) {
-//						EditMeetingActivity.addUser(result);
-//					}
-//				});				
-				
-				
-				
-				
-				
-				
-				
-				// mySQLiteAdapter.updateMeeting(newMeeting);
+
+				// UserVolleyAdapter.fetchUserInfo(session.getUserID(), new
+				// AsyncResponse<User>() {
+				// @Override
+				// public void processFinish(User result) {
+				// EditMeetingActivity.addUser(result);
+				// }
+				// });
+				//
+				// System.out.println("mattend: "+mattend);
+				// String userID = mattend.getText().toString();
+				//
+				// UserVolleyAdapter.fetchUserInfo(userID, new
+				// AsyncResponse<User>() {
+				// @Override
+				// public void processFinish(User result) {
+				// EditMeetingActivity.addUser(result);
+				// }
+				// });
+
 				msgIntent.putExtra("method", "update");
 				newMeeting.setID(displayedMeeting.getID());
 				UpdateMeetingTask task = new UpdateMeetingTask();
@@ -338,24 +318,27 @@ public class EditMeetingActivity extends FragmentActivity implements
 				displayedMeeting = newMeeting;
 				return;
 			}
-			Toast.makeText(this, String.format("Saving Meeting"), Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, String.format("Saving Meeting"),
+					Toast.LENGTH_SHORT).show();
 
 			msgIntent.putExtra(Keys.Meeting.PARCEL, newMeeting);
 			if (extras != null) {
-				msgIntent.putExtra("listPosition", extras.getInt("listPosition", -1));
+				msgIntent.putExtra("listPosition",
+						extras.getInt("listPosition", -1));
 			}
 			setResult(RESULT_OK, msgIntent);
 			finish();
 		}
 	}
-//	private static void addUser(User user){
-//		attendees.add(user);
-//		System.out.println("i hope it happens twice first");
-//	}
-//	private static void setUser(User newuser){
-//		System.out.println("got the user: "+newuser);
-//		user = newuser;
-//	}
+
+	// private static void addUser(User user){
+	// attendees.add(user);
+	// System.out.println("i hope it happens twice first");
+	// }
+	// private static void setUser(User newuser){
+	// System.out.println("got the user: "+newuser);
+	// user = newuser;
+	// }
 
 	// TODO: abstract date click listener and timeclick listener
 	private class DateClickListener implements OnClickListener,
@@ -395,7 +378,7 @@ public class EditMeetingActivity extends FragmentActivity implements
 			tempcal.set(year, monthOfYear, dayOfMonth,
 					cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE));
 			Calendar now = Calendar.getInstance();
-//			now.setTimeZone(TimeZone.getTimeZone("UTC"));
+			// now.setTimeZone(TimeZone.getTimeZone("UTC"));
 			now = Calendar.getInstance();
 			if (tempcal.after(now)) {
 				cal.set(year, monthOfYear, dayOfMonth);
@@ -479,7 +462,7 @@ public class EditMeetingActivity extends FragmentActivity implements
 			tempcal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
 					cal.get(Calendar.DAY_OF_MONTH), hourOfDay, minute);
 			Calendar now = Calendar.getInstance();
-//			now.setTimeZone(TimeZone.getTimeZone("UTC"));
+			// now.setTimeZone(TimeZone.getTimeZone("UTC"));
 			now = Calendar.getInstance();
 
 			if (tempcal.after(now)) {

@@ -9,11 +9,8 @@ import objects.SerializableUser;
 import objects.User;
 import objects.parcelable.UserParcel;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -53,11 +50,9 @@ public class EditGroupActivity extends Activity implements TokenListener {
 	EditText titleText;
 	EnhancedListView mListView;
 	private ArrayList<User> allUsers = new ArrayList<User>();
-	private final List<Contact> allContacts = new ArrayList<Contact>();
 	private List<User> bothUsers = new ArrayList<User>();
 
 	private AutoCompleteAdapter autoAdapter;
-	private ArrayList<String> addedIds = new ArrayList<String>();
 	private ArrayList<User> addedUsers = new ArrayList<User>();
 	private Dialog dlg;
 
@@ -65,31 +60,20 @@ public class EditGroupActivity extends Activity implements TokenListener {
 	// EditGroupActivity act = new EditGroupActivity();
 	// act.set
 	// }
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_edit_group);
-		setupActionBar();
-
-		Bundle data = getIntent().getExtras();
-		if (data != null)
-			displayedGroup = data.getParcelable(Keys.Group.PARCEL);
-		else
-			Log.e(TAG, "Error: Unable to get group from parcel");
-
-		titleText = (EditText) findViewById(R.id.group_edit_title);
-		titleText.setText(displayedGroup.getGroupTitle());
-
-		// allows keyboard to hide when not editing text
-		findViewById(R.id.group_edit_main_container).setOnTouchListener(new OnTouchListener() {
+	private void keyboardCanHide() {
+		findViewById(R.id.group_edit_main_container).setOnTouchListener(
+				new OnTouchListener() {
 					@Override
 					public boolean onTouch(View v, MotionEvent event) {
 						hideKeyboard();
 						return false;
 					}
 				});
+	}
 
-		mUserAdapter = new UserArrayAdapter(this, R.layout.list_item_user,displayedGroup.getMembers());
+	private void displayMembers() {
+		mUserAdapter = new UserArrayAdapter(this, R.layout.list_item_user,
+				displayedGroup.getMembers());
 		mListView = (EnhancedListView) findViewById(R.id.group_list);
 		mListView.setAdapter(mUserAdapter);
 		for (int k = 0; k < displayedGroup.getMembers().size(); k++) {
@@ -100,6 +84,14 @@ public class EditGroupActivity extends Activity implements TokenListener {
 				k--;
 			}
 		}
+	}
+
+	private void setupTitle() {
+		titleText = (EditText) findViewById(R.id.group_edit_title);
+		titleText.setText(displayedGroup.getGroupTitle());
+	}
+
+	private void deleteMember() {
 		mListView.setDismissCallback(new EnhancedListView.OnDismissCallback() {
 			@Override
 			public EnhancedListView.Undoable onDismiss(
@@ -120,25 +112,56 @@ public class EditGroupActivity extends Activity implements TokenListener {
 				};
 			}
 		});
-		mListView.setUndoHideDelay(5000);
+	}
+
+	private void clickingAndViewingAUser() {
 		mListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View v, int position,long id) {
+			public void onItemClick(AdapterView<?> arg0, View v, int position,
+					long id) {
 				User clicked = mUserAdapter.getItem(position);
 				Intent profileIntent = new Intent(v.getContext(),
 						ProfileActivity.class);
-				profileIntent.putExtra(Keys.User.PARCEL, new UserParcel(clicked));
+				profileIntent.putExtra(Keys.User.PARCEL,
+						new UserParcel(clicked));
 				startActivity(profileIntent);
 
 			}
 
 		});
-		mListView.enableSwipeToDismiss();
-		mListView.setSwipingLayout(R.id.list_group_item_frame_1);
+	}
 
-		mListView.setSwipeDirection(EnhancedListView.SwipeDirection.BOTH);
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_edit_group);
+		setupActionBar();
 
+		Bundle data = getIntent().getExtras();
+		if (data != null)
+			displayedGroup = data.getParcelable(Keys.Group.PARCEL);
+		else
+			Log.e(TAG, "Error: Unable to get group from parcel");
+
+		setupTitle();
+		keyboardCanHide();
+		displayMembers();
+		deleteMember();
+
+		mListView.setUndoHideDelay(5000);
+		clickingAndViewingAUser();
+
+		enableSwiping();
+		fetchUsers();
+
+		fetchContacts();
+
+		bothUsers.addAll(allUsers);
+
+	}
+
+	private void fetchUsers() {
 		UserVolleyAdapter.fetchAllUsers(new AsyncResponse<List<User>>() {
 			@Override
 			public void processFinish(List<User> result) {
@@ -146,16 +169,22 @@ public class EditGroupActivity extends Activity implements TokenListener {
 
 			}
 		});
+	}
 
-		new GetContactsTask(new AsyncResponse<List<Contact>>(){
+	private void fetchContacts() {
+		new GetContactsTask(new AsyncResponse<List<Contact>>() {
 			@Override
 			public void processFinish(List<Contact> result) {
-//				addContacts(result);
+				// addContacts(result);
 			}
 		}).execute((SessionManager.getInstance()).getUserID());
-		
-		bothUsers.addAll(allUsers);
+	}
 
+	private void enableSwiping() {
+		mListView.enableSwipeToDismiss();
+		mListView.setSwipingLayout(R.id.list_group_item_frame_1);
+
+		mListView.setSwipeDirection(EnhancedListView.SwipeDirection.BOTH);
 	}
 
 	@Override
@@ -165,19 +194,20 @@ public class EditGroupActivity extends Activity implements TokenListener {
 		return true;
 	}
 
-//	private void addContacts(List<Contact> allContacts){
-//		for(Contact c : allContacts){
-//			bothUsers.add(c.getContact());
-//			allUsers.remove(c.getContact());
-//		}
-//		//TODO: check if above code is useful?
-//		//TODO: add current user to list?
-//		bothUsers.addAll(allUsers);
-//	}
+	// private void addContacts(List<Contact> allContacts){
+	// for(Contact c : allContacts){
+	// bothUsers.add(c.getContact());
+	// allUsers.remove(c.getContact());
+	// }
+	// //TODO: check if above code is useful?
+	// //TODO: add current user to list?
+	// bothUsers.addAll(allUsers);
+	// }
 
 	private void hideKeyboard() {
 		InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-		inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+		inputMethodManager.hideSoftInputFromWindow(getCurrentFocus()
+				.getWindowToken(), 0);
 	}
 
 	private final View.OnClickListener gActionBarListener = new OnClickListener() {
@@ -192,9 +222,11 @@ public class EditGroupActivity extends Activity implements TokenListener {
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		// Make an Ok/Cancel ActionBar
-		View actionBarButtons = inflater.inflate(R.layout.actionbar_ok_cancel,new LinearLayout(this), false);
+		View actionBarButtons = inflater.inflate(R.layout.actionbar_ok_cancel,
+				new LinearLayout(this), false);
 
-		View cancelActionView = actionBarButtons.findViewById(R.id.action_cancel);
+		View cancelActionView = actionBarButtons
+				.findViewById(R.id.action_cancel);
 		cancelActionView.setOnClickListener(gActionBarListener);
 
 		View doneActionView = actionBarButtons.findViewById(R.id.action_done);
@@ -244,10 +276,12 @@ public class EditGroupActivity extends Activity implements TokenListener {
 	public void addMember(View view) {
 		dlg = new Dialog(this);
 		dlg.setTitle("Search by name or email:");
-		View autocompleteView = getLayoutInflater().inflate(R.layout.fragment_autocomplete, null);
-		final ContactTokenTextView input = (ContactTokenTextView) autocompleteView.findViewById(R.id.my_autocomplete);
-//		autoAdapter = new AutoCompleteAdapter(this, bothUsers);
-		autoAdapter = new AutoCompleteAdapter(this,allUsers);
+		View autocompleteView = getLayoutInflater().inflate(
+				R.layout.fragment_autocomplete, null);
+		final ContactTokenTextView input = (ContactTokenTextView) autocompleteView
+				.findViewById(R.id.my_autocomplete);
+		// autoAdapter = new AutoCompleteAdapter(this, bothUsers);
+		autoAdapter = new AutoCompleteAdapter(this, allUsers);
 		input.setAdapter(autoAdapter);
 		input.setTokenListener(this);
 		dlg.setContentView(autocompleteView);
