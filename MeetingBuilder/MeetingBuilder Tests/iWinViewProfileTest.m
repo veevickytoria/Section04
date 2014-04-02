@@ -33,13 +33,6 @@
     [super tearDown];
 }
 
-- (void)testCheckUserInfo
-{
-
-
-
-}
-
 - (void)testEditedUserInfo
 {
     [self.viewVC.editProfile sendActionsForControlEvents:UIControlEventTouchUpInside];
@@ -71,9 +64,5 @@
     
 }
 
-- (void)testCancelEditUser
-{
-  
-}
 
 @end
