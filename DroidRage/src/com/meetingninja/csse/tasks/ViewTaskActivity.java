@@ -34,10 +34,10 @@ import android.widget.TextView;
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
+import com.meetingninja.csse.database.volley.TaskVolleyAdapter;
 import com.meetingninja.csse.database.volley.UserVolleyAdapter;
 import com.meetingninja.csse.extras.MyDateUtils;
 import com.meetingninja.csse.tasks.tasks.DeleteTaskTask;
-import com.meetingninja.csse.tasks.tasks.GetTaskInfoTask;
 import com.meetingninja.csse.tasks.tasks.UpdateTaskTask;
 
 public class ViewTaskActivity extends Activity {
@@ -171,19 +171,16 @@ public class ViewTaskActivity extends Activity {
 					assignedText.setText("Unassigned");
 				}
 			}
-		} else{
-			//TODO:
-			
-			new GetTaskInfoTask(new AsyncResponse<Task>() {
-
+		} else{			
+			TaskVolleyAdapter.getTaskInfo(displayedTask.getID(), new AsyncResponse<Task>() {
 				@Override
 				public void processFinish(Task result) {
 					displayedTask = result;
 					setTask();
-					// TODO Auto-generated method stub			
 				}
+			});
+			
 
-			}).execute(displayedTask.getID());
 
 		}
 		

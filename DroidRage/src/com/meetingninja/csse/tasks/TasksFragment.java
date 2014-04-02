@@ -16,9 +16,7 @@
 package com.meetingninja.csse.tasks;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -49,9 +47,7 @@ import com.meetingninja.csse.R;
 import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
-import com.meetingninja.csse.extras.MyDateUtils;
 import com.meetingninja.csse.tasks.tasks.CreateTaskTask;
-import com.meetingninja.csse.tasks.tasks.GetTaskInfoTask;
 import com.meetingninja.csse.tasks.tasks.GetTaskListTask;
 
 public class TasksFragment extends Fragment implements	AsyncResponse<List<Task>> {
@@ -61,7 +57,6 @@ public class TasksFragment extends Fragment implements	AsyncResponse<List<Task>>
 	private TaskTypeAdapter typeAdapter;
 
 	private GetTaskListTask taskListfetcher = null;
-	private GetTaskInfoTask taskInfoFetcher = null;
 	private CreateTaskTask creator = null;
 	private SessionManager session;
 

@@ -17,13 +17,13 @@ import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.MeetingDatabaseAdapter;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
 import com.meetingninja.csse.database.volley.MeetingVolleyAdapter;
+import com.meetingninja.csse.database.volley.TaskVolleyAdapter;
 import com.meetingninja.csse.extras.MyDateUtils;
 import com.meetingninja.csse.meetings.MeetingFetcherTask;
 import com.meetingninja.csse.meetings.MeetingItemAdapter;
 import com.meetingninja.csse.meetings.ViewMeetingActivity;
 import com.meetingninja.csse.tasks.TaskItemAdapter;
 import com.meetingninja.csse.tasks.ViewTaskActivity;
-import com.meetingninja.csse.tasks.tasks.GetTaskInfoTask;
 
 import android.content.Context;
 import android.content.Intent;
@@ -83,12 +83,12 @@ public class HomePage extends Fragment {
 	}
 	
 	private void loadTask(Task task) {
-		new GetTaskInfoTask(new AsyncResponse<Task>() {
+		TaskVolleyAdapter.getTaskInfo(task.getID(), new AsyncResponse<Task>() {
 			@Override
 			public void processFinish(Task result) {
 				viewTask(result);
 			}
-		}).execute(task.getID());
+		});
 	}
 
 	private void setUp(Schedule sched) {

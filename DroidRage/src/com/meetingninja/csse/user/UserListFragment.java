@@ -83,7 +83,7 @@ public class UserListFragment extends Fragment implements TokenListener {
 
 		dbHelper = new SQLiteUserAdapter(getActivity());
 
-		setUpListView(v);
+		setUpAutoCompelete(v);
 		Bundle args = getArguments();
 		if (args != null && args.containsKey(Keys.Project.MEMBERS)) {
 			List<UserParcel> members = args
@@ -244,44 +244,12 @@ public class UserListFragment extends Fragment implements TokenListener {
 		fetcher.execute(session.getUserID());
 		// TODO: also remeve tempDeletedContacts
 	}
-
-	private void setUpListView(View v) {
-		mContactAdapter = new ContactArrayAdapter(getActivity(),
-				R.layout.list_item_user, contacts);
-
-		l = (EnhancedListView) v.findViewById(R.id.contacts_list);
-		l.setAdapter(mContactAdapter);
-		l.setEmptyView(v.findViewById(android.R.id.empty));
-		final EditText input = (EditText) v.findViewById(R.id.my_autocomplete);
-		input.addTextChangedListener(new TextWatcher() {
-
-			@Override
-			public void afterTextChanged(Editable arg0) {
-				String text = input.getText().toString().toLowerCase();
-				mContactAdapter.getFilter().filter(text);
-
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,	int after) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				// TODO Auto-generated method stub
-
-			}
-
-		});
+	private void setUpListOnDismiss(View v){
 		l.setDismissCallback(new de.timroes.android.listview.EnhancedListView.OnDismissCallback() {
 			@Override
-			public EnhancedListView.Undoable onDismiss(
-					EnhancedListView listView, final int position) {
+			public EnhancedListView.Undoable onDismiss(EnhancedListView listView, final int position) {
 
-				final Contact item = (Contact) mContactAdapter
-						.getItem(position);
+				final Contact item = (Contact) mContactAdapter.getItem(position);
 				tempDeletedContacts.add(item);
 				contacts.remove(item);
 				mContactAdapter.remove(item);
@@ -310,23 +278,43 @@ public class UserListFragment extends Fragment implements TokenListener {
 		});
 		l.setUndoHideDelay(5000);
 		l.setOnItemClickListener(new OnItemClickListener() {
-
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View v, int position,
-					long id) {
+			public void onItemClick(AdapterView<?> arg0, View v, int position,long id) {
 				User clicked = mContactAdapter.getItem(position).getContact();
-				Intent profileIntent = new Intent(v.getContext(),
-						ProfileActivity.class);
-				profileIntent.putExtra(Keys.User.PARCEL,
-						new UserParcel(clicked));
+				Intent profileIntent = new Intent(v.getContext(), ProfileActivity.class);
+				profileIntent.putExtra(Keys.User.PARCEL, new UserParcel(clicked));
 				startActivity(profileIntent);
 			}
-
 		});
 		l.enableSwipeToDismiss();
 		l.setSwipingLayout(R.id.list_group_item_frame_1);
 
 		l.setSwipeDirection(EnhancedListView.SwipeDirection.BOTH);
+	}
+
+	private void setUpAutoCompelete(View v) {
+		mContactAdapter = new ContactArrayAdapter(getActivity(), R.layout.list_item_user, contacts);
+
+		l = (EnhancedListView) v.findViewById(R.id.contacts_list);
+		l.setAdapter(mContactAdapter);
+		l.setEmptyView(v.findViewById(android.R.id.empty));
+		final EditText input = (EditText) v.findViewById(R.id.my_autocomplete);
+		input.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void afterTextChanged(Editable arg0) {
+				String text = input.getText().toString().toLowerCase();
+				mContactAdapter.getFilter().filter(text);
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,	int after) {
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+			}
+		});
+		setUpListOnDismiss(v);
 	}
 
 	final class RetContactsObj implements AsyncResponse<List<Contact>> {
