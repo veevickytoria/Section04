@@ -61,16 +61,6 @@
     XCTAssertTrue([contact.email isEqualToString:@"shahdk@rose-hulman.edu"], @"Search failed");
 }
 
-- (void)testValidLastNameSearch
-{
-    [self.addUsersVC filterContentForSearchText:@"Shah" scope:nil];
-    XCTAssertTrue(self.addUsersVC.filteredList.count == 1, @"Search failed");
-    
-    Contact *contact = (Contact *)[self.addUsersVC.filteredList objectAtIndex:0];
-    XCTAssertTrue([contact.name isEqualToString:@"Dharmin Shah"], @"Search failed");
-    XCTAssertTrue([contact.email isEqualToString:@"shahdk@rose-hulman.edu"], @"Search failed");
-}
-
 - (void)testValidEmailSearch
 {
     [self.addUsersVC filterContentForSearchText:@"shahdk" scope:nil];

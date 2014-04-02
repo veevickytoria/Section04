@@ -43,9 +43,4 @@
     XCTAssertTrue([self.projectVC.projectTitleField.text isEqualToString:@"Junior Project"], @"Check failed");
 }
 
-- (void)testFakeUserHasNoProjects
-{
-    XCTAssertTrue(self.projectListVC.projectList.count, @"Check failed");
-}
-
 @end
