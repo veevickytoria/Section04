@@ -60,9 +60,7 @@
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
-    
+    [super viewDidLoad];    
     self.headers = [[NSMutableArray alloc] init];
     self.taskFeed = [[NSMutableArray alloc] init];
     self.notificationFeed = [[NSMutableArray alloc] init];
