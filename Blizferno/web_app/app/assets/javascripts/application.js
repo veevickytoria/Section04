@@ -16,6 +16,8 @@
 //= require slate/bootswatch
 //= require turbolinks
 //= require json2.js
+//= require modaltypes.js
+//= require modalfactory.js
 
 function areCookiesEnabled(){
     var cookiesEnabled = (navigator.cookiesEnabled) ? true : false;

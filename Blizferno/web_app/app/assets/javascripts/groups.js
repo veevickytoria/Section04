@@ -193,65 +193,72 @@ function showEditModal(id){
 } 
 
 function showDeleteModal(ID){
-  deleteID = ID;
-  $('#deleteGroupModal').modal('show');
+  var ModalFactory = abstractModalFactory();
+  var modal = ModalFactory.createModal(DeleteModal, "GroupModal", ID);
+
+  modal.showModal("Group");
+
 }
 
-function hideDeleteModal(){
-  $.ajax({
-      type: 'DELETE',
-      url: 'http://csse371-04.csse.rose-hulman.edu/Group/' + deleteID,
-      success:function(data){
-      if(JSON.parse(data)["valid"] == "true"){
-        $('#deleteGroupModal').modal('hide');
-        window.location.reload(true);
-      }else{
-        alert('Delete Error');
-        $('#deleteGroupModal').modal('hide');
-      }
-    }
-  });
-}
+// function hideDeleteModal(){
+//   $.ajax({
+//       type: 'DELETE',
+//       url: 'http://csse371-04.csse.rose-hulman.edu/Group/' + deleteID,
+//       success:function(data){
+//       if(JSON.parse(data)["valid"] == "true"){
+//         $('#deleteGroupModal').modal('hide');
+//         window.location.reload(true);
+//       }else{
+//         alert('Delete Error');
+//         $('#deleteGroupModal').modal('hide');
+//       }
+//     }
+//   });
+// }
 
 function showGroupModalNoID(){
   showViewGroupModal(currentID);
 }
 
 function showViewGroupModal(ID){
-  var membInfo;
-  var membs = new Array();
-  currentID = ID;
-  $('#viewGroupModal').modal('hide');
-  $('#viewGroupModal').on('hidden.bs.modal', function() {
-    $(this).removeData('bs.modal');
-  });
+  // var membInfo;
+  // var membs = new Array();
+  // currentID = ID;
+  // $('#viewGroupModal').modal('hide');
+  // $('#viewGroupModal').on('hidden.bs.modal', function() {
+  //   $(this).removeData('bs.modal');
+  // });
 
-  $.ajax({
-    type: 'GET',
-    url: 'http://csse371-04.csse.rose-hulman.edu/Group/' + ID,
-    success:function(data){
-      groupArray = JSON.parse(data);
-    },
-    async: false
-  });
+  // $.ajax({
+  //   type: 'GET',
+  //   url: 'http://csse371-04.csse.rose-hulman.edu/Group/' + ID,
+  //   success:function(data){
+  //     groupArray = JSON.parse(data);
+  //   },
+  //   async: false
+  // });
   
-  for (i in groupArray['members']){
-    $.ajax({
-      type: 'GET',
-      url: 'http://csse371-04.csse.rose-hulman.edu/User/' + groupArray['members'][i]['userID'],
-      success:function(data){
-        membInfo = JSON.parse(data);
-        membs.push({'name':membInfo['name']});
-      },
-      async: false
-    });
-  }
+  // for (i in groupArray['members']){
+  //   $.ajax({
+  //     type: 'GET',
+  //     url: 'http://csse371-04.csse.rose-hulman.edu/User/' + groupArray['members'][i]['userID'],
+  //     success:function(data){
+  //       membInfo = JSON.parse(data);
+  //       membs.push({'name':membInfo['name']});
+  //     },
+  //     async: false
+  //   });
+  // }
 
-  document.getElementById("titleV").innerHTML = groupArray["groupTitle"];
-  populateTableRows(membs, "name", "membersV");
+  // document.getElementById("titleV").innerHTML = groupArray["groupTitle"];
+  // populateTableRows(membs, "name", "membersV");
+  var ModalFactory = abstractModalFactory();
+  var modal = ModalFactory.createModal(NinjaModal, "GroupModal");
+
+  modal.showModal();
   
-  $('#viewGroupModal').modal('show');
-  $('#editGroupModal').modal('hide');
+  // $('#viewGroupModal').modal('show');
+  // $('#editGroupModal').modal('hide');
 }
 
 function validateGroup(){
