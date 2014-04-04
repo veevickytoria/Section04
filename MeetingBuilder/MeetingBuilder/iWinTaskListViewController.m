@@ -101,6 +101,37 @@
     
 }
 
+- (NSDictionary *)getDeadLine:(NSData *)data
+{
+    NSError *jsonParsingError = nil;
+    NSDictionary *deserializedDictionary = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
+    [self.itemDetail addObject:[deserializedDictionary objectForKey:@"deadline"]];
+    return deserializedDictionary;
+}
+
+- (void)setTaskInfo:(NSDictionary *)deserializedDictionary
+{
+    iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    
+    NSManagedObjectContext *context = [appDelegate managedObjectContext];
+    
+    NSManagedObject *newTask = [NSEntityDescription insertNewObjectForEntityForName:@"Task" inManagedObjectContext:context];
+    NSError *error;
+    
+    [newTask setValue:[deserializedDictionary objectForKey:@"taskID"] forKey:@"taskID"];
+    [newTask setValue:[deserializedDictionary objectForKey:@"title"] forKey:@"title"];
+    [newTask setValue:[deserializedDictionary objectForKey:@"isCompleted"] forKey:@"isCompleted"];
+    [newTask setValue:[deserializedDictionary objectForKey:@"description"] forKey:@"desc"];
+    [newTask setValue:[deserializedDictionary objectForKey:@"deadline"] forKey:@"deadline"];
+    [newTask setValue:[deserializedDictionary objectForKey:@"dateCreated"] forKey:@"dateCreated"];
+    [newTask setValue:[deserializedDictionary objectForKey:@"dateAssigned"] forKey:@"dateAssigned"];
+    [newTask setValue:[NSNumber numberWithInt:self.userID] forKey:@"assignedTo"];
+    [newTask setValue:[deserializedDictionary objectForKey:@"assignedFrom"] forKey:@"assignedFrom"];
+    [newTask setValue:[deserializedDictionary objectForKey:@"createdBy"] forKey:@"createdBy"];
+    [context save:&error];
+}
+
+
 -(void)populateTaskDetails
 {
     for (int i = 0; i < [self.taskIDs count]; i++)
@@ -121,28 +152,9 @@
         }
         else
         {
-            NSError *jsonParsingError = nil;
-            NSDictionary *deserializedDictionary = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
-            [self.itemDetail addObject:[deserializedDictionary objectForKey:@"deadline"]];
-            
-            iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-            
-            NSManagedObjectContext *context = [appDelegate managedObjectContext];
-            
-            NSManagedObject *newTask = [NSEntityDescription insertNewObjectForEntityForName:@"Task" inManagedObjectContext:context];
-            NSError *error;
-
-            [newTask setValue:[deserializedDictionary objectForKey:@"taskID"] forKey:@"taskID"];
-            [newTask setValue:[deserializedDictionary objectForKey:@"title"] forKey:@"title"];
-            [newTask setValue:[deserializedDictionary objectForKey:@"isCompleted"] forKey:@"isCompleted"];
-            [newTask setValue:[deserializedDictionary objectForKey:@"description"] forKey:@"desc"];
-            [newTask setValue:[deserializedDictionary objectForKey:@"deadline"] forKey:@"deadline"];
-            [newTask setValue:[deserializedDictionary objectForKey:@"dateCreated"] forKey:@"dateCreated"];
-            [newTask setValue:[deserializedDictionary objectForKey:@"dateAssigned"] forKey:@"dateAssigned"];
-            [newTask setValue:[NSNumber numberWithInt:self.userID] forKey:@"assignedTo"];
-            [newTask setValue:[deserializedDictionary objectForKey:@"assignedFrom"] forKey:@"assignedFrom"];
-            [newTask setValue:[deserializedDictionary objectForKey:@"createdBy"] forKey:@"createdBy"];
-            [context save:&error];
+            NSDictionary *deserializedDictionary;
+            deserializedDictionary = [self getDeadLine:data];
+            [self setTaskInfo:deserializedDictionary];
         }
     }
 }

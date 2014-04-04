@@ -130,19 +130,6 @@
     self.headerLabel.text = @"View Meeting";
     self.saveAndAddMoreButton.hidden = YES;
     
-//    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Meeting" inManagedObjectContext:self.context];
-//    
-//    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-//    [request setEntity:entityDesc];
-//    
-//    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"meetingID = %d", self.meetingID];
-//    [request setPredicate:predicate];
-//    
-//    NSError *error;
-//    NSArray *result = [self.context executeFetchRequest:request
-//                                                  error:&error];
-    
-    
     NSString *url = [NSString stringWithFormat:@"%@/Meeting/%d",DATABASE_URL,self.meetingID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];

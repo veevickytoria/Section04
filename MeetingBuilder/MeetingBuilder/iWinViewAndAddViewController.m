@@ -276,7 +276,6 @@
 -(void)saveItem:(NSString *)name duration: (NSString*) duration description:(NSString*)
 description itemIndex: (NSInteger *) itemIndex
 {
-    //TODO: PUT DESCRIPTION BACK!!!
     if((NSInteger)self.agendaItemViewController.itemIndex > -1){
         NSDictionary *agendaItem = @{@"title" : name, @"time": duration, @"description": description, @"content": @""};
         [self.itemList replaceObjectAtIndex:self.agendaItemViewController.itemIndex withObject:agendaItem];
