@@ -26,6 +26,9 @@
 - (IBAction)onClickSaveAndAddMore;
 - (IBAction)onDeleteMeeting;
 - (IBAction)onClickCancel;
++(NSString *)getStringDateFromDate:(NSDate *)date;
++(NSString *)getStringTimeFromDate:(NSDate *)date;
++(NSString *)getStringDateTimeFromDate:(NSDate *)date;
 
 //- (IBAction)viewAgendas:(id)sender;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withUserID:(NSInteger)userID withMeetingID:(NSInteger)meetingID;

@@ -192,19 +192,41 @@
 }
 
 
++(NSString *)getStringTimeFromDate:(NSDate *)date
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    //Set the AM and PM symbols
+    [formatter setAMSymbol:@"AM"];
+    [formatter setPMSymbol:@"PM"];
+    //Specify only 2 M for month, 2 d for day and 2 h for hour
+    [formatter setDateFormat:@"hh:mm a"];
+    return [formatter stringFromDate:date];
+}
+
++(NSString *)getStringDateFromDate:(NSDate *)date
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    //Specify only 2 M for month, 2 d for day and 2 h for hour
+    [formatter setDateFormat:@"MM/dd/yyyy"];
+    return [formatter stringFromDate:date];
+}
+
++(NSString *)getStringDateTimeFromDate:(NSDate *)date
+{
+    return [NSString stringWithFormat:@"%@ %@", [self getStringDateFromDate:date], [self getStringTimeFromDate:date]];
+}
+
 
 -(void) initDateTimeLabels
 {
-//    self.meeting.datetime =[self.existMeeting objectForKey:@"datetime"];
-//    self.meeting.endDatetime = [self.existMeeting objectForKey:@"endDatetime"];
-    NSArray *startDateAndTime = [[self.existMeeting objectForKey:@"datetime"] componentsSeparatedByString:@" "];
-    NSArray *endDateAndTime = [[self.existMeeting objectForKey:@"endDatetime"] componentsSeparatedByString:@" "];
+    NSDate* startDateAndTime = [NSDate dateWithTimeIntervalSince1970:[[self.existMeeting objectForKey:@"datetime"] doubleValue]];
+    NSDate* endDateAndTime = [NSDate dateWithTimeIntervalSince1970:[[self.existMeeting objectForKey:@"endDatetime"] doubleValue]];
     
-    NSString *startdate = [startDateAndTime objectAtIndex:0];
-    NSString *starttime = [NSString stringWithFormat:@"%@ %@", [startDateAndTime objectAtIndex:1], [startDateAndTime objectAtIndex:2]];
+    NSString *startdate = [iWinScheduleViewMeetingViewController getStringDateFromDate:startDateAndTime];
+    NSString *starttime = [iWinScheduleViewMeetingViewController getStringTimeFromDate:startDateAndTime];
     
-    NSString *enddate = [endDateAndTime objectAtIndex:0];
-    NSString *endtime = [NSString stringWithFormat:@"%@ %@", [endDateAndTime objectAtIndex:1], [endDateAndTime objectAtIndex:2]];
+    NSString *enddate = [iWinScheduleViewMeetingViewController getStringDateFromDate:endDateAndTime];
+    NSString *endtime = [iWinScheduleViewMeetingViewController getStringTimeFromDate:endDateAndTime];
     
     self.startDateLabel.text = startdate;
     self.endDateLabel.text = enddate;
@@ -472,12 +494,23 @@
     }
     
     
+    NSString *startEpochString = [self makeEpochStringFromDateAndTimeStrings:self.startDateLabel.text timeString:self.startTimeLabel.text];
+    
+    NSString *endEpochString = [self makeEpochStringFromDateAndTimeStrings:self.endDateLabel.text timeString:self.endTimeLabel.text];
+    
+    
     NSArray *keys = [NSArray arrayWithObjects:@"userID", @"title", @"location", @"datetime", @"endDatetime", @"description", @"attendance", nil];
-    NSArray *objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.userID] stringValue], self.titleField.text, self.placeField.text, [NSString stringWithFormat:@"%@ %@", self.startDateLabel.text, self.startTimeLabel.text],[NSString stringWithFormat:@"%@ %@", self.endDateLabel.text, self.endTimeLabel.text], @"Test Meeting", userIDJsonDictionary, nil];
+    NSArray *objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.userID] stringValue], self.titleField.text, self.placeField.text, startEpochString, endEpochString, @"Test Meeting", userIDJsonDictionary, nil];
     NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
     NSString *url = [NSString stringWithFormat:@"%@/Meeting/", DATABASE_URL];
     NSDictionary *deserializedDictionary = [self.backendUtility postRequestForUrl:url withDictionary:jsonDictionary];
     self.meetingID = [[deserializedDictionary objectForKey:@"meetingID"] integerValue];
+}
+
+-(NSString *) makeEpochStringFromDateAndTimeStrings:(NSString*)dateString timeString:(NSString *)timeString
+{
+    NSTimeInterval interval = [[self makeDateFromText:dateString timeText:timeString] timeIntervalSince1970];
+    return [NSString stringWithFormat:@"%f", interval];
 }
 
 -(void) saveNewAgenda
@@ -526,6 +559,11 @@
 
 -(void) updateMeetingInfo
 {
+    
+    NSString *startEpochString = [self makeEpochStringFromDateAndTimeStrings:self.startDateLabel.text timeString:self.startTimeLabel.text];
+    
+    NSString *endEpochString = [self makeEpochStringFromDateAndTimeStrings:self.endDateLabel.text timeString:self.endTimeLabel.text];
+    
     NSString *url = [NSString stringWithFormat:@"%@/Meeting/", DATABASE_URL];
     
     NSArray *keys = [NSArray arrayWithObjects:@"meetingID", @"field", @"value", nil];
@@ -538,11 +576,11 @@
     jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
     [self.backendUtility putRequestForUrl:url withDictionary:jsonDictionary];
     
-    objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.meetingID] stringValue], @"dateTime", [NSString stringWithFormat:@"%@ %@", self.startDateLabel.text, self.startTimeLabel.text], nil];
+    objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.meetingID] stringValue], @"dateTime", startEpochString, nil];
     jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
     [self.backendUtility putRequestForUrl:url withDictionary:jsonDictionary];
     
-    objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.meetingID] stringValue], @"endDatetime", [NSString stringWithFormat:@"%@ %@", self.endDateLabel.text, self.endTimeLabel.text], nil];
+    objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.meetingID] stringValue], @"endDatetime", endEpochString, nil];
     jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
     [self.backendUtility putRequestForUrl:url withDictionary:jsonDictionary];
 }

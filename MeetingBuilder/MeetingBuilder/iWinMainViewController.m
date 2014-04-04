@@ -27,7 +27,6 @@
 @property (strong, nonatomic) iWinViewAndChangeSettingsViewController *settingsViewController;
 @property (strong, nonatomic) iWinViewProfileViewController *profileViewController;
 @property (strong, nonatomic) iWinOpenEarsModel *openEars;
-@property (strong, nonatomic) NSString *user;
 @property (nonatomic) NSInteger userID;
 @property BOOL movedRightView;
 @property BOOL movedView;
@@ -38,6 +37,22 @@
 @property (strong, nonatomic) iWinMenuViewController *menuViewController;
 @property (strong, nonatomic) iWinScheduleViewController *scheduleController;
 @end
+
+
+NSString* const REGISTER_VC_NIB_NAME = @"iWinRegisterViewController";
+NSString* const LOGIN_VC_NIB_NAME = @"iWinLoginViewController";
+NSString* const MENU_VC_NIB_NAME = @"iWinMenuViewController";
+NSString* const SCHEDULE_VC_NIB_NAME = @"iWinScheduleViewController";
+NSString* const HOME_SCREEN_VC_NIB_NAME = @"iWinHomeScreenViewController";
+NSString* const MEETING_VC_NIB_NAME = @"iWinMeetingViewController";
+NSString* const NOTES_VC_NIB_NAME = @"iWinNoteListViewController";
+NSString* const TASK_VC_NIB_NAME = @"iWinTaskListViewController";
+NSString* const SETTINGS_VC_NIB_NAME = @"iWinViewAndChangeSettingsViewController";
+NSString* const PROFILE_VC_NIB_NAME = @"iWinViewProfileViewController";
+const int LEFT_MENU_OFFSET = 200;
+const int RIGHT_MENU_OFFSET = 350;
+const float ANIMATION_DURATION = 0.4;
+
 
 @implementation iWinMainViewController
 
@@ -100,13 +115,13 @@
 
 -(void)initializeRegisterPage
 {
-    self.registerViewController = [[iWinRegisterViewController alloc] initWithNibName:@"iWinRegisterViewController" bundle:nil];
+    self.registerViewController = [[iWinRegisterViewController alloc] initWithNibName:REGISTER_VC_NIB_NAME bundle:nil];
     self.registerViewController.registerDelegate = self;
 }
 
 -(void)initializeLogin
 {
-    self.loginViewController = [[iWinLoginViewController alloc] initWithNibName:@"iWinLoginViewController" bundle:nil];
+    self.loginViewController = [[iWinLoginViewController alloc] initWithNibName:LOGIN_VC_NIB_NAME bundle:nil];
     self.loginViewController.loginDelegate = self;
     [self.mainView  addSubview:self.loginViewController.view];
     [self.loginViewController.view setBounds:self.mainView.bounds];
@@ -143,7 +158,7 @@
 
 -(void)initializeMenu
 {
-    self.menuViewController = [[iWinMenuViewController alloc] initWithNibName:@"iWinMenuViewController" bundle:nil];
+    self.menuViewController = [[iWinMenuViewController alloc] initWithNibName:MENU_VC_NIB_NAME bundle:nil];
     self.menuViewController.menuDelegate = self;
     [self.menuView addSubview:self.menuViewController.view];
     [self.menuViewController.view setBounds:self.menuView.bounds];
@@ -151,7 +166,7 @@
 
 -(void)initializeSchedule
 {
-    self.scheduleController = [[iWinScheduleViewController alloc] initWithNibName:@"iWinScheduleViewController" bundle:nil withUserID:self.userID];
+    self.scheduleController = [[iWinScheduleViewController alloc] initWithNibName:SCHEDULE_VC_NIB_NAME bundle:nil withUserID:self.userID];
     [self.rightSlideView addSubview:self.scheduleController.view];
     [self.scheduleController.view setBounds:self.rightSlideView.bounds];
 }
@@ -163,7 +178,7 @@
     self.userID = userID;
     [self.scheduleController setUserID:self.userID];
     [self.scheduleController loadScheduleView];
-    self.homeScreenViewController = [[iWinHomeScreenViewController alloc] initWithNibName:@"iWinHomeScreenViewController" bundle:nil withUserID:userID];
+    self.homeScreenViewController = [[iWinHomeScreenViewController alloc] initWithNibName:HOME_SCREEN_VC_NIB_NAME bundle:nil withUserID:userID];
     [self.mainView  addSubview:self.homeScreenViewController.view];
     [self.homeScreenViewController.view setBounds:self.mainView.bounds];
     
@@ -247,7 +262,7 @@
     [self enableSliding];
     [self removeTapRecognizer];
     self.userID = userID;
-    self.homeScreenViewController = [[iWinHomeScreenViewController alloc] initWithNibName:@"iWinHomeScreenViewController" bundle:nil withUserID:userID];
+    self.homeScreenViewController = [[iWinHomeScreenViewController alloc] initWithNibName:HOME_SCREEN_VC_NIB_NAME bundle:nil withUserID:userID];
     [self.mainView  addSubview:self.homeScreenViewController.view];
     [self.homeScreenViewController.view setBounds:self.mainView.bounds];
 }
@@ -310,7 +325,7 @@
 - (void)goToHomePage
 {
     [self prepareForControllerChange];
-    self.homeScreenViewController = [[iWinHomeScreenViewController alloc] initWithNibName:@"iWinHomeScreenViewController" bundle:nil];
+    self.homeScreenViewController = [[iWinHomeScreenViewController alloc] initWithNibName:HOME_SCREEN_VC_NIB_NAME bundle:nil withUserID:self.userID];
     [self.mainView  addSubview:self.homeScreenViewController.view];
     [self.homeScreenViewController.view setBounds:self.mainView.bounds];
     [self.scheduleController setUserID:self.userID];
@@ -322,7 +337,7 @@
     [self removeSubViews];
     [self removeTapRecognizer];
     [self disableSliding];
-    self.loginViewController = [[iWinLoginViewController alloc] initWithNibName:@"iWinLoginViewController" bundle:nil];
+    self.loginViewController = [[iWinLoginViewController alloc] initWithNibName:LOGIN_VC_NIB_NAME bundle:nil];
     [self.mainView  addSubview:self.loginViewController.view];
     [self.loginViewController.view setBounds:self.mainView.bounds];
     self.loginViewController.loginDelegate = self;
@@ -344,7 +359,7 @@
 - (void)goToMeetings
 {
     [self prepareForControllerChange];
-    self.meetingListViewController = [[iWinMeetingViewController alloc] initWithNibName:@"iWinMeetingViewController" bundle:nil withID:self.userID];
+    self.meetingListViewController = [[iWinMeetingViewController alloc] initWithNibName:MEETING_VC_NIB_NAME bundle:nil withID:self.userID];
     [self.mainView  addSubview:self.meetingListViewController.view];
     [self.meetingListViewController.view setBounds:self.mainView.bounds];
     self.meetingListViewController.reloadScheduleDelegate = self.scheduleController;
@@ -353,7 +368,7 @@
 - (void)goToNotes
 {
     [self prepareForControllerChange];
-    self.noteViewController = [[iWinNoteListViewController alloc] initWithNibName:@"iWinNoteListViewController" bundle:nil withUserID:self.userID];
+    self.noteViewController = [[iWinNoteListViewController alloc] initWithNibName:NOTES_VC_NIB_NAME bundle:nil withUserID:self.userID];
     [self.mainView addSubview:self.noteViewController.view];
     [self.noteViewController.view setBounds:self.mainView.bounds];
 }
@@ -361,7 +376,7 @@
 - (void)goToTasks
 {
     [self prepareForControllerChange];
-    self.taskListViewController = [[iWinTaskListViewController alloc] initWithNibName:@"iWinTaskListViewController" bundle:nil userID:self.userID];
+    self.taskListViewController = [[iWinTaskListViewController alloc] initWithNibName:TASK_VC_NIB_NAME bundle:nil userID:self.userID];
     [self.mainView  addSubview:self.taskListViewController.view];
     [self.taskListViewController.view setBounds:self.mainView.bounds];
 }
@@ -369,7 +384,7 @@
 - (void)goToSettings
 {
     [self prepareForControllerChange];
-    self.settingsViewController = [[iWinViewAndChangeSettingsViewController alloc] initWithNibName:@"iWinViewAndChangeSettingsViewController" bundle:nil withID:self.userID];
+    self.settingsViewController = [[iWinViewAndChangeSettingsViewController alloc] initWithNibName:SETTINGS_VC_NIB_NAME bundle:nil withID:self.userID];
     [self.mainView  addSubview:self.settingsViewController.view];
     [self.settingsViewController.view setBounds:self.mainView.bounds];
     self.settingsViewController.settingsDelegate = self;
@@ -377,7 +392,7 @@
 
 - (void)goToProfile{
     [self prepareForControllerChange];
-    self.profileViewController = [[iWinViewProfileViewController alloc] initWithNibName:@"iWinViewProfileViewController" bundle:nil withID: self.userID];
+    self.profileViewController = [[iWinViewProfileViewController alloc] initWithNibName:PROFILE_VC_NIB_NAME bundle:nil withID: self.userID];
     [self.mainView  addSubview:self.profileViewController.view];
     [self.profileViewController.view setBounds:self.mainView.bounds];
 }
@@ -385,22 +400,22 @@
 -(void)animateSlidingMenu:(BOOL)moveRight
 {
     [UIView beginAnimations:nil context:NULL];
-    [UIView setAnimationDuration:0.4];
+    [UIView setAnimationDuration:ANIMATION_DURATION];
     if (moveRight)
-        [self slideForView:self.menuView withOffset:200];
+        [self slideForView:self.menuView withOffset:LEFT_MENU_OFFSET];
     else
-        [self slideForView:self.menuView withOffset:-200];
+        [self slideForView:self.menuView withOffset:-LEFT_MENU_OFFSET];
     [UIView commitAnimations];
 }
 
 -(void)animateRightSlidingMenu:(BOOL)moveLeft
 {
     [UIView beginAnimations:nil context:NULL];
-    [UIView setAnimationDuration:0.4];
+    [UIView setAnimationDuration:ANIMATION_DURATION];
     if (moveLeft)
-        [self slideForView:self.rightSlideView withOffset:-350];
+        [self slideForView:self.rightSlideView withOffset:-RIGHT_MENU_OFFSET];
     else
-        [self slideForView:self.rightSlideView withOffset:350];
+        [self slideForView:self.rightSlideView withOffset:RIGHT_MENU_OFFSET];
     [UIView commitAnimations];
 }
 
