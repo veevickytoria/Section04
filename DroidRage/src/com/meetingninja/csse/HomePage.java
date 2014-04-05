@@ -2,8 +2,6 @@ package com.meetingninja.csse;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import objects.Meeting;
@@ -14,18 +12,14 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
-import com.meetingninja.csse.database.MeetingDatabaseAdapter;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
 import com.meetingninja.csse.database.volley.MeetingVolleyAdapter;
 import com.meetingninja.csse.database.volley.TaskVolleyAdapter;
-import com.meetingninja.csse.extras.MyDateUtils;
-import com.meetingninja.csse.meetings.MeetingFetcherTask;
 import com.meetingninja.csse.meetings.MeetingItemAdapter;
 import com.meetingninja.csse.meetings.ViewMeetingActivity;
 import com.meetingninja.csse.tasks.TaskItemAdapter;
 import com.meetingninja.csse.tasks.ViewTaskActivity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -34,9 +28,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 public class HomePage extends Fragment {
 
@@ -56,6 +48,7 @@ public class HomePage extends Fragment {
 		setHasOptionsMenu(true);
 
 		session = SessionManager.getInstance();
+		setUp();
 		getSchedule();
 
 		return v;
@@ -91,18 +84,18 @@ public class HomePage extends Fragment {
 		});
 	}
 
-	private void setUp(Schedule sched) {
+	private void setUp() {
 		meetingList = (ListView) v.findViewById(R.id.homepage_meetings);
 		taskList = (ListView) v.findViewById(R.id.homepage_tasks);
 		taskAdpt = new TaskItemAdapter(getActivity(), R.layout.list_item_task,tasks, false);
 		meetingAdpt = new MeetingItemAdapter(getActivity(),	R.layout.list_item_meeting, meetings);
 
 		taskList.setAdapter(taskAdpt);
-		taskAdpt.addAll(sched.getTasks());
+		taskAdpt.addAll(tasks);
 		taskAdpt.notifyDataSetChanged();
 
 		meetingList.setAdapter(meetingAdpt);
-		meetingAdpt.addAll(sched.getMeetings());
+		meetingAdpt.addAll(meetings);
 		meetingAdpt.notifyDataSetChanged();
 
 		meetingList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -121,6 +114,12 @@ public class HomePage extends Fragment {
 				loadTask(t);
 			}
 		});
+	}
+	private void setSched(Schedule sched){
+		taskAdpt.addAll(sched.getTasks());
+		meetingAdpt.addAll(sched.getMeetings());
+		taskAdpt.notifyDataSetChanged();
+		meetingAdpt.notifyDataSetChanged();
 	}
 
 	private void getSchedule() {
@@ -142,7 +141,7 @@ public class HomePage extends Fragment {
 
 			@Override
 			public void onPostExecute(Schedule result) {
-				setUp(result);
+				setSched(result);
 			}
 		}.execute();
 	}

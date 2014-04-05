@@ -58,13 +58,12 @@ public class ViewMeetingActivity extends Activity {
 		if (extras != null) {
 			displayedMeeting = extras.getParcelable(Keys.Meeting.PARCEL);
 		} else {
-			Log.w(TAG, "Error: Unable to find Task Parcel");
+			Log.w(TAG, "Error: Unable to find Meeting Parcel");
 		}
 		is24 = android.text.format.DateFormat
 				.is24HourFormat(getApplicationContext());
 		timeFormat = is24 ? MyDateUtils.JODA_24_TIME_FORMAT
 				: MyDateUtils.JODA_12_TIME_FORMAT;
-		System.out.println("got to this???");
 		setupViews();
 		setMeeting();
 	}
@@ -84,16 +83,19 @@ public class ViewMeetingActivity extends Activity {
 
 	private void setMeeting() {
 		if (displayedMeeting != null) {
+			Long sTime = displayedMeeting.getStartTimeInMillis();
+			Long eTime = displayedMeeting.getEndTimeInMillis();
+			
 			meetingName.setText(displayedMeeting.getTitle());
-			String format = dateFormat.print(displayedMeeting
-					.getStartTimeInMillis());
+			String format = dateFormat.print(sTime);
 			startDate.setText(format);
-			format = timeFormat.print(displayedMeeting.getStartTimeInMillis());
+			format = timeFormat.print(sTime);
 			startTime.setText(format);
-			format = dateFormat.print(displayedMeeting.getEndTimeInMillis());
+			format = dateFormat.print(eTime);
 			endDate.setText(format);
-			format = timeFormat.print(displayedMeeting.getEndTimeInMillis());
+			format = timeFormat.print(eTime);
 			endTime.setText(format);
+			
 			location.setText(displayedMeeting.getLocation());
 			description.setText(displayedMeeting.getDescription());
 			setAttendees(displayedMeeting.getAttendance());
@@ -102,7 +104,7 @@ public class ViewMeetingActivity extends Activity {
 
 	private void setAttendees(ArrayList<User> attendance) {
 		this.attendance.clear();
-		this.attendance.addAll(attendance);
+//		this.attendance.addAll(attendance);
 		this.adpt.notifyDataSetChanged();
 	}
 
@@ -111,7 +113,6 @@ public class ViewMeetingActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.menu_view_meeting, menu);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-		System.out.println("makes it here?");
 		return true;
 	}
 
@@ -120,8 +121,8 @@ public class ViewMeetingActivity extends Activity {
 		if (requestCode == 5) {
 			if (resultCode == RESULT_OK) {
 				if (data != null) {
-					displayedMeeting = data
-							.getParcelableExtra(Keys.Meeting.PARCEL);
+					displayedMeeting = data.getParcelableExtra(Keys.Meeting.PARCEL);
+					getIntent().putExtra(Keys.Meeting.PARCEL, displayedMeeting);
 					setMeeting();
 					this.resultCode = resultCode;
 				}
@@ -155,8 +156,7 @@ public class ViewMeetingActivity extends Activity {
 	private void edit() {
 		Intent editMeeting = new Intent(ViewMeetingActivity.this,
 				EditMeetingActivity.class);
-
-		editMeeting.putExtras(extras);
+		editMeeting.putExtra(Keys.Meeting.PARCEL, displayedMeeting);
 		startActivityForResult(editMeeting, 5);
 	}
 

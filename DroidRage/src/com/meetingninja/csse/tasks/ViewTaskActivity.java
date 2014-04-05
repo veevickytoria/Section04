@@ -108,6 +108,7 @@ public class ViewTaskActivity extends Activity {
 			if (resultCode == RESULT_OK) {
 				if (data != null) {
 					displayedTask = data.getParcelableExtra(Keys.Task.PARCEL);
+					getIntent().putExtra(Keys.Task.PARCEL, displayedTask);
 					setTask();
 					UpdateTaskTask tUpdate = new UpdateTaskTask();
 					tUpdate.updateTask(displayedTask);
