@@ -31,12 +31,14 @@ function NinjaModal(documentID, objectID){
 		},
 
 		addText: function(value, itemClass, documentPosition){
+			var span = document.createElement("span");
 			var text = document.createTextNode(value);
 			if(itemClass != ""){
-				text.classname = itemClass;
+				span.setAttribute("class", itemClass);
 			}
+			span.appendChild(text);
 			var doc = document.getElementById(documentPosition);
-			doc.appendChild(text);
+			doc.appendChild(span);
 			doc.appendChild(document.createElement("br"));
 		},
 
@@ -55,16 +57,26 @@ function DeleteModal(documentID, deleteID){
 	var parentAddText = deleteModal.addText;
 
 	deleteModal.showModal = function(object){
+		deleteModal.createHeader(object);
 		deleteModal.createBody(object);
-		deleteModal.createFooter();
+		deleteModal.createFooter(object);
 		parentShow.call(this);
+	}
+
+	deleteModal.createHeader = function(object){
+		var header = document.createElement("h1");
+		header.setAttribute("class", "modal-title");
+		var text = document.createTextNode("Delete " + object);
+		header.appendChild(text);
+		var doc = document.getElementById("header");
+		doc.appendChild(header);
 	}
 
 	deleteModal.createBody = function(object){
 		parentAddText.call(this,"Are you sure you want to delete this " + object + "?", "viewLabel", "body");
 	}
 
-	deleteModal.createFooter = function(){
+	deleteModal.createFooter = function(object){
 		// Close button
 		var element = document.createElement("button");
 		element.setAttribute("class", "btn btn-primary");
@@ -74,22 +86,21 @@ function DeleteModal(documentID, deleteID){
 		var doc = document.getElementById("footer");
 		doc.appendChild(element);
 
-		// // ActionButton
-		var element = document.createElement("input");
-		element.setAttribute("type", "button");
-		element.onclick = deleteModal.executeAction();
-		element.setAttribute("class", "btn btn-primary");
-		element.value = "Delete";
+		// ActionButton
+		var element2 = document.createElement("input");
+		element2.setAttribute("type", "button");
+		element2.onclick = deleteModal.executeAction(object);
+		element2.setAttribute("class", "btn btn-primary");
+		element2.value = "Delete";
 
-		var doc = document.getElementById("footer");
-		doc.appendChild(element);
+		doc.appendChild(element2);
 
 	}
 
-	deleteModal.executeAction = function(){
+	deleteModal.executeAction = function(object){
 		$.ajax({
 		    type: 'DELETE',
-		    url: 'http://csse371-04.csse.rose-hulman.edu/Group/' + deleteID,
+		    url: 'http://csse371-04.csse.rose-hulman.edu/' + object + '/' + deleteID,
 		    success:function(data){
 			    if(JSON.parse(data)["valid"] == "true"){
 			    	this.close;
