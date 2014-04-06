@@ -364,9 +364,6 @@
     self.userViewController.view.superview.bounds = CGRectMake(MODAL_XOFFSET, MODAL_YOFFSET, MODAL_WIDTH, MODAL_HEIGHT);
 }
 
-- (IBAction)onViewMySchedule {
-}
-
 -(void)selectedUsers:(NSMutableArray *)userList
 {
     self.userList = userList;
