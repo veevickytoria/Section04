@@ -182,10 +182,8 @@
 +(NSString *)getStringTimeFromDate:(NSDate *)date
 {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    //Set the AM and PM symbols
     [formatter setAMSymbol:@"AM"];
     [formatter setPMSymbol:@"PM"];
-    //Specify only 2 M for month, 2 d for day and 2 h for hour
     [formatter setDateFormat:@"hh:mm a"];
     return [formatter stringFromDate:date];
 }
@@ -225,9 +223,9 @@
     self.endDate = [self.dateFormatter dateFromString:enddate];
 }
 
--(Contact *)getContactForID:(NSString*)userID
+-(Contact *)getContactForID:(NSInteger)userID
 {
-    NSString *url = [NSString stringWithFormat:@"%@/User/%@", DATABASE_URL,userID];
+    NSString *url = [NSString stringWithFormat:@"%@/User/%d", DATABASE_URL,userID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
     if (!deserializedDictionary)
@@ -262,7 +260,7 @@
 
     for (int i=0; i<[attendeeArray count]; i++)
     {
-        [self.userList addObject:[self getContactForID:(NSString *)attendeeArray[i]]];
+        [self.userList addObject:[self getContactForID:[attendeeArray[i] integerValue]]];
     }
 }
 
@@ -332,11 +330,6 @@
     }
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
 - (IBAction)onAddAgenda
 {
@@ -368,10 +361,10 @@
 {
     self.userList = userList;
     [self.attendeeTableView reloadData];
-    [self getSuggestedTime];
+    //[self formatTime:[self getSuggestedTime]];
 }
 
--(void)getSuggestedTime {
+-(NSDate*)getSuggestedTime {
     int index;
     int times[10];
     
@@ -379,7 +372,12 @@
         times[a] = 0;
     }
     
-    for (Contact *c in self.userList){
+    Contact *c;
+    if (self.userList.count == 0){
+        c = [self getContactForID:self.userID];
+    }
+    for (Contact *contact in self.userList){
+        c = contact;
         NSString *url = [NSString stringWithFormat:@"%@/User/Schedule/%d", DATABASE_URL,[c.userID intValue]];
         url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
@@ -454,14 +452,7 @@
     NSString* hrStr = [NSString stringWithFormat:@"%d:00", min];
     NSDate* stDateTime = [nsdf dateFromString:hrStr];
     
-    [nsdf setDateFormat:@"hh:mm a"];
-    NSString* strDateTime = [nsdf stringFromDate:stDateTime];
-    
-    NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
-    [outputFormatter setDateFormat:@"hh:mm a"];
-    
-    //self.startDate = [outputFormatter dateFromString:strDateTime];
-    self.startTimeLabel.text = strDateTime;
+    return stDateTime;
 }
 
 -(void) saveNewMeeting
@@ -691,8 +682,39 @@
     NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
     [outputFormatter setDateFormat:@"hh:mm a"];
     
-    [self.startTimeLabel setText:[outputFormatter stringFromDate:self.datePicker.date]];
+    NSDateComponents *components = [[NSCalendar currentCalendar] components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:self.startDate];
+    NSDate *dateOne = [[NSCalendar currentCalendar] dateFromComponents:components];
+    components = [[NSCalendar currentCalendar] components: NSYearCalendarUnit |  NSMonthCalendarUnit | NSDayCalendarUnit fromDate:[NSDate date]];
+    NSDate *dateTwo = [[NSCalendar currentCalendar] dateFromComponents:components];
+    components = [[NSCalendar currentCalendar] components: NSHourCalendarUnit |  NSMinuteCalendarUnit fromDate:self.datePicker.date];
+    NSDate *startTimeDate = [[NSCalendar currentCalendar] dateFromComponents:components];
+    
+    if ([dateTwo compare:dateOne] == NSOrderedSame){
+        
+        
+        
+        components = [[NSCalendar currentCalendar] components: NSHourCalendarUnit |  NSMinuteCalendarUnit fromDate:[NSDate date]];
+        dateTwo = [[NSCalendar currentCalendar] dateFromComponents:components];
+        
+        if ([startTimeDate compare:dateTwo] == NSOrderedSame || NSOrderedDescending){
+            [self.startTimeLabel setText:[outputFormatter stringFromDate:self.datePicker.date]];
+        }
+    }
+    else {
+        [self.startTimeLabel setText:[outputFormatter stringFromDate:self.datePicker.date]];
+    }
+    
+    components = [[NSCalendar currentCalendar] components: NSHourCalendarUnit |  NSMinuteCalendarUnit fromDate:[outputFormatter dateFromString:self.endTimeLabel.text]];
+    NSDate *endTimeDate = [[NSCalendar currentCalendar] dateFromComponents:components];
+    
+    if ([endTimeDate compare:startTimeDate] == NSOrderedAscending || NSOrderedSame){
+        
+        NSDate *datePlusFiveMinutes = [startTimeDate dateByAddingTimeInterval:300];
+        self.endTimeLabel.text = [outputFormatter stringFromDate:datePlusFiveMinutes];
+    }
+    
     [self.popOverController dismissPopoverAnimated:YES];
+    
 }
 
 -(void) endTimeClicked
@@ -729,7 +751,26 @@
     NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
     [outputFormatter setDateFormat:@"hh:mm a"];
     
-    [self.endTimeLabel setText:[outputFormatter stringFromDate:self.enddatePicker.date]];
+    NSDateComponents *components = [[NSCalendar currentCalendar] components:NSHourCalendarUnit | NSMinuteCalendarUnit fromDate:self.startDate];
+    NSDate *dateOne = [[NSCalendar currentCalendar] dateFromComponents:components];
+    components = [[NSCalendar currentCalendar] components: NSHourCalendarUnit |  NSMinuteCalendarUnit fromDate:self.endDate];
+    NSDate *dateTwo = [[NSCalendar currentCalendar] dateFromComponents:components];
+    
+    components = [[NSCalendar currentCalendar] components: NSHourCalendarUnit |  NSMinuteCalendarUnit fromDate:[outputFormatter dateFromString:self.startTimeLabel.text]];
+    NSDate *startTimeDate = [[NSCalendar currentCalendar] dateFromComponents:components];
+    
+    components = [[NSCalendar currentCalendar] components: NSHourCalendarUnit |  NSMinuteCalendarUnit fromDate:self.enddatePicker.date];
+    NSDate *endTimeDate = [[NSCalendar currentCalendar] dateFromComponents:components];
+    
+    if ([dateTwo compare:dateOne] == NSOrderedDescending)
+    {
+        [self.endTimeLabel setText:[outputFormatter stringFromDate:self.enddatePicker.date]];
+    }
+    else if ([dateTwo compare:dateOne] == NSOrderedSame) {
+        if ([startTimeDate compare:endTimeDate] == NSOrderedAscending) {
+            [self.endTimeLabel setText:[outputFormatter stringFromDate:self.enddatePicker.date]];
+        }
+    }
     [self.popOverController dismissPopoverAnimated:YES];
     
     
@@ -737,7 +778,12 @@
 
 - (void)completedWithDate:(NSDate *)selectedDate
 {
-    if ([selectedDate compare:[NSDate date]] == NSOrderedDescending)
+    NSDateComponents *components = [[NSCalendar currentCalendar] components:NSYearCalendarUnit | NSMonthCalendarUnit |  NSDayCalendarUnit fromDate:[NSDate date]];
+    NSDate *dateOne = [[NSCalendar currentCalendar] dateFromComponents:components];
+    components = [[NSCalendar currentCalendar] components:NSYearCalendarUnit | NSMonthCalendarUnit |  NSDayCalendarUnit fromDate:selectedDate];
+    NSDate *dateTwo = [[NSCalendar currentCalendar] dateFromComponents:components];
+    
+    if ([dateTwo compare:dateOne] == NSOrderedDescending || [dateTwo compare:dateOne] == NSOrderedSame)
     {
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
         [dateFormatter setDateFormat:@"MM/dd/yyyy"];
