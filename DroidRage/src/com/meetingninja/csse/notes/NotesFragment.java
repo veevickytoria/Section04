@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import objects.Note;
+import objects.parcelable.NoteParcel;
 import objects.parcelable.ParcelDataFactory;
 import android.app.Activity;
 import android.content.Intent;
@@ -90,9 +91,13 @@ public class NotesFragment extends Fragment implements
 
 		Bundle args = getArguments();
 		if (args != null && args.containsKey(Keys.Project.NOTES)) {
-			List<Note> savedNoteList = args
-					.getParcelableArrayList(Keys.Project.NOTES);
-			processFinish(savedNoteList);
+			notes.clear();
+			List<NoteParcel> temp = getArguments().getParcelableArrayList(
+					Keys.Project.NOTES);
+			for (NoteParcel noteParcel : temp) {
+				notes.add(noteParcel.getData());
+			}
+			noteAdpt.notifyDataSetChanged();
 		} else {
 			populateList();
 		}
@@ -136,7 +141,7 @@ public class NotesFragment extends Fragment implements
 				Intent editNote = new Intent(getActivity(),
 						ViewNoteActivity.class);
 				editNote.putExtra("listPosition", position);
-				editNote.putExtra(Keys.Note.PARCEL, clickedNote);
+				editNote.putExtra(Keys.Note.PARCEL, new NoteParcel(clickedNote));
 				startActivityForResult(editNote, 1);
 
 			}

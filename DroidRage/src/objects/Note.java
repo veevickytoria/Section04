@@ -20,8 +20,7 @@ import com.meetingninja.csse.database.Keys;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "noteID", "createdBy", "title", "description", "content",
 		"dateCreated" })
-public class Note extends AbstractJSONObject<Note> implements Parcelable,
-		IJSONObject<Note> {
+public class Note extends AbstractJSONObject<Note> {
 
 	@JsonProperty("noteID")
 	private String noteID;
@@ -62,10 +61,6 @@ public class Note extends AbstractJSONObject<Note> implements Parcelable,
 		setContent(crsr.getString(idxCONTENT));
 		setDescription(crsr.getString(idxDESC));
 		setCreatedBy(crsr.getString(idxCREATOR));
-	}
-
-	public Note(Parcel in) {
-		readFromParcel(in);
 	}
 
 	public Note(NoteBuilder noteBuilder) {
@@ -150,44 +145,8 @@ public class Note extends AbstractJSONObject<Note> implements Parcelable,
 		this.dateCreated = dateCreated;
 	}
 
-	public static final Parcelable.Creator<Note> CREATOR = new Parcelable.Creator<Note>() {
-
-		@Override
-		public Note createFromParcel(Parcel in) {
-			return new Note(in);
-		}
-
-		@Override
-		public Note[] newArray(int size) {
-			return new Note[size];
-		}
-
-	};
-
-	public void readFromParcel(Parcel in) {
-		this.noteID = in.readString();
-		this.createdBy = in.readString();
-		this.title = in.readString();
-		this.description = in.readString();
-		this.content = in.readString();
-		this.dateCreated = in.readString();
-
-	}
-
-	@Override
-	public int describeContents() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(getID());
-		dest.writeString(getCreatedBy());
-		dest.writeString(getTitle());
-		dest.writeString(getDescription());
-		dest.writeString(getContent());
-		dest.writeString(getDateCreated());
+	public void mergeWith(Note selected) {
+		setContent(getContent() + "\n" + selected.getContent());
 
 	}
 
@@ -195,11 +154,6 @@ public class Note extends AbstractJSONObject<Note> implements Parcelable,
 	public JsonNode toJSON() throws JsonGenerationException, IOException {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	public void mergeWith(Note selected) {
-		setContent(getContent() + "\n" + selected.getContent());
-
 	}
 
 }

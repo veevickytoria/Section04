@@ -123,8 +123,7 @@ public class SessionManager {
 	}
 
 	public synchronized static String getUserID() {
-		SessionManager.getInstance();
-		return SessionManager.getUserID();
+		return SessionManager.getInstance().getUserDetails().get(KEY_USERID);
 	}
 
 	public synchronized void checkLogin() {

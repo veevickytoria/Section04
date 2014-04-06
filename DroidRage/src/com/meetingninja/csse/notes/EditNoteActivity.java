@@ -18,6 +18,8 @@ package com.meetingninja.csse.notes;
 import java.io.IOException;
 
 import objects.Note;
+import objects.parcelable.NoteParcel;
+import objects.parcelable.ParcelDataFactory;
 
 import org.joda.time.DateTime;
 
@@ -79,7 +81,7 @@ public class EditNoteActivity extends Activity implements AsyncResponse<String> 
 			displayedNote.setCreatedBy(SessionManager.getUserID());
 		} else if (extras != null) {
 			listPosition = extras.getInt("listPosition", -1);
-			displayedNote = (Note) extras.getParcelable(Keys.Note.PARCEL);
+			displayedNote = new ParcelDataFactory(extras).getNote();
 			mNoteTitle.setText(displayedNote.getTitle());
 			mTextEditor.setText(displayedNote.getContent());
 		} else {
@@ -145,7 +147,7 @@ public class EditNoteActivity extends Activity implements AsyncResponse<String> 
 		}
 
 		backToNotes.putExtra("listPosition", listPosition);
-		backToNotes.putExtra(Keys.Note.PARCEL, displayedNote);
+		backToNotes.putExtra(Keys.Note.PARCEL, new NoteParcel(displayedNote));
 
 		setResult(RESULT_OK, backToNotes);
 		finish();
@@ -309,7 +311,7 @@ public class EditNoteActivity extends Activity implements AsyncResponse<String> 
 		Intent backToNotes = new Intent();
 
 		backToNotes.putExtra("listPosition", listPosition);
-		backToNotes.putExtra(Keys.Note.PARCEL, displayedNote);
+		backToNotes.putExtra(Keys.Note.PARCEL, new NoteParcel(displayedNote));
 
 		if(result != null){
 			setResult(RESULT_OK, backToNotes);

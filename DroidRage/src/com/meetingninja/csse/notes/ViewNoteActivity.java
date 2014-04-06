@@ -1,6 +1,7 @@
 package com.meetingninja.csse.notes;
 
 import objects.Note;
+import objects.parcelable.ParcelDataFactory;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -47,7 +48,7 @@ public class ViewNoteActivity extends Activity {
 			// noteName = extras.getString("NoteName");
 			// noteID = extras.getString("NoteID");
 			// creator = extras.getString(EditNoteActivity.EXTRA_CREATOR);
-			displayedNote = extras.getParcelable(Keys.Note.PARCEL);
+			displayedNote = new ParcelDataFactory(extras).getNote();
 		}
 
 		if (displayedNote != null) {

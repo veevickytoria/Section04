@@ -8,6 +8,8 @@ import objects.Meeting;
 import objects.Note;
 import objects.Project;
 import objects.User;
+import objects.parcelable.NoteParcel;
+import objects.parcelable.ParcelDataFactory;
 import objects.parcelable.UserParcel;
 
 import com.meetingninja.csse.R;
@@ -366,8 +368,7 @@ public class ViewProjectActivity extends FragmentActivity implements
 				Meeting created = data.getParcelableExtra(Keys.Meeting.PARCEL);
 				addMeeting(created);
 			} else if (requestCode == 3) {
-				Note created = data.getParcelableExtra(Keys.Note.PARCEL);
-				addNote(created);
+				addNote(new ParcelDataFactory(data.getExtras()).getNote());
 			}
 		}
 	}
@@ -389,8 +390,11 @@ public class ViewProjectActivity extends FragmentActivity implements
 		case 1:
 			notesFrag = new NotesProjectFragment().setProjectController(this);
 			frag = notesFrag;
-			args.putParcelableArrayList(Keys.Project.NOTES,
-					(ArrayList<Note>) project.getNotes());
+			ArrayList<NoteParcel> list = new ArrayList<NoteParcel>();
+			for (Note note : project.getNotes()) {
+				list.add(new NoteParcel(note));
+			}
+			args.putParcelableArrayList(Keys.Project.NOTES, list);
 			break;
 		case 2:
 			memberFrag = new MemberListFragment().setProjectController(this);
