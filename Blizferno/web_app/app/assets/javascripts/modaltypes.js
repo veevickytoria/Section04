@@ -66,23 +66,24 @@ function DeleteModal(documentID, deleteID){
 
 	deleteModal.createFooter = function(){
 		// Close button
-		var element = document.createElement("button");
-		element.setAttribute("class", "btn btn-primary");
-		element.innerHTML = "Close";
-		element.setAttribute("data-dismiss", 'modal');
+		var elementClose = document.createElement("button");
+		elementClose.setAttribute("class", "btn btn-primary");
+		elementClose.innerHTML = "Close";
+		elementClose.setAttribute("data-dismiss", 'modal');
 
-		var doc = document.getElementById("footer");
-		doc.appendChild(element);
+		
+		
 
 		// // ActionButton
-		var element = document.createElement("input");
-		element.setAttribute("type", "button");
-		element.onclick = deleteModal.executeAction();
-		element.setAttribute("class", "btn btn-primary");
-		element.value = "Delete";
+		var elementDelete = document.createElement("input");
+		elementDelete.setAttribute("type", "button");
+		elementDelete.onclick = deleteModal.executeAction;
+		elementDelete.setAttribute("class", "btn btn-primary");
+		elementDelete.value = "Delete";
 
 		var doc = document.getElementById("footer");
-		doc.appendChild(element);
+		doc.appendChild(elementClose);
+		doc.appendChild(elementDelete);
 
 	}
 
