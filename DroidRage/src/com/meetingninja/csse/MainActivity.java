@@ -18,7 +18,7 @@ package com.meetingninja.csse;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import objects.Meeting;
+import objects.Event;
 import objects.Note;
 import objects.Schedule;
 import android.content.Intent;
@@ -47,10 +47,9 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.foound.widget.AmazingListView;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
 import com.meetingninja.csse.database.local.SQLiteHelper;
-import com.meetingninja.csse.extras.BaseFragment;
+import com.meetingninja.csse.extras.NinjaToastUtil;
 import com.meetingninja.csse.group.GroupsFragment;
 import com.meetingninja.csse.meetings.MeetingsFragment;
-import com.meetingninja.csse.notes.CreateNoteActivity;
 import com.meetingninja.csse.notes.EditNoteActivity;
 import com.meetingninja.csse.notes.NotesFragment;
 import com.meetingninja.csse.projects.ProjectFragment;
@@ -76,49 +75,55 @@ public class MainActivity extends FragmentActivity {
 	/**
 	 * Fields for the navigation drawer(s)
 	 */
-	private String[] leftDrawerItemNames; // labels
-	private TypedArray leftDrawerItemIcons; // icons next to text
-	private DrawerLayout drawerLayout; // the "frame" of main activity
-	private ListView leftDrawerList; // the listviews for the
-										// drawers
+	private String[] leftDrawerItemNames;
+	private TypedArray leftDrawerItemIcons;
+	private DrawerLayout drawerLayout;
+	private ListView leftDrawerList;
 	private AmazingListView rightDrawerList;
-	private ActionBarDrawerToggle drawerToggle; // open&close toggle
-	private CharSequence mDrawerTitle; // title for the drawer
-	private ArrayList<NavDrawerItem> leftDrawerItems; // object wrapper for left
-														// drawer
+	private ActionBarDrawerToggle drawerToggle;
+	private CharSequence mDrawerTitle;
+	private ArrayList<NavDrawerItem> leftDrawerItems;
 	private NavDrawerListAdapter leftDrawerAdapter;
 	private ScheduleAdapter rightDrawerAdapter;
 
 	public enum DrawerLabel {
-		HOMEPAGE(0), MEETINGS(1), NOTES(2), TASKS(3), PROFILE(4), GROUPS(5), PROJECTS(6), CONTACTS(
-				7), LOGOUT(8);
+		HOMEPAGE(0, homepage), MEETINGS(1, frag_meetings), NOTES(2, frag_notes), TASKS(
+				3, frag_tasks), PROFILE(4, frag_profile), GROUPS(5, frag_groups), PROJECTS(
+				6, frag_projects), CONTACTS(7, frag_contacts), LOGOUT(8,
+				new LogoutFragment());
 
 		private int position;
+		private Fragment frag;
 
-		private DrawerLabel(int position) {
+		private DrawerLabel(int position, Fragment frag) {
 			this.position = position;
+			this.frag = frag;
 		}
 
 		public int getPosition() {
 			return this.position;
 		}
 
+		public Fragment getFragment() {
+			return this.frag;
+		}
+
 	}
 
 	// Instances of fragments contained within this activity
-	private HomePage homepage;
-	private MeetingsFragment frag_meetings;
-	private NotesFragment frag_notes;
-	private TasksFragment frag_tasks;
-	private ProfileFragment frag_profile;
-	private GroupsFragment frag_groups;
-	private ProjectFragment frag_project;
-	private UserListFragment frag_contacts;
+	private static final HomePageFragment homepage = new HomePageFragment();
+	private static final MeetingsFragment frag_meetings = MeetingsFragment
+			.getInstance();
+	private static final NotesFragment frag_notes = NotesFragment.getInstance();
+	private static final TasksFragment frag_tasks = TasksFragment.getInstance();
+	private static final ProfileFragment frag_profile = new ProfileFragment();
+	private static final GroupsFragment frag_groups = new GroupsFragment();
+	private static final ProjectFragment frag_projects = new ProjectFragment();
+	private static final UserListFragment frag_contacts = new UserListFragment();
 
 	// Fields local to this activity
-	private Bundle icicle;
-	private CharSequence mTitle;
-	private SessionManager session;
+	private CharSequence actionBarTitle;
+	private SessionManager session = SessionManager.getInstance();
 	private boolean isDataCached;
 	private static final String KEY_SQL_CACHE = "SQL_DATA_CACHE";
 
@@ -128,55 +133,60 @@ public class MainActivity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		SessionManager.getInstance().init(MainActivity.this);
-		session = SessionManager.getInstance();
-
 		// Check if logged in
 		if (!session.isLoggedIn()) {
 			Log.v(TAG, "User is not logged in");
-			Intent login = new Intent(this, LoginActivity.class);
-			// Bring login to front
-			login.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			// User cannot go back to this activity
-			// login.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-			// Show no animation when launching login page
-			login.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-			startActivity(login);
-			finish(); // close main activity
+			showLogin();
 		} else { // Else continue
-			Log.v(TAG, "UserID " + session.getUserID() + " is logged in");
-			
+			Log.v(TAG, "UserID " + SessionManager.getUserID() + " is logged in");
+
 			setContentView(R.layout.activity_main);
 			setupActionBar();
 			setupViews();
 
-			
 			// on first time display view for first nav item
 			selectItem(session.getPage());
 
-			// Check to see if data has been cached in the local database
-			if (savedInstanceState != null) {
-				isDataCached = savedInstanceState.getBoolean(KEY_SQL_CACHE,
-						false);
-			}
-			if (!isDataCached && session.needsSync()) {
-				ApplicationController.getInstance().loadUsers();
-				isDataCached = true;
-				session.setSynced();
-			}
+			checkAndPreloadData(savedInstanceState);
 
-			// Track the usage of the application with Parse SDK
 			ParseAnalytics.trackAppOpened(getIntent());
-			ParseUser parseUser = ParseUser.getCurrentUser();
-			if (parseUser != null) {
-				ParseInstallation installation = ParseInstallation
-						.getCurrentInstallation();
-				installation.put("user", parseUser);
-				installation.put("userId", parseUser.getObjectId());
-				installation.saveEventually();
-			}
 		}
 
+	}
+
+	/**
+	 * // Check to see if data has been cached in the local database
+	 *
+	 * @param icicle
+	 */
+	private void checkAndPreloadData(Bundle icicle) {
+		if (icicle != null) {
+			isDataCached = icicle.getBoolean(KEY_SQL_CACHE, false);
+		}
+		if (!isDataCached || session.needsSync()) {
+			ApplicationController.getInstance().loadUsers();
+
+			// TODO : Preload more data
+
+			isDataCached = true;
+			session.setSynced();
+		}
+
+	}
+
+	/**
+	 * Route the user to the login screen
+	 */
+	private void showLogin() {
+		Intent login = new Intent(this, LoginActivity.class);
+		login.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+		// User cannot go back to this activity
+		// login.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+
+		login.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+		startActivity(login);
+		finish();
 	}
 
 	private void setupActionBar() {
@@ -202,11 +212,14 @@ public class MainActivity extends FragmentActivity {
 				R.array.nav_drawer_icons);
 
 		// Get the views
-
 		leftDrawerItems = new ArrayList<NavDrawerItem>();
+		DrawerLabel[] labels = DrawerLabel.values();
 		for (int i = 0; i < leftDrawerItemNames.length; i++) {
-			leftDrawerItems.add(new NavDrawerItem(leftDrawerItemNames[i],
-					leftDrawerItemIcons.getResourceId(i, -1)));
+			String label = leftDrawerItemNames[i];
+			int icon_Id = leftDrawerItemIcons.getResourceId(i, -1);
+			Fragment page = labels[i].getFragment();
+
+			leftDrawerItems.add(new NavDrawerItem(label, icon_Id, page));
 		}
 		// recycle the typed array
 		leftDrawerItemIcons.recycle();
@@ -227,7 +240,7 @@ public class MainActivity extends FragmentActivity {
 			/** Called when a drawer has settled in a completely closed state. */
 			@Override
 			public void onDrawerClosed(View view) {
-				getActionBar().setTitle(mTitle);
+				getActionBar().setTitle(actionBarTitle);
 				invalidateOptionsMenu(); // creates call to
 											// onPrepareOptionsMenu()
 			}
@@ -248,6 +261,7 @@ public class MainActivity extends FragmentActivity {
 	}
 
 	private void setupRightDrawer(Schedule sched) {
+		rightDrawerList.setOnItemClickListener(new RightDrawerClickListener());
 		rightDrawerList.setPinnedHeaderView(LayoutInflater.from(this).inflate(
 				R.layout.list_item_schedule_header, rightDrawerList, false));
 		rightDrawerAdapter = new ScheduleAdapter(MainActivity.this, sched);
@@ -263,7 +277,7 @@ public class MainActivity extends FragmentActivity {
 				Schedule sched = new Schedule();
 				try {
 					sched = UserDatabaseAdapter.getSchedule(SessionManager
-							.getInstance().getUserID());
+							.getUserID());
 				} catch (JsonParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -290,100 +304,35 @@ public class MainActivity extends FragmentActivity {
 	private void selectItem(int position) {
 		// Save the state of the current fragment
 		session.setPage(position);
-		FragmentManager fm = getSupportFragmentManager();
-		final Fragment currentPage = fm.findFragmentById(R.id.content_frame);
 
-		Fragment nextPage = null;
-		Bundle args = new Bundle();
-		String tag = "default";
+		String clickedLabel = leftDrawerItems.get(position).getTitle();
 
-		DrawerLabel clickedLabel = DrawerLabel.values()[position];
-		switch (clickedLabel) {
-		case HOMEPAGE:
-			nextPage = new HomePage();
-			homepage = (HomePage) nextPage;
-			break;
-		case MEETINGS:
-			nextPage = new MeetingsFragment();
-			frag_meetings = (MeetingsFragment) nextPage;
-			break;
-		case NOTES:
-			nextPage = new NotesFragment();
-			frag_notes = (NotesFragment) nextPage;
-			break;
-		case TASKS:
-			// nextPage = new TasksFragment();
-			nextPage = TasksFragment.getInstance();
-			frag_tasks = new TasksFragment();
-			break;
-		case PROFILE:
-			nextPage = new ProfileFragment();
-			frag_profile = (ProfileFragment) nextPage;
-			break;
-		case GROUPS:
-			nextPage = new GroupsFragment();
-			frag_groups = (GroupsFragment) nextPage;
-			break;
-		case PROJECTS:
-			nextPage = ProjectFragment.getInstance();
-			// args.putString("Content", "TODO: Projects Page");
-			// nextPage.setArguments(args);
-			frag_project = new ProjectFragment();
-			break;
-		case CONTACTS:
-			// fragment = new DummyFragment();
-			// args.putString("Content", "TODO: Groups Page");
-			// fragment.setArguments(args);
-			nextPage = new UserListFragment();
-			break;
-		// case SETTINGS:
-		// nextPage = SearchableUserFragment.getInstance();
-		// // args.putString("Content", "TODO: Settings Page");
-		// // fragment.setArguments(args);
-		// break;
-		// case ABOUT:
-		// nextPage = new DummyFragment();
-		// args.putString("Content", "TODO: About Page");
-		// nextPage.setArguments(args);
-		// break;
-		case LOGOUT:
-			logout();
-			break;
-		default:
-			Log.e(TAG + "drawerClicked", clickedLabel.toString()
-					+ " is not a valid page");
-			break;
-		}
+		if (selectFromLeftDrawer(position, getSupportFragmentManager())) {
+			Log.d(TAG, "Transition: " + clickedLabel);
 
-		if (nextPage != null) {
-			FragmentTransaction ft = fm.beginTransaction();
-			// if (currentPage != null)
-			// ft.hide(currentPage);
-
-			// if (fm.findFragmentByTag(tag) == null) {
-			// ft.add(R.id.content_frame, nextPage, tag).commit();
-			// } else {
-			// ft.show(fm.findFragmentByTag(tag));
-			// Insert the fragment by replacing any existing fragment
-			ft.replace(R.id.content_frame, nextPage).commit();
-			// }
-
-			// Highlight the selected item, update the title, and close the
-			// drawer
-			leftDrawerList.setItemChecked(position, true);
-			leftDrawerList.setSelection(position);
-			setTitle(leftDrawerItemNames[position]);
-			drawerLayout.closeDrawer(leftDrawerList);
 		} else {
-			// error in creating fragment
-			Log.e(TAG, "Error in creating fragment");
+			Log.e(TAG, "Navigation Transition error.\nFragment does not exist.");
 		}
+	}
+
+	/**
+	 * Highlight the selected item, update the title, and close the drawer
+	 *
+	 * @param position
+	 */
+	private boolean selectFromLeftDrawer(int position, FragmentManager fm) {
+		boolean validSelection = leftDrawerItems.get(position).select(fm);
+		leftDrawerList.setItemChecked(position, true);
+		leftDrawerList.setSelection(position);
+		setTitle(leftDrawerItemNames[position]);
+		drawerLayout.closeDrawer(leftDrawerList);
+		return validSelection;
 	}
 
 	@Override
 	public void setTitle(CharSequence title) {
-		mTitle = title;
-		getActionBar().setTitle(mTitle);
+		actionBarTitle = title;
+		getActionBar().setTitle(actionBarTitle);
 	}
 
 	@Override
@@ -397,7 +346,7 @@ public class MainActivity extends FragmentActivity {
 				&& resultCode == RESULT_OK) {
 			ArrayList<String> thingsYouSaid = data
 					.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-			if (thingsYouSaid.contains("home")){
+			if (thingsYouSaid.contains("home")) {
 				selectItem(DrawerLabel.HOMEPAGE.getPosition());
 			} else if (thingsYouSaid.contains("meetings")) {
 				selectItem(DrawerLabel.MEETINGS.getPosition());
@@ -417,22 +366,6 @@ public class MainActivity extends FragmentActivity {
 		}
 	}
 
-	private void logout() {
-		session.logoutUser();
-		// clear local database
-		SQLiteHelper mySQLiteHelper = SQLiteHelper
-				.getInstance(MainActivity.this);
-		mySQLiteHelper.onUpgrade(mySQLiteHelper.getReadableDatabase(), 1, 1);
-		// disassociate Parse SDK
-		ParseInstallation installation = ParseInstallation
-				.getCurrentInstallation();
-		installation.remove("userId");
-		installation.remove("user");
-		installation.saveInBackground();
-		ParseUser.logOut();
-		finish();
-	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -449,18 +382,13 @@ public class MainActivity extends FragmentActivity {
 		// Handle other action bar items...
 		switch (item.getItemId()) {
 		case R.id.action_refresh:
+			NinjaToastUtil.show(this, "Refreshing View");
 			switch (DrawerLabel.values()[session.getPage()]) {
 			case MEETINGS:
-				Toast.makeText(this, "Refreshing Meetings", Toast.LENGTH_SHORT)
-						.show();
-				frag_meetings.fetchMeetings();
-				// frag_meetings.populateList();
+				frag_meetings.refresh();
 				return true;
 			case NOTES:
-				Toast.makeText(this, "Refreshing Notes", Toast.LENGTH_SHORT)
-						.show();
-				// notesFrag.fetchNotes();
-				frag_notes.populateList();
+				frag_notes.refresh();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -475,7 +403,7 @@ public class MainActivity extends FragmentActivity {
 			startActivityForResult(createNote, 3);
 			return true;
 		case R.id.action_logout:
-			logout();
+			ApplicationController.getInstance().logout();
 			return true;
 		case R.id.action_settings:
 			return true;
@@ -533,6 +461,16 @@ public class MainActivity extends FragmentActivity {
 		public void onItemClick(AdapterView parent, View view, int position,
 				long id) {
 			selectItem(position);
+		}
+	}
+
+	private class RightDrawerClickListener implements
+			ListView.OnItemClickListener {
+		@Override
+		public void onItemClick(AdapterView parent, View view, int position,
+				long id) {
+			Event clicked = rightDrawerAdapter.getItem(position);
+			// TODO: View the event
 		}
 	}
 }

@@ -20,35 +20,15 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
 import objects.Contact;
-import objects.Event;
-import objects.Group;
-import objects.Meeting;
-import objects.MockObjectFactory;
-import objects.Note;
-import objects.Project;
-import objects.Schedule;
-import objects.SerializableUser;
-import objects.Task;
 import objects.User;
 import android.net.Uri;
-import android.text.TextUtils;
-import android.util.Log;
-
 import com.fasterxml.jackson.core.JsonEncoding;
-import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.meetingninja.csse.SessionManager;
-import com.meetingninja.csse.extras.JsonUtils;
-import com.meetingninja.csse.extras.Utilities;
 
 public class ContactDatabaseAdapter extends BaseDatabaseAdapter {
 
@@ -107,8 +87,8 @@ public class ContactDatabaseAdapter extends BaseDatabaseAdapter {
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod(IRequest.PUT);
 		addRequestHeader(conn, false);
-		SessionManager session = SessionManager.getInstance();
-		String userID = session.getUserID();
+		SessionManager.getInstance();
+		String userID = SessionManager.getUserID();
 		ByteArrayOutputStream json = new ByteArrayOutputStream();
 		// this type of print stream allows us to get a string easily
 		PrintStream ps = new PrintStream(json);
@@ -178,8 +158,8 @@ public class ContactDatabaseAdapter extends BaseDatabaseAdapter {
 		}
 
 		conn.disconnect();
-		SessionManager session = SessionManager.getInstance();
-		List<Contact> contacts = getContacts(session.getUserID());
+		SessionManager.getInstance();
+		List<Contact> contacts = getContacts(SessionManager.getUserID());
 		return contacts;
 	}
 }

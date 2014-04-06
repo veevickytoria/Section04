@@ -4,7 +4,6 @@ import java.util.List;
 
 import objects.User;
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +26,7 @@ public class AutoCompleteAdapter extends FilteredArrayAdapter<User> {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		User u = getItem(position);
 		if (convertView == null || convertView instanceof TextView) {
-			convertView = (View) mLayoutInflater.inflate(
+			convertView = mLayoutInflater.inflate(
 					R.layout.chips_recipient_dropdown_item, parent, false);
 		}
 		

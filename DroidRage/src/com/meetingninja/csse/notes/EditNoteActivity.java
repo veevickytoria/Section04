@@ -45,7 +45,7 @@ import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.NotesDatabaseAdapter;
 import com.meetingninja.csse.database.local.SQLiteNoteAdapter;
-import com.meetingninja.csse.extras.MyDateUtils;
+import com.meetingninja.csse.extras.NinjaDateUtils;
 
 public class EditNoteActivity extends Activity implements AsyncResponse<String> {
 
@@ -76,7 +76,7 @@ public class EditNoteActivity extends Activity implements AsyncResponse<String> 
 		if (extras.getBoolean(Note.CREATE_NOTE, false)) {
 			displayedNote = new Note();
 			isCreationMode = true;
-			displayedNote.setCreatedBy(SessionManager.getInstance().getUserID());
+			displayedNote.setCreatedBy(SessionManager.getUserID());
 		} else if (extras != null) {
 			listPosition = extras.getInt("listPosition", -1);
 			displayedNote = (Note) extras.getParcelable(Keys.Note.PARCEL);
@@ -129,7 +129,7 @@ public class EditNoteActivity extends Activity implements AsyncResponse<String> 
 
 		displayedNote.setTitle(title);
 		displayedNote.setContent(content);
-		displayedNote.setDateCreated(MyDateUtils.JODA_SERVER_DATE_FORMAT
+		displayedNote.setDateCreated(NinjaDateUtils.JODA_SERVER_DATE_FORMAT
 				.print(now));
 
 		Intent backToNotes = new Intent();
@@ -166,6 +166,7 @@ public class EditNoteActivity extends Activity implements AsyncResponse<String> 
 					.setCancelable(true)
 					.setPositiveButton("Yes",
 							new DialogInterface.OnClickListener() {
+								@Override
 								public void onClick(DialogInterface dialog,
 										int id) {
 									Intent intentMessage = new Intent();
@@ -243,8 +244,8 @@ public class EditNoteActivity extends Activity implements AsyncResponse<String> 
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
-	
+
+
 	private class CreateNoteTask extends AsyncTask<Note, Void, String> {
 
 		private AsyncResponse<String> delegate;
@@ -256,8 +257,8 @@ public class EditNoteActivity extends Activity implements AsyncResponse<String> 
 		@Override
 		protected String doInBackground(Note... params) {
 			try {
-				Note n = (Note) params[0];
-				
+				Note n = params[0];
+
 				return NotesDatabaseAdapter.createNote(n);
 			} catch (IOException e) {
 				Log.e("DB Adapter", "Error: CreateNote failed");
@@ -274,7 +275,7 @@ public class EditNoteActivity extends Activity implements AsyncResponse<String> 
 			delegate.processFinish(result);
 		}
 	}
-	
+
 	private class UpdateNoteTask extends AsyncTask<Note, Void, String> {
 
 		private AsyncResponse<String> delegate;
@@ -286,8 +287,8 @@ public class EditNoteActivity extends Activity implements AsyncResponse<String> 
 		@Override
 		protected String doInBackground(Note... params) {
 			try {
-				Note n = (Note) params[0];
-				
+				Note n = params[0];
+
 				NotesDatabaseAdapter.updateNote(n);
 				return n.getID();
 			} catch (Exception e) {
@@ -309,13 +310,13 @@ public class EditNoteActivity extends Activity implements AsyncResponse<String> 
 
 		backToNotes.putExtra("listPosition", listPosition);
 		backToNotes.putExtra(Keys.Note.PARCEL, displayedNote);
-		
+
 		if(result != null){
 			setResult(RESULT_OK, backToNotes);
 		} else {
 			setResult(RESULT_CANCELED, backToNotes);
 		}
-		
+
 		finish();
 	}
 

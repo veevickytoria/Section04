@@ -79,7 +79,7 @@ public class ContactTokenTextView extends TokenCompleteTextView {
 			Log.d(TAG, "Converting a " + className);
 
 			// Log.d("get", ((SerializableUser) s).getDisplayName());
-			objs.add((SerializableUser) s);
+			objs.add(s);
 		}
 
 		return objs;

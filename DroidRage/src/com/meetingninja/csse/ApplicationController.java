@@ -15,68 +15,77 @@
  ******************************************************************************/
 package com.meetingninja.csse;
 
+import objects.User;
+import objects.parcelable.UserParcel;
 import android.app.Application;
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.Volley;
+import com.meetingninja.csse.database.Keys;
+import com.meetingninja.csse.database.local.SQLiteHelper;
 import com.meetingninja.csse.database.local.SQLiteNoteAdapter;
 import com.meetingninja.csse.database.local.SQLiteUserAdapter;
+import com.meetingninja.csse.user.ProfileActivity;
 import com.parse.Parse;
 import com.parse.ParseInstallation;
+import com.parse.ParseUser;
 import com.parse.PushService;
 
 // http://arnab.ch/blog/2013/08/asynchronous-http-requests-in-android-using-volley/
 public class ApplicationController extends Application {
 
-	/**
-	 * Log or request TAG
-	 */
 	public static final String TAG = ApplicationController.class
 			.getSimpleName();
+
+	/**
+	 * Singleton ApplicationController
+	 */
+	private static ApplicationController sInstance;
+
+	public static synchronized ApplicationController getInstance() {
+		return sInstance;
+	}
 
 	/**
 	 * Global request queue for Volley
 	 */
 	private RequestQueue mRequestQueue;
 
-	/**
-	 * A singleton instance of the application class for easy access in other
-	 * places
-	 */
-	private static ApplicationController sInstance;
+	public RequestQueue getRequestQueue() {
+		if (mRequestQueue == null) {
+			mRequestQueue = Volley.newRequestQueue(getApplicationContext());
+		}
+		return mRequestQueue;
+	}
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
-
-		// initialize the singleton
 		sInstance = this;
+		SessionManager.getInstance().init();
+		initializeParseSDK();
+	}
 
-		// Initialize Parse SDK
+	/**
+	 * Sign-up for push-notifications from Parse.com
+	 */
+	public void initializeParseSDK() {
 		Parse.initialize(this, getString(R.string.parse_application_id),
 				getString(R.string.parse_client_key));
 
-		// Specify a Activity to handle all pushes by default.
+		// Specify a Activity to handle all pushes
 		PushService.setDefaultPushCallback(this, MainActivity.class);
 
-		// Save the current installation.
 		Log.d(TAG, "Saving Parse Installation");
 		ParseInstallation.getCurrentInstallation().saveInBackground();
+
 	}
 
-	/**
-	 * @return ApplicationController singleton instance
-	 */
-	public static synchronized ApplicationController getInstance() {
-		return sInstance;
-	}
-
-	/**
-	 * Load All Users into the SQLiteDatabase
-	 */
 	public void loadUsers() {
 		SQLiteUserAdapter sqlite = new SQLiteUserAdapter(
 				getApplicationContext());
@@ -85,9 +94,6 @@ public class ApplicationController extends Application {
 		sqlite.close();
 	}
 
-	/**
-	 * Load All Notes into the SQLiteDatabase
-	 */
 	public void loadNotes() {
 		SQLiteNoteAdapter sqlite = new SQLiteNoteAdapter(
 				getApplicationContext());
@@ -96,17 +102,30 @@ public class ApplicationController extends Application {
 		sqlite.close();
 	}
 
-	/**
-	 * @return The Volley Request queue, the queue will be created if it is null
-	 */
-	public RequestQueue getRequestQueue() {
-		// lazy initialize the request queue, the queue instance will be
-		// created when it is accessed for the first time
-		if (mRequestQueue == null) {
-			mRequestQueue = Volley.newRequestQueue(getApplicationContext());
-		}
+	public void logout() {
+		parseLogout();
+		clearSQLiteTables();
+		SessionManager.getInstance().logoutUser();
+	}
 
-		return mRequestQueue;
+	public void clearSQLiteTables() {
+		SQLiteHelper mySQLiteHelper = SQLiteHelper.getInstance(this);
+		mySQLiteHelper.onUpgrade(mySQLiteHelper.getReadableDatabase(), 1, 1);
+	}
+
+	public void parseLogout() {
+		ParseInstallation installation = ParseInstallation
+				.getCurrentInstallation();
+		installation.remove("userId");
+		installation.remove("user");
+		installation.saveInBackground();
+		ParseUser.logOut();
+	}
+
+	public void showUser(Context context, User user) {
+		Intent profileIntent = new Intent(context, ProfileActivity.class);
+		profileIntent.putExtra(Keys.User.PARCEL, new UserParcel(user));
+		getInstance().startActivity(profileIntent);
 	}
 
 	/**
@@ -132,9 +151,7 @@ public class ApplicationController extends Application {
 	 * @param tag
 	 */
 	public <T> void addToRequestQueue(Request<T> req) {
-		// set the default tag if tag is empty
 		req.setTag(TAG);
-
 		getRequestQueue().add(req);
 	}
 

@@ -40,25 +40,20 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.meetingninja.csse.ApplicationController;
 import com.meetingninja.csse.MainActivity;
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
-import com.meetingninja.csse.database.MeetingDatabaseAdapter;
 import com.meetingninja.csse.database.local.SQLiteMeetingAdapter;
 import com.meetingninja.csse.database.volley.MeetingVolleyAdapter;
-import com.meetingninja.csse.extras.Connectivity;
+import com.meetingninja.csse.extras.ConnectivityUtils;
+import com.meetingninja.csse.extras.IRefreshable;
 
 import de.timroes.android.listview.EnhancedListView;
 
 public class MeetingsFragment extends Fragment implements
-		AsyncResponse<List<Meeting>> {
+		AsyncResponse<List<Meeting>>, IRefreshable {
 
 	private static final String TAG = MeetingsFragment.class.getSimpleName();
 
@@ -102,9 +97,9 @@ public class MeetingsFragment extends Fragment implements
 			ArrayList<Meeting> temp = getArguments().getParcelableArrayList(Keys.Project.MEETINGS);
 			meetings.addAll(temp);
 			meetingAdpt.notifyDataSetChanged();
-		}else if (Connectivity.isConnected(getActivity()) && isAdded()) {
+		}else if (ConnectivityUtils.isConnected(getActivity()) && isAdded()) {
 			setHasOptionsMenu(true);
-			fetchMeetings();
+			populateList();
 		}
 
 		meetingImageButton.setOnClickListener(new View.OnClickListener() {
@@ -128,7 +123,7 @@ public class MeetingsFragment extends Fragment implements
 
 		setupSwipeList();
 	}
-	
+
 	private void loadMeeting (Meeting meeting) {
 		while (meeting.getEndTimeInMillis() == 0L);
 		Intent viewMeeting = new Intent(getActivity(), ViewMeetingActivity.class);
@@ -198,7 +193,7 @@ public class MeetingsFragment extends Fragment implements
 		mListView.setSwipingLayout(R.id.list_meeting_item_frame_1);
 		mListView.setSwipeDirection(EnhancedListView.SwipeDirection.BOTH);
 	}
-	
+
 	protected void deleteMeeting(Meeting item){
 		MeetingVolleyAdapter.deleteMeeting(item.getID());
 		meetings.remove(item);
@@ -253,8 +248,8 @@ public class MeetingsFragment extends Fragment implements
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		System.out.println("getting here");
-		fetchMeetings();
-		
+		populateList();
+
 		if (requestCode == 2) {
 			if (resultCode == Activity.RESULT_OK) {
 				if (data != null) {
@@ -269,11 +264,11 @@ public class MeetingsFragment extends Fragment implements
 						}else{
 							updateMeeting(created);
 						}
-						
+
 					} else if (data.getStringExtra("method").equals("insert")) {
 						 Log.d(TAG, "Inserting Meeting");
 						// created = mySQLiteAdapter.insertMeeting(created);
-						 fetchMeetings();
+						 populateList();
 					}
 				}
 			} else {
@@ -284,9 +279,9 @@ public class MeetingsFragment extends Fragment implements
 		}
 	}
 
-	public void fetchMeetings() {
+	public void populateList() {
 		fetcher = new MeetingFetcherTask(this);
-		fetcher.execute(session.getUserID());
+		fetcher.execute(SessionManager.getUserID());
 		// calls processFinish()
 	}
 
@@ -339,5 +334,10 @@ public class MeetingsFragment extends Fragment implements
 
 		if (isAdded())
 			meetingAdpt.notifyDataSetChanged();
+	}
+
+	@Override
+	public void refresh() {
+		this.populateList();
 	}
 }

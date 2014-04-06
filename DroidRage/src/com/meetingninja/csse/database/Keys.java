@@ -7,6 +7,7 @@ public interface Keys {
 	public final String DELETED = "deleted";
 	public final String ERROR_ID = "errorID";
 	public final String ERROR_MESSAGE = "errorMessage";
+	public final String LIST_POSITION = "listPosition";
 
 	public interface User {
 		public final String PARCEL = "UserParcel";
@@ -78,7 +79,8 @@ public interface Keys {
 		public final String PARCEL = "AgendaParcel";
 		public final String ID = "agendaID";
 		public final String TITLE = "title";
-		public final String MEETING = "meeting";
+		public final String MEETINGID = "meetingID";
+		public final String USERID = "userID";
 		public final String CONTENT = "content";
 		public final String SUBTOPIC = "subtopic";
 		public final String TOPIC = "topic";

@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.text.TextUtils;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -160,6 +159,7 @@ public class Meeting extends Event implements Parcelable, IJSONObject<Meeting> {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	private void readFromParcel(Parcel in) {
 		meetingID = in.readString();
 		title = in.readString();

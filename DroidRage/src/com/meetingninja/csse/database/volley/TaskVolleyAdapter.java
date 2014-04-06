@@ -1,9 +1,6 @@
 package com.meetingninja.csse.database.volley;
 
 import objects.Task;
-import objects.User;
-
-import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.meetingninja.csse.database.AsyncResponse;

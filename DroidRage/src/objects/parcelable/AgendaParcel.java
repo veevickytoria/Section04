@@ -5,44 +5,32 @@ import objects.Topic;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class AgendaParcel implements Parcelable {
-	private Agenda agenda;
+public class AgendaParcel extends DataParcel<Agenda> {
 
 	public AgendaParcel(Agenda agenda) {
-		this.agenda = agenda;
+		super(agenda);
 	}
 
 	public AgendaParcel(Parcel in) {
-		readFromParcel(in);
+		super(in);
 	}
 
-	public Agenda getAgenda() {
-		return this.agenda;
-	}
-
+	@SuppressWarnings("unchecked")
 	@Override
-	public int describeContents() {
-		// TODO Auto-generated method stub
-		return 0;
+	public void readFromParcel(Parcel in) {
+		data = new Agenda();
+		data.setID(in.readString());
+		data.setTitle(in.readString());
+		data.setTopics(in.readArrayList(Topic.class.getClassLoader()));
+		data.setAttachedMeetingID(in.readString());
 	}
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(agenda.getID());
-		dest.writeString(agenda.getTitle());
-		dest.writeList(agenda.getTopics());
-		dest.writeString(agenda.getAttachedMeetingID());
-
-	}
-
-	@SuppressWarnings("unchecked")
-	private void readFromParcel(Parcel in) {
-		this.agenda = new Agenda();
-		agenda.setID(in.readString());
-		agenda.setTitle(in.readString());
-		agenda.setTopics(in.readArrayList(Topic.class.getClassLoader()));
-		agenda.setAttachedMeetingID(in.readString());
-
+		dest.writeString(data.getID());
+		dest.writeString(data.getTitle());
+		dest.writeList(data.getTopics());
+		dest.writeString(data.getAttachedMeetingID());
 	}
 
 	public static final Parcelable.Creator<AgendaParcel> CREATOR = new Parcelable.Creator<AgendaParcel>() {

@@ -31,14 +31,14 @@ public class JsonUtils {
 
 	public static JsonFactory getJsonFactory() {
 		if (sJSONFactory == null) {
-			sJSONFactory = sObjMapper.getFactory();
+			sJSONFactory = getObjectMapper().getFactory();
 		}
 		return sJSONFactory;
 	}
 
 	/**
 	 * Returns empty text instead of null if the node does not contain the key
-	 * 
+	 *
 	 * @param node
 	 * @param key
 	 * @return

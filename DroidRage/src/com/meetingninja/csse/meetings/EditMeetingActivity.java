@@ -17,8 +17,10 @@ package com.meetingninja.csse.meetings;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+
 import objects.Meeting;
 import objects.User;
+import objects.parcelable.MeetingParcel;
 
 import org.joda.time.format.DateTimeFormatter;
 
@@ -47,7 +49,7 @@ import com.meetingninja.csse.agenda.AgendaActivity;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.extras.AlertDialogUtil;
-import com.meetingninja.csse.extras.MyDateUtils;
+import com.meetingninja.csse.extras.NinjaDateUtils;
 
 public class EditMeetingActivity extends FragmentActivity implements
 		AsyncResponse<String> {
@@ -59,8 +61,8 @@ public class EditMeetingActivity extends FragmentActivity implements
 	private boolean is24, edit_mode;
 	private Calendar start, end;
 	private DateTimeFormatter timeFormat;
-	private DateTimeFormatter dateFormat = MyDateUtils.JODA_APP_DATE_FORMAT;
-	private static ArrayList<User> attendees;
+	private DateTimeFormatter dateFormat = NinjaDateUtils.JODA_APP_DATE_FORMAT;
+	private static ArrayList<User> attendees = new ArrayList<User>();
 
 	private SessionManager session;
 	private Meeting displayedMeeting;
@@ -88,8 +90,8 @@ public class EditMeetingActivity extends FragmentActivity implements
 
 		is24 = android.text.format.DateFormat
 				.is24HourFormat(getApplicationContext());
-		timeFormat = is24 ? MyDateUtils.JODA_24_TIME_FORMAT
-				: MyDateUtils.JODA_12_TIME_FORMAT;
+		timeFormat = is24 ? NinjaDateUtils.JODA_24_TIME_FORMAT
+				: NinjaDateUtils.JODA_12_TIME_FORMAT;
 
 		setupViews();
 
@@ -276,8 +278,8 @@ public class EditMeetingActivity extends FragmentActivity implements
 			newMeeting.setStartTime(start.getTimeInMillis());
 			newMeeting.setEndTime(end.getTimeInMillis());
 			newMeeting.setDescription(desc);
-
 			// TODO: newMeeting.setAttendance();
+
 			if (displayedMeeting != null) {
 
 				// UserVolleyAdapter.fetchUserInfo(session.getUserID(), new
@@ -302,13 +304,10 @@ public class EditMeetingActivity extends FragmentActivity implements
 				msgIntent.putExtra("method", "update");
 				newMeeting.setID(displayedMeeting.getID());
 				UpdateMeetingTask task = new UpdateMeetingTask();
-				System.out.println("plz be second");
 				newMeeting.setAttendance(attendees);
 				task.updateMeeting(newMeeting);
 
-				// ??
 				displayedMeeting = newMeeting;
-				// ??
 
 			} else {
 				MeetingSaveTask task = new MeetingSaveTask(
@@ -321,7 +320,7 @@ public class EditMeetingActivity extends FragmentActivity implements
 			Toast.makeText(this, String.format("Saving Meeting"),
 					Toast.LENGTH_SHORT).show();
 
-			msgIntent.putExtra(Keys.Meeting.PARCEL, newMeeting);
+			msgIntent.putExtra(Keys.Meeting.PARCEL, new MeetingParcel(newMeeting));
 			if (extras != null) {
 				msgIntent.putExtra("listPosition",
 						extras.getInt("listPosition", -1));

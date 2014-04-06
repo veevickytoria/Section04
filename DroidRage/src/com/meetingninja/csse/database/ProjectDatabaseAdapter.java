@@ -34,7 +34,6 @@ import android.net.Uri;
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.meetingninja.csse.database.BaseDatabaseAdapter.IRequest;
 
 public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 

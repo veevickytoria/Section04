@@ -98,6 +98,7 @@ public class Project implements Comparable<Project>, Parcelable{
 	public void addNote(Note note){
 		this.notes.add(note);
 	}
+	@Override
 	public int compareTo(Project another) {
 		if (another == null) {
 			return 1;
@@ -143,6 +144,7 @@ public class Project implements Comparable<Project>, Parcelable{
 		dest.writeList(getMembers());
 
 	}
+	@SuppressWarnings("unchecked")
 	public void readFromParcel(Parcel in){
 		projectID = in.readString();
 		projectTitle = in.readString();

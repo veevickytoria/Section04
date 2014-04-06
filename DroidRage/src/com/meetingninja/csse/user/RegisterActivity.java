@@ -22,7 +22,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.graphics.Shader.TileMode;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -38,7 +37,7 @@ import android.widget.Toast;
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
-import com.meetingninja.csse.extras.Utilities;
+import com.meetingninja.csse.extras.NinjaTextUtils;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
@@ -208,7 +207,7 @@ public class RegisterActivity extends Activity implements AsyncResponse<User> {
 			emailText.setError(getString(R.string.error_field_required));
 			focusView = emailText;
 			cancel = true;
-		} else if (!Utilities.isValidEmailAddress(email)) {
+		} else if (!NinjaTextUtils.isValidEmailAddress(email)) {
 			emailText.setError(getString(R.string.error_invalid_email));
 			focusView = emailText;
 			cancel = true;
@@ -256,6 +255,7 @@ public class RegisterActivity extends Activity implements AsyncResponse<User> {
 		parseUser.put("location", user.getLocation());
 
 		parseUser.signUpInBackground(new SignUpCallback() {
+			@Override
 			public void done(ParseException e) {
 				if (e == null) {
 					Intent goLogin = new Intent();

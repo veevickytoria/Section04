@@ -35,7 +35,7 @@ public class Note extends AbstractJSONObject<Note> implements Parcelable,
 	private String content;
 	@JsonProperty("dateCreated")
 	private String dateCreated;
-	
+
 	public static final String CREATE_NOTE = "createNote";
 
 	public Note() {
@@ -195,6 +195,11 @@ public class Note extends AbstractJSONObject<Note> implements Parcelable,
 	public JsonNode toJSON() throws JsonGenerationException, IOException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public void mergeWith(Note selected) {
+		setContent(getContent() + "\n" + selected.getContent());
+
 	}
 
 }

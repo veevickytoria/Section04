@@ -30,7 +30,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.meetingninja.csse.R;
-import com.meetingninja.csse.extras.MyDateUtils;
+import com.meetingninja.csse.extras.NinjaDateUtils;
 
 /**
  * A class to display the meetings in a specific format for the items of the
@@ -98,8 +98,8 @@ public class MeetingItemAdapter extends ArrayAdapter<Meeting> {
 		StringBuilder spanBuilder = new StringBuilder();
 		boolean is24 = android.text.format.DateFormat.is24HourFormat(context
 				.getApplicationContext());
-		DateTimeFormatter timeFormat = is24 ? MyDateUtils.JODA_24_TIME_FORMAT
-				: MyDateUtils.JODA_12_TIME_FORMAT;
+		DateTimeFormatter timeFormat = is24 ? NinjaDateUtils.JODA_24_TIME_FORMAT
+				: NinjaDateUtils.JODA_12_TIME_FORMAT;
 		DateTimeFormatter dateFormat = DateTimeFormat
 				.forPattern("MMMM dd, yyyy");
 		spanBuilder.append(dateFormat.print(start));

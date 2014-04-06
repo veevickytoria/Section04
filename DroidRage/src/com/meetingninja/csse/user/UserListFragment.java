@@ -23,9 +23,7 @@ import objects.Contact;
 import objects.SerializableUser;
 import objects.User;
 import objects.parcelable.UserParcel;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -89,7 +87,7 @@ public class UserListFragment extends Fragment implements TokenListener {
 			List<UserParcel> members = args
 					.getParcelableArrayList(Keys.Project.MEMBERS);
 			for (UserParcel memberParcel : members) {
-				contacts.add(new Contact(memberParcel.getUser(), ""));
+				contacts.add(new Contact(memberParcel.getData(), ""));
 			}
 			mContactAdapter.notifyDataSetChanged();
 			mContactAdapter.getFilter().filter("");
@@ -239,9 +237,9 @@ public class UserListFragment extends Fragment implements TokenListener {
 	}
 
 	private void populateList(boolean add) {
-		SessionManager session = SessionManager.getInstance();
+		SessionManager.getInstance();
 		fetcher = new RetContactsObj(add);
-		fetcher.execute(session.getUserID());
+		fetcher.execute(SessionManager.getUserID());
 		// TODO: also remeve tempDeletedContacts
 	}
 	private void setUpListOnDismiss(View v){
@@ -249,7 +247,7 @@ public class UserListFragment extends Fragment implements TokenListener {
 			@Override
 			public EnhancedListView.Undoable onDismiss(EnhancedListView listView, final int position) {
 
-				final Contact item = (Contact) mContactAdapter.getItem(position);
+				final Contact item = mContactAdapter.getItem(position);
 				tempDeletedContacts.add(item);
 				contacts.remove(item);
 				mContactAdapter.remove(item);

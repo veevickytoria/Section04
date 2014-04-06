@@ -44,12 +44,12 @@
     </style>
 
     <style name="TextAppearance.EditEvent_LabelSmall" parent="TextAppearance.EditEvent_Small">
-        <item name="android:minHeight">24dip</item>
         <item name="android:layout_width">144dip</item>
         <item name="android:layout_marginLeft">16dip</item>
         <item name="android:layout_marginRight">16dip</item>
         <item name="android:paddingLeft">8dip</item>
         <item name="android:paddingRight">8dip</item>
+        <item name="android:minHeight">24dip</item>
         <item name="android:layout_marginBottom">-12dip</item>
     </style>
 
@@ -263,8 +263,8 @@
         <item name="android:background">@drawable/custom_btn_sorbus</item>
         <item name="android:padding">10dip</item>
     </style>
-    
-     <!-- Buttons -->
+
+    <!-- Buttons -->
     <style name="btnStyleHolo" parent="@android:style/Widget.Button">
         <item name="android:textSize">15sp</item>
         <item name="android:textStyle">bold</item>

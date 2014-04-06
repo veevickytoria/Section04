@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (C) 2014 The Android Open Source Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -56,7 +56,7 @@ public class SessionManager {
 
 	/**
 	 * Gets a singleton instance of the session manager
-	 * 
+	 *
 	 * @return
 	 */
 	public static synchronized SessionManager getInstance() {
@@ -65,16 +65,12 @@ public class SessionManager {
 		return sInstance;
 	}
 
-	public void init(Context context) {
-		this._context = context.getApplicationContext();
+	public void init() {
+		this._context = ApplicationController.getInstance().getApplicationContext();
 		pref = _context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
 	}
 
 	private SessionManager() {
-	}
-
-	private SessionManager(Context context) {
-		this.init(context);
 	}
 
 	/**
@@ -126,8 +122,9 @@ public class SessionManager {
 		return details;
 	}
 
-	public synchronized String getUserID() {
-		return pref.getString(KEY_USERID, null);
+	public synchronized static String getUserID() {
+		SessionManager.getInstance();
+		return SessionManager.getUserID();
 	}
 
 	public synchronized void checkLogin() {
@@ -177,7 +174,7 @@ public class SessionManager {
 	/**
 	 * Get the last pressed navigation drawer position. If doesn't exist,
 	 * returns 0.
-	 * 
+	 *
 	 * @return the last pressed navigation drawer position, or 0, if doesn't
 	 *         exist
 	 */

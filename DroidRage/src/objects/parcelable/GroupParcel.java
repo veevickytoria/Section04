@@ -1,39 +1,35 @@
 package objects.parcelable;
 
 import objects.Group;
+import objects.User;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class GroupParcel implements Parcelable {
-	private Group group;
+public class GroupParcel extends DataParcel<Group> {
 
 	public GroupParcel(Group group) {
-		this.group = group;
+		super(group);
 	}
 
 	public GroupParcel(Parcel in) {
-		readFromParcel(in);
-	}
-
-	public Group getGroup() {
-		return group;
-	}
-
-	@Override
-	public int describeContents() {
-		// TODO Auto-generated method stub
-		return 0;
+		super(in);
 	}
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		// TODO Auto-generated method stub
+		dest.writeString(data.getGroupID());
+		dest.writeString(data.getGroupTitle());
+		dest.writeList(data.getMembers());
 
 	}
 
-	private void readFromParcel(Parcel in) {
-		// TODO Auto-generated method stub
-
+	@SuppressWarnings("unchecked")
+	@Override
+	public void readFromParcel(Parcel in) {
+		data = new Group();
+		data.setID(in.readString());
+		data.setTitle(in.readString());
+		data.setMembers(in.readArrayList(User.class.getClassLoader()));
 	}
 
 	public static final Parcelable.Creator<GroupParcel> CREATOR = new Parcelable.Creator<GroupParcel>() {

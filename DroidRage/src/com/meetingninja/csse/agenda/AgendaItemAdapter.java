@@ -237,6 +237,7 @@ public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 			AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 			builder.setTitle("Select an Option");
 			builder.setItems(items, new DialogInterface.OnClickListener() {
+				@Override
 				public void onClick(DialogInterface dialog, int item) {
 
 					switch (item) {

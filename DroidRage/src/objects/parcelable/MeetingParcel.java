@@ -1,38 +1,43 @@
 package objects.parcelable;
 
 import objects.Meeting;
+import objects.User;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class MeetingParcel implements Parcelable {
-	private Meeting meeting;
+public class MeetingParcel extends DataParcel<Meeting> {
 
 	public MeetingParcel(Meeting meeting) {
-		this.meeting = meeting;
+		super(meeting);
 	}
 
 	public MeetingParcel(Parcel in) {
-		readFromParcel(in);
-	}
-
-	public Meeting getMeeting() {
-		return meeting;
-	}
-
-	@Override
-	public int describeContents() {
-		// TODO Auto-generated method stub
-		return 0;
+		super(in);
 	}
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		// TODO Auto-generated method stub
+		dest.writeString(data.getID());
+		dest.writeString(data.getTitle());
+		dest.writeString(data.getLocation());
+		dest.writeString(data.getStartTime());
+		dest.writeString(data.getEndTime());
+		dest.writeString(data.getDescription());
+		dest.writeList(data.getAttendance());
 
 	}
 
-	private void readFromParcel(Parcel in) {
-		// TODO Auto-generated method stub
+	@SuppressWarnings("unchecked")
+	@Override
+	public void readFromParcel(Parcel in) {
+		data = new Meeting();
+		data.setID(in.readString());
+		data.setTitle(in.readString());
+		data.setLocation(in.readString());
+		data.setStartTime(in.readString());
+		data.setEndTime(in.readString());
+		data.setDescription(in.readString());
+		data.setAttendance(in.readArrayList(User.class.getClassLoader()));
 
 	}
 

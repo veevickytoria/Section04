@@ -4,47 +4,38 @@ import objects.User;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class UserParcel implements Parcelable {
-	private User user;
+public class UserParcel extends DataParcel<User> {
 
 	public UserParcel(User user) {
-		this.user = user;
+		super(user);
 	}
 
 	public UserParcel(Parcel in) {
-		readFromParcel(in);
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	@Override
-	public int describeContents() {
-		// TODO Auto-generated method stub
-		return 0;
+		super(in);
 	}
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(user.getID());
-		dest.writeString(user.getDisplayName());
-		dest.writeString(user.getEmail());
-		dest.writeString(user.getPhone());
-		dest.writeString(user.getCompany());
-		dest.writeString(user.getTitle());
-		dest.writeString(user.getLocation());
+		dest.writeString(data.getID());
+		dest.writeString(data.getDisplayName());
+		dest.writeString(data.getEmail());
+		dest.writeString(data.getPhone());
+		dest.writeString(data.getCompany());
+		dest.writeString(data.getTitle());
+		dest.writeString(data.getLocation());
 
 	}
 
-	private void readFromParcel(Parcel in) {
-		user.setID(in.readString());
-		user.setDisplayName(in.readString());
-		user.setEmail(in.readString());
-		user.setPhone(in.readString());
-		user.setCompany(in.readString());
-		user.setTitle(in.readString());
-		user.setLocation(in.readString());
+	@Override
+	public void readFromParcel(Parcel in) {
+		data = new User();
+		data.setID(in.readString());
+		data.setDisplayName(in.readString());
+		data.setEmail(in.readString());
+		data.setPhone(in.readString());
+		data.setCompany(in.readString());
+		data.setTitle(in.readString());
+		data.setLocation(in.readString());
 	}
 
 	public static final Parcelable.Creator<UserParcel> CREATOR = new Parcelable.Creator<UserParcel>() {

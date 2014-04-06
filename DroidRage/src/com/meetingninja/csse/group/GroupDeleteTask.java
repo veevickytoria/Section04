@@ -2,7 +2,6 @@ package com.meetingninja.csse.group;
 
 import java.io.IOException;
 
-import objects.Group;
 import android.os.AsyncTask;
 import android.util.Log;
 

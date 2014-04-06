@@ -177,7 +177,7 @@ public class EditGroupActivity extends Activity implements TokenListener {
 			public void processFinish(List<Contact> result) {
 				// addContacts(result);
 			}
-		}).execute((SessionManager.getInstance()).getUserID());
+		}).execute(SessionManager.getUserID());
 	}
 
 	private void enableSwiping() {

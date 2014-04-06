@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (C) 2014 The Android Open Source Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,18 +32,11 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.meetingninja.csse.extras.JsonUtils;
+import com.meetingninja.csse.extras.SleeperThread;
 
 public class AgendaDatabaseAdapter extends BaseDatabaseAdapter {
 	private static final String TAG = UserDatabaseAdapter.class.getSimpleName();
-
-	protected static final String KEY_ID = "agendaID";
-	protected static final String KEY_TITLE = "title";
-	protected static final String KEY_MEETING = "meeting";
-	protected static final String KEY_CONTENT = "content";
-	protected static final String KEY_SUBTOPIC = "subtopic";
-	protected static final String KEY_TOPIC = "topic";
-	protected static final String KEY_TIME = "time";
-	protected static final String KEY_DESC = "description";
 
 	public static String getBaseUrl() {
 		return BASE_URL + "Agenda";
@@ -53,55 +46,32 @@ public class AgendaDatabaseAdapter extends BaseDatabaseAdapter {
 		return Uri.parse(getBaseUrl()).buildUpon();
 	}
 
-	public static Agenda createAgenda(Agenda create) throws IOException {
+	public static String createAgenda(Agenda create) throws IOException {
 		Agenda newAgenda = new Agenda(create);
-		// Server URL setup
+
 		String _url = getBaseUri().build().toString();
-		// Establish connection
+
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-		// add request header
 		conn.setRequestMethod(IRequest.POST);
 		addRequestHeader(conn, true);
 
-		// prepare POST payload
-		ByteArrayOutputStream json = new ByteArrayOutputStream();
-		// this type of print stream allows us to get a string easily
-		PrintStream ps = new PrintStream(json);
-		// Create a generator to build the JSON string
-		JsonGenerator jgen = JFACTORY.createGenerator(ps, JsonEncoding.UTF8);
+		String payload = create.toJSON().toString();
 
-		// Build JSON Object
-		jgen.writeStartObject(); // start agenda
-		jgen.writeStringField(Keys.Agenda.TITLE, create.getTitle());
-		jgen.writeStringField(Keys.Agenda.MEETING,
-				create.getAttachedMeetingID());
-		jgen.writeArrayFieldStart(Keys.Agenda.TOPIC); // start topics
-		MAPPER.writeValue(jgen, create.getTopics()); // recursively does
-														// subtopics
-		jgen.writeEndArray(); // end topics
-		jgen.writeEndObject(); // end agenda
-		jgen.close();
-
-		// Get JSON Object payload from print stream
-		String payload = json.toString("UTF8");
-		ps.close();
-
-		// Send payload
 		int responseCode = sendPostPayload(conn, payload);
 		String response = getServerResponse(conn);
 
-		newAgenda = parseAgenda(MAPPER.readTree(response));
-		return newAgenda;
+		// TODO : FIXME
+		// newAgenda = parseAgenda(MAPPER.readTree(response));
+		return getAgendaID(MAPPER.readTree(response));
+
 	}
 
 	public static JsonNode update(String agendaID,
 			Map<String, String> key_values) throws JsonGenerationException,
 			IOException, InterruptedException {
-		// prepare POST payload
+
 		ByteArrayOutputStream json = new ByteArrayOutputStream();
-		// this type of print stream allows us to get a string easily
 		PrintStream ps = new PrintStream(json);
 
 		// Create a generator to build the JSON string
@@ -118,25 +88,17 @@ public class AgendaDatabaseAdapter extends BaseDatabaseAdapter {
 		}
 
 		jgen.close();
-		// Get JSON Object payload from print stream
+
 		String payload = json.toString("UTF8");
 		ps.close();
-		// The backend can only update a single field at a time
+
 		String[] payloads = payload.split("\f\\s*"); // split at each form-feed
-		Thread t = new Thread(new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-					e.getLocalizedMessage();
-				}
-			}
-		}));
-		String response = "";
+
+		String response = null;
+		SleeperThread sleeper = new SleeperThread(500);
 		for (String p : payloads) {
-			t.run();
-			response = updateHelper(p);
+			sleeper.run();
+			response = updateHelper(getBaseUri().build().toString(), p);
 		}
 		return MAPPER.readTree(response);
 	}
@@ -160,13 +122,10 @@ public class AgendaDatabaseAdapter extends BaseDatabaseAdapter {
 		boolean result = false;
 		JsonNode tree = MAPPER.readTree(response);
 		if (!response.isEmpty()) {
-			if (!tree.has(Keys.DELETED)) {
+			if (!tree.hasNonNull(Keys.DELETED)) {
 				result = true;
 			} else {
-				Log.e(TAG,
-						String.format("ErrorID: [%s] %s",
-								tree.get(Keys.ERROR_ID).asText(),
-								tree.get(Keys.ERROR_MESSAGE).asText()));
+				logError(TAG, tree);
 			}
 		}
 
@@ -198,5 +157,9 @@ public class AgendaDatabaseAdapter extends BaseDatabaseAdapter {
 	public static Agenda parseAgenda(JsonNode agendaNode)
 			throws JsonParseException, JsonMappingException, IOException {
 		return MAPPER.readValue(agendaNode.toString(), Agenda.class);
+	}
+
+	public static String getAgendaID(JsonNode agendaNode) {
+		return JsonUtils.getJSONValue(agendaNode, Keys.Agenda.ID);
 	}
 }

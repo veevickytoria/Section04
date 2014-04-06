@@ -160,49 +160,13 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- ALL DAY -->
-
-    <LinearLayout
-        android:id="@+id/all_day_row"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dip"
-        android:gravity="center_vertical"
-        android:minHeight="24dip"
-        android:orientation="horizontal" >
-
-        <CheckBox
-            android:id="@+id/is_all_day"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="16dip"
-            android:layout_marginRight="0dip"
-            android:contentDescription="@string/accessibility_all_day"
-            android:gravity="center_vertical" />
-
-        <TextView
-            android:id="@+id/is_all_day_label"
-            style="@style/TextAppearance.EditEvent_Small"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|left"
-            android:layout_marginLeft="-8dip"
-            android:layout_weight="1"
-            android:gravity="center_vertical|left"
-            android:text="@string/edit_event_all_day_label" />
-    </LinearLayout>
-
-    <!-- TIME ZONE - Read-only textview version -->
-
-
-    <!-- TIME ZONE - Read/write version with button to launch picker -->
-
     <LinearLayout
         android:id="@+id/agenda_button_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:minHeight="48dip"
         android:orientation="vertical" >
 
@@ -212,13 +176,9 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-			android:background="@drawable/button_selector"
-            android:contentDescription="@string/accessibility_pick_time_zone"
-            android:gravity="center"
+            android:background="@drawable/button_selector"
             android:onClick="handleClick"
-            android:text="Add Agenda"
-            android:textColor="#FF777777"
-            android:textSize="18sp" />
+            android:text="Add Agenda" />
 
     </LinearLayout>
 

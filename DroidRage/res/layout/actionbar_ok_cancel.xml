@@ -17,7 +17,7 @@
 
         <TextView
             style="@style/EditEventCustomActionButtonText"
-            android:text="@string/discard_label" />
+            android:text="@string/action_cancel" />
     </LinearLayout>
 
     <View

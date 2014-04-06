@@ -16,6 +16,7 @@
 package com.meetingninja.csse.user;
 
 import objects.User;
+import objects.parcelable.ParcelDataFactory;
 import objects.parcelable.UserParcel;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -47,8 +48,7 @@ public class ProfileActivity extends FragmentActivity {
 		FragmentManager fm = getSupportFragmentManager();
 		Bundle input = getIntent().getExtras();
 		if (input != null && input.containsKey(Keys.User.PARCEL)) {
-			displayedUser = ((UserParcel) input.getParcelable(Keys.User.PARCEL))
-					.getUser();
+			displayedUser = new ParcelDataFactory(input).getUser();
 		}
 		ProfileFragment profFrag = new ProfileFragment();
 		Bundle args = new Bundle();

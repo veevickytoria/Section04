@@ -59,7 +59,7 @@ import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.volley.UserVolleyAdapter;
 import com.meetingninja.csse.extras.AlertDialogUtil;
 import com.meetingninja.csse.extras.ContactTokenTextView;
-import com.meetingninja.csse.extras.MyDateUtils;
+import com.meetingninja.csse.extras.NinjaDateUtils;
 import com.meetingninja.csse.user.AutoCompleteAdapter;
 import com.meetingninja.csse.user.ProfileActivity;
 import com.meetingninja.csse.user.UserArrayAdapter;
@@ -74,7 +74,7 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 	private EditText mDescription, completionCriteria, mTitle;
 	private TextView assignedDateLabel, createdDateLabel, isCompleted;
 	private Button mDeadlineBtn, mCompleteBtn;
-	private DateTimeFormatter dateFormat = MyDateUtils.JODA_APP_DATE_FORMAT;
+	private DateTimeFormatter dateFormat = NinjaDateUtils.JODA_APP_DATE_FORMAT;
 	private AutoCompleteAdapter autoAdapter;
 	private ArrayList<User> allUsers = new ArrayList<User>();
 	private ArrayList<User> assignedUsers = new ArrayList<User>();
@@ -98,7 +98,7 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 		Bundle extras = getIntent().getExtras();
 
 		session = SessionManager.getInstance();
-		userId = session.getUserID();
+		userId = SessionManager.getUserID();
 
 		if (extras != null) {
 			displayTask = extras.getParcelable(EXTRA_TASK);
@@ -299,7 +299,7 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 			public EnhancedListView.Undoable onDismiss(
 					EnhancedListView listView, final int position) {
 
-				final User item = (User) mUserAdapter.getItem(position);
+				final User item = mUserAdapter.getItem(position);
 				mUserAdapter.remove(item);
 				return new EnhancedListView.Undoable() {
 					@Override
@@ -345,7 +345,7 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 	}
 
 	private void hideKeyboard() {
-		InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+		InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
 	}
 

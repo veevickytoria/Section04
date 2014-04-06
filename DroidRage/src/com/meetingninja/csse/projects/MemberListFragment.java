@@ -4,8 +4,6 @@ import objects.Contact;
 import objects.User;
 
 import com.meetingninja.csse.user.UserListFragment;
-import com.meetingninja.csse.user.tasks.AddContactTask;
-import com.meetingninja.csse.user.tasks.DeleteContactTask;
 
 public class MemberListFragment extends UserListFragment {
 	

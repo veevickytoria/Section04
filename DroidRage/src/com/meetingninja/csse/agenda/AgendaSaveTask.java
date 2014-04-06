@@ -7,31 +7,41 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.meetingninja.csse.database.AgendaDatabaseAdapter;
+import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.extras.JsonUtils;
 
-public class AgendaSaveTask extends AsyncTask<Agenda, Void, Agenda> {
+public class AgendaSaveTask extends AsyncTask<Agenda, Void, String> {
 
 	private static final String TAG = AgendaSaveTask.class.getSimpleName();
 
-	@Override
-	protected Agenda doInBackground(Agenda... params) {
-		Agenda create = params[0];
-		try {
-			System.out.println(JsonUtils.getObjectMapper().writeValueAsString(
-					create));
-			create = AgendaDatabaseAdapter.createAgenda(create);
-		} catch (IOException e) {
-			Log.e(TAG, e.getLocalizedMessage());
-		}
-		return create;
+	private AsyncResponse<String> delegate;
+
+	public AgendaSaveTask(AsyncResponse<String> del) {
+		this.delegate = del;
 	}
 
 	@Override
-	protected void onPostExecute(Agenda result) {
+	protected String doInBackground(Agenda... params) {
+		Agenda create = params[0];
+		String id = "";
+		try {
+//			System.out.println(JsonUtils.getObjectMapper().writeValueAsString(
+//					create));
+//			create =
+			id = AgendaDatabaseAdapter.createAgenda(create);
+		} catch (IOException e) {
+			Log.e(TAG, e.getLocalizedMessage());
+		}
+		return id;
+	}
+
+	@Override
+	protected void onPostExecute(String result) {
 		// TODO Auto-generated method stub
 		super.onPostExecute(result);
 		if (result != null)
-			Log.v(TAG, result.getID());
+			Log.v(TAG + " Agenda ID", result);
+		delegate.processFinish(result);
 	}
 
 }

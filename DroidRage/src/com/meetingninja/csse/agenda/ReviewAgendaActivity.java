@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import objects.Agenda;
 import objects.Topic;
 import objects.parcelable.AgendaParcel;
+import objects.parcelable.ParcelDataFactory;
 import pl.polidea.treeview.InMemoryTreeStateManager;
 import pl.polidea.treeview.TreeBuilder;
 import pl.polidea.treeview.TreeStateManager;
@@ -69,14 +70,12 @@ public class ReviewAgendaActivity extends FragmentActivity {
 		if (savedInstanceState == null) {
 			manager = new InMemoryTreeStateManager<Topic>();
 			newCollapsible = false;
-			displayedAgenda = ((AgendaParcel) getIntent()
-					.getParcelableExtra(Keys.Agenda.PARCEL)).getAgenda();
+			displayedAgenda = new ParcelDataFactory(getIntent().getExtras()).getAgenda();
 		} else {
 			manager = (TreeStateManager<Topic>) savedInstanceState
 					.getSerializable("treeManager");
 			newCollapsible = savedInstanceState.getBoolean("collapsible");
-			displayedAgenda = ((AgendaParcel) savedInstanceState
-					.getParcelable(Keys.Agenda.PARCEL)).getAgenda();
+			displayedAgenda = new ParcelDataFactory(savedInstanceState).getAgenda();
 		}
 
 		setupViews();
@@ -211,6 +210,7 @@ public class ReviewAgendaActivity extends FragmentActivity {
 		alert.setView(input);
 
 		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+			@Override
 			public void onClick(DialogInterface dialog, int whichButton) {
 				String value = input.getText().toString();
 				finish();
@@ -219,6 +219,7 @@ public class ReviewAgendaActivity extends FragmentActivity {
 
 		alert.setNegativeButton("Cancel",
 				new DialogInterface.OnClickListener() {
+					@Override
 					public void onClick(DialogInterface dialog, int whichButton) {
 
 					}

@@ -36,7 +36,7 @@ import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.volley.TaskVolleyAdapter;
 import com.meetingninja.csse.database.volley.UserVolleyAdapter;
-import com.meetingninja.csse.extras.MyDateUtils;
+import com.meetingninja.csse.extras.NinjaDateUtils;
 import com.meetingninja.csse.tasks.tasks.DeleteTaskTask;
 import com.meetingninja.csse.tasks.tasks.UpdateTaskTask;
 
@@ -47,7 +47,7 @@ public class ViewTaskActivity extends Activity {
 			assignedText;
 	private Button taskCompleteButton;
 	private Task displayedTask;
-	private DateTimeFormatter dateFormat = MyDateUtils.JODA_APP_DATE_FORMAT;
+	private DateTimeFormatter dateFormat = NinjaDateUtils.JODA_APP_DATE_FORMAT;
 	private int resultCode = Activity.RESULT_CANCELED;
 	
 	

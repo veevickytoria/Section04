@@ -197,24 +197,8 @@
             android:label="@string/title_activity_edit_profile" >
         </activity>
         <activity
-            android:name="com.meetingninja.csse.projects.Profile_Fragment"
-            android:label="@string/title_activity_profile__fragment" >
-        </activity>
-        <activity
-            android:name="com.meetingninja.csse.projects.ProjectFragment"
-            android:label="@string/title_activity_project_fragment" >
-        </activity>
-        <activity
             android:name="com.meetingninja.csse.projects.ViewProjectActivity"
             android:label="@string/title_activity_view_project" >
-        </activity>
-        <activity
-            android:name="com.meetingninja.csse.projects.ProjectCustomDialog"
-            android:label="@string/title_activity_project_custom_dialog" >
-        </activity>
-        <activity
-            android:name="com.meetingninja.csse.HomePage"
-            android:label="@string/title_activity_home_page" >
         </activity>
     </application>
 

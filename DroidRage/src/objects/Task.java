@@ -142,12 +142,12 @@ public class Task extends Event implements Parcelable {
 	public String getStartTime(){
 		return this.getEndTime();
 	}
-	
+
 	@Override
 	public long getStartTimeInMillis(){
 		return this.getEndTimeInMillis();
 	}
-	
+
 
 	@Override
 	public int compareTo(Event another) {
@@ -157,7 +157,7 @@ public class Task extends Event implements Parcelable {
 		if (another instanceof Task) {
 			return compareTo((Task) another);
 		}
-		
+
 		return Long.valueOf(getEndTimeInMillis()).compareTo(
 				Long.valueOf(another.getStartTimeInMillis()));
 	}
@@ -194,6 +194,7 @@ public class Task extends Event implements Parcelable {
 		dest.writeList(getMembers());
 	}
 
+	@SuppressWarnings("unchecked")
 	public void readFromParcel(Parcel in) {
 		title = in.readString();
 		isCompleted = Boolean.parseBoolean(in.readString());

@@ -21,20 +21,13 @@ import java.io.PrintStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-
 import objects.Meeting;
-import objects.User;
 import android.net.Uri;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.meetingninja.csse.database.BaseDatabaseAdapter.IRequest;
 
 public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 	private final static String TAG = MeetingDatabaseAdapter.class

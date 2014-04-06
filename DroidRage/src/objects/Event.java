@@ -2,9 +2,7 @@ package objects;
 
 import org.joda.time.DateTime;
 
-import android.text.TextUtils;
-
-import com.meetingninja.csse.extras.MyDateUtils;
+import com.meetingninja.csse.extras.NinjaDateUtils;
 import com.meetingninja.csse.extras.NinjaTextUtils;
 
 public abstract class Event implements Comparable<Event> {
@@ -36,7 +34,7 @@ public abstract class Event implements Comparable<Event> {
 
 	public String getStartTime() {
 		return (!NinjaTextUtils.isEmpty(startTime)) ? startTime
-				: MyDateUtils.JODA_SERVER_DATE_FORMAT.print(new DateTime(0L));
+				: NinjaDateUtils.JODA_SERVER_DATE_FORMAT.print(new DateTime(0L));
 	}
 
 	public long getStartTimeInMillis() {
@@ -53,7 +51,7 @@ public abstract class Event implements Comparable<Event> {
 
 	public String getEndTime() {
 		return (!NinjaTextUtils.isEmpty(endTime)) ? endTime
-				: MyDateUtils.JODA_SERVER_DATE_FORMAT.print(new DateTime(1L));
+				: NinjaDateUtils.JODA_SERVER_DATE_FORMAT.print(new DateTime(1L));
 	}
 
 	public long getEndTimeInMillis() {

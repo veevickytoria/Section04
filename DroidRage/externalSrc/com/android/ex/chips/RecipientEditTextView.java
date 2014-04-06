@@ -344,7 +344,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
 		}
 
 		outAttrs.actionId = EditorInfo.IME_ACTION_DONE;
-		outAttrs.actionLabel = getContext().getString(R.string.done);
+		outAttrs.actionLabel = getContext().getString(R.string.action_return);
 		return connection;
 	}
 

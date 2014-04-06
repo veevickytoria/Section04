@@ -5,10 +5,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 import android.database.Cursor;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.text.TextUtils;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.core.JsonEncoding;

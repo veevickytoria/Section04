@@ -29,6 +29,7 @@ public class Contact implements Comparable<Contact>{
 	public String getRelationID() {
 		return relationID;
 	}
+	@Override
 	public int compareTo(Contact another) {
 		if (another == null) {
 			return 1;

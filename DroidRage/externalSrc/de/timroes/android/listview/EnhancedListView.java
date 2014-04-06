@@ -992,7 +992,7 @@ public class EnhancedListView extends ListView {
 		if (mUndoActions.size() > 1 && mUndoStyle == UndoStyle.COLLAPSED_POPUP) {
 			msg = getResources().getString(R.string.undo_all);
 		} else {
-			msg = getResources().getString(R.string.undo);
+			msg = getResources().getString(R.string.action_undo);
 		}
 		mUndoButton.setText(msg);
 	}

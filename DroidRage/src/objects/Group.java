@@ -39,12 +39,14 @@ public class Group extends Event implements Parcelable {
 		return groupID;
 	}
 
+	@Override
 	@JsonProperty("groupID")
 	public void setID(String id) {
 		int testInt = Integer.valueOf(id);
 		setID(testInt);
 	}
 
+	@Override
 	@JsonProperty("groupID")
 	public void setID(int id) {
 		this.groupID = Integer.toString(id);
@@ -87,6 +89,7 @@ public class Group extends Event implements Parcelable {
 		dest.writeList(getMembers());
 	}
 
+	@SuppressWarnings("unchecked")
 	public void readFromParcel(Parcel in) {
 		this.groupID = in.readString();
 		this.groupTitle = in.readString();

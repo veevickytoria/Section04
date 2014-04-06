@@ -38,7 +38,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
@@ -180,7 +179,7 @@ public class TasksFragment extends Fragment implements	AsyncResponse<List<Task>>
 				refreshTasks();
 			} else if (requestCode == 7) {
 				Task t = data.getParcelableExtra(Keys.Task.PARCEL);
-				t.setCreatedBy(session.getUserID());
+				t.setCreatedBy(SessionManager.getUserID());
 				creator.createTask(t);
 			}
 		}
@@ -195,7 +194,7 @@ public class TasksFragment extends Fragment implements	AsyncResponse<List<Task>>
 
 	public void refreshTasks() {
 		taskListfetcher = new GetTaskListTask(this);
-		taskListfetcher.execute(session.getUserID());
+		taskListfetcher.execute(SessionManager.getUserID());
 	}
 
 	private void setTaskList(int type) {

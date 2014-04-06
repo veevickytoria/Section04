@@ -18,6 +18,7 @@ package com.meetingninja.csse.user;
 import java.util.Map;
 
 import objects.User;
+import objects.parcelable.ParcelDataFactory;
 import objects.parcelable.UserParcel;
 import android.app.Activity;
 import android.content.Intent;
@@ -68,8 +69,7 @@ public class ProfileFragment extends Fragment {
 		displayedUser = new User();
 
 		if (extras != null && extras.containsKey(Keys.User.PARCEL)) {
-
-			displayedUser = ((UserParcel) extras.getParcelable(Keys.User.PARCEL)).getUser();
+			displayedUser = new ParcelDataFactory(extras).getUser();
 			try {
 				System.out.println(JsonUtils.getObjectMapper()
 						.writeValueAsString(displayedUser));
@@ -79,7 +79,7 @@ public class ProfileFragment extends Fragment {
 			}
 		} else {
 			Log.v(TAG, "Displaying Current User");
-			displayedUser.setID(session.getUserID());
+			displayedUser.setID(SessionManager.getUserID());
 		}
 		if (extras != null && extras.containsKey("notMine")) {
 			menu = R.menu.menu_profile;
@@ -115,7 +115,8 @@ public class ProfileFragment extends Fragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == Activity.RESULT_OK) {
 			if (requestCode == 7) {
-				displayedUser = ((UserParcel) data.getParcelableExtra(Keys.User.PARCEL)).getUser();
+				displayedUser = new ParcelDataFactory(data.getExtras())
+						.getUser();
 				setUser(displayedUser);
 			}
 		}
@@ -145,8 +146,8 @@ public class ProfileFragment extends Fragment {
 	private void fetchUserInfo(final String userID) {
 		displayedUser = new User();
 		// Local user is stored in SessionManager, so do not fetch
-		if (TextUtils.equals(userID, session.getUserID())) {
-			displayedUser.setID(session.getUserID());
+		if (TextUtils.equals(userID, SessionManager.getUserID())) {
+			displayedUser.setID(SessionManager.getUserID());
 			Map<String, String> details = session.getUserDetails();
 			displayedUser.setDisplayName(details.get(SessionManager.USER));
 			displayedUser.setCompany(details.get(SessionManager.COMPANY));

@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (C) 2014 The Android Open Source Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,28 +20,16 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
-
 import objects.Comment;
-import objects.Group;
 import objects.Note;
-import objects.Task;
-import objects.User;
 import android.net.Uri;
 import android.util.Log;
 
-import com.android.volley.VolleyError;
 import com.fasterxml.jackson.core.JsonEncoding;
-import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.meetingninja.csse.database.BaseDatabaseAdapter.IRequest;
-import com.meetingninja.csse.database.volley.JsonNodeRequest;
-import com.meetingninja.csse.database.volley.JsonRequestListener;
 import com.meetingninja.csse.extras.JsonUtils;
-import com.meetingninja.csse.extras.Utilities;
 
 public class NotesDatabaseAdapter extends BaseDatabaseAdapter {
 
@@ -53,7 +41,7 @@ public class NotesDatabaseAdapter extends BaseDatabaseAdapter {
 		return Uri.parse(getBaseUrl()).buildUpon();
 	}
 
-	public static Note getNote(final String noteID) throws Exception {
+	public static Note getNote(final String noteID) throws IOException {
 		// Server URL setup
 		String _url = getBaseUri().appendPath(noteID).build().toString();
 
@@ -68,13 +56,12 @@ public class NotesDatabaseAdapter extends BaseDatabaseAdapter {
 		// Get server response
 		int responseCode = conn.getResponseCode();
 		String response = getServerResponse(conn);
-		JsonNode userNode = MAPPER.readTree(response);
+		JsonNode noteNode = MAPPER.readTree(response);
 
-		Note ret = parseNote(userNode);
-		return ret;
+		return parseNote(noteNode);
 	}
 
-	public static String createNote(Note n) throws Exception {
+	public static String createNote(Note note) throws Exception {
 		// Server URL setup
 		String _url = getBaseUri().build().toString();
 
@@ -84,7 +71,7 @@ public class NotesDatabaseAdapter extends BaseDatabaseAdapter {
 
 		// add request header
 		conn.setRequestMethod(IRequest.POST);
-		//addRequestHeader(conn, true);
+		// addRequestHeader(conn, true);
 
 		// prepare POST payload
 		ByteArrayOutputStream json = new ByteArrayOutputStream();
@@ -95,37 +82,35 @@ public class NotesDatabaseAdapter extends BaseDatabaseAdapter {
 
 		// Build JSON Object
 		jgen.writeStartObject();
-		jgen.writeStringField(Keys.Note.CREATED_BY, n.getCreatedBy());
-		jgen.writeStringField(Keys.Note.TITLE, n.getTitle());
-		jgen.writeStringField(Keys.Note.DESC, n.getDescription());
-		jgen.writeStringField(Keys.Note.CONTENT, n.getContent());
-		jgen.writeStringField(Keys.Note.UPDATED, n.getDateCreated());
+		jgen.writeStringField(Keys.Note.CREATED_BY, note.getCreatedBy());
+		jgen.writeStringField(Keys.Note.TITLE, note.getTitle());
+		jgen.writeStringField(Keys.Note.DESC, note.getDescription());
+		jgen.writeStringField(Keys.Note.CONTENT, note.getContent());
+		jgen.writeStringField(Keys.Note.UPDATED, note.getDateCreated());
 		jgen.writeEndObject();
 		jgen.close();
 
 		// Get JSON Object payload from print stream
 		String payload = json.toString("UTF8");
-		Log.d("CREATENOTE_payload", payload);
 		ps.close();
 
 		// Send payload
 		int responseCode = sendPostPayload(conn, payload);
 		String response = getServerResponse(conn);
-		Log.d("CREATENOTE_response", response);
 
-		String ID = "";
+		String _id = null;
 		if (!response.isEmpty()) {
 			JsonNode tree = MAPPER.readTree(response);
-			if (!tree.has(Keys.Note.ID))
-				ID = "-1";
-			else 
-				ID = tree.get(Keys.Note.ID).asText();
+			if (!tree.hasNonNull(Keys.Note.ID))
+				_id = "-1";
+			else
+				_id = tree.get(Keys.Note.ID).asText();
 		}
 
 		conn.disconnect();
-		return ID;
+		return _id;
 	}
-	
+
 	public static Boolean deleteNote(String noteID) throws IOException {
 		String _url = getBaseUri().appendPath(noteID).build().toString();
 		URL url = new URL(_url);
@@ -151,11 +136,6 @@ public class NotesDatabaseAdapter extends BaseDatabaseAdapter {
 		return result;
 	}
 
-	public List<Comment> getComments(String noteID) throws Exception {
-		// TODO Implement this method
-		throw new Exception("getComments: Unimplemented");
-	}
-
 	public static Note parseNote(JsonNode node, String noteID) {
 		Note n = new Note();
 		n.setID(JsonUtils.getJSONValue(node, Keys.Note.ID));
@@ -166,7 +146,7 @@ public class NotesDatabaseAdapter extends BaseDatabaseAdapter {
 		n.setDateCreated(JsonUtils.getJSONValue(node, Keys.Note.UPDATED));
 		return n;
 	}
-	
+
 	public static Note parseNote(JsonNode node) {
 		Note n = new Note();
 		n.setID(JsonUtils.getJSONValue(node, Keys.Note.ID));
@@ -180,13 +160,15 @@ public class NotesDatabaseAdapter extends BaseDatabaseAdapter {
 
 	public static void updateNote(Note n) throws IOException {
 		Log.d("updatenote", "update");
-		String titlePayload = getEditPayload(n.getID(), Keys.Note.TITLE, n.getTitle());
-		String descPayload = getEditPayload(n.getID(), Keys.Note.CONTENT, n.getContent());
+		String titlePayload = getEditPayload(n.getID(), Keys.Note.TITLE,
+				n.getTitle());
+		String descPayload = getEditPayload(n.getID(), Keys.Note.CONTENT,
+				n.getContent());
 		// Get server response
 		sendSingleEdit(titlePayload);
 		sendSingleEdit(descPayload);
 	}
-	
+
 	private static String sendSingleEdit(String payload) throws IOException {
 		String _url = getBaseUri().build().toString();
 		URL url = new URL(_url);
@@ -196,8 +178,9 @@ public class NotesDatabaseAdapter extends BaseDatabaseAdapter {
 		sendPostPayload(conn, payload);
 		return getServerResponse(conn);
 	}
-	
-	private static String getEditPayload(String noteID, String field, String value) throws IOException {
+
+	private static String getEditPayload(String noteID, String field,
+			String value) throws IOException {
 		ByteArrayOutputStream json = new ByteArrayOutputStream();
 		// this type of print stream allows us to get a string easily
 		PrintStream ps = new PrintStream(json);

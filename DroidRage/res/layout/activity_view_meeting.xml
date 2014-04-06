@@ -1,133 +1,127 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/activity_horizontal_margin"
     android:orientation="vertical" >
 
+    <TextView
+        android:id="@+id/meeting_title_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Meeting Title"
+        android:layout_marginBottom="6dp"
+        android:textSize="25sp" />
+
+    <TextView
+        android:id="@+id/meeting_location_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Location" />
+
+    <TextView
+        android:id="@+id/meeting_desc_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:hint="Description" />
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/from_label"
+            style="@style/TextAppearance.EditEvent_Small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/meeting_title_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Meeting Title"
-                android:textSize="25sp" />
-
-            <TextView
-                android:id="@+id/meeting_location_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Location" />
-
-            <TextView
-                android:id="@+id/meeting_desc_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Description" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/from_label"
-                    style="@style/TextAppearance.EditEvent_LabelSmall"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="From"
-                    android:textColor="@android:color/secondary_text_dark" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
-
-                    <TextView
-                        android:id="@+id/meeting_from_date_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:hint="January 1, 1970"
-                        android:minHeight="32dp" />
-
-                    <TextView
-                        android:id="@+id/meeting_from_time_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:hint="12:00 AM"
-                        android:minHeight="32dp" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/to_label"
-                    style="@style/TextAppearance.EditEvent_LabelSmall"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="To"
-                    android:textColor="@android:color/secondary_text_dark" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:id="@+id/meeting_to_date_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:hint="November 13, 2013"
-                        android:minHeight="32dp" />
-
-                    <TextView
-                        android:id="@+id/meeting_to_time_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:hint="4:30 PM"
-                        android:minHeight="32dp" />
-                </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
+            android:layout_marginBottom="6dip"
+            android:text="From"
+            android:textColor="@android:color/secondary_text_dark" />
 
         <LinearLayout
-            android:id="@+id/email_guests_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="vertical" >
+            android:layout_height="wrap_content" >
 
             <TextView
-                android:id="@+id/emailGuestsButton"
+                android:id="@+id/meeting_from_date_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_newemail"
-                android:gravity="center_vertical"
-                android:hint="Email Guests"
-                android:textSize="16sp" />
+                android:layout_weight="2"
+                android:hint="January 1, 1970"
+                android:minHeight="32dp" />
+
+            <TextView
+                android:id="@+id/meeting_from_time_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="12:00 AM"
+                android:minHeight="32dp" />
         </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/to_label"
+            style="@style/TextAppearance.EditEvent_Small"
+           android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dip"
+            android:text="To"
+            android:textColor="@android:color/secondary_text_dark" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/meeting_to_date_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:hint="January 1, 1970"
+                android:minHeight="32dp" />
+
+            <TextView
+                android:id="@+id/meeting_to_time_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="4:30 PM"
+                android:minHeight="32dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/attendee_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/meeting_attendees_label"
+            style="@style/SectionHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Attendees" />
 
         <ListView
-                android:id="@+id/guests_attending"
-                android:layout_width="match_parent"
-                android:layout_height="0dp" >
+            android:id="@+id/guests_attending"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:choiceMode="singleChoice"
+            android:drawSelectorOnTop="false"
+            android:smoothScrollbar="true"
+            tools:listitem="@android:layout/simple_list_item_1" >
         </ListView>
 
-        <!-- REMINDERS -->
     </LinearLayout>
 
 </LinearLayout>

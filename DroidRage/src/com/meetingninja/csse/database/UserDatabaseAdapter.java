@@ -25,11 +25,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import objects.Contact;
 import objects.Event;
 import objects.Group;
 import objects.Meeting;
-import objects.MockObjectFactory;
 import objects.Note;
 import objects.Project;
 import objects.Schedule;
@@ -46,9 +44,8 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.extras.JsonUtils;
-import com.meetingninja.csse.extras.Utilities;
+import com.meetingninja.csse.extras.NinjaTextUtils;
 
 public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 
@@ -112,7 +109,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 
 		try {
 			// hash the password
-			pass = Utilities.computeHash(pass);
+			pass = NinjaTextUtils.computeHash(pass);
 		} catch (NoSuchAlgorithmException e) {
 			Log.e(TAG, e.getLocalizedMessage());
 		}
@@ -323,7 +320,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		return projectList;
 	}
 
-	public static List<Note> getNotes(String userID) throws Exception {
+	public static List<Note> getNotes(String userID) throws IOException {
 		// Server URL setup
 		String _url = getBaseUri().appendPath("Notes").appendPath(userID)
 				.build().toString();
@@ -428,7 +425,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		// Create a generator to build the JSON string
 		JsonGenerator jgen = JFACTORY.createGenerator(ps, JsonEncoding.UTF8);
 
-		password = Utilities.computeHash(password);
+		password = NinjaTextUtils.computeHash(password);
 		// Build JSON Object
 		jgen.writeStartObject();
 		jgen.writeStringField(Keys.User.NAME, registerMe.getDisplayName());
@@ -481,7 +478,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		JsonGenerator jgen = JFACTORY.createGenerator(ps, JsonEncoding.UTF8);
 		for (String key : key_values.keySet()) {
 			if (key.equals(Keys.User.EMAIL)
-					&& !Utilities.isValidEmailAddress(key_values
+					&& !NinjaTextUtils.isValidEmailAddress(key_values
 							.get(Keys.User.EMAIL)))
 				throw new IOException(
 						"Error : [Update User] Incorrect email format");
@@ -516,7 +513,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		String response = "";
 		for (String p : payloads) {
 			t.run();
-			response = updateHelper(p);
+			response = updateHelper(getBaseUri().build().toString(),  p);
 		}
 		return parseUser(MAPPER.readTree(response));
 	}
@@ -530,7 +527,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 			String email = node.get(Keys.User.EMAIL).asText();
 			// if their email is in a reasonable format
 			if (!TextUtils.isEmpty(node.get(Keys.User.NAME).asText())
-					&& Utilities.isValidEmailAddress(email)) {
+					&& NinjaTextUtils.isValidEmailAddress(email)) {
 				// set the required fields
 				if (node.hasNonNull(Keys.User.ID))
 					u.setID(node.get(Keys.User.ID).asText());

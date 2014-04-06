@@ -16,18 +16,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
-
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.meetingninja.csse.ApplicationController;
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.AsyncResponse;
-import com.meetingninja.csse.database.GroupDatabaseAdapter;
 import com.meetingninja.csse.database.Keys;
-import com.meetingninja.csse.extras.Connectivity;
+import com.meetingninja.csse.extras.ConnectivityUtils;
 
 public class GroupsFragment extends Fragment implements
 		AsyncResponse<List<Group>> {
@@ -125,10 +118,10 @@ public class GroupsFragment extends Fragment implements
 	}
 
 	public void fetchGroups() {
-		if (Connectivity.isConnected(getActivity()) && isAdded()) {
+		if (ConnectivityUtils.isConnected(getActivity()) && isAdded()) {
 
 			fetcher = new GroupFetcherTask(this);
-			fetcher.execute(session.getUserID()); // calls processFinish()
+			fetcher.execute(SessionManager.getUserID()); // calls processFinish()
 		}
 	}
 

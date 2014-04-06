@@ -9,15 +9,17 @@
     <string name="action_sign_in">Sign In</string>
     <string name="action_forgot_password">Recover lost password</string>
     <string name="login_progress_signing_in">Signing in&#8230;</string>
+
+    <!-- Strings related to register -->
+    <string name="title_activity_register">Register</string>
+    <string name="prompt_password_confirm">Confirm Password</string>
+
+    <!-- Error messages -->
     <string name="error_invalid_email">This email is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
     <string name="error_invalid_username_password">Invalid username or password</string>
-
-    <!-- Strings related to register -->
-    <string name="title_activity_register">Register</string>
-    <string name="prompt_password_confirm">Confirm Password</string>
     <string name="error_taken_username">This username already exists</string>
     <string name="error_mismatch_password">Passwords do not match</string>
 

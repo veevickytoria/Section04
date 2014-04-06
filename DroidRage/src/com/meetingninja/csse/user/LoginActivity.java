@@ -15,8 +15,6 @@
  ******************************************************************************/
 package com.meetingninja.csse.user;
 
-import java.io.IOException;
-
 import objects.User;
 import android.R.anim;
 import android.animation.Animator;
@@ -40,7 +38,7 @@ import com.meetingninja.csse.MainActivity;
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
-import com.meetingninja.csse.extras.Utilities;
+import com.meetingninja.csse.extras.NinjaTextUtils;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
@@ -184,7 +182,7 @@ public class LoginActivity extends Activity {
 			mEmailView.setError(getString(R.string.error_field_required));
 			focusView = mEmailView;
 			cancel = true;
-		} else if (!Utilities.isValidEmailAddress(mEmail)) {
+		} else if (!NinjaTextUtils.isValidEmailAddress(mEmail)) {
 			mEmailView.setError(getString(R.string.error_invalid_email));
 			focusView = mEmailView;
 			cancel = true;
@@ -222,6 +220,7 @@ public class LoginActivity extends Activity {
 		if (requestCode == 0) {
 			if (resultCode == Activity.RESULT_OK) {
 				if (data != null) {
+					ParseUser.logOut();
 					mEmailView.setText(data.getStringExtra(Intent.EXTRA_EMAIL));
 				}
 			}
@@ -278,7 +277,7 @@ public class LoginActivity extends Activity {
 
 		@Override
 		protected Boolean doInBackground(Void... params) {
-			String login_result = "";
+			String login_result = null;
 
 			try {
 				login_result = UserDatabaseAdapter.login(mEmail, mPassword);
@@ -316,6 +315,9 @@ public class LoginActivity extends Activity {
 							public void done(ParseUser user, ParseException e) {
 								if (user != null) {
 									// Hooray! The user is logged in.
+									ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+									installation.put("user", user);
+									installation.saveEventually();
 								} else {
 									Log.e(TAG, e.getLocalizedMessage());
 								}

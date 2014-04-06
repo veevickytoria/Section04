@@ -6,8 +6,6 @@ import java.util.Collections;
 import java.util.List;
 
 import objects.Project;
-import objects.Task;
-
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.Keys;
@@ -176,7 +174,7 @@ public class ProjectFragment extends Fragment{
 				return projectList;
 			}
 
-		}.execute(session.getUserID());
+		}.execute(SessionManager.getUserID());
 
 	}
 	private void deleteProject(Project p) {
@@ -220,7 +218,7 @@ public class ProjectFragment extends Fragment{
 			@Override
 			public EnhancedListView.Undoable onDismiss(EnhancedListView listView, final int position) {
 
-				final Project item = (Project) projectAdpt.getItem(position);
+				final Project item = projectAdpt.getItem(position);
 				//				tempDeletedContacts.add(item);
 				projectsList.remove(item);
 				//				projectAdpt.remove(item);

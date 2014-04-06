@@ -1,10 +1,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
+        android:id="@+id/edit_agenda_action_save"
+        android:icon="@drawable/ic_menu_save"
+        android:orderInCategory="50"
+        android:showAsAction="withText|ifRoom"
+        android:title="@string/action_save"/>
+    <item
         android:id="@+id/action_delete"
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="@string/action_delete"/>
+    <item
+        android:id="@+id/Review"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="Review"/>
     <item
         android:id="@+id/expand_all_menu_item"
         android:alphabeticShortcut="e"
@@ -37,10 +48,5 @@
         android:titleCondensed="@string/collapsible_condensed_disable"
         android:visible="true">
     </item>
-    <item
-        android:id="@+id/Review"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="Review"/>
 
 </menu>

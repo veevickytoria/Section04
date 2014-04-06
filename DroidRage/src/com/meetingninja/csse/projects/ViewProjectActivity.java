@@ -15,7 +15,6 @@ import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.ProjectDatabaseAdapter;
-import com.meetingninja.csse.database.local.SQLiteMeetingAdapter;
 import com.meetingninja.csse.database.local.SQLiteNoteAdapter;
 import com.meetingninja.csse.extras.AlertDialogUtil;
 import com.meetingninja.csse.meetings.EditMeetingActivity;
@@ -214,7 +213,7 @@ public class ViewProjectActivity extends FragmentActivity implements
 					}
 
 				});
-		fetcher.execute(SessionManager.getInstance().getUserID());
+		fetcher.execute(SessionManager.getUserID());
 	}
 
 	public void selectMeeting(List<Meeting> meetings) {
@@ -257,7 +256,6 @@ public class ViewProjectActivity extends FragmentActivity implements
 	public void selectNote() {
 		SQLiteNoteAdapter mySQLiteAdapter = new SQLiteNoteAdapter(this);
 		selectNote(mySQLiteAdapter.getAllNotes());
-
 	}
 
 	public void selectNote(List<Note> notes) {

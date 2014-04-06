@@ -15,7 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.meetingninja.csse.R;
-import com.meetingninja.csse.extras.MyDateUtils;
+import com.meetingninja.csse.extras.NinjaDateUtils;
 
 
 public class TaskItemAdapter extends ArrayAdapter<Task> {
@@ -80,7 +80,7 @@ public class TaskItemAdapter extends ArrayAdapter<Task> {
 		Task task = tasks.get(position);
 
 		viewHolder.title.setText(task.getTitle());
-		viewHolder.deadline.setText("Deadline:  "+ MyDateUtils.JODA_APP_DATE_FORMAT.print(task.getEndTimeInMillis()));
+		viewHolder.deadline.setText("Deadline:  "+ NinjaDateUtils.JODA_APP_DATE_FORMAT.print(task.getEndTimeInMillis()));
 
 		
 		if(colorit){

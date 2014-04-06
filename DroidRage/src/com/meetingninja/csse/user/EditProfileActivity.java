@@ -3,6 +3,7 @@ package com.meetingninja.csse.user;
 import java.util.HashMap;
 
 import objects.User;
+import objects.parcelable.ParcelDataFactory;
 import objects.parcelable.UserParcel;
 import android.app.Activity;
 import android.content.Context;
@@ -43,12 +44,15 @@ public class EditProfileActivity extends Activity {
 		displayedUser = new User();
 
 		if (extras != null && extras.containsKey(Keys.User.PARCEL)) {
-			displayedUser = ((UserParcel) extras.getParcelable(Keys.User.PARCEL)).getUser();
+			displayedUser = new ParcelDataFactory(extras).getUser();
 		} else {
 			Log.v(TAG, "Problem getting user info");
 			// displayedUser.setID(session.getUserID());
 		}
-		setUser(displayedUser);
+
+		if (displayedUser != null) {
+			setUser(displayedUser);
+		}
 
 		// fetchUserInfo(displayedUser.getID());
 
@@ -57,7 +61,7 @@ public class EditProfileActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.edit_profile, menu);
+		getMenuInflater().inflate(R.menu.menu_edit_profile, menu);
 		return true;
 	}
 
@@ -116,15 +120,15 @@ public class EditProfileActivity extends Activity {
 			// TODO: stuff
 			return;
 		}
-		displayedUser.setDisplayName(mName.getText().toString());// mUserImage =
-																	// (SmartImageView)
-																	// findViewById(R.id.view_prof_pic);
+
+		displayedUser.setDisplayName(mName.getText().toString());
+//		mUserImage = (SmartImageView) findViewById(R.id.view_prof_pic);
 		displayedUser.setCompany(mCompany.getText().toString());
 		displayedUser.setTitle(mTitle.getText().toString());
 		displayedUser.setLocation(mLocation.getText().toString());
 		displayedUser.setEmail(mEmail.getText().toString());
 		displayedUser.setPhone(mPhone.getText().toString());
-		dbSave();
+		saveUser();
 		session.createLoginSession(displayedUser);
 		Intent i = new Intent();
 		i.putExtra(Keys.User.PARCEL, new UserParcel(displayedUser));
@@ -132,15 +136,15 @@ public class EditProfileActivity extends Activity {
 		finish();
 	}
 
-	private void dbSave() {
+	private void saveUser() {
 		HashMap<String, String> fields = new HashMap<String, String>();
+
 		fields.put(Keys.User.NAME, displayedUser.getDisplayName());
 		fields.put(Keys.User.COMPANY, displayedUser.getCompany());
 		fields.put(Keys.User.LOCATION, displayedUser.getLocation());
-		// fields.put(Keys.User.EMAIL, displayedUser.getEmail());
 		fields.put(Keys.User.PHONE, displayedUser.getPhone());
-		UpdateUserTask updater = new UpdateUserTask(fields);
-		updater.execute(displayedUser.getID());
+
+		new UpdateUserTask(fields).execute(displayedUser.getID());
 	}
 
 	private void setupViews() {
