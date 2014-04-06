@@ -80,7 +80,38 @@
     if (email.length == 0 || [email rangeOfString:emailSymbol].location == NSNotFound) {
         return @"Please enter a valid email address!";
     }
+    if ([self emailExists:email]){
+        return @"An account with the email already exists.";
+    }
     return @"";
+}
+
+-(BOOL)emailExists:(NSString*)email
+{
+    NSString *url = [NSString stringWithFormat:@"%@/User/Users", DATABASE_URL];
+    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
+    
+    NSArray *jsonArray;
+    if (!deserializedDictionary)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Users not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alert show];
+    }
+    else
+    {
+        jsonArray = [deserializedDictionary objectForKey:@"users"];
+    }
+    if (jsonArray.count > 0)
+    {
+        for (NSDictionary* users in jsonArray)
+        {
+            NSString* userEmail = (NSString *)[users objectForKey:@"email"];
+            if ([email isEqualToString:userEmail])
+                return YES;
+        }
+    }
+    return NO;
 }
 
 - (IBAction)onClickRegister:(id)sender

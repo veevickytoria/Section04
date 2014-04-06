@@ -266,111 +266,10 @@
     {
         [self saveNewTask];
     }
-
-    [self scheduleNotification];
     [self.viewTaskDelegate refreshTaskList];
     
 }
 
--(void) scheduleNotification
-{
-    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Settings" inManagedObjectContext:self.context];
-    
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:entityDesc];
-    
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userID = %d", self.userID];
-    [request setPredicate:predicate];
-    
-    NSError *error;
-    NSArray *result = [self.context executeFetchRequest:request
-                                                  error:&error];
-    
-    Settings *settings = (Settings *)[result objectAtIndex:0];
-    if ([settings.shouldNotify boolValue])
-    {
-        [self removeOldNotifications];
-        
-        NSString *meetingStartDate = [NSString stringWithFormat:@"%@ %@", self.endDateLabel.text, self.endTimeLabel.text];
-        NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
-        [formatter setDateFormat:@"MM/dd/yyyy hh:mm a"];
-        NSDate *dateTimeOfMeeting = [formatter dateFromString:meetingStartDate];
-        
-        UILocalNotification* localNotification = [[UILocalNotification alloc] init];
-        localNotification.timeZone = [NSTimeZone defaultTimeZone];
-        
-        NSNumber *taskID = [NSNumber numberWithInt:self.taskID];
-        NSArray *key = [[NSArray alloc] initWithObjects:@"taskID", nil];
-        NSArray *object = [[NSArray alloc] initWithObjects:taskID, nil];
-        NSDictionary *userInfo = [[NSDictionary alloc] initWithObjects:object forKeys:key];
-        localNotification.userInfo = userInfo;
-        
-        NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
-        NSDate *fireDate;
-        switch ([settings.whenToNotify integerValue]) {
-            case 0:
-                fireDate = dateTimeOfMeeting;
-                localNotification.alertBody = [NSString stringWithFormat:@"%@ Task due now", self.titleField.text];
-                break;
-            case 1:
-                [dateComponents setMinute:-5];
-                fireDate = [[NSCalendar currentCalendar] dateByAddingComponents:dateComponents toDate:dateTimeOfMeeting options:0];
-                localNotification.alertBody = [NSString stringWithFormat:@"%@ Task due in 5 minutes", self.titleField.text];
-                break;
-            case 2:
-                [dateComponents setMinute:-15];
-                fireDate = [[NSCalendar currentCalendar] dateByAddingComponents:dateComponents toDate:dateTimeOfMeeting options:0];
-                localNotification.alertBody = [NSString stringWithFormat:@"%@ Task due in 15 minutes", self.titleField.text];
-                break;
-            case 3:
-                [dateComponents setMinute:-30];
-                fireDate = [[NSCalendar currentCalendar] dateByAddingComponents:dateComponents toDate:dateTimeOfMeeting options:0];
-                localNotification.alertBody = [NSString stringWithFormat:@"%@ Task due in 30 minutes", self.titleField.text];
-                break;
-            case 4:
-                [dateComponents setHour:-1];
-                fireDate = [[NSCalendar currentCalendar] dateByAddingComponents:dateComponents toDate:dateTimeOfMeeting options:0];
-                localNotification.alertBody = [NSString stringWithFormat:@"%@ Task due in 1 hour", self.titleField.text];
-                break;
-            case 5:
-                [dateComponents setHour:-2];
-                fireDate = [[NSCalendar currentCalendar] dateByAddingComponents:dateComponents toDate:dateTimeOfMeeting options:0];
-                localNotification.alertBody = [NSString stringWithFormat:@"%@ Task due in 2 hours", self.titleField.text];
-                break;
-            case 6:
-                [dateComponents setDay:-1];
-                fireDate = [[NSCalendar currentCalendar] dateByAddingComponents:dateComponents toDate:dateTimeOfMeeting options:0];
-                localNotification.alertBody = [NSString stringWithFormat:@"%@ Task due in 1 day", self.titleField.text];
-                break;
-            case 7:
-                [dateComponents setDay:-2];
-                fireDate = [[NSCalendar currentCalendar] dateByAddingComponents:dateComponents toDate:dateTimeOfMeeting options:0];
-                localNotification.alertBody = [NSString stringWithFormat:@"%@ Task due in 2 days", self.titleField.text];
-                break;
-            default:
-                break;
-        }
-        localNotification.fireDate = fireDate;
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadData" object:self];
-        localNotification.applicationIconBadgeNumber = [[UIApplication sharedApplication] applicationIconBadgeNumber] + 1;
-        [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
-    }
-}
--(void) removeOldNotifications
-{
-    NSArray *notifications = [[UIApplication sharedApplication] scheduledLocalNotifications];
-    for (int i=0; i<[notifications count]; i++)
-    {
-        UILocalNotification* notification = [notifications objectAtIndex:i];
-        NSDictionary *userInfo = notification.userInfo;
-        NSInteger taskID=[[userInfo valueForKey:@"taskID"] integerValue];
-        if (taskID == self.taskID)
-        {
-            [[UIApplication sharedApplication] cancelLocalNotification:notification];
-            break;
-        }
-    }
-}
 
 
 - (void)taskCreationAlert:(BOOL)error
@@ -407,7 +306,7 @@
     [urlRequest setHTTPBody:jsonData];
     NSURLResponse * response = nil;
     NSError * error = nil;
-    NSData * data =[NSURLConnection sendSynchronousRequest:urlRequest
+    [NSURLConnection sendSynchronousRequest:urlRequest
                                          returningResponse:&response
                                                      error:&error];
     if (error) {
@@ -501,27 +400,25 @@
 
 -(void) endTimeClicked
 {
-    UIViewController* popoverContent = [[UIViewController alloc] init]; //ViewController
+    UIViewController* popoverContent = [[UIViewController alloc] init];
     
     UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(220, 10, 75, 50)];
     [button setTitle:@"Save" forState:UIControlStateNormal];
     [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [button addTarget:self action:@selector(saveEndTime) forControlEvents:UIControlEventTouchUpInside];
     
-    UIView *popoverView = [[UIView alloc] init];   //view
+    UIView *popoverView = [[UIView alloc] init];
     [popoverView addSubview:button];
     
-    //UIDatePicker *enddatePicker=[[UIDatePicker alloc]init];//Date picker
-    self.enddatePicker=[[UIDatePicker alloc]init];//Date picker
+    
+    self.enddatePicker=[[UIDatePicker alloc]init];
     self.enddatePicker.frame=CGRectMake(0,30,320, 216);
     self.enddatePicker.datePickerMode = UIDatePickerModeTime;
     [self.enddatePicker setMinuteInterval:5];
-    //[datePicker addTarget:self action:@selector(Result) forControlEvents:UIControlEventValueChanged];
-    [popoverView addSubview:self.enddatePicker];
     
+    [popoverView addSubview:self.enddatePicker];
     popoverContent.view = popoverView;
     self.popOverController = [[UIPopoverController alloc] initWithContentViewController:popoverContent];
-    //popoverController.delegate=self;
     
     [self.popOverController setPopoverContentSize:CGSizeMake(320, 250) animated:NO];
     [self.popOverController presentPopoverFromRect:CGRectMake(self.endTimeLabel.frame.origin.x, self.endTimeLabel.frame.origin.y+2, self.endTimeLabel.frame.size.width, self.endTimeLabel.frame.size.height)  inView:self.view permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
@@ -533,7 +430,9 @@
     NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
     [outputFormatter setDateFormat:@"hh:mm a"];
     
-    [self.endTimeLabel setText:[outputFormatter stringFromDate:self.enddatePicker.date]];
+    if ([[NSDate date] compare:self.enddatePicker.date] == NSOrderedAscending) {
+        [self.endTimeLabel setText:[outputFormatter stringFromDate:self.enddatePicker.date]];
+    }
     [self.popOverController dismissPopoverAnimated:YES];
     
     
