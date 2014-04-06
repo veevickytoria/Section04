@@ -132,6 +132,14 @@
             userID = [[deserializedDictionary objectForKey:@"userID"] integerValue];
             [self createContactWithID:userID withEmail:email withPassword:self.passwordField.text];
         }
+        
+        [self deleteRememberMeInfo];
+        NSManagedObject *newRememberMe = [NSEntityDescription insertNewObjectForEntityForName:@"RememberMe" inManagedObjectContext:self.context];
+        NSError *error;
+        [newRememberMe setValue:email forKey:@"email"];
+        [newRememberMe setValue:self.passwordField.text forKey:@"password"];
+        [self.context save:&error];
+        
         [self.registerDelegate onRegister:userID];
         
     }
@@ -140,6 +148,23 @@
         [self failRegisterValidation:error];
     }
 
+}
+
+-(NSArray*) getRememberMeInfo
+{
+    NSFetchRequest *request = [[NSFetchRequest alloc]initWithEntityName:@"RememberMe"];
+    NSError *error = nil;
+    return [self.context executeFetchRequest:request error:&error];
+}
+
+-(void) deleteRememberMeInfo
+{
+    NSError *error;
+    for (NSManagedObject * rm in [self getRememberMeInfo])
+    {
+        [self.context deleteObject:rm];
+    }
+    [self.context save:&error];
 }
 
 -(void)createContactWithID:(NSInteger)userID withEmail:(NSString*)email withPassword:(NSString*)password
