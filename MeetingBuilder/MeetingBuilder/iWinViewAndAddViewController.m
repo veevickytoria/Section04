@@ -257,20 +257,10 @@
     self.agendaItemViewController.itemDelegate = self;
     [self.agendaItemViewController setModalPresentationStyle:UIModalPresentationFormSheet];
     [self.agendaItemViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-    
+    self.agendaItemViewController.itemTitle = @"Add New Item";
     [self presentViewController:self.agendaItemViewController animated:YES completion:nil];
     self.agendaItemViewController.view.superview.bounds = CGRectMake(0,0,556,283);
     
-}
-
-- (IBAction)onClickAddAttendees
-{
-    self.userViewController = [[iWinAddUsersViewController alloc] initWithNibName:@"iWinAddUsersViewController" bundle:nil withPageName:@"Agenda" inEditMode:self.isEditing];
-    [self.userViewController setModalPresentationStyle:UIModalPresentationPageSheet];
-    [self.userViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-  //  self.userViewController.userDelegate = self;
-    [self presentViewController:self.userViewController animated:YES completion:nil];
-    self.userViewController.view.superview.bounds = CGRectMake(MODAL_XOFFSET, MODAL_YOFFSET, MODAL_WIDTH, MODAL_HEIGHT);
 }
 
 -(void)saveItem:(NSString *)name duration: (NSString*) duration description:(NSString*)

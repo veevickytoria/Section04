@@ -103,6 +103,9 @@
         [self formatTime:[NSDate date]];
     }
 
+    self.descriptionField.layer.borderColor = [[UIColor lightGrayColor] CGColor];
+    self.descriptionField.layer.borderWidth = 0.7f;
+    self.descriptionField.layer.cornerRadius = 7.0f;
     
 }
 
