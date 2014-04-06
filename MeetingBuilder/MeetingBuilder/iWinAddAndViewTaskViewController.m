@@ -144,8 +144,8 @@
         self.endDateLabel.text = enddate;
         self.endTimeLabel.text = endtime;
         self.endDate = [self.dateFormatter dateFromString:enddate];
-        NSString *assignee = [[deserializedDictionary objectForKey:@"assignedTo"] stringValue];
-        [self.userList addObject:[self getContactForID:(NSString *)assignee]];
+        NSInteger assignee = [[deserializedDictionary objectForKey:@"assignedTo"] integerValue];
+        [self.userList addObject:[self getContactForID:assignee]];
     }
     
 //    self.titleField.text = self.task.title;
@@ -159,13 +159,12 @@
 
 -(void) initAttendees
 {
-    NSString *assignee = [self.task.assignedTo stringValue];
-    [self.userList addObject:[self getContactForID:(NSString *)assignee]];
+    [self.userList addObject:[self getContactForID:[self.task.assignedTo integerValue]]];
 }
 
--(Contact *)getContactForID:(NSString*)userID
+-(Contact *)getContactForID:(NSInteger)userID
 {
-    NSString *url = [NSString stringWithFormat:@"%@/User/%@", DATABASE_URL,userID];
+    NSString *url = [NSString stringWithFormat:@"%@/User/%d", DATABASE_URL,userID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:30];
     [urlRequest setHTTPMethod:@"GET"];
@@ -194,10 +193,7 @@
         NSDictionary* jsonObj = (NSDictionary*) jsonArray;
         Contact *c = [[Contact alloc] initWithEntity:entityDesc insertIntoManagedObjectContext:self.context];
         
-        NSNumberFormatter * f = [[NSNumberFormatter alloc] init];
-        [f setNumberStyle:NSNumberFormatterDecimalStyle];
-        NSNumber * uid = [f numberFromString:userID];
-        [c setUserID:uid];
+        [c setUserID:[NSNumber numberWithInt:userID]];
         
         NSString *name = (NSString *)[jsonObj objectForKey:@"name"];
         [c setName:name];
@@ -249,11 +245,16 @@
 
 - (IBAction)onClickSave
 {
-    Contact *c = (Contact *) self.userList[0];
+    Contact *c;
+    if (self.userList.count == 0){
+        c = [self getContactForID:self.userID];
+    }else {
+        c = (Contact *) self.userList[0];
+    }
     if (self.isEditing)
     {
         [self updateTask:@"title" :self.titleField.text];
-        [self updateTask:@"isCompleted" :@"False"];
+        [self updateTask:@"isCompleted" :[NSString stringWithFormat:@"%hhd", self.isCompleted.on]];
         [self updateTask:@"description" :self.descriptionField.text];
         [self updateTask:@"deadline" :[NSString stringWithFormat:@"%@ %@", self.endDateLabel.text, self.endTimeLabel.text]];
         [self updateTask:@"assignedTo" :[c.userID stringValue]];
@@ -412,7 +413,12 @@
 }
 
 - (void) saveNewTask{
-    Contact *c = (Contact *) self.userList[0];
+    Contact *c;
+    if (self.userList.count == 0){
+        c = [self getContactForID:self.userID];
+    }else {
+        c = (Contact *) self.userList[0];
+    }
     
     NSArray *keys = [NSArray arrayWithObjects:
                      @"title",

@@ -76,16 +76,16 @@
     
 }
 
-- (void)addTast:(NSDictionary *)element
+- (void)addTask:(NSDictionary *)element
 {
     NSString *url;
     NSInteger taskID =[[element objectForKey:@"id"] integerValue];
     
     url = [NSString stringWithFormat:@"%@/Task/%@", DATABASE_URL,[[NSNumber numberWithInt:taskID] stringValue]];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSDictionary *tastDeserializedDictionary = [self.backendUtility getRequestForUrl:url];
+    NSDictionary *taskDeserializedDictionary = [self.backendUtility getRequestForUrl:url];
     
-    if([tastDeserializedDictionary objectForKey:@"isCompleted"]){
+    if(![[taskDeserializedDictionary objectForKey:@"isCompleted"] boolValue]){
         [self.taskFeed addObject:element];
     }
 }
@@ -106,7 +106,7 @@
             }
             
             else {
-                [self addTast:element];
+                [self addTask:element];
             }
         }
     }
@@ -175,7 +175,7 @@
         self.addViewTaskViewController.viewTaskDelegate = self;
         
         [self presentViewController:self.addViewTaskViewController animated:YES completion:nil];
-        //self.addViewTaskViewController.view.superview.bounds = CGRectMake(MODAL_XOFFSET,MODAL_YOFFSET,MODAL_WIDTH,MODAL_HEIGHT);
+        self.addViewTaskViewController.view.superview.bounds = CGRectMake(MODAL_XOFFSET,MODAL_YOFFSET,MODAL_WIDTH,MODAL_HEIGHT);
     
     }
     else{ //notification
