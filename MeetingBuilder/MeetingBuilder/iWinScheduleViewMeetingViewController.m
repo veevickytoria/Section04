@@ -841,6 +841,16 @@
     NSString *agendaTitle = [deserializedDictionary objectForKey:@"title"];
     [self.addAgendaButton setTitle:agendaTitle forState:UIControlStateNormal];
     
+    NSInteger totalDuration = self.agendaController.totalDuration;
+    
+    NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
+    [outputFormatter setDateFormat:@"hh:mm a"];
+    
+    NSDateComponents *components = [[NSCalendar currentCalendar] components: NSHourCalendarUnit |  NSMinuteCalendarUnit fromDate:[outputFormatter dateFromString:self.startTimeLabel.text]];
+    NSDate *startTimeDate = [[NSCalendar currentCalendar] dateFromComponents:components];
+    NSDate *datePlusFiveMinutes = [startTimeDate dateByAddingTimeInterval:(totalDuration*60)];
+    self.endTimeLabel.text = [outputFormatter stringFromDate:datePlusFiveMinutes];
+    
     
     [self.agendaController dismissViewControllerAnimated:YES completion:nil];
     

@@ -18,7 +18,6 @@
 - (IBAction)onClickSave;
 - (IBAction)onClickCancel;
 - (IBAction)onClickAddItem;
-- (IBAction)onClickAddAttendees;
 @property (weak, nonatomic) IBOutlet UIButton *saveButton;
 @property (weak, nonatomic) IBOutlet UIButton *cancelButton;
 @property (weak, nonatomic) IBOutlet UILabel *headerLabel;
@@ -28,7 +27,7 @@
 @property (weak, nonatomic) IBOutlet UITableView *itemTableView;
 @property (nonatomic) id<AgendaDelegate> agendaDelegate;
 @property (nonatomic) BOOL isAgendaCreated;
-
+@property (nonatomic) NSInteger totalDuration;
 @property (nonatomic, assign) NSInteger meetingID;
 @property (nonatomic, assign) NSInteger userID;
 @property (nonatomic) NSInteger agendaID;

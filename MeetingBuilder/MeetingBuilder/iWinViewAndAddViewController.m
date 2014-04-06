@@ -46,7 +46,7 @@
     // Do any additional setup after loading the view from its nib.
     self.backendUtility = [[iWinBackEndUtility alloc] init];
     self.itemList = [[NSMutableArray alloc] init];
-
+    self.totalDuration = 0;
     if (!self.isAgendaCreated) {
         self.headerLabel.text = @"Create Agenda";
     
@@ -275,7 +275,7 @@ description itemIndex: (NSInteger *) itemIndex
         NSDictionary *agendaItem = @{@"title" : name, @"time": duration, @"description": description, @"content": @""};
     [self.itemList addObject:agendaItem];
     }
-    
+    self.totalDuration += [duration integerValue];
     [self.itemTableView reloadData];
     [self dismissViewControllerAnimated:YES completion:Nil];
 }
