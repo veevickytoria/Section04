@@ -45,7 +45,8 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 		return Uri.parse(getBaseUrl()).buildUpon();
 	}
 
-	public static Task getTask(String id) throws JsonParseException, JsonMappingException, IOException {
+	public static Task getTask(String id) throws JsonParseException,
+			JsonMappingException, IOException {
 		// Server URL setup
 		String _url = getBaseUri().appendPath(id).build().toString();
 		URL url = new URL(_url);
@@ -66,7 +67,7 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 		parseTask(taskNode, t);
 
 		conn.disconnect();
-		
+
 		return t;
 	}
 
@@ -86,9 +87,11 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 		// Build JSON Object for Title
 		jgen.writeStartObject();
 		jgen.writeStringField(Keys.Task.TITLE, t.getTitle());
-		jgen.writeStringField(Keys.Task.COMPLETED, Boolean.toString(t.getIsCompleted()));
+		jgen.writeStringField(Keys.Task.COMPLETED,
+				Boolean.toString(t.getIsCompleted()));
 		jgen.writeStringField(Keys.Task.DESC, t.getDescription());
-		jgen.writeStringField(Keys.Task.DEADLINE, Long.toString(t.getEndTimeInMillis()));
+		jgen.writeStringField(Keys.Task.DEADLINE,
+				Long.toString(t.getEndTimeInMillis()));
 		jgen.writeStringField(Keys.Task.DATE_CREATED, t.getDateCreated());
 		jgen.writeStringField(Keys.Task.DATE_ASSIGNED, t.getDateAssigned());
 		jgen.writeStringField(Keys.Task.CRITERIA, t.getCompletionCriteria());
@@ -207,7 +210,8 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 		t.setEndTime(JsonUtils.getJSONValue(node, Keys.Task.DEADLINE));
 		t.setDateCreated(JsonUtils.getJSONValue(node, Keys.Task.DATE_CREATED));
 		t.setDateAssigned(JsonUtils.getJSONValue(node, Keys.Task.DATE_ASSIGNED));
-		t.setCompletionCriteria(JsonUtils.getJSONValue(node, Keys.Task.CRITERIA));
+		t.setCompletionCriteria(JsonUtils
+				.getJSONValue(node, Keys.Task.CRITERIA));
 		t.setAssignedTo(JsonUtils.getJSONValue(node, Keys.Task.ASSIGNED_TO));
 		t.setAssignedTo(JsonUtils.getJSONValue(node, Keys.Task.ASSIGNED_FROM));
 		t.setCreatedBy(JsonUtils.getJSONValue(node, Keys.Task.CREATED_BY));

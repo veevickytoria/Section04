@@ -128,9 +128,7 @@ public class Meeting extends Event implements Parcelable, IJSONObject<Meeting> {
 		this.attendance = attendance;
 	}
 
-	public void addAttendee(String userID) {
-		// this.attendance.add(new AttendeeWrapper(userID,
-		// Attendance_Status.YES));
+	public void addAttendeeWithID(String userID) {
 		UserVolleyAdapter.fetchUserInfo(userID, new AsyncResponse<User>() {
 
 			@Override
@@ -139,6 +137,12 @@ public class Meeting extends Event implements Parcelable, IJSONObject<Meeting> {
 
 			}
 		});
+	}
+	
+	public void addAttendee(User user) {
+
+		this.attendance.add(user);
+
 	}
 
 	@Override
@@ -234,6 +238,11 @@ public class Meeting extends Event implements Parcelable, IJSONObject<Meeting> {
 	public JsonNode toJSON() throws JsonGenerationException, IOException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public boolean hasAgenda() {
+		// TODO : Chcek for an agenda
+		return false;
 	}
 
 }

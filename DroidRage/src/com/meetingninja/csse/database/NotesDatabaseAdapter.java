@@ -56,12 +56,11 @@ public class NotesDatabaseAdapter extends BaseDatabaseAdapter {
 		// Get server response
 		int responseCode = conn.getResponseCode();
 		String response = getServerResponse(conn);
-		JsonNode noteNode = MAPPER.readTree(response);
 
-		return parseNote(noteNode);
+		return parseNote(MAPPER.readTree(response));
 	}
 
-	public static String createNote(Note note) throws Exception {
+	public static String createNote(Note create) throws Exception {
 		// Server URL setup
 		String _url = getBaseUri().build().toString();
 
@@ -82,11 +81,11 @@ public class NotesDatabaseAdapter extends BaseDatabaseAdapter {
 
 		// Build JSON Object
 		jgen.writeStartObject();
-		jgen.writeStringField(Keys.Note.CREATED_BY, note.getCreatedBy());
-		jgen.writeStringField(Keys.Note.TITLE, note.getTitle());
-		jgen.writeStringField(Keys.Note.DESC, note.getDescription());
-		jgen.writeStringField(Keys.Note.CONTENT, note.getContent());
-		jgen.writeStringField(Keys.Note.UPDATED, note.getDateCreated());
+		jgen.writeStringField(Keys.Note.CREATED_BY, create.getCreatedBy());
+		jgen.writeStringField(Keys.Note.TITLE, create.getTitle());
+		jgen.writeStringField(Keys.Note.DESC, create.getDescription());
+		jgen.writeStringField(Keys.Note.CONTENT, create.getContent());
+		jgen.writeStringField(Keys.Note.UPDATED, create.getDateCreated());
 		jgen.writeEndObject();
 		jgen.close();
 
@@ -119,6 +118,7 @@ public class NotesDatabaseAdapter extends BaseDatabaseAdapter {
 		// add request header
 		conn.setRequestMethod(IRequest.DELETE);
 		addRequestHeader(conn, false);
+		
 		int responseCode = conn.getResponseCode();
 		String response = getServerResponse(conn);
 

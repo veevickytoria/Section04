@@ -21,6 +21,7 @@ import java.util.Map;
 
 import objects.Task;
 import objects.Topic;
+import objects.parcelable.TaskParcel;
 import pl.polidea.treeview.AbstractTreeViewAdapter;
 import pl.polidea.treeview.TreeBuilder;
 import pl.polidea.treeview.TreeNodeInfo;
@@ -181,11 +182,11 @@ public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 
 		// Add SubTopic Button
 		// mAddTopicBtn.setTag(rowTopic);
-		mAddTopicBtn.setOnClickListener(new SubTopicListener(rowTopic));
+		mAddTopicBtn.setOnClickListener(new AddSubTopicListener(rowTopic));
 
 		// Set Time Button
 		mTimeBtn.setTag(rowTopic);
-		mTimeBtn.setOnClickListener(new OnTimeBtnClick(rowTopic, mTime));
+		mTimeBtn.setOnClickListener(new OnAgendaTimeBtnClick(rowTopic, mTime));
 
 		Map<String, String> info = getDescription(rowTopic);
 
@@ -210,7 +211,6 @@ public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 
 	@Override
 	public long getItemId(final int position) {
-
 		return position;
 	}
 
@@ -219,11 +219,11 @@ public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 		return 1;
 	}
 
-	private class OnTimeBtnClick implements OnClickListener {
+	private class OnAgendaTimeBtnClick implements OnClickListener {
 		private final Topic topic;
 		private final TextView changeText;
 
-		public OnTimeBtnClick(Topic topic, TextView changeText) {
+		public OnAgendaTimeBtnClick(Topic topic, TextView changeText) {
 			this.topic = topic;
 			this.changeText = changeText;
 		}
@@ -260,23 +260,25 @@ public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 
 						});
 						hms.show();
-						Topic t = (Topic) v.getTag();
-						Map<String, String> info = getDescription(t);
+
+						Topic topicAtView = (Topic) v.getTag();
+						Map<String, String> info = getDescription(topicAtView);
 						Log.d(TAG, info.get("title"));
 						getManager().notifyDataSetChanged();
 						break;
 					case 1:
 
-						Intent i = new Intent(getActivity(),
+						Intent editTaskIntent = new Intent(getActivity(),
 								EditTaskActivity.class);
-						Task q = new Task();
-						q.setTitle(topic.getTitle());
-						i.putExtra(Keys.Task.PARCEL, q);
-						((Activity) mContext).startActivityForResult(i, 7);
+						Task agendaTask = new Task();
+						agendaTask.setTitle(topic.getTitle());
+						editTaskIntent.putExtra(Keys.Task.PARCEL,
+								new TaskParcel(agendaTask));
+						getActivity().startActivityForResult(editTaskIntent, 7);
 
 						break;
-					case 2:
-
+					case 2: // delete topic
+						// TODO
 						break;
 					default:
 						break;
@@ -289,10 +291,10 @@ public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 		}
 	}
 
-	private class SubTopicListener implements OnClickListener {
+	private class AddSubTopicListener implements OnClickListener {
 		private final Topic parent;
 
-		public SubTopicListener(Topic parent) {
+		public AddSubTopicListener(Topic parent) {
 			this.parent = parent;
 		}
 

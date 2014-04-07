@@ -40,15 +40,16 @@ public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 	public static String getBaseUrl() {
 		return BASE_URL + "Project";
 	}
-	
+
 	public static Uri.Builder getBaseUri() {
 		return Uri.parse(getBaseUrl()).buildUpon();
 	}
 
-	public static Project getProject(Project p) throws IOException{
+	public static Project getProject(Project p) throws IOException {
 
 		// Server URL setup
-		String _url = getBaseUri().appendPath(p.getProjectID()).build().toString();
+		String _url = getBaseUri().appendPath(p.getProjectID()).build()
+				.toString();
 
 		// Establish connection
 		URL url = new URL(_url);
@@ -62,13 +63,12 @@ public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 		conn.getResponseCode();
 		String response = getServerResponse(conn);
 		JsonNode projectNode = MAPPER.readTree(response);
-			
+
 		return parseProject(projectNode, p);
 	}
 
-
 	public static Project createProject(Project p) throws IOException,
-	MalformedURLException {
+			MalformedURLException {
 		// Server URL setup
 		String _url = getBaseUri().build().toString();
 
@@ -139,7 +139,7 @@ public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 			if (!projectNode.has(Keys.Project.ID)) {
 				result = "invalid";
 			} else
-				result =  projectNode.get(Keys.Project.ID).asText();
+				result = projectNode.get(Keys.Project.ID).asText();
 		}
 
 		if (!result.equalsIgnoreCase("invalid"))
@@ -148,7 +148,6 @@ public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 		conn.disconnect();
 		return p;
 	}
-
 
 	public static void updateProject(Project p) throws IOException {
 		ByteArrayOutputStream json = new ByteArrayOutputStream();
@@ -185,8 +184,7 @@ public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 		jgen.close();
 		String payloadMeetings = json.toString("UTF8");
 		ps.close();
-		
-		
+
 		json = new ByteArrayOutputStream();
 		// this type of print stream allows us to get a string easily
 		ps = new PrintStream(json);
@@ -207,7 +205,7 @@ public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 		jgen.close();
 		String payloadNotes = json.toString("UTF8");
 		ps.close();
-		
+
 		json = new ByteArrayOutputStream();
 		// this type of print stream allows us to get a string easily
 		ps = new PrintStream(json);
@@ -228,16 +226,15 @@ public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 		jgen.close();
 		String payloadMembers = json.toString("UTF8");
 		ps.close();
-		
-		
+
 		// Establish connection
 		updateHelper(payloadTitle);
 		updateHelper(payloadMeetings);
 		updateHelper(payloadNotes);
 		System.out.println(updateHelper(payloadMembers));
-		
+
 	}
-	
+
 	protected static String updateHelper(String jsonPayload) throws IOException {
 		// Server URL setup
 		String _url = getBaseUri().build().toString();
@@ -255,13 +252,12 @@ public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 		conn.disconnect();
 		return response;
 	}
-	
 
-	
-	public static void deleteProject(Project p) throws IOException{
+	public static void deleteProject(Project p) throws IOException {
 
 		// Server URL setup
-		String _url = getBaseUri().appendPath(p.getProjectID()).build().toString();
+		String _url = getBaseUri().appendPath(p.getProjectID()).build()
+				.toString();
 
 		// Establish connection
 		URL url = new URL(_url);
@@ -276,8 +272,9 @@ public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 		getServerResponse(conn);
 
 	}
-	
-	public static Project parseProject(JsonNode projectNode, Project p) throws IOException {
+
+	public static Project parseProject(JsonNode projectNode, Project p)
+			throws IOException {
 		String projectID = projectNode.get(Keys.Project.ID).asText();
 		List<Meeting> meetinglist = new ArrayList<Meeting>();
 		List<Note> notelist = new ArrayList<Note>();
@@ -285,7 +282,7 @@ public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 		p.setMeetings(meetinglist);
 		p.setMembers(userlist);
 		p.setNotes(notelist);
-		if(projectID != null){
+		if (projectID != null) {
 			p.setProjectID(projectID);
 			p.setProjectTitle(projectNode.get(Keys.Project.TITLE).asText());
 			JsonNode meetings = projectNode.get(Keys.Project.MEETINGS);
@@ -293,21 +290,22 @@ public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 				for (final JsonNode meetingNode : meetings) {
 					Meeting meeting = new Meeting();
 					meeting.setID(meetingNode.get(Keys.Meeting.ID).asText());
-					meeting = MeetingDatabaseAdapter.getMeetingInfo(meeting.getID());
+					meeting = MeetingDatabaseAdapter.getMeetingInfo(meeting
+							.getID());
 					p.addMeeting(meeting);
 				}
 			}
-			
+
 			JsonNode notes = projectNode.get(Keys.Project.NOTES);
 			if (notes != null && notes.isArray()) {
 				for (final JsonNode noteNode : notes) {
 					Note note = new Note();
 					note.setID(noteNode.get(Keys.Note.ID).asText());
-//					NotesDatabaseAdapter.get //TODO: lkjaslfdkjsad;lkfj
+					// NotesDatabaseAdapter.get //TODO: lkjaslfdkjsad;lkfj
 					p.addNote(note);
 				}
 			}
-			
+
 			JsonNode members = projectNode.get(Keys.Project.MEMBERS);
 			if (members != null && members.isArray()) {
 				for (final JsonNode memberNode : members) {

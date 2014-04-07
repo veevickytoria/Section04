@@ -70,17 +70,35 @@ public class ReviewAgendaActivity extends FragmentActivity {
 		if (savedInstanceState == null) {
 			manager = new InMemoryTreeStateManager<Topic>();
 			newCollapsible = false;
-			displayedAgenda = new ParcelDataFactory(getIntent().getExtras()).getAgenda();
+			displayedAgenda = getSavedAgenda(getIntent().getExtras());
 		} else {
 			manager = (TreeStateManager<Topic>) savedInstanceState
 					.getSerializable("treeManager");
 			newCollapsible = savedInstanceState.getBoolean("collapsible");
-			displayedAgenda = new ParcelDataFactory(savedInstanceState).getAgenda();
+			displayedAgenda = getSavedAgenda(savedInstanceState);
 		}
 
 		setupViews();
-		treeBuilder = new TreeBuilder<Topic>(manager);
+		setUpTreeListView(newCollapsible);
 
+		// registerForContextMenu(treeView);
+	}
+
+	private Agenda getSavedAgenda(Bundle extras) {
+		if (extras.containsKey(Keys.Agenda.PARCEL)) {
+			return new ParcelDataFactory(extras).getAgenda();
+		} else
+			return null;
+	}
+
+	private void setupViews() {
+		mTitleView = (TextView) findViewById(R.id.agenda_title_edittext);
+		mAddTopicBtn = (Button) findViewById(R.id.agenda_addTopicBtn);
+	}
+
+	private void setUpTreeListView(boolean collapsible) {
+		treeView = (TreeViewList) findViewById(R.id.agendaTreeView);
+		treeBuilder = new TreeBuilder<Topic>(manager);
 		if (displayedAgenda != null) {
 			int depth = displayedAgenda.getDepth();
 			mAgendaAdpt = new ReviewAgendaItemAdapter(this, manager,
@@ -89,16 +107,7 @@ public class ReviewAgendaActivity extends FragmentActivity {
 			buildTree(treeBuilder);
 		}
 		treeView.setAdapter(mAgendaAdpt);
-
-		setCollapsible(newCollapsible);
-
-		// registerForContextMenu(treeView);
-	}
-
-	private void setupViews() {
-		treeView = (TreeViewList) findViewById(R.id.agendaTreeView);
-		mTitleView = (TextView) findViewById(R.id.agenda_title_edittext);
-		mAddTopicBtn = (Button) findViewById(R.id.agenda_addTopicBtn);
+		setCollapsible(collapsible);
 
 	}
 
@@ -141,7 +150,8 @@ public class ReviewAgendaActivity extends FragmentActivity {
 		super.onSaveInstanceState(outState);
 		outState.putSerializable("treeManager", manager);
 		outState.putBoolean("collapsible", this.collapsible);
-		outState.putParcelable(Keys.Agenda.PARCEL, new AgendaParcel(displayedAgenda));
+		outState.putParcelable(Keys.Agenda.PARCEL, new AgendaParcel(
+				displayedAgenda));
 	}
 
 	protected final void setCollapsible(final boolean newCollapsible) {

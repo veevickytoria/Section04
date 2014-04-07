@@ -62,12 +62,6 @@ import com.parse.ParseAnalytics;
 import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 
-/**
- * Main Activity Window.
- *
- * @author moorejm
- *
- */
 public class MainActivity extends FragmentActivity {
 
 	private static final String TAG = MainActivity.class.getSimpleName();
@@ -342,28 +336,35 @@ public class MainActivity extends FragmentActivity {
 		if (requestCode == 3)
 			frag_notes.populateList();
 
-		if (requestCode == VOICE_RECOGNITION_REQUEST_CODE
-				&& resultCode == RESULT_OK) {
-			ArrayList<String> thingsYouSaid = data
-					.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-			if (thingsYouSaid.contains("home")) {
-				selectItem(DrawerLabel.HOMEPAGE.getPosition());
-			} else if (thingsYouSaid.contains("meetings")) {
-				selectItem(DrawerLabel.MEETINGS.getPosition());
-			} else if (thingsYouSaid.contains("groups")) {
-				selectItem(DrawerLabel.GROUPS.getPosition());
-			} else if (thingsYouSaid.contains("notes")) {
-				selectItem(DrawerLabel.NOTES.getPosition());
-			} else if (thingsYouSaid.contains("profile")) {
-				selectItem(DrawerLabel.PROFILE.getPosition());
-			} else if (thingsYouSaid.contains("tasks")) {
-				selectItem(DrawerLabel.TASKS.getPosition());
-			} else if (thingsYouSaid.contains("projects")) {
-				selectItem(DrawerLabel.PROJECTS.getPosition());
-			} else if (thingsYouSaid.contains("contacts")) {
-				selectItem(DrawerLabel.CONTACTS.getPosition());
+		if (data != null) {
+
+			if (requestCode == VOICE_RECOGNITION_REQUEST_CODE
+					&& resultCode == RESULT_OK) {
+				ArrayList<String> speechArray = data
+						.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+				handleSpeech(speechArray, data);
 			}
 		}
+	}
+
+
+	private void handleSpeech(ArrayList<String> speechArray, Intent data) {
+		if (speechArray.contains("meetings")) {
+			selectItem(DrawerLabel.MEETINGS.getPosition());
+		} else if (speechArray.contains("groups")) {
+			selectItem(DrawerLabel.GROUPS.getPosition());
+		} else if (speechArray.contains("notes")) {
+			selectItem(DrawerLabel.NOTES.getPosition());
+		} else if (speechArray.contains("profile")) {
+			selectItem(DrawerLabel.PROFILE.getPosition());
+		} else if (speechArray.contains("tasks")) {
+			selectItem(DrawerLabel.TASKS.getPosition());
+		} else if (speechArray.contains("projects")) {
+			selectItem(DrawerLabel.PROJECTS.getPosition());
+		} else if (speechArray.contains("contacts")) {
+			selectItem(DrawerLabel.CONTACTS.getPosition());
+		}
+
 	}
 
 	@Override
@@ -405,19 +406,16 @@ public class MainActivity extends FragmentActivity {
 		case R.id.action_logout:
 			ApplicationController.getInstance().logout();
 			return true;
-		case R.id.action_settings:
-			return true;
 		case R.id.action_speak:
-			Intent i = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-			i.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, "en-US");
-			i.putExtra(RecognizerIntent.EXTRA_PROMPT, "Go to...");
+			Intent speechIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+			speechIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, "en-US");
+			speechIntent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Go to...");
 			try {
-				startActivityForResult(i, VOICE_RECOGNITION_REQUEST_CODE);
+				startActivityForResult(speechIntent, VOICE_RECOGNITION_REQUEST_CODE);
 
 			} catch (Exception e) {
-				Toast.makeText(this,
-						"Error initializing speech to text engine.",
-						Toast.LENGTH_LONG).show();
+				NinjaToastUtil.show(this,
+						"Error initializing speech to text engine.");
 			}
 			return true;
 		default:

@@ -56,7 +56,7 @@ public class SessionManager {
 
 	/**
 	 * Gets a singleton instance of the session manager
-	 *
+	 * 
 	 * @return
 	 */
 	public static synchronized SessionManager getInstance() {
@@ -66,7 +66,8 @@ public class SessionManager {
 	}
 
 	public void init() {
-		this._context = ApplicationController.getInstance().getApplicationContext();
+		this._context = ApplicationController.getInstance()
+				.getApplicationContext();
 		pref = _context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
 	}
 
@@ -173,7 +174,7 @@ public class SessionManager {
 	/**
 	 * Get the last pressed navigation drawer position. If doesn't exist,
 	 * returns 0.
-	 *
+	 * 
 	 * @return the last pressed navigation drawer position, or 0, if doesn't
 	 *         exist
 	 */

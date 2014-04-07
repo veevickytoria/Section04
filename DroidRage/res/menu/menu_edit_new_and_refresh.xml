@@ -15,6 +15,6 @@
         android:showAsAction="ifRoom"
         android:title="Refresh">
     </item>
-    <item android:id="@+id/action_edit" android:orderInCategory="300" android:showAsAction="ifRoom" android:title="Edit" android:icon="@drawable/ic_action_notes"></item>
+    <item android:id="@+id/action_edit" android:orderInCategory="300" android:showAsAction="ifRoom" android:title="Edit" android:icon="@drawable/ic_action_edit"></item>
 
 </menu>

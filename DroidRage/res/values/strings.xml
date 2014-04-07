@@ -22,6 +22,8 @@
     <string name="drawer_open">Open Nav drawer</string>
     <string name="drawer_close">Close Nav drawer</string>
     <string name="action_edit">Edit</string>
+    <string name="label_yes">Yes</string>
+    <string name="label_no">No</string>
 
         <string name="button_ok">OK</string>
     <string name="error_title">Error</string>
@@ -46,7 +48,7 @@
     <array name="nav_drawer_icons">
         <item>@drawable/ic_action_homepage</item>
         <item>@drawable/ic_action_meetings</item>
-        <item>@drawable/ic_action_notes</item>
+        <item>@drawable/ic_action_edit</item>
         <item>@drawable/ic_action_tasks</item>
         <item>@drawable/ic_action_person</item>
         <item>@drawable/ic_action_group</item>

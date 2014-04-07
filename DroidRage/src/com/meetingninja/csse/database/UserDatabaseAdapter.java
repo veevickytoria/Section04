@@ -46,6 +46,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.meetingninja.csse.extras.JsonUtils;
 import com.meetingninja.csse.extras.NinjaTextUtils;
+import com.meetingninja.csse.extras.SleeperThread;
 
 public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 
@@ -59,7 +60,8 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		return Uri.parse(getBaseUrl()).buildUpon();
 	}
 
-	public static String getBaseContactUrl() {//TODO: get rid of this put append path in path place
+	public static String getBaseContactUrl() {// TODO: get rid of this put
+												// append path in path place
 		return BASE_URL + "Contact";
 	}
 
@@ -85,7 +87,8 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		JsonNode userNode = MAPPER.readTree(response);
 
 		User ret = parseUser(userNode);
-		ret.setID(userID);
+		if (ret != null)
+			ret.setID(userID);
 		return ret;
 	}
 
@@ -161,8 +164,8 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		addRequestHeader(conn, false);
 
 		// Get server response
-		 int responseCode = conn.getResponseCode();
-		 String response = getServerResponse(conn);
+		int responseCode = conn.getResponseCode();
+		String response = getServerResponse(conn);
 
 		Schedule sched = parseSchedule(MAPPER.readTree(response));
 
@@ -339,14 +342,17 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		// Initialize ObjectMapper
 		List<Note> noteList = new ArrayList<Note>();
 		List<String> noteIds = new ArrayList<String>();
-		final JsonNode noteArray = MAPPER.readTree(response).get(Keys.Note.LIST);
+		final JsonNode noteArray = MAPPER.readTree(response)
+				.get(Keys.Note.LIST);
 
 		if (noteArray.isArray()) {
 			for (final JsonNode noteNode : noteArray) {
-				Note n = NotesDatabaseAdapter.getNote(JsonUtils.getJSONValue(noteNode, Keys.Note.ID));
-				n.setCreatedBy(JsonUtils.getJSONValue(noteNode, Keys.Note.CREATED_BY));
-				if (n != null) {
-					noteList.add(n);
+				Note noteObj = NotesDatabaseAdapter.getNote(JsonUtils.getJSONValue(
+						noteNode, Keys.Note.ID));
+				noteObj.setCreatedBy(JsonUtils.getJSONValue(noteNode,
+						Keys.Note.CREATED_BY));
+				if (noteObj != null) {
+					noteList.add(noteObj);
 				}
 				noteIds.add(noteNode.get(Keys.Note.ID).asText());
 			}
@@ -399,7 +405,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 
 	/**
 	 * Registers a passed in User and returns that user with an assigned UserID
-	 *
+	 * 
 	 * @param registerMe
 	 * @param password
 	 * @return the passed-in user with an assigned ID by the server
@@ -500,20 +506,11 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		ps.close();
 		String[] payloads = payload.split("\f\\s*");
 
-		Thread t = new Thread(new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-					e.getLocalizedMessage();
-				}
-			}
-		}));
+		Thread sleeperThread = new SleeperThread(500);
 		String response = "";
 		for (String p : payloads) {
-			t.run();
-			response = updateHelper(getBaseUri().build().toString(),  p);
+			sleeperThread.run();
+			response = updateHelper(getBaseUri().build().toString(), p);
 		}
 		return parseUser(MAPPER.readTree(response));
 	}

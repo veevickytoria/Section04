@@ -92,7 +92,7 @@ public class ViewNoteActivity extends Activity {
 			NavUtils.navigateUpFromSameTask(this);
 			return true;
 
-		case R.id.edit_note_action_edit:
+		case R.id.note_edit_action:
 			edit();
 			return true;
 		}
