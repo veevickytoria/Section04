@@ -2,6 +2,9 @@ Meeting Ninja
 =========
 #### Rose-Hulman  Junior Project
 
+#### Project Description
+A meeting handler across 3 front-ends Web; iOS; and Android, connecting with a single REST API backend.  
+
 ##### Courses
 - Dr. Chandan Rupaketi CSSE 371 & CSSE 374 Section 04 Fall-Winter 2013-2014  
 - Dr. Shawn Bohner's CSSE 375 Section 01 Spring 2013-2014  
