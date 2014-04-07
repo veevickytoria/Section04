@@ -21,7 +21,6 @@
 @interface iWinScheduleViewMeetingViewController : UIViewController <OCCalendarDelegate, UserDelegate, UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate, UITextFieldDelegate, AgendaDelegate>
 - (IBAction)onAddAgenda;
 - (IBAction)onAddAttendees;
-- (IBAction)onViewMySchedule;
 - (IBAction)onClickSave;
 - (IBAction)onClickSaveAndAddMore;
 - (IBAction)onDeleteMeeting;
@@ -45,7 +44,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *saveButton;
 @property (weak, nonatomic) IBOutlet UIButton *cancelButton;
 @property (weak, nonatomic) IBOutlet UIButton *addAttendeesButton;
-@property (weak, nonatomic) IBOutlet UIButton *visitScheduleButton;
 @property (weak, nonatomic) IBOutlet UITableView *attendeeTableView;
 @property (weak, nonatomic) IBOutlet UIButton *deleteMeetingButton;
 @property (weak, nonatomic) IBOutlet UIButton *addAgendaButton;

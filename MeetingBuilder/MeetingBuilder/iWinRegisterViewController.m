@@ -80,7 +80,38 @@
     if (email.length == 0 || [email rangeOfString:emailSymbol].location == NSNotFound) {
         return @"Please enter a valid email address!";
     }
+    if ([self emailExists:email]){
+        return @"An account with the email already exists.";
+    }
     return @"";
+}
+
+-(BOOL)emailExists:(NSString*)email
+{
+    NSString *url = [NSString stringWithFormat:@"%@/User/Users", DATABASE_URL];
+    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
+    
+    NSArray *jsonArray;
+    if (!deserializedDictionary)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Users not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alert show];
+    }
+    else
+    {
+        jsonArray = [deserializedDictionary objectForKey:@"users"];
+    }
+    if (jsonArray.count > 0)
+    {
+        for (NSDictionary* users in jsonArray)
+        {
+            NSString* userEmail = (NSString *)[users objectForKey:@"email"];
+            if ([email isEqualToString:userEmail])
+                return YES;
+        }
+    }
+    return NO;
 }
 
 - (IBAction)onClickRegister:(id)sender
@@ -101,6 +132,14 @@
             userID = [[deserializedDictionary objectForKey:@"userID"] integerValue];
             [self createContactWithID:userID withEmail:email withPassword:self.passwordField.text];
         }
+        
+        [self deleteRememberMeInfo];
+        NSManagedObject *newRememberMe = [NSEntityDescription insertNewObjectForEntityForName:@"RememberMe" inManagedObjectContext:self.context];
+        NSError *error;
+        [newRememberMe setValue:email forKey:@"email"];
+        [newRememberMe setValue:self.passwordField.text forKey:@"password"];
+        [self.context save:&error];
+        
         [self.registerDelegate onRegister:userID];
         
     }
@@ -109,6 +148,23 @@
         [self failRegisterValidation:error];
     }
 
+}
+
+-(NSArray*) getRememberMeInfo
+{
+    NSFetchRequest *request = [[NSFetchRequest alloc]initWithEntityName:@"RememberMe"];
+    NSError *error = nil;
+    return [self.context executeFetchRequest:request error:&error];
+}
+
+-(void) deleteRememberMeInfo
+{
+    NSError *error;
+    for (NSManagedObject * rm in [self getRememberMeInfo])
+    {
+        [self.context deleteObject:rm];
+    }
+    [self.context save:&error];
 }
 
 -(void)createContactWithID:(NSInteger)userID withEmail:(NSString*)email withPassword:(NSString*)password

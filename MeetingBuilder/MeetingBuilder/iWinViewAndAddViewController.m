@@ -46,7 +46,7 @@
     // Do any additional setup after loading the view from its nib.
     self.backendUtility = [[iWinBackEndUtility alloc] init];
     self.itemList = [[NSMutableArray alloc] init];
-
+    self.totalDuration = 0;
     if (!self.isAgendaCreated) {
         self.headerLabel.text = @"Create Agenda";
     
@@ -257,20 +257,10 @@
     self.agendaItemViewController.itemDelegate = self;
     [self.agendaItemViewController setModalPresentationStyle:UIModalPresentationFormSheet];
     [self.agendaItemViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-    
+    self.agendaItemViewController.itemTitle = @"Add New Item";
     [self presentViewController:self.agendaItemViewController animated:YES completion:nil];
     self.agendaItemViewController.view.superview.bounds = CGRectMake(0,0,556,283);
     
-}
-
-- (IBAction)onClickAddAttendees
-{
-    self.userViewController = [[iWinAddUsersViewController alloc] initWithNibName:@"iWinAddUsersViewController" bundle:nil withPageName:@"Agenda" inEditMode:self.isEditing];
-    [self.userViewController setModalPresentationStyle:UIModalPresentationPageSheet];
-    [self.userViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-  //  self.userViewController.userDelegate = self;
-    [self presentViewController:self.userViewController animated:YES completion:nil];
-    self.userViewController.view.superview.bounds = CGRectMake(MODAL_XOFFSET, MODAL_YOFFSET, MODAL_WIDTH, MODAL_HEIGHT);
 }
 
 -(void)saveItem:(NSString *)name duration: (NSString*) duration description:(NSString*)
@@ -285,7 +275,7 @@ description itemIndex: (NSInteger *) itemIndex
         NSDictionary *agendaItem = @{@"title" : name, @"time": duration, @"description": description, @"content": @""};
     [self.itemList addObject:agendaItem];
     }
-    
+    self.totalDuration += [duration integerValue];
     [self.itemTableView reloadData];
     [self dismissViewControllerAnimated:YES completion:Nil];
 }

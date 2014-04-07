@@ -17,9 +17,12 @@
 @property (nonatomic) NSMutableArray *taskFeed;
 @property (nonatomic) NSMutableArray *notificationFeed;
 @property (nonatomic) NSMutableArray *meetingFeed;
+@property (nonatomic) NSMutableArray *noteFeed;
+@property (nonatomic) NSMutableArray *noteFeedSubtitle;
 @property (strong, nonatomic) iWinBackEndUtility *backendUtility;
 @property (strong, nonatomic) iWinScheduleViewMeetingViewController *scheduleMeetingVC;
 @property (strong, nonatomic) iWinAddAndViewTaskViewController *addViewTaskViewController;
+@property (nonatomic) NSInteger userID;
 @end
 
 
@@ -35,27 +38,9 @@
         [defaultDict setValue:[NSString stringWithFormat:@"%d", userID] forKey:@"userID"];
         [[NSUserDefaults standardUserDefaults] registerDefaults:defaultDict];
         [[NSUserDefaults standardUserDefaults] synchronize];
+        self.userID = userID;
     }
     return self;
-}
-
-
-
-- (void)initNotificationFeed
-{
-    NSString *urlNotification = [NSString stringWithFormat:@"%@/User/Notification/%@", DATABASE_URL,[[NSUserDefaults standardUserDefaults] objectForKey:@"userID"]];
-    
-    urlNotification = [urlNotification stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSDictionary *deserializedDictionaryNotification = [self.backendUtility getRequestForUrl:urlNotification];
-    
-    if (deserializedDictionaryNotification)
-    {
-        NSArray *jsonArray = [deserializedDictionaryNotification objectForKey:@"notifications"];
-        for(int i = 0; i < [jsonArray count]; i++){
-            NSDictionary* element = [jsonArray objectAtIndex:i];
-            [self.notificationFeed addObject:element];
-        }
-    }
 }
 
 - (void)viewDidLoad
@@ -73,19 +58,20 @@
     
     [self initMeetingAndTaskFeed];
     [self initNotificationFeed];
+    [self initMiscellanous];
     
 }
 
-- (void)addTast:(NSDictionary *)element
+- (void)addTask:(NSDictionary *)element
 {
     NSString *url;
     NSInteger taskID =[[element objectForKey:@"id"] integerValue];
     
     url = [NSString stringWithFormat:@"%@/Task/%@", DATABASE_URL,[[NSNumber numberWithInt:taskID] stringValue]];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSDictionary *tastDeserializedDictionary = [self.backendUtility getRequestForUrl:url];
+    NSDictionary *taskDeserializedDictionary = [self.backendUtility getRequestForUrl:url];
     
-    if([tastDeserializedDictionary objectForKey:@"isCompleted"]){
+    if(![[taskDeserializedDictionary objectForKey:@"isCompleted"] boolValue]){
         [self.taskFeed addObject:element];
     }
 }
@@ -106,13 +92,48 @@
             }
             
             else {
-                [self addTast:element];
+                [self addTask:element];
             }
         }
     }
 }
 
+- (void)initNotificationFeed
+{
+    NSString *urlNotification = [NSString stringWithFormat:@"%@/User/Notification/%@", DATABASE_URL,[[NSUserDefaults standardUserDefaults] objectForKey:@"userID"]];
+    
+    urlNotification = [urlNotification stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *deserializedDictionaryNotification = [self.backendUtility getRequestForUrl:urlNotification];
+    
+    if (deserializedDictionaryNotification)
+    {
+        NSArray *jsonArray = [deserializedDictionaryNotification objectForKey:@"notifications"];
+        for(int i = 0; i < [jsonArray count]; i++){
+            NSDictionary* element = [jsonArray objectAtIndex:i];
+            [self.notificationFeed addObject:element];
+        }
+    }
+}
 
+-(void)initMiscellanous
+{
+    self.noteFeed = [[NSMutableArray alloc] init];
+    self.noteFeedSubtitle = [[NSMutableArray alloc] init];
+    
+    NSString *url = [NSString stringWithFormat:@"%@/User/Sharing/%d", DATABASE_URL,self.userID];
+    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
+    
+    // parse json into variables --> Array of dictionaries
+    for (NSDictionary *sharingUser in deserializedDictionary ) {
+        // then for each user - put there userName into table view
+        [self.noteFeedSubtitle addObject:[NSString stringWithFormat:@"Shared by %@",[sharingUser objectForKey:@"userName"]]];
+    
+        for (NSDictionary *d in [sharingUser objectForKey:@"notes"])
+            [self.noteFeed addObject:[NSString stringWithFormat:@"Note '%@' has been shared with you.", [d objectForKey:@"noteTitle"]]];
+    }
+}
 
 - (void)didReceiveMemoryWarning
 {
@@ -129,25 +150,28 @@
         if (indexPath.section == 0)
         {
             NSDictionary* meeting = (NSDictionary*)[self.meetingFeed objectAtIndex:indexPath.row];
-  
             cell.textLabel.text = (NSString*)[meeting objectForKey:@"title"];
-                        //stringByAppendingString:@": "] stringByAppendingString:[meeting objectForKey:@"description"]];
             cell.detailTextLabel.text = (NSString*)[meeting objectForKey:@"datetimeStart"];
-                        //stringByAppendingString:@" to "] stringByAppendingString:[meeting objectForKey:@"datetimeEnd"]] ;
         }
     
         else if (indexPath.section == 1)
         {
             NSDictionary* task = (NSDictionary*)[self.taskFeed objectAtIndex:indexPath.row];
-            
             cell.detailTextLabel.text= (NSString*)[[[task objectForKey:@"datetimeStart"] stringByAppendingString:@" to "]stringByAppendingString:[task objectForKey:@"datetimeEnd"]];
             cell.textLabel.text = (NSString*)[[[task objectForKey:@"title"] stringByAppendingString:@": "] stringByAppendingString:[task objectForKey:@"description"]];
         }
     
         else
         {
-            NSDictionary* notification = (NSDictionary*) [self.notificationFeed objectAtIndex:indexPath.row];
-            cell.textLabel.text = (NSString*)[[[notification objectForKey:@"description"] stringByAppendingString:@": "]stringByAppendingString:[notification objectForKey:@"datetime"]];
+            NSInteger notificationLength = self.notificationFeed.count;
+            
+            if (indexPath.row < notificationLength){
+                NSDictionary* notification = (NSDictionary*) [self.notificationFeed objectAtIndex:indexPath.row];
+                cell.textLabel.text = (NSString*)[[[notification objectForKey:@"description"] stringByAppendingString:@": "]stringByAppendingString:[notification objectForKey:@"datetime"]];
+            }else{
+                cell.textLabel.text = (NSString*)[self.noteFeed objectAtIndex:(notificationLength - indexPath.row)];
+                cell.detailTextLabel.text = (NSString*)[self.noteFeedSubtitle objectAtIndex:(notificationLength - indexPath.row)];
+            }
         }
     
     return cell;
@@ -175,18 +199,11 @@
         self.addViewTaskViewController.viewTaskDelegate = self;
         
         [self presentViewController:self.addViewTaskViewController animated:YES completion:nil];
-        //self.addViewTaskViewController.view.superview.bounds = CGRectMake(MODAL_XOFFSET,MODAL_YOFFSET,MODAL_WIDTH,MODAL_HEIGHT);
+        self.addViewTaskViewController.view.superview.bounds = CGRectMake(MODAL_XOFFSET,MODAL_YOFFSET,MODAL_WIDTH,MODAL_HEIGHT);
     
-    }
-    else{ //notification
-        
-        
     }
 
 }
-
-
-
 
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -201,7 +218,7 @@
     }
     else
     {
-        return self.notificationFeed.count;
+        return (self.notificationFeed.count + self.noteFeed.count);
     }
 }
 

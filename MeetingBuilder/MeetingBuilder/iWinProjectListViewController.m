@@ -12,6 +12,7 @@
 #import "iWinBackEndUtility.h"
 #import <QuartzCore/QuartzCore.h>
 #import "iWinAppDelegate.h"
+#import "iWinConstants.h"
 
 @interface iWinProjectListViewController ()
 @property (nonatomic) NSInteger userID;
@@ -23,12 +24,6 @@
 @property (strong, nonatomic) iWinViewAndCreateProjectViewController *createProjectVC;
 @property (strong, nonatomic) iWinViewAndCreateProjectViewController *viewProjectVC;
 @end
-
-//constants
-const int XOFFSET = 36;
-const int YOFFSET = 15;
-const int HEIGHT = 1018;
-const int WIDTH = 804;
 
 @implementation iWinProjectListViewController
 
@@ -164,7 +159,7 @@ const int WIDTH = 804;
     
     
     [self presentViewController:self.viewProjectVC animated:YES completion:nil];
-    self.viewProjectVC.view.superview.bounds = CGRectMake(XOFFSET,YOFFSET,WIDTH,HEIGHT);
+    self.viewProjectVC.view.superview.bounds = CGRectMake(MODAL_XOFFSET,MODAL_YOFFSET,MODAL_WIDTH,MODAL_HEIGHT);
 }
 
 
@@ -210,7 +205,7 @@ const int WIDTH = 804;
     
     self.createProjectVC.projectDelegate = self;
     [self presentViewController:self.createProjectVC animated:YES completion:nil];
-    self.createProjectVC.view.superview.bounds = CGRectMake(XOFFSET,YOFFSET,WIDTH,HEIGHT);
+    self.createProjectVC.view.superview.bounds = CGRectMake(MODAL_XOFFSET,MODAL_YOFFSET,MODAL_WIDTH,MODAL_HEIGHT);
 }
 
 - (IBAction)onClickBackToProfile:(id)sender {

@@ -60,6 +60,9 @@
     if(self.groupID != -1){
         [self initView];
     }
+    
+    [self.userIDList addObject:[NSNumber numberWithInt:self.userID]];
+    [self.userList addObject:[self getContactForID:self.userID]];
 }
 
 - (void)didReceiveMemoryWarning
@@ -177,7 +180,7 @@
         }
         else
         {
-            [self.userList addObject:[self getContactForID:self.userIDList[i]]];
+            [self.userList addObject:[self getContactForID:[self.userIDList[i] integerValue]]];
             iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
             
             NSManagedObjectContext *context = [appDelegate managedObjectContext];
@@ -233,9 +236,9 @@
 }
 
 
--(Contact *)getContactForID:(NSString*)userID
+-(Contact *)getContactForID:(NSInteger)userID
 {
-    NSString *url = [NSString stringWithFormat:@"%@/User/%@", DATABASE_URL,userID];
+    NSString *url = [NSString stringWithFormat:@"%@/User/%d", DATABASE_URL,userID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *deserializedDictionary = [self.backEndUtility getRequestForUrl:url];
     if (!deserializedDictionary)

@@ -16,6 +16,7 @@
 @interface iWinTaskListViewController ()
 @property (strong, nonatomic) NSMutableArray *itemList;
 @property (strong, nonatomic) NSMutableArray *itemDetail;
+@property (strong, nonatomic) NSMutableArray *itemCompleted;
 @property (nonatomic) NSInteger userID;
 @property (strong, nonatomic) iWinAddAndViewTaskViewController *addViewTaskViewController;
 @property (nonatomic) NSInteger selectedTask;
@@ -42,12 +43,10 @@
     
     self.itemList = [[NSMutableArray alloc] init];
     self.itemDetail = [[NSMutableArray alloc] init];
+    self.itemCompleted = [[NSMutableArray alloc] init];
     self.taskIDs = [[NSMutableArray alloc] init];
     self.backendUtility = [[iWinBackEndUtility alloc] init];
     
-    self.createTaskButton.layer.cornerRadius = 7;
-    self.createTaskButton.layer.borderColor = [[UIColor darkGrayColor] CGColor];
-    self.createTaskButton.layer.borderWidth = 1.0f;
     [self populateTaskList];
     
 }
@@ -57,6 +56,7 @@
     [self.addViewTaskViewController dismissViewControllerAnimated:YES completion:nil];
     self.itemList = [[NSMutableArray alloc] init];
     self.itemDetail = [[NSMutableArray alloc] init];
+    self.itemCompleted = [[NSMutableArray alloc] init];
     self.taskIDs = [[NSMutableArray alloc] init];
 
     [self populateTaskList];
@@ -129,6 +129,8 @@
     [newTask setValue:[deserializedDictionary objectForKey:@"assignedFrom"] forKey:@"assignedFrom"];
     [newTask setValue:[deserializedDictionary objectForKey:@"createdBy"] forKey:@"createdBy"];
     [context save:&error];
+    
+    [self.itemCompleted addObject:[deserializedDictionary objectForKey:@"isCompleted"]];
 }
 
 
@@ -205,7 +207,7 @@
     cell.textLabel.text = (NSString *)[self.itemList objectAtIndex:indexPath.row];
     cell.detailTextLabel.text = (NSString *)[self.itemDetail objectAtIndex:indexPath.row];
     
-    if (indexPath.row == 0)
+    if ([self.itemCompleted[indexPath.row] boolValue])
     {
         cell.accessoryType = UITableViewCellAccessoryCheckmark;
     }
@@ -225,7 +227,7 @@
     [self.addViewTaskViewController setModalPresentationStyle:UIModalPresentationPageSheet];
     [self.addViewTaskViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     [self presentViewController:self.addViewTaskViewController animated:YES completion:nil];
-    self.addViewTaskViewController.view.superview.bounds = CGRectMake(0,0,768,1003);
+    self.addViewTaskViewController.view.superview.bounds = CGRectMake(MODAL_XOFFSET,MODAL_YOFFSET,MODAL_WIDTH,MODAL_HEIGHT);
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {

@@ -32,18 +32,13 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
-    
-    
-    
-    //self.headerLabel.text = @"Add New Item";
-    //if (self.isEditing)
-    //{
-        self.headerLabel.text = self.itemTitle;
-        self.titleTextField.text = self.itemTitle;
-        self.durationTextField.text = self.itemDuration;
-        self.descriptionField.text = self.itemDescription;
-    //}
+    self.descriptionField.layer.borderColor = [[UIColor lightGrayColor] CGColor];
+    self.descriptionField.layer.borderWidth = 0.7f;
+    self.descriptionField.layer.cornerRadius = 7.0f;
+    self.headerLabel.text = self.itemTitle;
+    self.titleTextField.text = self.itemTitle;
+    self.durationTextField.text = self.itemDuration;
+    self.descriptionField.text = self.itemDescription;
 }
 
 - (void)didReceiveMemoryWarning

@@ -62,7 +62,7 @@
     self.userList = [[NSMutableArray alloc] init];
     iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     self.context = [appDelegate managedObjectContext];
-
+    [self.userList addObject:[self getContactForID:self.userID]];
     if (self.isEditing)
     {
         
@@ -245,14 +245,14 @@
     
     for (int i=0; i<[attendeeArray count]; i++)
     {
-        [self.userList addObject:[self getContactForID:(NSString *)attendeeArray[i]]];
+        [self.userList addObject:[self getContactForID:[attendeeArray[i] integerValue]]];
     }
 }
 
 
--(Contact *)getContactForID:(NSString*)userID
+-(Contact *)getContactForID:(NSInteger)userID
 {
-    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/%@", userID];
+    NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/User/%d", userID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
     if (!deserializedDictionary)
@@ -267,7 +267,7 @@
             
             NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Contact" inManagedObjectContext:self.context];
             Contact *c = [[Contact alloc] initWithEntity:entityDesc insertIntoManagedObjectContext:self.context];
-            c.userID = [NSNumber numberWithInt:[userID integerValue]];
+            c.userID = [NSNumber numberWithInt:userID];
             c.name = (NSString *)[deserializedDictionary objectForKey:@"name"];
             c.email = (NSString *)[deserializedDictionary objectForKey:@"email"];
             return c;
