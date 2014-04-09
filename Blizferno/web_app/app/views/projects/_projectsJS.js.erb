@@ -23,13 +23,13 @@ function showDeleteModal(ID){
 }
 
 function hideDeleteModal(){
-    var onSuccess = function(data){
+  var doOnSuccess = function(data){
                       if(JSON.parse(data)["valid"] == "true"){
                         $('#deleteProjectModal').modal('hide');
                         window.location.reload(true);
                       }
                     }
-    ajaxRequest('null', 'DELETE', '/Project/' + deleteID, true, onSuccess);
+  ajaxRequest('null', 'DELETE', '/Project/' + deleteID, true, doOnSuccess);
 }
 
 function showEditModal(ID){
@@ -44,27 +44,27 @@ function showEditModal(ID){
   currentID = ID;
   projectID = projectsJSON[currentID]["projectID"].toString();
 
-  var successGetProject = function(data){
-                            setProjectArray(data);
-                          }
-  ajaxRequest('null', 'GET', '/Project/' + projectID, false, successGetProject);
+  var doOnSuccess = function(data){
+                      setProjectArray(data);
+                    }
+  ajaxRequest('null', 'GET', '/Project/' + projectID, false, doOnSuccess);
 
+  doOnSuccess = function(data){
+                  meetingInfo = JSON.parse(data);
+                  currentMeetings.push({'mid1':mid1,'title':meetingInfo['title']});
+                }
   for (i in projectArray['meetings']){
     mid1 = projectArray['meetings'][i]['meetingID'];
-    var successProjectInfo = function(data){
-                              meetingInfo = JSON.parse(data);
-                              currentMeetings.push({'mid1':mid1,'title':meetingInfo['title']});
-                            }
-    ajaxRequest('null', 'GET', '/Meeting/' + mid1, false, successProjectInfo);
+    ajaxRequest('null', 'GET', '/Meeting/' + mid1, false, doOnSuccess);
   }
 
+  doOnSuccess = function(data){
+                  memberInfo = JSON.parse(data);
+                  currentMembers.push({'mid2':mid2,'name':memberInfo['name']});
+                }
   for (i in projectArray['members']){
     mid2 = projectArray['members'][i]['userID'];
-    var successProjectInfo2 = function(data){
-                                memberInfo = JSON.parse(data);
-                                currentMembers.push({'mid2':mid2,'name':memberInfo['name']});
-                              }
-    ajaxRequest('null', 'GET', '/User/' + mid2, false, successProjectInfo2);
+    ajaxRequest('null', 'GET', '/User/' + mid2, false, doOnSuccess);
   }
 
   document.getElementById("titleE").value = projectArray['projectTitle'];
@@ -151,12 +151,12 @@ function submitEditModal(){
     ajaxRequest(updateTitle, 'PUT', '/Project/', false, 'null');
     ajaxRequest(updateMeetings, 'PUT', '/Project/', true, 'null');
 
-    var onSuccess = function(data){
-                      $('#editProjectModal').modal('hide');
-                      $('#viewProjectModal').modal('hide');
-                      window.location.reload(true);
-                    }
-    ajaxRequest(updateMembers, 'PUT', '/Project/', true, onSuccess);
+    var doOnSuccess = function(data){
+                        $('#editProjectModal').modal('hide');
+                        $('#viewProjectModal').modal('hide');
+                        window.location.reload(true);
+                      }
+    ajaxRequest(updateMembers, 'PUT', '/Project/', true, doOnSuccess);
   }
 }
 
@@ -174,25 +174,25 @@ function showViewModal(ID){
   currentID = ID;
   projectID = projectsJSON[currentID]["projectID"].toString();
 
-  var successGetProject = function(data){
-                          projectArray = JSON.parse(data);
-                        }
-  ajaxRequest('null', 'GET', '/Project/' + projectID, false, successGetProject);
+  var doOnSuccess = function(data){
+                      projectArray = JSON.parse(data);
+                    }
+  ajaxRequest('null', 'GET', '/Project/' + projectID, false, doOnSuccess);
 
+  doOnSuccess = function(data){
+                  meetingInfo = JSON.parse(data);
+                  projectMeetings.push({'title':meetingInfo['title']});
+                }
   for (i in projectArray['meetings']){
-    var successGetProjectMeetings = function(data){
-                                      meetingInfo = JSON.parse(data);
-                                      projectMeetings.push({'title':meetingInfo['title']});
-                                    }
-    ajaxRequest('null', 'GET', '/Meeting/' + projectArray['meetings'][i]['meetingID'], false, successGetProjectMeetings);
+    ajaxRequest('null', 'GET', '/Meeting/' + projectArray['meetings'][i]['meetingID'], false, doOnSuccess);
   }
 
+  doOnSuccess = function(data){
+                  memberInfo = JSON.parse(data);
+                  projectMembers.push({'name':memberInfo['name']});
+                } 
   for (i in projectArray['members']){
-    var successGetMembers = function(data){
-                              memberInfo = JSON.parse(data);
-                              projectMembers.push({'name':memberInfo['name']});
-                            }
-    ajaxRequest('null', 'GET', '/User/' + projectArray['members'][i]['userID'], false, successGetMembers);
+    ajaxRequest('null', 'GET', '/User/' + projectArray['members'][i]['userID'], false, doOnSuccess);
   }
 
   document.getElementById("titleV").innerHTML = projectArray["projectTitle"];
