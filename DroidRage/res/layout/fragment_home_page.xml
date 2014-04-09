@@ -1,84 +1,30 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/homepage_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/activity_horizontal_margin" >
+    android:layout_margin="@dimen/activity_horizontal_margin" 
+    android:layout_weight="2">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/news_feed_textview"
+            <LinearLayout
+                android:id="@+id/two_pane"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="News Feed:"
-                android:textSize="18sp" />
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal|top"
+                android:orientation="vertical">
 
-        </LinearLayout>
+                <include android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    layout="@layout/fragment_home_page_meetings" 
+                    android:layout_weight="1"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
+                <include
+                    android:id="@+id/attendees_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    layout="@layout/fragment_home_page_tasks" 
+                    android:layout_weight="1"/>
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/meeting_textview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Meetings:" />
-
-            <ListView
-                android:id="@+id/homepage_meetings"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-            </ListView>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/news_feed_textview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Tasks:" />
-
-            <ListView
-                android:id="@+id/homepage_tasks"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-            </ListView>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/misc_textview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Misc:" />
-
-            <ListView
-                android:id="@+id/homepage_misc"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-            </ListView>
-        </LinearLayout>
-
-    </LinearLayout>
-
-</FrameLayout>
+</LinearLayout>
