@@ -2,21 +2,7 @@ require 'project_api_wrapper'
 
 class ProjectsController < ApplicationController
 
-	before_filter :index
 	before_filter :getProjects
-
-  def index
-  	if (cookies[:userID].blank?)
-			redirect_to '/login/index'
-			return
-	end
-  end
-
-  def list
-  end
-
-  def new
-  end
 
   def getProjects
  	project_api_wrapper = ProjectApiWrapper.new

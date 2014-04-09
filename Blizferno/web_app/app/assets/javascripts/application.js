@@ -179,16 +179,6 @@ function deleteCookie(name){
   document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 }
 
-function convertFormToJSON(form){
-  var array = jQuery(form).serializeArray();
-  var json = {};
-
-  jQuery.each(array, function() {
-    json[this.name] = this.value || '';
-  });
-
-  return json;
-}
 
 function ajaxRequest(editData, type, location, syncronous, onSuccess){
     var HOMEPAGE = 'http://csse371-04.csse.rose-hulman.edu';
@@ -208,4 +198,117 @@ function ajaxRequest(editData, type, location, syncronous, onSuccess){
     }
 
     $.ajax(ajaxConfig);
+}
+
+
+
+
+
+//This function takes a form element and creates a json object using the name of each input in the form as the field and the value of each input as the corresponding input
+function convertFormToJSON(form){
+	var array = jQuery(form).serializeArray();
+	var json = {};
+
+	jQuery.each(array, function() {
+		json[this.name] = this.value || '';
+	});
+
+	return json;
+}
+
+function getMembers(id){
+    var newMembers = [];
+    $( '#' + id + ' :selected' ).each( function( i, selected ) {
+      newMembers[i] = $( selected ).val();
+    });
+    return newMembers;
+}
+
+
+function populateTableRows(JSONArray, JSONDisplayColumn, tableID){
+    var table = document.getElementById(tableID);
+    if(table.rows.length != 0){
+      for(var i = table.rows.length - 1; i > -1; i--){
+        table.deleteRow(i);
+      }
+    }
+
+    for (var k in JSONArray){
+      // alert(k);
+      var rowCount = table.rows.length;
+      var row = table.insertRow(rowCount);
+
+      var cell = row.insertCell(0);
+
+      cell.innerHTML = JSONArray[k][JSONDisplayColumn];
+    }
+}
+
+
+
+
+/* DOCUMENTATION FOR POPULATESELECT
+  Populates the select tag specified by 'selectID'
+  with text from JSONArray elements with JSONDisplayColumn data
+  and value from JSONArray elements with JSONValueColumn data.
+  Sets the values in JSONSelectValues to 'selected' in the newly
+  populated select tag.
+*/
+function populateSelect(JSONArray, JSONDisplayColumn, JSONValueColumn, JSONSelectValues, selectID){
+    var select = document.getElementById(selectID);
+
+    if(select.options.length != 0){
+      for(var i = select.options - 1; i > -1; i--){
+        select.remove(i);
+      }
+    }
+
+    for (var k in JSONArray){
+    	if (JSONArray[k][JSONDisplayColumn] != ""){
+		    var el = document.createElement("option");
+		    el.textContent = JSONArray[k][JSONDisplayColumn];
+		    el.value = JSONArray[k][JSONValueColumn];
+		    select.appendChild(el);
+		}
+    }
+
+    for (var i in JSONSelectValues){
+      for (var j in select.options){
+        if(JSONSelectValues[i][JSONValueColumn] == select.options[j].value){
+          select.options[j].selected = true;
+          break;
+        }
+      }
+    }
+}
+
+
+function returnSelectValuesAsJSON(JSONtype, JSONDisplayColumn, JSONValueColumn, selectID){
+    var select = document.getElementById(selectID);
+    var newJSONString = "{" + "\"" + JSONtype + "\"" + ":[";
+    
+    for (var j in select.options){
+      if(select.options[j].selected){
+        newJSONString = newJSONString + "{" + "\"" + JSONValueColumn + "\":\"" + select.options[j].value + "\"},";
+      }
+    }
+
+	newJSONString = newJSONString.substring(0, newJSONString.length - 1);
+    newJSONString = newJSONString + "]}";
+
+    var newJSON = JSON.parse(newJSONString);
+    return newJSON[JSONtype];
+}
+
+function hasSelectedValue(selectID){
+	var select =document.getElementById(selectID);
+
+	for (var j in select.options){
+      if(select.options[j].selected){
+        return true
+      }
+    }
+
+    return false
+
 }

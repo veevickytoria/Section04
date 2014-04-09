@@ -8,7 +8,7 @@ class ProjectApiWrapper < BaseWrapper
 	end
 
 	def get_project(project_id)
-		get_response(url_from_parts('/Project/', project_id))
+		get_response(url_from_parts('/Project/', project_id.to_s))
 	end
 end
 

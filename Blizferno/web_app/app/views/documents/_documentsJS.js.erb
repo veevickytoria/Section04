@@ -61,32 +61,118 @@ function createAgendaStructure(contents, element){
 //alert("description="+contents[i]['description']);
 //alert("contents[i]="+JSON.stringify(contents[i]));
 
-			var contentElement = element.appendChild(document.createElement("div"));
-				contentElement.setAttribute("style", "margin-left:"+10*i+"%");
-				contentElement.appendChild(document.createTextNode("Content: "));
+			var contentElement = document.createElement("div");
+				contentElement.setAttribute("style", "margin-left:"+15*i+"%");
+			var contentElementText = document.createTextNode("Content: ");
+				contentElement.appendChild(contentElementText);
+				element.appendChild(contentElement);
 
 			contentElement.appendChild(document.createElement("br"));
 			contentElement.appendChild(document.createElement("br"));
 
-			var titleElement = contentElement.appendChild(document.createElement("div").appendChild(document.createTextNode("Title: ")));
-			var title = contentElement.appendChild(document.createElement("div").appendChild(document.createTextNode(contents[i]['title'])));
+			var title = document.createElement("div");
+			var titleText = document.createTextNode("Title: " + contents[i]['title']);
+				title.appendChild(titleText);
+				contentElement.appendChild(title);
 
 			contentElement.appendChild(document.createElement("br"));
 			contentElement.appendChild(document.createElement("br"));
 
-			var timeElement = contentElement.appendChild(document.createElement("div").appendChild(document.createTextNode("Time: ")));
-			var time = contentElement.appendChild(document.createElement("div").appendChild(document.createTextNode(contents[i]['time'])));
+			var time = document.createElement("div");
+			var timeText = document.createTextNode("Time: " + contents[i]['time']);
+				time.appendChild(timeText);
+				contentElement.appendChild(time);
 
 			contentElement.appendChild(document.createElement("br"));
 			contentElement.appendChild(document.createElement("br"));
 
-			var descriptionElement = contentElement.appendChild(document.createElement("div").appendChild(document.createTextNode("Description: ")));
-			var description = contentElement.appendChild(document.createElement("div").appendChild(document.createTextNode(contents[i]['description'])));
+			var description = document.createElement("div");
+			var descriptionText = document.createTextNode("Description: " + contents[i]['description']);
+				description.appendChild(descriptionText);
+				contentElement.appendChild(description);
 
 			contentElement.appendChild(document.createElement("br"));
 			contentElement.appendChild(document.createElement("br"));
 
 			createAgendaStructure(contents[i]["content"], contentElement);
+		}
+	}
+}
+
+
+function createEditAgendaStructure(contents, element, depth){
+//alert("contents="+JSON.stringify(contents));
+//alert("count="+jsonLength(contents));
+
+
+	if(typeof contents != 'undefined'){
+		for(var i = 1; i <= jsonLength(contents); i++){
+//alert("description="+contents[i]['description']);
+//alert("contents[i]="+JSON.stringify(contents[i]));
+	var blah = i-1;
+
+			var contentElement = document.createElement("div");
+				contentElement.setAttribute("style", "margin-left:"+15*i+"%");
+if(typeof element.getAttribute("id").split(':')[1] == 'undefined'){
+	contentElement.setAttribute("id", "contentID|0:0");
+}else{
+		contentElement.setAttribute("id", "contentID|"+element.getAttribute("id").split('|')[1]+"-"+depth+":"+blah);
+}
+				
+			var contentElementText = document.createTextNode("Content: ");
+				contentElement.appendChild(contentElementText);
+				element.appendChild(contentElement);
+
+			contentElement.appendChild(document.createElement("br"));
+			contentElement.appendChild(document.createElement("br"));
+
+
+			var titleElement = document.createElement("input");
+				titleElement.setAttribute("type", "text");
+				titleElement.setAttribute("class", "form-control");
+				titleElement.setAttribute("name", "title-"+contentElement.getAttribute('id').split('|')[1]);
+				titleElement.value = contents[i]['title'];
+			var titleDiv = document.createElement("div");
+			var titleText = document.createTextNode("Title: ");
+				titleDiv.appendChild(titleText);
+				titleDiv.appendChild(titleElement);
+				contentElement.appendChild(titleDiv);
+
+
+			contentElement.appendChild(document.createElement("br"));
+			contentElement.appendChild(document.createElement("br"));
+
+			var timeElement = document.createElement("input");
+				timeElement.setAttribute("type", "text");
+				timeElement.setAttribute("class", "form-control");
+				timeElement.setAttribute("name", "time-"+contentElement.getAttribute('id').split('|')[1]);
+				timeElement.value = contents[i]['time'];
+			var timeDiv = document.createElement("div");
+			var timeText = document.createTextNode("Time: ");
+				timeDiv.appendChild(timeText);
+				timeDiv.appendChild(timeElement);
+				contentElement.appendChild(timeDiv);		
+
+
+
+			contentElement.appendChild(document.createElement("br"));
+			contentElement.appendChild(document.createElement("br"));
+
+			var descriptionElement = document.createElement("input");
+				descriptionElement.setAttribute("type", "textarea");
+				descriptionElement.setAttribute("class", "form-control");
+				descriptionElement.setAttribute("name", "description-"+contentElement.getAttribute('id').split('|')[1]);
+				descriptionElement.value = contents[i]['description'];
+			var descriptionDiv = document.createElement("div");
+			var descriptionText = document.createTextNode("Description: ");
+				descriptionDiv.appendChild(descriptionText);
+				descriptionDiv.appendChild(descriptionElement);
+				contentElement.appendChild(descriptionDiv);
+
+			contentElement.appendChild(document.createElement("br"));
+			contentElement.appendChild(document.createElement("br"));
+
+			createEditAgendaStructure(contents[i]["content"], contentElement, depth+1);
 		}
 	}
 }
@@ -117,9 +203,14 @@ function showEditNoteModal(){
 function showEditAgendaModal(){
 	document.getElementById("AtitleE").value = agendasJSON[currentID]["title"];
 	document.getElementById("AuserIDE").innerHTML = agendasJSON[currentID]["userID"];
-	document.getElementById("AcontentTitleE").value = agendasJSON[currentID]["content"]["1"]["title"];
+/*	document.getElementById("AcontentTitleE").value = agendasJSON[currentID]["content"]["1"]["title"];
 	document.getElementById("AcontentTimeE").value = agendasJSON[currentID]["content"]["1"]["time"];
 	document.getElementById("AcontentDescriptionE").value = agendasJSON[currentID]["content"]["1"]["description"];
+*/
+
+
+
+//createEditAgendaStructure(agendasJSON[currentID]["content"], document.getElementById("AuserIDE").parentNode, 0);
 
 
 		 	meetingIDs = [];
@@ -159,6 +250,10 @@ function updateEditedValues(type){
 	}else if(type =='agenda'){
 		var form = document.getElementById('editAgendaForm');
 		var formJSON = new convertFormToJSON(form);
+//alert("this is the form: "+ JSON.stringify(formJSON));
+//alert("this is the other version: "+ JSON.stringify(convertEditFormJSONToPOSTFormat(formJSON)));
+//convertEditFormJSONToPOSTFormat(0);
+
 		var invalid = validateEditedAgendaValues(formJSON);
 		if (!invalid){
 			updateEditedAgendaValues(formJSON);
@@ -166,6 +261,71 @@ function updateEditedValues(type){
 		}
 	}
 }
+
+
+function convertEditFormJSONToPOSTFormat(givenJSON){
+/*
+	var returnJSON = {};
+	for(var i = 0; i < r {
+		var nameSplit = i.split("-");
+		if(nameSplit[0] == 0){// if first level
+			retunJSON[nameSplit[2]]=val;
+		}else if(nameSplit[0] > depth){
+			depth = nameSplit[0];
+			returnJSON["content"]=
+		}
+	}
+
+return returnJSON;
+*/
+/*
+var blah = "content";
+var jsontest = {};
+for (var i = 1; i < 4; i++){
+eval("jsontest."+blah+"=[{content:[]}]");
+
+	blah = blah + "[0].content";
+}
+alert("blah:"+blah);
+eval("jsontest."+blah+"='test'");
+
+alert("testing:"+JSON.stringify(jsontest));
+*/
+
+var returnJSON = {"content":[]};
+	$.each(givenJSON, function(i, val){
+		var positionList = i.split('-');
+alert("positionList: "+ positionList);
+positionList.shift();
+
+		var field = positionList[0];
+		//eval("returnJSON."+generateNestedContent(positionList)+".field=val");
+	alert("returnJSON."+generateNestedContent(positionList)+".field=val");
+	});
+
+return returnJSON;
+
+}
+
+
+
+function generateNestedContent(positionList){
+alert("test: "+ positionList);
+	var locationArray = positionList.split(':');
+	var depth = locationArray[0];
+	var position = locationArray[1];
+	var evalString = "content";
+	for(var i = 0; i < positionList.length; i++){
+
+		evalString = evalString +"["+position+"].content";
+	}
+	evalString = evalString.slice(0,-8);
+alert("evalString: "+evalString);
+	return evalString;
+}
+
+
+
 
 function updateEditedNoteValues(editForm){
 	var editNoteID = notesJSON[currentID]['noteID'].toString();
@@ -426,47 +586,3 @@ function hideDeleteAgendaModal(){
 	ajaxRequest('null', 'DELETE', '/Agenda/' + deleteData, true, doOnSuccess);
 }
 
-function convertFormToJSON(form){
-	var array = jQuery(form).serializeArray();
-	var json = {};
-
-	jQuery.each(array, function() {
-		json[this.name] = this.value || '';
-	});
-
-	return json;
-}
-
-function getMembers(id){
-    var newMembers = [];
-    $( '#' + id + ' :selected' ).each( function( i, selected ) {
-      newMembers[i] = $( selected ).val();
-    });
-    return newMembers;
-}
-
-function populateSelect(JSONArray, JSONDisplayColumn, JSONValueColumn, JSONSelectValues, selectID){
-    var select = document.getElementById(selectID);
-
-    if(select.options.length != 0){
-      for(var i = select.options - 1; i > -1; i--){
-        select.remove(i);
-      }
-	}
-
-    for (var k in JSONArray){
-      var el = document.createElement("option");
-      el.textContent = JSONArray[k][JSONDisplayColumn];
-      el.value = JSONArray[k][JSONValueColumn];
-      select.appendChild(el);
-    }
-
-    for (var i in JSONSelectValues){
-      for (var j in select.options){
-        if(JSONSelectValues[i][JSONValueColumn] == select.options[j].value){
-          select.options[j].selected = true;
-          break;
-        }
-      }
-    }
-}
