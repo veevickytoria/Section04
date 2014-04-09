@@ -5,22 +5,25 @@ require_once "RequestHandler.php";
 
 class User extends RequestHandler{
 		
-    function __construct(){	
-            parent::__construct("Users", "email");
+    function __construct($client){	
+            parent::__construct($client, "Users", "email");
     }
 	
     protected function nodeToOutput($node) {
         if ($node == NULL) {return false;} //make pretty exception
-        return json_encode(array_merge(array("userID"=>$node->getId()), $node->getProperties()));
+        $nodeInfo = array_merge(array("userID"=>$node->getId()), $node->getProperties());
+        unset($nodeInfo['password']);
+        return json_encode($nodeInfo);
+        
     }
 	
     function login($email, $password){
         $userNode=$this->index->findOne('email', $email);
-        if(sizeof($userNode!=0)){
+        if(sizeof($userNode)!=0){
             $properties = $userNode->getProperties();
 
             if(strcasecmp($password, $properties['password']) == 0){
-                    return json_encode(array("userID"=>$email->getId()));
+                    return json_encode(array("userID"=>$userNode->getId()));
             }else{
                     return json_encode(array("errorID"=>1, "errorMessage"=>"Invalid email or password"));
             }
@@ -45,7 +48,7 @@ class User extends RequestHandler{
             $tempUserNode->setProperty('name',$postContent->name);
 
             NodeUtility::storeNodeInDatabase($tempUserNode);        
-            $this->index->add($tempUserNode, 'email', $postContent->email);
+            $this->index->add($tempUserNode, $this->indexKey, $postContent->email);
             $this->createSettings($tempUserNode->getId());
             return json_encode(array("userID"=>$tempUserNode->getId()));
         } else {
@@ -54,14 +57,11 @@ class User extends RequestHandler{
     }
 	
     function getAllUsers(){
-        $users= $this->index->query('email:*');
-        for($ii=0;$ii<sizeof($users);$ii++){
-            $array=$users[$ii]->getProperties();
-            $array['userID']=$users[$ii]->getId();
-            unset($array['password']);
-            $results[$ii]= $array;
+        $response = array();
+        foreach($this->index->query($this->indexKey.':*') as $user){
+            array_push($response, $this->nodeToOutput($user));
         }
-        return json_encode(array("users"=>$results));
+        return json_encode(array("users"=>$response));
     }
 	
     function getUserInfo($userId){
@@ -78,24 +78,33 @@ class User extends RequestHandler{
     }
 	
     function PUT($putList){
-        $userId= $putList["userID"];
-        $field= $putList["field"];
-        $value= $putList["value"];
+        $user = NodeUtility::getNodeByID($putList->userID, $this->client);
+        if ($user == NULL){
+            return json_encode(array('errorID'=>'10', 'errorMessage'=>$user->getId().' is an not a node.'));
+        }
+        if (!NodeUtility::checkInIndex($user, $this->index) ){
+            return json_encode(array('errorID'=>'11', 'errorMessage'=>$user->getId().' is an not a user node.'));
+        }
 
-        $userNode=$this->client->getNode($userId);
-
-        if(NodeUtility::isValidField($userNode, $field)){	
-            if(strcasecmp($field, 'email') == 0){
-                updateUserEmail($value);
+        if(NodeUtility::isValidField($user, $putList->field)){	
+            if(strcasecmp($putList->field, 'email') == 0){
+                $this->updateUserEmail($putList->value);
             }
 
-            $userNode->setProperty($field, $value);
-            NodeUtility::storeNodeInDatabase($userNode);        
-
-            $resultsArr = array_merge(array('userID'=>$userNode->getId()), $userNode->getProperties());
-            unset($resultsArr['password']);
-            return json_encode($resultsArr);		
+            $user->setProperty($putList->field, $putList->value);
+            NodeUtility::storeNodeInDatabase($user);
+            return $this->nodeToOutput($user);		
         }        
+    }    
+	
+    function updateUserEmail($newEmail){
+        $user = $this->index->findOne('email', $newEmail);
+        if($user != NULL){
+            $this->index->remove($user);
+            $this->index->add($user, 'email', $newEmail);
+        } else {
+            return json_encode(array('errorID'=>'11', 'errorMessage'=>'Email already linked to another account'));
+        }
     }
     
     public function DELETE($id){
@@ -123,17 +132,6 @@ class User extends RequestHandler{
         foreach($relations as $rel){
             //remove all relationships
             $rel->delete();
-        }
-    }
-	
-    function updateUserEmail($newEmail){
-        $user = $this->index->findOne('email', $newEmail);
-        if($user != NULL){
-            $user->setProperty('email', $newEmail)->save();
-            $this->index->remove($user);
-            $this->index->add($user, 'email', $newEmail);
-        } else {
-            return json_encode(array('errorID'=>'11', 'errorMessage'=>'Email already linked to another account'));
         }
     }
 	
@@ -238,14 +236,14 @@ class User extends RequestHandler{
 }
 
 //================this section is for testing with our test suite without controller==========
-/*
+
 $postContent = json_decode(file_get_contents('php://input'));
 $client = new Client();
 $User = new User($client);
 
 
 if (strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'Login')==0) {
-    echo $User.login($postContent->email,$postContent->password);
+    echo $User->login($postContent->email,$postContent->password);
 	
 }else if (strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 ){
     echo $User->POST($postContent);
@@ -254,13 +252,13 @@ if (strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat'])
     echo $User.push($postContent->message);
 	
 }else if(strcasecmp($_SERVER['REQUEST_METHOD'], 'GET')==0 && isset($_REQUEST['cat']) && strcasecmp($_REQUEST['cat'], 'Users')==0){
-    echo $User.getAllUsers();
+    echo $User->getAllUsers();
 	
 }else if( strcasecmp($_SERVER['REQUEST_METHOD'],'GET') == 0){
     echo $User->GET($_GET['id']);
 	
 }else if( strcasecmp($_SERVER['REQUEST_METHOD'],'PUT') == 0){
-    echo $User.updateUser($_GET['id'], $postContent->field, $postContent->value);
+    echo $User->PUT($postContent);
 	
 }else if( strcasecmp($_SERVER['REQUEST_METHOD'],'DELETE') == 0){
     echo $User->DELETE($_GET['id']);
@@ -268,4 +266,3 @@ if (strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 && isset($_REQUEST['cat'])
     echo $_SERVER['REQUEST_METHOD'] ." request method not found";
 }
  
- */
