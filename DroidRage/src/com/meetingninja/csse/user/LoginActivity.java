@@ -317,6 +317,7 @@ public class LoginActivity extends Activity {
 									// Hooray! The user is logged in.
 									ParseInstallation installation = ParseInstallation.getCurrentInstallation();
 									installation.put("user", user);
+									installation.put("userId", user.getObjectId());
 									installation.saveEventually();
 								} else {
 									Log.e(TAG, e.getLocalizedMessage());

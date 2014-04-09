@@ -103,7 +103,7 @@ public class ApplicationController extends Application {
 	}
 
 	public void logout() {
-		parseLogout();
+		parseSDKLogout();
 		clearSQLiteTables();
 		SessionManager.getInstance().logoutUser();
 	}
@@ -113,7 +113,7 @@ public class ApplicationController extends Application {
 		mySQLiteHelper.onUpgrade(mySQLiteHelper.getReadableDatabase(), 1, 1);
 	}
 
-	public void parseLogout() {
+	public void parseSDKLogout() {
 		ParseInstallation installation = ParseInstallation
 				.getCurrentInstallation();
 		installation.remove("userId");

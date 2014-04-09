@@ -109,7 +109,7 @@ public class MainActivity extends FragmentActivity {
 	private static final MeetingsFragment frag_meetings = MeetingsFragment
 			.getInstance();
 	private static final NotesFragment frag_notes = NotesFragment.getInstance();
-	private static final TasksFragment frag_tasks = TasksFragment.getInstance();
+	private static final TasksFragment frag_tasks = new TasksFragment();
 	private static final ProfileFragment frag_profile = new ProfileFragment();
 	private static final GroupsFragment frag_groups = new GroupsFragment();
 	private static final ProjectFragment frag_projects = new ProjectFragment();

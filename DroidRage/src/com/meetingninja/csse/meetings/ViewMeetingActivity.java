@@ -159,7 +159,7 @@ public class ViewMeetingActivity extends Activity {
 			NavUtils.navigateUpFromSameTask(this);
 			return true;
 
-		case R.id.note_edit_action:
+		case R.id.edit_meeting_action:
 			edit();
 			return true;
 		}
