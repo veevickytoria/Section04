@@ -1,11 +1,11 @@
-function showEditModal(id, users){
+function showEditGroupModal(id, users){
   var ModalFactory = abstractModalFactory();
   var modal = ModalFactory.createModal(EditGroupModal, "GroupModal", id);
 
   modal.showModal(users);
 } 
 
-function showDeleteModal(ID){
+function showDeleteGroupModal(ID){
   var ModalFactory = abstractModalFactory();
   var modal = ModalFactory.createModal(DeleteModal, "GroupModal", ID);
 
@@ -13,16 +13,16 @@ function showDeleteModal(ID){
 
 }
 
-function showNewModal(users){
+function showNewGroupModal(users){
   var ModalFactory = abstractModalFactory();
   var modal = ModalFactory.createModal(NewGroupModal, "GroupModal", "");
 
   modal.showModal(users);
 }
 
-function showViewGroupModal(ID){
+function showViewGroupModal(ID, users){
   var ModalFactory = abstractModalFactory();
-  var modal = ModalFactory.createModal(ViewGroupModal, "GroupModal");
+  var modal = ModalFactory.createModal(ViewGroupModal, "GroupModal", ID);
 
-  modal.showModal();
+  modal.showModal(users);
 }

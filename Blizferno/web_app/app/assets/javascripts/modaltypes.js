@@ -57,15 +57,18 @@ function NinjaModal(documentID, objectID){
 			while(div.firstChild){
     			div.removeChild(div.firstChild);
 			}
-			var div = document.getElementById('body');
-			while(div.firstChild){
-    			div.removeChild(div.firstChild);
+			var div2 = document.getElementById('body');
+			while(div2.firstChild){
+    			div2.removeChild(div2.firstChild);
 			}
-			var div = document.getElementById('footer');
-			while(div.firstChild){
-    			div.removeChild(div.firstChild);
+			var div3 = document.getElementById('footer');
+			while(div3.firstChild){
+    			div3.removeChild(div3.firstChild);
 			}
-			$('#' + documentID).modal('hide');
+
+			$('#' + documentID).on('hidden.bs.modal', function() {
+				$(this).removeData('bs.modal');
+			});
 		},
 
 		/* From this point on, the methods are methods that do not pertain 
@@ -121,7 +124,6 @@ function NinjaModal(documentID, objectID){
 		populateSelect: function(JSONArray, JSONDisplayColumn, JSONValueColumn, JSONSelectValues, selectID){
 			// get select tag
 			var select = selectID;
-
 			// empty select tag
 			if(select.options.length != 0){
 				for(var i = select.options - 1; i > -1; i--){
@@ -131,7 +133,7 @@ function NinjaModal(documentID, objectID){
 
 			// populate select tag
 			for (var k in JSONArray){
-				if(JSONArray[k][JSONDisplayColumn] != null){
+				if(JSONArray[k][JSONDisplayColumn] != "" && JSONArray[k][JSONDisplayColumn] != null){
 					var el = document.createElement("option");
 					el.textContent = JSONArray[k][JSONDisplayColumn];
 					el.value = JSONArray[k][JSONValueColumn];
@@ -150,6 +152,26 @@ function NinjaModal(documentID, objectID){
 			}
 
 			return select;
+		},
+
+		populateTableRows: function(JSONArray, JSONDisplayColumn, tableID){
+			var table = tableID
+			if(table.rows.length != 0){
+				for(var i = table.rows.length - 1; i > -1; i--){
+					table.deleteRow(i);
+				}
+			}
+
+			for (var k in JSONArray){
+				var rowCount = table.rows.length;
+				var row = table.insertRow(rowCount);
+
+				var cell = row.insertCell(0);
+
+				cell.innerHTML = JSONArray[k][JSONDisplayColumn];
+			}
+
+			return table
 		}
 	}
 }
@@ -183,6 +205,7 @@ function DeleteModal(documentID, deleteID){
 	}
 
 	deleteModal.createFooter = function(object){
+		var self = this;
 		// Close button
 		var elementClose = document.createElement("button");
 		elementClose.setAttribute("class", "btn btn-primary");
@@ -192,7 +215,7 @@ function DeleteModal(documentID, deleteID){
 		// ActionButton
 		var elementDelete = document.createElement("input");
 		elementDelete.setAttribute("type", "button");
-		elementDelete.onclick = deleteModal.executeAction;
+		elementDelete.onclick = function(){self.executeAction(object);};
 		elementDelete.setAttribute("class", "btn btn-primary");
 		elementDelete.value = "Delete";
 
@@ -208,10 +231,11 @@ function DeleteModal(documentID, deleteID){
 		    url: 'http://csse371-04.csse.rose-hulman.edu/' + object + '/' + deleteID,
 		    success:function(data){
 			    if(JSON.parse(data)["valid"] == "true"){
-			    	this.close;
+			    	parentClose.call(this);
 			        window.location.reload(true);
 			    }else{
 			        alert('Delete Error');
+			        parentClose.call(this);
 			        this.close;
 			    }
 		    }
@@ -236,9 +260,12 @@ function NewGroupModal(documentID, blankID){
 	var parentClose = newModal.close;
 
 	newModal.showModal = function(users){
+		var charToReplaceWith = ":";
+		var userJson = users.replace(/=>/g,charToReplaceWith);
+		var usersParsed = JSON.parse(userJson);
 
 		newModal.createHeader();
-		newModal.createBody(users);
+		newModal.createBody(usersParsed);
 		newModal.createFooter();
 		parentShow.call(this);
 	}
@@ -253,7 +280,6 @@ function NewGroupModal(documentID, blankID){
 	}
 
 	newModal.createBody = function(users){
-		alert(users);
 		parentAddText.call(this, "* Indicate required fields.","","", "body");
 		parentAddBreak.call(this,"body");
 		parentAddText.call(this, "Group Title*","","", "body");
@@ -269,8 +295,8 @@ function NewGroupModal(documentID, blankID){
 		element.setAttribute("size","6");
 		element.setAttribute("id", "members")
 
-		element = parentPopulateSelect.call(this, users, "name", "userID", "", element);
-		doc.appendChild(element);
+		var elementNames = parentPopulateSelect.call(this, users["users"], "name", "userID", [], element);
+		doc.appendChild(elementNames);
 
 		parentAddText.call(this, "Required", "membersR", "required", "body");
 		parentAddBreak.call(this,"body");
@@ -298,11 +324,11 @@ function NewGroupModal(documentID, blankID){
 	newModal.executeAction = function(){
 		var invalid = newModal.validate();
 		if(!invalid){
-			var form = new parentConvertToJSON(this, document.getElementById("body"))
+			var form = parentConvertToJSON.call(this, document.getElementById("body"))
 			
 			var uid = getCookie('userID');
 		    var postTitle = form.title;
-		    var members = getMembers('members');
+		    var members = newModal.getMembers('members');
 
 		    var postMembers = [{"userID":uid}];
 
@@ -342,7 +368,7 @@ function NewGroupModal(documentID, blankID){
 		}
 
 		if(document.getElementById("members") != null && document.getElementById("membersR") != null){
-			var result = parentHasSelected(this, document.getElementById("members"));
+			var result = parentHasSelected.call(this, document.getElementById("members"));
 			if(!result){
 				invalidFields = true;
 				document.getElementById("membersR").style.display = "inline";
@@ -380,9 +406,12 @@ function EditGroupModal(documentID, groupID){
 	var parentClose = editModal.close;
 
 	editModal.showModal = function(users){
+		var charToReplaceWith = ":";
+		var userJson = users.replace(/=>/g,charToReplaceWith);
+		var usersParsed = JSON.parse(userJson);
 
 		editModal.createHeader();
-		editModal.createBody(users);
+		editModal.createBody(usersParsed);
 		editModal.createFooter(users);
 		parentShow.call(this);
 	}
@@ -397,7 +426,6 @@ function EditGroupModal(documentID, groupID){
 	}
 
 	editModal.createBody = function(users){
-		alert(users);
 		parentAddText.call(this, "* Indicate required fields.","","", "body");
 		parentAddBreak.call(this,"body");
 		parentAddText.call(this, "Group Title*","","", "body");
@@ -413,17 +441,19 @@ function EditGroupModal(documentID, groupID){
 		element.setAttribute("size","6");
 		element.setAttribute("id", "members")
 
-		element = parentPopulateSelect.call(this, users, "name", "userID", "", element);
+		element = parentPopulateSelect.call(this, users["users"], "name", "userID", "", element);
 		doc.appendChild(element);
 
 		parentAddText.call(this, "Required", "membersR", "required", "body");
 		parentAddBreak.call(this,"body");
 
-		var groupArray;
+		// Populate Data
+		var groupArray,mid;
+		var currentMembs = new Array();
 
 		$.ajax({
 			type: 'GET',
-			url: 'http://csse371-04.csse.rose-hulman.edu/Group/' + id,
+			url: 'http://csse371-04.csse.rose-hulman.edu/Group/' + groupID,
 			success:function(data){
 				groupArray = JSON.parse(data);
 			},
@@ -445,11 +475,12 @@ function EditGroupModal(documentID, groupID){
 
 		document.getElementById("title").value = groupArray["groupTitle"];
 
-		populateSelect([], "name", "mid", currentMembs, document.getElementById("members"));
+		parentPopulateSelect.call(this,[], "name", "mid", currentMembs, document.getElementById("members"));
 	}
 
 	editModal.close = function(users){
 		parentClose.call(this);
+
 		var ModalFactory = abstractModalFactory();
 		var modal = ModalFactory.createModal(ViewGroupModal, "GroupModal", groupID);
 
@@ -457,16 +488,18 @@ function EditGroupModal(documentID, groupID){
 	}
 
 	editModal.createFooter = function(users){
+		var self = this;
+
 		// Close button
 		var elementClose = document.createElement("button");
 		elementClose.setAttribute("class", "btn btn-primary");
 		elementClose.innerHTML = "Close";
-		elementClose.onclick = editModal.close(users);
+		elementClose.onclick = function(){self.close(users);};
 
 		// ActionButton
 		var elementSubmit = document.createElement("input");
 		elementSubmit.setAttribute("type", "button");
-		elementSubmit.onclick = editModal.executeAction(users);
+		elementSubmit.onclick = function(){self.executeAction(users);};
 		elementSubmit.setAttribute("class", "btn btn-primary");
 		elementSubmit.value = "Submit";
 
@@ -478,10 +511,10 @@ function EditGroupModal(documentID, groupID){
 	editModal.executeAction = function(users){
 		var invalid = editModal.validate();
 		if(!invalid){
-			var form = new parentConvertToJSON(this, document.getElementById("body"))
+			var form = parentConvertToJSON.call(this, document.getElementById("body"))
 			
 			var postTitle = form.title;
-			var members = getMembers('membersE');
+			var members = editModal.getMembers('members');
 
 			var postMembers = new Array();
 
@@ -518,11 +551,11 @@ function EditGroupModal(documentID, groupID){
 				data: updateMembers,
 				success:function(data){
 					parentClose.call(this);
+
 					var ModalFactory = abstractModalFactory();
-					var modal = ModalFactory.createModal(ViewGroupModal, "GroupModal", groupID);
+					var modal = ModalFactory.createModal(ViewGroupModal, documentID, groupID);
 
 			  		modal.showModal(users);
-					window.location.reload(true);
 				}
 			});
 		}
@@ -542,7 +575,7 @@ function EditGroupModal(documentID, groupID){
 		}
 
 		if(document.getElementById("members") != null && document.getElementById("membersR") != null){
-			var result = parentHasSelected(this, document.getElementById("members"));
+			var result = parentHasSelected.call(this, document.getElementById("members"));
 			if(!result){
 				invalidFields = true;
 				document.getElementById("membersR").style.display = "inline";
@@ -575,10 +608,11 @@ function ViewGroupModal(documentID, groupID){
 	var parentAddBreak = viewModal.addBreak;
 	var parentAddElement = viewModal.addElement;
 	var parentClose = viewModal.close;
+	var parentPopulateTableRows = viewModal.populateTableRows;
 
 	viewModal.showModal = function(users){
 		viewModal.createHeader();
-		viewModal.createBody(users);
+		viewModal.createBody();
 		viewModal.createFooter(users);
 		parentShow.call(this);
 	}
@@ -586,40 +620,75 @@ function ViewGroupModal(documentID, groupID){
 	viewModal.createHeader = function(){
 		var header = document.createElement("h1");
 		header.setAttribute("class", "modal-title");
-		var text = document.createTextNode("View Group");
+		var text = document.createTextNode("View Group Details");
 		header.appendChild(text);
 		var doc = document.getElementById("header");
 		doc.appendChild(header);
 	}
 
-	viewModal.createBody = function(users){
-		alert(users);
-		parentAddText.call(this, "* Indicate required fields.","","", "body");
-		parentAddBreak.call(this,"body");
-		parentAddText.call(this, "Group Title*","","", "body");
-		parentAddElement.call(this, "text", "", "title", "title", "", "body");
-		parentAddText.call(this, "Required", "titleR", "required", "body");
-		parentAddBreak.call(this, "body");
+	viewModal.createBody = function(){
+		// Get Group Info
+		var membInfo;
+  		var membs = new Array();
 
+		$.ajax({
+			type: 'GET',
+			url: 'http://csse371-04.csse.rose-hulman.edu/Group/' + groupID,
+			success:function(data){
+				groupArray = JSON.parse(data);
+			},
+			async: false
+		});
+
+		for (i in groupArray['members']){
+			$.ajax({
+				type: 'GET',
+				url: 'http://csse371-04.csse.rose-hulman.edu/User/' + groupArray['members'][i]['userID'],
+				success:function(data){
+					membInfo = JSON.parse(data);
+					membs.push({'name':membInfo['name']});
+				},
+				async: false
+			});
+		}
+
+		parentAddText.call(this, "Group Title: ","","viewLabel", "body");
+		parentAddText.call(this, groupArray["groupTitle"],"title","viewData", "body");
+		parentAddText.call(this, "Members: ","","viewLabel", "body");
+
+		var table = document.createElement("table");
+		table.setAttribute("id", "members");
+		table.setAttribute("class", "viewData");
+
+
+		tableMems = parentPopulateTableRows.call(this, membs, "name", table);
+		var doc = document.getElementById("body");
+		doc.appendChild(tableMems);
 	}
 
 	viewModal.createFooter = function(users){
 		// Close button
+		var self = this;
 		var elementClose = document.createElement("button");
 		elementClose.setAttribute("class", "btn btn-primary");
 		elementClose.innerHTML = "Close";
-		elementClose.onclick = parentClose;
+		elementClose.onclick = viewModal.close;
 
 		// ActionButton
 		var elementSubmit = document.createElement("input");
 		elementSubmit.setAttribute("type", "button");
-		elementSubmit.onclick = viewModal.executeAction(users);
+		elementSubmit.onclick = function(){self.executeAction(users);};
 		elementSubmit.setAttribute("class", "btn btn-primary");
-		elementSubmit.value = "Submit";
+		elementSubmit.value = "Edit";
 
 		var doc = document.getElementById("footer");
 		doc.appendChild(elementClose);
 		doc.appendChild(elementSubmit);
+	}
+
+	viewModal.close = function(){
+		parentClose.call(this);
+		$('#' + documentID).modal('hide');
 	}
 
 	viewModal.executeAction = function(users){
