@@ -5,10 +5,6 @@ class PreferencesController < ApplicationController
 before_filter :home
 
   def home
-  	if (cookies[:userID].blank?)
-		redirect_to '/login/index'
-		return
-	end
 
   def getUserSettings
       preferences_api_wrapper = PreferencesApiWrapper.new

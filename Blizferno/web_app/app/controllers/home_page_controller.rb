@@ -6,22 +6,11 @@ require 'project_api_wrapper'
 
 class HomePageController < ApplicationController
 
-	before_filter :index
 	before_filter :getSettings
 	before_filter :getMeetings
 	before_filter :getProjects
 	before_filter :getGroups
 	before_filter :getTasks
-	
-	def index
-		if (cookies[:userID].blank?)
-			redirect_to '/login/index'
-		end
-	end
-	def tabpage
-	end
-	def mypage
-	end
 
   def getSettings
   	preferences_api_wrapper = PreferencesApiWrapper.new

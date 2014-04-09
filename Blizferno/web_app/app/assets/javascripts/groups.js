@@ -226,6 +226,7 @@ function validateGroup(){
   var groupMembers = getMembers('grpMemSlct');
 }
 
+<<<<<<< HEAD
 function getMembers(id){
   var newMembers = [];
   $( '#' + id + ' :selected' ).each( function( i, selected ) {
@@ -352,3 +353,5 @@ function hasSelectedValue(selectID){
   }
   return false
 }
+=======
+>>>>>>> 52652e0572e03bf0ee297d0486d21cbced209ad1
