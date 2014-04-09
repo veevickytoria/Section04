@@ -74,63 +74,78 @@
                     [self.meetingID addObject:[meetings objectForKey:@"id"]];
                 }
             }
-            [self populateMeetingDetails];
+            [self populateMeetingListDetails];
         }
     }
 }
 
--(void)populateMeetingDetails
+-(NSDictionary *)getMeetingDetailsFromStringId:(NSString*)meetingId
 {
-    for (int i = 0; i < [self.meetingID count]; i++)
-    {
-        NSString *url = [NSString stringWithFormat:@"%@/Meeting/%d", DATABASE_URL,[self.meetingID[i] integerValue]];
-        url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
+    NSString *url = [[NSString stringWithFormat:@"%@/Meeting/%d", DATABASE_URL,[meetingId integerValue]] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    return [self.backendUtility getRequestForUrl:url];
+}
+
+
+-(NSMutableString*)getAttendeeListFromJsonArray:(NSArray*)jsonArray
+{
+    NSMutableString *attendeeList = [[NSMutableString alloc] init];
+    for (NSDictionary* users in jsonArray) {
+        [attendeeList appendFormat:@"%@,", (NSString *)[users objectForKey:@"userID"]];
+    }
+    
+    if (attendeeList.length > 0) {
+        [attendeeList deleteCharactersInRange:NSMakeRange([attendeeList length]-1, 1)];
+    }
+    
+    return attendeeList;
+}
+
+-(void)addMeetingDetailsToLocalDatabase:(NSDictionary*)deserializedDictionary
+{
+    iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    NSManagedObjectContext *context = [appDelegate managedObjectContext];
+    NSManagedObject *newMeeting = [NSEntityDescription insertNewObjectForEntityForName:@"Meeting" inManagedObjectContext:context];
+    NSError *error;
+    [newMeeting setValue:[deserializedDictionary objectForKey:@"title"] forKey:@"title"];
+    [newMeeting setValue:[deserializedDictionary objectForKey:@"location"] forKey:@"location"];
+    [newMeeting setValue:[deserializedDictionary objectForKey:@"endDatetime"] forKey:@"endDatetime"];
+    [newMeeting setValue:[deserializedDictionary objectForKey:@"meetingID"]forKey:@"meetingID"];
+    [newMeeting setValue:[deserializedDictionary objectForKey:@"datetime"] forKey:@"datetime"];
+    [newMeeting setValue:[NSNumber numberWithInt:self.userID] forKey:@"userID"];
+    [newMeeting setValue:[self getAttendeeListFromJsonArray:[deserializedDictionary objectForKey:@"attendance"]] forKey:@"attendance"];
+    [newMeeting setValue:[deserializedDictionary objectForKey:@"description"] forKey:@"meetingDesc"];
+    [context save:&error];
+}
+
+
+-(void)alertUserOfErrorToLoadMeetingDetails
+{
+    [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Meetings not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil] show];
+}
+
+-(NSString*)getDateTimeStringFromEpochString:(NSString*)epochString
+{
+    return [iWinScheduleViewMeetingViewController getStringDateTimeFromDate:[NSDate dateWithTimeIntervalSince1970:[epochString doubleValue]]];
+}
+
+-(BOOL)populateMeetingRowWithDetails:(NSDictionary*)deserializedDictionary
+{
+    
+    if (!deserializedDictionary) return NO;
+    [self.meetingDetail addObject:[self getDateTimeStringFromEpochString:[deserializedDictionary objectForKey:@"datetime"]]];
+    [self.meetingLocations addObject:[deserializedDictionary objectForKey:@"location"]];
+    [self addMeetingDetailsToLocalDatabase:deserializedDictionary];
+    
+    return YES;
+}
+
+
+-(void)populateMeetingListDetails
+{
+    for (int i = 0; i < [self.meetingID count]; i++) {
         
-        if (!deserializedDictionary)
-        {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Meetings not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
-            [alert show];
-        }
-        else
-        {
-            
-            NSDate *dateTime = [NSDate dateWithTimeIntervalSince1970:[[deserializedDictionary objectForKey:@"datetime"] doubleValue]];
-            NSString *dateTimeString = [iWinScheduleViewMeetingViewController getStringDateTimeFromDate:dateTime];
-            [self.meetingDetail addObject:dateTimeString];
-            [self.meetingLocations addObject:[deserializedDictionary objectForKey:@"location"]];
-            
-            NSArray *jsonArray = [deserializedDictionary objectForKey:@"attendance"];
-            NSMutableString *attendeeList = [[NSMutableString alloc] init];
-            if (jsonArray.count > 0)
-            {
-                for (NSDictionary* users in jsonArray)
-                {
-                    [attendeeList appendFormat:@"%@,", (NSString *)[users objectForKey:@"userID"]];
-                }
-            }
-            
-            if (attendeeList.length > 0)
-            {
-                [attendeeList deleteCharactersInRange:NSMakeRange([attendeeList length]-1, 1)];
-            }
-            
-            //add it to local database so accessing the info for a meeting is faster.
-            iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-            
-            NSManagedObjectContext *context = [appDelegate managedObjectContext];
-            
-            NSManagedObject *newMeeting = [NSEntityDescription insertNewObjectForEntityForName:@"Meeting" inManagedObjectContext:context];
-            NSError *error;
-            [newMeeting setValue:[deserializedDictionary objectForKey:@"title"] forKey:@"title"];
-            [newMeeting setValue:[deserializedDictionary objectForKey:@"location"] forKey:@"location"];
-            [newMeeting setValue:[deserializedDictionary objectForKey:@"endDatetime"] forKey:@"endDatetime"];
-            [newMeeting setValue:self.meetingID[i] forKey:@"meetingID"];
-            [newMeeting setValue:[deserializedDictionary objectForKey:@"datetime"] forKey:@"datetime"];
-            [newMeeting setValue:[NSNumber numberWithInt:self.userID] forKey:@"userID"];
-            [newMeeting setValue:attendeeList forKey:@"attendance"];
-            [newMeeting setValue:[deserializedDictionary objectForKey:@"description"] forKey:@"meetingDesc"];
-            [context save:&error];
+        if (![self populateMeetingRowWithDetails:[self getMeetingDetailsFromStringId:self.meetingID[i]]]) {
+            [self alertUserOfErrorToLoadMeetingDetails];
         }
     }
 }

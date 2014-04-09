@@ -69,32 +69,41 @@
 
 -(void)switchCanvasToEditMode
 {
-    [self.saveButton setTitle:@"Save" forState:UIControlStateNormal];
-    [self.saveButton setTitleColor:[UIColor greenColor] forState:UIControlStateNormal];
-    self.titleField.userInteractionEnabled = YES;
-    self.noteField.userInteractionEnabled = YES;
-    [self.titleField setBorderStyle:UITextBorderStyleRoundedRect];
-    self.noteField.layer.borderWidth = 0.7f;
+    [self setNoteViewEditModeValuesTo:@"Save" color:[UIColor greenColor] enabledInteraction:YES borderWidth:0.7f
+        inEditMode:YES borderStyle:UITextBorderStyleRoundedRect deleteButtonHidden:[self shouldHideDeleteButtonIfNewNote]];
+}
+
+
+-(BOOL)shouldHideDeleteButtonIfNewNote
+{
     if (self.noteID == -1) {
-        self.deleteButton.hidden = YES;
+        return YES;
     }
     else {
-        self.deleteButton.hidden = NO;
+        return NO;
     }
     
-    self.inEditMode = YES;
 }
+
 
 -(void)switchCanvasOutOfEditMode
 {
-    [self.saveButton setTitle:@"Edit" forState:UIControlStateNormal];
-    [self.saveButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-    self.titleField.userInteractionEnabled = NO;
-    self.noteField.userInteractionEnabled = NO;
-    [self.titleField setBorderStyle:UITextBorderStyleNone];
-    self.noteField.layer.borderWidth = 0.0f;
-    self.deleteButton.hidden = YES;
-    self.inEditMode = NO;
+    [self setNoteViewEditModeValuesTo:@"Edit" color:[UIColor blueColor] enabledInteraction:NO borderWidth:0.0f
+        inEditMode:NO borderStyle:UITextBorderStyleNone deleteButtonHidden:YES];
+}
+
+
+
+-(void)setNoteViewEditModeValuesTo:(NSString*)modeName color:(UIColor*)color enabledInteraction:(BOOL)enabledInteraction borderWidth:(float)borderWidth
+                        inEditMode:(BOOL)inEditMode borderStyle:(UITextBorderStyle)borderStyle deleteButtonHidden:(BOOL)deleteButtonHidden
+{
+    [self.saveButton setTitle:modeName forState:UIControlStateNormal];
+    [self.saveButton setTitleColor:color forState:UIControlStateNormal];
+    self.titleField.userInteractionEnabled = self.noteField.userInteractionEnabled = enabledInteraction;
+    [self.titleField setBorderStyle:borderStyle];
+    self.noteField.layer.borderWidth = borderWidth;
+    self.deleteButton.hidden = deleteButtonHidden;
+    self.inEditMode = inEditMode;
 }
 
 - (void)didReceiveMemoryWarning
