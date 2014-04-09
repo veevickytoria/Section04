@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
   before_filter :loadSettings
 
   def loginRedirect
-	if (cookies[:userID].blank?)
+	if (cookies[:userID].blank? && params[:controller] != 'login')
 		redirect_to '/login/index'
 		return
 	end
