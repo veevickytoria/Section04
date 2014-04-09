@@ -8,7 +8,6 @@ describe MeetingApiWrapper do
 
 	it 'gets meeting summaries from the database' do
 		userID = 645
-		#wrapper = MeetingApiWrapper.new
 		meeting_summaries = wrapper.get_user_meetings(userID)
 		meetings_parsed = JSON.parse(meeting_summaries)
 		meetings_parsed['meetings'].each do |meeting|
@@ -17,7 +16,7 @@ describe MeetingApiWrapper do
 	end
 
 	it 'gets meeting information' do
-		meetingID = 4124.to_s
+		meetingID = 3785.to_s
 		meeting_string = wrapper.get_meeting(meetingID)
 		meeting_parsed = JSON.parse(meeting_string)
 		meeting_parsed.keys.should eq ['userID', 'title', 'location', 'description', 'endDatetime', 'nodeType', 'datetime', 'attendance']
@@ -25,7 +24,7 @@ describe MeetingApiWrapper do
 
 	it 'meeting creator valid' do
 		userID = 645
-		meetingID = 4124.to_s
+		meetingID = 3785.to_s
 		meeting_string = wrapper.get_meeting(meetingID)
 		meeting_parsed = JSON.parse(meeting_string)
 		meeting_parsed['userID'].should eq userID

@@ -21,6 +21,15 @@ describe DocumentsApiWrapper do
 		note_parsed = JSON.parse(note_string)
 		note_parsed.keys.should eq ['noteID', 'content', 'title', 'description', 'dateCreated']
 	end
+
+	it 'gets agendas from the database' do
+		userID = 645
+		agendas = wrapper.get_user_agendas(userID)
+		agendas_parsed = JSON.parse(agendas)
+		agendas_parsed['agendas'].each do |agenda|
+			agenda.keys.should eq ['agendaID', 'title', 'meetingID', 'userID', 'content']
+		end
+	end
 end
 
 #web_app/spec/lib/
