@@ -100,7 +100,7 @@ function validateEditedValues(){
 			}
 		}
 	}
-	alert('in validate edit');
+
 	// Check dates
 	var date = document.getElementById("deadlinedateE").value.split("-");
 	var time = document.getElementById("deadlinetimeE").value.split(":");
@@ -116,52 +116,6 @@ function validateEditedValues(){
 	}
 
 	return invalidFields
-}
-
-function validateNewVaasfdasdflues(JSONForm){
-
-	var invalidFields = false;
-	alert('hasdlhast');
-	for (key in JSONForm){
-		if(document.getElementById(key+"R") != null){
-			if(JSONForm[key] == ""){
-				invalidFields = true;
-				document.getElementById(key+"R").style.display = "inline";
-			}
-			else{
-				document.getElementById(key+"R").style.display = "none";
-			}
-		}
-	}
-
-	var additionalkeys = ["deadlinetime","deadlinedate"];
-	for (key in additionalkeys){
-		if(document.getElementById(additionalkeys[key]) != null && document.getElementById(additionalkeys[key]+"R") != null){
-			if(document.getElementById(additionalkeys[key]).value == ""){
-				invalidFields = true;
-				document.getElementById(additionalkeys[key]+"R").style.display = "inline";
-			}
-			else{
-				document.getElementById(additionalkeys[key]+"R").style.display = "none";
-			}
-		}
-	}
-	alert('yep');
-	//Check dates
-	var date = document.getElementById("deadlinedate").value.split("-");
-	var time = document.getElementById("deadlinetime").value.split(":");
-	var datetime = new Date(date[0], date[1]-1, date[2], time[0], time[1]);
-	datetime = datetime.getTime()/1000.0;
-	var deadline = datetime;
-
-	var dateNow = (new Date).getTime();
-
-	if(!(deadline*1000 > dateNow)){
-		invalidFields = true;
-		alert("Invalid deadline date/time");
-	}
-
-	return invalidFields;
 }
 
 function updateEditedValues(){
