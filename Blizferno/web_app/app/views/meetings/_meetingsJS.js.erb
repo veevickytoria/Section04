@@ -31,10 +31,6 @@ function showViewMeetingModal(ID){
 	
 	document.getElementById("endDatetimeV").innerHTML = dtString.toLocaleString();
 	document.getElementById("descriptionV").innerHTML = meetingsJSON[currentID]["description"];
-	//document.getElementById("attendanceV").innerHTML = meetingsJSON[currentID]["attendance"];
-
-//alert("meetingsJSON:"+JSON.stringify(meetingsJSON[currentID]));
-//for(attendee in meetingsJSON[currentID]["attendance"]){
 
 	var allIDs = new Array();
 	allIDs.push(<%=@userID%>);
@@ -44,17 +40,11 @@ function showViewMeetingModal(ID){
 	}
 
 	for(var i = 0; i < allIDs.length; i++){
-//alert("attendance:"+JSON.stringify(meetingsJSON[currentID]["attendance"]));
-//alert("attendee:"+i);
-	  $.ajax({
-        type: 'GET',
-        url: "http://csse371-04.csse.rose-hulman.edu/User/" + allIDs[i],
-        success:function(data){
-          attendeeInfo = JSON.parse(data);
-          attends.push({'name':attendeeInfo['name']});
-        },
-        async: false
-      	});
+		var doOnSuccess = function(data){
+          					attendeeInfo = JSON.parse(data);
+          					attends.push({'name':attendeeInfo['name']});
+        					}
+		ajaxRequest('null', 'GET', '/User/' + allIDs[i], false, doOnSuccess);
 	}
 
 	populateTableRows(attends, "name", "attendanceV");
@@ -257,13 +247,7 @@ function updateEditedValues(){
 			editValue = meetingsJSON[currentID][key];
 			editData = JSON.stringify({"meetingID":editMeetingID,"field":editField,"value":editValue});
 			//make a PUT request with the backend to change the specified field for the specified meeting to the specified value
-			$.ajax({
-				type: 'PUT',
-				url: 'http://csse371-04.csse.rose-hulman.edu/Meeting/',
-				data: editData,
-				async: false
-			});
-
+			ajaxRequest(editData, 'PUT', '/Meeting/', false, 'null');
 		}
 	}
 	
@@ -276,15 +260,10 @@ function updateEditedValues(){
 	else{
 		editData = JSON.stringify({"meetingID":editMeetingID,"field":editField,"value":[]});
 	}
-	
-	$.ajax({
-		type: 'PUT',
-		url: 'http://csse371-04.csse.rose-hulman.edu/Meeting/',
-		data: editData,
-		success:function(data){
-			window.location.reload(true);
-		}
-	});
+	var doOnSuccess = function(data){
+						window.location.reload(true);
+					}
+	ajaxRequest(editData, 'PUT', '/Meeting/', true, doOnSuccess);
 }
 
 //This function is called when a user clicks the create button and sends a POST request to the backend
@@ -337,18 +316,14 @@ function submitCreateModal(){
 		});
 
 		//make the POST request to the backend
-		$.ajax({
-			type: 'POST',
-			url: 'http://csse371-04.csse.rose-hulman.edu/Meeting/',
-			data: postData,
-			success:function(data){
-				//if successful then close the modal and reload the page
-				$('#newMeetingModal').modal('hide');
-				alert("Meeting successfully created! Reloading page...");
-				window.location.reload(true);
-			}
-		});
-}
+		var doOnSuccess = function(data){
+							//if successful then close the modal and reload the page
+							$('#newMeetingModal').modal('hide');
+							alert("Meeting successfully created! Reloading page...");
+							window.location.reload(true);
+						}
+		ajaxRequest(postData, 'POST', '/Meeting/', true, doOnSuccess);
+	}
 }
 
 //This function is called when a user clicks on the delete icon
@@ -364,19 +339,16 @@ function hideDeleteModal(){
 	var deleteData = meetingsJSON[deleteID]['meetingID'];
 	
 	//make the DELETE request to the backend
-	$.ajax({
-		type: 'DELETE',
-		url: 'http://csse371-04.csse.rose-hulman.edu/Meeting/' + deleteData,
-		success:function(data){
-			//if the database returned true
-			if(JSON.parse(data)["valid"] == "true"){
-				//hide the delete modal
-				$('#deleteMeetingModal').modal('hide');
-				//refresh the page
-				window.location.reload(true);
-			}
-		}
-	});
+	var doOnSuccess = function(data){
+						//if the database returned true
+						if(JSON.parse(data)["valid"] == "true"){
+							//hide the delete modal
+							$('#deleteMeetingModal').modal('hide');
+							//refresh the page
+							window.location.reload(true);
+						}
+					}
+	ajaxRequest('null', 'DELETE', '/Meeting/' + deleteData, true, doOnSuccess);
 }
 
 

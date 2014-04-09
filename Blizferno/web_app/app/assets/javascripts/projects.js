@@ -75,16 +75,11 @@ function submitCreateProject(){
         "notes":postNotes,
         "members":postMembers
       });
-
-    $.ajax({
-      type: 'POST',
-      url: 'http://csse371-04.csse.rose-hulman.edu/Project/',
-      data: postData,
-      success:function(data){
-        $('#newProjectModal').modal('hide');
-        window.location.reload(true);
-      }
-    });
+    var doOnSuccess = function(data){
+                        $('#newProjectModal').modal('hide');
+                        window.location.reload(true);
+                      }
+    ajaxRequest(postData, 'POST', '/Project/', true, doOnSuccess);
   }
 }
 
