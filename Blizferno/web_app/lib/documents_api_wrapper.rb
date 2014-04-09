@@ -12,7 +12,7 @@ class DocumentsApiWrapper < BaseWrapper
 	end
 
 	def get_note(note_id)
-		get_response(url_from_parts('/Note/', group_id))
+		get_response(url_from_parts('/Note/', note_id.to_s))
 	end
 end
 

@@ -189,3 +189,23 @@ function convertFormToJSON(form){
 
   return json;
 }
+
+function ajaxRequest(editData, type, location, syncronous, onSuccess){
+    var HOMEPAGE = 'http://csse371-04.csse.rose-hulman.edu';
+
+    var ajaxConfig = {
+        type: type,
+        url: HOMEPAGE + location,
+    }
+    if(editData != 'null'){
+        ajaxConfig.data = editData;
+    }
+
+    ajaxConfig.async = syncronous === true;
+
+    if (onSuccess !== 'null') {
+        ajaxConfig.success = onSuccess;
+    }
+
+    $.ajax(ajaxConfig);
+}
