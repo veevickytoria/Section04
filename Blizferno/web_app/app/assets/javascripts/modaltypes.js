@@ -69,6 +69,7 @@ function NinjaModal(documentID, objectID){
 			$('#' + documentID).on('hidden.bs.modal', function() {
 				$(this).removeData('bs.modal');
 			});
+
 		},
 
 		/* From this point on, the methods are methods that do not pertain 
@@ -210,7 +211,7 @@ function DeleteModal(documentID, deleteID){
 		var elementClose = document.createElement("button");
 		elementClose.setAttribute("class", "btn btn-primary");
 		elementClose.innerHTML = "Close";
-		elementClose.onclick = parentClose;
+		elementClose.onclick = function(){self.close();};
 
 		// ActionButton
 		var elementDelete = document.createElement("input");
@@ -223,6 +224,11 @@ function DeleteModal(documentID, deleteID){
 		doc.appendChild(elementClose);
 		doc.appendChild(elementDelete);
 
+	}
+
+	deleteModal.close = function(){
+		parentClose.call(this);
+		$('#' + documentID).modal('hide');
 	}
 
 	deleteModal.executeAction = function(object){
@@ -307,7 +313,7 @@ function NewGroupModal(documentID, blankID){
 		var elementClose = document.createElement("button");
 		elementClose.setAttribute("class", "btn btn-primary");
 		elementClose.innerHTML = "Close";
-		elementClose.onclick = parentClose;
+		elementClose.onclick = newModal.close;
 
 		// ActionButton
 		var elementSubmit = document.createElement("input");
@@ -319,6 +325,11 @@ function NewGroupModal(documentID, blankID){
 		var doc = document.getElementById("footer");
 		doc.appendChild(elementClose);
 		doc.appendChild(elementSubmit);
+	}
+
+	newModal.close = function(){
+		parentClose.call(this);
+		$('#' + documentID).modal('hide');
 	}
 
 	newModal.executeAction = function(){
