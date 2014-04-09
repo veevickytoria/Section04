@@ -8,6 +8,7 @@
 
 #import "iWinAddAndViewTaskViewController.h"
 #import "iWinAddUsersViewController.h"
+#import "iWinScheduleViewMeetingViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Contact.h"
 #import "Task.h"
@@ -138,14 +139,24 @@
     }
     else
     {
-        self.titleField.text = [deserializedDictionary objectForKey:@"title"];
-        self.descriptionField.text = [deserializedDictionary objectForKey:@"description"];
-        self.isCompleted.on = [[deserializedDictionary objectForKey:@"isCompleted"] boolValue];
-        NSArray *endDateAndTime = [[deserializedDictionary objectForKey:@"deadline"]  componentsSeparatedByString:@" "];
-        NSString *enddate = [endDateAndTime objectAtIndex:0];
-        NSString *endtime = [NSString stringWithFormat:@"%@ %@", [endDateAndTime objectAtIndex:1], [endDateAndTime objectAtIndex:2]];
+        NSDate* endDateAndTime = [NSDate dateWithTimeIntervalSince1970:[[deserializedDictionary objectForKey:@"deadline"] doubleValue]];
+        
+        
+        NSString *enddate = [iWinScheduleViewMeetingViewController getStringDateFromDate:endDateAndTime];
+        NSString *endtime = [iWinScheduleViewMeetingViewController getStringTimeFromDate:endDateAndTime];
+        
         self.endDateLabel.text = enddate;
         self.endTimeLabel.text = endtime;
+        
+        self.endDate = [self.dateFormatter dateFromString:enddate];
+        self.titleField.text = [deserializedDictionary objectForKey:@"title"];
+        //self.descriptionField.text = [deserializedDictionary objectForKey:@"description"];
+        self.isCompleted.on = [[deserializedDictionary objectForKey:@"isCompleted"] boolValue];
+//        NSArray *endDateAndTime = [[deserializedDictionary objectForKey:@"deadline"]  componentsSeparatedByString:@" "];
+//        NSString *enddate = [endDateAndTime objectAtIndex:0];
+//        NSString *endtime = [NSString stringWithFormat:@"%@ %@", [endDateAndTime objectAtIndex:1], [endDateAndTime objectAtIndex:2]];
+//        self.endDateLabel.text = enddate;
+//        self.endTimeLabel.text = endtime;
         self.endDate = [self.dateFormatter dateFromString:enddate];
         NSInteger assignee = [[deserializedDictionary objectForKey:@"assignedTo"] integerValue];
         [self.userList addObject:[self getContactForID:assignee]];
@@ -256,10 +267,11 @@
     }
     if (self.isEditing)
     {
+        NSString *endEpochString = [self makeEpochStringFromDateAndTimeStrings:self.endDateLabel.text timeString:self.endTimeLabel.text];
         [self updateTask:@"title" :self.titleField.text];
         [self updateTask:@"isCompleted" :[NSString stringWithFormat:@"%hhd", self.isCompleted.on]];
         [self updateTask:@"description" :self.descriptionField.text];
-        [self updateTask:@"deadline" :[NSString stringWithFormat:@"%@ %@", self.endDateLabel.text, self.endTimeLabel.text]];
+        [self updateTask:@"deadline" :endEpochString];
         [self updateTask:@"assignedTo" :[c.userID stringValue]];
         
     }else
@@ -335,13 +347,14 @@
                      @"createdBy",
                      nil];
     
+    NSString *endEpochString = [self makeEpochStringFromDateAndTimeStrings:self.endDateLabel.text timeString:self.endTimeLabel.text];
     NSArray *objects = [NSArray arrayWithObjects:
                         self.titleField.text,
                         @"False",
                         self.descriptionField.text,
-                        [NSString stringWithFormat:@"%@ %@", self.endDateLabel.text, self.endTimeLabel.text],
-                        [NSString stringWithFormat:@"%@ %@", self.endDateLabel.text, self.endTimeLabel.text],
-                        [NSString stringWithFormat:@"%@ %@", self.endDateLabel.text, self.endTimeLabel.text],
+                        endEpochString,
+                        endEpochString,
+                        endEpochString,
                         @"nothing",
                         [c.userID stringValue],
                         [[NSNumber numberWithInt:self.userID] stringValue],
@@ -358,21 +371,21 @@
         jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     }
     NSString *url = [NSString stringWithFormat:@"%@/Task/", DATABASE_URL];
-    
-    NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
-    [urlRequest setHTTPMethod:@"POST"];
-    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [urlRequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-length"];
-    [urlRequest setHTTPBody:jsonData];
-    NSURLResponse * response = nil;
-    NSError * error = nil;
-    NSData * data =[NSURLConnection sendSynchronousRequest:urlRequest
-                                         returningResponse:&response
-                                                     error:&error];
-    NSError *jsonParsingError = nil;
-    NSDictionary *deserializedDictionary = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments|NSJSONReadingMutableContainers error:&jsonParsingError];
+    NSDictionary *deserializedDictionary = [self.backendUtility postRequestForUrl:url withDictionary:jsonDictionary];
     self.taskID = [[deserializedDictionary objectForKey:@"taskID"] integerValue];
+}
+
+-(NSString *) makeEpochStringFromDateAndTimeStrings:(NSString*)dateString timeString:(NSString *)timeString
+{
+    NSTimeInterval interval = [[self makeDateFromText:dateString timeText:timeString] timeIntervalSince1970];
+    return [NSString stringWithFormat:@"%f", interval];
+}
+-(NSDate *)makeDateFromText:(NSString *)dateText timeText:(NSString *)timeText
+{
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.dateFormat = @"MM/dd/yyyy h:mm a";
+    NSString *dateTime = [NSString stringWithFormat:@"%@ %@", dateText, timeText];
+    return [dateFormatter dateFromString:dateTime];
 }
 
 - (IBAction)onClickSaveAndAddMore

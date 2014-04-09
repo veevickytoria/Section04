@@ -8,6 +8,7 @@
 
 #import "iWinTaskListViewController.h"
 #import "iWinAddAndViewTaskViewController.h"
+#import "iWinScheduleViewMeetingViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "iWinAppDelegate.h"
 #import "iWinBackEndUtility.h"
@@ -105,7 +106,10 @@
 {
     NSError *jsonParsingError = nil;
     NSDictionary *deserializedDictionary = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
-    [self.itemDetail addObject:[deserializedDictionary objectForKey:@"deadline"]];
+    NSDate *dateTime = [NSDate dateWithTimeIntervalSince1970:[[deserializedDictionary objectForKey:@"deadline"] doubleValue]];
+    NSString *dateTimeString = [iWinScheduleViewMeetingViewController getStringDateTimeFromDate:dateTime];
+    [self.itemDetail addObject:dateTimeString];
+    //[self.itemDetail addObject:[deserializedDictionary objectForKey:@"deadline"]];
     return deserializedDictionary;
 }
 
