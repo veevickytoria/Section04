@@ -141,32 +141,6 @@
     // Dispose of any resources that can be recreated.
 }
 
--(NSString *)getStringTimeFromDate:(NSDate *)date
-{
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setAMSymbol:@"AM"];
-    [formatter setPMSymbol:@"PM"];
-    [formatter setDateFormat:@"hh:mm a"];
-    return [formatter stringFromDate:date];
-}
-
--(NSString *)getStringDateFromDate:(NSDate *)date
-{
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    //Specify only 2 M for month, 2 d for day and 2 h for hour
-    [formatter setDateFormat:@"MM/dd/yyyy"];
-    return [formatter stringFromDate:date];
-}
-
--(NSString*)getDateTimeStringFromEpochString:(NSString*)epochString
-{
-    return [iWinScheduleViewMeetingViewController getStringDateTimeFromDate:[NSDate dateWithTimeIntervalSince1970:[epochString doubleValue]]];
-}
-
--(NSString *)getStringDateTimeFromDate:(NSDate *)date
-{
-    return [NSString stringWithFormat:@"%@ %@", [self getStringDateFromDate:date], [self getStringTimeFromDate:date]];
-}
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -178,7 +152,7 @@
         {
             NSDictionary* meeting = (NSDictionary*)[self.meetingFeed objectAtIndex:indexPath.row];
             cell.textLabel.text = (NSString*)[meeting objectForKey:@"title"];
-            cell.detailTextLabel.text = (NSString*)[self getDateTimeStringFromEpochString:[meeting objectForKey:@"datetimeStart"]];
+            cell.detailTextLabel.text = (NSString*)[iWinMeetingViewController getDateTimeStringFromEpochString:[meeting objectForKey:@"datetimeStart"]];
         }
     
         else if (indexPath.section == 1)

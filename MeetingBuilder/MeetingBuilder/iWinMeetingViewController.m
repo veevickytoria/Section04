@@ -123,7 +123,7 @@
     [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Meetings not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil] show];
 }
 
--(NSString*)getDateTimeStringFromEpochString:(NSString*)epochString
++(NSString*)getDateTimeStringFromEpochString:(NSString*)epochString
 {
     return [iWinScheduleViewMeetingViewController getStringDateTimeFromDate:[NSDate dateWithTimeIntervalSince1970:[epochString doubleValue]]];
 }
@@ -132,7 +132,7 @@
 {
     
     if (!deserializedDictionary) return NO;
-    [self.meetingDetail addObject:[self getDateTimeStringFromEpochString:[deserializedDictionary objectForKey:@"datetime"]]];
+    [self.meetingDetail addObject:[iWinMeetingViewController getDateTimeStringFromEpochString:[deserializedDictionary objectForKey:@"datetime"]]];
     [self.meetingLocations addObject:[deserializedDictionary objectForKey:@"location"]];
     [self addMeetingDetailsToLocalDatabase:deserializedDictionary];
     
