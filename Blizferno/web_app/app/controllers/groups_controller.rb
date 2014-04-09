@@ -2,17 +2,8 @@ require 'group_api_wrapper'
 
 class GroupsController < ApplicationController
 	
-	before_filter :index
 	before_filter :getGroups
 	before_filter :getAllUsers
-
-	def index
-		# CHECK IF USER LOGGED IN
-		if (cookies[:userID].blank?)
-			redirect_to '/login/index'
-			return
-		end
-	end
 
 	def getGroups
 		group_api_wrapper = GroupApiWrapper.new

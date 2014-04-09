@@ -144,8 +144,8 @@ function submitEditModal(){
   if (!invalid){
     var postTitle = form.title;
 
-    var meetings = getElements('TableMeetingsE');
-    var members = getElements('TableMembersE');
+    var meetings = getMembers('TableMeetingsE');
+    var members = getMembers('TableMembersE');
 
     var postMeetings = new Array();
     var postMembers = new Array();
@@ -249,98 +249,6 @@ function showViewModal(ID){
   $('#editProjectModal').modal('hide');
 }
 
-function populateTableRows(JSONArray, JSONDisplayColumn, tableID){
-  var table = document.getElementById(tableID);
-
-  if(table.rows.length != 0){
-    for(var i = table.rows.length - 1; i > -1; i--){
-      table.deleteRow(i);
-    }
-  }
-
-  for (var k in JSONArray){
-    var rowCount = table.rows.length;
-    var row = table.insertRow(rowCount);
-
-    var cell = row.insertCell(0);
-   
-    cell.innerHTML = JSONArray[k][JSONDisplayColumn];
-  }
-}
-
-function populateSelect(JSONArray, JSONDisplayColumn, JSONValueColumn, JSONSelectValues, selectID){
-  var select = document.getElementById(selectID);
-
-  if(select.options.length != 0){
-    for(var i = select.options - 1; i > -1; i--){
-      select.remove(i);
-    }
-  }
-
-  for (var k in JSONArray){
-    var el = document.createElement("option");
-    el.textContent = JSONArray[k][JSONDisplayColumn];
-    el.value = JSONArray[k][JSONValueColumn];
-    select.appendChild(el);
-  }
-
-  for (var i in JSONSelectValues){
-    for (var j in select.options){
-      if(JSONSelectValues[i][JSONValueColumn] == select.options[j].value){
-        select.options[j].selected = true;
-        break;
-      }
-    }
-  }
-}
-
-// TODO: This will probably be usless once connected to the back end
-function returnSelectValuesAsJSON(JSONtype, JSONDisplayColumn, JSONValueColumn, selectID){
-  var select = document.getElementById(selectID);
-  var newJSONString = "{" + "\"" + JSONtype + "\"" + ":[";
-  
-  for (var j in select.options){
-    if(select.options[j].selected){
-      newJSONString = newJSONString + "{" + "\"" + JSONValueColumn + "\":\"" + select.options[j].value + "\",\"" + JSONDisplayColumn + "\":\"" + select.options[j].textContent + "\"},";
-    }
-  }
-
-  newJSONString = newJSONString.substring(0, newJSONString.length - 1);
-  newJSONString = newJSONString + "]}";
-  var newJSON = JSON.parse(newJSONString);
-  return newJSON[JSONtype];
-}
 
 
 
-//This function takes a form element and creates a json object using the name of each input in the form as the field and the value of each input as the corresponding input
-function convertFormToJSON(form){
-  var array = jQuery(form).serializeArray();
-  var json = {};
-
-  jQuery.each(array, function() {
-    json[this.name] = this.value || '';
-  });
-
-  return json;
-}
-
-function getElements(id){
-  var elements = [];
-  $( '#' + id + ' :selected' ).each( function( i, selected ) {
-    elements[i] = $( selected ).val();
-  });
-  return elements;
-}
-
-function hasSelectedValue(selectID){
-  var select =document.getElementById(selectID);
-
-  for (var j in select.options){
-    if(select.options[j].selected){
-      return true
-    }
-  }
-
-    return false
-}
