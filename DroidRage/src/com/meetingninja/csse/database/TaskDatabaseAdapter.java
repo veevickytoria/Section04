@@ -45,8 +45,7 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 		return Uri.parse(getBaseUrl()).buildUpon();
 	}
 
-	public static Task getTask(String id) throws JsonParseException,
-			JsonMappingException, IOException {
+	public static Task getTask(String id) throws JsonParseException, JsonMappingException, IOException {
 		// Server URL setup
 		String _url = getBaseUri().appendPath(id).build().toString();
 		URL url = new URL(_url);

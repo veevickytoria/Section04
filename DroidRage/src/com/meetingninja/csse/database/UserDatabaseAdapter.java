@@ -365,11 +365,9 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		return noteList;
 	}
 
-	public static List<Task> getTasks(String userID) throws JsonParseException,
-			JsonMappingException, IOException {
+	public static List<Task> getTasks(String userID) throws JsonParseException,	JsonMappingException, IOException {
 		// Server URL setup
-		String _url = getBaseUri().appendPath("Tasks").appendPath(userID)
-				.build().toString();
+		String _url = getBaseUri().appendPath("Tasks").appendPath(userID).build().toString();
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
@@ -383,8 +381,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 
 		// Initialize ObjectMapper
 		List<Task> taskList = new ArrayList<Task>();
-		final JsonNode taskArray = MAPPER.readTree(response)
-				.get(Keys.Task.LIST);
+		final JsonNode taskArray = MAPPER.readTree(response).get(Keys.Task.LIST);
 
 		if (taskArray.isArray()) {
 			for (final JsonNode taskNode : taskArray) {
@@ -396,12 +393,15 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		} else {
 			Log.e(TAG, "Error parsing user's task list");
 		}
-
+		List<Task> result = new ArrayList<Task>();
+		
 		conn.disconnect();
 		for (Task t : taskList) {
-			TaskDatabaseAdapter.getTask(t.getID());
+			Task task = TaskDatabaseAdapter.getTask(t.getID());
+			task.setType(t.getType());
+			result.add(task);
 		}
-		return taskList;
+		return result;
 	}
 
 	/**

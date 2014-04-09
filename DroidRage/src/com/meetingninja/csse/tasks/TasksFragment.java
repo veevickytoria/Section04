@@ -50,8 +50,7 @@ import com.meetingninja.csse.extras.IRefreshable;
 import com.meetingninja.csse.tasks.tasks.CreateTaskTask;
 import com.meetingninja.csse.tasks.tasks.GetTaskListTask;
 
-public class TasksFragment extends Fragment implements
-		AsyncResponse<List<Task>>, IRefreshable {
+public class TasksFragment extends Fragment implements AsyncResponse<List<Task>>, IRefreshable {
 
 	private HashMap<String, List<Task>> taskLists;
 	private TaskItemAdapter taskAdpt;
@@ -79,8 +78,7 @@ public class TasksFragment extends Fragment implements
 	// first user's ID in the members list to assignedto when saving and sending
 	// to backend (because they only save one)
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,	Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		View v = inflater.inflate(R.layout.fragment_tasks, container, false);
 		setupActionBar();
@@ -107,8 +105,7 @@ public class TasksFragment extends Fragment implements
 		actionBar.setListNavigationCallbacks(typeAdapter,
 				new OnNavigationListener() {
 					@Override
-					public boolean onNavigationItemSelected(int itemPosition,
-							long itemId) {
+					public boolean onNavigationItemSelected(int itemPosition,long itemId) {
 						setTaskList(itemPosition);
 						return true;
 					}
@@ -130,8 +127,7 @@ public class TasksFragment extends Fragment implements
 	}
 
 	private void setupListView(View v) {
-		taskAdpt = new TaskItemAdapter(getActivity(), R.layout.list_item_task,
-				taskLists.get(iAssigned), true);
+		taskAdpt = new TaskItemAdapter(getActivity(), R.layout.list_item_task, taskLists.get(iAssigned), true);
 
 		ListView lv = (ListView) v.findViewById(R.id.task_list);
 		lv.setEmptyView(v.findViewById(android.R.id.empty));
@@ -140,8 +136,7 @@ public class TasksFragment extends Fragment implements
 		lv.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parentAdapter, View v,
-					int position, long id) {
+			public void onItemClick(AdapterView<?> parentAdapter, View v, int position, long id) {
 				Task clicked = taskAdpt.getItem(position);
 				viewTask(clicked);
 			}
@@ -160,8 +155,7 @@ public class TasksFragment extends Fragment implements
 			refresh();
 			return true;
 		case R.id.action_new:
-			Intent editIntent = new Intent(getActivity(),
-					EditTaskActivity.class);
+			Intent editIntent = new Intent(getActivity(), EditTaskActivity.class);
 			Task newTask = new Task();
 			editIntent.putExtra(Keys.Task.PARCEL, newTask);
 			startActivityForResult(editIntent, 7);
@@ -184,6 +178,7 @@ public class TasksFragment extends Fragment implements
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 		actionBar.setSelectedNavigationItem(prevSelectedType);
 		super.onResume();
+		refresh();
 	}
 
 	@Override
@@ -235,6 +230,7 @@ public class TasksFragment extends Fragment implements
 		Collections.sort(result);
 		for (Task task : result) {
 			if (task.getType().equals("ASSIGNED_TO")) {
+				System.out.println("title: "+task.getTitle()+"  time:"+task.getEndTime());
 				taskLists.get(assignedToMe).add(task);
 			} else if (task.getType().equals("ASSIGNED_FROM")) {
 				taskLists.get(iAssigned).add(task);
