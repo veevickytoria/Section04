@@ -14,7 +14,7 @@ class NodeUtility{
         $node = $client->getNode($id);
 	if ($node == NULL)  {
             /* Should we handle errors elsewhere? */
-            echo json_encode(array('errorID'=>'XX', 'errorMessage'=>$id . ' is an unrecognized node ID in the database'));
+            echo json_encode(array('errorID'=>'12', 'errorMessage'=>$id . ' is an unrecognized node ID in the database'));
             return NULL;
 	} else {
             return $node;

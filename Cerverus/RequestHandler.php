@@ -51,8 +51,8 @@ abstract class RequestHandler{
      * @param String $indexName Name of the index
      * @param String $indexKey  Key to the index
      */
-    function __construct($indexName, $indexKey){
-        $this->client = new Client();
+    function __construct($client, $indexName, $indexKey){
+        $this->client = $client;
         $this->index = new Index\NodeIndex($this->client, $indexName);
         $this->index->save();
         $this->indexKey = $indexKey;
@@ -137,9 +137,9 @@ abstract class RequestHandler{
      * @return array Information about the edited node.
      */
     public function PUT($putList){
-        $id = $putList[$this->idName];
-        $field = $putList["field"];
-        $value = $putList["value"];
+        $id = $putList->$this->idName;
+        $field = $putList->field;
+        $value = $putList->value;
         $node = NodeUtility::getNodeByID($id, $this->client);
         
         if (in_array($field, $this->propertyList)){
@@ -183,12 +183,13 @@ abstract class RequestHandler{
      */
     public function DELETE($id)
     {
-        $node = getNodeByID($id);
+        $node = NodeUtility::getNodeByID($id, $this->client);
+        if($node == NULL){ return false; }
         if (!NodeUtility::checkInIndex($node, $this->index, $this->indexKey))
             {return false;} //!!Use fancier error message   
         $this->index->remove($node);
-        NodeUtility::deleteNodeFromDatabase(NodeUtility::getNodeByID($id));
-        return true; //make fancy delete message
+        NodeUtility::deleteNodeFromDatabase(NodeUtility::getNodeByID($id, $this->client));
+        return json_encode("valid", "true"); //make fancy delete message
     }
     
 }
