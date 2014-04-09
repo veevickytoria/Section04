@@ -57,6 +57,11 @@ function showViewMeetingModal(ID){
         },
         async: false
       	});
+
+	  var success = function(data){
+          			attendeeInfo = JSON.parse(data);
+          			attends.push({'name':attendeeInfo['name']});
+        			}
 	}
 
 	populateTableRows(attends, "name", "attendanceV");

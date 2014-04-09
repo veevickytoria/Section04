@@ -17,21 +17,19 @@ function hideViewModal(){
 }
 
 function showDeleteModal(ID){
+  currentID = ID;
   deleteID = projectsJSON[currentID]["projectID"].toString();
   $('#deleteProjectModal').modal('show');
 }
 
 function hideDeleteModal(){
-    $.ajax({
-      type: 'DELETE',
-      url: 'http://csse371-04.csse.rose-hulman.edu/Project/' + deleteID,
-      success:function(data){
-          if(JSON.parse(data)["valid"] == "true"){
-            $('#deleteProjectModal').modal('hide');
-            window.location.reload(true);
-          }
-      }
-    });
+    var onSuccess = function(data){
+                      if(JSON.parse(data)["valid"] == "true"){
+                        $('#deleteProjectModal').modal('hide');
+                        window.location.reload(true);
+                      }
+                    }
+    ajaxRequest('null', 'DELETE', '/Project/' + deleteID, true, onSuccess);
 }
 
 function showEditModal(ID){
@@ -46,39 +44,27 @@ function showEditModal(ID){
   currentID = ID;
   projectID = projectsJSON[currentID]["projectID"].toString();
 
-  $.ajax({
-    type: 'GET',
-    url: 'http://csse371-04.csse.rose-hulman.edu/Project/' + projectID,
-    success:function(data){
-      setProjectArray(data);
-    },
-    async: false
-  });
+  var successGetProject = function(data){
+                            setProjectArray(data);
+                          }
+  ajaxRequest('null', 'GET', '/Project/' + projectID, false, successGetProject);
 
   for (i in projectArray['meetings']){
     mid1 = projectArray['meetings'][i]['meetingID'];
-    $.ajax({
-      type: 'GET',
-      url: 'http://csse371-04.csse.rose-hulman.edu/Meeting/' + mid1,
-      success:function(data){
-        meetingInfo = JSON.parse(data);
-        currentMeetings.push({'mid1':mid1,'title':meetingInfo['title']});
-      },
-      async: false
-    });
+    var successProjectInfo = function(data){
+                              meetingInfo = JSON.parse(data);
+                              currentMeetings.push({'mid1':mid1,'title':meetingInfo['title']});
+                            }
+    ajaxRequest('null', 'GET', '/Meeting/' + mid1, false, successProjectInfo);
   }
 
   for (i in projectArray['members']){
     mid2 = projectArray['members'][i]['userID'];
-    $.ajax({
-      type: 'GET',
-      url: 'http://csse371-04.csse.rose-hulman.edu/User/' + mid2,
-      success:function(data){
-        memberInfo = JSON.parse(data);
-        currentMembers.push({'mid2':mid2,'name':memberInfo['name']});
-      },
-      async: false
-    });
+    var successProjectInfo2 = function(data){
+                                memberInfo = JSON.parse(data);
+                                currentMembers.push({'mid2':mid2,'name':memberInfo['name']});
+                              }
+    ajaxRequest('null', 'GET', '/User/' + mid2, false, successProjectInfo2);
   }
 
   document.getElementById("titleE").value = projectArray['projectTitle'];
@@ -162,35 +148,15 @@ function submitEditModal(){
     var updateMeetings = JSON.stringify({"projectID":projectID,"field":"meetings","value":postMeetings});
     var updateMembers = JSON.stringify({"projectID":projectID,"field":"members","value":postMembers});
 
-    $.ajax({
-      type: 'PUT',
-      url: 'http://csse371-04.csse.rose-hulman.edu/Project/',
-      data: updateTitle,
-      success:function(data){
-        // do nothing
-      },
-      async: false
-    });
+    ajaxRequest(updateTitle, 'PUT', '/Project/', false, 'null');
+    ajaxRequest(updateMeetings, 'PUT', '/Project/', true, 'null');
 
-    $.ajax({
-      type: 'PUT',
-      url: 'http://csse371-04.csse.rose-hulman.edu/Project/',
-      data: updateMeetings,
-      success:function(data){
-        // do nothing
-      },
-    });
-
-    $.ajax({
-      type: 'PUT',
-      url: 'http://csse371-04.csse.rose-hulman.edu/Project/',
-      data: updateMembers,
-      success:function(data){
-        $('#editProjectModal').modal('hide');
-        $('#viewProjectModal').modal('hide');
-        window.location.reload(true);
-      },
-    });
+    var onSuccess = function(data){
+                      $('#editProjectModal').modal('hide');
+                      $('#viewProjectModal').modal('hide');
+                      window.location.reload(true);
+                    }
+    ajaxRequest(updateMembers, 'PUT', '/Project/', true, onSuccess);
   }
 }
 
@@ -208,37 +174,25 @@ function showViewModal(ID){
   currentID = ID;
   projectID = projectsJSON[currentID]["projectID"].toString();
 
-  $.ajax({
-    type: 'GET',
-    url: 'http://csse371-04.csse.rose-hulman.edu/Project/' + projectID,
-    success:function(data){
-      projectArray = JSON.parse(data);
-    },
-    async: false
-  });
+  var successGetProject = function(data){
+                          projectArray = JSON.parse(data);
+                        }
+  ajaxRequest('null', 'GET', '/Project/' + projectID, false, successGetProject);
 
   for (i in projectArray['meetings']){
-    $.ajax({
-      type: 'GET',
-      url: 'http://csse371-04.csse.rose-hulman.edu/Meeting/' + projectArray['meetings'][i]['meetingID'],
-      success:function(data){
-        meetingInfo = JSON.parse(data);
-        projectMeetings.push({'title':meetingInfo['title']});
-      },
-      async: false
-    });
+    var successGetProjectMeetings = function(data){
+                                      meetingInfo = JSON.parse(data);
+                                      projectMeetings.push({'title':meetingInfo['title']});
+                                    }
+    ajaxRequest('null', 'GET', '/Meeting/' + projectArray['meetings'][i]['meetingID'], false, successGetProjectMeetings);
   }
 
   for (i in projectArray['members']){
-    $.ajax({
-      type: 'GET',
-      url: 'http://csse371-04.csse.rose-hulman.edu/User/' + projectArray['members'][i]['userID'],
-      success:function(data){
-        memberInfo = JSON.parse(data);
-        projectMembers.push({'name':memberInfo['name']});
-      },
-      async: false
-    });
+    var successGetMembers = function(data){
+                              memberInfo = JSON.parse(data);
+                              projectMembers.push({'name':memberInfo['name']});
+                            }
+    ajaxRequest('null', 'GET', '/User/' + projectArray['members'][i]['userID'], false, successGetMembers);
   }
 
   document.getElementById("titleV").innerHTML = projectArray["projectTitle"];
