@@ -48,13 +48,12 @@ abstract class RequestHandler{
      * Creates a new request handler given a client, name for the index, and
      * key for the index
      * 
-     * @param Client $client    Client to be used
      * @param String $indexName Name of the index
      * @param String $indexKey  Key to the index
      */
-    function __construct($client, $indexName, $indexKey){
-        $this->client = $client;
-        $this->index = new Index\NodeIndex($client, $indexName);
+    function __construct($indexName, $indexKey){
+        $this->client = new Client();
+        $this->index = new Index\NodeIndex($this->client, $indexName);
         $this->index->save();
         $this->indexKey = $indexKey;
     }

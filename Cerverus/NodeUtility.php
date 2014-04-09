@@ -28,7 +28,7 @@ class NodeUtility{
     
     public static function deleteNodeFromDatabase($node){
         if ($node == NULL) {return false;}
-        $this->deleteAllNodeRelationships($node); 
+        NodeUtility::deleteAllNodeRelations($node); 
         $node->delete();
         return true;
     }
@@ -101,8 +101,9 @@ class NodeUtility{
         $node->setProperty($nodeProperty, $list->$listProperty);
     }
     
-    public static function checkInIndex($node, $index, $indexKey="ID"){
-        $match= $index->findOne($indexKey, $node->getId());
+    public static function checkInIndex($node, $index, $indexKey="ID", $checkValue=null){
+        if($checkValue == null){ $checkValue = $node->getId(); }
+        $match= $index->findOne($indexKey, $checkValue);
         return ($match != null);
     }
     
