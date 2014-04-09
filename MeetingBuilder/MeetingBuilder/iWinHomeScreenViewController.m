@@ -158,7 +158,8 @@
         else if (indexPath.section == 1)
         {
             NSDictionary* task = (NSDictionary*)[self.taskFeed objectAtIndex:indexPath.row];
-            cell.detailTextLabel.text= (NSString*)[[[task objectForKey:@"datetimeStart"] stringByAppendingString:@" to "]stringByAppendingString:[task objectForKey:@"datetimeEnd"]];
+            cell.detailTextLabel.text= (NSString*)[[[iWinMeetingViewController getDateTimeStringFromEpochString:[task objectForKey:@"datetimeStart"]]
+                                                    stringByAppendingString:@" to "]stringByAppendingString:[iWinMeetingViewController getDateTimeStringFromEpochString:[task objectForKey:@"datetimeEnd"]]];
             cell.textLabel.text = (NSString*)[[[task objectForKey:@"title"] stringByAppendingString:@": "] stringByAppendingString:[task objectForKey:@"description"]];
         }
     
@@ -168,7 +169,7 @@
             
             if (indexPath.row < notificationLength){
                 NSDictionary* notification = (NSDictionary*) [self.notificationFeed objectAtIndex:indexPath.row];
-                cell.textLabel.text = (NSString*)[[[notification objectForKey:@"description"] stringByAppendingString:@": "]stringByAppendingString:[notification objectForKey:@"datetime"]];
+                cell.textLabel.text = (NSString*)[[[notification objectForKey:@"description"] stringByAppendingString:@": "]stringByAppendingString:[iWinMeetingViewController getDateTimeStringFromEpochString:[notification objectForKey:@"datetime"]]];
             }else{
                 cell.textLabel.text = (NSString*)[self.noteFeed objectAtIndex:(notificationLength - indexPath.row)];
                 cell.detailTextLabel.text = (NSString*)[self.noteFeedSubtitle objectAtIndex:(notificationLength - indexPath.row)];
