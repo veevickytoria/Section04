@@ -2,27 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-
+    android:orientation="vertical"
+    android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft" >
+    
      <TextView
         android:id="@+id/group_item_title"
-        style="?android:attr/textAppearanceMediumInverse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ellipsize="marquee"
         android:singleLine="true"
-        android:textColor="@color/list_item_title_color"
         android:textSize="18sp"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/group_item_num_members"
-        style="?android:attr/textAppearanceSmallInverse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ellipsize="marquee"
         android:singleLine="true"
-        android:textColor="@color/list_item_desc_text_color"
         android:textSize="14sp" />
 
 </LinearLayout>

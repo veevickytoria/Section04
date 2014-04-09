@@ -6,25 +6,25 @@
     android:layout_margin="@dimen/activity_horizontal_margin" 
     android:layout_weight="2">
 
-
             <LinearLayout
                 android:id="@+id/two_pane"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal|top"
-                android:orientation="vertical">
+                android:orientation="vertical" >
 
-                <include android:layout_width="match_parent"
+                <include
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    layout="@layout/fragment_home_page_meetings" 
-                    android:layout_weight="1"/>
+                    android:layout_weight="1"
+                    layout="@layout/fragment_home_page_meetings" />
 
                 <include
                     android:id="@+id/attendees_group"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    layout="@layout/fragment_home_page_tasks" 
-                    android:layout_weight="1"/>
+                    android:layout_weight="1"
+                    layout="@layout/fragment_home_page_tasks" />
             </LinearLayout>
 
 </LinearLayout>

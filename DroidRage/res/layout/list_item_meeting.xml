@@ -6,38 +6,34 @@
     android:layout_gravity="center_vertical|fill_horizontal"
     android:layout_marginRight="4dip"
     android:minHeight="64dip"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft" >
+    
 
     <TextView
         android:id="@+id/title"
-        style="?android:attr/textAppearanceMediumInverse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ellipsize="marquee"
         android:singleLine="true"
-        android:textColor="@color/list_item_title_color"
         android:textSize="18sp"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/when"
-        style="?android:attr/textAppearanceSmallInverse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ellipsize="marquee"
         android:singleLine="true"
-        android:textColor="@color/list_item_desc_text_color"
         android:textSize="14sp" />
 
     <TextView
         android:id="@+id/where"
-        style="?android:attr/textAppearanceSmallInverse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="-3dip"
         android:ellipsize="marquee"
         android:singleLine="true"
-        android:textColor="@color/list_item_desc_text_color"
         android:textSize="14sp" />
 
 </LinearLayout>
