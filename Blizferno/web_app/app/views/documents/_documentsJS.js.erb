@@ -62,7 +62,7 @@ function createAgendaStructure(contents, element){
 //alert("contents[i]="+JSON.stringify(contents[i]));
 
 			var contentElement = document.createElement("div");
-				contentElement.setAttribute("style", "margin-left:"+10*i+"%");
+				contentElement.setAttribute("style", "margin-left:"+15*i+"%");
 			var contentElementText = document.createTextNode("Content: ");
 				contentElement.appendChild(contentElementText);
 				element.appendChild(contentElement);
@@ -103,7 +103,7 @@ function createAgendaStructure(contents, element){
 
 
 
-function createEditAgendaStructure(contents, element){
+function createEditAgendaStructure(contents, element, depth){
 //alert("contents="+JSON.stringify(contents));
 //alert("count="+jsonLength(contents));
 
@@ -112,9 +112,16 @@ function createEditAgendaStructure(contents, element){
 		for(var i = 1; i <= jsonLength(contents); i++){
 //alert("description="+contents[i]['description']);
 //alert("contents[i]="+JSON.stringify(contents[i]));
+	var blah = i-1;
 
 			var contentElement = document.createElement("div");
-				contentElement.setAttribute("style", "margin-left:"+10*i+"%");
+				contentElement.setAttribute("style", "margin-left:"+15*i+"%");
+if(typeof element.getAttribute("id").split(':')[1] == 'undefined'){
+	contentElement.setAttribute("id", "contentID|0:0");
+}else{
+		contentElement.setAttribute("id", "contentID|"+element.getAttribute("id").split('|')[1]+"-"+depth+":"+blah);
+}
+				
 			var contentElementText = document.createTextNode("Content: ");
 				contentElement.appendChild(contentElementText);
 				element.appendChild(contentElement);
@@ -126,6 +133,7 @@ function createEditAgendaStructure(contents, element){
 			var titleElement = document.createElement("input");
 				titleElement.setAttribute("type", "text");
 				titleElement.setAttribute("class", "form-control");
+				titleElement.setAttribute("name", "title-"+contentElement.getAttribute('id').split('|')[1]);
 				titleElement.value = contents[i]['title'];
 			var titleDiv = document.createElement("div");
 			var titleText = document.createTextNode("Title: ");
@@ -140,6 +148,7 @@ function createEditAgendaStructure(contents, element){
 			var timeElement = document.createElement("input");
 				timeElement.setAttribute("type", "text");
 				timeElement.setAttribute("class", "form-control");
+				timeElement.setAttribute("name", "time-"+contentElement.getAttribute('id').split('|')[1]);
 				timeElement.value = contents[i]['time'];
 			var timeDiv = document.createElement("div");
 			var timeText = document.createTextNode("Time: ");
@@ -155,6 +164,7 @@ function createEditAgendaStructure(contents, element){
 			var descriptionElement = document.createElement("input");
 				descriptionElement.setAttribute("type", "textarea");
 				descriptionElement.setAttribute("class", "form-control");
+				descriptionElement.setAttribute("name", "description-"+contentElement.getAttribute('id').split('|')[1]);
 				descriptionElement.value = contents[i]['description'];
 			var descriptionDiv = document.createElement("div");
 			var descriptionText = document.createTextNode("Description: ");
@@ -165,7 +175,7 @@ function createEditAgendaStructure(contents, element){
 			contentElement.appendChild(document.createElement("br"));
 			contentElement.appendChild(document.createElement("br"));
 
-			createEditAgendaStructure(contents[i]["content"], contentElement);
+			createEditAgendaStructure(contents[i]["content"], contentElement, depth+1);
 		}
 	}
 }
@@ -205,7 +215,19 @@ function showEditAgendaModal(){
 	document.getElementById("AcontentDescriptionE").value = agendasJSON[currentID]["content"]["1"]["description"];
 */
 
-createEditAgendaStructure(agendasJSON[currentID]["content"], document.getElementById("AuserIDE").parentNode);
+/*
+var testelement = document.createElement("input");
+	testelement.setAttribute("type", "textarea");
+	testelement.setAttribute("class", "form-control");
+	testelement.setAttribute("name","testingbox");
+var testText = document.createTextNode("testinghere");
+	testelement.appendChild(testText);
+	document.getElementById("AuserIDE").parentNode.appendChild(testelement);
+*/
+
+
+createEditAgendaStructure(agendasJSON[currentID]["content"], document.getElementById("AuserIDE").parentNode, 0);
+
 
 		 	meetingIDs = [];
 			possibleMeetings = [{"meetingID":agendasJSON[currentID]["meetingID"],"title":agendasJSON[currentID]["meetingID"]}]
@@ -244,6 +266,10 @@ function updateEditedValues(type){
 	}else if(type =='agenda'){
 		var form = document.getElementById('editAgendaForm');
 		var formJSON = new convertFormToJSON(form);
+alert("this is the form: "+ JSON.stringify(formJSON));
+alert("this is the other version: "+ JSON.stringify(convertEditFormJSONToPOSTFormat(formJSON)));
+//convertEditFormJSONToPOSTFormat(0);
+
 		var invalid = validateEditedAgendaValues(formJSON);
 		if (!invalid){
 			updateEditedAgendaValues(formJSON);
@@ -251,6 +277,72 @@ function updateEditedValues(type){
 		}
 	}
 }
+
+
+
+function convertEditFormJSONToPOSTFormat(givenJSON){
+/*
+	var returnJSON = {};
+	for(var i = 0; i < r {
+		var nameSplit = i.split("-");
+		if(nameSplit[0] == 0){// if first level
+			retunJSON[nameSplit[2]]=val;
+		}else if(nameSplit[0] > depth){
+			depth = nameSplit[0];
+			returnJSON["content"]=
+		}
+	}
+
+return returnJSON;
+*/
+/*
+var blah = "content";
+var jsontest = {};
+for (var i = 1; i < 4; i++){
+eval("jsontest."+blah+"=[{content:[]}]");
+
+	blah = blah + "[0].content";
+}
+alert("blah:"+blah);
+eval("jsontest."+blah+"='test'");
+
+alert("testing:"+JSON.stringify(jsontest));
+*/
+
+var returnJSON = {"content":[]};
+	$.each(givenJSON, function(i, val){
+		var positionList = i.split('-');
+alert("positionList: "+ positionList);
+positionList.shift();
+
+		var field = positionList[0];
+		//eval("returnJSON."+generateNestedContent(positionList)+".field=val");
+	alert("returnJSON."+generateNestedContent(positionList)+".field=val");
+	});
+
+return returnJSON;
+
+}
+
+
+
+function generateNestedContent(positionList){
+alert("test: "+ positionList);
+	var locationArray = positionList.split(':');
+	var depth = locationArray[0];
+	var position = locationArray[1];
+	var evalString = "content";
+	for(var i = 0; i < positionList.length; i++){
+
+		evalString = evalString +"["+position+"].content";
+	}
+	evalString = evalString.slice(0,-8);
+alert("evalString: "+evalString);
+	return evalString;
+}
+
+
+
 
 function updateEditedNoteValues(){
 	var editNoteID = noteJSON[currentID]['noteID'].toString();
