@@ -358,20 +358,7 @@
         jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     }
     NSString *url = [NSString stringWithFormat:@"%@/Task/", DATABASE_URL];
-    
-    NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
-    [urlRequest setHTTPMethod:@"POST"];
-    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [urlRequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-length"];
-    [urlRequest setHTTPBody:jsonData];
-    NSURLResponse * response = nil;
-    NSError * error = nil;
-    NSData * data =[NSURLConnection sendSynchronousRequest:urlRequest
-                                         returningResponse:&response
-                                                     error:&error];
-    NSError *jsonParsingError = nil;
-    NSDictionary *deserializedDictionary = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments|NSJSONReadingMutableContainers error:&jsonParsingError];
+    NSDictionary *deserializedDictionary = [self.backendUtility postRequestForUrl:url withDictionary:jsonDictionary];
     self.taskID = [[deserializedDictionary objectForKey:@"taskID"] integerValue];
 }
 
