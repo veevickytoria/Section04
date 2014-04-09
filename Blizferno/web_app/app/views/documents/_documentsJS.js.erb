@@ -91,12 +91,6 @@ function createAgendaStructure(contents, element){
 	}
 }
 
-
-
-
-
-
-
 function showViewModalNoID(type){
 	updateEditedValues(type);
 }
@@ -173,8 +167,8 @@ function updateEditedValues(type){
 	}
 }
 
-function updateEditedNoteValues(){
-	var editNoteID = noteJSON[currentID]['noteID'].toString();
+function updateEditedNoteValues(editForm){
+	var editNoteID = notesJSON[currentID]['noteID'].toString();
 	var editField = "";
 	var editValue = "";
 	var editData = "";
@@ -188,11 +182,7 @@ function updateEditedNoteValues(){
 			editValue = notesJSON[currentID][key];
 			editData = JSON.stringify({"noteID":editNoteID,"field":editField,"value":editValue});
 
-			$.ajax({
-				type: 'PUT',
-				url: 'http://csse371-04.csse.rose-hulman.edu/Note/',
-				data: editData
-			});
+			ajaxRequest(editData, 'PUT', '/Note/', true, 'null');
 
 		}
 	}
@@ -236,16 +226,11 @@ function updateEditedAgendaValues(formJSON){
 			"user":postUser,
 			"content":postContent
 		});
-
-		$.ajax({
-			type: 'PUT',
-			url: 'http://csse371-04.csse.rose-hulman.edu/Agenda/',
-			data: postData,
-			success:function(data){
-				$('#editAgendaModal').modal('hide');
-				window.location.reload(true);
-			}
-		});
+		var doOnSuccess = function(data){
+							$('#editAgendaModal').modal('hide');
+							window.location.reload(true);
+						}
+		ajaxRequest(postData, 'PUT', '/Agenda/', true, doOnSuccess);
 }
 
 function validateEditedAgendaValues(editForm){
@@ -341,16 +326,12 @@ function submitCreateNoteModal(){
 		});
 		
 		//make the POST request to the backend
-		$.ajax({
-			type: 'POST',
-			url: 'http://csse371-04.csse.rose-hulman.edu/Note/',
-			data: postData,
-			success:function(data){
-				//if successful then close the modal and reload the page
-				$('#newNoteModal').modal('hide');
-				window.location.reload(true);
-			}
-		});
+		var doOnSuccess = function(data){
+							//if successful then close the modal and reload the page
+							$('#newNoteModal').modal('hide');
+							window.location.reload(true);
+						}
+		ajaxRequest(postData, 'POST', '/Note/', true, doOnSuccess);
 	}
 }
 
@@ -396,15 +377,11 @@ function submitCreateAgendaModal(){
 			"content":postContent
 		});
 
-		$.ajax({
-			type: 'POST',
-			url: 'http://csse371-04.csse.rose-hulman.edu/Agenda/',
-			data: postData,
-			success:function(data){
-				$('#newAgendaModal').modal('hide');
-				window.location.reload(true);
-			}
-		});
+		var doOnSuccess = function(data){
+							$('#newAgendaModal').modal('hide');
+							window.location.reload(true);
+						}
+		ajaxRequest(postData, 'POST', '/Agenda/', true, doOnSuccess);
 	}
 }
 
@@ -428,30 +405,25 @@ function hideDeleteModal(type){
 function hideDeleteNoteModal(){
 	var deleteData = notesJSON[deleteID]['noteID'];
 
-	$.ajax({
-		type: 'DELETE',
-		url: 'http://csse371-04.csse.rose-hulman.edu/Note/' + deleteData,
-		success:function(data){
-			if(JSON.parse(data)["valid"] == "true"){
-				$('#deleteNoteModal').modal('hide');
-				window.location.reload(true);
-			}
-		}
-	});
+	var doOnSuccess = function(data){
+						if(JSON.parse(data)["valid"] == "true"){
+							$('#deleteNoteModal').modal('hide');
+							window.location.reload(true);
+						}
+					}
+	ajaxRequest('null', 'DELETE', '/Note/' + deleteData, true, doOnSuccess);
 }
 
 function hideDeleteAgendaModal(){
 	var deleteData = agendasJSON[deleteID]['agendaID'];
-	$.ajax({
-		type: 'DELETE',
-		url: 'http://csse371-04.csse.rose-hulman.edu/Agenda/' + deleteData,
-		success:function(data){
-			if(JSON.parse(data)["valid"] == "true"){
-				$('#deleteAgendaModal').modal('hide');
-				window.location.reload(true);
-			}
-		}
-	});
+
+	var doOnSuccess = function(data){
+						if(JSON.parse(data)["valid"] == "true"){
+							$('#deleteAgendaModal').modal('hide');
+							window.location.reload(true);
+						}
+					}
+	ajaxRequest('null', 'DELETE', '/Agenda/' + deleteData, true, doOnSuccess);
 }
 
 function convertFormToJSON(form){
