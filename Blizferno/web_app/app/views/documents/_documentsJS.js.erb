@@ -215,18 +215,9 @@ function showEditAgendaModal(){
 	document.getElementById("AcontentDescriptionE").value = agendasJSON[currentID]["content"]["1"]["description"];
 */
 
-/*
-var testelement = document.createElement("input");
-	testelement.setAttribute("type", "textarea");
-	testelement.setAttribute("class", "form-control");
-	testelement.setAttribute("name","testingbox");
-var testText = document.createTextNode("testinghere");
-	testelement.appendChild(testText);
-	document.getElementById("AuserIDE").parentNode.appendChild(testelement);
-*/
 
 
-createEditAgendaStructure(agendasJSON[currentID]["content"], document.getElementById("AuserIDE").parentNode, 0);
+//createEditAgendaStructure(agendasJSON[currentID]["content"], document.getElementById("AuserIDE").parentNode, 0);
 
 
 		 	meetingIDs = [];
@@ -266,8 +257,8 @@ function updateEditedValues(type){
 	}else if(type =='agenda'){
 		var form = document.getElementById('editAgendaForm');
 		var formJSON = new convertFormToJSON(form);
-alert("this is the form: "+ JSON.stringify(formJSON));
-alert("this is the other version: "+ JSON.stringify(convertEditFormJSONToPOSTFormat(formJSON)));
+//alert("this is the form: "+ JSON.stringify(formJSON));
+//alert("this is the other version: "+ JSON.stringify(convertEditFormJSONToPOSTFormat(formJSON)));
 //convertEditFormJSONToPOSTFormat(0);
 
 		var invalid = validateEditedAgendaValues(formJSON);
