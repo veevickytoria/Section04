@@ -73,14 +73,7 @@ public class EditMeetingActivity extends FragmentActivity implements
 	public static final String EXTRA_EDIT_MODE = "editing";
 	public static final String EXTRA_MEETING = Keys.Meeting.PARCEL;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_edit_event);
-		// Show the Up button in the action bar.
-		setupActionBar();
-
-		// Do some initializations
+	private void init() {
 		extras = getIntent().getExtras();
 		if (extras != null && !extras.isEmpty()) {
 			edit_mode = extras.getBoolean(EXTRA_EDIT_MODE, true);
@@ -92,17 +85,17 @@ public class EditMeetingActivity extends FragmentActivity implements
 				.is24HourFormat(getApplicationContext());
 		timeFormat = is24 ? NinjaDateUtils.JODA_24_TIME_FORMAT
 				: NinjaDateUtils.JODA_12_TIME_FORMAT;
+	}
 
-		setupViews();
-
-		// init the text fields
+	private void textFieldinit() {
 		if (displayedMeeting != null) {
 			mTitle.setText(displayedMeeting.getTitle());
 			mLocation.setText(displayedMeeting.getLocation());
 			mDescription.setText(displayedMeeting.getDescription());
 		}
+	}
 
-		// init the date-time pickers
+	private void dateTimePicker() {
 		start = Calendar.getInstance();
 		end = Calendar.getInstance();
 		if (displayedMeeting != null) {
@@ -124,6 +117,18 @@ public class EditMeetingActivity extends FragmentActivity implements
 		mToTime.setOnClickListener(new TimeClickListener(mToTime, end, this,
 				start, mFromTime, false));
 		mToTime.setText(timeFormat.print(end.getTimeInMillis()));
+	}
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_edit_event);
+		// Show the Up button in the action bar.
+		setupActionBar();
+		init();
+		setupViews();
+		textFieldinit();
+		dateTimePicker();
 	}
 
 	private final View.OnClickListener mActionBarListener = new OnClickListener() {
@@ -320,7 +325,8 @@ public class EditMeetingActivity extends FragmentActivity implements
 			Toast.makeText(this, String.format("Saving Meeting"),
 					Toast.LENGTH_SHORT).show();
 
-			msgIntent.putExtra(Keys.Meeting.PARCEL, new MeetingParcel(newMeeting));
+			msgIntent.putExtra(Keys.Meeting.PARCEL, new MeetingParcel(
+					newMeeting));
 			if (extras != null) {
 				msgIntent.putExtra("listPosition",
 						extras.getInt("listPosition", -1));
