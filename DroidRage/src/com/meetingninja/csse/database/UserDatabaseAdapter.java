@@ -47,6 +47,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.meetingninja.csse.extras.JsonUtils;
 import com.meetingninja.csse.extras.NinjaTextUtils;
 import com.meetingninja.csse.extras.SleeperThread;
+import com.parse.ParseUser;
 
 public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 
@@ -512,7 +513,23 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 			sleeperThread.run();
 			response = updateHelper(getBaseUri().build().toString(), p);
 		}
-		return parseUser(MAPPER.readTree(response));
+
+		User parsedFromBackend = parseUser(MAPPER.readTree(response));
+		updateParseSDKUser(parsedFromBackend);
+		return parsedFromBackend;
+	}
+
+	public static void updateParseSDKUser(User user) {
+		ParseUser parseUser = ParseUser.getCurrentUser();
+
+		parseUser.setUsername(user.getDisplayName());
+		parseUser.put("title", user.getTitle());
+		parseUser.put("company", user.getCompany());
+		parseUser.put("location", user.getLocation());
+		parseUser.put("phone", user.getPhone());
+
+		parseUser.saveInBackground();
+
 	}
 
 	public static SerializableUser parseUser(JsonNode node) {
