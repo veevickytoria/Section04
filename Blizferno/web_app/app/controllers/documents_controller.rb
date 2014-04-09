@@ -7,7 +7,7 @@ before_filter :getDocuments
 	def getDocuments
 		documents_api_wrapper = DocumentsApiWrapper.new
 
-		@agendas = documents_api_wrapper.get_user_agendas(@userID);
+		@agendas = documents_api_wrapper.get_user_agendas(@userID)
 		@agendasParsed = JSON.parse(@agendas)
 
 		userAgendaIDs = Array.new
