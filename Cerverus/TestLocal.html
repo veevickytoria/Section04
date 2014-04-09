@@ -1,0 +1,1024 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<title>TestCases</title>
+<head>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+</head>
+<body>
+<h1> Test Cases Local</h1><h3>Only Fill in the REQUIRED EMAIL box<br>
+Enter a Unique Email (try letters+numbers)</h3>
+<input name="searchTxt" placeholder="REQUIRED EMAIL"  type="text" maxlength="512" id="PUTid" class="searchField"/>
+<button type="button" value="" onclick="UserPostTest()">userTest</button>
+<script type="text/javascript">
+/* http://patorjk.com/software/taag/#p=display&f=Doom&t=Users
+ _   _                   
+| | | |                  
+| | | |___  ___ _ __ ___ 
+| | | / __|/ _ \ '__/ __|
+| |_| \__ \  __/ |  \__ \
+ \___/|___/\___|_|  |___/
+                        
+                        */
+UserGetTest = function() {
+	var groupDiv = $("#UserRes");
+    var resultDiv = $("#resultDivContainer");
+    $.ajax({
+        url: "http://localhost/User/"+document.getElementById('GETid').value,
+        type: "GET",
+        success: function (result) {
+            switch (result) {
+                case true:
+                    //processResponse(result);
+                    break;
+                default:
+					if (JSON.parse(result).errorMessage !== undefined)
+					{
+						groupDiv.html(groupDiv.html()+"<br>"+"Get User <font color='red'>FAIL</font>");
+					}
+					else //if(JSON.parse(result).userID==document.getElementById('GETid').value)
+					{
+						groupDiv.html(groupDiv.html()+"<br>"+"Get User <font color='green'>Passed</font>");
+						groupDiv.html(groupDiv.html()+"<br>"+"Testing PUT");
+						UserPutTest();
+					}
+            }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+        alert(xhr.status);
+        alert(thrownError);
+        }
+    });
+};
+UserPostTest = function() {
+	
+	var resultDiv = $("#resultDivContainer");
+	var groupDiv = $("#UserRes");
+	groupDiv.html(groupDiv.html()+"<br>"+"Testing POST");
+	var datta = JSON.stringify({ "name": "PaulBlue",    "password": "123",   "email": document.getElementById('PUTid').value,    "phone": "123321",    "company": "12",    "title": "titl",    "location": "loc"});	
+    $.ajax({
+        url: "http://localhost/User/",
+        type: "POST",
+        data: datta,
+	 	dataType: "text",
+        success: function (result) {
+		//resultDiv.html(result);
+			switch (result) {
+			    case true:
+			        //processResponse(result);
+			        break;
+			    default:
+			        if (JSON.parse(result).errorMessage !== undefined)
+				{
+					groupDiv.html(groupDiv.html()+"<br>"+"Post User <font color='red'>FAIL</font>");
+				}
+				else if(JSON.parse(result).userID !== undefined)
+				{
+					document.getElementById('GETid').value=JSON.parse(result).userID;
+					groupDiv.html(groupDiv.html()+"<br>"+"User Post <font color='green'>Passed</font>");
+					groupDiv.html(groupDiv.html()+"<br>"+"Testing GET");
+					UserGetTest();
+				}
+			}
+		},
+		error: function (xhr, ajaxOptions, thrownError) {
+		alert(xhr.status);
+		alert(thrownError);
+		}
+   });
+};
+UserPutTest = function() {
+	var resultDiv = $("#resultDivContainer");
+	var groupDiv = $("#UserRes");
+	var datta = JSON.stringify({"userID": document.getElementById('GETid').value , "field" : "title", "value" : "PutTest"});
+	//{"userID": document.getElementById('GETid'), "field": "title" , "value": "TestWorked"});	
+    $.ajax({
+        url: "http://localhost/User/",
+        type: "PUT",
+        data: datta,
+	 	dataType: "text",
+        success: function (result) {
+			switch (result) {
+			    case true:
+			        //processResponse(result);
+			        break;
+			    default:
+			        if (JSON.parse(result).errorMessage !== undefined)
+				{
+					groupDiv.html(groupDiv.html()+"<br>"+"Put User <font color='red'>FAIL</font>");
+				}
+				else if(JSON.parse(result).userID !== undefined)
+				{	
+					if(JSON.parse(result).title=='PutTest'){
+						groupDiv.html(groupDiv.html()+"<br>"+"User Put <font color='green'>Passed</font>");
+						groupDiv.html(groupDiv.html()+"<br>"+"Testing DELETE");
+						NotePostTest();
+						//groupDiv.html(groupDiv.html()+"<br>"+"Testing DELETE");
+						//UserDeleteTest();
+					}else{
+						groupDiv.html(groupDiv.html()+"<br>"+"Put User <font color='red'>FAIL</font>");
+					}
+				}
+			}
+		},
+		error: function (xhr, ajaxOptions, thrownError) {
+		alert(xhr.status);
+		alert(thrownError);
+		}
+   });
+};
+UserDeleteTest = function() {
+	var groupDiv = $("#UserRes");
+    var resultDiv = $("#resultDivContainer");
+    $.ajax({
+        url: "http://localhost/User/"+document.getElementById('GETid').value,
+        type: "DELETE",
+        success: function (result) {
+            switch (result) {
+                case true:
+                    //processResponse(result);
+                    break;
+                default:
+					if (JSON.parse(result).errorMessage !== undefined)
+					{
+						groupDiv.html(groupDiv.html()+"<br>"+"Delete User FAIL");
+					}
+					else if(JSON.parse(result).valid=="true")
+					{
+						groupDiv.html(groupDiv.html()+"<br>"+"Delete User <font color='green'>Passed</font>");
+					}
+            }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+        alert(xhr.status);
+        alert(thrownError);
+        }
+    });
+};
+/*
+ _   _       _            
+| \ | |     | |           
+|  \| | ___ | |_ ___  ___ 
+| . ` |/ _ \| __/ _ \/ __|
+| |\  | (_) | ||  __/\__ \
+\_| \_/\___/ \__\___||___/
+                         
+                         */
+NoteGetTest = function() {
+	var groupDiv = $("#NoteRes");
+    var resultDiv = $("#resultDivContainer");
+    $.ajax({
+        url: "http://localhost/Note/"+document.getElementById('noteGETid').value,
+        type: "GET",
+        success: function (result) {
+            switch (result) {
+                case true:
+                    //processResponse(result);
+                    break;
+                default:
+					if (JSON.parse(result).errorMessage !== undefined)
+					{
+						groupDiv.html(groupDiv.html()+"<br>"+"Get Note <font color='red'>FAIL</font>");
+					}
+					else //if(JSON.parse(result).noteID==document.getElementById('noteGETid').value)
+					{
+						groupDiv.html(groupDiv.html()+"<br>"+"Get Note <font color='green'>Passed</font>");
+						groupDiv.html(groupDiv.html()+"<br>"+"Testing PUT");
+						NotePutTest();
+					}
+            }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+        alert(xhr.status);
+        alert(thrownError);
+        }
+    });
+};
+NotePostTest = function() {
+	
+	var resultDiv = $("#resultDivContainer");
+	var groupDiv = $("#NoteRes");
+	groupDiv.html(groupDiv.html()+"<br>"+"Testing POST");
+	var datta = JSON.stringify({ "title": "Test",   "createdBy": document.getElementById('GETid').value,    "description": "Test Description",   "content": "Money Money Money MOOONNNEYYY",    "dateCreated": "11223132"});	
+    $.ajax({
+        url: "http://localhost/Note/",
+        type: "POST",
+        data: datta,
+	 	dataType: "text",
+        success: function (result) {
+		//resultDiv.html(result);
+			switch (result) {
+			    case true:
+			        //processResponse(result);
+			        break;
+			    default:
+			        if (JSON.parse(result).errorMessage !== undefined)
+				{
+					groupDiv.html(groupDiv.html()+"<br>"+"Post Note <font color='red'>FAIL</font>");
+				}
+				else if(JSON.parse(result).noteID !== undefined)
+				{
+					document.getElementById('noteGETid').value=JSON.parse(result).noteID;
+					groupDiv.html(groupDiv.html()+"<br>"+"Post Note <font color='green'>Passed</font>");
+					groupDiv.html(groupDiv.html()+"<br>"+"Testing GET");
+					NoteGetTest();
+				}
+			}
+		},
+		error: function (xhr, ajaxOptions, thrownError) {
+		alert(xhr.status);
+		alert(thrownError);
+		}
+   });
+};
+NotePutTest = function() {
+	var resultDiv = $("#resultDivContainer");
+	var groupDiv = $("#NoteRes");
+	var datta = JSON.stringify({"noteID": document.getElementById('noteGETid').value , "field" : "title", "value" : "PutTest"});
+	//{"noteID": document.getElementById('noteGETid'), "field": "title" , "value": "TestWorked"});	
+    $.ajax({
+        url: "http://localhost/Note/",
+        type: "PUT",
+        data: datta,
+	 	dataType: "text",
+        success: function (result) {
+			switch (result) {
+			    case true:
+			        //processResponse(result);
+			        break;
+			    default:
+			        if (JSON.parse(result).errorMessage !== undefined)
+				{
+					groupDiv.html(groupDiv.html()+"<br>"+"Put Note <font color='red'>FAIL</font>");
+				}
+				else if(JSON.parse(result).noteID !== undefined)
+				{	
+					if(JSON.parse(result).title=='PutTest'){
+						groupDiv.html(groupDiv.html()+"<br>"+"Note Put <font color='green'>Passed</font>");
+						groupDiv.html(groupDiv.html()+"<br>"+"Testing DELETE");
+						NoteDeleteTest();
+					}else{
+						groupDiv.html(groupDiv.html()+"<br>"+"Put Note <font color='red'>FAIL</font>");
+					}
+				}
+			}
+		},
+		error: function (xhr, ajaxOptions, thrownError) {
+		alert(xhr.status);
+		alert(thrownError);
+		}
+   });
+};
+NoteDeleteTest = function() {
+	var groupDiv = $("#NoteRes");
+    var resultDiv = $("#resultDivContainer");
+    $.ajax({
+        url: "http://localhost/Note/"+document.getElementById('noteGETid').value,
+        type: "DELETE",
+        success: function (result) {
+            switch (result) {
+                case true:
+                    //processResponse(result);
+                    break;
+                default:
+					if (JSON.parse(result).errorMessage !== undefined)
+					{
+						groupDiv.html(groupDiv.html()+"<br>"+"Delete Note FAIL");
+					}
+					else if(JSON.parse(result).valid=="true")
+					{
+						groupDiv.html(groupDiv.html()+"<br>"+"Delete Note <font color='green'>Passed</font>");
+						TaskPostTest();
+					}
+            }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+        alert(xhr.status);
+        alert(thrownError);
+        }
+    });
+};
+/*
+ _____         _        
+|_   _|       | |       
+  | | __ _ ___| | _____ 
+  | |/ _` / __| |/ / __|
+  | | (_| \__ \   <\__ \
+  \_/\__,_|___/_|\_\___/
+                        
+
+*/
+TaskGetTest = function() {
+	var groupDiv = $("#TaskRes");
+    var resultDiv = $("#resultDivContainer");
+    $.ajax({
+        url: "http://localhost/Task/"+document.getElementById('taskGETid').value,
+        type: "GET",
+        success: function (result) {
+            switch (result) {
+                case true:
+                    //processResponse(result);
+                    break;
+                default:
+					if (JSON.parse(result).errorMessage !== undefined)
+					{
+						groupDiv.html(groupDiv.html()+"<br>"+"Get Task <font color='red'>FAIL</font>");
+					}
+					else //if(JSON.parse(result).taskID==document.getElementById('taskGETid').value)
+					{
+						groupDiv.html(groupDiv.html()+"<br>"+"Get Task <font color='green'>Passed</font>");
+						groupDiv.html(groupDiv.html()+"<br>"+"Testing PUT");
+						TaskPutTest();
+					}
+            }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+        alert(xhr.status);
+        alert(thrownError);
+        }
+    });
+};
+TaskPostTest = function() {
+	
+	var resultDiv = $("#resultDivContainer");
+	var groupDiv = $("#TaskRes");
+	groupDiv.html(groupDiv.html()+"<br>"+"Testing POST");
+	var datta = JSON.stringify({ "title": "Test",   "createdBy": document.getElementById('GETid').value, "assignedTo": document.getElementById('GETid').value, "assignedFrom": document.getElementById('GETid').value,    "completionCriteria": "Test Crit",   "description": "Test Description","isCompleted": "false","deadline": "11223132", "dateAssigned": "1122312",   "dateCreated": "11223132"});	
+    $.ajax({
+        url: "http://localhost/Task/",
+        type: "POST",
+        data: datta,
+	 	dataType: "text",
+        success: function (result) {
+		//resultDiv.html(result);
+			switch (result) {
+			    case true:
+			        //processResponse(result);
+			        break;
+			    default:
+			        if (JSON.parse(result).errorMessage !== undefined)
+				{
+					groupDiv.html(groupDiv.html()+"<br>"+"Post Task <font color='red'>FAIL</font>");
+				}
+				else if(JSON.parse(result).taskID !== undefined)
+				{
+					document.getElementById('taskGETid').value=JSON.parse(result).taskID;
+					groupDiv.html(groupDiv.html()+"<br>"+"Post Task <font color='green'>Passed</font>");
+					groupDiv.html(groupDiv.html()+"<br>"+"Testing GET");
+					TaskGetTest();
+				}
+			}
+		},
+		error: function (xhr, ajaxOptions, thrownError) {
+		alert(xhr.status);
+		alert(thrownError);
+		}
+   });
+};
+TaskPutTest = function() {
+	var resultDiv = $("#resultDivContainer");
+	var groupDiv = $("#TaskRes");
+	var datta = JSON.stringify({"taskID": document.getElementById('taskGETid').value,"field":"title","value":"PutTest"});
+    $.ajax({
+        url: "http://localhost/Task/",
+        type: "PUT",
+        data: datta,
+	 	dataType: "text",
+        success: function (result) {
+			switch (result) {
+			    case true:
+			        //processResponse(result);
+			        break;
+			    default:
+			    if (JSON.parse(result).errorMessage !== undefined)
+				{
+					groupDiv.html(groupDiv.html()+"<br>"+"Put Task <font color='red'>FAIL</font>");
+				}
+				else if(JSON.parse(result).title=='PutTest'){
+					groupDiv.html(groupDiv.html()+"<br>"+"Task Put <font color='green'>Passed</font>");
+					groupDiv.html(groupDiv.html()+"<br>"+"Testing DELETE");
+					TaskDeleteTest();
+				}else{
+					groupDiv.html(groupDiv.html()+"<br>"+"Put Task <font color='red'>FAIL</font>");
+				}
+				
+			}
+		},
+		error: function (xhr, ajaxOptions, thrownError) {
+		alert(xhr.status);
+		alert(thrownError);
+		}
+   });
+};
+TaskDeleteTest = function() {
+	var groupDiv = $("#TaskRes");
+    var resultDiv = $("#resultDivContainer");
+    $.ajax({
+        url: "http://localhost/Task/"+document.getElementById('taskGETid').value,
+        type: "DELETE",
+        success: function (result) {
+            switch (result) {
+                case true:
+                    //processResponse(result);
+                    break;
+                default:
+					if (JSON.parse(result).errorMessage !== undefined)
+					{
+						groupDiv.html(groupDiv.html()+"<br>"+"Delete Task FAIL");
+					}
+					else if(JSON.parse(result).valid=="true")
+					{
+						groupDiv.html(groupDiv.html()+"<br>"+"Delete Task <font color='green'>Passed</font>");
+						MeetingPostTest();
+						//AgendaPostTest(); //Meeting before Agenda
+					}
+            }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+        alert(xhr.status);
+        alert(thrownError);
+        }
+    });
+};
+/*
+___  ___          _   _                 
+|  \/  |         | | (_)                
+| .  . | ___  ___| |_ _ _ __   __ _ ___ 
+| |\/| |/ _ \/ _ \ __| | '_ \ / _` / __|
+| |  | |  __/  __/ |_| | | | | (_| \__ \
+\_|  |_/\___|\___|\__|_|_| |_|\__, |___/
+                               __/ |    
+                              |___/     
+                              */
+
+MeetingGetTest = function() {
+	var groupDiv = $("#MeetingRes");
+    var resultDiv = $("#resultDivContainer");
+    $.ajax({
+        url: "http://localhost/Meeting/"+document.getElementById('meetingGETid').value,
+        type: "GET",
+        success: function (result) {
+            switch (result) {
+                case true:
+                    //processResponse(result);
+                    break;
+                default:
+					if (JSON.parse(result).errorMessage !== undefined)
+					{
+						groupDiv.html(groupDiv.html()+"<br>"+"Get Meeting <font color='red'>FAIL</font>");
+					}
+					else //if(JSON.parse(result).meetingID==document.getElementById('meetingGETid').value)
+					{
+						groupDiv.html(groupDiv.html()+"<br>"+"Get Meeting <font color='green'>Passed</font>");
+						groupDiv.html(groupDiv.html()+"<br>"+"Testing PUT");
+						MeetingPutTest();
+					}
+            }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+        alert(xhr.status);
+        alert(thrownError);
+        }
+    });
+ };
+MeetingPostTest = function() {
+	
+	var resultDiv = $("#resultDivContainer");
+	var groupDiv = $("#MeetingRes");
+	groupDiv.html(groupDiv.html()+"<br>"+"Testing POST");
+	var datta = JSON.stringify({ "title": "Test",   "userID": document.getElementById('GETid').value, "datetime": "11223132","location":"099" ,"endDatetime": "1122312", "attendance":[],  "description": "11223132"});	
+    $.ajax({
+        url: "http://localhost/Meeting/",
+        type: "POST",
+        data: datta,
+	 	dataType: "text",
+        success: function (result) {
+		//resultDiv.html(result);
+			switch (result) {
+			    case true:
+			        //processResponse(result);
+			        break;
+			    default:
+			        if (JSON.parse(result).errorMessage !== undefined)
+				{
+					groupDiv.html(groupDiv.html()+"<br>"+"Post Meeting <font color='red'>FAIL</font>");
+				}
+				else if(JSON.parse(result).meetingID !== undefined)
+				{
+					document.getElementById('meetingGETid').value=JSON.parse(result).meetingID;
+					groupDiv.html(groupDiv.html()+"<br>"+"Post Meeting <font color='green'>Passed</font>");
+					groupDiv.html(groupDiv.html()+"<br>"+"Testing GET");
+					MeetingGetTest();
+				}
+			}
+		},
+		error: function (xhr, ajaxOptions, thrownError) {
+		alert(xhr.status);
+		alert(thrownError);
+		}
+   });
+};
+MeetingPutTest = function() {
+	var resultDiv = $("#resultDivContainer");
+	var groupDiv = $("#MeetingRes");
+	var datta = JSON.stringify({"meetingID": document.getElementById('meetingGETid').value,"field":"title","value":"PutTest"});
+    $.ajax({
+        url: "http://localhost/Meeting/",
+        type: "PUT",
+        data: datta,
+	 	dataType: "text",
+        success: function (result) {
+			switch (result) {
+			    case true:
+			        //processResponse(result);
+			        break;
+			    default:
+			    if (JSON.parse(result).errorMessage !== undefined)
+				{
+					groupDiv.html(groupDiv.html()+"<br>"+"Put Meeting <font color='red'>FAIL</font>");
+				}
+				else if(JSON.parse(result).title=='PutTest'){
+					groupDiv.html(groupDiv.html()+"<br>"+"Meeting Put <font color='green'>Passed</font>");
+					groupDiv.html(groupDiv.html()+"<br>"+"Testing DELETE");
+					MeetingDeleteTest();
+				}else{
+					groupDiv.html(groupDiv.html()+"<br>"+"Put Meeting <font color='red'>FAIL</font>");
+				}
+				
+			}
+		},
+		error: function (xhr, ajaxOptions, thrownError) {
+		alert(xhr.status);
+		alert(thrownError);
+		}
+   });
+};
+MeetingDeleteTest = function() {
+	var groupDiv = $("#MeetingRes");
+    var resultDiv = $("#resultDivContainer");
+    $.ajax({
+        url: "http://localhost/Meeting/"+document.getElementById('meetingGETid').value,
+        type: "DELETE",
+        success: function (result) {
+            switch (result) {
+                case true:
+                    //processResponse(result);
+                    break;
+                default:
+					if (JSON.parse(result).errorMessage !== undefined)
+					{
+						groupDiv.html(groupDiv.html()+"<br>"+"Delete Meeting FAIL");
+					}
+					else if(JSON.parse(result).valid=="true")
+					{
+						groupDiv.html(groupDiv.html()+"<br>"+"Delete Meeting <font color='green'>Passed</font>");
+
+						GroupPostTest();
+					}
+            }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+        alert(xhr.status);
+        alert(thrownError);
+        }
+    });
+};
+/*
+ _____                           
+|  __ \                          
+| |  \/_ __ ___  _   _ _ __  ___ 
+| | __| '__/ _ \| | | | '_ \/ __|
+| |_\ \ | | (_) | |_| | |_) \__ \
+ \____/_|  \___/ \__,_| .__/|___/
+                      | |        
+                      |_|        
+								*/
+GroupGetTest = function() {
+	var groupDiv = $("#GroupRes");
+    var resultDiv = $("#resultDivContainer");
+    $.ajax({
+        url: "http://localhost/Group/"+document.getElementById('groupGETid').value,
+        type: "GET",
+        success: function (result) {
+            switch (result) {
+                case true:
+                    //processResponse(result);
+                    break;
+                default:
+					if (JSON.parse(result).errorMessage !== undefined)
+					{
+						groupDiv.html(groupDiv.html()+"<br>"+"Get Group <font color='red'>FAIL</font>");
+					}
+					else //if(JSON.parse(result).groupID==document.getElementById('groupGETid').value)
+					{
+						groupDiv.html(groupDiv.html()+"<br>"+"Get Group <font color='green'>Passed</font>");
+						groupDiv.html(groupDiv.html()+"<br>"+"Testing PUT");
+						GroupPutTest();
+					}
+            }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+        alert(xhr.status);
+        alert(thrownError);
+        }
+    });
+ };
+GroupPostTest = function() {
+	
+	var resultDiv = $("#resultDivContainer");
+	var groupDiv = $("#GroupRes");
+	groupDiv.html(groupDiv.html()+"<br>"+"Testing POST");
+	var datta = JSON.stringify({ "groupTitle": "Test", "members": [{ "userID" : document.getElementById('GETid').value }] });	
+    $.ajax({
+        url: "http://localhost/Group/",
+        type: "POST",
+        data: datta,
+	 	dataType: "text",
+        success: function (result) {
+		//resultDiv.html(result);
+			switch (result) {
+			    case true:
+			        //processResponse(result);
+			        break;
+			    default:
+			        if (JSON.parse(result).errorMessage !== undefined)
+				{
+					groupDiv.html(groupDiv.html()+"<br>"+"Post Group <font color='red'>FAIL</font>");
+				}
+				else if(JSON.parse(result).groupID !== undefined)
+				{
+					document.getElementById('groupGETid').value=JSON.parse(result).groupID;
+					groupDiv.html(groupDiv.html()+"<br>"+"Post Group <font color='green'>Passed</font>");
+					groupDiv.html(groupDiv.html()+"<br>"+"Testing GET");
+					GroupGetTest();
+				}
+			}
+		},
+		error: function (xhr, ajaxOptions, thrownError) {
+		alert(xhr.status);
+		alert(thrownError);
+		}
+   });
+};
+GroupPutTest = function() {
+	var resultDiv = $("#resultDivContainer");
+	var groupDiv = $("#GroupRes");
+	var datta = JSON.stringify({"groupID": document.getElementById('groupGETid').value,"field":"groupTitle","value":"PutTest"});
+    $.ajax({
+        url: "http://localhost/Group/",
+        type: "PUT",
+        data: datta,
+	 	dataType: "text",
+        success: function (result) {
+			switch (result) {
+			    case true:
+			        //processResponse(result);
+			        break;
+			    default:
+			    if (JSON.parse(result).errorMessage !== undefined)
+				{
+					groupDiv.html(groupDiv.html()+"<br>"+"Put Group <font color='red'>FAIL</font>");
+				}
+				else if(JSON.parse(result).groupTitle=='PutTest'){
+					groupDiv.html(groupDiv.html()+"<br>"+"Group Put <font color='green'>Passed</font>");
+					groupDiv.html(groupDiv.html()+"<br>"+"Testing DELETE");
+					GroupDeleteTest();
+				}else{
+					groupDiv.html(groupDiv.html()+"<br>"+"Put Group <font color='red'>FAIL</font>");
+				}
+				
+			}
+		},
+		error: function (xhr, ajaxOptions, thrownError) {
+		alert(xhr.status);
+		alert(thrownError);
+		}
+   });
+};
+GroupDeleteTest = function() {
+	var groupDiv = $("#GroupRes");
+    var resultDiv = $("#resultDivContainer");
+    $.ajax({
+        url: "http://localhost/Group/"+document.getElementById('groupGETid').value,
+        type: "DELETE",
+        success: function (result) {
+            switch (result) {
+                case true:
+                    //processResponse(result);
+                    break;
+                default:
+					if (JSON.parse(result).errorMessage !== undefined)
+					{
+						groupDiv.html(groupDiv.html()+"<br>"+"Delete Group FAIL");
+					}
+					else if(JSON.parse(result).valid=="true")
+					{
+						groupDiv.html(groupDiv.html()+"<br>"+"Delete Group <font color='green'>Passed</font>");
+
+						UserDeleteTest();
+					}
+            }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+        alert(xhr.status);
+        alert(thrownError);
+        }
+    });
+};
+/*
+______          _           _       
+| ___ \        (_)         | |      
+| |_/ / __ ___  _  ___  ___| |_ ___ 
+|  __/ '__/ _ \| |/ _ \/ __| __/ __|
+| |  | | | (_) | |  __/ (__| |_\__ \
+\_|  |_|  \___/| |\___|\___|\__|___/
+              _/ |                  
+             |__/                  
+             */
+// ProjectGetTest = function() {
+// 	var projectDiv = $("#ProjectRes");
+//     var resultDiv = $("#resultDivContainer");
+//     $.ajax({
+//         url: "http://localhost/Project/"+document.getElementById('projectGETid').value,
+//         type: "GET",
+//         success: function (result) {
+//             switch (result) {
+//                 case true:
+//                     //processResponse(result);
+//                     break;
+//                 default:
+// 					if (JSON.parse(result).errorMessage !== undefined)
+// 					{
+// 						projectDiv.html(projectDiv.html()+"<br>"+"Get Project <font color='red'>FAIL</font>");
+// 					}
+// 					else //if(JSON.parse(result).projectID==document.getElementById('projectGETid').value)
+// 					{
+// 						projectDiv.html(projectDiv.html()+"<br>"+"Get Project <font color='green'>Passed</font>");
+// 						projectDiv.html(projectDiv.html()+"<br>"+"Testing PUT");
+// 						ProjectPutTest();
+// 					}
+//             }
+//         },
+//         error: function (xhr, ajaxOptions, thrownError) {
+//         alert(xhr.status);
+//         alert(thrownError);
+//         }
+//     });
+//  };
+// ProjectPostTest = function() {
+	
+// 	var resultDiv = $("#resultDivContainer");
+// 	var projectDiv = $("#ProjectRes");
+// 	projectDiv.html(projectDiv.html()+"<br>"+"Testing POST");
+// 	var datta = JSON.stringify({ "projectTitle": "Test","notes": [{ "noteID" : document.getElementById('noteGETid').value }] ,"meetings": [{ "meetingID" : document.getElementById('meetingGETid').value }] , "members": [{ "userID" : document.getElementById('GETid').value }] });	
+//     $.ajax({
+//         url: "http://localhost/Project/",
+//         type: "POST",
+//         data: datta,
+// 	 	dataType: "text",
+//         success: function (result) {
+// 		//resultDiv.html(result);
+// 			switch (result) {
+// 			    case true:
+// 			        //processResponse(result);
+// 			        break;
+// 			    default:
+// 			        if (JSON.parse(result).errorMessage !== undefined)
+// 				{
+// 					projectDiv.html(projectDiv.html()+"<br>"+"Post Project <font color='red'>FAIL</font>");
+// 				}
+// 				else if(JSON.parse(result).projectID !== undefined)
+// 				{
+// 					document.getElementById('projectGETid').value=JSON.parse(result).projectID;
+// 					projectDiv.html(projectDiv.html()+"<br>"+"Post Project <font color='green'>Passed</font>");
+// 					projectDiv.html(projectDiv.html()+"<br>"+"Testing GET");
+// 					ProjectGetTest();
+// 				}
+// 			}
+// 		},
+// 		error: function (xhr, ajaxOptions, thrownError) {
+// 		alert(xhr.status);
+// 		alert(thrownError);
+// 		}
+//    });
+// };
+// ProjectPutTest = function() {
+// 	var resultDiv = $("#resultDivContainer");
+// 	var projectDiv = $("#ProjectRes");
+// 	var datta = JSON.stringify({"projectID": document.getElementById('projectGETid').value,"field":"projectTitle","value":"PutTest"});
+//     $.ajax({
+//         url: "http://localhost/Project/",
+//         type: "PUT",
+//         data: datta,
+// 	 	dataType: "text",
+//         success: function (result) {
+// 			switch (result) {
+// 			    case true:
+// 			        //processResponse(result);
+// 			        break;
+// 			    default:
+// 			    if (JSON.parse(result).errorMessage !== undefined)
+// 				{
+// 					projectDiv.html(projectDiv.html()+"<br>"+"Put Project <font color='red'>FAIL</font>");
+// 				}
+// 				else if(JSON.parse(result).projectTitle=='PutTest'){
+// 					projectDiv.html(projectDiv.html()+"<br>"+"Project Put <font color='green'>Passed</font>");
+// 					projectDiv.html(projectDiv.html()+"<br>"+"Testing DELETE");
+// 					ProjectDeleteTest();
+// 				}else{
+// 					projectDiv.html(projectDiv.html()+"<br>"+"Put Project <font color='red'>FAIL</font>");
+// 				}
+				
+// 			}
+// 		},
+// 		error: function (xhr, ajaxOptions, thrownError) {
+// 		alert(xhr.status);
+// 		alert(thrownError);
+// 		}
+//    });
+// };
+// ProjectDeleteTest = function() {
+// 	var projectDiv = $("#ProjectRes");
+//     var resultDiv = $("#resultDivContainer");
+//     $.ajax({
+//         url: "http://localhost/Project/"+document.getElementById('projectGETid').value,
+//         type: "DELETE",
+//         success: function (result) {
+//             switch (result) {
+//                 case true:
+//                     //processResponse(result);
+//                     break;
+//                 default:
+// 					if (JSON.parse(result).errorMessage !== undefined)
+// 					{
+// 						projectDiv.html(projectDiv.html()+"<br>"+"Delete Project FAIL");
+// 					}
+// 					else if(JSON.parse(result).valid=="true")
+// 					{
+// 						projectDiv.html(projectDiv.html()+"<br>"+"Delete Project <font color='green'>Passed</font>");
+
+// 						UserDeleteTest();
+// 					}
+//             }
+//         },
+//         error: function (xhr, ajaxOptions, thrownError) {
+//         alert(xhr.status);
+//         alert(thrownError);
+//         }
+//     });
+// };
+// AgendaGetTest = function() {
+// 	var groupDiv = $("#AgendaRes");
+//     var resultDiv = $("#resultDivContainer");
+//     $.ajax({
+//         url: "http://localhost/Agenda/"+document.getElementById('agendaGETid').value,
+//         type: "GET",
+//         success: function (result) {
+//             switch (result) {
+//                 case true:
+//                     //processResponse(result);
+//                     break;
+//                 default:
+// 					if (JSON.parse(result).errorMessage !== undefined)
+// 					{
+// 						groupDiv.html(groupDiv.html()+"<br>"+"Get Agenda <font color='red'>FAIL</font>");
+// 					}
+// 					else //if(JSON.parse(result).agendaID==document.getElementById('agendaGETid').value)
+// 					{
+// 						groupDiv.html(groupDiv.html()+"<br>"+"Get Agenda <font color='green'>Passed</font>");
+// 						groupDiv.html(groupDiv.html()+"<br>"+"Testing PUT");
+// 						AgendaPutTest();
+// 					}
+//             }
+//         },
+//         error: function (xhr, ajaxOptions, thrownError) {
+//         alert(xhr.status);
+//         alert(thrownError);
+//         }
+//     });
+// };
+// AgendaPostTest = function() {
+	
+// 	var resultDiv = $("#resultDivContainer");
+// 	var groupDiv = $("#AgendaRes");
+// 	groupDiv.html(groupDiv.html()+"<br>"+"Testing POST");
+// 	var datta = JSON.stringify({ "title": "Test",   "userID": document.getElementById('GETid').value, "content": "[]","meeting":document.getElementById('meetingGETid').value });	
+//     $.ajax({
+//         url: "http://localhost/Agenda/",
+//         type: "POST",
+//         data: datta,
+// 	 	dataType: "text",
+//         success: function (result) {
+// 		resultDiv.html(result);
+// 			switch (result) {
+// 			    case true:
+// 			        //processResponse(result);
+// 			        break;
+// 			    default:
+// 			        if (JSON.parse(result).errorMessage !== undefined)
+// 				{
+// 					groupDiv.html(groupDiv.html()+"<br>"+"Post Agenda <font color='red'>FAIL</font>");
+// 				}
+// 				else
+// 				{
+// 					document.getElementById('agendaGETid').value=JSON.parse(result).agendaID;
+// 					groupDiv.html(groupDiv.html()+"<br>"+"Post Agenda <font color='green'>Passed</font>");
+// 					groupDiv.html(groupDiv.html()+"<br>"+"Testing GET");
+// 					AgendaGetTest();
+// 				}
+// 			}
+// 		},
+// 		error: function (xhr, ajaxOptions, thrownError) {
+// 		alert(xhr.status);
+// 		alert(thrownError);
+// 		}
+//    });
+// };
+// AgendaPutTest = function() {
+// 	var resultDiv = $("#resultDivContainer");
+// 	var groupDiv = $("#AgendaRes");
+// 	var datta = JSON.stringify({"agendaID": document.getElementById('agendaGETid').value,"field":"title","value":"PutTest"});
+//     $.ajax({
+//         url: "http://localhost/Agenda/",
+//         type: "PUT",
+//         data: datta,
+// 	 	dataType: "text",
+//         success: function (result) {
+// 			switch (result) {
+// 			    case true:
+// 			        //processResponse(result);
+// 			        break;
+// 			    default:
+// 			    if (JSON.parse(result).errorMessage !== undefined)
+// 				{
+// 					groupDiv.html(groupDiv.html()+"<br>"+"Put Agenda <font color='red'>FAIL</font>");
+// 				}
+// 				else if(JSON.parse(result).title=='PutTest'){
+// 					groupDiv.html(groupDiv.html()+"<br>"+"Agenda Put <font color='green'>Passed</font>");
+// 					groupDiv.html(groupDiv.html()+"<br>"+"Testing DELETE");
+// 					AgendaDeleteTest();
+// 				}else{
+// 					groupDiv.html(groupDiv.html()+"<br>"+"Put Agenda <font color='red'>FAIL</font>");
+// 				}
+				
+// 			}
+// 		},
+// 		error: function (xhr, ajaxOptions, thrownError) {
+// 		alert(xhr.status);
+// 		alert(thrownError);
+// 		}
+//    });
+// };
+// AgendaDeleteTest = function() {
+// 	var groupDiv = $("#AgendaRes");
+//     var resultDiv = $("#resultDivContainer");
+//     $.ajax({
+//         url: "http://localhost/Agenda/"+document.getElementById('agendaGETid').value,
+//         type: "DELETE",
+//         success: function (result) {
+//             switch (result) {
+//                 case true:
+//                     //processResponse(result);
+//                     break;
+//                 default:
+// 					if (JSON.parse(result).errorMessage !== undefined)
+// 					{
+// 						groupDiv.html(groupDiv.html()+"<br>"+"Delete Agenda FAIL");
+// 					}
+// 					else if(JSON.parse(result).valid=="true")
+// 					{
+// 						groupDiv.html(groupDiv.html()+"<br>"+"Delete Agenda <font color='green'>Passed</font>");
+
+// 						MeetingDeleteTest();
+// 					}
+//             }
+//         },
+//         error: function (xhr, ajaxOptions, thrownError) {
+//         alert(xhr.status);
+//         alert(thrownError);
+//         }
+//     });
+// };
+</script>
+<h1>User TestCases</h1>
+<input name="searchTxt" type="text" maxlength="512" id="GETid" class="searchField"/>
+<div id="UserRes"></div>
+<h1>Note TestCases</h1>
+<input name="searchTxt" type="text" maxlength="512" id="noteGETid" class="searchField"/>
+<div id="NoteRes"></div>
+<h1>Task TestCases</h1>
+<input name="searchTxt" type="text" maxlength="512" id="taskGETid" class="searchField"/>
+<div id="TaskRes"></div>
+<h1>Meeting TestCases</h1>
+<input name="searchTxt" type="text" maxlength="512" id="meetingGETid" class="searchField"/>
+<div id="MeetingRes"></div>
+<h1>Group TestCases</h1>
+<input name="searchTxt" type="text" maxlength="512" id="groupGETid" class="searchField"/>
+<div id="GroupRes"></div>
+<h1><strike>Project TestCases</strike></h1>
+<div id="ProjectRes"></div>
+<h1><strike>Agenda TestCases</strike></h1>
+<div id="AgendaRes"></div>
+<div id="resultDivContainer"></div>
+
+</body>
+</html> 

@@ -3,12 +3,6 @@
 Options +FollowSymLinks
 RewriteEngine On
 
-#RewriteRule ^([A-Za-z]+)/$ Controller.php?class1=$1 [NC,L]
-#RewriteRule ^([A-Za-z]+)/([0-9]+)$ Controller.php?class1=$1&id1=$2 [NC,L]
-#RewriteRule ^([A-Za-z]+)/([0-9]+)/$ Controller.php?class1=$1&id1=$2 [NC,L]
-#RewriteRule ^([A-Za-z]+)/([A-Za-z]+)/([0-9]+)/?$ Controller.php?class1=$1&class2=$2&id1=$3&id2=null [NC,L]
-#RewriteRule ^([A-Za-z]+)/([A-Za-z]+)/([0-9]+)/([0-9]+)/?$ Controller.php?class1=$1&class2=$2&id1=$3&id2=$4 [NC,L]
-
 RewriteRule ^User/([0-9]+)/?$ User.php?id=$1 [NC,L]
 RewriteRule ^User/Test/?$ User.php?cat=login [NC,L]
 RewriteRule ^User/Push/?$ User.php?cat=push [NC,L]

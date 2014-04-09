@@ -7,7 +7,6 @@ require_once "RequestHandler.php";
 class Contact extends RequestHandler{ 
     //relationship name for contacts
     const CONTACT_RELATION = "CONTACT";
-    const CONTACT_DIRECTION = Relationship::DirectionOut;
     
     public function __construct($client) {
         parent::__construct($client, 'Users', 'ID');
@@ -65,26 +64,3 @@ class Contact extends RequestHandler{
     }
 
 }
-
-//================this section is for testing with our test suite without controller==========
-
-$postContent = json_decode(file_get_contents('php://input'));
-$client = new Client();
-$Contact = new Contact($client);
-
-
-if (strcasecmp($_SERVER['REQUEST_METHOD'], 'POST')==0 ){
-    echo $Contact->POST($postContent);
-	
-}else if( strcasecmp($_SERVER['REQUEST_METHOD'],'GET') == 0){
-    echo $Contact->GET($_GET['id']);
-	
-}else if( strcasecmp($_SERVER['REQUEST_METHOD'],'PUT') == 0){
-    echo $Contact->PUT($postContent);
-	
-}else if( strcasecmp($_SERVER['REQUEST_METHOD'],'DELETE') == 0){
-    echo $Contact->DELETE($_GET['id']);
-}else{
-    echo $_SERVER['REQUEST_METHOD'] ." request method not found";
-}
- 
