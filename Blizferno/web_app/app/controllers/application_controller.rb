@@ -34,8 +34,6 @@ class ApplicationController < ActionController::Base
       }
     
       @Notifications = JSON.parse(res.body)
-      # Testing string
-      # @Notifications = JSON.parse('{"totalAmount":"6","userID":"0","notifications":[{"datetime":"","type":"Meeting","nodeID":"","description":""},{"datetime":"","type":"Task","nodeID":"","description":""},{"datetime":"","type":"Project","nodeID":"","description":""},{"datetime":"","type":"Task","nodeID":"","description":""},{"datetime":"","type":"Group","nodeID":"","description":""},{"datetime":"","type":"Meeting","nodeID":"","description":""},{"datetime":"","type":"Project","nodeID":"","description":""},{"datetime":"","type":"Task","nodeID":"","description":""},{"datetime":"","type":"Meeting","nodeID":"","description":""},{"datetime":"","type":"Project","nodeID":"","description":""},{"datetime":"","type":"Meeting","nodeID":"","description":""},{"datetime":"","type":"Task","nodeID":"","description":""},{"datetime":"","type":"Task","nodeID":"","description":""}]}')
       @Noti = @Notifications["notifications"]
       @Meeting = 0
       @Task = 0
