@@ -3,6 +3,7 @@ require 'group_api_wrapper'
 class GroupsController < ApplicationController
 	
 	before_filter :getGroups
+	before_filter :getAllUsers
 
 	def getGroups
 		group_api_wrapper = GroupApiWrapper.new
