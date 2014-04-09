@@ -1,12 +1,9 @@
 function submitCreateTaskModal(){
-	alert("tasks js")
 	$('#sCrTsk').addClass('disabled');
 	$('#cCrTsk').addClass('disabled');
 	//grab the form from the html document
 	var form = document.getElementById('createTask');
-	//still testing validation
-	//if(validateMeetingForm(form)){
-	//parse it into a json object
+	
 	var formJSON = new convertFormToJSON(form);
 	var invalid = validateNewValues(formJSON);
 	if (!invalid){
