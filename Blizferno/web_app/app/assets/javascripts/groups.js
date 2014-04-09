@@ -13,9 +13,9 @@ function showDeleteGroupModal(ID){
 
 }
 
-function showNewGroupModal(users){
+function showNewGroupModal(users, modal){
   var ModalFactory = abstractModalFactory();
-  var modal = ModalFactory.createModal(NewGroupModal, "GroupModal", "");
+  var modal = ModalFactory.createModal(NewGroupModal, modal, "");
 
   modal.showModal(users);
 }

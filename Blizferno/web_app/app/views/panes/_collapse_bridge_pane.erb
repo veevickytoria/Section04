@@ -112,7 +112,7 @@
             </tr>
           </thead>
           <tr>
-            <td colspan='4' style='cursor: pointer; text-align: center' onclick="showNewGroupModal('<%=@allUsers%>')" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
+            <td colspan='4' style='cursor: pointer; text-align: center' onclick="showNewGroupModal('<%=@allUsers%>','Modal')" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
           </tr>
           <% counter = 0; max = @groupVal.to_i; %>
           <% for group in @groups; if counter >= max; break; end; %>
