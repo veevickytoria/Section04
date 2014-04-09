@@ -15,15 +15,17 @@
         android:ellipsize="marquee"
         android:singleLine="true"
         android:hint="Title"
+        android:textSize="18sp"
         android:textStyle="bold" />
 
     <!-- Task Deadline -->
 
     <TextView
         android:id="@+id/list_task_deadline"
+        android:hint="deadline"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="deadline"
-        android:singleLine="false" />
+        android:singleLine="false" 
+        android:textSize="14sp"/>
 
 </LinearLayout>

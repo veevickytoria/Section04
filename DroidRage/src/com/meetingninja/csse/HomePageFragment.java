@@ -40,8 +40,7 @@ public class HomePageFragment extends Fragment {
 	private List<Meeting> meetings = new ArrayList<Meeting>();
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		View fragView = inflater.inflate(R.layout.fragment_home_page, container, false);
 		setUpViews(fragView);
@@ -52,8 +51,7 @@ public class HomePageFragment extends Fragment {
 	}
 
 	public void viewMeeting(Meeting meeting) {
-		Intent viewMeeting = new Intent(getActivity(),
-				ViewMeetingActivity.class);
+		Intent viewMeeting = new Intent(getActivity(), ViewMeetingActivity.class);
 		viewMeeting.putExtra(Keys.Meeting.PARCEL, meeting);
 		startActivityForResult(viewMeeting, 6);
 	}
@@ -84,18 +82,15 @@ public class HomePageFragment extends Fragment {
 	}
 
 	private void setUpViews(View v) {
-		meetingAdpt = new MeetingItemAdapter(getActivity(),
-				R.layout.list_item_meeting, meetings);
+		meetingAdpt = new MeetingItemAdapter(getActivity(),	R.layout.list_item_meeting, meetings);
 		meetingList = (ListView) v.findViewById(R.id.homepage_meetings);
 		meetingList.setAdapter(meetingAdpt);
 
-		taskAdpt = new TaskItemAdapter(getActivity(), R.layout.list_item_task,
-				tasks, false);
+		taskAdpt = new TaskItemAdapter(getActivity(), R.layout.list_item_task,	tasks, false);
 		taskList = (ListView) v.findViewById(R.id.homepage_tasks);
 		taskList.setAdapter(taskAdpt);
 
-		meetingList
-				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		meetingList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 					@Override
 					public void onItemClick(AdapterView<?> parentAdapter,
 							View v, int position, long id) {
@@ -106,8 +101,7 @@ public class HomePageFragment extends Fragment {
 
 		taskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> parentAdapter, View v,
-					int position, long id) {
+			public void onItemClick(AdapterView<?> parentAdapter, View v, int position, long id) {
 				Task clicked = taskAdpt.getItem(position);
 				loadTask(clicked);
 			}
@@ -116,10 +110,11 @@ public class HomePageFragment extends Fragment {
 	}
 
 	private void loadSchedule(Schedule sched) {
-
+		meetingAdpt.clear();
 		meetingAdpt.addAll(sched.getMeetings());
 		meetingAdpt.notifyDataSetChanged();
 
+		taskAdpt.clear();
 		taskAdpt.addAll(sched.getTasks());
 		taskAdpt.notifyDataSetChanged();
 	}

@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:baselineAligned="false"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft">
 
     <!-- Name of Note -->
 
@@ -19,7 +20,7 @@
         android:paddingTop="8dp"
         android:singleLine="true"
         android:text="Name"
-        android:textSize="16sp"
+        android:textSize="18sp"
         android:textStyle="bold" />
 
     <!-- Note Content -->
@@ -35,6 +36,6 @@
         android:paddingBottom="8dp"
         android:singleLine="false"
         android:text="Content"
-        android:textSize="12sp" />
+        android:textSize="14sp" />
 
 </LinearLayout>
