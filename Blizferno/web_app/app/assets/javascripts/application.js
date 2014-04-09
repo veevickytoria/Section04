@@ -18,6 +18,8 @@
 //= require json2.js
 //= require modaltypes.js
 //= require modalfactory.js
+//= require groupmodal.js
+//= require meetingmodal.js
 
 function areCookiesEnabled(){
     var cookiesEnabled = (navigator.cookiesEnabled) ? true : false;
