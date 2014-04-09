@@ -23,50 +23,25 @@
 		// 		"projects":projects,
 		// 		"meetings":meetings
 		// 	});
-
+    var data;
+        var incrementOnSuccess = function(data){
+                                    count++;
+                                  }
       	if(tasks != ""){
-      		$.ajax({
-	        	type: "PUT",
-            	url: "http://csse371-04.csse.rose-hulman.edu/UserSettings/",
-            	data: JSON.stringify({"userID":ID, "field":"tasks", "value":tasks}),
-            	async: false,
-              success:function(data){
-                count++;
-            }
-    		});
+          data = JSON.stringify({"userID":ID, "field":"tasks", "value":tasks});
+          ajaxRequest(data, 'PUT', '/UserSettings/', false, incrementOnSuccess);
       	}
       	if(groups != ""){
-      		$.ajax({
-	        	type: "PUT",
-            	url: "http://csse371-04.csse.rose-hulman.edu/UserSettings/",
-            	data: JSON.stringify({"userID":ID, "field":"groups", "value":groups}),
-            	async: false,
-              success:function(data){
-                count++;
-            }
-    		});
+          data = JSON.stringify({"userID":ID, "field":"groups", "value":groups});
+          ajaxRequest(data, 'PUT', '/UserSettings/', false, incrementOnSuccess);
       	}
       	if(projects != ""){
-      		$.ajax({
-	        	type: "PUT",
-            	url: "http://csse371-04.csse.rose-hulman.edu/UserSettings/",
-            	data: JSON.stringify({"userID":ID, "field":"projects", "value":projects}),
-            	async: false,
-              success:function(data){
-                count++;
-            }
-    		});
+          data = JSON.stringify({"userID":ID, "field":"projects", "value":projects});
+          ajaxRequest(data, 'PUT', '/UserSettings/', false, incrementOnSuccess);
       	}
       	if(meetings != ""){
-      		$.ajax({
-	        	type: "PUT",
-            	url: "http://csse371-04.csse.rose-hulman.edu/UserSettings/",
-            	data: JSON.stringify({"userID":ID, "field":"meetings", "value":meetings}),
-            	async: false,
-            	success:function(data){
-                count++;
-      			}
-    		});
+          data = JSON.stringify({"userID":ID, "field":"meetings", "value":meetings});
+          ajaxRequest(data, 'PUT', '/UserSettings/', false, incrementOnSuccess);
       	}
         if(count > 0){
             if(confirm("Your Settings have been saved!")){
