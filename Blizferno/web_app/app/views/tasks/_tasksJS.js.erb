@@ -181,12 +181,7 @@ function updateEditedValues(){
 	// Just the deadline...
 	editData = JSON.stringify({"taskID":editTaskID,"field":"deadline","value":datetime});
 
-	$.ajax({
-		type: 'PUT',
-		url: 'http://csse371-04.csse.rose-hulman.edu/Task/',
-		data: editData,
-		async:false
-	});
+	ajaxRequest(editData, 'PUT', '/Task/', false, 'null')
 
 	// Everything else
 	for (key in tasksJSON[currentID]){
@@ -198,12 +193,7 @@ function updateEditedValues(){
 					editValue = tasksJSON[currentID][key];
 					editData = JSON.stringify({"taskID":editTaskID,"field":editField,"value":editValue});
 
-					$.ajax({
-						type: 'PUT',
-						url: 'http://csse371-04.csse.rose-hulman.edu/Task/',
-						data: editData,
-						async:false
-					});
+					ajaxRequest(editData, 'PUT', '/Task/', false, 'null');
 				}
 				else if(tasksJSON[currentID][key] != document.getElementById(key+"E").value){
 					tasksJSON[currentID][key] = document.getElementById(key+"E").value;
@@ -211,13 +201,8 @@ function updateEditedValues(){
 					editField = key;
 					editValue = tasksJSON[currentID][key];
 					editData = JSON.stringify({"taskID":editTaskID,"field":editField,"value":editValue});
-					
-					$.ajax({
-						type: 'PUT',
-						url: 'http://csse371-04.csse.rose-hulman.edu/Task/',
-						data: editData,
-						async:false
-					});
+
+					ajaxRequest(editData, 'PUT', '/Task/', false, 'null');
 
 				}
 			}
@@ -236,16 +221,14 @@ function hideDeleteModal(){
 
 	var deleteData = tasksJSON[deleteID]['taskID'];
 
-	$.ajax({
-		type: 'DELETE',
-		url: 'http://csse371-04.csse.rose-hulman.edu/Task/'+deleteData,
-		success:function(data){
-			if(JSON.parse(data)["valid"] == "true"){
-				delete tasksJSON[deleteID];
-				window.location.reload(true);
-			}
-		}
-	});
+	var onSuccess = function(data){
+						if(JSON.parse(data)["valid"] == "true"){
+						delete tasksJSON[deleteID];
+						window.location.reload(true);
+						}
+					}
+
+	ajaxRequest('null', 'DELETE', '/Task/' + deleteData, true, onSuccess)
 
 	$('#deleteTaskModal').modal('hide');
 }
@@ -285,32 +268,20 @@ function showViewTaskModal(ID){
 
 	document.getElementById("completionCriteriaV").innerHTML = tasksJSON[currentID]["completionCriteria"];
 
-	$.ajax({
-		type: 'GET',
-        url: "http://csse371-04.csse.rose-hulman.edu/User/" + tasksJSON[currentID]["assignedTo"],
-        success:function(data){
-          assignedTo = JSON.parse(data);
-        },
-        async: false
-	});
+	var successAssignmentTo = function(data){
+								assignedTo = JSON.parse(data);
+							}
+	ajaxRequest('null', 'GET', '/User/' + tasksJSON[currentID]["assignedTo"] , false, successAssignmentTo);
 
-	$.ajax({
-		type: 'GET',
-        url: "http://csse371-04.csse.rose-hulman.edu/User/" + tasksJSON[currentID]["assignedFrom"],
-        success:function(data){
-          assignedFrom = JSON.parse(data);
-        },
-        async: false
-	});
+	var successAssignmentFrom = function(data){
+								assignedFrom = JSON.parse(data);
+							}
+	ajaxRequest('null', 'GET', '/User/' + tasksJSON[currentID]["assignedFrom"] , false, successAssignmentFrom);
 
-	$.ajax({
-		type: 'GET',
-        url: "http://csse371-04.csse.rose-hulman.edu/User/" + tasksJSON[currentID]["createdBy"],
-        success:function(data){
-          createdBy = JSON.parse(data);
-        },
-        async: false
-	});
+	var successCreation = function(data){
+								createdBy = JSON.parse(data);
+							}
+	ajaxRequest('null', 'GET', '/User/' + tasksJSON[currentID]["createdBy"] , false, successCreation);
 
 	document.getElementById("assignedToV").innerHTML = assignedTo["name"];
 	document.getElementById("assignedFromV").innerHTML = assignedFrom["name"];
@@ -419,19 +390,13 @@ function submitCreateModal(){
 			"assignedFrom":postAssignedFrom,
 			"createdBy":postCreatedBy
 		});
-			
-		//make the POST request to the backend
-		$.ajax({
-			type: 'POST',
-			url: 'http://csse371-04.csse.rose-hulman.edu/Task/',
-			data: postData,
-			success:function(data){
-				// if successful then close the modal and reload the page
-				$('#newTaskModal').modal('hide');
-				alert("Task successfully created! Reloading page...")
-				window.location.reload(true);
-			}
-		});
+		var success = function(data){
+						$('#newTaskModal').modal('hide');
+						alert("Task successfully created! Reloading page...")
+						window.location.reload(true);
+					}
+		ajaxRequest(postData, 'POST', '/Task/', true, success);
+
 	}
 }
 

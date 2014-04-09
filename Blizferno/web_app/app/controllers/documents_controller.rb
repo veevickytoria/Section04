@@ -2,15 +2,15 @@ require 'documents_api_wrapper'
 
 class DocumentsController < ApplicationController
 
-before_filter :index
+#before_filter :index
 before_filter :getDocuments
 
-	def index
-		if (cookies[:userID].blank?)
-			redirect_to '/login/index'
-			return
-		end
-	end
+	# def index
+	# 	if (cookies[:userID].blank?)
+	# 		redirect_to '/login/index'
+	# 		return
+	# 	end
+	# end
 
 	def getDocuments
 		documents_api_wrapper = DocumentsApiWrapper.new

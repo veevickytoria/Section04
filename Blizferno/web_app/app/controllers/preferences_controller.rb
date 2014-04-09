@@ -3,7 +3,6 @@ require 'preferences_api_wrapper'
 class PreferencesController < ApplicationController
 
 before_filter :home
-before_filter :getUserSettings
 
   def home
   	if (cookies[:userID].blank?)
