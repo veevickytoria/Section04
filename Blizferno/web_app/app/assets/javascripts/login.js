@@ -46,14 +46,6 @@ $(window).load(function() {
 	jQuery('#registerForm').bind('submit', function(event){
 		event.preventDefault();
 
-		// var regName = document.getElementById('regName');
-		// var regEmail = document.getElementById('regEmail');
-		// var pass = document.getElementById('p0');
-
-		// if(regName.value == "" || regEmail.value == "" || pass.value == ""){
-		// 	alert("You did not enter the required fields.");
-		// 	window.location.href = "/";
-		// }
 
 		var invalid = validateRegister();
 		if (!invalid){

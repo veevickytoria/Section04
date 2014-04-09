@@ -5,14 +5,6 @@ tasksJSON = JSON.parse("["+tasksJSON.toString()+"]");
 var allUsers = <%= raw @allUsersRaw %>;
 allUsers = JSON.parse(JSON.stringify(allUsers));
 
-// var select = formJSON.assignedTo;
-// var selIndex;
-// var selValue;
-
-// select.onchange = function() {
-//     selIndex = select.selectedIndex;
-//     selValue = select.options(selIndex).innerHTML;
-// }
 
 function hideTaskModal(){
 	$('#viewTaskModal').modal('hide');
@@ -66,7 +58,6 @@ function showEditModal(){
 
 	document.getElementById("completionCriteriaE").value = tasksJSON[currentID]["completionCriteria"];
 	
-	//populateSelect(allUsers['users'], "name", "userID", tasksJSON[currentID]["assignedTo"], "grpMemSlct");
 
 	$('#editTaskModal').modal('show');
 	$('#viewTaskModal').modal('hide');
