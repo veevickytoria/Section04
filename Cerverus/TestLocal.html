@@ -23,7 +23,7 @@ UserGetTest = function() {
 	var groupDiv = $("#UserRes");
     var resultDiv = $("#resultDivContainer");
     $.ajax({
-        url: "localhost/User/"+document.getElementById('GETid').value,
+        url: "http://localhost/User/"+document.getElementById('GETid').value,
         type: "GET",
         success: function (result) {
             switch (result) {
@@ -56,7 +56,7 @@ UserPostTest = function() {
 	groupDiv.html(groupDiv.html()+"<br>"+"Testing POST");
 	var datta = JSON.stringify({ "name": "PaulBlue",    "password": "123",   "email": document.getElementById('PUTid').value,    "phone": "123321",    "company": "12",    "title": "titl",    "location": "loc"});	
     $.ajax({
-        url: "localhost/User/",
+        url: "http://localhost/User/",
         type: "POST",
         data: datta,
 	 	dataType: "text",
@@ -92,7 +92,7 @@ UserPutTest = function() {
 	var datta = JSON.stringify({"userID": document.getElementById('GETid').value , "field" : "title", "value" : "PutTest"});
 	//{"userID": document.getElementById('GETid'), "field": "title" , "value": "TestWorked"});	
     $.ajax({
-        url: "localhost/User/",
+        url: "http://localhost/User/",
         type: "PUT",
         data: datta,
 	 	dataType: "text",
@@ -130,7 +130,7 @@ UserDeleteTest = function() {
 	var groupDiv = $("#UserRes");
     var resultDiv = $("#resultDivContainer");
     $.ajax({
-        url: "localhost/User/"+document.getElementById('GETid').value,
+        url: "http://localhost/User/"+document.getElementById('GETid').value,
         type: "DELETE",
         success: function (result) {
             switch (result) {
@@ -167,7 +167,7 @@ NoteGetTest = function() {
 	var groupDiv = $("#NoteRes");
     var resultDiv = $("#resultDivContainer");
     $.ajax({
-        url: "localhost/Note/"+document.getElementById('noteGETid').value,
+        url: "http://localhost/Note/"+document.getElementById('noteGETid').value,
         type: "GET",
         success: function (result) {
             switch (result) {
@@ -200,7 +200,7 @@ NotePostTest = function() {
 	groupDiv.html(groupDiv.html()+"<br>"+"Testing POST");
 	var datta = JSON.stringify({ "title": "Test",   "createdBy": document.getElementById('GETid').value,    "description": "Test Description",   "content": "Money Money Money MOOONNNEYYY",    "dateCreated": "11223132"});	
     $.ajax({
-        url: "localhost/Note/",
+        url: "http://localhost/Note/",
         type: "POST",
         data: datta,
 	 	dataType: "text",
@@ -236,7 +236,7 @@ NotePutTest = function() {
 	var datta = JSON.stringify({"noteID": document.getElementById('noteGETid').value , "field" : "title", "value" : "PutTest"});
 	//{"noteID": document.getElementById('noteGETid'), "field": "title" , "value": "TestWorked"});	
     $.ajax({
-        url: "localhost/Note/",
+        url: "http://localhost/Note/",
         type: "PUT",
         data: datta,
 	 	dataType: "text",
@@ -272,7 +272,7 @@ NoteDeleteTest = function() {
 	var groupDiv = $("#NoteRes");
     var resultDiv = $("#resultDivContainer");
     $.ajax({
-        url: "localhost/Note/"+document.getElementById('noteGETid').value,
+        url: "http://localhost/Note/"+document.getElementById('noteGETid').value,
         type: "DELETE",
         success: function (result) {
             switch (result) {
@@ -311,7 +311,7 @@ TaskGetTest = function() {
 	var groupDiv = $("#TaskRes");
     var resultDiv = $("#resultDivContainer");
     $.ajax({
-        url: "localhost/Task/"+document.getElementById('taskGETid').value,
+        url: "http://localhost/Task/"+document.getElementById('taskGETid').value,
         type: "GET",
         success: function (result) {
             switch (result) {
@@ -344,7 +344,7 @@ TaskPostTest = function() {
 	groupDiv.html(groupDiv.html()+"<br>"+"Testing POST");
 	var datta = JSON.stringify({ "title": "Test",   "createdBy": document.getElementById('GETid').value, "assignedTo": document.getElementById('GETid').value, "assignedFrom": document.getElementById('GETid').value,    "completionCriteria": "Test Crit",   "description": "Test Description","isCompleted": "false","deadline": "11223132", "dateAssigned": "1122312",   "dateCreated": "11223132"});	
     $.ajax({
-        url: "localhost/Task/",
+        url: "http://localhost/Task/",
         type: "POST",
         data: datta,
 	 	dataType: "text",
@@ -379,7 +379,7 @@ TaskPutTest = function() {
 	var groupDiv = $("#TaskRes");
 	var datta = JSON.stringify({"taskID": document.getElementById('taskGETid').value,"field":"title","value":"PutTest"});
     $.ajax({
-        url: "localhost/Task/",
+        url: "http://localhost/Task/",
         type: "PUT",
         data: datta,
 	 	dataType: "text",
@@ -413,7 +413,7 @@ TaskDeleteTest = function() {
 	var groupDiv = $("#TaskRes");
     var resultDiv = $("#resultDivContainer");
     $.ajax({
-        url: "localhost/Task/"+document.getElementById('taskGETid').value,
+        url: "http://localhost/Task/"+document.getElementById('taskGETid').value,
         type: "DELETE",
         success: function (result) {
             switch (result) {
@@ -454,7 +454,7 @@ MeetingGetTest = function() {
 	var groupDiv = $("#MeetingRes");
     var resultDiv = $("#resultDivContainer");
     $.ajax({
-        url: "localhost/Meeting/"+document.getElementById('meetingGETid').value,
+        url: "http://localhost/Meeting/"+document.getElementById('meetingGETid').value,
         type: "GET",
         success: function (result) {
             switch (result) {
@@ -487,7 +487,7 @@ MeetingPostTest = function() {
 	groupDiv.html(groupDiv.html()+"<br>"+"Testing POST");
 	var datta = JSON.stringify({ "title": "Test",   "userID": document.getElementById('GETid').value, "datetime": "11223132","location":"099" ,"endDatetime": "1122312", "attendance":[],  "description": "11223132"});	
     $.ajax({
-        url: "localhost/Meeting/",
+        url: "http://localhost/Meeting/",
         type: "POST",
         data: datta,
 	 	dataType: "text",
@@ -522,7 +522,7 @@ MeetingPutTest = function() {
 	var groupDiv = $("#MeetingRes");
 	var datta = JSON.stringify({"meetingID": document.getElementById('meetingGETid').value,"field":"title","value":"PutTest"});
     $.ajax({
-        url: "localhost/Meeting/",
+        url: "http://localhost/Meeting/",
         type: "PUT",
         data: datta,
 	 	dataType: "text",
@@ -556,7 +556,7 @@ MeetingDeleteTest = function() {
 	var groupDiv = $("#MeetingRes");
     var resultDiv = $("#resultDivContainer");
     $.ajax({
-        url: "localhost/Meeting/"+document.getElementById('meetingGETid').value,
+        url: "http://localhost/Meeting/"+document.getElementById('meetingGETid').value,
         type: "DELETE",
         success: function (result) {
             switch (result) {
@@ -596,7 +596,7 @@ GroupGetTest = function() {
 	var groupDiv = $("#GroupRes");
     var resultDiv = $("#resultDivContainer");
     $.ajax({
-        url: "localhost/Group/"+document.getElementById('groupGETid').value,
+        url: "http://localhost/Group/"+document.getElementById('groupGETid').value,
         type: "GET",
         success: function (result) {
             switch (result) {
@@ -629,7 +629,7 @@ GroupPostTest = function() {
 	groupDiv.html(groupDiv.html()+"<br>"+"Testing POST");
 	var datta = JSON.stringify({ "groupTitle": "Test", "members": [{ "userID" : document.getElementById('GETid').value }] });	
     $.ajax({
-        url: "localhost/Group/",
+        url: "http://localhost/Group/",
         type: "POST",
         data: datta,
 	 	dataType: "text",
@@ -664,7 +664,7 @@ GroupPutTest = function() {
 	var groupDiv = $("#GroupRes");
 	var datta = JSON.stringify({"groupID": document.getElementById('groupGETid').value,"field":"groupTitle","value":"PutTest"});
     $.ajax({
-        url: "localhost/Group/",
+        url: "http://localhost/Group/",
         type: "PUT",
         data: datta,
 	 	dataType: "text",
@@ -698,7 +698,7 @@ GroupDeleteTest = function() {
 	var groupDiv = $("#GroupRes");
     var resultDiv = $("#resultDivContainer");
     $.ajax({
-        url: "localhost/Group/"+document.getElementById('groupGETid').value,
+        url: "http://localhost/Group/"+document.getElementById('groupGETid').value,
         type: "DELETE",
         success: function (result) {
             switch (result) {
@@ -738,7 +738,7 @@ ______          _           _
 // 	var projectDiv = $("#ProjectRes");
 //     var resultDiv = $("#resultDivContainer");
 //     $.ajax({
-//         url: "localhost/Project/"+document.getElementById('projectGETid').value,
+//         url: "http://localhost/Project/"+document.getElementById('projectGETid').value,
 //         type: "GET",
 //         success: function (result) {
 //             switch (result) {
@@ -771,7 +771,7 @@ ______          _           _
 // 	projectDiv.html(projectDiv.html()+"<br>"+"Testing POST");
 // 	var datta = JSON.stringify({ "projectTitle": "Test","notes": [{ "noteID" : document.getElementById('noteGETid').value }] ,"meetings": [{ "meetingID" : document.getElementById('meetingGETid').value }] , "members": [{ "userID" : document.getElementById('GETid').value }] });	
 //     $.ajax({
-//         url: "localhost/Project/",
+//         url: "http://localhost/Project/",
 //         type: "POST",
 //         data: datta,
 // 	 	dataType: "text",
@@ -806,7 +806,7 @@ ______          _           _
 // 	var projectDiv = $("#ProjectRes");
 // 	var datta = JSON.stringify({"projectID": document.getElementById('projectGETid').value,"field":"projectTitle","value":"PutTest"});
 //     $.ajax({
-//         url: "localhost/Project/",
+//         url: "http://localhost/Project/",
 //         type: "PUT",
 //         data: datta,
 // 	 	dataType: "text",
@@ -840,7 +840,7 @@ ______          _           _
 // 	var projectDiv = $("#ProjectRes");
 //     var resultDiv = $("#resultDivContainer");
 //     $.ajax({
-//         url: "localhost/Project/"+document.getElementById('projectGETid').value,
+//         url: "http://localhost/Project/"+document.getElementById('projectGETid').value,
 //         type: "DELETE",
 //         success: function (result) {
 //             switch (result) {
@@ -870,7 +870,7 @@ ______          _           _
 // 	var groupDiv = $("#AgendaRes");
 //     var resultDiv = $("#resultDivContainer");
 //     $.ajax({
-//         url: "localhost/Agenda/"+document.getElementById('agendaGETid').value,
+//         url: "http://localhost/Agenda/"+document.getElementById('agendaGETid').value,
 //         type: "GET",
 //         success: function (result) {
 //             switch (result) {
@@ -903,7 +903,7 @@ ______          _           _
 // 	groupDiv.html(groupDiv.html()+"<br>"+"Testing POST");
 // 	var datta = JSON.stringify({ "title": "Test",   "userID": document.getElementById('GETid').value, "content": "[]","meeting":document.getElementById('meetingGETid').value });	
 //     $.ajax({
-//         url: "localhost/Agenda/",
+//         url: "http://localhost/Agenda/",
 //         type: "POST",
 //         data: datta,
 // 	 	dataType: "text",
@@ -938,7 +938,7 @@ ______          _           _
 // 	var groupDiv = $("#AgendaRes");
 // 	var datta = JSON.stringify({"agendaID": document.getElementById('agendaGETid').value,"field":"title","value":"PutTest"});
 //     $.ajax({
-//         url: "localhost/Agenda/",
+//         url: "http://localhost/Agenda/",
 //         type: "PUT",
 //         data: datta,
 // 	 	dataType: "text",
@@ -972,7 +972,7 @@ ______          _           _
 // 	var groupDiv = $("#AgendaRes");
 //     var resultDiv = $("#resultDivContainer");
 //     $.ajax({
-//         url: "localhost/Agenda/"+document.getElementById('agendaGETid').value,
+//         url: "http://localhost/Agenda/"+document.getElementById('agendaGETid').value,
 //         type: "DELETE",
 //         success: function (result) {
 //             switch (result) {
