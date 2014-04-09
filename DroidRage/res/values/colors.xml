@@ -11,7 +11,7 @@
     <!-- Text color of declined events in agenda view -->
     <color name="agenda_item_declined_color">#66333333</color>
     <!-- Text color of non-declined events in agenda view -->
-    <color name="agenda_item_standard_color">#FF333333</color>
+    <color name="list_item_title_color">#FF333333</color>
     <!-- Color of the separator between items in the agenda list -->
     <color name="agenda_list_separator_color">#FFBBBBBB</color>
     <!-- General background color in agenda view -->
@@ -19,7 +19,7 @@
     <!-- Agenda day item text color -->
     <color name="agenda_day_item_text_color">#FF666666</color>
     <!-- Color of the event location's text in an agenda item -->
-    <color name="agenda_item_where_text_color">#FF666666</color>
+    <color name="list_item_desc_text_color">#FF666666</color>
     <!-- Color of the event location's text in an agenda item -->
     <color name="agenda_item_where_declined_text_color">#66666666</color>
 

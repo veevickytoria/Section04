@@ -76,19 +76,18 @@ public class TaskItemAdapter extends ArrayAdapter<Task> {
 		} else
 			viewHolder = (ViewHolder) rowView.getTag();
 
-		// Setup from the meeting_item XML file
 		Task task = tasks.get(position);
 
 		viewHolder.title.setText(task.getTitle());
 		viewHolder.deadline.setText("Deadline:  "+ NinjaDateUtils.JODA_APP_DATE_FORMAT.print(task.getEndTimeInMillis()));
 
-		
+
 		if(colorit){
 			Calendar cal = Calendar.getInstance();
 			cal.setTimeInMillis(task.getEndTimeInMillis());
 			cal.add(Calendar.DAY_OF_MONTH, -1);
 			if (task.getEndTimeInMillis() == 0L) {
-	
+
 			} else if (task.getIsCompleted()) {
 				viewHolder.background.setBackgroundColor(Color.rgb(53, 227, 111));
 			} else if (cal.before(Calendar.getInstance())) {
