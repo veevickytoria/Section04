@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   
   protect_from_forgery with: :null_session
 
+  before_filter :loginRedirect
   before_filter :getUserInfo
   before_filter :getNotifications
   before_filter :getAllUsers
@@ -9,6 +10,12 @@ class ApplicationController < ActionController::Base
   before_filter :getAllNotes
   before_filter :loadSettings
 
+  def loginRedirect
+	if (cookies[:userID].blank?)
+		redirect_to '/login/index'
+		return
+	end
+  end
 
   def getUserInfo
     if (!cookies[:userID].blank?)
