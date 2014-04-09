@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (C) 2014 The Android Open Source Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -46,18 +46,20 @@ import com.meetingninja.csse.R;
 import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
+import com.meetingninja.csse.extras.IRefreshable;
 import com.meetingninja.csse.tasks.tasks.CreateTaskTask;
 import com.meetingninja.csse.tasks.tasks.GetTaskListTask;
 
-public class TasksFragment extends Fragment implements	AsyncResponse<List<Task>> {
+public class TasksFragment extends Fragment implements
+		AsyncResponse<List<Task>>, IRefreshable {
 
 	private HashMap<String, List<Task>> taskLists;
 	private TaskItemAdapter taskAdpt;
 	private TaskTypeAdapter typeAdapter;
+	private ActionBar actionBar;
 
-	private GetTaskListTask taskListfetcher = null;
-	private CreateTaskTask creator = null;
-	private SessionManager session;
+	private GetTaskListTask taskListfetcher;
+	private CreateTaskTask creator;
 
 	private final String assignedToMe = "Assigned to me";
 	private final String iAssigned = "I assigned";
@@ -70,69 +72,80 @@ public class TasksFragment extends Fragment implements	AsyncResponse<List<Task>>
 		// Empty
 	}
 
-	private static TasksFragment sInstance;
-
-	public static TasksFragment getInstance() {
-		if (sInstance == null) {
-			sInstance = new TasksFragment();
-		}
-		return sInstance;
-	}
-	//right now this uses getassignedto to get the userID of the user (only one right now) assigned to a task. then uses members to temperatily have multiple members 
-	//assigned to a task (just in edit or create screen) then assignes the first user's ID in the members list to assignedto when saving and sending to backend (because they only save one) 
+	// right now this uses getassignedto to get the userID of the user (only one
+	// right now) assigned to a task. then uses members to temperatily have
+	// multiple members
+	// assigned to a task (just in edit or create screen) then assignes the
+	// first user's ID in the members list to assignedto when saving and sending
+	// to backend (because they only save one)
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		View v = inflater.inflate(R.layout.fragment_tasks, container, false);
-		setHasOptionsMenu(true);
+		setupActionBar();
 
-		session = SessionManager.getInstance();
 		creator = new CreateTaskTask(this);
-		/* Set up the spinner selector */
+
+		setupTaskLists();
+
+		setupListView(v);
+
+		return v;
+	}
+
+	private void setupActionBar() {
+		actionBar = getActivity().getActionBar();
 		List<String> typeNames = new ArrayList<String>();
 		typeNames.add(assignedToMe);
 		typeNames.add(iAssigned);
 		typeNames.add(iCreated);
 
 		typeAdapter = new TaskTypeAdapter(getActivity(), typeNames);
-		getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-		getActivity().getActionBar().setSelectedNavigationItem(prevSelectedType);
-		getActivity().getActionBar().setListNavigationCallbacks(typeAdapter,new OnNavigationListener() {
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		actionBar.setSelectedNavigationItem(prevSelectedType);
+		actionBar.setListNavigationCallbacks(typeAdapter,
+				new OnNavigationListener() {
 					@Override
-					public boolean onNavigationItemSelected(int itemPosition,long itemId) {
+					public boolean onNavigationItemSelected(int itemPosition,
+							long itemId) {
 						setTaskList(itemPosition);
 						return true;
 					}
 				});
+		setHasOptionsMenu(true);
+	}
 
+	private void setupTaskLists() {
 		if (taskLists == null) {
 			/* Set up the task list */
 			taskLists = new HashMap<String, List<Task>>();
-			ArrayList<Task> l1 = new ArrayList<Task>(), l2 = new ArrayList<Task>(), l3 = new ArrayList<Task>();
-			taskLists.put(assignedToMe, l1);
-			taskLists.put(iAssigned, l2);
-			taskLists.put(iCreated, l3);
+			taskLists.put(assignedToMe, new ArrayList<Task>());
+			taskLists.put(iAssigned, new ArrayList<Task>());
+			taskLists.put(iCreated, new ArrayList<Task>());
 
-			refreshTasks();
+			refresh();
 		}
+
+	}
+
+	private void setupListView(View v) {
+		taskAdpt = new TaskItemAdapter(getActivity(), R.layout.list_item_task,
+				taskLists.get(iAssigned), true);
 
 		ListView lv = (ListView) v.findViewById(R.id.task_list);
 		lv.setEmptyView(v.findViewById(android.R.id.empty));
-		taskAdpt = new TaskItemAdapter(getActivity(), R.layout.list_item_task,taskLists.get(iAssigned),true);
-
 		lv.setAdapter(taskAdpt);
-		registerForContextMenu(lv);
 
 		lv.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parentAdapter, View v,int position, long id) {
-				Task t = taskAdpt.getItem(position);
-				loadTask(t);
+			public void onItemClick(AdapterView<?> parentAdapter, View v,
+					int position, long id) {
+				Task clicked = taskAdpt.getItem(position);
+				viewTask(clicked);
 			}
 		});
-
-		return v;
 	}
 
 	@Override
@@ -144,13 +157,14 @@ public class TasksFragment extends Fragment implements	AsyncResponse<List<Task>>
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_refresh:
-			refreshTasks();
+			refresh();
 			return true;
 		case R.id.action_new:
-			Intent i = new Intent(getActivity(), EditTaskActivity.class);
-			Task t = new Task();
-			i.putExtra(Keys.Task.PARCEL, t);
-			startActivityForResult(i, 7);
+			Intent editIntent = new Intent(getActivity(),
+					EditTaskActivity.class);
+			Task newTask = new Task();
+			editIntent.putExtra(Keys.Task.PARCEL, newTask);
+			startActivityForResult(editIntent, 7);
 			return true;
 		default:
 			return super.onContextItemSelected(item);
@@ -159,40 +173,41 @@ public class TasksFragment extends Fragment implements	AsyncResponse<List<Task>>
 
 	@Override
 	public void onPause() {
-		prevSelectedType = getActivity().getActionBar().getSelectedNavigationIndex();
-		getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+		prevSelectedType = actionBar.getSelectedNavigationIndex();
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 
 		super.onPause();
 	}
 
 	@Override
 	public void onResume() {
-		getActivity().getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-		getActivity().getActionBar().setSelectedNavigationItem(prevSelectedType);
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		actionBar.setSelectedNavigationItem(prevSelectedType);
 		super.onResume();
 	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == Activity.RESULT_OK) {
-			if (requestCode == 6) {
-				refreshTasks();
-			} else if (requestCode == 7) {
-				Task t = data.getParcelableExtra(Keys.Task.PARCEL);
-				t.setCreatedBy(SessionManager.getUserID());
-				creator.createTask(t);
+			if (data != null) {
+				if (requestCode == 6) {
+					refresh();
+				} else if (requestCode == 7) {
+					Task t = data.getParcelableExtra(Keys.Task.PARCEL);
+					t.setCreatedBy(SessionManager.getUserID());
+					creator.createTask(t);
+				}
 			}
 		}
 	}
 
-	private void loadTask(Task task) {
-		while (task.getEndTimeInMillis() == 0L);
+	private void viewTask(Task task) {
 		Intent viewTask = new Intent(getActivity(), ViewTaskActivity.class);
 		viewTask.putExtra(Keys.Task.PARCEL, task);
 		startActivityForResult(viewTask, 6);
 	}
 
-	public void refreshTasks() {
+	public void refresh() {
 		taskListfetcher = new GetTaskListTask(this);
 		taskListfetcher.execute(SessionManager.getUserID());
 	}
@@ -310,7 +325,15 @@ class TaskTypeAdapter implements SpinnerAdapter {
 	@Override
 	public View getDropDownView(int position, View convertView, ViewGroup parent) {
 		TextView rowView = (TextView) getView(position, convertView, parent);
-		rowView.setPadding((int) this.context.getResources().getDimension(R.dimen.activity_horizontal_margin),(int) this.context.getResources().getDimension(R.dimen.activity_vertical_margin),(int) this.context.getResources().getDimension(R.dimen.activity_horizontal_margin),	(int) this.context.getResources().getDimension(R.dimen.activity_vertical_margin));
+		rowView.setPadding(
+				(int) this.context.getResources().getDimension(
+						R.dimen.activity_horizontal_margin),
+				(int) this.context.getResources().getDimension(
+						R.dimen.activity_vertical_margin),
+				(int) this.context.getResources().getDimension(
+						R.dimen.activity_horizontal_margin),
+				(int) this.context.getResources().getDimension(
+						R.dimen.activity_vertical_margin));
 		return rowView;
 	}
 
