@@ -20,7 +20,6 @@ tmp/
 .loadpath
 
 # built application files
-*.apk
 *.ap_
 
 # files for the dex VM
