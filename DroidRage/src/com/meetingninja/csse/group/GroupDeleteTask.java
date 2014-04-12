@@ -8,21 +8,15 @@ import android.util.Log;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.GroupDatabaseAdapter;
 
-public class GroupDeleteTask implements AsyncResponse<Boolean> {
-	private AsyncGroupDeleteTask deleter; 
-	
+public class GroupDeleteTask {
+	private AsyncGroupDeleteTask deleter;
+
 	public GroupDeleteTask() {
 		this.deleter = new AsyncGroupDeleteTask();
 	}
 
 	public void deleteGroup(String groupID) {
 		this.deleter.execute(groupID);
-	}
-
-	@Override
-	public void processFinish(Boolean result) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

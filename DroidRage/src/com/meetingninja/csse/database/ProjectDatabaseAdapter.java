@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright (C) 2014 The Android Open Source Project
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,12 +28,12 @@ import objects.Meeting;
 import objects.Note;
 import objects.Project;
 import objects.User;
-
 import android.net.Uri;
 
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.meetingninja.csse.extras.JsonUtils;
 
 public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 
@@ -299,10 +299,12 @@ public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 			JsonNode notes = projectNode.get(Keys.Project.NOTES);
 			if (notes != null && notes.isArray()) {
 				for (final JsonNode noteNode : notes) {
-					Note note = new Note();
-					note.setID(noteNode.get(Keys.Note.ID).asText());
-					// NotesDatabaseAdapter.get //TODO: lkjaslfdkjsad;lkfj
-					p.addNote(note);
+					String _id = JsonUtils.getJSONValue(noteNode, Keys.Note.ID);
+					if (!_id.isEmpty()) {
+						Note note =  NotesDatabaseAdapter.getNote(_id);
+						note.setID(_id);
+						p.addNote(note);
+					}
 				}
 			}
 

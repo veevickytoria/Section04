@@ -78,8 +78,8 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 				Keys.Meeting.OTHEREND, meeting.getEndTime());
 		String descPayload = getEditPayload(meetingID, Keys.Meeting.DESC,
 				meeting.getDescription());
-		// String attendancePayload =
-		// getEditPayload(meetingID,Keys.Meeting.ATTEND,meeting.getAttendance());
+//		 String attendancePayload =
+//		 getEditPayload(meetingID, Keys.Meeting.ATTEND,meeting.getAttendance());
 
 		// TODO: ByteArrayOutputStream json = new ByteArrayOutputStream();
 		// PrintStream ps = new PrintStream(json);

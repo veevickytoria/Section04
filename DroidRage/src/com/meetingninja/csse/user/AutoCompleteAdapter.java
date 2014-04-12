@@ -29,7 +29,7 @@ public class AutoCompleteAdapter extends FilteredArrayAdapter<User> {
 			convertView = mLayoutInflater.inflate(
 					R.layout.chips_recipient_dropdown_item, parent, false);
 		}
-		
+
 //		if(u == null){
 //			((TextView) convertView.findViewById(android.R.id.title)).setText((position == 0 ? "Contacts" : "Other"));
 //			((TextView) convertView.findViewById(android.R.id.text1)).setText("");
@@ -38,7 +38,8 @@ public class AutoCompleteAdapter extends FilteredArrayAdapter<User> {
 					.getDisplayName());
 			((TextView) convertView.findViewById(android.R.id.text1)).setText(u
 					.getEmail());
-			// TODO : Get url's for user images
+
+			// Get the URL for user images
 			SmartImageView img = (SmartImageView) convertView
 					.findViewById(android.R.id.icon);
 //		}

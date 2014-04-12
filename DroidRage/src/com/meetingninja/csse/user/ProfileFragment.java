@@ -74,7 +74,6 @@ public class ProfileFragment extends Fragment {
 				System.out.println(JsonUtils.getObjectMapper()
 						.writeValueAsString(displayedUser));
 			} catch (JsonProcessingException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} else {

@@ -12,7 +12,7 @@ public abstract class Event implements Comparable<Event> {
 	protected String description;
 
 	public Event() {
-		// TODO Auto-generated constructor stub
+		// empty
 	}
 
 	public abstract String getID();
