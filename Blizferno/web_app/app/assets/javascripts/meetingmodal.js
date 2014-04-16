@@ -1,3 +1,4 @@
+// NewMeeting Modal
 function NewMeetingModal(documentID, blankID){
 	var newModal = NinjaModal(documentID, blankID);
 
@@ -153,9 +154,112 @@ function NewMeetingModal(documentID, blankID){
 			}
 		});
 
-		
+
 			}
 		}
+}
+
+// ViewMeeting Modal
+function ViewMeetingModal(documentID, meetingID){
+	var viewModal = NinjaModal(documentID, meetingID);
+
+	var parentShow = viewModal.showModal;
+	var parentAddText = viewModal.addText;
+	var parentAddBreak = viewModal.addBreak;
+	var parentAddElement = viewModal.addElement;
+	var parentClose = viewModal.close;
+	var parentPopulateTableRows = viewModal.populateTableRows;
+
+	viewModal.showModal = function(users){
+		viewModal.createHeader();
+		viewModal.createBody();
+		viewModal.createFooter(users);
+		parentShow.call(this);
+	}
+
+	viewModal.createHeader = function(){
+		var header = document.createElement("h1");
+		header.setAttribute("class", "modal-title");
+		var text = document.createTextNode("View Meeting Details");
+		header.appendChild(text);
+		var doc = document.getElementById("header");
+		doc.appendChild(header);
+	}
+
+	viewModal.createBody = function(){
+		// Get meeting Info
+		var membInfo;
+  		var membs = new Array();
+
+		$.ajax({
+			type: 'GET',
+			url: 'http://csse371-04.csse.rose-hulman.edu/Meeting/' + meetingID,
+			success:function(data){
+				meetingArray = JSON.parse(data);
+			},
+			async: false
+		});
+
+		alert(meetingArray);
+
+		for (i in meetingArray['members']){
+			$.ajax({
+				type: 'GET',
+				url: 'http://csse371-04.csse.rose-hulman.edu/User/' + meetingArray['members'][i]['userID'],
+				success:function(data){
+					membInfo = JSON.parse(data);
+					membs.push({'name':membInfo['name']});
+				},
+				async: false
+			});
+		}
+
+		//add meeting info
+
+		var table = document.createElement("table");
+		table.setAttribute("id", "members");
+		table.setAttribute("class", "viewData");
+
+
+		tableMems = parentPopulateTableRows.call(this, membs, "name", table);
+		var doc = document.getElementById("body");
+		doc.appendChild(tableMems);
+	}
+
+	viewModal.createFooter = function(users){
+		// Close button
+		var self = this;
+		var elementClose = document.createElement("button");
+		elementClose.setAttribute("class", "btn btn-primary");
+		elementClose.innerHTML = "Close";
+		elementClose.onclick = viewModal.close;
+
+		// ActionButton
+		var elementSubmit = document.createElement("input");
+		elementSubmit.setAttribute("type", "button");
+		elementSubmit.onclick = function(){self.executeAction(users);};
+		elementSubmit.setAttribute("class", "btn btn-primary");
+		elementSubmit.value = "Edit";
+
+		var doc = document.getElementById("footer");
+		doc.appendChild(elementClose);
+		doc.appendChild(elementSubmit);
+	}
+
+	viewModal.close = function(){
+		parentClose.call(this);
+		$('#' + documentID).modal('hide');
+	}
+
+	viewModal.executeAction = function(users){
+		parentClose.call(this);
+		var ModalFactory = abstractModalFactory();
+		var modal = ModalFactory.createModal(EditMeetingModal, "MeetingModal", meetingID);
+
+  		modal.showModal(users);
+	}
+
+	return viewModal
 }
 
 newModal.validate = function(){
