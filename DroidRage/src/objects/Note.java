@@ -4,9 +4,6 @@ import java.io.IOException;
 
 import objects.builders.NoteBuilder;
 import android.database.Cursor;
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

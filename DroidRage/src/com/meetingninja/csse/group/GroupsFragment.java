@@ -24,7 +24,6 @@ import com.meetingninja.csse.extras.ConnectivityUtils;
 
 public class GroupsFragment extends Fragment implements
 		AsyncResponse<List<Group>> {
-	private SessionManager session;
 	private ListView groupsList;
 	private static List<Group> groups = new ArrayList<Group>();;
 	private GroupItemAdapter groupAdpt;
@@ -55,7 +54,7 @@ public class GroupsFragment extends Fragment implements
 
 		creator = new GroupCreateTask(this);
 
-		session = SessionManager.getInstance();
+		SessionManager.getInstance();
 		groupsList = (ListView) v.findViewById(R.id.groupsList);
 		groupAdpt = new GroupItemAdapter(getActivity(),
 				R.layout.list_item_group, groups);
@@ -121,7 +120,8 @@ public class GroupsFragment extends Fragment implements
 		if (ConnectivityUtils.isConnected(getActivity()) && isAdded()) {
 
 			fetcher = new GroupFetcherTask(this);
-			fetcher.execute(SessionManager.getUserID()); // calls processFinish()
+			fetcher.execute(SessionManager.getUserID()); // calls
+															// processFinish()
 		}
 	}
 
@@ -134,26 +134,26 @@ public class GroupsFragment extends Fragment implements
 	public void deleteGroup(String groupID) {
 		GroupDeleteTask deltask = new GroupDeleteTask();
 		deltask.deleteGroup(groupID);
-//		String url = GroupDatabaseAdapter.getBaseUri().appendPath(groupID)
-//				.build().toString();
-//		StringRequest dr = new StringRequest(
-//				com.android.volley.Request.Method.DELETE, url,
-//				new Response.Listener<String>() {
-//					@Override
-//					public void onResponse(String response) {
-//						// response
-//						Toast.makeText(getActivity(), response,
-//								Toast.LENGTH_SHORT).show();
-//					}
-//				}, new Response.ErrorListener() {
-//					@Override
-//					public void onErrorResponse(VolleyError error) {
-//						// error.
-//
-//					}
-//
-//				});
-//		ApplicationController.getInstance().addToRequestQueue(dr);
+		// String url = GroupDatabaseAdapter.getBaseUri().appendPath(groupID)
+		// .build().toString();
+		// StringRequest dr = new StringRequest(
+		// com.android.volley.Request.Method.DELETE, url,
+		// new Response.Listener<String>() {
+		// @Override
+		// public void onResponse(String response) {
+		// // response
+		// Toast.makeText(getActivity(), response,
+		// Toast.LENGTH_SHORT).show();
+		// }
+		// }, new Response.ErrorListener() {
+		// @Override
+		// public void onErrorResponse(VolleyError error) {
+		// // error.
+		//
+		// }
+		//
+		// });
+		// ApplicationController.getInstance().addToRequestQueue(dr);
 	}
 
 	@Override

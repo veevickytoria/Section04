@@ -18,7 +18,6 @@ package com.meetingninja.csse;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import objects.Event;
 import objects.Note;
 import objects.Schedule;
 import android.content.Intent;
@@ -31,7 +30,6 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,13 +38,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
-
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.foound.widget.AmazingListView;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
-import com.meetingninja.csse.database.local.SQLiteHelper;
 import com.meetingninja.csse.extras.NinjaToastUtil;
 import com.meetingninja.csse.group.GroupsFragment;
 import com.meetingninja.csse.meetings.MeetingsFragment;
@@ -59,8 +54,6 @@ import com.meetingninja.csse.user.LoginActivity;
 import com.meetingninja.csse.user.ProfileFragment;
 import com.meetingninja.csse.user.UserListFragment;
 import com.parse.ParseAnalytics;
-import com.parse.ParseInstallation;
-import com.parse.ParseUser;
 
 public class MainActivity extends FragmentActivity {
 
@@ -150,7 +143,7 @@ public class MainActivity extends FragmentActivity {
 
 	/**
 	 * // Check to see if data has been cached in the local database
-	 *
+	 * 
 	 * @param icicle
 	 */
 	private void checkAndPreloadData(Bundle icicle) {
@@ -311,7 +304,7 @@ public class MainActivity extends FragmentActivity {
 
 	/**
 	 * Highlight the selected item, update the title, and close the drawer
-	 *
+	 * 
 	 * @param position
 	 */
 	private boolean selectFromLeftDrawer(int position, FragmentManager fm) {
@@ -346,7 +339,6 @@ public class MainActivity extends FragmentActivity {
 			}
 		}
 	}
-
 
 	private void handleSpeech(ArrayList<String> speechArray, Intent data) {
 		if (speechArray.contains("meetings")) {
@@ -407,11 +399,14 @@ public class MainActivity extends FragmentActivity {
 			ApplicationController.getInstance().logout();
 			return true;
 		case R.id.action_speak:
-			Intent speechIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-			speechIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, "en-US");
+			Intent speechIntent = new Intent(
+					RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+			speechIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+					"en-US");
 			speechIntent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Go to...");
 			try {
-				startActivityForResult(speechIntent, VOICE_RECOGNITION_REQUEST_CODE);
+				startActivityForResult(speechIntent,
+						VOICE_RECOGNITION_REQUEST_CODE);
 
 			} catch (Exception e) {
 				NinjaToastUtil.show(this,
@@ -456,7 +451,7 @@ public class MainActivity extends FragmentActivity {
 	private class LeftDrawerClickListener implements
 			ListView.OnItemClickListener {
 		@Override
-		public void onItemClick(AdapterView parent, View view, int position,
+		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
 			selectItem(position);
 		}
@@ -465,10 +460,8 @@ public class MainActivity extends FragmentActivity {
 	private class RightDrawerClickListener implements
 			ListView.OnItemClickListener {
 		@Override
-		public void onItemClick(AdapterView parent, View view, int position,
+		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
-			Event clicked = rightDrawerAdapter.getItem(position);
-			// TODO: View the event
 		}
 	}
 }

@@ -45,7 +45,8 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 		return Uri.parse(getBaseUrl()).buildUpon();
 	}
 
-	public static Task getTask(String id) throws JsonParseException, JsonMappingException, IOException {
+	public static Task getTask(String id) throws JsonParseException,
+			JsonMappingException, IOException {
 		// Server URL setup
 		String _url = getBaseUri().appendPath(id).build().toString();
 		URL url = new URL(_url);
@@ -55,8 +56,7 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 		conn.setRequestMethod(IRequest.GET);
 		addRequestHeader(conn, false);
 
-		// Get server response
-		int responseCode = conn.getResponseCode();
+		conn.getResponseCode();
 		String response = getServerResponse(conn);
 
 		// Initialize ObjectMapper
@@ -104,7 +104,7 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 		ps.close();
 		// Get server response
 		sendPostPayload(conn, payload);
-		String response = getServerResponse(conn);
+		getServerResponse(conn);
 		Map<String, String> responseMap = new HashMap<String, String>();
 		if (responseMap.containsKey(Keys.Task.ID)) {
 			t.setID(responseMap.get(Keys.Task.ID));
@@ -120,7 +120,7 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 		// add request header
 		conn.setRequestMethod(IRequest.DELETE);
 		addRequestHeader(conn, false);
-		int responseCode = conn.getResponseCode();
+		conn.getResponseCode();
 		String response = getServerResponse(conn);
 
 		boolean result = false;

@@ -29,6 +29,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipDescription;
@@ -260,6 +261,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
 
 	private boolean mAttachedToWindow;
 
+	@SuppressLint({ "HandlerLeak", "MissingSuperCall" })
 	public RecipientEditTextView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		setChipDimensions(context, attrs);
@@ -303,6 +305,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
 		setOnEditorActionListener(this);
 	}
 
+	@SuppressLint("MissingSuperCall")
 	@Override
 	protected void onDetachedFromWindow() {
 		mAttachedToWindow = false;
@@ -903,7 +906,8 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
 	}
 
 	// Visible for testing.
-	/* package */void handlePendingChips() {
+	/* package */@SuppressWarnings("unchecked")
+	void handlePendingChips() {
 		if (getViewWidth() <= 0) {
 			// The widget has not been sized yet.
 			// This will be called as a result of onSizeChanged
@@ -2491,6 +2495,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
 		return super.onTextContextMenuItem(id);
 	}
 
+	@SuppressWarnings("unchecked")
 	private void handlePasteAndReplace() {
 		ArrayList<DrawableRecipientChip> created = handlePaste();
 		if (created != null && created.size() > 0) {

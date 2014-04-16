@@ -76,7 +76,6 @@ public class DayPickerView extends ListView implements OnScrollListener,
 
 	protected SimpleMonthAdapter.CalendarDay mTempDay = new SimpleMonthAdapter.CalendarDay();
 
-	private static float mScale = 0;
 	// When the week starts; numbered like Time.<WEEKDAY> (e.g. SUNDAY=0).
 	protected int mFirstDayOfWeek;
 	// The last name announced by accessibility

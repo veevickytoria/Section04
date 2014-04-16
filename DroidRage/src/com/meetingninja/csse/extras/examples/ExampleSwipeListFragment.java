@@ -28,9 +28,10 @@ import de.timroes.android.listview.EnhancedListView;
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass. Activities that
  * contain this fragment must implement the
- * {@link ExampleSwipeListFragment.OnFragmentInteractionListener} interface to handle
- * interaction events. Use the {@link ExampleSwipeListFragment#newInstance} factory
- * method to create an instance of this fragment.
+ * {@link ExampleSwipeListFragment.OnFragmentInteractionListener} interface to
+ * handle interaction events. Use the
+ * {@link ExampleSwipeListFragment#newInstance} factory method to create an
+ * instance of this fragment.
  * 
  */
 @SuppressLint("ValidFragment")
@@ -42,7 +43,6 @@ public class ExampleSwipeListFragment extends Fragment {
 	private static final String PREF_SWIPE_DIRECTION = "de.timroes.android.listviewdemo.SWIPE_DIRECTION";
 	private static final String PREF_SWIPE_LAYOUT = "de.timroes.android.listviewdemo.SWIPE_LAYOUT";
 
-	private Bundle extras;
 	private Context mContext;
 	private EnhancedListView mListView;
 	private EnhancedListAdapter mAdapter;
@@ -218,7 +218,7 @@ public class ExampleSwipeListFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
-			extras = getArguments();
+			getArguments();
 		}
 	}
 

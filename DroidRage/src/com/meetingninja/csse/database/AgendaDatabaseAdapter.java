@@ -24,8 +24,6 @@ import java.util.Map;
 
 import objects.Agenda;
 import android.net.Uri;
-import android.util.Log;
-
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -47,7 +45,7 @@ public class AgendaDatabaseAdapter extends BaseDatabaseAdapter {
 	}
 
 	public static String createAgenda(Agenda create) throws IOException {
-		Agenda newAgenda = new Agenda(create);
+		new Agenda(create);
 
 		String _url = getBaseUri().build().toString();
 
@@ -58,7 +56,7 @@ public class AgendaDatabaseAdapter extends BaseDatabaseAdapter {
 
 		String payload = create.toJSON().toString();
 
-		int responseCode = sendPostPayload(conn, payload);
+		sendPostPayload(conn, payload);
 		String response = getServerResponse(conn);
 
 		// TODO : FIXME
@@ -115,8 +113,7 @@ public class AgendaDatabaseAdapter extends BaseDatabaseAdapter {
 		conn.setRequestMethod(IRequest.DELETE);
 		addRequestHeader(conn, false);
 
-		// Get server response
-		int responseCode = conn.getResponseCode();
+		conn.getResponseCode();
 		String response = getServerResponse(conn);
 
 		boolean result = false;
@@ -146,8 +143,7 @@ public class AgendaDatabaseAdapter extends BaseDatabaseAdapter {
 		conn.setRequestMethod(IRequest.GET);
 		addRequestHeader(conn, false);
 
-		// Get server response
-		int responseCode = conn.getResponseCode();
+		conn.getResponseCode();
 		String response = getServerResponse(conn);
 		JsonNode agendaNode = MAPPER.readTree(response);
 

@@ -22,8 +22,6 @@ import android.util.Log;
 
 public class SQLiteHelper extends SQLiteOpenHelper {
 	private static SQLiteHelper sInstance;
-	private final Context mContext;
-
 	// Logcat tag
 	private static final String TAG = "DatabaseHelper";
 
@@ -87,7 +85,6 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
 	protected SQLiteHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
-		mContext = context;
 	}
 
 	@Override

@@ -16,14 +16,14 @@ public class JsonHelper {
 	public static Object toJSON(Object object) throws JsonProcessingException {
 		Map<String, Object> json = new HashMap<String, Object>();
 		if (object instanceof Map) {
-			Map map = (Map) object;
+			Map<?, ?> map = (Map<?, ?>) object;
 			for (Object key : map.keySet()) {
 				json.put(key.toString(), toJSON(map.get(key)));
 			}
 			return mapper.writeValueAsString(json);
 		} else if (object instanceof Iterable) {
 			List<Object> list = new ArrayList<Object>();
-			for (Object value : ((Iterable) object)) {
+			for (Object value : ((Iterable<?>) object)) {
 				list.add(value);
 			}
 			return list;
@@ -52,7 +52,7 @@ public class JsonHelper {
 		return map;
 	}
 
-	public static List toList(JSONArray array) throws JSONException {
+	public static List<Object> toList(JSONArray array) throws JSONException {
 		List<Object> list = new ArrayList<Object>();
 		for (int i = 0; i < array.length(); i++) {
 			list.add(fromJson(array.get(i)));

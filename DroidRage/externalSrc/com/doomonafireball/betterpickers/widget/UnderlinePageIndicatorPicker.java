@@ -340,7 +340,6 @@ public class UnderlinePageIndicatorPicker extends View implements PageIndicator 
 			dest.writeInt(currentPage);
 		}
 
-		@SuppressWarnings("UnusedDeclaration")
 		public static final Creator<SavedState> CREATOR = new Creator<SavedState>() {
 			@Override
 			public SavedState createFromParcel(Parcel in) {

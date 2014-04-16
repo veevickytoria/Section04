@@ -62,7 +62,6 @@ public class MeetingsFragment extends Fragment implements
 	private MeetingItemAdapter meetingAdpt;
 	private ImageButton meetingImageButton;
 
-	private SessionManager session;
 	private SQLiteMeetingAdapter mySQLiteAdapter;
 
 	private MeetingFetcherTask fetcher;
@@ -87,17 +86,19 @@ public class MeetingsFragment extends Fragment implements
 		View v = inflater.inflate(R.layout.fragment_meetings, container, false);
 		setupViews(v);
 
-		session = SessionManager.getInstance();
+		SessionManager.getInstance();
 		mySQLiteAdapter = new SQLiteMeetingAdapter(getActivity());
 		meetingAdpt = new MeetingItemAdapter(getActivity(),
 				R.layout.list_item_meeting, meetings);
 
 		mListView.setAdapter(meetingAdpt);
-		if(getArguments() != null && getArguments().containsKey(Keys.Project.MEETINGS)){
-			ArrayList<Meeting> temp = getArguments().getParcelableArrayList(Keys.Project.MEETINGS);
+		if (getArguments() != null
+				&& getArguments().containsKey(Keys.Project.MEETINGS)) {
+			ArrayList<Meeting> temp = getArguments().getParcelableArrayList(
+					Keys.Project.MEETINGS);
 			meetings.addAll(temp);
 			meetingAdpt.notifyDataSetChanged();
-		}else if (ConnectivityUtils.isConnected(getActivity()) && isAdded()) {
+		} else if (ConnectivityUtils.isConnected(getActivity()) && isAdded()) {
 			setHasOptionsMenu(true);
 			populateList();
 		}
@@ -124,9 +125,11 @@ public class MeetingsFragment extends Fragment implements
 		setupSwipeList();
 	}
 
-	private void loadMeeting (Meeting meeting) {
-		while (meeting.getEndTimeInMillis() == 0L);
-		Intent viewMeeting = new Intent(getActivity(), ViewMeetingActivity.class);
+	private void loadMeeting(Meeting meeting) {
+		while (meeting.getEndTimeInMillis() == 0L)
+			;
+		Intent viewMeeting = new Intent(getActivity(),
+				ViewMeetingActivity.class);
 		viewMeeting.putExtra(Keys.Meeting.PARCEL, meeting);
 		startActivityForResult(viewMeeting, 6);
 	}
@@ -194,7 +197,7 @@ public class MeetingsFragment extends Fragment implements
 		mListView.setSwipeDirection(EnhancedListView.SwipeDirection.BOTH);
 	}
 
-	protected void deleteMeeting(Meeting item){
+	protected void deleteMeeting(Meeting item) {
 		MeetingVolleyAdapter.deleteMeeting(item.getID());
 		meetings.remove(item);
 		meetingAdpt.notifyDataSetChanged();
@@ -215,8 +218,7 @@ public class MeetingsFragment extends Fragment implements
 	public boolean onContextItemSelected(MenuItem item) {
 		int position = item.getItemId();
 		boolean handled = false;
-		AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) item
-				.getMenuInfo();
+		item.getMenuInfo();
 		if (item.getGroupId() == MainActivity.DrawerLabel.MEETINGS
 				.getPosition()) {
 			switch (item.getOrder()) {
@@ -259,16 +261,16 @@ public class MeetingsFragment extends Fragment implements
 
 					if (data.getStringExtra("method").equals("update")) {
 						Log.d(TAG, "Updating Meeting");
-						if (listPosition != -1){
+						if (listPosition != -1) {
 							updateMeeting(listPosition, created);
-						}else{
+						} else {
 							updateMeeting(created);
 						}
 
 					} else if (data.getStringExtra("method").equals("insert")) {
-						 Log.d(TAG, "Inserting Meeting");
+						Log.d(TAG, "Inserting Meeting");
 						// created = mySQLiteAdapter.insertMeeting(created);
-						 populateList();
+						populateList();
 					}
 				}
 			} else {

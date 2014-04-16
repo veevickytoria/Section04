@@ -45,12 +45,6 @@ import android.view.View;
  */
 public class ColorChipView extends View {
 
-	private static final String TAG = "ColorChipView";
-	// Style of drawing
-	// Full rectangle for accepted events
-	// Border for tentative events
-	// Cross-hatched with 50% transparency for declined events
-
 	public static final int DRAW_FULL = 0;
 	public static final int DRAW_BORDER = 1;
 	public static final int DRAW_FADED = 2;

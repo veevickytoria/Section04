@@ -28,9 +28,6 @@ import com.meetingninja.csse.database.Keys;
 
 public class SQLiteMeetingAdapter extends SQLiteHelper {
 
-	private static final String TAG = SQLiteMeetingAdapter.class
-			.getSimpleName();
-
 	private SQLiteHelper mDbHelper;
 	private SQLiteDatabase mDb;
 

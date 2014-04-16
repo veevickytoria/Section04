@@ -1,5 +1,6 @@
 package com.doomonafireball.betterpickers.hmspicker;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
@@ -86,6 +87,7 @@ public class HmsPicker extends LinearLayout implements Button.OnClickListener,
 	 * @param themeResId
 	 *            the resource ID of the new style
 	 */
+	@SuppressLint("Recycle")
 	public void setTheme(int themeResId) {
 		mTheme = themeResId;
 		if (mTheme != -1) {
@@ -142,6 +144,7 @@ public class HmsPicker extends LinearLayout implements Button.OnClickListener,
 		}
 	}
 
+	@SuppressLint("UseValueOf")
 	@Override
 	protected void onFinishInflate() {
 		super.onFinishInflate();
@@ -386,18 +389,6 @@ public class HmsPicker extends LinearLayout implements Button.OnClickListener,
 			dest.writeIntArray(mInput);
 			dest.writeInt(mAmPmState);
 		}
-
-		public static final Creator<SavedState> CREATOR = new Creator<SavedState>() {
-			@Override
-			public SavedState createFromParcel(Parcel in) {
-				return new SavedState(in);
-			}
-
-			@Override
-			public SavedState[] newArray(int size) {
-				return new SavedState[size];
-			}
-		};
 	}
 
 	/**

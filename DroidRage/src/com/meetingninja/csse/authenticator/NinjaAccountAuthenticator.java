@@ -31,13 +31,8 @@ import android.os.Bundle;
  */
 public class NinjaAccountAuthenticator extends AbstractAccountAuthenticator {
 
-	private String TAG = NinjaAccountAuthenticator.class.getSimpleName();
-	private final Context mContext;
-
 	public NinjaAccountAuthenticator(Context context) {
 		super(context);
-
-		mContext = context;
 	}
 
 	@Override

@@ -66,7 +66,6 @@ public class UserListFragment extends Fragment implements TokenListener {
 	private User addedUser;
 	private List<Contact> contacts = new ArrayList<Contact>();
 	private List<Contact> tempDeletedContacts = new ArrayList<Contact>();
-	private List<Contact> viewContacts = new ArrayList<Contact>();
 	private Dialog dlg;
 
 	public UserListFragment() {
@@ -242,10 +241,12 @@ public class UserListFragment extends Fragment implements TokenListener {
 		fetcher.execute(SessionManager.getUserID());
 		// TODO: also remeve tempDeletedContacts
 	}
-	private void setUpListOnDismiss(View v){
+
+	private void setUpListOnDismiss(View v) {
 		l.setDismissCallback(new de.timroes.android.listview.EnhancedListView.OnDismissCallback() {
 			@Override
-			public EnhancedListView.Undoable onDismiss(EnhancedListView listView, final int position) {
+			public EnhancedListView.Undoable onDismiss(
+					EnhancedListView listView, final int position) {
 
 				final Contact item = mContactAdapter.getItem(position);
 				tempDeletedContacts.add(item);
@@ -277,10 +278,13 @@ public class UserListFragment extends Fragment implements TokenListener {
 		l.setUndoHideDelay(5000);
 		l.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View v, int position,long id) {
+			public void onItemClick(AdapterView<?> arg0, View v, int position,
+					long id) {
 				User clicked = mContactAdapter.getItem(position).getContact();
-				Intent profileIntent = new Intent(v.getContext(), ProfileActivity.class);
-				profileIntent.putExtra(Keys.User.PARCEL, new UserParcel(clicked));
+				Intent profileIntent = new Intent(v.getContext(),
+						ProfileActivity.class);
+				profileIntent.putExtra(Keys.User.PARCEL,
+						new UserParcel(clicked));
 				startActivity(profileIntent);
 			}
 		});
@@ -291,7 +295,8 @@ public class UserListFragment extends Fragment implements TokenListener {
 	}
 
 	private void setUpAutoCompelete(View v) {
-		mContactAdapter = new ContactArrayAdapter(getActivity(), R.layout.list_item_user, contacts);
+		mContactAdapter = new ContactArrayAdapter(getActivity(),
+				R.layout.list_item_user, contacts);
 
 		l = (EnhancedListView) v.findViewById(R.id.contacts_list);
 		l.setAdapter(mContactAdapter);
@@ -305,11 +310,13 @@ public class UserListFragment extends Fragment implements TokenListener {
 			}
 
 			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,	int after) {
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
 			}
 
 			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
 			}
 		});
 		setUpListOnDismiss(v);
@@ -318,11 +325,9 @@ public class UserListFragment extends Fragment implements TokenListener {
 	final class RetContactsObj implements AsyncResponse<List<Contact>> {
 
 		private GetContactsTask contactsFetcher;
-		private boolean add;
 
 		public RetContactsObj(boolean add) {
 			contactsFetcher = new GetContactsTask(this);
-			this.add = add;
 		}
 
 		public void execute(String userID) {

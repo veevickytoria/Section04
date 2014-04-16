@@ -21,7 +21,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 public class LogoutFragment extends Fragment {
 	private final String TAG = LogoutFragment.class.getSimpleName();

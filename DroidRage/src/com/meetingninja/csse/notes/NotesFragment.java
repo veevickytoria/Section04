@@ -59,7 +59,6 @@ public class NotesFragment extends Fragment implements
 
 	private static final String TAG = NotesFragment.class.getSimpleName();
 
-	private SessionManager session = SessionManager.getInstance();
 	private NoteArrayAdapter noteAdpt;
 	private ImageButton notesImageButton;
 	private SQLiteNoteAdapter mySQLiteAdapter;
@@ -158,7 +157,7 @@ public class NotesFragment extends Fragment implements
 							ContextMenuInfo menuInfo) {
 						AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) menuInfo;
 
-						Note n = noteAdpt.getItem(aInfo.position);
+						noteAdpt.getItem(aInfo.position);
 						menu.setHeaderTitle("Note options");
 						String[] labels = new String[] { "Edit", "Delete",
 								"Merge" };
@@ -265,11 +264,11 @@ public class NotesFragment extends Fragment implements
 		if (requestCode == 1) { // EditNoteActivity
 			if (resultCode == Activity.RESULT_OK) {
 				if (data != null) {
-					int listPosition = data.getIntExtra("listPosition", -1);
+					data.getIntExtra("listPosition", -1);
 					Note editedNote = new ParcelDataFactory(data.getExtras())
 							.getNote();
 
-					int _id = Integer.valueOf(editedNote.getID());
+					Integer.valueOf(editedNote.getID());
 
 					// if (listPosition != -1)
 					// updateNote(listPosition, editedNote);
@@ -337,10 +336,7 @@ public class NotesFragment extends Fragment implements
 
 	private class UpdateNoteTask extends AsyncTask<Note, Void, List<Note>> {
 
-		private AsyncResponse<List<Note>> delegate;
-
 		public UpdateNoteTask(AsyncResponse<List<Note>> del) {
-			this.delegate = del;
 		}
 
 		@Override

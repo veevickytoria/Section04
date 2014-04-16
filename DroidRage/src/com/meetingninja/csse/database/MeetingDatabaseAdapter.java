@@ -23,14 +23,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import objects.Meeting;
-import objects.User;
 import android.net.Uri;
 import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.meetingninja.csse.database.volley.UserVolleyAdapter;
 
 public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 	private final static String TAG = MeetingDatabaseAdapter.class
@@ -56,8 +54,7 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 		conn.setRequestMethod("GET");
 		addRequestHeader(conn, false);
 
-		// Get server response
-		int responseCode = conn.getResponseCode();
+		conn.getResponseCode();
 		String response = getServerResponse(conn);
 		JsonNode meetingNode = MAPPER.readTree(response);
 
@@ -78,8 +75,9 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 				Keys.Meeting.OTHEREND, meeting.getEndTime());
 		String descPayload = getEditPayload(meetingID, Keys.Meeting.DESC,
 				meeting.getDescription());
-//		 String attendancePayload =
-//		 getEditPayload(meetingID, Keys.Meeting.ATTEND,meeting.getAttendance());
+		// String attendancePayload =
+		// getEditPayload(meetingID,
+		// Keys.Meeting.ATTEND,meeting.getAttendance());
 
 		// TODO: ByteArrayOutputStream json = new ByteArrayOutputStream();
 		// PrintStream ps = new PrintStream(json);
@@ -173,12 +171,10 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 		jgen.writeStringField(Keys.Meeting.DESC, m.getDescription());
 		jgen.writeArrayFieldStart(Keys.Meeting.ATTEND);
 		// TODO: Add attendees to meeting
-		// for (String attendee : m.getAttendance()) {
-		// if (attendee.isAttending()) {
+		// for (User attendee : m.getAttendance()) {
 		jgen.writeStartObject();
 		jgen.writeStringField(Keys.User.ID, userID);
 		jgen.writeEndObject();
-		// }
 		// }
 		jgen.writeEndArray();
 		jgen.writeEndObject();
@@ -188,8 +184,7 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 		String payload = json.toString("UTF8");
 		ps.close();
 
-		// send payload
-		int responseCode = sendPostPayload(conn, payload);
+		sendPostPayload(conn, payload);
 		String response = getServerResponse(conn);
 
 		// prepare to get the id of the created Meeting
@@ -227,7 +222,7 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 		if (attendance != null && attendance.isArray()) {
 			for (final JsonNode attendeeNode : attendance) {
 				String _id = attendeeNode.get("userID").asText();
-					m.addAttendeeWithID(_id);
+				m.addAttendeeWithID(_id);
 			}
 		} else
 			Log.e(TAG, "Error: Unable to parse meeting attendance");

@@ -1,5 +1,6 @@
 package com.doomonafireball.betterpickers.hmspicker;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
@@ -16,8 +17,6 @@ public class HmsView extends LinearLayout {
 	private ZeroTopPaddingTextView mMinutesOnes, mMinutesTens;
 	private ZeroTopPaddingTextView mSecondsOnes, mSecondsTens;
 	private final Typeface mAndroidClockMonoThin;
-	private Typeface mOriginalHoursTypeface;
-
 	private ColorStateList mTextColor;
 
 	/**
@@ -55,6 +54,7 @@ public class HmsView extends LinearLayout {
 	 * @param themeResId
 	 *            the resource ID for theming
 	 */
+	@SuppressLint("Recycle")
 	public void setTheme(int themeResId) {
 		if (themeResId != -1) {
 			TypedArray a = getContext().obtainStyledAttributes(themeResId,
@@ -95,7 +95,7 @@ public class HmsView extends LinearLayout {
 		mSecondsTens = (ZeroTopPaddingTextView) findViewById(R.id.seconds_tens);
 		mSecondsOnes = (ZeroTopPaddingTextView) findViewById(R.id.seconds_ones);
 		if (mHoursOnes != null) {
-			mOriginalHoursTypeface = mHoursOnes.getTypeface();
+			mHoursOnes.getTypeface();
 			mHoursOnes.updatePaddingForBoldDate();
 		}
 		if (mMinutesTens != null) {

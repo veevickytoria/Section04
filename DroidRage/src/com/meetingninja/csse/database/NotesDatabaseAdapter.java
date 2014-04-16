@@ -20,8 +20,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
-import objects.Comment;
 import objects.Note;
 import android.net.Uri;
 import android.util.Log;
@@ -53,8 +51,7 @@ public class NotesDatabaseAdapter extends BaseDatabaseAdapter {
 		conn.setRequestMethod(IRequest.GET);
 		addRequestHeader(conn, false);
 
-		// Get server response
-		int responseCode = conn.getResponseCode();
+		conn.getResponseCode();
 		String response = getServerResponse(conn);
 
 		return parseNote(MAPPER.readTree(response));
@@ -93,8 +90,7 @@ public class NotesDatabaseAdapter extends BaseDatabaseAdapter {
 		String payload = json.toString("UTF8");
 		ps.close();
 
-		// Send payload
-		int responseCode = sendPostPayload(conn, payload);
+		sendPostPayload(conn, payload);
 		String response = getServerResponse(conn);
 
 		String _id = null;
@@ -118,8 +114,8 @@ public class NotesDatabaseAdapter extends BaseDatabaseAdapter {
 		// add request header
 		conn.setRequestMethod(IRequest.DELETE);
 		addRequestHeader(conn, false);
-		
-		int responseCode = conn.getResponseCode();
+
+		conn.getResponseCode();
 		String response = getServerResponse(conn);
 
 		boolean result = false;

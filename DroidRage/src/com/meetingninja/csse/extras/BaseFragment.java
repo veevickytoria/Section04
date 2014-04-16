@@ -26,8 +26,6 @@ public class BaseFragment extends Fragment {
 		public void onPostExecute();
 	}
 
-	private TaskCallbacks mCallbacks;
-
 	/**
 	 * Android passes us a reference to the newly created Activity by calling
 	 * this method after each configuration change.
@@ -40,11 +38,6 @@ public class BaseFragment extends Fragment {
 			throw new IllegalStateException(
 					"Activity must implement the TaskCallbacks interface.");
 		}
-
-		// Hold a reference to the parent Activity so we can report back the
-		// task's
-		// current progress and results.
-		mCallbacks = (TaskCallbacks) activity;
 	}
 
 	/**

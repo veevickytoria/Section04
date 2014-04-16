@@ -40,8 +40,6 @@ import com.meetingninja.csse.R;
 public class YearPickerView extends ListView implements OnItemClickListener,
 		OnDateChangedListener {
 
-	private static final String TAG = "YearPickerView";
-
 	private final CalendarDatePickerController mController;
 	private YearAdapter mAdapter;
 	private int mViewSize;

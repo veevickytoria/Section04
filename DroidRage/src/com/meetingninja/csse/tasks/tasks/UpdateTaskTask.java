@@ -26,7 +26,6 @@ import com.meetingninja.csse.database.TaskDatabaseAdapter;
 
 public class UpdateTaskTask implements AsyncResponse<Task> {
 	private TaskUpdateTask updater;
-	private Task task;
 
 	public UpdateTaskTask() {
 		this.updater = new TaskUpdateTask(this);

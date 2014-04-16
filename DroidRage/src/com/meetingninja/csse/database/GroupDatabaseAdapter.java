@@ -52,15 +52,15 @@ public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
 		conn.setRequestMethod("GET");
 		addRequestHeader(conn, false);
 
-		// Get server response
-		int responseCode = conn.getResponseCode();
+		conn.getResponseCode();
 		String response = getServerResponse(conn);
 		JsonNode groupNode = MAPPER.readTree(response);
 
 		return parseGroup(groupNode, new Group());
 	}
 
-	public static Group createGroup(Group g) throws IOException, MalformedURLException {
+	public static Group createGroup(Group g) throws IOException,
+			MalformedURLException {
 		// Server URL setup
 		String _url = getBaseUri().build().toString();
 
@@ -96,8 +96,7 @@ public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
 		String payload = json.toString("UTF8");
 		ps.close();
 
-		// send payload
-		int responseCode = sendPostPayload(conn, payload);
+		sendPostPayload(conn, payload);
 		String response = getServerResponse(conn);
 
 		// prepare to get the id of the created Meeting
@@ -161,29 +160,26 @@ public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
 
 		return parseGroup(groupNode, new Group());
 	}
-	
-	public static Boolean deleteGroup(String groupID) throws IOException{
+
+	public static Boolean deleteGroup(String groupID) throws IOException {
 		String _url = getBaseUri().appendPath(groupID).build().toString();
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-		
+
 		conn.setRequestMethod(IRequest.DELETE);
-		addRequestHeader(conn,false);
-		int responseCode = conn.getResponseCode();
+		addRequestHeader(conn, false);
+		conn.getResponseCode();
 		String response = getServerResponse(conn);
 		boolean result = false;
 		JsonNode tree = MAPPER.readTree(response);
-		if(!response.isEmpty()){
-			if(!tree.has(Keys.DELETED)){
-				result=true;
+		if (!response.isEmpty()) {
+			if (!tree.has(Keys.DELETED)) {
+				result = true;
 			}
 		}
 		conn.disconnect();
 		return result;
-		
-		
-		
-		
+
 	}
 
 	private static String sendSingleEdit(String payload) throws IOException {

@@ -5,7 +5,6 @@ import java.io.IOException;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.GroupDatabaseAdapter;
 
 public class GroupDeleteTask {
@@ -22,15 +21,15 @@ public class GroupDeleteTask {
 }
 
 class AsyncGroupDeleteTask extends AsyncTask<String, Void, Boolean> {
-//	private AsyncResponse<Group> delegate;
+	// private AsyncResponse<Group> delegate;
 
 	public AsyncGroupDeleteTask() {
-//		this.delegate = delegate;
+		// this.delegate = delegate;
 	}
 
 	@Override
 	protected Boolean doInBackground(String... params) {
-		boolean success=false;
+		boolean success = false;
 		try {
 			success = GroupDatabaseAdapter.deleteGroup(params[0]);
 		} catch (IOException e) {
@@ -43,7 +42,7 @@ class AsyncGroupDeleteTask extends AsyncTask<String, Void, Boolean> {
 	@Override
 	protected void onPostExecute(Boolean success) {
 		super.onPostExecute(success);
-//		delegate.processFinish(g);
+		// delegate.processFinish(g);
 	}
 
 }

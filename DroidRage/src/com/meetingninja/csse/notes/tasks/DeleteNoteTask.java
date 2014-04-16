@@ -1,13 +1,9 @@
 package com.meetingninja.csse.notes.tasks;
 
 import java.io.IOException;
-import java.util.List;
-
-import objects.Note;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.NotesDatabaseAdapter;
 
 public class DeleteNoteTask extends AsyncTask<String, Void, Boolean> {

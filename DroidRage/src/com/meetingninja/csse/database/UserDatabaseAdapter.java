@@ -82,8 +82,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		conn.setRequestMethod(IRequest.GET);
 		addRequestHeader(conn, false);
 
-		// Get server response
-		int responseCode = conn.getResponseCode();
+		conn.getResponseCode();
 		String response = getServerResponse(conn);
 		JsonNode userNode = MAPPER.readTree(response);
 
@@ -128,8 +127,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		String payload = json.toString("UTF8");
 		ps.close();
 
-		// Send payload
-		int responseCode = sendPostPayload(conn, payload);
+		sendPostPayload(conn, payload);
 		String response = getServerResponse(conn);
 
 		/*
@@ -164,8 +162,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		conn.setRequestMethod(IRequest.GET);
 		addRequestHeader(conn, false);
 
-		// Get server response
-		int responseCode = conn.getResponseCode();
+		conn.getResponseCode();
 		String response = getServerResponse(conn);
 
 		Schedule sched = parseSchedule(MAPPER.readTree(response));
@@ -188,8 +185,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		conn.setRequestMethod("GET");
 		addRequestHeader(conn, false);
 
-		// Get server response
-		int responseCode = conn.getResponseCode();
+		conn.getResponseCode();
 		String response = getServerResponse(conn);
 
 		// Initialize ObjectMapper
@@ -226,8 +222,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		conn.setRequestMethod(IRequest.GET);
 		addRequestHeader(conn, false);
 
-		// Get server response
-		int responseCode = conn.getResponseCode();
+		conn.getResponseCode();
 		String response = getServerResponse(conn);
 
 		List<User> userList = new ArrayList<User>();
@@ -260,8 +255,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		conn.setRequestMethod(IRequest.GET);
 		addRequestHeader(conn, false);
 
-		// Get server response
-		int responseCode = conn.getResponseCode();
+		conn.getResponseCode();
 		String response = getServerResponse(conn);
 
 		System.out.println("yes");
@@ -301,8 +295,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		conn.setRequestMethod(IRequest.GET);
 		addRequestHeader(conn, false);
 
-		// Get server response
-		int responseCode = conn.getResponseCode();
+		conn.getResponseCode();
 		String response = getServerResponse(conn);
 		// Initialize ObjectMapper
 		List<Project> projectList = new ArrayList<Project>();
@@ -336,8 +329,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		conn.setRequestMethod(IRequest.GET);
 		addRequestHeader(conn, false);
 
-		// Get server response
-		int responseCode = conn.getResponseCode();
+		conn.getResponseCode();
 		String response = getServerResponse(conn);
 
 		// Initialize ObjectMapper
@@ -348,8 +340,8 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 
 		if (noteArray.isArray()) {
 			for (final JsonNode noteNode : noteArray) {
-				Note noteObj = NotesDatabaseAdapter.getNote(JsonUtils.getJSONValue(
-						noteNode, Keys.Note.ID));
+				Note noteObj = NotesDatabaseAdapter.getNote(JsonUtils
+						.getJSONValue(noteNode, Keys.Note.ID));
 				noteObj.setCreatedBy(JsonUtils.getJSONValue(noteNode,
 						Keys.Note.CREATED_BY));
 				if (noteObj != null) {
@@ -365,9 +357,11 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		return noteList;
 	}
 
-	public static List<Task> getTasks(String userID) throws JsonParseException,	JsonMappingException, IOException {
+	public static List<Task> getTasks(String userID) throws JsonParseException,
+			JsonMappingException, IOException {
 		// Server URL setup
-		String _url = getBaseUri().appendPath("Tasks").appendPath(userID).build().toString();
+		String _url = getBaseUri().appendPath("Tasks").appendPath(userID)
+				.build().toString();
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
@@ -375,13 +369,13 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		conn.setRequestMethod(IRequest.GET);
 		addRequestHeader(conn, false);
 
-		// Get server response
-		int responseCode = conn.getResponseCode();
+		conn.getResponseCode();
 		String response = getServerResponse(conn);
 
 		// Initialize ObjectMapper
 		List<Task> taskList = new ArrayList<Task>();
-		final JsonNode taskArray = MAPPER.readTree(response).get(Keys.Task.LIST);
+		final JsonNode taskArray = MAPPER.readTree(response)
+				.get(Keys.Task.LIST);
 
 		if (taskArray.isArray()) {
 			for (final JsonNode taskNode : taskArray) {
@@ -394,7 +388,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 			Log.e(TAG, "Error parsing user's task list");
 		}
 		List<Task> result = new ArrayList<Task>();
-		
+
 		conn.disconnect();
 		for (Task t : taskList) {
 			Task task = TaskDatabaseAdapter.getTask(t.getID());
@@ -449,8 +443,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		String payload = json.toString("UTF8");
 		ps.close();
 
-		// Send payload
-		int responseCode = sendPostPayload(conn, payload);
+		sendPostPayload(conn, payload);
 		String response = getServerResponse(conn);
 
 		User createUser = new User(registerMe);

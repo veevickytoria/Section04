@@ -31,17 +31,15 @@ import android.os.Bundle;
  * 
  */
 public class StubSyncAdapter extends AbstractThreadedSyncAdapter {
-	private final AccountManager mAccountManager;
-
 	public StubSyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);
-		mAccountManager = AccountManager.get(context);
+		AccountManager.get(context);
 	}
 
 	public StubSyncAdapter(Context context, boolean autoInitialize,
 			boolean allowParallelSyncs) {
 		super(context, autoInitialize, allowParallelSyncs);
-		mAccountManager = AccountManager.get(context);
+		AccountManager.get(context);
 	}
 
 	@Override

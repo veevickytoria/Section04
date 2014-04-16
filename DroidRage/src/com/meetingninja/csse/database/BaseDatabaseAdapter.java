@@ -96,7 +96,8 @@ public abstract class BaseDatabaseAdapter {
 		return response.toString();
 	}
 
-	protected static String updateHelper(String updateURL, String jsonPayload) throws IOException {
+	protected static String updateHelper(String updateURL, String jsonPayload)
+			throws IOException {
 		URL url = new URL(updateURL);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
@@ -104,7 +105,6 @@ public abstract class BaseDatabaseAdapter {
 		conn.setRequestMethod(IRequest.PUT);
 		addRequestHeader(conn, true);
 
-		int responseCode = sendPostPayload(conn, jsonPayload);
 		String response = getServerResponse(conn);
 		conn.disconnect();
 		return response;

@@ -11,12 +11,10 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.meetingninja.csse.R;
-import com.meetingninja.csse.database.Keys;
 
 public class ViewNoteActivity extends Activity {
 
 	private Bundle extras;
-	private String noteName;
 	private TextView contentsText;
 	private TextView titleText;
 	private TextView creatorText;

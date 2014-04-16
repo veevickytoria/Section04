@@ -612,8 +612,6 @@ public class RadialPickerLayout extends FrameLayout implements OnTouchListener {
 		final Boolean[] isInnerCircle = new Boolean[1];
 		isInnerCircle[0] = false;
 
-		long millis = SystemClock.uptimeMillis();
-
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
 			if (!mInputEnabled) {
@@ -833,6 +831,7 @@ public class RadialPickerLayout extends FrameLayout implements OnTouchListener {
 	/**
 	 * Announce the currently-selected time when launched.
 	 */
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean dispatchPopulateAccessibilityEvent(AccessibilityEvent event) {
 		if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {

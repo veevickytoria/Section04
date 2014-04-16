@@ -13,7 +13,6 @@ import com.meetingninja.csse.database.ProjectDatabaseAdapter;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
 import de.timroes.android.listview.EnhancedListView;
 
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
@@ -35,17 +34,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class ProjectFragment extends Fragment{
+public class ProjectFragment extends Fragment {
 
-
-	private static ProjectFragment sInstance= null;
+	private static ProjectFragment sInstance = null;
 	private List<Project> projectsList = new ArrayList<Project>();
 	private ProjectItemAdapter projectAdpt;
-	private SessionManager session;
 	private EnhancedListView l;
+
 	public ProjectFragment() {
 		// Empty
 	}
+
 	public static ProjectFragment getInstance() {
 		if (sInstance == null) {
 			sInstance = new ProjectFragment();
@@ -54,11 +53,12 @@ public class ProjectFragment extends Fragment{
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		//		super.onCreate(savedInstanceState);
-		//		setContentView(R.layout.activity_project_fragment);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		// super.onCreate(savedInstanceState);
+		// setContentView(R.layout.activity_project_fragment);
 		setHasOptionsMenu(true);
-		session = SessionManager.getInstance();
+		SessionManager.getInstance();
 		View v = inflater.inflate(R.layout.fragment_project, container, false);
 		setUpListView(v);
 
@@ -66,6 +66,7 @@ public class ProjectFragment extends Fragment{
 		return v;
 
 	}
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == Activity.RESULT_OK) {
@@ -93,45 +94,51 @@ public class ProjectFragment extends Fragment{
 			return super.onContextItemSelected(item);
 		}
 	}
-	public void setProjects(List<Project> listOfProjects){
+
+	public void setProjects(List<Project> listOfProjects) {
 		projectsList.clear();
 		projectsList.addAll(listOfProjects);
 		projectAdpt.notifyDataSetChanged();
 	}
-	public void createProjectOption(){
-		final EditText title = new EditText(getActivity());
-		//      title.setText(getProjectTitle());
-		new AlertDialog.Builder(getActivity()).setTitle("Enter a title").setPositiveButton("OK", new OnClickListener() {
 
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				createProject(title.getText().toString());
-			}
-		}).setNegativeButton("Cancel", new OnClickListener(){
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.cancel();
-			}
-		}).setView(title).show();
-		
+	public void createProjectOption() {
+		final EditText title = new EditText(getActivity());
+		// title.setText(getProjectTitle());
+		new AlertDialog.Builder(getActivity()).setTitle("Enter a title")
+				.setPositiveButton("OK", new OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						createProject(title.getText().toString());
+					}
+				}).setNegativeButton("Cancel", new OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.cancel();
+					}
+				}).setView(title).show();
+
 	}
-	public void createProject(String title){
+
+	public void createProject(String title) {
 		Project project = new Project();
 		project.setProjectTitle(title);
-		new AsyncTask<Project,Void,Project>(){
+		new AsyncTask<Project, Void, Project>() {
 			@Override
 			protected void onPostExecute(Project p) {
 				super.onPostExecute(p);
 				Intent i = new Intent(getActivity(), ViewProjectActivity.class);
 				i.putExtra(Keys.Project.PARCEL, p);
 				startActivityForResult(i, 7);
-				//TODO: check if you add yourself to a project if it automatically updates fragment list
+				// TODO: check if you add yourself to a project if it
+				// automatically updates fragment list
 			}
+
 			@Override
-			protected Project doInBackground(Project... params){
+			protected Project doInBackground(Project... params) {
 				Project p = new Project();
 				try {
-					p=ProjectDatabaseAdapter.createProject(params[0]);
+					p = ProjectDatabaseAdapter.createProject(params[0]);
 				} catch (IOException e) {
 					System.out.println("failed to create project");
 					e.printStackTrace();
@@ -140,20 +147,21 @@ public class ProjectFragment extends Fragment{
 			}
 
 		}.execute(project);
-		
+
 	}
 
 	private void refreshProjects() {
 
-		new AsyncTask<String,Void,List<Project>>(){
+		new AsyncTask<String, Void, List<Project>>() {
 			@Override
 			protected void onPostExecute(List<Project> projectList) {
 				super.onPostExecute(projectList);
 				Collections.sort(projectList);
 				setProjects(projectList);
 			}
+
 			@Override
-			protected List<Project> doInBackground(String... params){
+			protected List<Project> doInBackground(String... params) {
 				List<Project> projectList = new ArrayList<Project>();
 				try {
 					projectList = UserDatabaseAdapter.getProject(params[0]);
@@ -161,10 +169,11 @@ public class ProjectFragment extends Fragment{
 					System.out.println("failed to get projects");
 					e.printStackTrace();
 				}
-				for(int i=0;i<projectList.size();i++){
-					Project p=null;
+				for (int i = 0; i < projectList.size(); i++) {
+					Project p = null;
 					try {
-						p=ProjectDatabaseAdapter.getProject(projectList.get(i));
+						p = ProjectDatabaseAdapter.getProject(projectList
+								.get(i));
 					} catch (IOException e) {
 						System.out.println("fialed to get project info");
 						e.printStackTrace();
@@ -177,12 +186,13 @@ public class ProjectFragment extends Fragment{
 		}.execute(SessionManager.getUserID());
 
 	}
+
 	private void deleteProject(Project p) {
 
-		new AsyncTask<Project,Void,Void>(){
+		new AsyncTask<Project, Void, Void>() {
 
 			@Override
-			protected Void doInBackground(Project... params){
+			protected Void doInBackground(Project... params) {
 				try {
 					ProjectDatabaseAdapter.deleteProject(params[0]);
 				} catch (IOException e) {
@@ -195,10 +205,11 @@ public class ProjectFragment extends Fragment{
 	}
 
 	private void loadProject(Project project) {
-		//		while (project.getEndTimeInMillis() == 0L);
-		Intent viewProject = new Intent(getActivity(), ViewProjectActivity.class);
+		// while (project.getEndTimeInMillis() == 0L);
+		Intent viewProject = new Intent(getActivity(),
+				ViewProjectActivity.class);
 		viewProject.putExtra(Keys.Project.PARCEL, project);
-		startActivityForResult(viewProject, 6);	
+		startActivityForResult(viewProject, 6);
 	}
 
 	@Override
@@ -207,27 +218,30 @@ public class ProjectFragment extends Fragment{
 	}
 
 	private void setUpListView(View v) {
-		projectAdpt = new ProjectItemAdapter(getActivity(),R.layout.list_item_task, projectsList);
+		projectAdpt = new ProjectItemAdapter(getActivity(),
+				R.layout.list_item_task, projectsList);
 
 		l = (EnhancedListView) v.findViewById(R.id.project_list);
 		l.setAdapter(projectAdpt);
 		l.setEmptyView(v.findViewById(android.R.id.empty));
-		//		final EditText input = (EditText) v.findViewById(R.id.my_autocomplete);
+		// final EditText input = (EditText)
+		// v.findViewById(R.id.my_autocomplete);
 
 		l.setDismissCallback(new de.timroes.android.listview.EnhancedListView.OnDismissCallback() {
 			@Override
-			public EnhancedListView.Undoable onDismiss(EnhancedListView listView, final int position) {
+			public EnhancedListView.Undoable onDismiss(
+					EnhancedListView listView, final int position) {
 
 				final Project item = projectAdpt.getItem(position);
-				//				tempDeletedContacts.add(item);
+				// tempDeletedContacts.add(item);
 				projectsList.remove(item);
-				//				projectAdpt.remove(item);
+				// projectAdpt.remove(item);
 
 				return new EnhancedListView.Undoable() {
 					@Override
 					public void undo() {
 						projectsList.add(item);
-						//						tempDeletedContacts.remove(item);
+						// tempDeletedContacts.remove(item);
 						projectAdpt.notifyDataSetChanged();
 					}
 
@@ -239,7 +253,7 @@ public class ProjectFragment extends Fragment{
 					@Override
 					public void discard() {
 						deleteProject(item);
-						//						tempDeletedContacts.remove(item);
+						// tempDeletedContacts.remove(item);
 
 					}
 				};
@@ -249,9 +263,11 @@ public class ProjectFragment extends Fragment{
 		l.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View v, int position,long id) {
-				//				Intent viewProject = new Intent(getActivity(), ViewProjectActivity.class);
-				//				startActivity(viewProject);
+			public void onItemClick(AdapterView<?> arg0, View v, int position,
+					long id) {
+				// Intent viewProject = new Intent(getActivity(),
+				// ViewProjectActivity.class);
+				// startActivity(viewProject);
 				Project p = projectAdpt.getItem(position);
 				loadProject(p);
 			}
@@ -263,15 +279,14 @@ public class ProjectFragment extends Fragment{
 		l.setSwipeDirection(EnhancedListView.SwipeDirection.BOTH);
 	}
 
-
 }
-
 
 class ProjectItemAdapter extends ArrayAdapter<Project> {
 	private List<Project> projects;
 	private Context context;
 
-	public ProjectItemAdapter(Context context, int textViewResourceId,	List<Project> projects) {
+	public ProjectItemAdapter(Context context, int textViewResourceId,
+			List<Project> projects) {
 		super(context, textViewResourceId, projects);
 		this.context = context;
 		this.projects = projects;
@@ -304,14 +319,16 @@ class ProjectItemAdapter extends ArrayAdapter<Project> {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View rowView = convertView;
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater inflater = (LayoutInflater) context
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		if (rowView == null) {
 			rowView = inflater.inflate(R.layout.list_item_project, null);
 			viewHolder = new ViewHolder();
-			viewHolder.title = (TextView) rowView.findViewById(R.id.list_project_title);
+			viewHolder.title = (TextView) rowView
+					.findViewById(R.id.list_project_title);
 
 			rowView.setTag(viewHolder);
-		} else{
+		} else {
 			viewHolder = (ViewHolder) rowView.getTag();
 		}
 

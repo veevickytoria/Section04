@@ -51,7 +51,6 @@ public abstract class TouchExplorationHelper<T> extends
 
 	private View mParentView;
 	private int mFocusedItemId = INVALID_ID;
-	private T mCurrentItem = null;
 
 	/**
 	 * Constructs a new touch exploration helper.
@@ -220,26 +219,9 @@ public abstract class TouchExplorationHelper<T> extends
 	 * return false; }
 	 */
 
-	private void setCurrentItem(T item) {
-		if (mCurrentItem == item) {
-			return;
-		}
-
-		if (mCurrentItem != null) {
-			sendEventForItem(mCurrentItem,
-					AccessibilityEvent.TYPE_VIEW_HOVER_EXIT);
-		}
-
-		mCurrentItem = item;
-
-		if (mCurrentItem != null) {
-			sendEventForItem(mCurrentItem,
-					AccessibilityEvent.TYPE_VIEW_HOVER_ENTER);
-		}
-	}
-
 	private AccessibilityEvent getEventForItem(T item, int eventType) {
 		final AccessibilityEvent event = AccessibilityEvent.obtain(eventType);
+		@SuppressWarnings("deprecation")
 		final AccessibilityRecordCompat record = new AccessibilityRecordCompat(
 				event);
 		final int virtualDescendantId = getIdForItem(item);

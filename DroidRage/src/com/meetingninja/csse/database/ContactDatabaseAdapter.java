@@ -53,8 +53,7 @@ public class ContactDatabaseAdapter extends BaseDatabaseAdapter {
 
 		conn.setRequestMethod(IRequest.GET);
 		addRequestHeader(conn, false);
-		// Get server response
-		int responseCode = conn.getResponseCode();
+		conn.getResponseCode();
 		String response = getServerResponse(conn);
 		List<Contact> contacts = new ArrayList<Contact>();
 		List<String> contactIds = new ArrayList<String>();
@@ -109,7 +108,7 @@ public class ContactDatabaseAdapter extends BaseDatabaseAdapter {
 		ps.close();
 
 		sendPostPayload(conn, payload);
-		String response = getServerResponse(conn);
+		getServerResponse(conn);
 
 		// TODO: put add useful check here
 		// User userContact=null;
@@ -136,7 +135,8 @@ public class ContactDatabaseAdapter extends BaseDatabaseAdapter {
 		return contacts;
 	}
 
-	public static List<Contact> deleteContact(String relationID) throws IOException {
+	public static List<Contact> deleteContact(String relationID)
+			throws IOException {
 
 		String _url = getBaseUri().appendPath("Relations")
 				.appendPath(relationID).build().toString();
@@ -145,14 +145,12 @@ public class ContactDatabaseAdapter extends BaseDatabaseAdapter {
 		conn.setRequestMethod(IRequest.DELETE);
 
 		addRequestHeader(conn, false);
-		int responseCode = conn.getResponseCode();
+		conn.getResponseCode();
 		String response = getServerResponse(conn);
 
-		boolean result = false;
 		JsonNode tree = MAPPER.readTree(response);
 		if (!response.isEmpty()) {
 			if (!tree.has(Keys.DELETED)) {
-				result = true;
 			} else {
 				logError(TAG, tree);
 			}

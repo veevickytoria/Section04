@@ -64,7 +64,6 @@ public class EditMeetingActivity extends FragmentActivity implements
 	private DateTimeFormatter dateFormat = NinjaDateUtils.JODA_APP_DATE_FORMAT;
 	private static ArrayList<User> attendees = new ArrayList<User>();
 
-	private SessionManager session;
 	private Meeting displayedMeeting;
 
 	public static final String EXTRA_TITLE = "title";
@@ -79,7 +78,7 @@ public class EditMeetingActivity extends FragmentActivity implements
 			edit_mode = extras.getBoolean(EXTRA_EDIT_MODE, true);
 			displayedMeeting = extras.getParcelable(EXTRA_MEETING);
 		}
-		session = SessionManager.getInstance();
+		SessionManager.getInstance();
 
 		is24 = android.text.format.DateFormat
 				.is24HourFormat(getApplicationContext());
@@ -139,7 +138,6 @@ public class EditMeetingActivity extends FragmentActivity implements
 
 		}
 	};
-
 	/**
 	 * Set up the {@link android.app.ActionBar}.
 	 */
@@ -286,20 +284,19 @@ public class EditMeetingActivity extends FragmentActivity implements
 			// TODO: newMeeting.setAttendance();
 
 			if (displayedMeeting != null) {
-
-				// UserVolleyAdapter.fetchUserInfo(session.getUserID(), new
-				// AsyncResponse<User>() {
+				// UserVolleyAdapter.fetchUserInfo(SessionManager.getUserID(),
+				// new AsyncResponse<User>() {
 				// @Override
 				// public void processFinish(User result) {
 				// EditMeetingActivity.addUser(result);
 				// }
 				// });
-				//
-				// System.out.println("mattend: "+mattend);
+
+				// System.out.println("mattend: " + mattend);
 				// String userID = mattend.getText().toString();
 				//
-				// UserVolleyAdapter.fetchUserInfo(userID, new
-				// AsyncResponse<User>() {
+				// UserVolleyAdapter.fetchUserInfo(userID,
+				// new AsyncResponse<User>() {
 				// @Override
 				// public void processFinish(User result) {
 				// EditMeetingActivity.addUser(result);
@@ -336,12 +333,13 @@ public class EditMeetingActivity extends FragmentActivity implements
 		}
 	}
 
-	// private static void addUser(User user){
+	// private static void addUser(User user) {
 	// attendees.add(user);
 	// System.out.println("i hope it happens twice first");
 	// }
-	// private static void setUser(User newuser){
-	// System.out.println("got the user: "+newuser);
+
+	// private static void setUser(User newuser) {
+	// System.out.println("got the user: " + newuser);
 	// user = newuser;
 	// }
 

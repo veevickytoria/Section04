@@ -45,7 +45,6 @@ public class ViewMeetingActivity extends Activity {
 	private ListView attendeesList;
 	private DateTimeFormatter dateFormat = NinjaDateUtils.JODA_APP_DATE_FORMAT;
 	private DateTimeFormatter timeFormat;
-	private int resultCode = Activity.RESULT_CANCELED;
 	private Boolean is24;
 	UserArrayAdapter adpt;
 	ArrayList<User> attendance = new ArrayList<User>();
@@ -138,7 +137,6 @@ public class ViewMeetingActivity extends Activity {
 							.getParcelableExtra(Keys.Meeting.PARCEL);
 					getIntent().putExtra(Keys.Meeting.PARCEL, displayedMeeting);
 					setMeeting(displayedMeeting);
-					this.resultCode = resultCode;
 				}
 			} else if (resultCode == RESULT_CANCELED) {
 				// do nothing here
@@ -148,7 +146,8 @@ public class ViewMeetingActivity extends Activity {
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
-		outState.putParcelable(Keys.Meeting.PARCEL, new MeetingParcel(displayedMeeting));
+		outState.putParcelable(Keys.Meeting.PARCEL, new MeetingParcel(
+				displayedMeeting));
 		super.onSaveInstanceState(outState);
 	}
 

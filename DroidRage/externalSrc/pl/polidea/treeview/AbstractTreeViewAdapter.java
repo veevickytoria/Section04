@@ -19,7 +19,7 @@ import com.meetingninja.csse.R;
 
 /**
  * Adapter used to feed the table view.
- *
+ * 
  * @param <T>
  *            class for ID of the tree
  */
@@ -183,7 +183,7 @@ public abstract class AbstractTreeViewAdapter<T> extends BaseAdapter implements
 
 	/**
 	 * Called when new view is to be created.
-	 *
+	 * 
 	 * @param treeNodeInfo
 	 *            node info
 	 * @return view that should be displayed as tree content
@@ -195,7 +195,7 @@ public abstract class AbstractTreeViewAdapter<T> extends BaseAdapter implements
 	 * and fill it in with the data required to display the new information. You
 	 * can also create a new view, which will mean that the old view will not be
 	 * reused.
-	 *
+	 * 
 	 * @param view
 	 *            view that should be updated with the new values
 	 * @param treeNodeInfo
@@ -206,7 +206,7 @@ public abstract class AbstractTreeViewAdapter<T> extends BaseAdapter implements
 
 	/**
 	 * Retrieves background drawable for the node.
-	 *
+	 * 
 	 * @param treeNodeInfo
 	 *            node info
 	 * @return drawable returned as background for the whole row. Might be null,
@@ -225,6 +225,7 @@ public abstract class AbstractTreeViewAdapter<T> extends BaseAdapter implements
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	public final LinearLayout populateTreeItem(final LinearLayout layout,
 			final View childView, final TreeNodeInfo<T> nodeInfo,
 			final boolean newChildView) {

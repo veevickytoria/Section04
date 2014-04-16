@@ -98,8 +98,8 @@ public class ScheduleAdapter extends AmazingAdapter {
 			// dt = Long.parseLong(sectionTitle);
 			// dt = MyDateUtils.JODA_SERVER_DATE_FORMAT
 			// .parseDateTime(sectionTitle);
-			lSectionTitle.setText(NinjaDateUtils.JODA_APP_DATE_FORMAT.print(Long
-					.parseLong(sectionTitle)));
+			lSectionTitle.setText(NinjaDateUtils.JODA_APP_DATE_FORMAT
+					.print(Long.parseLong(sectionTitle)));
 		} else {
 			view.findViewById(R.id.schedule_header).setVisibility(View.GONE);
 		}
@@ -163,8 +163,8 @@ public class ScheduleAdapter extends AmazingAdapter {
 
 	@Override
 	public int getSectionForPosition(int position) {
-		Event event = getItem(position);
-		String[] dates = getSections();
+		getItem(position);
+		getSections();
 		// for (int i = 0; i < events.size(); i++) {
 		// if (TextUtils.equals(convertDate(e.getStartTime()), dates[i])) {
 		// return i;

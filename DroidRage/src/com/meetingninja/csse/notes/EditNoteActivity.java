@@ -51,12 +51,9 @@ import com.meetingninja.csse.extras.NinjaDateUtils;
 
 public class EditNoteActivity extends Activity implements AsyncResponse<String> {
 
-	private static final String TAG = EditNoteActivity.class.getSimpleName();
-
 	private Bundle extras;
 	private EditText mTextEditor, mNoteTitle;
 
-	private SQLiteNoteAdapter mySQLiteAdapter;
 	private Note displayedNote;
 	private int listPosition;
 	private boolean isCreationMode = false;
@@ -69,7 +66,7 @@ public class EditNoteActivity extends Activity implements AsyncResponse<String> 
 		setContentView(R.layout.activity_edit_note);
 		// Show the Up button in the action bar.
 		setupActionBar(false);
-		mySQLiteAdapter = new SQLiteNoteAdapter(this);
+		new SQLiteNoteAdapter(this);
 
 		mTextEditor = (EditText) findViewById(R.id.noteContentEditor);
 		mNoteTitle = (EditText) findViewById(R.id.noteTitleEditor);
@@ -247,7 +244,6 @@ public class EditNoteActivity extends Activity implements AsyncResponse<String> 
 		return super.onOptionsItemSelected(item);
 	}
 
-
 	private class CreateNoteTask extends AsyncTask<Note, Void, String> {
 
 		private AsyncResponse<String> delegate;
@@ -313,7 +309,7 @@ public class EditNoteActivity extends Activity implements AsyncResponse<String> 
 		backToNotes.putExtra("listPosition", listPosition);
 		backToNotes.putExtra(Keys.Note.PARCEL, new NoteParcel(displayedNote));
 
-		if(result != null){
+		if (result != null) {
 			setResult(RESULT_OK, backToNotes);
 		} else {
 			setResult(RESULT_CANCELED, backToNotes);

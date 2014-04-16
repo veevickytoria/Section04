@@ -155,6 +155,7 @@ public final class MockObjectFactory {
 		return json;
 	}
 
+	@SuppressWarnings("deprecation")
 	public static String getMockSchedule() throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		PrintStream ps = new PrintStream(baos);
