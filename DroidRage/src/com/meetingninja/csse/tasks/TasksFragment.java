@@ -71,12 +71,8 @@ public class TasksFragment extends Fragment implements AsyncResponse<List<Task>>
 		// Empty
 	}
 
-	// right now this uses getassignedto to get the userID of the user (only one
-	// right now) assigned to a task. then uses members to temperatily have
-	// multiple members
-	// assigned to a task (just in edit or create screen) then assignes the
-	// first user's ID in the members list to assignedto when saving and sending
-	// to backend (because they only save one)
+	// right now this uses getassignedto to get the userID of the user (only oneright now) assigned to a task. then uses members to temperatily have multiple members
+	// assigned to a task (just in edit or create screen) then assignes the first user's ID in the members list to assignedto when saving and sending to backend (because they only save one)
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,	Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
@@ -102,14 +98,13 @@ public class TasksFragment extends Fragment implements AsyncResponse<List<Task>>
 		typeAdapter = new TaskTypeAdapter(getActivity(), typeNames);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 		actionBar.setSelectedNavigationItem(prevSelectedType);
-		actionBar.setListNavigationCallbacks(typeAdapter,
-				new OnNavigationListener() {
-					@Override
-					public boolean onNavigationItemSelected(int itemPosition,long itemId) {
-						setTaskList(itemPosition);
-						return true;
-					}
-				});
+		actionBar.setListNavigationCallbacks(typeAdapter,new OnNavigationListener() {
+			@Override
+			public boolean onNavigationItemSelected(int itemPosition,long itemId) {
+				setTaskList(itemPosition);
+				return true;
+			}
+		});
 		setHasOptionsMenu(true);
 	}
 
@@ -230,7 +225,6 @@ public class TasksFragment extends Fragment implements AsyncResponse<List<Task>>
 		Collections.sort(result);
 		for (Task task : result) {
 			if (task.getType().equals("ASSIGNED_TO")) {
-				System.out.println("title: "+task.getTitle()+"  time:"+task.getEndTime());
 				taskLists.get(assignedToMe).add(task);
 			} else if (task.getType().equals("ASSIGNED_FROM")) {
 				taskLists.get(iAssigned).add(task);
@@ -321,15 +315,7 @@ class TaskTypeAdapter implements SpinnerAdapter {
 	@Override
 	public View getDropDownView(int position, View convertView, ViewGroup parent) {
 		TextView rowView = (TextView) getView(position, convertView, parent);
-		rowView.setPadding(
-				(int) this.context.getResources().getDimension(
-						R.dimen.activity_horizontal_margin),
-				(int) this.context.getResources().getDimension(
-						R.dimen.activity_vertical_margin),
-				(int) this.context.getResources().getDimension(
-						R.dimen.activity_horizontal_margin),
-				(int) this.context.getResources().getDimension(
-						R.dimen.activity_vertical_margin));
+		rowView.setPadding((int) this.context.getResources().getDimension(R.dimen.activity_horizontal_margin),(int) this.context.getResources().getDimension(R.dimen.activity_vertical_margin),(int) this.context.getResources().getDimension(R.dimen.activity_horizontal_margin),(int) this.context.getResources().getDimension(R.dimen.activity_vertical_margin));
 		return rowView;
 	}
 

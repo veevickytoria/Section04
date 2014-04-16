@@ -19,67 +19,60 @@ public class UserVolleyAdapter extends UserDatabaseAdapter {
 			final AsyncResponse<User> delegate) {
 		String _url = getBaseUri().appendPath(userID).build().toString();
 
-		JsonNodeRequest req = new JsonNodeRequest(_url, null,
-				new JsonRequestListener() {
+		JsonNodeRequest req = new JsonNodeRequest(_url, null,new JsonRequestListener() {
 
-					@Override
-					public void onResponse(JsonNode response, int statusCode,
-							VolleyError error) {
-						if (response != null) {
-							User retUser = parseUser(response);
-							retUser.setID(userID);
-							delegate.processFinish(retUser);
-						} else {
-							error.printStackTrace();
-						}
+			@Override
+			public void onResponse(JsonNode response, int statusCode,
+					VolleyError error) {
+				if (response != null) {
+					User retUser = parseUser(response);
+					retUser.setID(userID);
+					delegate.processFinish(retUser);
+				} else {
+					error.printStackTrace();
+				}
 
-					}
-				});
+			}
+		});
 
 		addToRequestQueue(req);
 	}
 
 	public static void fetchAllUsers(final AsyncResponse<List<User>> delegate) {
 		String _url = getBaseUri().appendPath("Users").build().toString();
+		JsonNodeRequest req = new JsonNodeRequest(_url, null,new JsonRequestListener() {
 
-		JsonNodeRequest req = new JsonNodeRequest(_url, null,
-				new JsonRequestListener() {
-
-					@Override
-					public void onResponse(JsonNode response, int statusCode,
-							VolleyError error) {
-						if (response != null) {
-							delegate.processFinish(parseUserList(response));
-						} else
-							VolleyLog.e("Error: ", error.getMessage());
-					}
-				});
-
+			@Override
+			public void onResponse(JsonNode response, int statusCode,VolleyError error) {
+				if (response != null) {
+					delegate.processFinish(parseUserList(response));
+				} else
+					VolleyLog.e("Error: ", error.getMessage());
+			}
+		});
+		
 		// add the request object to the queue to be executed
 		addToRequestQueue(req);
 
 	}
 
-	public static void deleteUser(String userID,
-			final AsyncResponse<Boolean> delegate) {
-		String url = UserDatabaseAdapter.getBaseUri().appendPath(userID)
-				.build().toString();
+	public static void deleteUser(String userID,final AsyncResponse<Boolean> delegate) {
+		String url = UserDatabaseAdapter.getBaseUri().appendPath(userID).build().toString();
 
-		JsonNodeRequest del_req = new JsonNodeRequest(Request.Method.DELETE,
-				url, null, new JsonRequestListener() {
+		JsonNodeRequest del_req = new JsonNodeRequest(Request.Method.DELETE,url, null, new JsonRequestListener() {
 
-					@Override
-					public void onResponse(JsonNode response, int statusCode,
-							VolleyError error) {
-						if (response != null) {
-							delegate.processFinish(response.get(Keys.DELETED)
-									.asBoolean(false));
-						} else {
-							error.printStackTrace();
-						}
+			@Override
+			public void onResponse(JsonNode response, int statusCode,
+					VolleyError error) {
+				if (response != null) {
+					delegate.processFinish(response.get(Keys.DELETED)
+							.asBoolean(false));
+				} else {
+					error.printStackTrace();
+				}
 
-					}
-				});
+			}
+		});
 		addToRequestQueue(del_req);
 
 	}
