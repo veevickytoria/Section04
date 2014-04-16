@@ -111,7 +111,9 @@ public class ViewMeetingActivity extends Activity {
 	}
 
 	private void setAttendees(ArrayList<User> attendance) {
+		Log.i(TAG, attendance.toString());
 		this.attendance.clear();
+		this.adpt.clear();
 		this.attendance.addAll(attendance);
 		this.adpt.notifyDataSetChanged();
 	}

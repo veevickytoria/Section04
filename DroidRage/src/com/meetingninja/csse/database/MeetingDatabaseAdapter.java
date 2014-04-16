@@ -23,6 +23,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import objects.Meeting;
+import objects.User;
 import android.net.Uri;
 import android.util.Log;
 
@@ -171,11 +172,11 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 		jgen.writeStringField(Keys.Meeting.DESC, m.getDescription());
 		jgen.writeArrayFieldStart(Keys.Meeting.ATTEND);
 		// TODO: Add attendees to meeting
-		// for (User attendee : m.getAttendance()) {
+		 for (User attendee : m.getAttendance()) {
 		jgen.writeStartObject();
-		jgen.writeStringField(Keys.User.ID, userID);
+		jgen.writeStringField(Keys.User.ID, attendee.getID());
 		jgen.writeEndObject();
-		// }
+		 }
 		jgen.writeEndArray();
 		jgen.writeEndObject();
 		jgen.close();
@@ -227,6 +228,7 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 		} else
 			Log.e(TAG, "Error: Unable to parse meeting attendance");
 
+		Log.i(TAG, "[Parsed] " + m.toString());
 		return m;
 	}
 }
