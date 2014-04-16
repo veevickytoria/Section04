@@ -45,8 +45,7 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 		return Uri.parse(getBaseUrl()).buildUpon();
 	}
 
-	public static Task getTask(String id) throws JsonParseException,
-			JsonMappingException, IOException {
+	public static Task getTask(String id) throws JsonParseException, JsonMappingException, IOException {
 		// Server URL setup
 		String _url = getBaseUri().appendPath(id).build().toString();
 		URL url = new URL(_url);
@@ -56,7 +55,8 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 		conn.setRequestMethod(IRequest.GET);
 		addRequestHeader(conn, false);
 
-		conn.getResponseCode();
+		// Get server response
+		int responseCode = conn.getResponseCode();
 		String response = getServerResponse(conn);
 
 		// Initialize ObjectMapper
@@ -104,7 +104,7 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 		ps.close();
 		// Get server response
 		sendPostPayload(conn, payload);
-		getServerResponse(conn);
+		String response = getServerResponse(conn);
 		Map<String, String> responseMap = new HashMap<String, String>();
 		if (responseMap.containsKey(Keys.Task.ID)) {
 			t.setID(responseMap.get(Keys.Task.ID));
@@ -120,7 +120,7 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 		// add request header
 		conn.setRequestMethod(IRequest.DELETE);
 		addRequestHeader(conn, false);
-		conn.getResponseCode();
+		int responseCode = conn.getResponseCode();
 		String response = getServerResponse(conn);
 
 		boolean result = false;
@@ -209,14 +209,12 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 		t.setEndTime(JsonUtils.getJSONValue(node, Keys.Task.DEADLINE));
 		t.setDateCreated(JsonUtils.getJSONValue(node, Keys.Task.DATE_CREATED));
 		t.setDateAssigned(JsonUtils.getJSONValue(node, Keys.Task.DATE_ASSIGNED));
-		t.setCompletionCriteria(JsonUtils
-				.getJSONValue(node, Keys.Task.CRITERIA));
+		t.setCompletionCriteria(JsonUtils.getJSONValue(node, Keys.Task.CRITERIA));
 		t.setAssignedTo(JsonUtils.getJSONValue(node, Keys.Task.ASSIGNED_TO));
-		t.setAssignedTo(JsonUtils.getJSONValue(node, Keys.Task.ASSIGNED_FROM));
+		t.setAssignedFrom(JsonUtils.getJSONValue(node, Keys.Task.ASSIGNED_FROM));
 		t.setCreatedBy(JsonUtils.getJSONValue(node, Keys.Task.CREATED_BY));
-		t.setIsCompleted(node.hasNonNull(Keys.Task.COMPLETED) ? node.get(
-				Keys.Task.COMPLETED).asBoolean() : false);
-
+		t.setIsCompleted(node.hasNonNull(Keys.Task.COMPLETED) ? node.get(Keys.Task.COMPLETED).asBoolean() : false);
+		t.setType(JsonUtils.getJSONValue(node, Keys.TYPE));
 	}
 
 	public static Task parseTasks(JsonNode node) {

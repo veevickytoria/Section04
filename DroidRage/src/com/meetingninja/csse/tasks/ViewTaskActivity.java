@@ -131,12 +131,12 @@ public class ViewTaskActivity extends Activity {
 	private void setupViews() {
 		taskName = (TextView) this.findViewById(R.id.task_title_label);
 		dateCreated = (TextView) this.findViewById(R.id.task_date_created_text);
-		dateAssigned = (TextView) this.findViewById(R.id.task_date_assigned_text);
+//		dateAssigned = (TextView) this.findViewById(R.id.task_date_assigned_text);
 		deadline = (TextView) this.findViewById(R.id.task_date_deadline_text);
 		description = (TextView) this.findViewById(R.id.task_desc_text);
 		completionCriteria = (TextView) this.findViewById(R.id.task_comp_crit_text);
 		isCompleted = (TextView) this.findViewById(R.id.task_completed_text);
-		assignedLabel = (TextView) this.findViewById(R.id.task_assigned_label);
+//		assignedLabel = (TextView) this.findViewById(R.id.task_assigned_label);
 		assignedText = (TextView) this.findViewById(R.id.task_assigned_text);
 		taskCompleteButton = (Button) this.findViewById(R.id.task_complete_button);
 	}
@@ -146,7 +146,7 @@ public class ViewTaskActivity extends Activity {
 		String format = dateFormat.print(Long.parseLong(displayedTask.getDateCreated()));
 		dateCreated.setText(format);
 		// TODO: change this to the real date assigned
-		dateAssigned.setText(displayedTask.getDateAssigned());
+//		dateAssigned.setText(displayedTask.getDateAssigned());
 		format = dateFormat.print(displayedTask.getEndTimeInMillis());
 		deadline.setText(format);
 		description.setText(displayedTask.getDescription());
@@ -158,20 +158,21 @@ public class ViewTaskActivity extends Activity {
 			isCompleted.setText("No"); // TODO: change this to use string xml
 			taskCompleteButton.setVisibility(View.VISIBLE);
 		}
+//		System.out.println("got here for testing");
+//		System.out.println(displayedTask.getType());
 		if(displayedTask.getType()!=null){
-			if (displayedTask.getType().equals("ASSIGNED_TO")) {
-				assignedLabel.setText("Assigned From:");
-				// assignedText.setText(task.getAssignedFrom());
-				fetchUserName(displayedTask.getAssignedFrom());
-			} else {
-				assignedLabel.setText("Assigned To:");
-				// assignedText.setText(task.getAssignedTo());
-				if (!displayedTask.getAssignedTo().toString().equals("")) {
+//			if (displayedTask.getType().equals("ASSIGNED_TO")) {
+//				assignedLabel.setText("Assigned From:");
+//				fetchUserName(displayedTask.getAssignedFrom());
+//			} else {
+//				assignedLabel.setText("Assigned To:");
+//				if (!displayedTask.getAssignedTo().toString().equals("")) {
 					fetchUserName(displayedTask.getAssignedTo());
-				} else {
-					assignedText.setText("Unassigned");
-				}
-			}
+					System.out.println(displayedTask.getAssignedTo());
+//				} else {
+//					assignedText.setText("Unassigned");
+//				}
+//			}
 		} else{			
 			TaskVolleyAdapter.getTaskInfo(displayedTask.getID(), new AsyncResponse<Task>() {
 				@Override
@@ -180,8 +181,6 @@ public class ViewTaskActivity extends Activity {
 					setTask();
 				}
 			});
-			
-
 
 		}
 		

@@ -57,13 +57,12 @@ public class HomePageFragment extends Fragment {
 	}
 
 	private void loadMeeting(Meeting meeting) {
-		MeetingVolleyAdapter.fetchMeetingInfo(meeting.getID(),
-				new AsyncResponse<Meeting>() {
-					@Override
-					public void processFinish(Meeting result) {
-						viewMeeting(result);
-					}
-				});
+		MeetingVolleyAdapter.fetchMeetingInfo(meeting.getID(),new AsyncResponse<Meeting>() {
+			@Override
+			public void processFinish(Meeting result) {
+				viewMeeting(result);
+			}
+		});
 	}
 
 	public void viewTask(Task task) {
@@ -91,13 +90,12 @@ public class HomePageFragment extends Fragment {
 		taskList.setAdapter(taskAdpt);
 
 		meetingList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-					@Override
-					public void onItemClick(AdapterView<?> parentAdapter,
-							View v, int position, long id) {
-						Meeting clicked = meetingAdpt.getItem(position);
-						loadMeeting(clicked);
-					}
-				});
+			@Override
+			public void onItemClick(AdapterView<?> parentAdapter,View v, int position, long id) {
+				Meeting clicked = meetingAdpt.getItem(position);
+				loadMeeting(clicked);
+			}
+		});
 
 		taskList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
@@ -125,8 +123,7 @@ public class HomePageFragment extends Fragment {
 			protected Schedule doInBackground(Void... arg0) {
 				Schedule sched = new Schedule();
 				try {
-					sched = UserDatabaseAdapter.getSchedule(SessionManager
-							.getUserID());
+					sched = UserDatabaseAdapter.getSchedule(SessionManager.getUserID());
 				} catch (JsonParseException e) {
 					e.printStackTrace();
 				} catch (JsonMappingException e) {
