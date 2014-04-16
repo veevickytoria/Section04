@@ -29,6 +29,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -347,67 +348,16 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 		InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
 	}
-	
-	private void addMemberDialog(final View view){
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle("Search by name or email:");
-		
-		View autocompleteView = this.getLayoutInflater().inflate(R.layout.fragment_autocomplete, null);
+	public void addMemberDialog(final View view){
+		Dialog dlg = new Dialog(this);
+		dlg.setTitle("Search by name or email:");
+		View autocompleteView = getLayoutInflater().inflate(R.layout.fragment_autocomplete, null);
 		final ContactTokenTextView input = (ContactTokenTextView) autocompleteView.findViewById(R.id.my_autocomplete);
 		autoAdapter = new AutoCompleteAdapter(this, allUsers);
 		input.setAdapter(autoAdapter);
-
 		input.setTokenListener(this);
-		builder.setView(autocompleteView);
-		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				if(addedUser == null){
-					dialog.cancel();
-					return;
-				}
-				boolean contains = false;
-				for (int i = 0; i < assignedUsers.size(); i++) {
-					if (assignedUsers.get(i).equals(addedUser)) {
-						contains = true;
-					}
-				}
-				if (contains) {
-					AlertDialogUtil.displayDialog(view.getContext(),"Unable to add user","This user is already assigned to this task", "OK",null);
-					addedUser=null;
-				} else {
-					addAssignedUser(addedUser);
-					addedUser = null;
-				}
-			}
-		});
-		builder.setNegativeButton("Cancel",	new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.cancel();
-			}
-		});
-		builder.show();
-		//		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		//		builder.setTitle("Enter member ID");
-		//		final EditText input = new EditText(this);
-		//		builder.setView(input);
-		//		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-		//			@Override
-		//			public void onClick(DialogInterface dialog, int which) {
-		//
-		//				loadUser(input.getText().toString(), true);
-		//				// mUserAdapter.getItem(mUserAdapter.)
-		//				// member = input.getText().toString();
-		//			}
-		//		});
-		//		builder.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
-		//					@Override
-		//					public void onClick(DialogInterface dialog, int which) {
-		//						dialog.cancel();
-		//					}
-		//				});
-		//		builder.show();
+		dlg.setContentView(autocompleteView);
+		dlg.show();
 	}
 
 	public void addMember(final View view) {

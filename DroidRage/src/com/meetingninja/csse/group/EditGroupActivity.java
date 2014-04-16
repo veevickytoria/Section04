@@ -61,19 +61,17 @@ public class EditGroupActivity extends Activity implements TokenListener {
 	// act.set
 	// }
 	private void keyboardCanHide() {
-		findViewById(R.id.group_edit_main_container).setOnTouchListener(
-				new OnTouchListener() {
-					@Override
-					public boolean onTouch(View v, MotionEvent event) {
-						hideKeyboard();
-						return false;
-					}
-				});
+		findViewById(R.id.group_edit_main_container).setOnTouchListener(new OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				hideKeyboard();
+				return false;
+			}
+		});
 	}
 
 	private void displayMembers() {
-		mUserAdapter = new UserArrayAdapter(this, R.layout.list_item_user,
-				displayedGroup.getMembers());
+		mUserAdapter = new UserArrayAdapter(this, R.layout.list_item_user,displayedGroup.getMembers());
 		mListView = (EnhancedListView) findViewById(R.id.group_list);
 		mListView.setAdapter(mUserAdapter);
 		for (int k = 0; k < displayedGroup.getMembers().size(); k++) {
@@ -94,8 +92,7 @@ public class EditGroupActivity extends Activity implements TokenListener {
 	private void deleteMember() {
 		mListView.setDismissCallback(new EnhancedListView.OnDismissCallback() {
 			@Override
-			public EnhancedListView.Undoable onDismiss(
-					EnhancedListView listView, final int position) {
+			public EnhancedListView.Undoable onDismiss(EnhancedListView listView, final int position) {
 
 				final User item = mUserAdapter.getItem(position);
 				mUserAdapter.remove(item);
@@ -118,13 +115,10 @@ public class EditGroupActivity extends Activity implements TokenListener {
 		mListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View v, int position,
-					long id) {
+			public void onItemClick(AdapterView<?> arg0, View v, int position,long id) {
 				User clicked = mUserAdapter.getItem(position);
-				Intent profileIntent = new Intent(v.getContext(),
-						ProfileActivity.class);
-				profileIntent.putExtra(Keys.User.PARCEL,
-						new UserParcel(clicked));
+				Intent profileIntent = new Intent(v.getContext(),ProfileActivity.class);
+				profileIntent.putExtra(Keys.User.PARCEL,new UserParcel(clicked));
 				startActivity(profileIntent);
 
 			}
@@ -206,8 +200,7 @@ public class EditGroupActivity extends Activity implements TokenListener {
 
 	private void hideKeyboard() {
 		InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-		inputMethodManager.hideSoftInputFromWindow(getCurrentFocus()
-				.getWindowToken(), 0);
+		inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
 	}
 
 	private final View.OnClickListener gActionBarListener = new OnClickListener() {
@@ -276,10 +269,8 @@ public class EditGroupActivity extends Activity implements TokenListener {
 	public void addMember(View view) {
 		dlg = new Dialog(this);
 		dlg.setTitle("Search by name or email:");
-		View autocompleteView = getLayoutInflater().inflate(
-				R.layout.fragment_autocomplete, null);
-		final ContactTokenTextView input = (ContactTokenTextView) autocompleteView
-				.findViewById(R.id.my_autocomplete);
+		View autocompleteView = getLayoutInflater().inflate(R.layout.fragment_autocomplete, null);
+		final ContactTokenTextView input = (ContactTokenTextView) autocompleteView.findViewById(R.id.my_autocomplete);
 		// autoAdapter = new AutoCompleteAdapter(this, bothUsers);
 		autoAdapter = new AutoCompleteAdapter(this, allUsers);
 		input.setAdapter(autoAdapter);
