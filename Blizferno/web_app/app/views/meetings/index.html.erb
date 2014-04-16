@@ -37,9 +37,9 @@
  
   <% for meeting in @meetingsParsed %>
     <tr>
-      <td onclick="showViewMeetingModal(<%=@meetingsParsed.index(meeting)%>)" data-refresh="true" data-toggle="modal"><%= Time.at(meeting['datetime']) %></td>
-      <td onclick="showViewMeetingModal(<%=@meetingsParsed.index(meeting)%>)" data-refresh="true" data-toggle="modal"><%= meeting['title'] %></td>
-      <td onclick="showViewMeetingModal(<%=@meetingsParsed.index(meeting)%>)" data-refresh="true" data-toggle="modal"><%= meeting['location'] %></td>
+      <td onclick="showViewMeetingModal(<%= meeting['meetingID'] %>,'<%= @allUsers %>')" data-refresh="true" data-toggle="modal"><%= Time.at(meeting['datetime']) %></td>
+      <td onclick="showViewMeetingModal(<%= meeting['meetingID'] %>,'<%= @allUsers %>')" data-refresh="true" data-toggle="modal"><%= meeting['title'] %></td>
+      <td onclick="showViewMeetingModal(<%= meeting['meetingID'] %>,'<%= @allUsers %>')" data-refresh="true" data-toggle="modal"><%= meeting['location'] %></td>
 
       <td style="width: 7%">
           <span style='font-size: 1.3em; color: white; cursor: pointer;' onclick='showDeleteMeetingModal(<%= meeting["meetingID"] %>)' class='glyphicon glyphicon-trash'></span>
