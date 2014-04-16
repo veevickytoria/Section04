@@ -22,6 +22,7 @@ import org.joda.time.format.DateTimeFormatter;
 import objects.Meeting;
 import objects.User;
 import objects.parcelable.MeetingParcel;
+import objects.parcelable.ParcelDataFactory;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -68,9 +69,11 @@ public class ViewMeetingActivity extends Activity {
 		timeFormat = is24 ? NinjaDateUtils.JODA_24_TIME_FORMAT
 				: NinjaDateUtils.JODA_12_TIME_FORMAT;
 
+		getActionBar().setTitle("");
 		setupViews();
 
 		setMeeting(displayedMeeting);
+
 	}
 
 	private void setupViews() {
@@ -133,8 +136,7 @@ public class ViewMeetingActivity extends Activity {
 		if (requestCode == 5) {
 			if (resultCode == RESULT_OK) {
 				if (data != null) {
-					displayedMeeting = data
-							.getParcelableExtra(Keys.Meeting.PARCEL);
+					displayedMeeting = new ParcelDataFactory(data.getExtras()).getMeeting();
 					getIntent().putExtra(Keys.Meeting.PARCEL, displayedMeeting);
 					setMeeting(displayedMeeting);
 				}

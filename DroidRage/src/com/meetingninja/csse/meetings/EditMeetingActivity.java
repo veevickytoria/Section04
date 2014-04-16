@@ -49,6 +49,7 @@ import com.meetingninja.csse.agenda.AgendaActivity;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.extras.AlertDialogUtil;
+import com.meetingninja.csse.extras.ContactTokenTextView;
 import com.meetingninja.csse.extras.NinjaDateUtils;
 
 public class EditMeetingActivity extends FragmentActivity implements
@@ -58,11 +59,12 @@ public class EditMeetingActivity extends FragmentActivity implements
 	private EditText mTitle, mLocation, mDescription;
 	private Button mFromDate, mToDate, mToTime;
 	private Button mFromTime;
-	private boolean is24, edit_mode;
+	private boolean is24;
 	private Calendar start, end;
 	private DateTimeFormatter timeFormat;
 	private DateTimeFormatter dateFormat = NinjaDateUtils.JODA_APP_DATE_FORMAT;
 	private static ArrayList<User> attendees = new ArrayList<User>();
+	private ContactTokenTextView mGuestsComplete;
 
 	private Meeting displayedMeeting;
 
@@ -75,10 +77,8 @@ public class EditMeetingActivity extends FragmentActivity implements
 	private void init() {
 		extras = getIntent().getExtras();
 		if (extras != null && !extras.isEmpty()) {
-			edit_mode = extras.getBoolean(EXTRA_EDIT_MODE, true);
 			displayedMeeting = extras.getParcelable(EXTRA_MEETING);
 		}
-		SessionManager.getInstance();
 
 		is24 = android.text.format.DateFormat
 				.is24HourFormat(getApplicationContext());
@@ -138,6 +138,7 @@ public class EditMeetingActivity extends FragmentActivity implements
 
 		}
 	};
+
 	/**
 	 * Set up the {@link android.app.ActionBar}.
 	 */
@@ -190,10 +191,7 @@ public class EditMeetingActivity extends FragmentActivity implements
 		// Get the bottom half of the meeting page (radiogroup - privacy)
 		View bottom = findViewById(R.id.attendees_group);
 		mDescription = (EditText) findViewById(R.id.description);
-		// Hide RadioGroup if creating meeting
-		if (edit_mode) {
-			bottom.findViewById(R.id.response_row).setVisibility(View.GONE);
-		}
+		mGuestsComplete = (ContactTokenTextView) findViewById(R.id.guests_Complete);
 	}
 
 	private void trimTextViews() {
@@ -220,30 +218,6 @@ public class EditMeetingActivity extends FragmentActivity implements
 		}
 		return true;
 	}
-
-	// @Override
-	// public boolean onCreateOptionsMenu(Menu menu) {
-	// // Inflate the menu this adds items to the action bar if it is present.
-	// getMenuInflater().inflate(R.menu.new_meeting, menu);
-	// return true;
-	// }
-	//
-	// @Override
-	// public boolean onOptionsItemSelected(MenuItem item) {
-	// switch (item.getItemId()) {
-	// case android.R.id.home:
-	// // This ID represents the Home or Up button. In the case of this
-	// // activity, the Up button is shown. Use NavUtils to allow users
-	// // to navigate up one level in the application structure. For
-	// // more details, see the Navigation pattern on Android Design:
-	// //
-	// http://developer.android.com/design/patterns/navigation.html#up-vs-back
-	// // NavUtils.navigateUpFromSameTask(this); return true;
-	// case R.id.action_save:
-	// break;
-	// }
-	// return super.onOptionsItemSelected(item);
-	// }
 
 	@Override
 	public void processFinish(String result) {

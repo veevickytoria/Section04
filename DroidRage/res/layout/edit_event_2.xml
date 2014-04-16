@@ -24,65 +24,6 @@
 
     <!-- RESPONSE -->
 
-    <LinearLayout
-        android:id="@+id/response_row"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:focusable="true"
-        android:minHeight="64dip"
-        android:orientation="vertical" >
-
-        <TextView
-            android:id="@+id/attending_header"
-            style="@style/TextAppearance.EditEvent_LabelSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:text="@string/view_event_response_label" />
-
-        <RadioGroup
-            android:id="@+id/response_value"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dip"
-            android:layout_marginRight="8dip"
-            android:orientation="horizontal"
-            android:paddingTop="5dip" >
-
-            <RadioButton
-                android:id="@+id/response_yes"
-                style="@style/TextAppearance.EditEvent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:maxWidth="128dip"
-                android:text="@string/response_yes" />
-
-            <RadioButton
-                android:id="@+id/response_maybe"
-                style="@style/TextAppearance.EditEvent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:maxWidth="128dip"
-                android:text="@string/response_maybe" />
-
-            <RadioButton
-                android:id="@+id/response_no"
-                style="@style/TextAppearance.EditEvent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:maxWidth="128dip"
-                android:text="@string/response_no" />
-        </RadioGroup>
-
-        <View style="@style/EditEventSeparator" />
-    </LinearLayout>
-
     <View style="@style/EditEventSeparator" />
 
     <!-- DESCRIPTION -->
