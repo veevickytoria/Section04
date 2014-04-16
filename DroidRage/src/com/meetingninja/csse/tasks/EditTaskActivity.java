@@ -266,7 +266,8 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 			if (!displayTask.getMembers().isEmpty()) {
 				displayTask.setAssignedTo(displayTask.getMembers().get(0).getID());
 			} else {
-				displayTask.setAssignedTo("");
+				displayTask.setAssignedTo(userId);
+//				displayTask.setAssignedTo("");
 			}
 			// TODO: fetcher for assigned to
 
