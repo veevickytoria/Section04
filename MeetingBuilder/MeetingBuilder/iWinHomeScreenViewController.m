@@ -141,32 +141,6 @@
     // Dispose of any resources that can be recreated.
 }
 
--(NSString *)getStringTimeFromDate:(NSDate *)date
-{
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setAMSymbol:@"AM"];
-    [formatter setPMSymbol:@"PM"];
-    [formatter setDateFormat:@"hh:mm a"];
-    return [formatter stringFromDate:date];
-}
-
--(NSString *)getStringDateFromDate:(NSDate *)date
-{
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    //Specify only 2 M for month, 2 d for day and 2 h for hour
-    [formatter setDateFormat:@"MM/dd/yyyy"];
-    return [formatter stringFromDate:date];
-}
-
--(NSString*)getDateTimeStringFromEpochString:(NSString*)epochString
-{
-    return [iWinScheduleViewMeetingViewController getStringDateTimeFromDate:[NSDate dateWithTimeIntervalSince1970:[epochString doubleValue]]];
-}
-
--(NSString *)getStringDateTimeFromDate:(NSDate *)date
-{
-    return [NSString stringWithFormat:@"%@ %@", [self getStringDateFromDate:date], [self getStringTimeFromDate:date]];
-}
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -178,13 +152,14 @@
         {
             NSDictionary* meeting = (NSDictionary*)[self.meetingFeed objectAtIndex:indexPath.row];
             cell.textLabel.text = (NSString*)[meeting objectForKey:@"title"];
-            cell.detailTextLabel.text = (NSString*)[self getDateTimeStringFromEpochString:[meeting objectForKey:@"datetimeStart"]];
+            cell.detailTextLabel.text = (NSString*)[iWinMeetingViewController getDateTimeStringFromEpochString:[meeting objectForKey:@"datetimeStart"]];
         }
     
         else if (indexPath.section == 1)
         {
             NSDictionary* task = (NSDictionary*)[self.taskFeed objectAtIndex:indexPath.row];
-            cell.detailTextLabel.text= (NSString*)[[[task objectForKey:@"datetimeStart"] stringByAppendingString:@" to "]stringByAppendingString:[task objectForKey:@"datetimeEnd"]];
+            cell.detailTextLabel.text= (NSString*)[[[iWinMeetingViewController getDateTimeStringFromEpochString:[task objectForKey:@"datetimeStart"]]
+                                                    stringByAppendingString:@" to "]stringByAppendingString:[iWinMeetingViewController getDateTimeStringFromEpochString:[task objectForKey:@"datetimeEnd"]]];
             cell.textLabel.text = (NSString*)[[[task objectForKey:@"title"] stringByAppendingString:@": "] stringByAppendingString:[task objectForKey:@"description"]];
         }
     
@@ -194,7 +169,7 @@
             
             if (indexPath.row < notificationLength){
                 NSDictionary* notification = (NSDictionary*) [self.notificationFeed objectAtIndex:indexPath.row];
-                cell.textLabel.text = (NSString*)[[[notification objectForKey:@"description"] stringByAppendingString:@": "]stringByAppendingString:[notification objectForKey:@"datetime"]];
+                cell.textLabel.text = (NSString*)[[[notification objectForKey:@"description"] stringByAppendingString:@": "]stringByAppendingString:[iWinMeetingViewController getDateTimeStringFromEpochString:[notification objectForKey:@"datetime"]]];
             }else{
                 cell.textLabel.text = (NSString*)[self.noteFeed objectAtIndex:(notificationLength - indexPath.row)];
                 cell.detailTextLabel.text = (NSString*)[self.noteFeedSubtitle objectAtIndex:(notificationLength - indexPath.row)];

@@ -23,4 +23,5 @@
 @property (nonatomic) id<ReloadScheduleDelegate> reloadScheduleDelegate;
 - (IBAction)onScheduleNewMeeting;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withID:(NSInteger)userID;
++(NSString*)getDateTimeStringFromEpochString:(NSString*)epochString;
 @end
