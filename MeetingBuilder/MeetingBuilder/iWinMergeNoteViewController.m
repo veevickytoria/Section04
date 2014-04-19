@@ -95,31 +95,39 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    NSMutableArray *noteDictionaries;
     
     if ([tableView isEqual:self.userListTable])
     {
         self.currentUserRowIndex = indexPath.row;
-        noteDictionaries = [self.notes objectAtIndex:self.currentUserRowIndex];
-        self.notesForTable = [[NSMutableArray alloc]init];
-        for (NSDictionary *d in noteDictionaries) {
-            [self.notesForTable addObject:[d objectForKey:@"noteTitle"]];
-        }
-        [self.noteListTable reloadData];
+        [self populateSharedNotesTableFromClickedUser];
     }
-    // otherwise perform the merge
     else {
-        noteDictionaries = [self.notes objectAtIndex:self.currentUserRowIndex];
-        NSInteger noteID = [[[noteDictionaries objectAtIndex:indexPath.row] objectForKey:@"noteID"] integerValue];
-        
-        NSString *mergedContent = [self mergeNote:noteID];
-        [self updateOriginalNote:mergedContent];
-        
-        // remove shared note from user
-        NSString *unshareUrl = [NSString stringWithFormat:@"%@/Note/Sharing/%d/%d", DATABASE_URL, noteID, self.userID];
-        [self.backendUtility deleteRequestForUrl:unshareUrl];
-
+        [self performMergeFromIndexRow:indexPath.row];
     }
+}
+
+-(void)populateSharedNotesTableFromClickedUser
+{
+    NSMutableArray *noteDictionaries = [self.notes objectAtIndex:self.currentUserRowIndex];
+    self.notesForTable = [[NSMutableArray alloc]init];
+    for (NSDictionary *d in noteDictionaries) {
+        [self.notesForTable addObject:[d objectForKey:@"noteTitle"]];
+    }
+    [self.noteListTable reloadData];
+}
+
+-(void)performMergeFromIndexRow:(NSInteger)row
+{
+    NSMutableArray *noteDictionaries = [self.notes objectAtIndex:self.currentUserRowIndex];
+    NSInteger noteID = [[[noteDictionaries objectAtIndex:row] objectForKey:@"noteID"] integerValue];
+    [self updateOriginalNote:[self mergeNote:noteID]];
+    [self removeSharedNoteFromUser:noteID];
+}
+
+-(void)removeSharedNoteFromUser:(NSInteger)noteID
+{
+    NSString *unshareUrl = [NSString stringWithFormat:@"%@/Note/Sharing/%d/%d", DATABASE_URL, noteID, self.userID];
+    [self.backendUtility deleteRequestForUrl:unshareUrl];
 }
 
 -(void)updateOriginalNote:(NSString *)mergedNoteContent
