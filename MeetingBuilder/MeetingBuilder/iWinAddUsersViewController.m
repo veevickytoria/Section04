@@ -91,29 +91,28 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)sendInvitation:(MFMailComposeViewController *)mc
+{
+    mc.mailComposeDelegate = self;
+    [mc setSubject:@"Invitation to join Meeting Ninja"];
+    [mc setMessageBody:@"Hello! \n \nYou have been invited to join the Meeting Ninja community. Meeting Ninja as an iPad application that simplfies the management of meetings, tasks, & projects. \n\nTo accept the invitation and install the Meeting Ninja application, please visit: www.apple.com/appStore/Downloads/MeetingNinja\n\nAndroid and Web versions of Meeting Ninja are also available." isHTML:NO];
+    [mc setToRecipients:[NSArray arrayWithObject:@"[Enter Invitee Email Here!]"]];
+    [self presentViewController:mc animated:YES completion:NULL];
+}
+
+- (void)alertEmailNotSetUp
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Failure" message:@"You're device does not have email set up." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+    [alert show];
+}
+
 - (IBAction)onClickSendInvite: (id) sender
 {
-    
-//    self.inviteAlertView = [[UIAlertView alloc] initWithTitle:@"Invite User" message:@"Enter user email" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Invite", nil];
-//    [self.inviteAlertView setAlertViewStyle:UIAlertViewStylePlainTextInput];
-//    [self.inviteAlertView show];
-    
-    NSString *emailTitle = @"Invitation to join Meeting Ninja";
-    NSString *messageBody = @"Hello! \n \nYou have been invited to join the Meeting Ninja community. Meeting Ninja as an iPad application that simplfies the management of meetings, tasks, & projects. \n\nTo accept the invitation and install the Meeting Ninja application, please visit: www.apple.com/appStore/Downloads/MeetingNinja\n\nAndroid and Web versions of Meeting Ninja are also available.";
-    NSArray *toRecipents = [NSArray arrayWithObject:@"[Enter Invitee Email Here!]"];
     MFMailComposeViewController *mc = [[MFMailComposeViewController alloc] init];
     if ([MFMailComposeViewController canSendMail]){
-        
-        
-        mc.mailComposeDelegate = self;
-        [mc setSubject:emailTitle];
-        [mc setMessageBody:messageBody isHTML:NO];
-        [mc setToRecipients:toRecipents];
-        
-        [self presentViewController:mc animated:YES completion:NULL];
+        [self sendInvitation:mc];
     } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Failure" message:@"You're device does not have email set up." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-        [alert show];
+        [self alertEmailNotSetUp];
     }
 }
 
