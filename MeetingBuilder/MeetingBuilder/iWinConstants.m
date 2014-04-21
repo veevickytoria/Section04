@@ -46,5 +46,21 @@ NSString* const DESCRIPTION_KEY = @"description";
 NSString* const CONFIRM_DELETE_TITLE = @"Confirm Delete";
 NSString* const NO_DELETE_OPTION = @"No, just kidding!";
 NSString* const YES_DELETE_OPTION = @"Yes, please";
+NSString* const MEETING_URL = @"%@/Meeting/%d";
+NSString* const MEETING_NOT_FOUND_MESSAGE = @"Meetings not found";
+NSString* const END_DATE_TIME_KEY = @"endDatetime";
+NSString* const USER_ID_URL = @"%@/User/%d";
+NSString* const ATTENDANCE_KEY = @"attendance";
+NSString* const DELETE_MEETING_MESSAGE = @"Are you sure you want to delete this meeting?";
+NSString* const VIEW_AND_ADD_AGENDA_NIB = @"iWinViewAndAddViewController";
+NSString* const ADD_USERS_NIB = @"iWinAddUsersViewController";
+NSString* const NAME_KEY = @"name";
+NSString* const TYPE_KEY = @"type";
+NSString* const SCHEDULE_KEY = @"schedule";
+NSString* const DATE_TIME_START = @"datetimeStart";
+NSString* const DATE_TIME_END = @"datetimeEnd";
+NSString* const MEETING_ID_KEY = @"meetingID";
+NSString* const EMPTY_STRING = @"";
+NSString* const SAVE_BUTTON = @"Save";
 
 @end

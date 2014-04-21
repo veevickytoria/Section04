@@ -27,15 +27,9 @@
 //constants
 NSString* const MEETING_CELL_ID = @"MeetingCell";
 NSString* const USER_MEETING_URL = @"%@/User/Meetings/%ld";
-NSString* const MEETING_NOT_FOUND_MESSAGE = @"Meetings not found";
 NSString* const MEETINGS_KEY = @"meetings";
-NSString* const MEETING_URL = @"%@/Meeting/%d";
 NSString* const ATTENDEE_LIST_FORMAT = @"%@,";
-NSString* const END_DATE_TIME_KEY = @"endDatetime";
-NSString* const MEETING_ID_KEY = @"meetingID";
-NSString* const ATTENDANCE_KEY = @"attendance";
 NSString* const MEETING_DESCRIPTION_KEY = @"meetingDesc";
-NSString* const DELETE_MEETING_MESSAGE = @"Are you sure you want to delete this meeting?";
 
 @implementation iWinMeetingViewController
 

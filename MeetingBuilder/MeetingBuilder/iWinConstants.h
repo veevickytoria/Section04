@@ -46,5 +46,21 @@ extern NSString* const DESCRIPTION_KEY;
 extern NSString* const CONFIRM_DELETE_TITLE;
 extern NSString* const NO_DELETE_OPTION;
 extern NSString* const YES_DELETE_OPTION;
+extern NSString* const MEETING_URL;
+extern NSString* const MEETING_NOT_FOUND_MESSAGE;
+extern NSString* const END_DATE_TIME_KEY;
+extern NSString* const USER_ID_URL;
+extern NSString* const ATTENDANCE_KEY;
+extern NSString* const DELETE_MEETING_MESSAGE;
+extern NSString* const VIEW_AND_ADD_AGENDA_NIB;
+extern NSString* const ADD_USERS_NIB;
+extern NSString* const NAME_KEY;
+extern NSString* const TYPE_KEY;
+extern NSString* const SCHEDULE_KEY;
+extern NSString* const DATE_TIME_START;
+extern NSString* const DATE_TIME_END;
+extern NSString* const MEETING_ID_KEY;
+extern NSString* const EMPTY_STRING;
+extern NSString* const SAVE_BUTTON;
 
 @end

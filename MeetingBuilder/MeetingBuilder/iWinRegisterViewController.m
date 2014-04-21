@@ -29,12 +29,10 @@ NSString* const INVALID_CONFIRM_PASSWORD_MESSAGE = @"Please enter matching passw
 NSString* const INVALID_PHONE_MESSAGE = @"Please enter a valid phone number!";
 NSString* const INVALID_EMAIL_MESSAGE = @"Please enter a valid email address!";
 NSString* const EMAIL_EXISTS_MESSAGE = @"An account with the email already exists.";
-NSString* const EMPTY_STRING = @"";
 NSString* const USERS_LIST_URL = @"%@/User/Users";
 NSString* const USERS_KEY = @"users";
 NSString* const USER_NOT_FOUND_MESSAGE = @"Users not found";
 NSString* const USER_URL = @"%@/User/";
-NSString* const NAME_KEY = @"name";
 NSString* const PHONE_KEY = @"phone";
 NSString* const COMPANY_KEY = @"company";
 

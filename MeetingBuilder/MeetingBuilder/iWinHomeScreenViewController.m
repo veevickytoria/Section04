@@ -29,13 +29,9 @@
 NSString* const TASK_HEADER = @"Task";
 NSString* const MISC_HEADER = @"Miscellaneous";
 NSString* const IS_COMPLETED_KEY = @"isCompleted";
-NSString* const SCHEDULE_KEY = @"schedule";
-NSString* const TYPE_KEY = @"type";
 NSString* const NOTIFICATIONS_KEY = @"notifications";
 NSString* const USER_NAME_KEY = @"userName";
 NSString* const NOTE_TITLE_KEY = @"noteTitle";
-NSString* const DATE_TIME_START = @"datetimeStart";
-NSString* const DATE_TIME_END = @"datetimeEnd";
 NSString* const TASK_URL = @"%@/Task/%ld";
 NSString* const SCHEDULE_URL = @"%@/User/Schedule/%@";
 NSString* const NOTIFICATION_URL = @"%@/User/Notification/%@";
