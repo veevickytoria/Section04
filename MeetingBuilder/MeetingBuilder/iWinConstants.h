@@ -62,5 +62,11 @@ extern NSString* const DATE_TIME_END;
 extern NSString* const MEETING_ID_KEY;
 extern NSString* const EMPTY_STRING;
 extern NSString* const SAVE_BUTTON;
+extern NSString* const AGENDA_URL;
+extern NSString* const CONTENT_KEY;
+extern NSString* const AGENDA_ITEM_NIB;
+extern NSString* const USER_KEY;
+extern NSString* const AGENDA_LIST_URL;
+extern NSString* const AGENDA_ID_KEY;
 
 @end

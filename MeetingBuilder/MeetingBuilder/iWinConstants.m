@@ -62,5 +62,11 @@ NSString* const DATE_TIME_END = @"datetimeEnd";
 NSString* const MEETING_ID_KEY = @"meetingID";
 NSString* const EMPTY_STRING = @"";
 NSString* const SAVE_BUTTON = @"Save";
+NSString* const AGENDA_URL = @"%@/Agenda/%d";
+NSString* const CONTENT_KEY = @"content";
+NSString* const AGENDA_ITEM_NIB = @"iWinAgendaItemViewController";
+NSString* const USER_KEY = @"user";
+NSString* const AGENDA_LIST_URL = @"%@/Agenda/";
+NSString* const AGENDA_ID_KEY = @"agendaID";
 
 @end

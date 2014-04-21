@@ -24,6 +24,15 @@
 @property (weak, nonatomic) IBOutlet UILabel *currentAgendaItemLabel;
 @end
 
+NSString* const CREATE_AGENDA_TITLE = @"Create Agenda";
+NSString* const VIEW_AGENDA_TITLE = @"View Agenda";
+NSString* const TIME_KEY = @"time";
+NSString* const ITEM_CELL_ID = @"ItemCell";
+const int AGENDA_ITEM_VC_X_POS = 0;
+const int AGENDA_ITEM_VC_Y_POS = 0;
+const int AGENDA_ITEM_VC_WIDTH = 556;
+const int AGENDA_ITEM_VC_HEIGHT = 283;
+NSString* const ADD_AGENDA_ITEM_TITLE = @"Add New Item";
 
 @implementation iWinViewAndAddViewController
 
@@ -33,8 +42,6 @@
     self.startDate = startDate;
     self.endDate  = endDate;
     if (self) {
-        // Custom initialization
-//        self.isEditing = isEditing;
         self.agendaID = 0;
     }
     return self;
@@ -48,25 +55,21 @@
     self.itemList = [[NSMutableArray alloc] init];
     self.totalDuration = 0;
     if (!self.isAgendaCreated) {
-        self.headerLabel.text = @"Create Agenda";
+        self.headerLabel.text = CREATE_AGENDA_TITLE;
     
         if (self.isEditing)
         {
-            self.titleTextField.text = @"Agenda 101";
-            [self.itemList addObject:@"Item 1"];
-            [self.itemList addObject:@"Item 2"];
-            [self.itemList addObject:@"Item 3"];
-            self.headerLabel.text = @"View Agenda";
+            self.headerLabel.text = VIEW_AGENDA_TITLE;
         }
     } else {
-        NSString *url = [NSString stringWithFormat:@"%@/Agenda/%d", DATABASE_URL,self.agendaID];
+        NSString *url = [NSString stringWithFormat:AGENDA_URL, DATABASE_URL,self.agendaID];
         url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
-        self.titleTextField.text = [deserializedDictionary objectForKey:@"title"];
+        self.titleTextField.text = [deserializedDictionary objectForKey:TITLE_KEY];
         
-        int conteneSize = [[deserializedDictionary objectForKey:@"content"] count] + 1;
+        int conteneSize = [[deserializedDictionary objectForKey:CONTENT_KEY] count] + 1;
         for(int i = 1; i < conteneSize; i++){
-            NSDictionary *item = [[deserializedDictionary objectForKey:@"content"] objectForKey:[[NSNumber numberWithInt:i] stringValue]];
+            NSDictionary *item = [[deserializedDictionary objectForKey:CONTENT_KEY] objectForKey:[[NSNumber numberWithInt:i] stringValue]];
             [self.itemList addObject:item];
         }
         
@@ -93,12 +96,12 @@
     NSInteger secRemaining;
     // find current item
     for (NSDictionary *item in self.itemList) {
-        itemMinutes = [[item objectForKey:@"time"] doubleValue];
+        itemMinutes = [[item objectForKey:TIME_KEY] doubleValue];
         pastMinutes += itemMinutes;
         itemMinutesRemaining = pastMinutes - [self getElapsedAgendaTimeInMinutes];
         secRemaining = 60 - [self getElapsedAgendaTimeInSeconds] % 60;
         if (itemMinutesRemaining >= 0  && secRemaining >= 0) {
-            [self setTimerControlFields:[self getTimerTextRemaining:itemMinutesRemaining :secRemaining] currentItemText:[item objectForKey:@"title"]];
+            [self setTimerControlFields:[self getTimerTextRemaining:itemMinutesRemaining :secRemaining] currentItemText:[item objectForKey:TITLE_KEY]];
             [self showTimerControls];
             break;
         }
@@ -107,7 +110,7 @@
 
 -(NSString *)getTimerTextRemaining:(NSInteger)itemMinutesRemaining :(NSInteger)secRemaining
 {
-    NSString *secRemainingZeroHolder = @"";
+    NSString *secRemainingZeroHolder = EMPTY_STRING;
     if (secRemaining < 10) {
         secRemainingZeroHolder = @"0";
     }
@@ -160,18 +163,13 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ItemCell"];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ITEM_CELL_ID];
     if (cell == nil)
     {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ItemCell"];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ITEM_CELL_ID];
     }
     
-    NSString *agendaItemName = [[self.itemList objectAtIndex:indexPath.row] objectForKey:@"title"];
-    
-//    for(int i = 0; i < self.itemList.count; i++){
-//        NSString *agendaItemName = [[self.itemList objectAtIndex:i] objectForKey:@"title"];
-//        NSLog(@"item is: %@\n", agendaItemName);
-//    }
+    NSString *agendaItemName = [[self.itemList objectAtIndex:indexPath.row] objectForKey:TITLE_KEY];
     
     cell.textLabel.text = agendaItemName;
     return cell;
@@ -186,14 +184,14 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSDictionary *agendaItem = [self.itemList objectAtIndex:indexPath.row];
-    NSString *agendaItemName = [agendaItem objectForKey:@"title"];
-    NSString *agendaItemDuration = [agendaItem objectForKey:@"time"];
-    NSString *agendaItemDescription = [agendaItem objectForKey:@"description"];
+    NSString *agendaItemName = [agendaItem objectForKey:TITLE_KEY];
+    NSString *agendaItemDuration = [agendaItem objectForKey:TIME_KEY];
+    NSString *agendaItemDescription = [agendaItem objectForKey:DESCRIPTION_KEY];
 
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     self.agendaItemViewController = [[iWinAgendaItemViewController alloc]
-                                     initWithNibName:@"iWinAgendaItemViewController" bundle:nil];
+                                     initWithNibName:AGENDA_ITEM_NIB bundle:nil];
     self.agendaItemViewController.itemTitle = agendaItemName;
     self.agendaItemViewController.itemDuration = agendaItemDuration;
     self.agendaItemViewController.itemDescription = agendaItemDescription;
@@ -206,7 +204,7 @@
     [self.agendaItemViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     
     [self presentViewController:self.agendaItemViewController animated:YES completion:nil];
-    self.agendaItemViewController.view.superview.bounds = CGRectMake(0,0,556,283);
+    self.agendaItemViewController.view.superview.bounds = CGRectMake(AGENDA_ITEM_VC_X_POS, AGENDA_ITEM_VC_Y_POS, AGENDA_ITEM_VC_WIDTH, AGENDA_ITEM_VC_HEIGHT);
     
 }
 
@@ -225,8 +223,8 @@
 
 -(void) updateAgendaInfo
 {
-    NSString *url = [NSString stringWithFormat:@"%@/Agenda/", DATABASE_URL];
-    NSArray *keys = [NSArray arrayWithObjects:@"agendaID", @"title", @"meeting", @"user", @"content", nil];
+    NSString *url = [NSString stringWithFormat:AGENDA_LIST_URL, DATABASE_URL];
+    NSArray *keys = [NSArray arrayWithObjects:AGENDA_ID_KEY, TITLE_KEY, MEETING_KEY, USER_KEY, CONTENT_KEY, nil];
     NSArray *objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.agendaID] stringValue], self.titleTextField.text, [[NSNumber numberWithInt:self.meetingID] stringValue], [[NSNumber numberWithInt:self.userID] stringValue], self.itemList, nil];
     NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
     [self.backendUtility putRequestForUrl:url withDictionary:jsonDictionary];
@@ -236,12 +234,12 @@
 
 -(void) saveNewAgenda
 {
-    NSString *url = [NSString stringWithFormat:@"%@/Agenda/", DATABASE_URL];
-    NSArray *keys = [NSArray arrayWithObjects:@"title", @"user", @"content",nil];
+    NSString *url = [NSString stringWithFormat:AGENDA_LIST_URL, DATABASE_URL];
+    NSArray *keys = [NSArray arrayWithObjects:TITLE_KEY, USER_KEY, CONTENT_KEY,nil];
     NSArray *objects = [NSArray arrayWithObjects: self.titleTextField.text,[[NSNumber numberWithInt:self.userID] stringValue], self.itemList, nil];
     NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
     NSDictionary *deserializedDictionary = [self.backendUtility postRequestForUrl:url withDictionary:jsonDictionary];
-    self.agendaID = [[deserializedDictionary objectForKey:@"agendaID"] integerValue];
+    self.agendaID = [[deserializedDictionary objectForKey:AGENDA_ID_KEY] integerValue];
 }
 
 
@@ -253,26 +251,26 @@
 
 - (IBAction)onClickAddItem
 {
-    self.agendaItemViewController = [[iWinAgendaItemViewController alloc] initWithNibName:@"iWinAgendaItemViewController" bundle:nil];
+    self.agendaItemViewController = [[iWinAgendaItemViewController alloc] initWithNibName:AGENDA_ITEM_NIB bundle:nil];
     self.agendaItemViewController.itemDelegate = self;
     [self.agendaItemViewController setModalPresentationStyle:UIModalPresentationFormSheet];
     [self.agendaItemViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-    self.agendaItemViewController.itemTitle = @"Add New Item";
+    self.agendaItemViewController.itemTitle = ADD_AGENDA_ITEM_TITLE;
     [self presentViewController:self.agendaItemViewController animated:YES completion:nil];
-    self.agendaItemViewController.view.superview.bounds = CGRectMake(0,0,556,283);
+    self.agendaItemViewController.view.superview.bounds = CGRectMake(AGENDA_ITEM_VC_X_POS, AGENDA_ITEM_VC_Y_POS, AGENDA_ITEM_VC_WIDTH, AGENDA_ITEM_VC_HEIGHT);
     
 }
 
 -(void)saveItem:(NSString *)name duration: (NSString*) duration description:(NSString*)
-description itemIndex: (NSInteger *) itemIndex
+description itemIndex: (NSInteger) itemIndex
 {
     if((NSInteger)self.agendaItemViewController.itemIndex > -1){
-        NSDictionary *agendaItem = @{@"title" : name, @"time": duration, @"description": description, @"content": @""};
+        NSDictionary *agendaItem = @{TITLE_KEY : name, TIME_KEY: duration, DESCRIPTION_KEY: description, CONTENT_KEY: EMPTY_STRING};
         [self.itemList replaceObjectAtIndex:self.agendaItemViewController.itemIndex withObject:agendaItem];
     }
     
     else{
-        NSDictionary *agendaItem = @{@"title" : name, @"time": duration, @"description": description, @"content": @""};
+        NSDictionary *agendaItem = @{TITLE_KEY : name, TIME_KEY: duration, DESCRIPTION_KEY: description, CONTENT_KEY: EMPTY_STRING};
     [self.itemList addObject:agendaItem];
     }
     self.totalDuration += [duration integerValue];

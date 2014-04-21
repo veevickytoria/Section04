@@ -11,7 +11,7 @@
 @protocol AgendaItemDelegate <NSObject>
 
 -(void)saveItem:(NSString *)name duration:(NSString*)duration description:(NSString*)description
-      itemIndex: (NSInteger *) itemIndex;
+      itemIndex: (NSInteger) itemIndex;
 
 
 -(void)cancel;
@@ -36,5 +36,5 @@
 @property (weak, nonatomic) IBOutlet UITextView *descriptionField;
 @property (weak, nonatomic) IBOutlet UIButton *saveButton;
 @property (nonatomic) id<AgendaItemDelegate> itemDelegate;
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil; //inEditMode:(BOOL)isEditing;
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil;
 @end
