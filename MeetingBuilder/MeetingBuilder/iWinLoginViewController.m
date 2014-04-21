@@ -22,13 +22,8 @@
 @property (strong, nonatomic) iWinBackEndUtility *backendUtility;
 @end
 
-NSString* const REMEMBER_ME_ENTITY = @"RememberMe";
-NSString* const EMAIL_KEY = @"email";
-NSString* const PASSWORD_KEY = @"password";
 NSString* const LOGIN_URL = @"%@/User/Login";
-NSString* const ERROR_MESSAGE = @"Error";
 NSString* const USERNAME_NOT_FOUND_MESSAGE = @"Username/Password not found";
-NSString* const OK_BUTTON = @"Ok";
 NSString* const VALID_VALUE_MESSAGE = @"Enter valid values";
 NSString* const SHOULD_NOTIFY_KEY = @"shouldNotify";
 NSString* const WHEN_TO_NOTIFY_KEY = @"whenToNotify";

@@ -19,6 +19,27 @@
 @property (strong, nonatomic) iWinBackEndUtility *backendUtility;
 @end
 
+const int MIN_PHONE_LENGTH = 8;
+const int MAX_PHONE_LENGTH = 12;
+NSString* const PHONE_SEPARATOR = @"-";
+NSString* const AT_RATE_SYMBOL = @"@";
+NSString* const INVALID_NAME_MESSAGE = @"Please enter your name!";
+NSString* const INVALID_PASSWORD_MESSAGE = @"Password must be at least 6 characters!";
+NSString* const INVALID_CONFIRM_PASSWORD_MESSAGE = @"Please enter matching passwords!";
+NSString* const INVALID_PHONE_MESSAGE = @"Please enter a valid phone number!";
+NSString* const INVALID_EMAIL_MESSAGE = @"Please enter a valid email address!";
+NSString* const EMAIL_EXISTS_MESSAGE = @"An account with the email already exists.";
+NSString* const EMPTY_STRING = @"";
+NSString* const USERS_LIST_URL = @"%@/User/Users";
+NSString* const USERS_KEY = @"users";
+NSString* const USER_NOT_FOUND_MESSAGE = @"Users not found";
+NSString* const USER_URL = @"%@/User/";
+NSString* const NAME_KEY = @"name";
+NSString* const PHONE_KEY = @"phone";
+NSString* const COMPANY_KEY = @"company";
+NSString* const TITLE_KEY = @"title";
+NSString* const LOCATION_KEY = @"location";
+
 @implementation iWinRegisterViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -43,10 +64,10 @@
     if (self.phoneNumberField.text.length == 0) {
         return YES;
     }
-    if (self.phoneNumberField.text.length > 12 || self.phoneNumberField.text.length < 8) {
+    if (self.phoneNumberField.text.length > MAX_PHONE_LENGTH || self.phoneNumberField.text.length < MIN_PHONE_LENGTH) {
         return NO;
     }
-    NSArray *phoneParts = [self.phoneNumberField.text componentsSeparatedByString:@"-"];
+    NSArray *phoneParts = [self.phoneNumberField.text componentsSeparatedByString:PHONE_SEPARATOR];
     for (NSString *stringPart in phoneParts) {
         if ([stringPart rangeOfCharacterFromSet:notDigits].location != NSNotFound)
         {
@@ -63,50 +84,50 @@
     NSString *email = [[self.emailField text] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     NSString *password = [self.passwordField text];
     NSString *confirmPassword = [self.confirmPasswordField text];
-    NSString *emailSymbol = @"@";
+    NSString *emailSymbol = AT_RATE_SYMBOL;
     
     if (name.length == 0) {
-        return @"Please enter your name!";
+        return INVALID_NAME_MESSAGE;
     }
     if (password.length < 6) {
-        return @"Password must be at least 6 characters!";
+        return INVALID_PASSWORD_MESSAGE;
     }
     if (![password isEqualToString:confirmPassword]) {
-        return @"Please enter matching passwords!";
+        return INVALID_CONFIRM_PASSWORD_MESSAGE;
     }
     if (![self validatePhoneNumber]) {
-        return @"Please enter a valid phone number!";
+        return INVALID_PHONE_MESSAGE;
     }
     if (email.length == 0 || [email rangeOfString:emailSymbol].location == NSNotFound) {
-        return @"Please enter a valid email address!";
+        return INVALID_EMAIL_MESSAGE;
     }
     if ([self emailExists:email]){
-        return @"An account with the email already exists.";
+        return EMAIL_EXISTS_MESSAGE;
     }
-    return @"";
+    return EMPTY_STRING;
 }
 
 -(BOOL)emailExists:(NSString*)email
 {
-    NSString *url = [NSString stringWithFormat:@"%@/User/Users", DATABASE_URL];
+    NSString *url = [NSString stringWithFormat:USERS_LIST_URL, DATABASE_URL];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
     
     NSArray *jsonArray;
     if (!deserializedDictionary)
     {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Users not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_MESSAGE message:USER_NOT_FOUND_MESSAGE delegate:self cancelButtonTitle:OK_BUTTON otherButtonTitles: nil];
         [alert show];
     }
     else
     {
-        jsonArray = [deserializedDictionary objectForKey:@"users"];
+        jsonArray = [deserializedDictionary objectForKey:USERS_KEY];
     }
     if (jsonArray.count > 0)
     {
         for (NSDictionary* users in jsonArray)
         {
-            NSString* userEmail = (NSString *)[users objectForKey:@"email"];
+            NSString* userEmail = (NSString *)[users objectForKey:EMAIL_KEY];
             if ([email isEqualToString:userEmail])
                 return YES;
         }
@@ -121,23 +142,23 @@
     {
         NSString *email = [[self.emailField text] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
         NSString *password = [self sha256HashFor: [self.passwordField text]];
-        NSString *url = [NSString stringWithFormat:@"%@/User/", DATABASE_URL];
-        //register
-        NSArray *keys = [NSArray arrayWithObjects:@"name", @"password", @"email", @"phone", @"company", @"title", @"location", nil];
+        NSString *url = [NSString stringWithFormat:USER_URL, DATABASE_URL];
+        
+        NSArray *keys = [NSArray arrayWithObjects:NAME_KEY, PASSWORD_KEY, EMAIL_KEY, PHONE_KEY, COMPANY_KEY, TITLE_KEY, LOCATION_KEY, nil];
         NSArray *objects = [NSArray arrayWithObjects:self.nameField.text, password, email, self.phoneNumberField.text, self.companyField.text, self.titleField.text, self.locationField.text,nil];
         NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];        
         NSDictionary *deserializedDictionary = [self.backendUtility postRequestForUrl:url withDictionary:jsonDictionary];
         NSInteger userID = -1;
         if (deserializedDictionary) {
-            userID = [[deserializedDictionary objectForKey:@"userID"] integerValue];
+            userID = [[deserializedDictionary objectForKey:USER_ID_KEY] integerValue];
             [self createContactWithID:userID withEmail:email withPassword:self.passwordField.text];
         }
         
         [self deleteRememberMeInfo];
-        NSManagedObject *newRememberMe = [NSEntityDescription insertNewObjectForEntityForName:@"RememberMe" inManagedObjectContext:self.context];
+        NSManagedObject *newRememberMe = [NSEntityDescription insertNewObjectForEntityForName:REMEMBER_ME_ENTITY inManagedObjectContext:self.context];
         NSError *error;
-        [newRememberMe setValue:email forKey:@"email"];
-        [newRememberMe setValue:self.passwordField.text forKey:@"password"];
+        [newRememberMe setValue:email forKey:EMAIL_KEY];
+        [newRememberMe setValue:self.passwordField.text forKey:PASSWORD_KEY];
         [self.context save:&error];
         
         [self.registerDelegate onRegister:userID];
@@ -152,7 +173,7 @@
 
 -(NSArray*) getRememberMeInfo
 {
-    NSFetchRequest *request = [[NSFetchRequest alloc]initWithEntityName:@"RememberMe"];
+    NSFetchRequest *request = [[NSFetchRequest alloc]initWithEntityName:REMEMBER_ME_ENTITY];
     NSError *error = nil;
     return [self.context executeFetchRequest:request error:&error];
 }
@@ -169,19 +190,19 @@
 
 -(void)createContactWithID:(NSInteger)userID withEmail:(NSString*)email withPassword:(NSString*)password
 {
-    NSArray *result = [self getEntity:@"Contact" withID:userID];
+    NSArray *result = [self getEntity:CONTACT_ENTITY withID:userID];
     NSError *error;
     if ([result count] == 0)
     {
-        NSManagedObject *newSetting = [NSEntityDescription insertNewObjectForEntityForName:@"Contact" inManagedObjectContext:self.context];
-        [newSetting setValue:[NSNumber numberWithInt:userID] forKey:@"userID"];
-        [newSetting setValue:email forKey:@"email"];
+        NSManagedObject *newSetting = [NSEntityDescription insertNewObjectForEntityForName:CONTACT_ENTITY inManagedObjectContext:self.context];
+        [newSetting setValue:[NSNumber numberWithInt:userID] forKey:USER_ID_KEY];
+        [newSetting setValue:email forKey:EMAIL_KEY];
         [self.context save:&error];
     }
     else
     {
         Contact *updateContact = (Contact*)[result objectAtIndex:0];
-        [updateContact setValue:email forKey:@"email"];
+        [updateContact setValue:email forKey:EMAIL_KEY];
         [self.context save:&error];
     }
     [self createSettingsWithID:userID withEmail:email withPassword:password];
@@ -189,22 +210,22 @@
 
 -(void)createSettingsWithID:(NSInteger)userID withEmail:(NSString*)email withPassword:(NSString*)password
 {
-    NSArray *result = [self getEntity:@"Settings" withID:userID];
+    NSArray *result = [self getEntity:SETTINGS_ENTITY withID:userID];
     NSError *error;
     if ([result count] == 0)
     {
-        NSManagedObject *newSetting = [NSEntityDescription insertNewObjectForEntityForName:@"Settings" inManagedObjectContext:self.context];
+        NSManagedObject *newSetting = [NSEntityDescription insertNewObjectForEntityForName:SETTINGS_ENTITY inManagedObjectContext:self.context];
         NSError *error;
-        [newSetting setValue:[NSNumber numberWithInt:userID] forKey:@"userID"];
-        [newSetting setValue:email forKey:@"email"];
-        [newSetting setValue:password forKey:@"password"];
+        [newSetting setValue:[NSNumber numberWithInt:userID] forKey:USER_ID_KEY];
+        [newSetting setValue:email forKey:EMAIL_KEY];
+        [newSetting setValue:password forKey:PASSWORD_KEY];
         [self.context save:&error];
     }
     else
     {
         Contact *updateSettings = (Contact*)[result objectAtIndex:0];
-        [updateSettings setValue:email forKey:@"email"];
-        [updateSettings setValue:password forKey:@"password"];
+        [updateSettings setValue:email forKey:EMAIL_KEY];
+        [updateSettings setValue:password forKey:PASSWORD_KEY];
         [self.context save:&error];
     }
 }
@@ -212,13 +233,13 @@
 -(NSArray*)getEntity:(NSString*)entity withID:(NSInteger)userID
 {
     NSEntityDescription *entityDesc;
-    if ([entity isEqualToString:@"Settings"])
+    if ([entity isEqualToString:SETTINGS_ENTITY])
     {
-        entityDesc = [NSEntityDescription entityForName:@"Settings" inManagedObjectContext:self.context];
+        entityDesc = [NSEntityDescription entityForName:SETTINGS_ENTITY inManagedObjectContext:self.context];
     }
     else
     {
-        entityDesc = [NSEntityDescription entityForName:@"Contact" inManagedObjectContext:self.context];
+        entityDesc = [NSEntityDescription entityForName:CONTACT_ENTITY inManagedObjectContext:self.context];
     }
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:entityDesc];
@@ -248,7 +269,7 @@
 
 - (void)failRegisterValidation:(NSString *)error
 {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:error delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_MESSAGE message:error delegate:self cancelButtonTitle:OK_BUTTON otherButtonTitles: nil];
     [alert show];
 }
 
