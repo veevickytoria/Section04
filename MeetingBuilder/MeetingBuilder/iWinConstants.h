@@ -35,5 +35,16 @@ extern NSString* const NOTES_VC_NIB_NAME;
 extern NSString* const TASK_VC_NIB_NAME;
 extern NSString* const SETTINGS_VC_NIB_NAME;
 extern NSString* const PROFILE_VC_NIB_NAME;
+extern NSString* const ID_KEY;
+extern NSString* const MEETING_KEY;
+extern NSString* const TITLE_KEY;
+extern NSString* const MEETING_HEADER;
+extern NSString* const CUSTOM_SUBTITLED_CELL;
+extern NSString* const LOCATION_KEY;
+extern NSString* const DATE_TIME_KEY;
+extern NSString* const DESCRIPTION_KEY;
+extern NSString* const CONFIRM_DELETE_TITLE;
+extern NSString* const NO_DELETE_OPTION;
+extern NSString* const YES_DELETE_OPTION;
 
 @end

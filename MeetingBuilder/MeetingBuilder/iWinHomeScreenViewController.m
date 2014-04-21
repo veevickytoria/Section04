@@ -26,13 +26,10 @@
 @end
 
 //constants
-NSString* const ID_KEY = @"id";
-NSString* const MEETING_HEADER = @"Meeting";
 NSString* const TASK_HEADER = @"Task";
 NSString* const MISC_HEADER = @"Miscellaneous";
 NSString* const IS_COMPLETED_KEY = @"isCompleted";
 NSString* const SCHEDULE_KEY = @"schedule";
-NSString* const MEETING_KEY = @"meeting";
 NSString* const TYPE_KEY = @"type";
 NSString* const NOTIFICATIONS_KEY = @"notifications";
 NSString* const USER_NAME_KEY = @"userName";
@@ -46,11 +43,9 @@ NSString* const SHARING_URL = @"%@/User/Sharing/%ld";
 NSString* const SHARED_BY_STRING = @"Shared by %@";
 NSString* const NOTE_KEY = @"notes";
 NSString* const SHARED_WITH_FORMAT = @"Note '%@' has been shared with you.";
-NSString* const TITLE_KEY = @"title";
-NSString* const DESCRIPTION_KEY = @"description";
 NSString* const TO_SEPARATOR = @" to ";
 NSString* const COLON_SEPARATOR = @": ";
-NSString* const DATE_TIME_KEY = @"datetime";
+
 
 @implementation iWinHomeScreenViewController
 

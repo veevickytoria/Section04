@@ -37,8 +37,7 @@ NSString* const USER_URL = @"%@/User/";
 NSString* const NAME_KEY = @"name";
 NSString* const PHONE_KEY = @"phone";
 NSString* const COMPANY_KEY = @"company";
-NSString* const TITLE_KEY = @"title";
-NSString* const LOCATION_KEY = @"location";
+
 
 @implementation iWinRegisterViewController
 

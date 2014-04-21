@@ -35,5 +35,16 @@ NSString* const NOTES_VC_NIB_NAME = @"iWinNoteListViewController";
 NSString* const TASK_VC_NIB_NAME = @"iWinTaskListViewController";
 NSString* const SETTINGS_VC_NIB_NAME = @"iWinViewAndChangeSettingsViewController";
 NSString* const PROFILE_VC_NIB_NAME = @"iWinViewProfileViewController";
+NSString* const ID_KEY = @"id";
+NSString* const MEETING_KEY = @"meeting";
+NSString* const TITLE_KEY = @"title";
+NSString* const MEETING_HEADER = @"Meeting";
+NSString* const CUSTOM_SUBTITLED_CELL = @"CustomSubtitledCell";
+NSString* const LOCATION_KEY = @"location";
+NSString* const DATE_TIME_KEY = @"datetime";
+NSString* const DESCRIPTION_KEY = @"description";
+NSString* const CONFIRM_DELETE_TITLE = @"Confirm Delete";
+NSString* const NO_DELETE_OPTION = @"No, just kidding!";
+NSString* const YES_DELETE_OPTION = @"Yes, please";
 
 @end
