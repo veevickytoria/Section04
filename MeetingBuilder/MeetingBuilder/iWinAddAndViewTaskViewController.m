@@ -58,7 +58,7 @@
 
 - (IBAction)onClickAddAssignees
 {
-    self.userViewController = [[iWinAddUsersViewController alloc] initWithNibName:@"iWinAddUsersViewController" bundle:nil withPageName:@"Task" inEditMode:self.isEditing];
+    self.userViewController = [[iWinAddUsersViewController alloc] initWithNibName:ADD_USERS_NIB bundle:nil withPageName:@"Task" inEditMode:self.isEditing];
     [self.userViewController setModalPresentationStyle:UIModalPresentationPageSheet];
     [self.userViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     self.userViewController.userDelegate = self;
@@ -129,12 +129,12 @@
                                                   error:&error];
     self.task = (Task*)[result objectAtIndex:0];
     
-    NSString *url = [NSString stringWithFormat:@"%@/Task/%d", DATABASE_URL,self.taskID];
+    NSString *url = [NSString stringWithFormat:TASK_URL, DATABASE_URL,self.taskID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
     
     if (!deserializedDictionary) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Failure" message:@"Could not load your task" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_MESSAGE message:@"Could not load your task" delegate:self cancelButtonTitle:OK_BUTTON otherButtonTitles: nil];
         [alert show];
     }
     else
@@ -149,26 +149,12 @@
         self.endTimeLabel.text = endtime;
         
         self.endDate = [self.dateFormatter dateFromString:enddate];
-        self.titleField.text = [deserializedDictionary objectForKey:@"title"];
-        //self.descriptionField.text = [deserializedDictionary objectForKey:@"description"];
-        self.isCompleted.on = [[deserializedDictionary objectForKey:@"isCompleted"] boolValue];
-//        NSArray *endDateAndTime = [[deserializedDictionary objectForKey:@"deadline"]  componentsSeparatedByString:@" "];
-//        NSString *enddate = [endDateAndTime objectAtIndex:0];
-//        NSString *endtime = [NSString stringWithFormat:@"%@ %@", [endDateAndTime objectAtIndex:1], [endDateAndTime objectAtIndex:2]];
-//        self.endDateLabel.text = enddate;
-//        self.endTimeLabel.text = endtime;
+        self.titleField.text = [deserializedDictionary objectForKey:TITLE_KEY];
+        self.isCompleted.on = [[deserializedDictionary objectForKey:IS_COMPLETED_KEY] boolValue];
         self.endDate = [self.dateFormatter dateFromString:enddate];
         NSInteger assignee = [[deserializedDictionary objectForKey:@"assignedTo"] integerValue];
         [self.userList addObject:[self getContactForID:assignee]];
     }
-    
-//    self.titleField.text = self.task.title;
-//    self.descriptionField.text = self.task.desc;
-//    self.isCompleted.enabled = [self.task.isCompleted boolValue];
-//    self.isCompleted.on = [self.task.isCompleted boolValue];
-    
-//    [self initDateTimeLabels];
-//    [self initAttendees];
 }
 
 -(void) initAttendees
@@ -479,7 +465,6 @@
 {
     if (buttonIndex == 1)
     {
-        //Perform deletion
         NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Task/%d", self.taskID];
         NSError * error = [self.backendUtility deleteRequestForUrl:url];
         if (!error)

@@ -68,5 +68,7 @@ NSString* const AGENDA_ITEM_NIB = @"iWinAgendaItemViewController";
 NSString* const USER_KEY = @"user";
 NSString* const AGENDA_LIST_URL = @"%@/Agenda/";
 NSString* const AGENDA_ID_KEY = @"agendaID";
+NSString* const IS_COMPLETED_KEY = @"isCompleted";
+NSString* const TASK_URL = @"%@/Task/%ld";
 
 @end

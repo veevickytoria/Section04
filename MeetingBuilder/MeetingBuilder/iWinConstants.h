@@ -68,5 +68,7 @@ extern NSString* const AGENDA_ITEM_NIB;
 extern NSString* const USER_KEY;
 extern NSString* const AGENDA_LIST_URL;
 extern NSString* const AGENDA_ID_KEY;
+extern NSString* const IS_COMPLETED_KEY;
+extern NSString* const TASK_URL;
 
 @end
