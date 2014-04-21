@@ -25,7 +25,32 @@
 @property (nonatomic) NSInteger userID;
 @end
 
-
+//constants
+NSString* const ID_KEY = @"id";
+NSString* const MEETING_HEADER = @"Meeting";
+NSString* const TASK_HEADER = @"Task";
+NSString* const MISC_HEADER = @"Miscellaneous";
+NSString* const IS_COMPLETED_KEY = @"isCompleted";
+NSString* const SCHEDULE_KEY = @"schedule";
+NSString* const MEETING_KEY = @"meeting";
+NSString* const TYPE_KEY = @"type";
+NSString* const NOTIFICATIONS_KEY = @"notifications";
+NSString* const USER_NAME_KEY = @"userName";
+NSString* const NOTE_TITLE_KEY = @"noteTitle";
+NSString* const DATE_TIME_START = @"datetimeStart";
+NSString* const DATE_TIME_END = @"datetimeEnd";
+NSString* const TASK_URL = @"%@/Task/%ld";
+NSString* const SCHEDULE_URL = @"%@/User/Schedule/%@";
+NSString* const NOTIFICATION_URL = @"%@/User/Notification/%@";
+NSString* const SHARING_URL = @"%@/User/Sharing/%ld";
+NSString* const SHARED_BY_STRING = @"Shared by %@";
+NSString* const NOTE_KEY = @"notes";
+NSString* const SHARED_WITH_FORMAT = @"Note '%@' has been shared with you.";
+NSString* const TITLE_KEY = @"title";
+NSString* const DESCRIPTION_KEY = @"description";
+NSString* const TO_SEPARATOR = @" to ";
+NSString* const COLON_SEPARATOR = @": ";
+NSString* const DATE_TIME_KEY = @"datetime";
 
 @implementation iWinHomeScreenViewController
 
@@ -35,7 +60,7 @@
     if (self) {
         // Custom initialization
         NSMutableDictionary *defaultDict = [[NSMutableDictionary alloc] init];
-        [defaultDict setValue:[NSString stringWithFormat:@"%d", userID] forKey:@"userID"];
+        [defaultDict setValue:[NSString stringWithFormat:@"%ld", (long)userID] forKey:USER_ID_KEY];
         [[NSUserDefaults standardUserDefaults] registerDefaults:defaultDict];
         [[NSUserDefaults standardUserDefaults] synchronize];
         self.userID = userID;
@@ -52,9 +77,9 @@
     self.meetingFeed = [[NSMutableArray alloc] init];
     self.backendUtility = [[iWinBackEndUtility alloc] init];
     
-    [self.headers addObject:@"Meeting"];
-    [self.headers addObject:@"Task"];
-    [self.headers addObject:@"Miscellaneous"];
+    [self.headers addObject:MEETING_HEADER];
+    [self.headers addObject:TASK_HEADER];
+    [self.headers addObject:MISC_HEADER];
     
     [self initMeetingAndTaskFeed];
     [self initNotificationFeed];
@@ -65,29 +90,29 @@
 - (void)addTask:(NSDictionary *)element
 {
     NSString *url;
-    NSInteger taskID =[[element objectForKey:@"id"] integerValue];
+    NSInteger taskID =[[element objectForKey:ID_KEY] integerValue];
     
-    url = [NSString stringWithFormat:@"%@/Task/%@", DATABASE_URL,[[NSNumber numberWithInt:taskID] stringValue]];
+    url = [NSString stringWithFormat:TASK_URL, DATABASE_URL,(long)taskID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *taskDeserializedDictionary = [self.backendUtility getRequestForUrl:url];
     
-    if(![[taskDeserializedDictionary objectForKey:@"isCompleted"] boolValue]){
+    if(![[taskDeserializedDictionary objectForKey:IS_COMPLETED_KEY] boolValue]){
         [self.taskFeed addObject:element];
     }
 }
 
 - (void)initMeetingAndTaskFeed
 {
-    NSString *url = [NSString stringWithFormat:@"%@/User/Schedule/%@", DATABASE_URL,[[NSUserDefaults standardUserDefaults] objectForKey:@"userID"]];
+    NSString *url = [NSString stringWithFormat:SCHEDULE_URL, DATABASE_URL,[[NSUserDefaults standardUserDefaults] objectForKey:USER_ID_KEY]];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
     
     if (deserializedDictionary)
     {
-        NSArray *jsonArray = [deserializedDictionary objectForKey:@"schedule"];
+        NSArray *jsonArray = [deserializedDictionary objectForKey:SCHEDULE_KEY];
         for(int i = 0; i < [jsonArray count]; i++){
             NSDictionary* element = [jsonArray objectAtIndex:i];
-            if([[element objectForKey:@"type"] isEqualToString:@"meeting"]){
+            if([[element objectForKey:TYPE_KEY] isEqualToString:MEETING_KEY]){
                 [self.meetingFeed addObject:element];
             }
             
@@ -100,14 +125,14 @@
 
 - (void)initNotificationFeed
 {
-    NSString *urlNotification = [NSString stringWithFormat:@"%@/User/Notification/%@", DATABASE_URL,[[NSUserDefaults standardUserDefaults] objectForKey:@"userID"]];
+    NSString *urlNotification = [NSString stringWithFormat:NOTIFICATION_URL, DATABASE_URL,[[NSUserDefaults standardUserDefaults] objectForKey:USER_ID_KEY]];
     
     urlNotification = [urlNotification stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *deserializedDictionaryNotification = [self.backendUtility getRequestForUrl:urlNotification];
     
     if (deserializedDictionaryNotification)
     {
-        NSArray *jsonArray = [deserializedDictionaryNotification objectForKey:@"notifications"];
+        NSArray *jsonArray = [deserializedDictionaryNotification objectForKey:NOTIFICATIONS_KEY];
         for(int i = 0; i < [jsonArray count]; i++){
             NSDictionary* element = [jsonArray objectAtIndex:i];
             [self.notificationFeed addObject:element];
@@ -120,7 +145,7 @@
     self.noteFeed = [[NSMutableArray alloc] init];
     self.noteFeedSubtitle = [[NSMutableArray alloc] init];
     
-    NSString *url = [NSString stringWithFormat:@"%@/User/Sharing/%d", DATABASE_URL,self.userID];
+    NSString *url = [NSString stringWithFormat:SHARING_URL, DATABASE_URL,(long)self.userID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
@@ -128,17 +153,11 @@
     // parse json into variables --> Array of dictionaries
     for (NSDictionary *sharingUser in deserializedDictionary ) {
         // then for each user - put there userName into table view
-        [self.noteFeedSubtitle addObject:[NSString stringWithFormat:@"Shared by %@",[sharingUser objectForKey:@"userName"]]];
+        [self.noteFeedSubtitle addObject:[NSString stringWithFormat:SHARED_BY_STRING,[sharingUser objectForKey:USER_NAME_KEY]]];
     
-        for (NSDictionary *d in [sharingUser objectForKey:@"notes"])
-            [self.noteFeed addObject:[NSString stringWithFormat:@"Note '%@' has been shared with you.", [d objectForKey:@"noteTitle"]]];
+        for (NSDictionary *d in [sharingUser objectForKey:NOTE_KEY])
+            [self.noteFeed addObject:[NSString stringWithFormat:SHARED_WITH_FORMAT, [d objectForKey:NOTE_TITLE_KEY]]];
     }
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 
@@ -151,16 +170,16 @@
         if (indexPath.section == 0)
         {
             NSDictionary* meeting = (NSDictionary*)[self.meetingFeed objectAtIndex:indexPath.row];
-            cell.textLabel.text = (NSString*)[meeting objectForKey:@"title"];
-            cell.detailTextLabel.text = (NSString*)[iWinMeetingViewController getDateTimeStringFromEpochString:[meeting objectForKey:@"datetimeStart"]];
+            cell.textLabel.text = (NSString*)[meeting objectForKey:TITLE_KEY];
+            cell.detailTextLabel.text = (NSString*)[iWinMeetingViewController getDateTimeStringFromEpochString:[meeting objectForKey:DATE_TIME_START]];
         }
     
         else if (indexPath.section == 1)
         {
             NSDictionary* task = (NSDictionary*)[self.taskFeed objectAtIndex:indexPath.row];
-            cell.detailTextLabel.text= (NSString*)[[[iWinMeetingViewController getDateTimeStringFromEpochString:[task objectForKey:@"datetimeStart"]]
-                                                    stringByAppendingString:@" to "]stringByAppendingString:[iWinMeetingViewController getDateTimeStringFromEpochString:[task objectForKey:@"datetimeEnd"]]];
-            cell.textLabel.text = (NSString*)[[[task objectForKey:@"title"] stringByAppendingString:@": "] stringByAppendingString:[task objectForKey:@"description"]];
+            cell.detailTextLabel.text= (NSString*)[[[iWinMeetingViewController getDateTimeStringFromEpochString:[task objectForKey:DATE_TIME_START]]
+                                                    stringByAppendingString:TO_SEPARATOR]stringByAppendingString:[iWinMeetingViewController getDateTimeStringFromEpochString:[task objectForKey:DATE_TIME_END]]];
+            cell.textLabel.text = (NSString*)[[[task objectForKey:TITLE_KEY] stringByAppendingString:COLON_SEPARATOR] stringByAppendingString:[task objectForKey:DESCRIPTION_KEY]];
         }
     
         else
@@ -169,7 +188,7 @@
             
             if (indexPath.row < notificationLength){
                 NSDictionary* notification = (NSDictionary*) [self.notificationFeed objectAtIndex:indexPath.row];
-                cell.textLabel.text = (NSString*)[[[notification objectForKey:@"description"] stringByAppendingString:@": "]stringByAppendingString:[iWinMeetingViewController getDateTimeStringFromEpochString:[notification objectForKey:@"datetime"]]];
+                cell.textLabel.text = (NSString*)[[[notification objectForKey:DESCRIPTION_KEY] stringByAppendingString:COLON_SEPARATOR]stringByAppendingString:[iWinMeetingViewController getDateTimeStringFromEpochString:[notification objectForKey:DATE_TIME_KEY]]];
             }else{
                 cell.textLabel.text = (NSString*)[self.noteFeed objectAtIndex:(notificationLength - indexPath.row)];
                 cell.detailTextLabel.text = (NSString*)[self.noteFeedSubtitle objectAtIndex:(notificationLength - indexPath.row)];
@@ -185,7 +204,7 @@
     //meeting
     if(indexPath.section == 0){
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
-        self.scheduleMeetingVC = [[iWinScheduleViewMeetingViewController alloc] initWithNibName:@"iWinScheduleViewMeetingViewController" bundle:nil withUserID:[[[NSUserDefaults standardUserDefaults] objectForKey:@"userID"] intValue] withMeetingID:[[[self.meetingFeed objectAtIndex:indexPath.row] objectForKey:@"id"] intValue]];
+        self.scheduleMeetingVC = [[iWinScheduleViewMeetingViewController alloc] initWithNibName:VIEW_AND_SCHEDULE_MEETING_NIB bundle:nil withUserID:[[[NSUserDefaults standardUserDefaults] objectForKey:USER_ID_KEY] intValue] withMeetingID:[[[self.meetingFeed objectAtIndex:indexPath.row] objectForKey:ID_KEY] intValue]];
         self.scheduleMeetingVC.viewMeetingDelegate = self;
         [self.scheduleMeetingVC setModalPresentationStyle:UIModalPresentationPageSheet];
         [self.scheduleMeetingVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
@@ -195,7 +214,7 @@
         
     }
     else if(indexPath.section == 1){ //task
-        self.addViewTaskViewController = [[iWinAddAndViewTaskViewController alloc] initWithNibName:@"iWinAddAndViewTaskViewController" bundle:nil withUserID:[[[NSUserDefaults standardUserDefaults] objectForKey:@"userID"] intValue] withTaskID: [[[self.taskFeed objectAtIndex:indexPath.row] objectForKey:@"id"] intValue]];
+        self.addViewTaskViewController = [[iWinAddAndViewTaskViewController alloc] initWithNibName:ADD_AND_VIEW_TASK_NIB bundle:nil withUserID:[[[NSUserDefaults standardUserDefaults] objectForKey:USER_ID_KEY] intValue] withTaskID: [[[self.taskFeed objectAtIndex:indexPath.row] objectForKey:ID_KEY] intValue]];
         [self.addViewTaskViewController setModalPresentationStyle:UIModalPresentationPageSheet];
         [self.addViewTaskViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
         self.addViewTaskViewController.viewTaskDelegate = self;
