@@ -22,6 +22,12 @@
 @property (nonatomic) iWinBackEndUtility *backendUtility;
 @end
 
+NSString* const USER_ATTENDEE_CELL_ID = @"UserAttendeeCell";
+NSString* const NO_EMAIL_MESSAGE = @"You're device does not have email set up.";
+NSString* const EMAIL_SUBJECT = @"Invitation to join Meeting Ninja";
+NSString* const EMAIL_BODY = @"Hello! \n \nYou have been invited to join the Meeting Ninja community. Meeting Ninja as an iPad application that simplfies the management of meetings, tasks, & projects. \n\nTo accept the invitation and install the Meeting Ninja application, please visit: www.apple.com/appStore/Downloads/MeetingNinja\n\nAndroid and Web versions of Meeting Ninja are also available.";
+NSString* const USER_LIST_URL = @"%@/User/Users";
+
 @implementation iWinAddUsersViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withPageName:(NSString *)pageName inEditMode:(BOOL)isEditing
@@ -38,47 +44,46 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
     
-    [self.userListTableView registerNib:[UINib nibWithNibName:@"CustomSubtitledCell" bundle:nil] forCellReuseIdentifier:@"AttendeeCell"];
-    [self.searchDisplayController.searchResultsTableView registerNib:[UINib nibWithNibName:@"CustomSubtitledCell" bundle:nil] forCellReuseIdentifier:@"AttendeeCell"];
+    [self.userListTableView registerNib:[UINib nibWithNibName:CUSTOM_SUBTITLED_CELL bundle:nil] forCellReuseIdentifier:USER_ATTENDEE_CELL_ID];
+    [self.searchDisplayController.searchResultsTableView registerNib:[UINib nibWithNibName:CUSTOM_SUBTITLED_CELL bundle:nil] forCellReuseIdentifier:USER_ATTENDEE_CELL_ID];
     self.attendeeList = [[NSMutableArray alloc] init];
     self.filteredList = [[NSMutableArray alloc] init];
     self.userList = [[NSMutableArray alloc] init];
     iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     NSManagedObjectContext *context = [appDelegate managedObjectContext];
-    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Contact" inManagedObjectContext:context];
+    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:CONTACT_ENTITY inManagedObjectContext:context];
     
     self.backendUtility = [[iWinBackEndUtility alloc] init];
 
     //for backend connection
-    NSString *url = [NSString stringWithFormat:@"%@/User/Users", DATABASE_URL];
+    NSString *url = [NSString stringWithFormat:USER_LIST_URL, DATABASE_URL];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
     
     NSArray *jsonArray;
     if (!deserializedDictionary)
     {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Users not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_MESSAGE message:USER_NOT_FOUND_MESSAGE delegate:self cancelButtonTitle:OK_BUTTON otherButtonTitles: nil];
         [alert show];
     }
     else
     {
-        jsonArray = [deserializedDictionary objectForKey:@"users"];
+        jsonArray = [deserializedDictionary objectForKey:USERS_KEY];
     }
     if (jsonArray.count > 0)
     {
         for (NSDictionary* users in jsonArray)
         {
             Contact *c = [[Contact alloc] initWithEntity:entityDesc insertIntoManagedObjectContext:context];
-            c.userID = [users objectForKey:@"userID"];
+            c.userID = [users objectForKey:USER_ID_KEY];
 
-            c.name = (NSString *)[users objectForKey:@"name"];
-            c.email = (NSString *)[users objectForKey:@"email"];
+            c.name = (NSString *)[users objectForKey:NAME_KEY];
+            c.email = (NSString *)[users objectForKey:EMAIL_KEY];
             c.phone = (NSString *)[users objectForKey:@"phone"];
             c.company = (NSString *)[users objectForKey:@"companyc"];
-            c.title = (NSString *)[users objectForKey:@"title"];
-            c.location = (NSString *)[users objectForKey:@"location"];
+            c.title = (NSString *)[users objectForKey:TITLE_KEY];
+            c.location = (NSString *)[users objectForKey:LOCATION_KEY];
             
             [self.userList addObject:c];
         }
@@ -94,15 +99,15 @@
 - (void)sendInvitation:(MFMailComposeViewController *)mc
 {
     mc.mailComposeDelegate = self;
-    [mc setSubject:@"Invitation to join Meeting Ninja"];
-    [mc setMessageBody:@"Hello! \n \nYou have been invited to join the Meeting Ninja community. Meeting Ninja as an iPad application that simplfies the management of meetings, tasks, & projects. \n\nTo accept the invitation and install the Meeting Ninja application, please visit: www.apple.com/appStore/Downloads/MeetingNinja\n\nAndroid and Web versions of Meeting Ninja are also available." isHTML:NO];
+    [mc setSubject:EMAIL_SUBJECT];
+    [mc setMessageBody:EMAIL_BODY isHTML:NO];
     [mc setToRecipients:[NSArray arrayWithObject:@"[Enter Invitee Email Here!]"]];
     [self presentViewController:mc animated:YES completion:NULL];
 }
 
 - (void)alertEmailNotSetUp
 {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Failure" message:@"You're device does not have email set up." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_MESSAGE message:NO_EMAIL_MESSAGE delegate:nil cancelButtonTitle:OK_BUTTON otherButtonTitles:nil, nil];
     [alert show];
 }
 
@@ -154,10 +159,10 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    CustomSubtitledCell *cell = (CustomSubtitledCell *)[tableView dequeueReusableCellWithIdentifier:@"AttendeeCell"];
+    CustomSubtitledCell *cell = (CustomSubtitledCell *)[tableView dequeueReusableCellWithIdentifier:USER_ATTENDEE_CELL_ID];
     if (cell == nil)
     {
-        cell = [[CustomSubtitledCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"AttendeeCell"];
+        cell = [[CustomSubtitledCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:USER_ATTENDEE_CELL_ID];
     }
     [cell initCell];
     cell.subTitledDelegate = self;
@@ -223,12 +228,8 @@ shouldReloadTableForSearchString:(NSString *)searchString
         NSArray *checkArray = [self.attendeeList filteredArrayUsingPredicate:predicate];
         if (checkArray.count == 0)
         {
-//            if ([self.pageName isEqualToString:@"Task"]){
-//                self.attendeeList[0] = c;
-//            }else{
-                [self.attendeeList addObject:c];
-                [self.userListTableView reloadData];
-//            }
+            [self.attendeeList addObject:c];
+            [self.userListTableView reloadData];
         }
         [self.searchDisplayController setActive:NO];
     }
@@ -237,7 +238,7 @@ shouldReloadTableForSearchString:(NSString *)searchString
 -(void)deleteCell:(NSInteger)row
 {
     self.rowToDelete = row;
-    self.deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this contact?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
+    self.deleteAlertView = [[UIAlertView alloc] initWithTitle:CONFIRM_DELETE_TITLE message:DELETE_CONTACT_MESSAGE delegate:self cancelButtonTitle:NO_DELETE_OPTION otherButtonTitles:YES_DELETE_OPTION, nil];
     [self.deleteAlertView show];
 }
 

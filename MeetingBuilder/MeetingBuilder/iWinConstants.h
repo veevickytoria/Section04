@@ -14,7 +14,10 @@ extern const int MODAL_XOFFSET;
 extern const int MODAL_YOFFSET;
 extern const int MODAL_HEIGHT;
 extern const int MODAL_WIDTH;
-extern const NSString *DATABASE_URL;
+extern const float FIELD_CORNER_RADIUS;
+extern const float FIELD_BORDER_WIDTH;
+
+extern NSString* const DATABASE_URL;
 extern NSString* const VIEW_AND_SCHEDULE_MEETING_NIB;
 extern NSString* const ADD_AND_VIEW_TASK_NIB;
 extern NSString* const USER_ID_KEY;
@@ -70,5 +73,15 @@ extern NSString* const AGENDA_LIST_URL;
 extern NSString* const AGENDA_ID_KEY;
 extern NSString* const IS_COMPLETED_KEY;
 extern NSString* const TASK_URL;
+extern NSString* const TASK_ENTITY;
+extern NSString* const TIME_FORMAT;
+extern NSString* const DATE_FORMAT;
+extern NSString* const TASK_NOT_FOUND_MESSAGE;
+extern NSString* const ASSIGNED_TO_KEY;
+extern NSString* const DEADLINE_KEY;
+extern NSString* const DATE_TIME_STRING_FORMAT;
+extern NSString* const DELETE_CONTACT_MESSAGE;
+extern NSString* const USERS_KEY;
+extern NSString* const USER_NOT_FOUND_MESSAGE;
 
 @end

@@ -41,16 +41,14 @@
 @end
 
 NSString* const SCHEDULE_MEETING_TITLE = @"Schedule a Meeting";
-NSString* const TIME_FORMAT = @"hh:mm a";
+
 NSString* const ADD_AGENDA_TITLE = @"Add Agenda";
-NSString* const DATE_FORMAT = @"MM/dd/yyyy";
 NSString* const VIEW_MEETING_TITLE = @"View Meeting";
 NSString* const MEETING_AGENDA_URL = @"%@/Meeting/Agenda/%d";
 NSString* const MEETING_AGENDA_NOT_FOUND_MESSAGE = @"Meeting agenda not found";
 NSString* const ERROR_ID_KEY = @"errorID";
 NSString* const AM_SYMBOL = @"AM";
 NSString* const PM_SYMBOL = @"PM";
-NSString* const DATE_TIME_STRING_FORMAT = @"%@ %@";
 NSString* const ATTENDEE_CELL_ID = @"AttendeeCell";
 const int NUM_OF_SUGGESTED_TIMES = 10;
 NSString* const USER_SCHEDULE_URL = @"%@/User/Schedule/%d";
@@ -58,7 +56,6 @@ NSString* const SCHEDULE_NOT_FOUND_MESSAGE = @"Schedule not found";
 const int START_HOUR = 8;
 const int END_HOUR = 17;
 NSString* const MEETING_LIST_URL = @"%@/Meeting/";
-NSString* const DELETE_CONTACT_MESSAGE = @"Are you sure you want to delete this contact?";
 const int DATE_PICKER_X_OFFSET = 84;
 const int DATE_PICKER_Y_OFFSET = 32;
 const int SAVE_TIME_BUTTON_X_POS = 220;

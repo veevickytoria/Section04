@@ -8,13 +8,11 @@
 
 #import "iWinAgendaItemViewController.h"
 #import <QuartzCore/QuartzCore.h>
+#import "iWinConstants.h"
 
 @interface iWinAgendaItemViewController ()
 @property (nonatomic) BOOL isEditing;
 @end
-
-const float FIELD_BPRDER_WIDTH = 0.7f;
-const float FIELD_CORNER_RADIUS = 7.0f;
 
 @implementation iWinAgendaItemViewController
 
@@ -31,7 +29,7 @@ const float FIELD_CORNER_RADIUS = 7.0f;
 {
     [super viewDidLoad];
     self.descriptionField.layer.borderColor = [[UIColor lightGrayColor] CGColor];
-    self.descriptionField.layer.borderWidth = FIELD_BPRDER_WIDTH;
+    self.descriptionField.layer.borderWidth = FIELD_BORDER_WIDTH;
     self.descriptionField.layer.cornerRadius = FIELD_CORNER_RADIUS;
     self.headerLabel.text = self.itemTitle;
     self.titleTextField.text = self.itemTitle;

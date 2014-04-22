@@ -26,15 +26,11 @@
 @end
 
 NSString* const USER_TASK_URL = @"%@/User/Tasks/%d";
-NSString* const TASK_NOT_FOUND_MESSAGE = @"Tasks not found";
 NSString* const TASKS_KEY = @"tasks";
 NSString* const ASSIGEND_TO_STRING = @"ASSIGNED_TO";
-NSString* const DEADLINE_KEY = @"deadline";
-NSString* const TASK_ENTITY = @"Task";
 NSString* const TASK_ID_KEY = @"taskID";
 NSString* const DATE_CREATED_KEY = @"dateCreated";
 NSString* const DATE_ASSIGNED_KEY = @"dateAssigned";
-NSString* const ASSIGNED_TO_KEY = @"assignedTo";
 NSString* const ASSIGNED_FROM_KEY = @"assignedFrom";
 NSString* const CREATED_BY_KEY = @"createdBy";
 NSString* const TASK_CELL_ID = @"TaskCell";

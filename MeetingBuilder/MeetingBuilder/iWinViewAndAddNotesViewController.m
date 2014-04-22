@@ -43,7 +43,7 @@
     self.usersSharingWithMe = [[NSMutableArray alloc] init];
     self.backendUtility = [[iWinBackEndUtility alloc] init];
     self.noteField.layer.borderColor = [[UIColor blackColor] CGColor];
-    self.noteField.layer.borderWidth = 0.7f;
+    self.noteField.layer.borderWidth = FIELD_BORDER_WIDTH;
     self.noteField.layer.cornerRadius = 15.0f;
     self.inEditMode = YES;
     self.deleteButton.hidden = YES;
@@ -69,7 +69,7 @@
 
 -(void)switchCanvasToEditMode
 {
-    [self setNoteViewEditModeValuesTo:@"Save" color:[UIColor greenColor] enabledInteraction:YES borderWidth:0.7f
+    [self setNoteViewEditModeValuesTo:SAVE_BUTTON color:[UIColor greenColor] enabledInteraction:YES borderWidth:FIELD_BORDER_WIDTH
         inEditMode:YES borderStyle:UITextBorderStyleRoundedRect deleteButtonHidden:[self shouldHideDeleteButtonIfNewNote]];
 }
 
@@ -122,13 +122,13 @@
     NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
     
     if (!deserializedDictionary) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Failure" message:@"Could not load your note" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_MESSAGE message:@"Could not load your note" delegate:self cancelButtonTitle:OK_BUTTON otherButtonTitles: nil];
         [alert show];
     }
     else
     {
-        self.titleField.text = [deserializedDictionary objectForKey:@"title"];
-        self.noteField.text = [deserializedDictionary objectForKey:@"content"];
+        self.titleField.text = [deserializedDictionary objectForKey:TITLE_KEY];
+        self.noteField.text = [deserializedDictionary objectForKey:CONTENT_KEY];
     }
 }
 
@@ -145,8 +145,8 @@
             // save note for update
             NSString *title = [[self.titleField text] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
             NSString *content = [[self.noteField text] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-            [self updateNote:NO : @"title" : title];
-            [self updateNote:YES : @"content" : content];
+            [self updateNote:NO : TITLE_KEY : title];
+            [self updateNote:YES : CONTENT_KEY : content];
         }
     }
     else {
@@ -157,7 +157,7 @@
 // Override to support editing the table view.
 - (IBAction)confirmDeleteAlert
 {
-    UIAlertView *deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this note?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
+    UIAlertView *deleteAlertView = [[UIAlertView alloc] initWithTitle:CONFIRM_DELETE_TITLE message:@"Are you sure you want to delete this note?" delegate:self cancelButtonTitle:NO_DELETE_OPTION otherButtonTitles:YES_DELETE_OPTION, nil];
     [deleteAlertView show];
 }
 

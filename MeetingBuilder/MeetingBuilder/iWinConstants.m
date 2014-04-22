@@ -14,7 +14,10 @@ const int MODAL_XOFFSET = 0;
 const int MODAL_YOFFSET = 20;
 const int MODAL_HEIGHT = 1040;
 const int MODAL_WIDTH = 768;
-const NSString *DATABASE_URL = @"http://csse371-04.csse.rose-hulman.edu";
+const float FIELD_BORDER_WIDTH = 0.7f;
+const float FIELD_CORNER_RADIUS = 7.0f;
+
+NSString* const DATABASE_URL = @"http://csse371-04.csse.rose-hulman.edu";
 NSString* const VIEW_AND_SCHEDULE_MEETING_NIB = @"iWinScheduleViewMeetingViewController";
 NSString* const ADD_AND_VIEW_TASK_NIB = @"iWinAddAndViewTaskViewController";
 NSString* const USER_ID_KEY = @"userID";
@@ -70,5 +73,15 @@ NSString* const AGENDA_LIST_URL = @"%@/Agenda/";
 NSString* const AGENDA_ID_KEY = @"agendaID";
 NSString* const IS_COMPLETED_KEY = @"isCompleted";
 NSString* const TASK_URL = @"%@/Task/%ld";
+NSString* const TASK_ENTITY = @"Task";
+NSString* const TIME_FORMAT = @"hh:mm a";
+NSString* const DATE_FORMAT = @"MM/dd/yyyy";
+NSString* const TASK_NOT_FOUND_MESSAGE = @"Tasks not found";
+NSString* const ASSIGNED_TO_KEY = @"assignedTo";
+NSString* const DEADLINE_KEY = @"deadline";
+NSString* const DATE_TIME_STRING_FORMAT = @"%@ %@";
+NSString* const DELETE_CONTACT_MESSAGE = @"Are you sure you want to delete this contact?";
+NSString* const USERS_KEY = @"users";
+NSString* const USER_NOT_FOUND_MESSAGE = @"Users not found";
 
 @end
