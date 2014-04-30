@@ -39,7 +39,7 @@ import com.tokenautocomplete.TokenCompleteTextView.TokenListener;
  * <p />
  */
 public class SearchableUserFragment extends Fragment implements
-		AbsListView.OnItemClickListener, AsyncResponse<List<User>>,
+		AsyncResponse<List<User>>,
 		TokenListener {
 
 	// private OnFragmentInteractionListener mListener;
@@ -112,9 +112,6 @@ public class SearchableUserFragment extends Fragment implements
 				R.layout.list_item_user, addedUsers);
 		mListView = (AbsListView) view.findViewById(android.R.id.list);
 		((AdapterView<ListAdapter>) mListView).setAdapter(addedAdapter);
-
-		// Set OnItemClickListener so we can be notified on item clicks
-		mListView.setOnItemClickListener(this);
 
 		return view;
 	}
