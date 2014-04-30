@@ -26,22 +26,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="0"
+        android:background="@drawable/button_selector"
         android:minHeight="24dp"
         android:padding="4dip"
-        android:text="Add Subtopic"
-        android:background="@drawable/button_selector"
+        android:text="New Subtopic"
         android:textColor="#FF777777"
         android:textSize="18sp" />
 
-    <Button
-        android:id="@+id/agenda_topicTimeBtn"
+    <ImageButton
+        android:id="@+id/agenda_topicOptionBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="0"
-        android:minHeight="24dp"
+        android:background="@drawable/btn_transparent_holo_light"
+        android:contentDescription="@string/descr_overflow_button"
         android:padding="4dip"
-        android:text="Add"
-        android:background="@drawable/button_selector"
-        android:textColor="#FF777777" />
+        android:src="@drawable/ic_action_overflow_holo_light" />
 
 </LinearLayout>

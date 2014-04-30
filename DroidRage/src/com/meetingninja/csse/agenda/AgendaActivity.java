@@ -28,6 +28,7 @@ import pl.polidea.treeview.TreeBuilder;
 import pl.polidea.treeview.TreeStateManager;
 import pl.polidea.treeview.TreeViewList;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -125,7 +126,7 @@ public class AgendaActivity extends FragmentActivity {
 
 		Bundle extras = getIntent().getExtras();
 
-		if (savedInstanceState == null) {
+		if (savedInstanceState == null) { // e.g. fresh activity
 			manager = new InMemoryTreeStateManager<Topic>();
 			newCollapsible = false;
 			if (extras != null) {
@@ -134,7 +135,7 @@ public class AgendaActivity extends FragmentActivity {
 
 			// loadAgendaMock();
 
-		} else {
+		} else { // e.g. orientation change
 			manager = (TreeStateManager<Topic>) savedInstanceState
 					.getSerializable("treeManager");
 			newCollapsible = savedInstanceState.getBoolean("collapsible");
@@ -148,24 +149,20 @@ public class AgendaActivity extends FragmentActivity {
 
 		if (displayedAgenda != null) {
 			Log.i(TAG, displayedAgenda.getID());
-//			int depth = displayedAgenda.getDepth();
-//			mAgendaAdpt = new AgendaItemAdapter(this, manager, treeBuilder,
-//					depth);
 			mTitleView.setText(displayedAgenda.getTitle());
 		} else {
+			Log.i(TAG, "Creating a new Agenda");
 			displayedAgenda = new Agenda();
+			displayedAgenda.setID("-1");
 		}
 
+		mTitleView.setText(displayedAgenda.getTitle());
 		int depth = displayedAgenda.getDepth();
-		mAgendaAdpt = new AgendaItemAdapter(this, manager, treeBuilder,
-				depth);
+		mAgendaAdpt = new AgendaItemAdapter(this, manager, treeBuilder, depth);
 		buildTree(treeBuilder);
-
 		treeView.setAdapter(mAgendaAdpt);
+		setTreeViewAsCollapsible(newCollapsible);
 
-		setCollapsible(newCollapsible);
-
-		// registerForContextMenu(treeView);
 	}
 
 	private void loadAgendaMock() {
@@ -213,14 +210,22 @@ public class AgendaActivity extends FragmentActivity {
 
 		int depth = 0;
 		if (displayedAgenda != null) {
+			mTitleView.setText(displayedAgenda.getTitle());
 			depth = displayedAgenda.getDepth();
 			mAgendaAdpt = new AgendaItemAdapter(this, manager, treeBuilder,
 					depth);
-			mTitleView.setText(displayedAgenda.getTitle());
+			treeView.setAdapter(mAgendaAdpt);
 			buildTree(treeBuilder);
 		}
-		treeView.setAdapter(mAgendaAdpt);
 
+	}
+
+	public void removeTopicRecursively(Topic topic) {
+		if (displayedAgenda.getTopics().remove(topic)) {
+			manager.removeNodeRecursively(topic);
+			manager.notifyDataSetChanged();
+			reconstructTree();
+		}
 	}
 
 	@Override
@@ -232,7 +237,7 @@ public class AgendaActivity extends FragmentActivity {
 				displayedAgenda));
 	}
 
-	protected final void setCollapsible(final boolean newCollapsible) {
+	protected final void setTreeViewAsCollapsible(final boolean newCollapsible) {
 		this.collapsible = newCollapsible;
 		treeView.setCollapsible(this.collapsible);
 	}
@@ -241,6 +246,7 @@ public class AgendaActivity extends FragmentActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.menu_agenda, menu);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 		return true;
 	}
 
@@ -250,14 +256,12 @@ public class AgendaActivity extends FragmentActivity {
 			switch (v.getId()) {
 			case R.id.agenda_addTopicBtn:
 				Topic newTopic = new Topic();
-
 				newTopic.setTitle("");
+
 				final EditText mTitle = (EditText) ((View) v.getParent())
 						.findViewById(R.id.agenda_title_edittext);
-
 				System.out.println("FOUND:" + mTitle);
-				newTopic.setTitle(mTitle.getText().toString());
-
+				displayedAgenda.setTitle(mTitle.getText().toString());
 
 				displayedAgenda.addTopic(newTopic);
 				reconstructTree();
@@ -295,7 +299,7 @@ public class AgendaActivity extends FragmentActivity {
 			if (requestCode == 6) {
 			} else if (requestCode == 7) {
 				Task t = new ParcelDataFactory(data.getExtras()).getTask();
-				t.setCreatedBy(SessionManager.getInstance().getUserID());
+				t.setCreatedBy(SessionManager.getUserID());
 				CreateTaskTask creator = new CreateTaskTask(null);
 				creator.createTask(t);
 			}
@@ -310,10 +314,11 @@ public class AgendaActivity extends FragmentActivity {
 
 		// Handle other action bar items...
 		switch (item.getItemId()) {
+		case android.R.id.home:
+
 		case R.id.edit_agenda_action_save:
 			AgendaSaveTask saver = new AgendaSaveTask(
 					new AsyncResponse<String>() {
-
 						@Override
 						public void processFinish(String result) {
 							Log.i(TAG + " Agenda ID", result);
@@ -328,7 +333,7 @@ public class AgendaActivity extends FragmentActivity {
 			finish();
 			return true;
 		case R.id.collapsible_menu_item:
-			setCollapsible(!this.collapsible);
+			setTreeViewAsCollapsible(!this.collapsible);
 			break;
 		case R.id.expand_all_menu_item:
 			manager.expandEverythingBelow(null);
@@ -337,14 +342,18 @@ public class AgendaActivity extends FragmentActivity {
 			manager.collapseChildren(null);
 			break;
 		case R.id.Review:
-			Intent i = new Intent(this, ReviewAgendaActivity.class);
-			i.putExtra(Keys.Agenda.PARCEL, new AgendaParcel(displayedAgenda));
-			startActivity(i);
+			viewAgenda(AgendaActivity.this, displayedAgenda);
 			break;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 		return true;
+	}
+
+	public void viewAgenda(Context context, Agenda viewAgenda) {
+		Intent viewIntent = new Intent(context, ReviewAgendaActivity.class);
+		viewIntent.putExtra(Keys.Agenda.PARCEL, new AgendaParcel(viewAgenda));
+		startActivity(viewIntent);
 	}
 
 }
