@@ -27,12 +27,8 @@ import objects.parcelable.UserParcel;
 
 import org.joda.time.format.DateTimeFormatter;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.AlertDialog.Builder;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -58,6 +54,7 @@ import com.meetingninja.csse.R;
 import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
+import com.meetingninja.csse.database.volley.TaskVolleyAdapter;
 import com.meetingninja.csse.database.volley.UserVolleyAdapter;
 import com.meetingninja.csse.extras.AlertDialogUtil;
 import com.meetingninja.csse.extras.ContactTokenTextView;
@@ -80,7 +77,7 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 	private AutoCompleteAdapter autoAdapter;
 	private ArrayList<User> allUsers = new ArrayList<User>();
 	private ArrayList<User> assignedUsers = new ArrayList<User>();
-	private User addedUser;
+	Dialog dlg;
 
 	// private SessionManager session;
 	private Task displayTask;
@@ -107,8 +104,8 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 		}
 		if (displayTask != null) {
 			// allows keyboard to hide when not editing text
-			setUpListView();
-			setTask();
+			
+			loadTask(displayTask.getID());
 
 			cal = Calendar.getInstance();
 			cal.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -119,7 +116,17 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 			// createdDateLabel.setText(dateFormat.format(createdDate));
 		}
 	}
+	private void loadTask(String id){
+		TaskVolleyAdapter.getTaskInfo(id, new AsyncResponse<Task>() {
+			@Override
+			public void processFinish(Task result) {
+				displayTask = result;
+				setTask();
+				setUpListView();
+			}
 
+		});
+	}
 	private void setTask() {
 		mTitle.setText(displayTask.getTitle());
 		completionCriteria.setText(displayTask.getCompletionCriteria());
@@ -224,7 +231,9 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 		}
 
 		if (added != null) {
-			addedUser = added;
+			displayTask.addMember(added);
+			dlg.dismiss();
+			mUserAdapter.notifyDataSetChanged();
 		}
 	}
 
@@ -237,7 +246,6 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 			removed = new SerializableUser((User) arg0);
 		}
 		if (removed != null) {
-			addedUser = null;
 		}
 
 	}
@@ -271,7 +279,6 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 //				displayTask.setAssignedTo("");
 			}
 			// TODO: fetcher for assigned to
-
 			Toast.makeText(this, String.format("Saving Task"),Toast.LENGTH_SHORT).show();
 
 			Intent msgIntent = new Intent();
@@ -339,8 +346,14 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 		// }
 
 		// TODO: change to a loop when backend catches up
-		String mem = displayTask.getAssignedTo();
+		String mem;
+		if(displayTask.getMembers().size()>0){
+			mem = displayTask.getMembers().get(0).getID();
+		}else{
+			mem=displayTask.getAssignedTo();
+		}
 		loadUser(mem, false);
+		mUserAdapter.notifyDataSetChanged();
 
 	}
 
@@ -349,7 +362,7 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 		inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
 	}
 	public void addMemberDialog(final View view){
-		Dialog dlg = new Dialog(this);
+		dlg = new Dialog(this);
 		dlg.setTitle("Search by name or email:");
 		View autocompleteView = getLayoutInflater().inflate(R.layout.fragment_autocomplete, null);
 		final ContactTokenTextView input = (ContactTokenTextView) autocompleteView.findViewById(R.id.my_autocomplete);
