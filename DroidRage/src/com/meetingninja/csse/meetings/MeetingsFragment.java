@@ -249,7 +249,6 @@ public class MeetingsFragment extends Fragment implements
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		System.out.println("getting here");
 		populateList();
 
 		if (requestCode == 2) {

@@ -41,8 +41,7 @@ import com.meetingninja.csse.user.UserArrayAdapter;
 public class ViewMeetingActivity extends Activity {
 	private static final String TAG = ViewMeetingActivity.class.getSimpleName();
 	private Meeting displayedMeeting;
-	private TextView meetingName, location, startDate, endDate, startTime,
-			endTime, description;
+	private TextView meetingName, location, startDate, endDate, startTime,endTime, description;
 	private ListView attendeesList;
 	private DateTimeFormatter dateFormat = NinjaDateUtils.JODA_APP_DATE_FORMAT;
 	private DateTimeFormatter timeFormat;
@@ -127,8 +126,7 @@ public class ViewMeetingActivity extends Activity {
 	}
 
 	private void edit() {
-		Intent editMeeting = new Intent(ViewMeetingActivity.this,
-				EditMeetingActivity.class);
+		Intent editMeeting = new Intent(ViewMeetingActivity.this,EditMeetingActivity.class);
 		editMeeting.putExtra(Keys.Meeting.PARCEL, displayedMeeting);
 		startActivityForResult(editMeeting, 5);
 	}
@@ -150,8 +148,7 @@ public class ViewMeetingActivity extends Activity {
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
-		outState.putParcelable(Keys.Meeting.PARCEL, new MeetingParcel(
-				displayedMeeting));
+		outState.putParcelable(Keys.Meeting.PARCEL, new MeetingParcel(displayedMeeting));
 		super.onSaveInstanceState(outState);
 	}
 

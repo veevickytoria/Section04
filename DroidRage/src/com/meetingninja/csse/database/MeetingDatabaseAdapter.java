@@ -172,10 +172,10 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 		jgen.writeStringField(Keys.Meeting.DESC, m.getDescription());
 		jgen.writeArrayFieldStart(Keys.Meeting.ATTEND);
 		// TODO: Add attendees to meeting
-		 for (User attendee : m.getAttendance()) {
-		jgen.writeStartObject();
-		jgen.writeStringField(Keys.User.ID, attendee.getID());
-		jgen.writeEndObject();
+		for (User attendee : m.getAttendance()) {
+			jgen.writeStartObject();
+			jgen.writeStringField(Keys.User.ID, attendee.getID());
+			jgen.writeEndObject();
 		 }
 		jgen.writeEndArray();
 		jgen.writeEndObject();

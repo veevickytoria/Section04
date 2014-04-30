@@ -281,8 +281,7 @@ public class EditMeetingActivity extends FragmentActivity implements
 
 	private void save() {
 		if (TextUtils.isEmpty(mTitle.getText())) {
-			Toast.makeText(this, "Empty meeting not created",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Empty meeting not created",Toast.LENGTH_SHORT).show();
 			setResult(RESULT_CANCELED);
 			finish();
 		} else {
@@ -331,20 +330,18 @@ public class EditMeetingActivity extends FragmentActivity implements
 				displayedMeeting = newMeeting;
 
 			} else {
+				System.out.println("save this meeting: "+newMeeting.getTitle());
 				MeetingSaveTask task = new MeetingSaveTask(EditMeetingActivity.this);
 				task.execute(newMeeting);
 				msgIntent.putExtra("method", "insert");
 				displayedMeeting = newMeeting;
 				return;
 			}
-			Toast.makeText(this, String.format("Saving Meeting"),
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, String.format("Saving Meeting"),Toast.LENGTH_SHORT).show();
 
-			msgIntent.putExtra(Keys.Meeting.PARCEL, new MeetingParcel(
-					newMeeting));
+			msgIntent.putExtra(Keys.Meeting.PARCEL, new MeetingParcel(newMeeting));
 			if (extras != null) {
-				msgIntent.putExtra("listPosition",
-						extras.getInt("listPosition", -1));
+				msgIntent.putExtra("listPosition",extras.getInt("listPosition", -1));
 			}
 			setResult(RESULT_OK, msgIntent);
 			finish();
