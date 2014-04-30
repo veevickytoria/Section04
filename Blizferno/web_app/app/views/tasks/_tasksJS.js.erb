@@ -5,15 +5,6 @@ tasksJSON = JSON.parse("["+tasksJSON.toString()+"]");
 var allUsers = <%= raw @allUsersRaw %>;
 allUsers = JSON.parse(JSON.stringify(allUsers));
 
-// var select = formJSON.assignedTo;
-// var selIndex;
-// var selValue;
-
-// select.onchange = function() {
-//     selIndex = select.selectedIndex;
-//     selValue = select.options(selIndex).innerHTML;
-// }
-
 function hideTaskModal(){
 	$('#viewTaskModal').modal('hide');
 }
@@ -33,34 +24,8 @@ function showEditModal(){
 	document.getElementById("isCompletedE").checked = tasksJSON[currentID]["isCompleted"];
 	document.getElementById("descriptionE").value = tasksJSON[currentID]["description"];
 
-	var dateTime = tasksJSON[currentID]["deadline"];
-	dateTime = (new Date(dateTime * 1000)).toLocaleString();
-	dateTime = dateTime.split(" ");
-	var date = dateTime[0].split("/");
-	var month;
-	var day;
-
-	if(date[0].length == 1) month = "0" + date[0];
-	else month = date[0];
-	if(date[1].length == 1) day = "0" + date[1];
-	else day = date[1];
-
-	date = date[2] + "-" + month + "-" + day;
-
-	var time = dateTime[1].split(":");
-	var intHour;
-	if(dateTime[2] == "PM"){
-		intHour = parseInt(time[0]) + 12;
-		time = intHour + ":" + time[1];
-	}
-	else{
-		intHour = parseInt(time[0]);
-		if(intHour < 10)
-			time = "0" + intHour + ":" + time[1];
-		else
-			time = intHour + ":" + time[1];
-	}
-
+	var date = epochToDate(tasksJSON[currentID]["deadline"]);
+	var time = epochToTime(tasksJSON[currentID]["deadline"]);
 	document.getElementById("deadlinedateE").value = date;
 	document.getElementById("deadlinetimeE").value = time;
 
@@ -102,12 +67,7 @@ function validateEditedValues(){
 	}
 
 	// Check dates
-	var date = document.getElementById("deadlinedateE").value.split("-");
-	var time = document.getElementById("deadlinetimeE").value.split(":");
-	var datetime = new Date(date[0], date[1]-1, date[2], time[0], time[1]);
-	datetime = datetime.getTime()/1000.0;
-	var deadline = datetime;
-
+	var deadline = timeToEpoch(document.getElementById("deadlinedateE").value, document.getElementById("deadlinetimeE").value);
 	var dateNow = (new Date).getTime();
 
 	if(!(deadline*1000 > dateNow)){
@@ -127,10 +87,7 @@ function updateEditedValues(){
 	var editData = "";
 
 	// Deadline date/time
-	var splitTime = document.getElementById("deadlinetimeE").value.split(":");
-	var splitDate = document.getElementById("deadlinedateE").value.split("-");
-	var datetime = new Date(splitDate[0], splitDate[1]-1, splitDate[2], splitTime[0], splitTime[1]);
-	datetime = datetime.getTime()/1000.0;
+	var datetime = timeToEpoch(document.getElementById("deadlinedateE").value, document.getElementById("deadlinetimeE").value);
 
 	// Just the deadline...
 	editData = JSON.stringify({"taskID":editTaskID,"field":"deadline","value":datetime});
@@ -213,12 +170,10 @@ function showViewTaskModal(ID){
 	}
 	document.getElementById("descriptionV").innerHTML = tasksJSON[currentID]["description"];
 	
-	var dt = tasksJSON[currentID]["deadline"];
-	dt = new Date(dt * 1000);
-	document.getElementById("deadlineV").innerHTML = dt.toLocaleString();
-	dt = tasksJSON[currentID]["dateCreated"];
-	dt = new Date(dt * 1000);
-	document.getElementById("dateCreatedV").innerHTML = dt.toLocaleString();
+	var dt = epochToFullString(tasksJSON[currentID]["deadline"]);
+	document.getElementById("deadlineV").innerHTML = dt;
+	dt = epochToFullString(tasksJSON[currentID]["dateCreated"]);
+	document.getElementById("dateCreatedV").innerHTML = dt;
 
 	document.getElementById("completionCriteriaV").innerHTML = tasksJSON[currentID]["completionCriteria"];
 
@@ -245,45 +200,6 @@ function showViewTaskModal(ID){
 	$('#editTaskModal').modal('hide');
 }
 
-function validateForm(){
-	var title = document.forms["input"]["title"].value;
-	var description = document.forms["input"]["description"].value;
-	var deadline = document.forms["input"]["deadline"].value;
-	var completionCriteria = document.forms["input"]["completionCriteria"].value;
-	var assignedTo = document.forms["input"]["assignedTo"].value;
-
-	if(title.length == 0 || description.length == 0 || !checkDeadlineFormat(deadline) || completionCriteria.length == 0 || assignedTo.length == 0) {
-		var string = "The following fields need filled or modified: \n\n";
-		if(title.length == 0) string = string + "Title\n";
-		if(description.length == 0) string = string + "Description\n";
-		if(!checkDeadlineFormat(deadline)) string = string + "Deadline (format = 'MM/DD/YYYY_HH:MM', where the underscore is a space)\n";
-		if(completionCriteria.length == 0) string = string + "Completion Criteria\n";
-		if(assignedTo.length == 0) string = string + "Assigned To\n";
-		alert(string);
-		return false;
-	}else{
-		alert("The following fields were added to the db: " + title + " " + description + " " + deadline + " " + completionCriteria + " " + assignedTo)
-		return true;
-	}
-}
-
-function checkDeadlineFormat(deadline){
-	if(deadline.length == 0) return false;
-	else {
-		var array = deadline.split('');
-		var date = new Date()
-		var month = parseInt(deadline.substring(0,2));
-		var day = parseInt(deadline.substring(3,5));
-		var year = parseInt(deadline.substring(6, 10));
-		var hours = parseInt(deadline.substring(11, 13));
-		var minutes = parseInt(deadline.substring(14, 16));
-		if(!(!isNaN(array[0]) && !isNaN(array[1]) && !isNaN(array[3]) && !isNaN(array[4]) && !isNaN(array[6]) && !isNaN(array[7]) && !isNaN(array[8]) && !isNaN(array[9]) && !isNaN(array[11]) && !isNaN(array[12]) && !isNaN(array[14]) && !isNaN(array[15]))) return false;
-		else if(array[2] != '/' || array[5] != '/' || array[10] != ' ' || array[13] != ':') return false;
-		else if(day > 31 || day == 0 || month > 12 || month == 0 || year < date.getFullYear() || hours > 23 || minutes > 59) return false;
-		else return true;
-	}
-}
-
 function submitCreateModal(){
 	//grab the form from the html document
 	var form = document.getElementById('createTask');
@@ -299,25 +215,9 @@ function submitCreateModal(){
 		var postisCompleted = false;
 		var postDescription = formJSON.description;
 
-		var date = formJSON.deadlinedate.split("-");
-		var time = formJSON.deadlinetime.split(":");
-		var datetime = new Date(date[0], date[1]-1, date[2], time[0], time[1]);
-		datetime = datetime.getTime()/1000.0;
-		var postDeadline = datetime;
-
-		var dt = formJSON.dateCreated.split(" ");
-		date = dt[0].split("-");
-		time = dt[1].split(":");
-		datetime = new Date(date[0], date[1]-1, date[2], time[0], time[1]);
-		datetime = datetime.getTime()/1000.0;
-		var postDateCreated = datetime;
-
-		dt = formJSON.dateAssigned.split(" ");
-		date = dt[0].split("-");
-		time = dt[1].split(":");
-		datetime = new Date(date[0], date[1]-1, date[2], time[0], time[1]);
-		datetime = datetime.getTime()/1000.0;
-		var postDateAssigned = datetime;
+		var postDeadline = timeToEpoch(formJSON.deadlinedate, formJSON.deadlinetime);
+		var postDateCreated = timeToEpoch(formJSON.dateCreated.split(" ")[0], formJSON.dateCreated.split(" ")[1]);
+		var postDateAssigned = timeToEpoch(formJSON.dateAssigned.split(" ")[0], formJSON.dateAssigned.split(" ")[1]);
 
 		var postCompletionCriteria = formJSON.completionCriteria;
 		var postAssignedFrom = <%=@userID%>;
@@ -383,12 +283,7 @@ function validateTaskForm(JSONForm){
 	}
 
 	//Check dates
-	var date = document.getElementById("deadlinedate").value.split("-");
-	var time = document.getElementById("deadlinetime").value.split(":");
-	var datetime = new Date(date[0], date[1]-1, date[2], time[0], time[1]);
-	datetime = datetime.getTime()/1000.0;
-	var deadline = datetime;
-
+	var deadline = timeToEpoch(document.getElementById("deadlinedate").value, document.getElementById("deadlinetime").value);
 	var dateNow = (new Date).getTime();
 
 	if(!(deadline*1000 > dateNow) && !invalidFields){

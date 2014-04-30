@@ -20,7 +20,7 @@ function showViewNoteModal(){
 	document.getElementById("NtitleV").innerHTML = notesJSON[currentID]["title"];
 	document.getElementById("NcontentV").innerHTML = notesJSON[currentID]["content"];
 	document.getElementById("NdescriptionV").innerHTML = notesJSON[currentID]["description"];
-	document.getElementById("NdateCreatedV").innerHTML = notesJSON[currentID]["dateCreated"];
+	document.getElementById("NdateCreatedV").innerHTML = epochToFullString(notesJSON[currentID]["dateCreated"]);
 
 	$('#editNoteModal').modal('hide');
 	$('#viewNoteModal').modal('show');
@@ -79,7 +79,7 @@ function createAgendaStructure(contents, element){
 			contentElement.appendChild(document.createElement("br"));
 
 			var time = document.createElement("div");
-			var timeText = document.createTextNode("Time: " + contents[i]['time']);
+			var timeText = document.createTextNode("Time: " + epochToFullString(contents[i]['time']));
 				time.appendChild(timeText);
 				contentElement.appendChild(time);
 
@@ -371,9 +371,10 @@ function updateEditedAgendaValues(formJSON){
 		var postTitle = formJSON.title;
 		var postMeeting = formJSON.meeting;
 		var postUser = <%=@userID%>;
+		var datetime = timeToEpoch(formJSON["contentDate"], formJSON["contentTime"]);
 		var postContent = JSON.stringify([{
 				"title":formJSON["contentTitle"],
-				"time":formJSON["contentTime"],
+				"time":datetime,
 				"description":formJSON["contentDescription"],
 				"content":[]
 			}]);
@@ -452,23 +453,16 @@ function validateNewNoteValues(JSONForm){
 
 function submitCreateNoteModal(){
 
-	var today = new Date();
-	var dd = today.getDate();
-	var mm = today.getMonth()+1; //January is 0!
-
-	var yyyy = today.getFullYear();
-	if(dd<10){dd='0'+dd} 
-		if(mm<10){mm='0'+mm} today = mm+'/'+dd+'/'+yyyy;
-		
-		//grab the form from the html document
-		var form = document.getElementById('createDocument');
-		//still testing validation
-		//if(validateMeetingForm(form)){
-		//parse it into a json object
-		var formJSON = new convertFormToJSON(form);
-		var invalid = validateNewNoteValues(formJSON);
-		if(!invalid){
-
+	var today = new Date().getTime();
+			
+	//grab the form from the html document
+	var form = document.getElementById('createDocument');
+	//still testing validation
+	//if(validateMeetingForm(form)){
+	//parse it into a json object
+	var formJSON = new convertFormToJSON(form);
+	var invalid = validateNewNoteValues(formJSON);
+	if(!invalid){
 		//manually grab the values for each field expected by the backend
 		var postCreator = <%=@userID%>;
 		var postTitle = formJSON.title;
@@ -510,7 +504,15 @@ function validateNewAgendaValues(JSONForm){
 		}
 	}
 
-	return invalidFields
+	var datetime = timeToEpoch(document.getElementById("contentDate").value, document.getElementById("contentTime").value);
+	var dateNow = (new Date).getTime();
+
+	if(!(datetime*1000 > dateNow) && !invalidFields){
+		invalidFields = true;
+		alert("The date/time can't be in the past.");
+	}
+
+	return invalidFields;
 }
 
 function submitCreateAgendaModal(){
@@ -522,10 +524,12 @@ function submitCreateAgendaModal(){
 		var postTitle = formJSON.title;
 		var postMeeting = document.getElementById("meeting").value;
 		var postUser = <%=@userID%>;
+		var datetime = timeToEpoch(formJSON["contentDate"], formJSON["contentTime"]);
+
 		var postContent = JSON.stringify([{
 				"title":formJSON["contentTitle"],
 				"time":formJSON["contentTime"],
-				"description":formJSON["contentDescription"],
+				"description":datetime,
 				"content":[]
 			}]);
 		postContent = JSON.parse(postContent);
@@ -536,7 +540,7 @@ function submitCreateAgendaModal(){
 			"user":postUser,
 			"content":postContent
 		});
-
+		alert(postData);
 		var doOnSuccess = function(data){
 							$('#newAgendaModal').modal('hide');
 							window.location.reload(true);

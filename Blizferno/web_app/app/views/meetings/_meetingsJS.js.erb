@@ -21,15 +21,10 @@ function showViewMeetingModal(ID){
 	document.getElementById("titleV").innerHTML = meetingsJSON[currentID]["title"];
 	document.getElementById("locationV").innerHTML = meetingsJSON[currentID]["location"];
 
-	var startDateTime = meetingsJSON[currentID]["datetime"];
-	var endDateTime = meetingsJSON[currentID]["endDatetime"];
-
-	var dtString = new Date(startDateTime * 1000);
-
-	document.getElementById("datetimeV").innerHTML = dtString.toLocaleString();
-	dtString = new Date(endDateTime * 1000);
-	
-	document.getElementById("endDatetimeV").innerHTML = dtString.toLocaleString();
+	var dtString = epochToFullString(meetingsJSON[currentID]["datetime"]);
+	document.getElementById("datetimeV").innerHTML = dtString;
+	dtString = epochToFullString(meetingsJSON[currentID]["endDatetime"]);
+	document.getElementById("endDatetimeV").innerHTML = dtString;
 	document.getElementById("descriptionV").innerHTML = meetingsJSON[currentID]["description"];
 
 	var allIDs = new Array();
@@ -68,17 +63,8 @@ function validateEditedValues(){
 			}
 		}
 	}
-	var splitTime = document.getElementById("timeStartE").value.split(":");
-	var splitDate = document.getElementById("dateStartE").value.split("-");
-	var startDateTime = new Date(splitDate[0], splitDate[1]-1, splitDate[2], splitTime[0], splitTime[1]);
-	startDateTime = startDateTime.getTime()/1000.0;
-
-	// End date/time
-	splitTime = document.getElementById("timeEndE").value.split(":");
-	splitDate = document.getElementById("dateEndE").value.split("-");
-	var endDateTime = new Date(splitDate[0], splitDate[1]-1, splitDate[2], splitTime[0], splitTime[1]);
-	endDateTime = endDateTime.getTime()/1000.0;
-
+	var startDateTime = timeToEpoch(document.getElementById("dateStartE").value, document.getElementById("timeStartE").value);
+	var endDateTime = timeToEpoch(document.getElementById("dateEndE").value, document.getElementById("timeEndE").value);
 	var dateNow = (new Date).getTime();
 
 	additionalKeys = ["dateStart","dateEnd", "timeStart", "timeEnd"];
@@ -109,8 +95,7 @@ function validateEditedValues(){
 			document.getElementById("attendanceER").style.display = "none";
 		}
 	}
-
-	return invalidFields
+	return invalidFields;
 }
 
 //This function is called when a user submits an edit by clicking the "Save Changes" button. We cannot access our javascript variable, currentID, in the html file, index, when we set the functionality of the EditMeetingModal's "Save Changes" button so we use this as a proxy.
@@ -135,63 +120,18 @@ function showEditModal(ID){
 	document.getElementById("titleE").value = meetingsJSON[currentID]["title"];
 	document.getElementById("locationE").value = meetingsJSON[currentID]["location"];
 
-	var dateTime = meetingsJSON[currentID]["datetime"];
-	dateTime = (new Date(dateTime * 1000)).toLocaleString();
-	dateTime = dateTime.split(" ");
-	
-	var date = dateTime[0].split("/");
-	var month;
-	var day;
-
-	if(date[0].length == 1) month = "0" + date[0];
-	else month = date[0];
-	if(date[1].length == 1) day = "0" + date[1];
-	else day = date[1];
-
-	date = date[2] + "-" + month + "-" + day;
-
-	var time = dateTime[1].split(":");
-	var intHour;
-	if(dateTime[2] == "PM"){
-		intHour = parseInt(time[0]) + 12;
-		time = intHour + ":" + time[1];
-	}
-	else{
-		intHour = parseInt(time[0]);
-		if(intHour < 10)
-			time = "0" + intHour + ":" + time[1];
-		else
-			time = intHour + ":" + time[1];
-	}
+	var date = epochToDate(meetingsJSON[currentID]["datetime"]);
+	var time = epochToTime(meetingsJSON[currentID]["datetime"]);
 
 	document.getElementById("dateStartE").value = date;
 	document.getElementById("timeStartE").value = time;
-		
-	dateTime = meetingsJSON[currentID]["endDatetime"];
-	dateTime = (new Date(dateTime *1000)).toLocaleString();
-	dateTime = dateTime.split(" ");
 
-	date = dateTime[0].split("/");
-	if(date[0].length == 1) month = "0" + date[0];
-	else month = date[0];
-	if(date[1].length == 1) day = "0" + date[1];
-	else day = date[1];
+	date = epochToDate(meetingsJSON[currentID]["endDatetime"]);
+	time = epochToTime(meetingsJSON[currentID]["endDatetime"]);
 
-	date = date[2] + "-" + month + "-" + day;
-
-	time = dateTime[1].split(":");
-	if(dateTime[2] == "PM"){
-		intHour = parseInt(time[0]) + 12;
-		time = intHour + ":" + time[1];
-	}
-	else{
-		time = time[0] + ":" + time[1];
-	}
 	document.getElementById("dateEndE").value = date;
 	document.getElementById("timeEndE").value = time;
-	document.getElementById("descriptionE").value = meetingsJSON[currentID]["description"];
-	//document.getElementById("attendanceE").value = meetingsJSON[currentID]["attendance"];
-
+	document.getElementById("descriptionE").value = meetingsJSON[currentID]["description"];	
     populateSelect(allUsers['users'], "name", "userID", meetingsJSON[currentID]["attendance"], "attendanceE");
 
 	$('#editMeetingModal').modal('show');
@@ -213,18 +153,9 @@ function updateEditedValues(){
 	//convert the form into a JSON object for easy parsing
 	var editForm = convertFormToJSON(document.getElementById("editMeetingForm"));
 
-	// Start date/time
-	var splitTime = editForm.timeStart.split(":");
-	var splitDate = editForm.dateStart.split("-");
-	var startDateTime = new Date(splitDate[0], splitDate[1]-1, splitDate[2], splitTime[0], splitTime[1]);
-	startDateTime = startDateTime.getTime()/1000.0;
+	var startDateTime = timeToEpoch(editForm.dateStart, editForm.timeStart);
+	var endDateTime = timeToEpoch(editForm.dateEnd, editForm.timeEnd);
 	editForm['datetime'] = startDateTime;
-
-	// End date/time
-	splitTime = editForm.timeEnd.split(":");
-	splitDate = editForm.dateEnd.split("-");
-	var endDateTime = new Date(splitDate[0], splitDate[1]-1, splitDate[2], splitTime[0], splitTime[1]);
-	endDateTime = endDateTime.getTime()/1000.0;
 	editForm['endDatetime'] = endDateTime;
 	//get the meetingID associated with the current meeting from our table
 
@@ -280,21 +211,8 @@ function submitCreateModal(){
 	var postTitle = formJSON.title;
 	var postLocation = formJSON.location;
 
-	// Start date/time
-	var splitTime = formJSON.timeStart.split(":");
-	var splitDate = formJSON.dateStart.split("-");
-	var startDateTime = new Date(splitDate[0], splitDate[1]-1, splitDate[2], splitTime[0], splitTime[1]);
-	startDateTime = startDateTime.getTime()/1000.0;
-	var postDatetime = startDateTime;
-
-	// End date/time
-	splitTime = formJSON.timeEnd.split(":");
-	splitDate = formJSON.dateEnd.split("-");
-	var endDateTime = new Date(splitDate[0], splitDate[1]-1, splitDate[2], splitTime[0], splitTime[1]);
-	endDateTime = endDateTime.getTime()/1000.0;
-	var postEndDatetime = endDateTime;
-	//var mydate = new Date(testDate * 1000);
-	//alert(mydate.toGMTString() + " " + mydate.toLocaleString());
+	var postDatetime = timeToEpoch(formJSON.dateStart, formJSON.timeStart);
+	var postEndDatetime = timeToEpoch(formJSON.dateEnd, formJSON.timeEnd);
 
 	var postDescription = formJSON.description;
 	var attendees = getMembers('attendees');
@@ -379,18 +297,9 @@ function validateMeetingForm(inputForm){
 		else document.getElementById(field+"R").style.display = "none";
 	}
 	if(!filledOut) return false;
-	// Start date/time
-	var splitTime = form.timeStart.split(":");
-	var splitDate = form.dateStart.split("-");
-	var startDateTime = new Date(splitDate[0], splitDate[1]-1, splitDate[2], splitTime[0], splitTime[1]);
-	startDateTime = startDateTime.getTime()/1000.0;
 
-	// End date/time
-	splitTime = form.timeEnd.split(":");
-	splitDate = form.dateEnd.split("-");
-	var endDateTime = new Date(splitDate[0], splitDate[1]-1, splitDate[2], splitTime[0], splitTime[1]);
-	endDateTime = endDateTime.getTime()/1000.0;
-
+	var startDateTime = timeToEpoch(form.dateStart, form.timeStart);
+	var endDateTime = timeToEpoch(form.dateEnd, form.timeEnd);
 	var dateNow = (new Date).getTime();
 	
 	
