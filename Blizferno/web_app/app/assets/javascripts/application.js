@@ -191,5 +191,57 @@ function convertFormToJSON(form){
     json[this.name] = this.value || '';
   });
 
-  return json;
+}
+
+function timeToEpoch(date, time){
+    var splitTime = time.split(":");
+    var splitDate = date.split("-");
+    var dateAndTime = new Date(splitDate[0], splitDate[1]-1, splitDate[2], splitTime[0], splitTime[1]);
+    dateAndTime = dateAndTime.getTime()/1000.0;
+    return dateAndTime;
+}
+
+function epochToDate(epoch){
+    var dateTime = (new Date(epoch * 1000)).toLocaleString();
+    dateTime = dateTime.split(" ");
+
+    var date = dateTime[0].split("/");
+    var month;
+    var day;
+
+    if(date[0].length == 1) month = "0" + date[0];
+    else month = date[0];
+    if(date[1].length == 1) day = "0" + date[1];
+    else day = date[1];
+
+    date = date[2] + "-" + month + "-" + day;
+
+    return date;
+}
+
+function epochToTime(epoch){
+    var dateTime = (new Date(epoch * 1000)).toLocaleString();
+    dateTime = dateTime.split(" ");
+
+    var time = dateTime[1].split(":");
+    var intHour;
+
+    if(dateTime[2] == "PM"){
+        intHour = parseInt(time[0]) + 12;
+        time = intHour + ":" + time[1];
+    }
+    else{
+        intHour = parseInt(time[0]);
+        if(intHour < 10)
+            time = "0" + intHour + ":" + time[1];
+        else
+            time = intHour + ":" + time[1];
+    }
+
+    return time;
+}
+
+function epochToFullString(epoch){
+    var dtString = new Date(epoch*1000);
+    return dtString.toLocaleString();
 }

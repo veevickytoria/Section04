@@ -107,6 +107,7 @@ function NewMeetingModal(documentID, blankID){
 	newModal.executeAction = function(){
 		var invalid = newModal.validate();
 		if(!invalid){
+			alert();
 			var form = parentConvertToJSON.call(this, document.getElementById("body"))
 			
 			var postUid = getCookie('userID');
@@ -114,10 +115,9 @@ function NewMeetingModal(documentID, blankID){
 			var members = newModal.getMembers('members');
 
 			var postMembers = [{"userID":postUid}];
-
 			for (var i = members.length - 1; i >= 0; i--) {
 				postMembers.push({"userID":members[i]});
-
+			}
 				var splitTime = form.timeStart.split(":");
 				var splitDate = form.dateStart.split("-");
 				var startDateTime = new Date(splitDate[0], splitDate[1]-1, splitDate[2], splitTime[0], splitTime[1]);
@@ -139,7 +139,7 @@ function NewMeetingModal(documentID, blankID){
 					"datetime":postDatetime,
 					"endDatetime":postEndDatetime,
 					"description":postDescription,
-					"members":postMembers
+					"attendance":postMembers
 				});
 
 
@@ -154,7 +154,7 @@ function NewMeetingModal(documentID, blankID){
 					}
 				});
 
-			}
+			
 			}
 		}
 
@@ -222,9 +222,9 @@ function ViewMeetingModal(documentID, meetingID){
 		var header = document.createElement("h1");
 		header.setAttribute("class", "modal-title");
 		var text = document.createTextNode("View Meeting Details");
-		// header.appendChild(text);
+		header.appendChild(text);
 		var doc = document.getElementById("header");
-		// doc.appendChild(header);
+		doc.appendChild(header);
 	}
 
 	viewModal.createBody = function(){
@@ -252,10 +252,7 @@ function ViewMeetingModal(documentID, meetingID){
 				async: false
 			});
 		}
-
-		parentAddText.call(this, "Meeting Title: ","","viewLabel", "body");
-		parentAddText.call(this, meetingArray["title"],"title","viewData", "body");
-		parentAddText.call(this, "Members: ","","viewLabel", "body");
+	
 
 		var table = document.createElement("table");
 		table.setAttribute("id", "members");
@@ -266,56 +263,59 @@ function ViewMeetingModal(documentID, meetingID){
 		var doc = document.getElementById("body");
 		doc.appendChild(tableMems);
 
-		// // Get meeting Info
-		// var membInfo;
-		// var membs = new Array();
+		// Get meeting Info
+		var membInfo;
+		var membs = new Array();
 
-		// $.ajax({
-		// 	type: 'GET',
-		// 	url: 'http://csse371-04.csse.rose-hulman.edu/Meeting/' + meetingID,
-		// 	success:function(data){
-		// 		meetingArray = JSON.parse(data);
-		// 	},
-		// 	async: false
-		// });
+		$.ajax({
+			type: 'GET',
+			url: 'http://csse371-04.csse.rose-hulman.edu/Meeting/' + meetingID,
+			success:function(data){
+				meetingArray = JSON.parse(data);
+			},
+			async: false
+		});
 
-		// alert(JSON.stringify(meetingArray));
+		for (i in meetingArray['attendance']){
+			$.ajax({
+				type: 'GET',
+				url: 'http://csse371-04.csse.rose-hulman.edu/User/' + meetingArray['attendance'][i]['userID'],
+				success:function(data){
+					membInfo = JSON.parse(data);
+					membs.push({'name':membInfo['name']});
+				},
+				async: false
+			});
+		}
 
-		// for (i in meetingArray['members']){
-		// 	$.ajax({
-		// 		type: 'GET',
-		// 		url: 'http://csse371-04.csse.rose-hulman.edu/User/' + meetingArray['attendance'][i]['userID'],
-		// 		success:function(data){
-		// 			membInfo = JSON.parse(data);
-		// 			membs.push({'name':membInfo['name']});
-		// 		},
-		// 		async: false
-		// 	});
-		// }
+		//add meeting info
+		parentAddText.call(this, "Topic:","","viewLabel", "body");
+		parentAddText.call(this, meetingArray["title"], "title", "viewData", "body");
+		parentAddBreak.call(this, "body");
 
-		// //add meeting info
-		// parentAddText.call(this, "Topic:","","viewLabel", "body");
-		// parentAddElement.call(this, meetingArray["title"], "title", "viewData", "body");
-		// parentAddBreak.call(this, "body");
+		parentAddText.call(this, "Location:", "", "viewLabel", "body");
+		parentAddText.call(this, meetingArray["location"],"location","viewData", "body");
+		parentAddBreak.call(this, "body");
 
-		// parentAddText.call(this, "Location:", "", "", "body");
-		// parentAddElement.call(this, meetingArray["location"],"location","viewData", "body");
-		// parentAddBreak.call(this, "body");
+		//fix get time for parsing
+		//var date = epochToDate(meetingArray["endDatetime"]);
 
-		// //fix get time for parsing
+		//parentAddText.call(this, date,"endDatetime","viewData", "body");
 
-		// parentAddText.call(this, "Description:", "", "", "body");
-		// parentAddElement.call(this, meetingArray["description"],"description","viewData", "body");
-		// parentAddBreak.call(this, "body");
+		parentAddText.call(this, "Description:", "", "viewLabel", "body");
+		parentAddText.call(this, meetingArray["description"],"description","viewData", "body");
+		parentAddBreak.call(this, "body");
 
-		// var table = document.createElement("table");
-		// table.setAttribute("id", "members");
-		// table.setAttribute("class", "viewData");
+		parentAddText.call(this, "Members: ","","viewLabel", "body");
+
+		var table = document.createElement("table");
+		table.setAttribute("id", "attendance");
+		table.setAttribute("class", "viewData");
 
 
-		// tableMems = parentPopulateTableRows.call(this, membs, "name", table);
-		// var doc = document.getElementById("body");
-		// doc.appendChild(tableMems);
+		tableMems = parentPopulateTableRows.call(this, membs, "name", table);
+		var doc = document.getElementById("body");
+		doc.appendChild(tableMems);
 	}
 
 	viewModal.createFooter = function(users){
