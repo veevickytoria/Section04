@@ -219,7 +219,8 @@ function submitCreateModal(){
 	var postAttendance = [];
 
 	for (var i = attendees.length - 1; i >= 0; i--) {
-		postAttendance.push({"userID":attendees[i]});
+		if(attendees[i] != postId)
+			postAttendance.push({"userID":attendees[i]});
 	};
 
 		//set up the data for the call

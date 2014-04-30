@@ -27,9 +27,19 @@ function showViewNoteModal(){
 }
 
 function showViewAgendaModal(){
+	var userName;
+	var meetingTitle;
+	var doOnSuccess = function(data){
+						userName = JSON.parse(data)['name'];
+					}
+	ajaxRequest('null', 'GET', '/User/'+agendasJSON[currentID]["userID"], false, doOnSuccess);
+	doOnSuccess = function(data){
+					meetingTitle = JSON.parse(data)['title'];
+	}
+	ajaxRequest('null', 'GET', '/Meeting/' + agendasJSON[currentID]["meetingID"], false, doOnSuccess);
 	document.getElementById("AtitleV").innerHTML = agendasJSON[currentID]["title"];
-	document.getElementById("AuserIDV").innerHTML = agendasJSON[currentID]["userID"];
-	document.getElementById("AmeetingIDV").innerHTML = agendasJSON[currentID]["meetingID"];
+	document.getElementById("AuserIDV").innerHTML = userName;
+	document.getElementById("AmeetingIDV").innerHTML = meetingTitle;
 	/*document.getElementById("AcontentTitleV").innerHTML = agendasJSON[currentID]["content"]["1"]["title"];
 	document.getElementById("AcontentTimeV").innerHTML = agendasJSON[currentID]["content"]["1"]["time"];
 	document.getElementById("AcontentDescriptionV").innerHTML = agendasJSON[currentID]["content"]["1"]["description"];
@@ -55,7 +65,6 @@ function createAgendaStructure(contents, element){
 //alert("contents="+JSON.stringify(contents));
 //alert("count="+jsonLength(contents));
 
-
 	if(typeof contents != 'undefined'){
 		for(var i = 1; i <= jsonLength(contents); i++){
 //alert("description="+contents[i]['description']);
@@ -79,7 +88,7 @@ function createAgendaStructure(contents, element){
 			contentElement.appendChild(document.createElement("br"));
 
 			var time = document.createElement("div");
-			var timeText = document.createTextNode("Time: " + epochToFullString(contents[i]['time']));
+			var timeText = document.createTextNode("Time: " + contents[i]['time']);
 				time.appendChild(timeText);
 				contentElement.appendChild(time);
 
@@ -87,7 +96,7 @@ function createAgendaStructure(contents, element){
 			contentElement.appendChild(document.createElement("br"));
 
 			var description = document.createElement("div");
-			var descriptionText = document.createTextNode("Description: " + contents[i]['description']);
+			var descriptionText = document.createTextNode("Description: " + epochToFullString(contents[i]['description']));
 				description.appendChild(descriptionText);
 				contentElement.appendChild(description);
 
@@ -201,8 +210,14 @@ function showEditNoteModal(){
 }
 
 function showEditAgendaModal(){
+	var userName;
+	var doOnSuccess = function(data){
+						userName = JSON.parse(data)['name'];
+					}
+	ajaxRequest('null', 'GET', '/User/'+agendasJSON[currentID]["userID"], false, doOnSuccess);
+
 	document.getElementById("AtitleE").value = agendasJSON[currentID]["title"];
-	document.getElementById("AuserIDE").innerHTML = agendasJSON[currentID]["userID"];
+	document.getElementById("AuserIDE").innerHTML = userName;
 /*	document.getElementById("AcontentTitleE").value = agendasJSON[currentID]["content"]["1"]["title"];
 	document.getElementById("AcontentTimeE").value = agendasJSON[currentID]["content"]["1"]["time"];
 	document.getElementById("AcontentDescriptionE").value = agendasJSON[currentID]["content"]["1"]["description"];
@@ -540,7 +555,7 @@ function submitCreateAgendaModal(){
 			"user":postUser,
 			"content":postContent
 		});
-		
+
 		var doOnSuccess = function(data){
 							$('#newAgendaModal').modal('hide');
 							window.location.reload(true);
