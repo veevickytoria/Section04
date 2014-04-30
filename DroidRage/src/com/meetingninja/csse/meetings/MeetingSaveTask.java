@@ -19,7 +19,6 @@ public class MeetingSaveTask extends AsyncTask<Meeting, Void, String> {
 	protected String doInBackground(Meeting... params) {
 		Meeting m = params[0];
 		try {
-			SessionManager.getInstance();
 			String userID = SessionManager.getUserID();
 			m = MeetingDatabaseAdapter.createMeeting(userID, m);
 		} catch (Exception e) {

@@ -17,8 +17,10 @@ package com.meetingninja.csse.meetings;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import objects.Meeting;
+import objects.SerializableUser;
 import objects.User;
 import objects.parcelable.MeetingParcel;
 
@@ -36,6 +38,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.doomonafireball.betterpickers.calendardatepicker.CalendarDatePickerDialog;
@@ -48,12 +51,16 @@ import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.agenda.AgendaActivity;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
+import com.meetingninja.csse.database.volley.UserVolleyAdapter;
 import com.meetingninja.csse.extras.AlertDialogUtil;
 import com.meetingninja.csse.extras.ContactTokenTextView;
 import com.meetingninja.csse.extras.NinjaDateUtils;
+import com.meetingninja.csse.user.AutoCompleteAdapter;
+import com.meetingninja.csse.user.UserArrayAdapter;
+import com.tokenautocomplete.TokenCompleteTextView.TokenListener;
 
 public class EditMeetingActivity extends FragmentActivity implements
-		AsyncResponse<String> {
+		AsyncResponse<String> , TokenListener {
 
 	private Bundle extras;
 	private EditText mTitle, mLocation, mDescription;
@@ -63,8 +70,15 @@ public class EditMeetingActivity extends FragmentActivity implements
 	private Calendar start, end;
 	private DateTimeFormatter timeFormat;
 	private DateTimeFormatter dateFormat = NinjaDateUtils.JODA_APP_DATE_FORMAT;
-	private static ArrayList<User> attendees = new ArrayList<User>();
+
 	private ContactTokenTextView mGuestsComplete;
+
+	private AutoCompleteAdapter autoAdapter;
+	private UserArrayAdapter addedAdapter;
+
+	private ArrayList<User> allUsers = new ArrayList<User>();
+	private ArrayList<User> addedUsers = new ArrayList<User>();
+	private ArrayList<String> addedIds = new ArrayList<String>();
 
 	private Meeting displayedMeeting;
 
@@ -84,6 +98,22 @@ public class EditMeetingActivity extends FragmentActivity implements
 				.is24HourFormat(getApplicationContext());
 		timeFormat = is24 ? NinjaDateUtils.JODA_24_TIME_FORMAT
 				: NinjaDateUtils.JODA_12_TIME_FORMAT;
+
+		getAllUsers();
+	}
+
+	private void getAllUsers() {
+		UserVolleyAdapter.fetchAllUsers(new AsyncResponse<List<User>>() {
+
+			@Override
+			public void processFinish(List<User> result) {
+				allUsers.clear();
+				autoAdapter.clear();
+				allUsers.addAll(result);
+				autoAdapter.notifyDataSetChanged();
+			}
+		});
+
 	}
 
 	private void textFieldinit() {
@@ -128,6 +158,21 @@ public class EditMeetingActivity extends FragmentActivity implements
 		setupViews();
 		textFieldinit();
 		dateTimePicker();
+		setupAutoComplete();
+	}
+
+	private void setupAutoComplete() {
+		getAllUsers();
+		autoAdapter = new AutoCompleteAdapter(EditMeetingActivity.this, allUsers);
+		mGuestsComplete.setAdapter(autoAdapter);
+		mGuestsComplete.setTokenListener(this);
+
+		// token listener when autocompleted
+
+				addedAdapter = new UserArrayAdapter(EditMeetingActivity.this,
+						R.layout.list_item_user, addedUsers);
+
+
 	}
 
 	private final View.OnClickListener mActionBarListener = new OnClickListener() {
@@ -280,14 +325,13 @@ public class EditMeetingActivity extends FragmentActivity implements
 				msgIntent.putExtra("method", "update");
 				newMeeting.setID(displayedMeeting.getID());
 				UpdateMeetingTask task = new UpdateMeetingTask();
-				newMeeting.setAttendance(attendees);
+				newMeeting.setAttendance(addedUsers);
 				task.updateMeeting(newMeeting);
 
 				displayedMeeting = newMeeting;
 
 			} else {
-				MeetingSaveTask task = new MeetingSaveTask(
-						EditMeetingActivity.this);
+				MeetingSaveTask task = new MeetingSaveTask(EditMeetingActivity.this);
 				task.execute(newMeeting);
 				msgIntent.putExtra("method", "insert");
 				displayedMeeting = newMeeting;
@@ -459,6 +503,48 @@ public class EditMeetingActivity extends FragmentActivity implements
 						"A Meeting can not be set to start or end before now",
 						"OK", null);
 			}
+		}
+
+	}
+
+	@Override
+	public void onTokenAdded(Object arg0) {
+		SerializableUser added = null;
+		if (arg0 instanceof SerializableUser)
+			added = (SerializableUser) arg0;
+		else if (arg0 instanceof User)
+			added = new SerializableUser((User) arg0);
+
+		if (added != null) {
+			addedUsers.add(added);
+			if (!TextUtils.equals(added.getID(), "")) {
+				addedIds.add(added.getID());
+			}
+//			else {
+//				addedIds.add(added.getEmail());
+//			}
+		}
+		addedAdapter.notifyDataSetChanged();
+
+	}
+
+	@Override
+	public void onTokenRemoved(Object arg0) {
+		SerializableUser removed = null;
+		if (arg0 instanceof SerializableUser)
+			removed = (SerializableUser) arg0;
+		else if (arg0 instanceof User)
+			removed = new SerializableUser((User) arg0);
+
+		if (removed != null) {
+			addedUsers.remove(removed);
+			if (!TextUtils.equals(removed.getID(), "")) {
+				addedIds.remove(removed.getID());
+			}
+//			else {
+//				addedIds.remove(removed.getEmail());
+//			}
+			addedAdapter.notifyDataSetChanged();
 		}
 
 	}
