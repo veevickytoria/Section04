@@ -193,18 +193,16 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		List<String> meetingIDList = new ArrayList<String>();
 		JsonNode responseNode = MAPPER.readTree(response);
 		final JsonNode meetingsArray = responseNode.get(Keys.Meeting.LIST);
-
 		if (meetingsArray != null && meetingsArray.isArray()) {
 			for (final JsonNode meetingNode : meetingsArray) {
 				String _id = meetingNode.get(Keys._ID).asText();
-				if (!meetingNode.get("type").asText().equals("MADE_MEETING")) {
+//				if (!meetingNode.get("type").asText().equals("MADE_MEETING")) {
 					meetingIDList.add(_id);
-				}
+//				}
 			}
 		} else {
 			logError(TAG, responseNode);
 		}
-
 		conn.disconnect();
 		for (String id : meetingIDList) {
 			meetingsList.add(MeetingDatabaseAdapter.getMeetingInfo(id));
@@ -245,7 +243,6 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 
 	public static List<Group> getGroups(String userID) throws IOException {
 		// Server URL setup
-		System.out.println(userID);
 		String _url = getBaseUri().appendPath("Groups").appendPath(userID)
 				.build().toString();
 		URL url = new URL(_url);
@@ -258,20 +255,16 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		conn.getResponseCode();
 		String response = getServerResponse(conn);
 
-		System.out.println("yes");
 
 		// Initialize ObjectMapper
 		List<Group> groupList = new ArrayList<Group>();
 		List<String> groupIDList = new ArrayList<String>();
-		System.out.println("maybe");
 		final JsonNode groupArray = MAPPER.readTree(response).get(
 				Keys.Group.LIST);
-		System.out.println("no");
 
 		if (groupArray.isArray()) {
 			for (final JsonNode groupNode : groupArray) {
 				String _id = groupNode.get(Keys.Group.ID).asText();
-				System.out.println(_id);
 				groupIDList.add(_id);
 			}
 		}
@@ -406,8 +399,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 	 * @return the passed-in user with an assigned ID by the server
 	 * @throws Exception
 	 */
-	public static User register(User registerMe, String password)
-			throws Exception {
+	public static User register(User registerMe, String password)throws Exception {
 		// Server URL setup
 		String _url = getBaseUri().build().toString();
 
@@ -610,14 +602,10 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 					}
 					if (event != null) {
 						event.setID(_id.asText());
-						event.setTitle(JsonUtils.getJSONValue(
-								meetingOrTaskNode, Keys.Meeting.TITLE));
-						event.setDescription(JsonUtils.getJSONValue(
-								meetingOrTaskNode, Keys.Meeting.DESC));
-						event.setStartTime(JsonUtils.getJSONValue(
-								meetingOrTaskNode, Keys.Meeting.START));
-						event.setEndTime(JsonUtils.getJSONValue(
-								meetingOrTaskNode, Keys.Meeting.END));
+						event.setTitle(JsonUtils.getJSONValue(meetingOrTaskNode, Keys.Meeting.TITLE));
+						event.setDescription(JsonUtils.getJSONValue(meetingOrTaskNode, Keys.Meeting.DESC));
+						event.setStartTime(JsonUtils.getJSONValue(meetingOrTaskNode, Keys.Meeting.START));
+						event.setEndTime(JsonUtils.getJSONValue(meetingOrTaskNode, Keys.Meeting.END));
 
 						// Add event to the schedule
 						if (event instanceof Meeting)
