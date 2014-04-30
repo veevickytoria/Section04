@@ -179,8 +179,9 @@ public class User extends AbstractJSONObject<User> {
 
 		// Build JSON Object
 		jgen.writeStartObject();
-		if (!(getID() == null || getID().isEmpty()))
+		if (!(getID() == null || getID().isEmpty())){
 			jgen.writeStringField("userID", getID());
+		}
 		jgen.writeStringField("displayName", getDisplayName());
 		jgen.writeStringField("email", getEmail());
 		jgen.writeStringField("phone", getPhone());
