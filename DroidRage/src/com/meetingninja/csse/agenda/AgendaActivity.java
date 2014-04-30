@@ -132,7 +132,7 @@ public class AgendaActivity extends FragmentActivity {
 				displayedAgenda = new ParcelDataFactory(extras).getAgenda();
 			}
 
-//			loadAgendaMock();
+			// loadAgendaMock();
 
 		} else {
 			manager = (TreeStateManager<Topic>) savedInstanceState
@@ -148,12 +148,19 @@ public class AgendaActivity extends FragmentActivity {
 
 		if (displayedAgenda != null) {
 			Log.i(TAG, displayedAgenda.getID());
-			int depth = displayedAgenda.getDepth();
-			mAgendaAdpt = new AgendaItemAdapter(this, manager, treeBuilder,
-					depth);
+//			int depth = displayedAgenda.getDepth();
+//			mAgendaAdpt = new AgendaItemAdapter(this, manager, treeBuilder,
+//					depth);
 			mTitleView.setText(displayedAgenda.getTitle());
-			buildTree(treeBuilder);
+		} else {
+			displayedAgenda = new Agenda();
 		}
+
+		int depth = displayedAgenda.getDepth();
+		mAgendaAdpt = new AgendaItemAdapter(this, manager, treeBuilder,
+				depth);
+		buildTree(treeBuilder);
+
 		treeView.setAdapter(mAgendaAdpt);
 
 		setCollapsible(newCollapsible);
@@ -162,19 +169,16 @@ public class AgendaActivity extends FragmentActivity {
 	}
 
 	private void loadAgendaMock() {
-		 try {
-		 displayedAgenda = AgendaDatabaseAdapter.parseAgenda(JsonUtils
-		 .getObjectMapper().readTree(testAgenda));
-		 } catch (JsonParseException e) {
-		 // TODO Auto-generated catch block
-		 e.printStackTrace();
-		 } catch (JsonMappingException e) {
-		 // TODO Auto-generated catch block
-		 e.printStackTrace();
-		 } catch (IOException e) {
-		 // TODO Auto-generated catch block
-		 e.printStackTrace();
-		 }
+		try {
+			displayedAgenda = AgendaDatabaseAdapter.parseAgenda(JsonUtils
+					.getObjectMapper().readTree(testAgenda));
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 	}
 
@@ -247,14 +251,13 @@ public class AgendaActivity extends FragmentActivity {
 			case R.id.agenda_addTopicBtn:
 				Topic newTopic = new Topic();
 
-				newTopic.setTitle("new topic");
+				newTopic.setTitle("");
 				final EditText mTitle = (EditText) ((View) v.getParent())
 						.findViewById(R.id.agenda_title_edittext);
 
 				System.out.println("FOUND:" + mTitle);
 				newTopic.setTitle(mTitle.getText().toString());
 
-				newTopic.setTitle(mTitle.getText().toString());
 
 				displayedAgenda.addTopic(newTopic);
 				reconstructTree();
