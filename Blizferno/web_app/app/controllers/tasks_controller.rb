@@ -4,6 +4,7 @@ class TasksController < ApplicationController
 
 	before_filter :index
 	before_filter :getTasks
+	before_filter :getAllUsers
 
 	def index
 		if (cookies[:userID].blank?)
@@ -15,28 +16,17 @@ class TasksController < ApplicationController
 	def getTasks
 		task_api_wrapper = TaskApiWrapper.new
 
-		getUserTasks = JSON.parse(task_api_wrapper.get_user_tasks(@userID))
+		@listOfID = JSON.parse(task_api_wrapper.get_user_tasks(@userID))
 		@tasks = Array.new
-		@tasksParsed = Array.new
+		
 		taskString = ''
 
 		getUserTasks['tasks'].each do |task|
 			taskID = task['id'].to_s
-
 			taskString = task_api_wrapper.get_task(taskID)
-			taskIdString = ',"taskID":"'+task['id'].to_s+'"}';
-
-			taskString = taskString[0..-2] + taskIdString;
-
-			@tasks.push(taskString)
-			@tasksParsed.push(JSON.parse(taskString))
+			@tasks.push(JSON.parse(taskString))
 		end	
 	end
-
-	def list
-	end
-
-	def new
-	end
+	
 	layout 'slate'
 end

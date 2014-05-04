@@ -31,7 +31,9 @@
   </thead>
 
   <% if !(@groups.any?) %>
-  <tr><td colspan="3" style="text-align: center;">YOU ARE NOT A MEMBER OF ANY GROUPS</td></tr>
+    <tr>
+      <td colspan="3" style="text-align: center;">YOU ARE NOT A MEMBER OF ANY GROUPS</td>
+    </tr>
   <% else %>
     <% for group in @groups %>
       <tr>

@@ -15,7 +15,7 @@
             </tr>
           </thead>
           <tr>
-            <td colspan='4' style='cursor: pointer; text-align: center' href='#newTaskModal' data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
+            <td colspan='4' style='cursor: pointer; text-align: center' onclick="showNewTaskModal('<%=@allUsers%>','Modal')" data-toggle='modal'><span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-plus'></span><span style='font-size: 1.1em; color: white;'>  Create New</span></td>
           </tr>
           <% counter = 0; max = @taskVal.to_i; seenTasks = []; %>
           <% for task in @tasksParsed %>

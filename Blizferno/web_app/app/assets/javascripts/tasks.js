@@ -9,7 +9,7 @@ function showDeleteTaskModal(ID){
   var ModalFactory = abstractModalFactory();
   var modal = ModalFactory.createModal(DeleteModal, "TaskModal", ID);
 
-  modal.showModal("Group");
+  modal.showModal("Task");
 
 }
 
