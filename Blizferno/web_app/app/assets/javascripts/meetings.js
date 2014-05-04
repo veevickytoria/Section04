@@ -69,15 +69,33 @@ function validateNewValues(JSONForm){
 	return invalidFields
 }
 
-function hasSelectedValue(selectID){
-	var select =document.getElementById(selectID);
 
-	for (var j in select.options){
-      if(select.options[j].selected){
-        return true
-      }
-    }
+//start
+function showEditMeetingModal(id, users){
+  var ModalFactory = abstractModalFactory();
+  var modal = ModalFactory.createModal(EditMeetingModal, "MeetingModal", id);
 
-    return false
+  modal.showModal(users);
+} 
 
+function showDeleteMeetingModal(ID){
+  var ModalFactory = abstractModalFactory();
+  var modal = ModalFactory.createModal(DeleteModal, "MeetingModal", ID);
+
+  modal.showModal("Meeting");
+
+}
+
+function showNewMeetingModal(users){
+  var ModalFactory = abstractModalFactory();
+  var modal = ModalFactory.createModal(NewMeetingModal, "MeetingModal", "");
+
+  modal.showModal(users);
+}
+
+function showViewMeetingModal(ID, users){
+  var ModalFactory = abstractModalFactory();
+  var modal = ModalFactory.createModal(ViewMeetingModal, "MeetingModal", ID);
+
+  modal.showModal(users);
 }

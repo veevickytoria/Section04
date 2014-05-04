@@ -4,6 +4,7 @@ class MeetingsController < ApplicationController
 
 	before_filter :index
 	before_filter :getAllUsers
+	before_filter :getMeetings
 
 	def index
 		if (cookies[:userID].blank?)
