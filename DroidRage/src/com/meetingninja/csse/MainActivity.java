@@ -341,7 +341,9 @@ public class MainActivity extends FragmentActivity {
 	}
 
 	private void handleSpeech(ArrayList<String> speechArray, Intent data) {
-		if (speechArray.contains("meetings")) {
+		if(speechArray.contains("homepage")){ 
+			selectItem(DrawerLabel.HOMEPAGE.getPosition());
+		} else if (speechArray.contains("meetings")) {
 			selectItem(DrawerLabel.MEETINGS.getPosition());
 		} else if (speechArray.contains("groups")) {
 			selectItem(DrawerLabel.GROUPS.getPosition());
