@@ -35,6 +35,13 @@
 
 @end
 
+const int ADD_USERS_VC_X_POS = 0;
+const int ADD_USERS_VC_Y_POS = 0;
+const int ADD_USERS_VC_WIDTH = 768;
+const int ADD_USERS_VC_HEIGHT = 1003;
+NSString* const ADD_NEW_TASK_TITLE = @"Add New Task";
+NSString* const VIEW_TASK_TITLE = @"View/Modify Task";
+
 @implementation iWinAddAndViewTaskViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withUserID:(NSInteger)userID withTaskID:(NSInteger)taskID
@@ -58,18 +65,18 @@
 
 - (IBAction)onClickAddAssignees
 {
-    self.userViewController = [[iWinAddUsersViewController alloc] initWithNibName:@"iWinAddUsersViewController" bundle:nil withPageName:@"Task" inEditMode:self.isEditing];
+    self.userViewController = [[iWinAddUsersViewController alloc] initWithNibName:ADD_USERS_NIB bundle:nil withPageName:TASK_ENTITY inEditMode:self.isEditing];
     [self.userViewController setModalPresentationStyle:UIModalPresentationPageSheet];
     [self.userViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     self.userViewController.userDelegate = self;
     [self presentViewController:self.userViewController animated:YES completion:nil];
-    self.userViewController.view.superview.bounds = CGRectMake(0,0,768,1003);
+    self.userViewController.view.superview.bounds = CGRectMake(ADD_USERS_VC_X_POS, ADD_USERS_VC_Y_POS, ADD_USERS_VC_WIDTH, ADD_USERS_VC_HEIGHT);
 }
 
 - (void)formatTime:(NSDate *)date
 {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"hh:mm a"];
+    [formatter setDateFormat:TIME_FORMAT];
     NSDate *currentDate = [NSDate date];
     self.endTimeLabel.text = [formatter stringFromDate:currentDate];
 }
@@ -80,8 +87,8 @@
     self.backendUtility = [[iWinBackEndUtility alloc] init];
     iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     self.context = [appDelegate managedObjectContext];
-    // Do any additional setup after loading the view from its nib.
-    self.headerLabel.text = @"Add New Task";
+
+    self.headerLabel.text = ADD_NEW_TASK_TITLE;
     self.saveAndAddMoreButton.hidden = NO;
     self.userList = [[NSMutableArray alloc] init];
     
@@ -93,7 +100,7 @@
     [self setGestureRecognizers];
     
     self.dateFormatter = [[NSDateFormatter alloc] init];
-    [self.dateFormatter setDateFormat:@"MM/dd/yyyy"];
+    [self.dateFormatter setDateFormat:DATE_FORMAT];
     if (self.isEditing)
     {
         [self initForExistingTask];
@@ -105,18 +112,18 @@
     }
 
     self.descriptionField.layer.borderColor = [[UIColor lightGrayColor] CGColor];
-    self.descriptionField.layer.borderWidth = 0.7f;
-    self.descriptionField.layer.cornerRadius = 7.0f;
+    self.descriptionField.layer.borderWidth = FIELD_BORDER_WIDTH;
+    self.descriptionField.layer.cornerRadius = FIELD_CORNER_RADIUS;
     
 }
 
 -(void) initForExistingTask
 {
-    self.headerLabel.text = @"View/Modify Task";
+    self.headerLabel.text = VIEW_TASK_TITLE;
     self.saveAndAddMoreButton.hidden = YES;
     
     
-    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Task" inManagedObjectContext:self.context];
+    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:TASK_ENTITY inManagedObjectContext:self.context];
     
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:entityDesc];
@@ -129,17 +136,17 @@
                                                   error:&error];
     self.task = (Task*)[result objectAtIndex:0];
     
-    NSString *url = [NSString stringWithFormat:@"%@/Task/%d", DATABASE_URL,self.taskID];
+    NSString *url = [NSString stringWithFormat:TASK_URL, DATABASE_URL,self.taskID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
     
     if (!deserializedDictionary) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Failure" message:@"Could not load your task" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_MESSAGE message:TASK_NOT_FOUND_MESSAGE delegate:self cancelButtonTitle:OK_BUTTON otherButtonTitles: nil];
         [alert show];
     }
     else
     {
-        NSDate* endDateAndTime = [NSDate dateWithTimeIntervalSince1970:[[deserializedDictionary objectForKey:@"deadline"] doubleValue]];
+        NSDate* endDateAndTime = [NSDate dateWithTimeIntervalSince1970:[[deserializedDictionary objectForKey:DEADLINE_KEY] doubleValue]];
         
         
         NSString *enddate = [iWinScheduleViewMeetingViewController getStringDateFromDate:endDateAndTime];
@@ -149,26 +156,12 @@
         self.endTimeLabel.text = endtime;
         
         self.endDate = [self.dateFormatter dateFromString:enddate];
-        self.titleField.text = [deserializedDictionary objectForKey:@"title"];
-        //self.descriptionField.text = [deserializedDictionary objectForKey:@"description"];
-        self.isCompleted.on = [[deserializedDictionary objectForKey:@"isCompleted"] boolValue];
-//        NSArray *endDateAndTime = [[deserializedDictionary objectForKey:@"deadline"]  componentsSeparatedByString:@" "];
-//        NSString *enddate = [endDateAndTime objectAtIndex:0];
-//        NSString *endtime = [NSString stringWithFormat:@"%@ %@", [endDateAndTime objectAtIndex:1], [endDateAndTime objectAtIndex:2]];
-//        self.endDateLabel.text = enddate;
-//        self.endTimeLabel.text = endtime;
+        self.titleField.text = [deserializedDictionary objectForKey:TITLE_KEY];
+        self.isCompleted.on = [[deserializedDictionary objectForKey:IS_COMPLETED_KEY] boolValue];
         self.endDate = [self.dateFormatter dateFromString:enddate];
-        NSInteger assignee = [[deserializedDictionary objectForKey:@"assignedTo"] integerValue];
+        NSInteger assignee = [[deserializedDictionary objectForKey:ASSIGNED_TO_KEY] integerValue];
         [self.userList addObject:[self getContactForID:assignee]];
     }
-    
-//    self.titleField.text = self.task.title;
-//    self.descriptionField.text = self.task.desc;
-//    self.isCompleted.enabled = [self.task.isCompleted boolValue];
-//    self.isCompleted.on = [self.task.isCompleted boolValue];
-    
-//    [self initDateTimeLabels];
-//    [self initAttendees];
 }
 
 -(void) initAttendees
@@ -178,7 +171,7 @@
 
 -(Contact *)getContactForID:(NSInteger)userID
 {
-    NSString *url = [NSString stringWithFormat:@"%@/User/%d", DATABASE_URL,userID];
+    NSString *url = [NSString stringWithFormat:USER_ID_URL, DATABASE_URL,userID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:30];
     [urlRequest setHTTPMethod:@"GET"];
@@ -190,7 +183,7 @@
     NSArray *jsonArray;
     if (error)
     {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Tasks not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_MESSAGE message:TASK_NOT_FOUND_MESSAGE delegate:self cancelButtonTitle:OK_BUTTON otherButtonTitles: nil];
         [alert show];
     }
     else
@@ -202,17 +195,17 @@
     {
 
         
-        NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Contact" inManagedObjectContext:self.context];
+        NSEntityDescription *entityDesc = [NSEntityDescription entityForName:CONTACT_ENTITY inManagedObjectContext:self.context];
 
         NSDictionary* jsonObj = (NSDictionary*) jsonArray;
         Contact *c = [[Contact alloc] initWithEntity:entityDesc insertIntoManagedObjectContext:self.context];
         
         [c setUserID:[NSNumber numberWithInt:userID]];
         
-        NSString *name = (NSString *)[jsonObj objectForKey:@"name"];
+        NSString *name = (NSString *)[jsonObj objectForKey:NAME_KEY];
         [c setName:name];
         
-        NSString *email = (NSString *)[jsonObj objectForKey:@"email"];
+        NSString *email = (NSString *)[jsonObj objectForKey:EMAIL_KEY];
         [c setEmail:email];
         
         [self.addAssigneeButton setTitle:c.name forState:UIControlStateNormal];
@@ -225,7 +218,7 @@
 {
     NSArray *endDateAndTime = [self.task.deadline componentsSeparatedByString:@" "];
     NSString *enddate = [endDateAndTime objectAtIndex:0];
-    NSString *endtime = [NSString stringWithFormat:@"%@ %@", [endDateAndTime objectAtIndex:1], [endDateAndTime objectAtIndex:2]];
+    NSString *endtime = [NSString stringWithFormat:DATE_TIME_STRING_FORMAT, [endDateAndTime objectAtIndex:1], [endDateAndTime objectAtIndex:2]];
     
     self.endDateLabel.text = enddate;
     self.endTimeLabel.text = endtime;
@@ -268,11 +261,11 @@
     if (self.isEditing)
     {
         NSString *endEpochString = [self makeEpochStringFromDateAndTimeStrings:self.endDateLabel.text timeString:self.endTimeLabel.text];
-        [self updateTask:@"title" :self.titleField.text];
-        [self updateTask:@"isCompleted" :[NSString stringWithFormat:@"%hhd", self.isCompleted.on]];
-        [self updateTask:@"description" :self.descriptionField.text];
-        [self updateTask:@"deadline" :endEpochString];
-        [self updateTask:@"assignedTo" :[c.userID stringValue]];
+        [self updateTask:TITLE_KEY :self.titleField.text];
+        [self updateTask:IS_COMPLETED_KEY :[NSString stringWithFormat:@"%hhd", self.isCompleted.on]];
+        [self updateTask:DESCRIPTION_KEY :self.descriptionField.text];
+        [self updateTask:DEADLINE_KEY :endEpochString];
+        [self updateTask:ASSIGNED_TO_KEY :[c.userID stringValue]];
         
     }else
     {
@@ -288,9 +281,9 @@
 {
     NSString *title;
     NSString *message;
-    title = @"Error";
-    message = @"Failed to save task";
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+    title = ERROR_MESSAGE;
+    message = TASK_NOT_FOUND_MESSAGE;
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:OK_BUTTON otherButtonTitles: nil];
     [alert show];
 }
 
@@ -441,7 +434,7 @@
 -(void) saveEndTime
 {
     NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
-    [outputFormatter setDateFormat:@"hh:mm a"];
+    [outputFormatter setDateFormat:TIME_FORMAT];
     
     if ([[NSDate date] compare:self.enddatePicker.date] == NSOrderedAscending) {
         [self.endTimeLabel setText:[outputFormatter stringFromDate:self.enddatePicker.date]];
@@ -456,7 +449,7 @@
     if ([selectedDate compare:[NSDate date]] == NSOrderedDescending)
     {
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:@"MM/dd/yyyy"];
+        [dateFormatter setDateFormat:DATE_FORMAT];
         self.endDate = selectedDate;
         self.endDateLabel.text = [dateFormatter stringFromDate:selectedDate];
 
@@ -471,7 +464,7 @@
 
 - (IBAction)onDeleteTask
 {
-    self.deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this task?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
+    self.deleteAlertView = [[UIAlertView alloc] initWithTitle:CONFIRM_DELETE_TITLE message:@"Are you sure you want to delete this task?" delegate:self cancelButtonTitle:NO_DELETE_OPTION otherButtonTitles:YES_DELETE_OPTION, nil];
     [self.deleteAlertView show];
 }
 
@@ -479,7 +472,6 @@
 {
     if (buttonIndex == 1)
     {
-        //Perform deletion
         NSString *url = [NSString stringWithFormat:@"http://csse371-04.csse.rose-hulman.edu/Task/%d", self.taskID];
         NSError * error = [self.backendUtility deleteRequestForUrl:url];
         if (!error)

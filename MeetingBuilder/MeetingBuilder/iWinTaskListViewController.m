@@ -25,6 +25,17 @@
 @property (nonatomic) iWinBackEndUtility *backendUtility;
 @end
 
+NSString* const USER_TASK_URL = @"%@/User/Tasks/%d";
+NSString* const TASKS_KEY = @"tasks";
+NSString* const ASSIGEND_TO_STRING = @"ASSIGNED_TO";
+NSString* const TASK_ID_KEY = @"taskID";
+NSString* const DATE_CREATED_KEY = @"dateCreated";
+NSString* const DATE_ASSIGNED_KEY = @"dateAssigned";
+NSString* const ASSIGNED_FROM_KEY = @"assignedFrom";
+NSString* const CREATED_BY_KEY = @"createdBy";
+NSString* const TASK_CELL_ID = @"TaskCell";
+NSString* const DELETE_TASK_MESSAGE = @"Are you sure you want to delete this task?";
+
 @implementation iWinTaskListViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil userID:(NSInteger) userID
@@ -32,7 +43,6 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     self.userID = userID;
     if (self) {
-        // Custom initialization
     }
     return self;
 }
@@ -40,7 +50,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
     
     self.itemList = [[NSMutableArray alloc] init];
     self.itemDetail = [[NSMutableArray alloc] init];
@@ -66,7 +75,7 @@
 
 -(void)populateTaskList
 {
-    NSString *url = [NSString stringWithFormat:@"%@/User/Tasks/%d", DATABASE_URL,self.userID];
+    NSString *url = [NSString stringWithFormat:USER_TASK_URL, DATABASE_URL,self.userID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:30];
     [urlRequest setHTTPMethod:@"GET"];
@@ -78,23 +87,23 @@
     NSArray *jsonArray;
     if (error)
     {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Tasks not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_MESSAGE message:TASK_NOT_FOUND_MESSAGE delegate:self cancelButtonTitle:OK_BUTTON otherButtonTitles: nil];
         [alert show];
     }
     else
     {
         NSError *jsonParsingError = nil;
         NSDictionary *deserializedDictionary = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
-        jsonArray = [deserializedDictionary objectForKey:@"tasks"];
+        jsonArray = [deserializedDictionary objectForKey:TASKS_KEY];
     }
     if (jsonArray.count > 0)
     {
         for (NSDictionary* tasks in jsonArray)
         {
-            NSString *relationship = [tasks objectForKey:@"type"];
-            if ([relationship isEqual:@"ASSIGNED_TO"]){
-                [self.itemList addObject:[tasks objectForKey:@"title"]];
-                [self.taskIDs addObject:[tasks objectForKey:@"id"]];
+            NSString *relationship = [tasks objectForKey:TYPE_KEY];
+            if ([relationship isEqual:ASSIGEND_TO_STRING]){
+                [self.itemList addObject:[tasks objectForKey:TITLE_KEY]];
+                [self.taskIDs addObject:[tasks objectForKey:ID_KEY]];
             }
         }
         [self populateTaskDetails];
@@ -106,10 +115,9 @@
 {
     NSError *jsonParsingError = nil;
     NSDictionary *deserializedDictionary = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
-    NSDate *dateTime = [NSDate dateWithTimeIntervalSince1970:[[deserializedDictionary objectForKey:@"deadline"] doubleValue]];
+    NSDate *dateTime = [NSDate dateWithTimeIntervalSince1970:[[deserializedDictionary objectForKey:DEADLINE_KEY] doubleValue]];
     NSString *dateTimeString = [iWinScheduleViewMeetingViewController getStringDateTimeFromDate:dateTime];
     [self.itemDetail addObject:dateTimeString];
-    //[self.itemDetail addObject:[deserializedDictionary objectForKey:@"deadline"]];
     return deserializedDictionary;
 }
 
@@ -119,22 +127,22 @@
     
     NSManagedObjectContext *context = [appDelegate managedObjectContext];
     
-    NSManagedObject *newTask = [NSEntityDescription insertNewObjectForEntityForName:@"Task" inManagedObjectContext:context];
+    NSManagedObject *newTask = [NSEntityDescription insertNewObjectForEntityForName:TASK_ENTITY inManagedObjectContext:context];
     NSError *error;
     
-    [newTask setValue:[deserializedDictionary objectForKey:@"taskID"] forKey:@"taskID"];
-    [newTask setValue:[deserializedDictionary objectForKey:@"title"] forKey:@"title"];
-    [newTask setValue:[deserializedDictionary objectForKey:@"isCompleted"] forKey:@"isCompleted"];
-    [newTask setValue:[deserializedDictionary objectForKey:@"description"] forKey:@"desc"];
-    [newTask setValue:[deserializedDictionary objectForKey:@"deadline"] forKey:@"deadline"];
-    [newTask setValue:[deserializedDictionary objectForKey:@"dateCreated"] forKey:@"dateCreated"];
-    [newTask setValue:[deserializedDictionary objectForKey:@"dateAssigned"] forKey:@"dateAssigned"];
-    [newTask setValue:[NSNumber numberWithInt:self.userID] forKey:@"assignedTo"];
-    [newTask setValue:[deserializedDictionary objectForKey:@"assignedFrom"] forKey:@"assignedFrom"];
-    [newTask setValue:[deserializedDictionary objectForKey:@"createdBy"] forKey:@"createdBy"];
+    [newTask setValue:[deserializedDictionary objectForKey:TASK_ID_KEY] forKey:TASK_ID_KEY];
+    [newTask setValue:[deserializedDictionary objectForKey:TITLE_KEY] forKey:TITLE_KEY];
+    [newTask setValue:[deserializedDictionary objectForKey:IS_COMPLETED_KEY] forKey:IS_COMPLETED_KEY];
+    [newTask setValue:[deserializedDictionary objectForKey:DESCRIPTION_KEY] forKey:@"desc"];
+    [newTask setValue:[deserializedDictionary objectForKey:DEADLINE_KEY] forKey:DEADLINE_KEY];
+    [newTask setValue:[deserializedDictionary objectForKey:DATE_CREATED_KEY] forKey:DATE_CREATED_KEY];
+    [newTask setValue:[deserializedDictionary objectForKey:DATE_ASSIGNED_KEY] forKey:DATE_ASSIGNED_KEY];
+    [newTask setValue:[NSNumber numberWithInt:self.userID] forKey:ASSIGNED_TO_KEY];
+    [newTask setValue:[deserializedDictionary objectForKey:ASSIGNED_FROM_KEY] forKey:ASSIGNED_FROM_KEY];
+    [newTask setValue:[deserializedDictionary objectForKey:CREATED_BY_KEY] forKey:CREATED_BY_KEY];
     [context save:&error];
     
-    [self.itemCompleted addObject:[deserializedDictionary objectForKey:@"isCompleted"]];
+    [self.itemCompleted addObject:[deserializedDictionary objectForKey:IS_COMPLETED_KEY]];
 }
 
 
@@ -142,7 +150,7 @@
 {
     for (int i = 0; i < [self.taskIDs count]; i++)
     {
-        NSString *url = [NSString stringWithFormat:@"%@/Task/%d", DATABASE_URL,[self.taskIDs[i] integerValue]];
+        NSString *url = [NSString stringWithFormat:TASK_URL, DATABASE_URL,[self.taskIDs[i] integerValue]];
         url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:30];
         [urlRequest setHTTPMethod:@"GET"];
@@ -153,7 +161,7 @@
                                                           error:&error];
         if (error)
         {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Tasks not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_MESSAGE message:TASK_NOT_FOUND_MESSAGE delegate:self cancelButtonTitle:OK_BUTTON otherButtonTitles: nil];
             [alert show];
         }
         else
@@ -171,7 +179,7 @@
     
     NSManagedObjectContext *context = [appDelegate managedObjectContext];
     
-    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Task" inManagedObjectContext:context];
+    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:TASK_ENTITY inManagedObjectContext:context];
     
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:entityDesc];
@@ -191,7 +199,7 @@
 - (IBAction)onClickCreateNewTask
 {
     //[self.taskListDelegate createNewTaskClicked:NO];
-    self.addViewTaskViewController = [[iWinAddAndViewTaskViewController alloc] initWithNibName:@"iWinAddAndViewTaskViewController" bundle:nil withUserID:self.userID withTaskID:-1];
+    self.addViewTaskViewController = [[iWinAddAndViewTaskViewController alloc] initWithNibName:ADD_AND_VIEW_TASK_NIB bundle:nil withUserID:self.userID withTaskID:-1];
     [self.addViewTaskViewController setModalPresentationStyle:UIModalPresentationPageSheet];
     [self.addViewTaskViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     self.addViewTaskViewController.viewTaskDelegate = self;
@@ -202,10 +210,10 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TaskCell"];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:TASK_CELL_ID];
     if (cell == nil)
     {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"TaskCell"];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:TASK_CELL_ID];
     }
     
     cell.textLabel.text = (NSString *)[self.itemList objectAtIndex:indexPath.row];
@@ -226,7 +234,7 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    self.addViewTaskViewController = [[iWinAddAndViewTaskViewController alloc] initWithNibName:@"iWinAddAndViewTaskViewController" bundle:nil withUserID:self.userID withTaskID:[self.taskIDs[indexPath.row] integerValue]];
+    self.addViewTaskViewController = [[iWinAddAndViewTaskViewController alloc] initWithNibName:ADD_AND_VIEW_TASK_NIB bundle:nil withUserID:self.userID withTaskID:[self.taskIDs[indexPath.row] integerValue]];
     self.addViewTaskViewController.viewTaskDelegate = self;
     [self.addViewTaskViewController setModalPresentationStyle:UIModalPresentationPageSheet];
     [self.addViewTaskViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
@@ -238,12 +246,11 @@
     return YES;
 }
 
-// Override to support editing the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        //add code here for when you hit delete
+
         self.selectedTask = indexPath.row;
-        UIAlertView *deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this task?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
+        UIAlertView *deleteAlertView = [[UIAlertView alloc] initWithTitle:CONFIRM_DELETE_TITLE message:DELETE_TASK_MESSAGE delegate:self cancelButtonTitle:NO_DELETE_OPTION otherButtonTitles:YES_DELETE_OPTION, nil];
         [deleteAlertView show];
     }
 }
@@ -252,7 +259,7 @@
 {
     if (buttonIndex == 1)
     {
-        NSString *url = [NSString stringWithFormat:@"%@/Task/%d", DATABASE_URL,[[self.taskIDs objectAtIndex:self.selectedTask] integerValue]];
+        NSString *url = [NSString stringWithFormat:TASK_URL, DATABASE_URL,[[self.taskIDs objectAtIndex:self.selectedTask] integerValue]];
         NSError *error = [self.backendUtility deleteRequestForUrl:url];
         if (!error)
         {

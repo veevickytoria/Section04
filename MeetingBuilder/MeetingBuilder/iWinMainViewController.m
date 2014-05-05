@@ -15,6 +15,7 @@
 #import "iWinBackEndUtility.h"
 #import "iWinScheduleViewController.h"
 #import "iWinMeetingViewController.h"
+#import "iWinConstants.h"
 
 @interface iWinMainViewController ()
 @property (strong, nonatomic) iWinLoginViewController *loginViewController;
@@ -39,16 +40,7 @@
 @end
 
 
-NSString* const REGISTER_VC_NIB_NAME = @"iWinRegisterViewController";
-NSString* const LOGIN_VC_NIB_NAME = @"iWinLoginViewController";
-NSString* const MENU_VC_NIB_NAME = @"iWinMenuViewController";
-NSString* const SCHEDULE_VC_NIB_NAME = @"iWinScheduleViewController";
-NSString* const HOME_SCREEN_VC_NIB_NAME = @"iWinHomeScreenViewController";
-NSString* const MEETING_VC_NIB_NAME = @"iWinMeetingViewController";
-NSString* const NOTES_VC_NIB_NAME = @"iWinNoteListViewController";
-NSString* const TASK_VC_NIB_NAME = @"iWinTaskListViewController";
-NSString* const SETTINGS_VC_NIB_NAME = @"iWinViewAndChangeSettingsViewController";
-NSString* const PROFILE_VC_NIB_NAME = @"iWinViewProfileViewController";
+
 const int LEFT_MENU_OFFSET = 200;
 const int RIGHT_MENU_OFFSET = 350;
 const float ANIMATION_DURATION = 0.4;

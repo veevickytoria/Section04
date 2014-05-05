@@ -30,7 +30,6 @@
 @property (strong, nonatomic) UIDatePicker *datePicker;
 @property (strong, nonatomic) UIDatePicker *enddatePicker;
 @property (nonatomic) NSInteger userID;
-//@property (strong, nonatomic) Meeting *meeting;
 @property (strong, nonatomic) NSMutableArray *userList;
 @property (strong, nonatomic) NSDateFormatter *dateFormatter;
 @property (nonatomic) NSUInteger rowToDelete;
@@ -41,14 +40,42 @@
 
 @end
 
+NSString* const SCHEDULE_MEETING_TITLE = @"Schedule a Meeting";
+
+NSString* const ADD_AGENDA_TITLE = @"Add Agenda";
+NSString* const VIEW_MEETING_TITLE = @"View Meeting";
+NSString* const MEETING_AGENDA_URL = @"%@/Meeting/Agenda/%d";
+NSString* const MEETING_AGENDA_NOT_FOUND_MESSAGE = @"Meeting agenda not found";
+NSString* const ERROR_ID_KEY = @"errorID";
+NSString* const AM_SYMBOL = @"AM";
+NSString* const PM_SYMBOL = @"PM";
+NSString* const ATTENDEE_CELL_ID = @"AttendeeCell";
+const int NUM_OF_SUGGESTED_TIMES = 10;
+NSString* const USER_SCHEDULE_URL = @"%@/User/Schedule/%d";
+NSString* const SCHEDULE_NOT_FOUND_MESSAGE = @"Schedule not found";
+const int START_HOUR = 8;
+const int END_HOUR = 17;
+NSString* const MEETING_LIST_URL = @"%@/Meeting/";
+const int DATE_PICKER_X_OFFSET = 84;
+const int DATE_PICKER_Y_OFFSET = 32;
+const int SAVE_TIME_BUTTON_X_POS = 220;
+const int SAVE_TIME_BUTTON_Y_POS = 10;
+const int SAVE_TIME_BUTTON_WIDTH = 75;
+const int SAVE_TIME_BUTTON_HEIGHT = 50;
+const int DATE_PICKER_X_POS = 0;
+const int DATE_PICKER_Y_POS = 30;
+const int DATE_PICKER_WIDTH = 320;
+const int DATE_PICKER_HEIGHT = 216;
+const int DATE_PICKER_INTERVAL = 5;
+const int POP_OVER_WIDTH = 320;
+const int POP_OVER_HEIGHT = 250;
+
 @implementation iWinScheduleViewMeetingViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withUserID:(NSInteger)userID withMeetingID:(NSInteger)meetingID
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
-        
         self.meetingID = meetingID;
         self.isEditing = YES;
         self.userID = userID;
@@ -56,7 +83,6 @@
         {
            self.isEditing = NO;
         }
-        //tracker for every hour from 8am - 5pm
     }
     return self;
 }
@@ -64,7 +90,7 @@
 - (void)formatTime:(NSDate *)date
 {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"hh:mm a"];
+    [formatter setDateFormat:TIME_FORMAT];
     self.startTimeLabel.text = [formatter stringFromDate:date];
     NSDate *currentDate = [NSDate date];
     NSDate *datePlusFiveMinutes = [currentDate dateByAddingTimeInterval:300];
@@ -74,13 +100,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    //_isAgendaCreated = false;
     
     iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     self.context = [appDelegate managedObjectContext];
     self.isStartDate = NO;
-    self.headerLabel.text = @"Schedule a Meeting";
-    [self.addAgendaButton setTitle:@"Add Agenda" forState:UIControlStateNormal];
+    self.headerLabel.text = SCHEDULE_MEETING_TITLE;
+    [self.addAgendaButton setTitle:ADD_AGENDA_TITLE forState:UIControlStateNormal];
     self.saveAndAddMoreButton.hidden = NO;
     self.deleteMeetingButton.hidden = !self.isEditing;
     self.userList = [[NSMutableArray alloc] init];
@@ -91,7 +116,7 @@
     [self setGestureRecognizers];
     
     self.dateFormatter = [[NSDateFormatter alloc] init];
-    [self.dateFormatter setDateFormat:@"MM/dd/yyyy"];
+    [self.dateFormatter setDateFormat:DATE_FORMAT];
     
     if (self.isEditing)
     {
@@ -127,16 +152,16 @@
 
 -(void) initForExistingMeeting
 {
-    self.headerLabel.text = @"View Meeting";
+    self.headerLabel.text = VIEW_MEETING_TITLE;
     self.saveAndAddMoreButton.hidden = YES;
     
-    NSString *url = [NSString stringWithFormat:@"%@/Meeting/%d",DATABASE_URL,self.meetingID];
+    NSString *url = [NSString stringWithFormat:MEETING_URL,DATABASE_URL,self.meetingID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
     
     if (!deserializedDictionary)
     {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Meetings not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_MESSAGE message:MEETING_NOT_FOUND_MESSAGE delegate:self cancelButtonTitle:OK_BUTTON otherButtonTitles: nil];
         [alert show];
     }
     else
@@ -145,8 +170,8 @@
 
     }
     
-    self.titleField.text = [self.existMeeting objectForKey:@"title"];
-    self.placeField.text = [self.existMeeting objectForKey:@"location"];
+    self.titleField.text = [self.existMeeting objectForKey:TITLE_KEY];
+    self.placeField.text = [self.existMeeting objectForKey:LOCATION_KEY];
     
     [self setAgendaTitle];
     [self initDateTimeLabels];
@@ -155,36 +180,36 @@
 
 -(void) setAgendaTitle
 {
-    NSString *url = [NSString stringWithFormat:@"%@/Meeting/Agenda/%d", DATABASE_URL,self.meetingID];
+    NSString *url = [NSString stringWithFormat:MEETING_AGENDA_URL, DATABASE_URL,self.meetingID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
     NSString *agendaTitle;
     
     if (!deserializedDictionary)
     {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Meeting agenda not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_MESSAGE message:MEETING_AGENDA_NOT_FOUND_MESSAGE delegate:self cancelButtonTitle:OK_BUTTON otherButtonTitles: nil];
         [alert show];
     }
-    else if([deserializedDictionary objectForKey:@"errorID"]){
-        [self.addAgendaButton setTitle:@"Add Agenda" forState:UIControlStateNormal];
+    else if([deserializedDictionary objectForKey:ERROR_ID_KEY]){
+        [self.addAgendaButton setTitle:ADD_AGENDA_TITLE forState:UIControlStateNormal];
     }
     
     else
     {
-        agendaTitle =  [deserializedDictionary objectForKey:@"title"];
+        agendaTitle =  [deserializedDictionary objectForKey:TITLE_KEY];
         [self.addAgendaButton setTitle:agendaTitle forState:UIControlStateNormal];
     }
     
-    self.agendaID = [[deserializedDictionary objectForKey:@"agendaID"] integerValue];
+    self.agendaID = [[deserializedDictionary objectForKey:AGENDA_ID_KEY] integerValue];
 }
 
 
 +(NSString *)getStringTimeFromDate:(NSDate *)date
 {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setAMSymbol:@"AM"];
-    [formatter setPMSymbol:@"PM"];
-    [formatter setDateFormat:@"hh:mm a"];
+    [formatter setAMSymbol:AM_SYMBOL];
+    [formatter setPMSymbol:PM_SYMBOL];
+    [formatter setDateFormat:TIME_FORMAT];
     return [formatter stringFromDate:date];
 }
 
@@ -192,20 +217,20 @@
 {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     //Specify only 2 M for month, 2 d for day and 2 h for hour
-    [formatter setDateFormat:@"MM/dd/yyyy"];
+    [formatter setDateFormat:DATE_FORMAT];
     return [formatter stringFromDate:date];
 }
 
 +(NSString *)getStringDateTimeFromDate:(NSDate *)date
 {
-    return [NSString stringWithFormat:@"%@ %@", [self getStringDateFromDate:date], [self getStringTimeFromDate:date]];
+    return [NSString stringWithFormat:DATE_TIME_STRING_FORMAT, [self getStringDateFromDate:date], [self getStringTimeFromDate:date]];
 }
 
 
 -(void) initDateTimeLabels
 {
-    NSDate* startDateAndTime = [NSDate dateWithTimeIntervalSince1970:[[self.existMeeting objectForKey:@"datetime"] doubleValue]];
-    NSDate* endDateAndTime = [NSDate dateWithTimeIntervalSince1970:[[self.existMeeting objectForKey:@"endDatetime"] doubleValue]];
+    NSDate* startDateAndTime = [NSDate dateWithTimeIntervalSince1970:[[self.existMeeting objectForKey:DATE_TIME_KEY] doubleValue]];
+    NSDate* endDateAndTime = [NSDate dateWithTimeIntervalSince1970:[[self.existMeeting objectForKey:END_DATE_TIME_KEY] doubleValue]];
     
     NSString *startdate = [iWinScheduleViewMeetingViewController getStringDateFromDate:startDateAndTime];
     NSString *starttime = [iWinScheduleViewMeetingViewController getStringTimeFromDate:startDateAndTime];
@@ -225,23 +250,23 @@
 
 -(Contact *)getContactForID:(NSInteger)userID
 {
-    NSString *url = [NSString stringWithFormat:@"%@/User/%d", DATABASE_URL,userID];
+    NSString *url = [NSString stringWithFormat:USER_ID_URL, DATABASE_URL,userID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
     if (!deserializedDictionary)
     {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Meetings not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_MESSAGE message:MEETING_NOT_FOUND_MESSAGE delegate:self cancelButtonTitle:OK_BUTTON otherButtonTitles: nil];
             [alert show];
     }
     else
     {
         if (deserializedDictionary.count > 0)
         {
-            NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Contact" inManagedObjectContext:self.context];
+            NSEntityDescription *entityDesc = [NSEntityDescription entityForName:CONTACT_ENTITY inManagedObjectContext:self.context];
             Contact *c = [[Contact alloc] initWithEntity:entityDesc insertIntoManagedObjectContext:self.context];
-            c.userID = (NSNumber*)[deserializedDictionary objectForKey:@"userID"];
-            c.name = (NSString *)[deserializedDictionary objectForKey:@"name"];
-            c.email = (NSString *)[deserializedDictionary objectForKey:@"email"];
+            c.userID = (NSNumber*)[deserializedDictionary objectForKey:USER_ID_KEY];
+            c.name = (NSString *)[deserializedDictionary objectForKey:NAME_KEY];
+            c.email = (NSString *)[deserializedDictionary objectForKey:EMAIL_KEY];
             return c;
             
         }
@@ -253,9 +278,9 @@
 -(void) initAttendees
 {
     NSMutableArray *attendeeArray = [[NSMutableArray alloc] init];
-    NSArray* attendeeFromDatabase = [self.existMeeting objectForKey:@"attendance"];
+    NSArray* attendeeFromDatabase = [self.existMeeting objectForKey:ATTENDANCE_KEY];
     for(int i = 0; i < [attendeeFromDatabase count]; i++){
-        [attendeeArray addObject:[(NSDictionary*)[attendeeFromDatabase objectAtIndex:i] objectForKey:@"userID"]];
+        [attendeeArray addObject:[(NSDictionary*)[attendeeFromDatabase objectAtIndex:i] objectForKey:USER_ID_KEY]];
     }
 
     for (int i=0; i<[attendeeArray count]; i++)
@@ -267,10 +292,10 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
        
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"AttendeeCell"];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ATTENDEE_CELL_ID];
     if (cell == nil)
     {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"AttendeeCell"];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:ATTENDEE_CELL_ID];
     }
     
     Contact *c = (Contact *)[self.userList objectAtIndex:indexPath.row];
@@ -296,7 +321,7 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         self.rowToDelete = indexPath.row;
-        UIAlertView *deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this meeting?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
+        UIAlertView *deleteAlertView = [[UIAlertView alloc] initWithTitle:CONFIRM_DELETE_TITLE message:DELETE_MEETING_MESSAGE delegate:self cancelButtonTitle:NO_DELETE_OPTION otherButtonTitles:YES_DELETE_OPTION, nil];
         [deleteAlertView show];
     }
 }
@@ -308,7 +333,7 @@
         if (buttonIndex == 1)
         {
             //Perform deletion
-            NSString *url = [NSString stringWithFormat:@"%@/Meeting/%d",DATABASE_URL,self.meetingID];
+            NSString *url = [NSString stringWithFormat:MEETING_URL,DATABASE_URL,self.meetingID];
             NSError * error = [self.backendUtility deleteRequestForUrl:url];
             if (!error)
             {
@@ -333,7 +358,7 @@
 
 - (IBAction)onAddAgenda
 {
-    self.agendaController = [[iWinViewAndAddViewController alloc] initWithNibName:@"iWinViewAndAddViewController" bundle:nil startDate:[self makeDateFromText:self.startDateLabel.text timeText:self.startTimeLabel.text] endDate:[self makeDateFromText:self.endDateLabel.text timeText:self.endTimeLabel.text]];
+    self.agendaController = [[iWinViewAndAddViewController alloc] initWithNibName:VIEW_AND_ADD_AGENDA_NIB bundle:nil startDate:[self makeDateFromText:self.startDateLabel.text timeText:self.startTimeLabel.text] endDate:[self makeDateFromText:self.endDateLabel.text timeText:self.endTimeLabel.text]];
     self.agendaController.meetingID = self.meetingID;
     self.agendaController.userID = self.userID;
     self.agendaController.agendaID = self.agendaID;
@@ -341,14 +366,14 @@
     [self.agendaController setModalPresentationStyle:UIModalPresentationPageSheet];
     [self.agendaController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     self.agendaController.agendaDelegate = self;
-    self.agendaController.isAgendaCreated = [self.addAgendaButton.titleLabel.text isEqualToString:@"Add Agenda"] ? NO : YES;
+    self.agendaController.isAgendaCreated = [self.addAgendaButton.titleLabel.text isEqualToString:ADD_AGENDA_TITLE] ? NO : YES;
     [self presentViewController:self.agendaController animated:YES completion:nil];
     self.agendaController.view.superview.bounds = CGRectMake(MODAL_XOFFSET, MODAL_YOFFSET, MODAL_WIDTH, MODAL_HEIGHT);
 }
 
 - (IBAction)onAddAttendees
 {
-    self.userViewController = [[iWinAddUsersViewController alloc] initWithNibName:@"iWinAddUsersViewController" bundle:nil withPageName:@"Meeting" inEditMode:self.isEditing];
+    self.userViewController = [[iWinAddUsersViewController alloc] initWithNibName:ADD_USERS_NIB bundle:nil withPageName:MEETING_HEADER inEditMode:self.isEditing];
     [self.userViewController setModalPresentationStyle:UIModalPresentationPageSheet];
     [self.userViewController setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     self.userViewController.userDelegate = self;
@@ -366,9 +391,9 @@
 
 -(NSDate*)getSuggestedTime {
     int index;
-    int times[10];
+    int times[NUM_OF_SUGGESTED_TIMES];
     
-    for (int a = 0; a < 10; a++){
+    for (int a = 0; a < NUM_OF_SUGGESTED_TIMES; a++){
         times[a] = 0;
     }
     
@@ -378,42 +403,42 @@
     }
     for (Contact *contact in self.userList){
         c = contact;
-        NSString *url = [NSString stringWithFormat:@"%@/User/Schedule/%d", DATABASE_URL,[c.userID intValue]];
+        NSString *url = [NSString stringWithFormat:USER_SCHEDULE_URL, DATABASE_URL,[c.userID intValue]];
         url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
         
         if (!deserializedDictionary)
         {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Schedule not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_MESSAGE message:SCHEDULE_NOT_FOUND_MESSAGE delegate:self cancelButtonTitle:OK_BUTTON otherButtonTitles: nil];
             [alert show];
         }
         else
         {
-            NSArray *jsonArray = [deserializedDictionary objectForKey:@"schedule"];
+            NSArray *jsonArray = [deserializedDictionary objectForKey:SCHEDULE_KEY];
             if (jsonArray.count > 0)
             {
                 for (NSDictionary* meetings in jsonArray)
                 {
-                    if ([[meetings objectForKey:@"type"] isEqualToString:@"meeting"]){
+                    if ([[meetings objectForKey:TYPE_KEY] isEqualToString:MEETING_KEY]){
                         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
                         //Set the AM and PM symbols
-                        [dateFormatter setAMSymbol:@"AM"];
-                        [dateFormatter setPMSymbol:@"PM"];
+                        [dateFormatter setAMSymbol:AM_SYMBOL];
+                        [dateFormatter setPMSymbol:PM_SYMBOL];
                         //Specify only 2 M for month, 2 d for day and 2 h for hour
-                        [dateFormatter setDateFormat:@"MM/dd/yyyy hh:mm a"];
+                        [dateFormatter setDateFormat:[NSString stringWithFormat:DATE_TIME_STRING_FORMAT, DATE_FORMAT, TIME_FORMAT]];
                         
-                        NSDate *date = [dateFormatter dateFromString:[meetings objectForKey:@"datetimeStart"]];
+                        NSDate *date = [dateFormatter dateFromString:[meetings objectForKey:DATE_TIME_START]];
                         NSCalendar *calendar = [NSCalendar currentCalendar];
                         NSDateComponents *components = [calendar components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:date];
                         NSInteger startHour = [components hour];
                         
-                        date = [dateFormatter dateFromString:[meetings objectForKey:@"datetimeEnd"]];
+                        date = [dateFormatter dateFromString:[meetings objectForKey:DATE_TIME_END]];
                         components = [calendar components:(NSHourCalendarUnit | NSMinuteCalendarUnit) fromDate:date];
                         NSInteger endHour = [components hour];
                         
                         NSDateComponents *dayComp1 = [calendar components:(NSDayCalendarUnit | NSMonthCalendarUnit | NSYearCalendarUnit) fromDate:date];
                         
-                        [dateFormatter setDateFormat:@"MM/dd/yyyy"];
+                        [dateFormatter setDateFormat:DATE_FORMAT];
                         NSString *sdl = (NSString*) self.startDateLabel.text;
                         date = [dateFormatter dateFromString:sdl];
                         
@@ -426,9 +451,9 @@
                         //currently assuming all meetings are all within 8am - 5pm on the same day.
                         if ([date1 isEqualToDate:date2]){
                             
-                            if (startHour >= 8 && endHour <= 17 && startHour < endHour){
+                            if (startHour >= START_HOUR && endHour <= END_HOUR && startHour < endHour){
                                 for (index = startHour; index <= endHour; index++) {
-                                    times[index - 8]++;
+                                    times[index - START_HOUR]++;
                                 }
                             }
                         }
@@ -441,7 +466,7 @@
     int min = 0;
     
     //gets the index of the lowest used time
-    for (int i = 0; i < 10; i++){
+    for (int i = 0; i < NUM_OF_SUGGESTED_TIMES; i++){
         if (times[min] > times[i]){
             min = i;
         }
@@ -462,7 +487,7 @@
     for (int i = 0; i<[self.userList count]; i++)
     {
         Contact *c = (Contact *)self.userList[i];
-        NSArray *userIDKeys = [[NSArray alloc] initWithObjects:@"userID", nil];
+        NSArray *userIDKeys = [[NSArray alloc] initWithObjects:USER_ID_KEY, nil];
         NSArray *userIDObjects = [[NSArray alloc] initWithObjects:[c.userID stringValue], nil];
         NSDictionary *dict = [NSDictionary dictionaryWithObjects:userIDObjects forKeys:userIDKeys];
         [userIDJsonDictionary addObject:dict];
@@ -474,12 +499,12 @@
     NSString *endEpochString = [self makeEpochStringFromDateAndTimeStrings:self.endDateLabel.text timeString:self.endTimeLabel.text];
     
     
-    NSArray *keys = [NSArray arrayWithObjects:@"userID", @"title", @"location", @"datetime", @"endDatetime", @"description", @"attendance", nil];
+    NSArray *keys = [NSArray arrayWithObjects:USER_ID_KEY, TITLE_KEY, LOCATION_KEY, DATE_TIME_KEY, END_DATE_TIME_KEY, DESCRIPTION_KEY, ATTENDANCE_KEY, nil];
     NSArray *objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.userID] stringValue], self.titleField.text, self.placeField.text, startEpochString, endEpochString, @"Test Meeting", userIDJsonDictionary, nil];
     NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-    NSString *url = [NSString stringWithFormat:@"%@/Meeting/", DATABASE_URL];
+    NSString *url = [NSString stringWithFormat:MEETING_LIST_URL, DATABASE_URL];
     NSDictionary *deserializedDictionary = [self.backendUtility postRequestForUrl:url withDictionary:jsonDictionary];
-    self.meetingID = [[deserializedDictionary objectForKey:@"meetingID"] integerValue];
+    self.meetingID = [[deserializedDictionary objectForKey:MEETING_ID_KEY] integerValue];
 }
 
 -(NSString *) makeEpochStringFromDateAndTimeStrings:(NSString*)dateString timeString:(NSString *)timeString
@@ -491,24 +516,24 @@
 -(void) saveNewAgenda
 {
     
-    NSString *url = [NSString stringWithFormat:@"%@/Agenda/%d", DATABASE_URL,self.agendaID];
+    NSString *url = [NSString stringWithFormat:AGENDA_URL, DATABASE_URL,self.agendaID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *getAgenda = [self.backendUtility getRequestForUrl:url];
     
     if (!getAgenda)
     {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Meetings not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_MESSAGE message:MEETING_NOT_FOUND_MESSAGE delegate:self cancelButtonTitle:OK_BUTTON otherButtonTitles: nil];
         [alert show];
     }
     
     
     
-    NSArray *keys = [NSArray arrayWithObjects:@"user", @"title", @"meeting", @"content", nil];
-    NSArray *objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.userID] stringValue], [getAgenda objectForKey:@"title"], [[NSNumber numberWithInt:self.meetingID] stringValue], [getAgenda objectForKey:@"content"], nil];
+    NSArray *keys = [NSArray arrayWithObjects:USER_KEY, TITLE_KEY, MEETING_KEY, CONTENT_KEY, nil];
+    NSArray *objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.userID] stringValue], [getAgenda objectForKey:TITLE_KEY], [[NSNumber numberWithInt:self.meetingID] stringValue], [getAgenda objectForKey:CONTENT_KEY], nil];
     NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-    url = [NSString stringWithFormat:@"%@/Agenda/", DATABASE_URL];
+    url = [NSString stringWithFormat:AGENDA_LIST_URL, DATABASE_URL];
     NSDictionary *deserializedDictionary = [self.backendUtility postRequestForUrl:url withDictionary:jsonDictionary];
-    self.agendaID = [[deserializedDictionary objectForKey:@"agendaID"] integerValue];
+    self.agendaID = [[deserializedDictionary objectForKey:AGENDA_ID_KEY] integerValue];
     
 }
 
@@ -539,23 +564,23 @@
     
     NSString *endEpochString = [self makeEpochStringFromDateAndTimeStrings:self.endDateLabel.text timeString:self.endTimeLabel.text];
     
-    NSString *url = [NSString stringWithFormat:@"%@/Meeting/", DATABASE_URL];
+    NSString *url = [NSString stringWithFormat:MEETING_LIST_URL, DATABASE_URL];
     
-    NSArray *keys = [NSArray arrayWithObjects:@"meetingID", @"field", @"value", nil];
-    NSArray *objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.meetingID] stringValue], @"title", self.titleField.text,nil];
+    NSArray *keys = [NSArray arrayWithObjects:MEETING_ID_KEY, @"field", @"value", nil];
+    NSArray *objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.meetingID] stringValue], TITLE_KEY, self.titleField.text,nil];
     NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
     [self.backendUtility putRequestForUrl:url withDictionary:jsonDictionary];
 
     
-    objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.meetingID] stringValue], @"location", self.placeField.text,nil];
+    objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.meetingID] stringValue], LOCATION_KEY, self.placeField.text,nil];
     jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
     [self.backendUtility putRequestForUrl:url withDictionary:jsonDictionary];
     
-    objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.meetingID] stringValue], @"dateTime", startEpochString, nil];
+    objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.meetingID] stringValue], DATE_TIME_KEY, startEpochString, nil];
     jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
     [self.backendUtility putRequestForUrl:url withDictionary:jsonDictionary];
     
-    objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.meetingID] stringValue], @"endDatetime", endEpochString, nil];
+    objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.meetingID] stringValue], END_DATE_TIME_KEY, endEpochString, nil];
     jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
     [self.backendUtility putRequestForUrl:url withDictionary:jsonDictionary];
 }
@@ -563,32 +588,32 @@
 -(NSDate *)makeDateFromText:(NSString *)dateText timeText:(NSString *)timeText
 {
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    dateFormatter.dateFormat = @"MM/dd/yyyy h:mm a";
-    NSString *dateTime = [NSString stringWithFormat:@"%@ %@", dateText, timeText];
+    dateFormatter.dateFormat = [NSString stringWithFormat:DATE_TIME_STRING_FORMAT, DATE_FORMAT, TIME_FORMAT];
+    NSString *dateTime = [NSString stringWithFormat:DATE_TIME_STRING_FORMAT, dateText, timeText];
     return [dateFormatter dateFromString:dateTime];
 }
 
 -(void) updateAgendaInfo
 {
-    NSString *url = [NSString stringWithFormat:@"%@/Agenda/%d", DATABASE_URL,self.agendaID];
+    NSString *url = [NSString stringWithFormat:AGENDA_URL, DATABASE_URL,self.agendaID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *getAgenda = [self.backendUtility getRequestForUrl:url];
-    bool checkupdateAgenda = [[getAgenda objectForKey:@"meetingID"] integerValue] == self.meetingID;
+    bool checkupdateAgenda = [[getAgenda objectForKey:MEETING_ID_KEY] integerValue] == self.meetingID;
     
     
     if (!getAgenda)
     {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Meetings not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_MESSAGE message:MEETING_NOT_FOUND_MESSAGE delegate:self cancelButtonTitle:OK_BUTTON otherButtonTitles: nil];
         [alert show];
     }
     
     else if(checkupdateAgenda){
-        NSArray *keys = [NSArray arrayWithObjects:@"user", @"title", @"meeting", @"content", @"agendaID", nil];
-        NSArray *objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.userID] stringValue], [getAgenda objectForKey:@"title"], [[NSNumber numberWithInt:self.meetingID] stringValue], [getAgenda objectForKey:@"content"], [[NSNumber numberWithInt:self.agendaID] stringValue], nil];
+        NSArray *keys = [NSArray arrayWithObjects:USER_KEY, TITLE_KEY, MEETING_KEY, CONTENT_KEY, AGENDA_ID_KEY, nil];
+        NSArray *objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.userID] stringValue], [getAgenda objectForKey:TITLE_KEY], [[NSNumber numberWithInt:self.meetingID] stringValue], [getAgenda objectForKey:CONTENT_KEY], [[NSNumber numberWithInt:self.agendaID] stringValue], nil];
         NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-        url = [NSString stringWithFormat:@"%@/Agenda/", DATABASE_URL];
+        url = [NSString stringWithFormat:AGENDA_LIST_URL, DATABASE_URL];
         NSDictionary *deserializedDictionary = [self.backendUtility putRequestForUrl:url withDictionary:jsonDictionary];
-        self.agendaID = [[deserializedDictionary objectForKey:@"agendaID"] integerValue];
+        self.agendaID = [[deserializedDictionary objectForKey:AGENDA_ID_KEY] integerValue];
     }
     
     else{
@@ -602,18 +627,18 @@
 {
     [self saveNewMeeting];
     
-    self.headerLabel.text = @"Schedule a Meeting";
-    self.titleField.text = @"";
-    self.startDateLabel.text = @"";
-    self.endDateLabel.text = @"";
-    self.placeField.text = @"";
-    [self.addAgendaButton setTitle:@"Add Agenda" forState:UIControlStateNormal];
+    self.headerLabel.text = SCHEDULE_MEETING_TITLE;
+    self.titleField.text = EMPTY_STRING;
+    self.startDateLabel.text = EMPTY_STRING;
+    self.endDateLabel.text = EMPTY_STRING;
+    self.placeField.text = EMPTY_STRING;
+    [self.addAgendaButton setTitle:ADD_AGENDA_TITLE forState:UIControlStateNormal];
 }
 
 - (IBAction)onDeleteMeeting {
     
     
-    self.deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this contact?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
+    self.deleteAlertView = [[UIAlertView alloc] initWithTitle:CONFIRM_DELETE_TITLE message:DELETE_CONTACT_MESSAGE delegate:self cancelButtonTitle:NO_DELETE_OPTION otherButtonTitles:YES_DELETE_OPTION, nil];
     [self.deleteAlertView show];
 }
 
@@ -626,7 +651,7 @@
 - (void)startDateClicked
 {
     self.isStartDate = YES;
-    self.ocCalVC = [[OCCalendarViewController alloc] initAtPoint:CGPointMake(self.startDateLabel.frame.origin.x+84, self.startDateLabel.frame.origin.y+32) inView:self.view];
+    self.ocCalVC = [[OCCalendarViewController alloc] initAtPoint:CGPointMake(self.startDateLabel.frame.origin.x+DATE_PICKER_X_OFFSET, self.startDateLabel.frame.origin.y+DATE_PICKER_Y_OFFSET) inView:self.view];
     [self.ocCalVC setStartDate:self.startDate];
     [self.ocCalVC setEndDate:self.startDate];
     self.ocCalVC.selectionMode = OCSelectionSingleDate;
@@ -639,7 +664,7 @@
 {
     self.isStartDate = NO;
     
-    self.ocCalVC = [[OCCalendarViewController alloc] initAtPoint:CGPointMake(self.endDateLabel.frame.origin.x+84, self.endDateLabel.frame.origin.y+32) inView:self.view];
+    self.ocCalVC = [[OCCalendarViewController alloc] initAtPoint:CGPointMake(self.endDateLabel.frame.origin.x+DATE_PICKER_X_OFFSET, self.endDateLabel.frame.origin.y+DATE_PICKER_Y_OFFSET) inView:self.view];
     self.ocCalVC.selectionMode = OCSelectionSingleDate;
     self.ocCalVC.delegate = self;
     [self.ocCalVC setStartDate:self.endDate];
@@ -647,40 +672,41 @@
     [self.view addSubview:self.ocCalVC.view];
 }
 
+
+
 -(void) startTimeClicked
 {
-    UIViewController* popoverContent = [[UIViewController alloc] init]; //ViewController
+    UIViewController* popoverContent = [[UIViewController alloc] init];
     
-    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(220, 10, 75, 50)];
-    [button setTitle:@"Save" forState:UIControlStateNormal];
+    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(SAVE_TIME_BUTTON_X_POS, SAVE_TIME_BUTTON_Y_POS, SAVE_TIME_BUTTON_WIDTH, SAVE_TIME_BUTTON_HEIGHT)];
+    [button setTitle:SAVE_BUTTON forState:UIControlStateNormal];
     [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [button addTarget:self action:@selector(saveStartTime) forControlEvents:UIControlEventTouchUpInside];
     
     
-    UIView *popoverView = [[UIView alloc] init];   //view
+    UIView *popoverView = [[UIView alloc] init];
     [popoverView addSubview:button];
     
-    //    UIDatePicker *datePicker=[[UIDatePicker alloc]init];//Date picker
-    self.datePicker=[[UIDatePicker alloc]init];//Date picker
-    self.datePicker.frame=CGRectMake(0,30,320, 216);
+    self.datePicker=[[UIDatePicker alloc]init];
+    self.datePicker.frame=CGRectMake(DATE_PICKER_X_POS,DATE_PICKER_Y_POS, DATE_PICKER_WIDTH, DATE_PICKER_HEIGHT);
     self.datePicker.datePickerMode = UIDatePickerModeTime;
-    [self.datePicker setMinuteInterval:5];
-    //[datePicker addTarget:self action:@selector(Result) forControlEvents:UIControlEventValueChanged];
+    [self.datePicker setMinuteInterval:DATE_PICKER_INTERVAL];
+    
     [popoverView addSubview:self.datePicker];
     
     popoverContent.view = popoverView;
     self.popOverController = [[UIPopoverController alloc] initWithContentViewController:popoverContent];
-    //popoverController.delegate=self;
+
     
     
-    [self.popOverController setPopoverContentSize:CGSizeMake(320, 250) animated:NO];
+    [self.popOverController setPopoverContentSize:CGSizeMake(POP_OVER_WIDTH, POP_OVER_HEIGHT) animated:NO];
     [self.popOverController presentPopoverFromRect:CGRectMake(self.startTimeLabel.frame.origin.x, self.startTimeLabel.frame.origin.y+2, self.startTimeLabel.frame.size.width, self.startTimeLabel.frame.size.height)  inView:self.view permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
 }
 
 -(void) saveStartTime
 {
     NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
-    [outputFormatter setDateFormat:@"hh:mm a"];
+    [outputFormatter setDateFormat:TIME_FORMAT];
     
     NSDateComponents *components = [[NSCalendar currentCalendar] components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:self.startDate];
     NSDate *dateOne = [[NSCalendar currentCalendar] dateFromComponents:components];
@@ -719,29 +745,27 @@
 
 -(void) endTimeClicked
 {
-    UIViewController* popoverContent = [[UIViewController alloc] init]; //ViewController
+    UIViewController* popoverContent = [[UIViewController alloc] init];
     
-    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(220, 10, 75, 50)];
-    [button setTitle:@"Save" forState:UIControlStateNormal];
+    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(SAVE_TIME_BUTTON_X_POS, SAVE_TIME_BUTTON_Y_POS, SAVE_TIME_BUTTON_WIDTH, SAVE_TIME_BUTTON_HEIGHT)];
+    [button setTitle:SAVE_BUTTON forState:UIControlStateNormal];
     [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [button addTarget:self action:@selector(saveEndTime) forControlEvents:UIControlEventTouchUpInside];
     
-    UIView *popoverView = [[UIView alloc] init];   //view
+    UIView *popoverView = [[UIView alloc] init];
     [popoverView addSubview:button];
     
-    //UIDatePicker *enddatePicker=[[UIDatePicker alloc]init];//Date picker
-    self.enddatePicker=[[UIDatePicker alloc]init];//Date picker
-    self.enddatePicker.frame=CGRectMake(0,30,320, 216);
+    
+    self.enddatePicker=[[UIDatePicker alloc]init];
+    self.enddatePicker.frame=CGRectMake(DATE_PICKER_X_POS, DATE_PICKER_Y_POS, DATE_PICKER_WIDTH, DATE_PICKER_HEIGHT);
     self.enddatePicker.datePickerMode = UIDatePickerModeTime;
-    [self.enddatePicker setMinuteInterval:5];
-    //[datePicker addTarget:self action:@selector(Result) forControlEvents:UIControlEventValueChanged];
+    [self.enddatePicker setMinuteInterval:DATE_PICKER_INTERVAL];
     [popoverView addSubview:self.enddatePicker];
     
     popoverContent.view = popoverView;
     self.popOverController = [[UIPopoverController alloc] initWithContentViewController:popoverContent];
-    //popoverController.delegate=self;
     
-    [self.popOverController setPopoverContentSize:CGSizeMake(320, 250) animated:NO];
+    [self.popOverController setPopoverContentSize:CGSizeMake(POP_OVER_WIDTH, POP_OVER_HEIGHT) animated:NO];
     [self.popOverController presentPopoverFromRect:CGRectMake(self.endTimeLabel.frame.origin.x, self.endTimeLabel.frame.origin.y+2, self.endTimeLabel.frame.size.width, self.endTimeLabel.frame.size.height)  inView:self.view permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
 }
 
@@ -749,7 +773,7 @@
 -(void) saveEndTime
 {
     NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
-    [outputFormatter setDateFormat:@"hh:mm a"];
+    [outputFormatter setDateFormat:TIME_FORMAT];
     
     NSDateComponents *components = [[NSCalendar currentCalendar] components:NSHourCalendarUnit | NSMinuteCalendarUnit fromDate:self.startDate];
     NSDate *dateOne = [[NSCalendar currentCalendar] dateFromComponents:components];
@@ -786,7 +810,7 @@
     if ([dateTwo compare:dateOne] == NSOrderedDescending || [dateTwo compare:dateOne] == NSOrderedSame)
     {
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:@"MM/dd/yyyy"];
+        [dateFormatter setDateFormat:DATE_FORMAT];
         if (self.isStartDate)
         {
             self.startDate = selectedDate;
@@ -834,17 +858,17 @@
 {
     self.agendaID = agendaID;
     
-    NSString *url = [NSString stringWithFormat:@"%@/Agenda/%d", DATABASE_URL,self.agendaID];
+    NSString *url = [NSString stringWithFormat:AGENDA_URL, DATABASE_URL,self.agendaID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
     
-    NSString *agendaTitle = [deserializedDictionary objectForKey:@"title"];
+    NSString *agendaTitle = [deserializedDictionary objectForKey:TITLE_KEY];
     [self.addAgendaButton setTitle:agendaTitle forState:UIControlStateNormal];
     
     NSInteger totalDuration = self.agendaController.totalDuration;
     
     NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
-    [outputFormatter setDateFormat:@"hh:mm a"];
+    [outputFormatter setDateFormat:TIME_FORMAT];
     
     NSDateComponents *components = [[NSCalendar currentCalendar] components: NSHourCalendarUnit |  NSMinuteCalendarUnit fromDate:[outputFormatter dateFromString:self.startTimeLabel.text]];
     NSDate *startTimeDate = [[NSCalendar currentCalendar] dateFromComponents:components];

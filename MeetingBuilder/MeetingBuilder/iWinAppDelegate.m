@@ -10,6 +10,10 @@
 #import "iWinMainViewController.h"
 #import <Parse/Parse.h>
 
+NSString* const PARSE_APP_ID = @"o4UYE8YSQMmLOcyTOv7pj2z9qYkNnUpKBaqezGWx";
+NSString* const PARSE_CLIENT_KEY = @"MfwhwCpIweZmhpQa2Z1yrrrm7y6zAH9elHPfazyB";
+NSString* const MAIN_CONTROLLER_NIB = @"iWinMainViewController";
+
 @implementation iWinAppDelegate
 
 @synthesize managedObjectContext = _managedObjectContext;
@@ -22,20 +26,14 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor whiteColor];
-    iWinMainViewController *mainViewController = [[iWinMainViewController alloc] initWithNibName:@"iWinMainViewController" bundle:nil];
+    iWinMainViewController *mainViewController = [[iWinMainViewController alloc] initWithNibName:MAIN_CONTROLLER_NIB bundle:nil];
     self.window.rootViewController = mainViewController;
     [self.window makeKeyAndVisible];
     
     //register for push notifications
-    [Parse setApplicationId:@"o4UYE8YSQMmLOcyTOv7pj2z9qYkNnUpKBaqezGWx" clientKey:@"MfwhwCpIweZmhpQa2Z1yrrrm7y6zAH9elHPfazyB"];
+    [Parse setApplicationId:PARSE_APP_ID clientKey:PARSE_CLIENT_KEY];
     
     [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound];
-    //[application registerForRemoteNotificationTypes:UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound];
-//    UILocalNotification *locationNotification = [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
-//    if (locationNotification) {
-//        // Set icon badge number to zero
-//        application.applicationIconBadgeNumber = application.applicationIconBadgeNumber - 1;
-//    }
 
     
     return YES;
@@ -179,22 +177,5 @@ int SOMETHING = 1;
     [[[UIAlertView alloc] initWithTitle:@"Push Notification" message:[NSString stringWithFormat:@"Received Notification from backend %d", SOMETHING] delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil] show];
     SOMETHING = 2;
 }
-
-//- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
-//{
-//    UIApplicationState state = [application applicationState];
-//    if (state == UIApplicationStateActive) {
-//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Reminder"
-//                                                        message:notification.alertBody
-//                                                       delegate:self cancelButtonTitle:@"OK"
-//                                              otherButtonTitles:nil];
-//        [alert show];
-//    }
-//    
-////    // Request to reload table view data
-////    [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadData" object:self];
-//    
-//    application.applicationIconBadgeNumber = application.applicationIconBadgeNumber - 1;
-//}
 
 @end

@@ -52,8 +52,6 @@
 
 #pragma mark TKCalendarDayViewDelegate
 - (NSArray *) calendarDayTimelineView:(TKCalendarDayView*)calendarDayTimeline eventsForDate:(NSDate *)eventDate{
-    //if([eventDate compare:[NSDate dateWithTimeIntervalSinceNow:-24*60*60]] == NSOrderedAscending) return @[];
-	//if([eventDate compare:[NSDate dateWithTimeIntervalSinceNow:24*60*60]] == NSOrderedDescending) return @[];
     
 	NSDateComponents *info = [[NSDate date] dateComponentsWithTimeZone:calendarDayTimeline.timeZone];
 	info.second = 0;
