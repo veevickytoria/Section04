@@ -3,28 +3,23 @@
     android:id="@+id/homepage_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/activity_horizontal_margin" 
-    android:layout_weight="2">
+    android:layout_gravity="center_horizontal|top"
+    android:layout_margin="@dimen/activity_horizontal_margin"
+    android:layout_weight="2"
+    android:orientation="vertical" >
 
-            <LinearLayout
-                android:id="@+id/two_pane"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal|top"
-                android:orientation="vertical" >
+    <include
+        android:id="@+id/homepage_meetings_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        layout="@layout/fragment_home_page_meetings" />
 
-                <include
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    layout="@layout/fragment_home_page_meetings" />
-
-                <include
-                    android:id="@+id/attendees_group"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    layout="@layout/fragment_home_page_tasks" />
-            </LinearLayout>
+    <include
+        android:id="@+id/homepage_tasks_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        layout="@layout/fragment_home_page_tasks" />
 
 </LinearLayout>

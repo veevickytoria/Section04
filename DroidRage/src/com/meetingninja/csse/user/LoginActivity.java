@@ -34,6 +34,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.meetingninja.csse.ApplicationController;
 import com.meetingninja.csse.MainActivity;
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.SessionManager;
@@ -207,10 +208,13 @@ public class LoginActivity extends Activity {
 		} else {
 			// Show a progress spinner, and kick off a background task to
 			// perform the user login attempt.
-			mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
-			showProgress(true);
-			mAuthTask = new UserLoginTask();
-			mAuthTask.execute((Void) null); // runs on background thread
+			if (ApplicationController.getInstance().isConnectedToBackend(
+					LoginActivity.this)) {
+				mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
+				showProgress(true);
+				mAuthTask = new UserLoginTask();
+				mAuthTask.execute(); // runs on background thread
+			}
 		}
 	}
 
@@ -315,9 +319,11 @@ public class LoginActivity extends Activity {
 							public void done(ParseUser user, ParseException e) {
 								if (user != null) {
 									// Hooray! The user is logged in.
-									ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+									ParseInstallation installation = ParseInstallation
+											.getCurrentInstallation();
 									installation.put("user", user);
-									installation.put("userId", user.getObjectId());
+									installation.put("userId",
+											user.getObjectId());
 									installation.saveEventually();
 								} else {
 									Log.e(TAG, e.getLocalizedMessage());

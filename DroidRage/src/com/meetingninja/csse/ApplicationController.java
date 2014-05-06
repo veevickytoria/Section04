@@ -15,17 +15,24 @@
  ******************************************************************************/
 package com.meetingninja.csse;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 import objects.User;
 import objects.parcelable.UserParcel;
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.Volley;
+import com.meetingninja.csse.database.BaseDatabaseAdapter;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.local.SQLiteHelper;
 import com.meetingninja.csse.database.local.SQLiteNoteAdapter;
@@ -35,6 +42,9 @@ import com.parse.Parse;
 import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 import com.parse.PushService;
+
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
 
 // http://arnab.ch/blog/2013/08/asynchronous-http-requests-in-android-using-volley/
 public class ApplicationController extends Application {
@@ -100,6 +110,39 @@ public class ApplicationController extends Application {
 		// sqlite.cacheNotes(false);
 		// sqlite.cacheNotes(true);
 		sqlite.close();
+	}
+
+	public boolean isConnectedToBackend(Activity activity) {
+		final ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		final NetworkInfo netInfo = cm.getActiveNetworkInfo();
+
+		try {
+	        if (netInfo != null && netInfo.isConnected()) {
+	            // Network is available but check if we can get access from the
+	            // network.
+	            URL url = new java.net.URL(BaseDatabaseAdapter.getBaseUrl());
+	            HttpURLConnection urlc = (HttpURLConnection) url.openConnection();
+	            urlc.setRequestProperty("Connection", "close");
+	            urlc.setConnectTimeout(2000); // Timeout 2 seconds.
+	            urlc.connect();
+
+	            if (urlc.getResponseCode() == 200) // Successful response.
+	            {
+	            	urlc.disconnect();
+	            	return true;
+	            } else {
+	                Log.d("NO INTERNET", "NO INTERNET");
+	                Crouton.makeText(activity, "Internet Connectivity Issue", Style.ALERT).show();
+	                return false;
+	            }
+	        } else {
+	        	Crouton.makeText(activity, "Internet Connection Unavailable", Style.ALERT).show();
+	        	return false;
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return false;
 	}
 
 	public void logout() {

@@ -23,20 +23,14 @@
         android:layout_alignParentTop="true"
         android:gravity="center|center_vertical" >
 
-        <ProgressBar
-            android:id="@+id/loading"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true" />
-
         <TextView
             android:id="@+id/projects_empty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/loading"
-            android:text="Getting All Projects" />
+            android:text="No Projects"
+            android:textSize="18sp" />
+
     </RelativeLayout>
 
 </LinearLayout>

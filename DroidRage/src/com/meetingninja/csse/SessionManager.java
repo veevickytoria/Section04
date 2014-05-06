@@ -56,7 +56,7 @@ public class SessionManager {
 
 	/**
 	 * Gets a singleton instance of the session manager
-	 * 
+	 *
 	 * @return
 	 */
 	public static synchronized SessionManager getInstance() {
@@ -68,10 +68,11 @@ public class SessionManager {
 	public void init() {
 		this._context = ApplicationController.getInstance()
 				.getApplicationContext();
-		pref = _context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+		this.pref = _context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
 	}
 
 	private SessionManager() {
+		init();
 	}
 
 	/**
@@ -79,7 +80,6 @@ public class SessionManager {
 	 * */
 	public synchronized void createLoginSession(String userID) {
 		Editor editor = pref.edit();
-		// Storing login value as TRUE
 		editor.putString(USER, "user");
 		editor.putString(KEY_USERID, userID);
 		editor.putBoolean(LOGGED_IN, true);
@@ -92,7 +92,6 @@ public class SessionManager {
 	 * */
 	public synchronized void createLoginSession(User u) {
 		Editor editor = pref.edit();
-		// Storing login value as TRUE
 		// editor.putString(KEY_USERID, u.getUserID());
 		editor.putString(USER, u.getDisplayName());
 		editor.putString(EMAIL, u.getEmail());
@@ -136,7 +135,7 @@ public class SessionManager {
 			// Add flag to start new activity
 			login.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			// User cannot go back to this activity
-			// login.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+			 login.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 			// Show no animation when launching login page
 			login.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 			// Show login page
@@ -149,6 +148,7 @@ public class SessionManager {
 		Editor editor = pref.edit();
 		editor.clear();
 		editor.commit();
+		setPage(0);
 	}
 
 	public synchronized void logoutUser() {
@@ -174,7 +174,7 @@ public class SessionManager {
 	/**
 	 * Get the last pressed navigation drawer position. If doesn't exist,
 	 * returns 0.
-	 * 
+	 *
 	 * @return the last pressed navigation drawer position, or 0, if doesn't
 	 *         exist
 	 */

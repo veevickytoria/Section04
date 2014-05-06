@@ -19,11 +19,14 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import com.meetingninja.csse.database.BaseDatabaseAdapter;
 
@@ -34,6 +37,8 @@ import com.meetingninja.csse.database.BaseDatabaseAdapter;
  *
  */
 public class ConnectivityUtils {
+
+	private static final String TAG = ConnectivityUtils.class.getSimpleName();
 
 	/**
 	 * Get the network info
@@ -58,21 +63,6 @@ public class ConnectivityUtils {
 		return (info != null && info.isConnected());
 	}
 
-	public static boolean canReachBackend() throws IOException {
-		boolean exists = false;
-		SocketAddress sockaddr = new InetSocketAddress(
-				BaseDatabaseAdapter.getBaseUrl(), 80);
-		// create an unbound socket
-		Socket sock = new Socket();
-		// This method will block no more than timeoutMs
-		int timeoutMs = 2000; // 2 seconds
-		// If the timeout occurs, SocketTimeoutException is thrown
-		sock.connect(sockaddr, timeoutMs);
-
-		exists = true;
-		sock.close();
-		return exists;
-	}
 
 	/**
 	 * Check if there is any connectivity to a Wifi network

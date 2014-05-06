@@ -34,25 +34,29 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.meetingninja.csse.ApplicationController;
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
+import com.meetingninja.csse.extras.ConnectivityUtils;
 import com.meetingninja.csse.extras.NinjaTextUtils;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
+
 public class RegisterActivity extends Activity implements AsyncResponse<User> {
 
-	EditText nameText;
-	EditText emailText;
-	EditText passwordText;
-	EditText confirmPasswordText;
+	private EditText nameText;
+	private EditText emailText;
+	private EditText passwordText;
+	private EditText confirmPasswordText;
 	public static final String ARG_USERNAME = "user";
+	protected static final String TAG = RegisterActivity.class.getSimpleName();
 
-	AlertDialog.Builder builder;
-
-	AlertDialog.Builder passCheck;
 	private RegisterTask registerTask;
 	private boolean mRegisterSuccess;
 
@@ -67,25 +71,6 @@ public class RegisterActivity extends Activity implements AsyncResponse<User> {
 		emailText = ((EditText) findViewById(R.id.register_email));
 		passwordText = ((EditText) findViewById(R.id.register_password));
 		confirmPasswordText = ((EditText) findViewById(R.id.register_confirm));
-
-		// builder = new AlertDialog.Builder(RegisterActivity.this);
-		//
-		// builder.setMessage(
-		// "The username "
-		// + usernameText.getText().toString()
-		// + " is already taken.\nPlease enter a different username.")
-		// .setTitle("Username Already in Use");
-		//
-		// builder.setPositiveButton("OK", null);
-		//
-		// passCheck = new AlertDialog.Builder(RegisterActivity.this);
-		//
-		// passCheck
-		// .setMessage(
-		// "Your password and confirmation password were different.\nPlease re-enter password")
-		// .setTitle("Password Mismatch");
-		//
-		// passCheck.setPositiveButton("OK", null);
 
 		findViewById(R.id.register_action_button).setOnClickListener(
 				new View.OnClickListener() {
@@ -112,21 +97,7 @@ public class RegisterActivity extends Activity implements AsyncResponse<User> {
 		switch (item.getItemId()) {
 		// Respond to the action bar's Up/Home button
 		case android.R.id.home:
-			Intent upIntent = new Intent(this, LoginActivity.class);
-			if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
-				// This activity is NOT part of this app's task, so create a new
-				// task
-				// when navigating up, with a synthesized back stack.
-				TaskStackBuilder.create(this)
-				// Add all of this activity's parents to the back stack
-						.addNextIntent(upIntent)
-						// Navigate up to the closest parent
-						.startActivities();
-			} else {
-				// This activity is part of this app's task, so simply
-				// navigate up to the logical parent activity.
-				NavUtils.navigateUpTo(this, upIntent);
-			}
+			tryToDisplayLogin(null);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -134,7 +105,14 @@ public class RegisterActivity extends Activity implements AsyncResponse<User> {
 
 	@Override
 	public void onBackPressed() {
+		tryToDisplayLogin(null);
+	}
+
+	private void tryToDisplayLogin(Bundle extras) {
 		Intent upIntent = new Intent(this, LoginActivity.class);
+		if (extras != null) {
+			upIntent.putExtras(extras);
+		}
 		if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
 			// This activity is NOT part of this app's task, so create a new
 			// task
@@ -164,12 +142,13 @@ public class RegisterActivity extends Activity implements AsyncResponse<User> {
 		emailText.setError(null);
 		passwordText.setError(null);
 		confirmPasswordText.setError(null);
+		Crouton.clearCroutonsForActivity(RegisterActivity.this);
 
 		// Store values
-		String name = nameText.getText().toString().trim();
-		String email = emailText.getText().toString().trim();
-		String pass = passwordText.getText().toString().trim();
-		String confPass = confirmPasswordText.getText().toString().trim();
+		final String name = nameText.getText().toString().trim();
+		final String email = emailText.getText().toString().trim();
+		final String pass = passwordText.getText().toString().trim();
+		final String confPass = confirmPasswordText.getText().toString().trim();
 
 		Log.d("Registering", name + " : " + email + " : " + pass + " : "
 				+ confPass);
@@ -194,15 +173,17 @@ public class RegisterActivity extends Activity implements AsyncResponse<User> {
 			focusView = confirmPasswordText;
 			cancel = true;
 		}
+
 		if (TextUtils.isEmpty(pass)) {
 			passwordText.setError(getString(R.string.error_field_required));
 			focusView = passwordText;
 			cancel = true;
 		} else if (pass.length() < 4) {
-			passwordText.setError(getString(R.string.error_field_required));
+			passwordText.setError(getString(R.string.error_invalid_password));
 			focusView = passwordText;
 			cancel = true;
 		}
+
 		if (TextUtils.isEmpty(email)) {
 			emailText.setError(getString(R.string.error_field_required));
 			focusView = emailText;
@@ -212,6 +193,7 @@ public class RegisterActivity extends Activity implements AsyncResponse<User> {
 			focusView = emailText;
 			cancel = true;
 		}
+
 		if (TextUtils.isEmpty(name)) {
 			nameText.setError(getString(R.string.error_field_required));
 			focusView = nameText;
@@ -221,11 +203,38 @@ public class RegisterActivity extends Activity implements AsyncResponse<User> {
 		if (cancel) {
 			focusView.requestFocus();
 		} else {
-			registerTask = new RegisterTask(this);
-			registerTask.execute(name, email, pass);
-			// go to process finish
+			// registerTask = new RegisterTask(this);
+			// registerTask.execute(name, email, pass);
+
+			new AsyncTask<Void, Void, Boolean>() {
+				@Override
+				protected Boolean doInBackground(Void... params) {
+					return ApplicationController.getInstance()
+							.isConnectedToBackend(RegisterActivity.this);
+				}
+
+				@Override
+				protected void onPostExecute(Boolean result) {
+					if (result) {
+						parseSDKRegistration1st(name, email);
+					} else {
+						Crouton.makeText(RegisterActivity.this,
+								"Internet Connectivity Error", Style.ALERT)
+								.show();
+						if (registerTask != null && !registerTask.isCancelled()) {
+							registerTask.cancel(true);
+						}
+					}
+				}
+			}.execute();
+
 		}
 
+	}
+
+	private void registerUser(String name, String email, String pass) {
+		registerTask = new RegisterTask(RegisterActivity.this);
+		registerTask.execute(name, email, pass);
 	}
 
 	@Override
@@ -233,15 +242,68 @@ public class RegisterActivity extends Activity implements AsyncResponse<User> {
 		mRegisterSuccess = (result != null);
 
 		if (!mRegisterSuccess) {
-			Toast.makeText(getApplicationContext(),
-					"Registration Unsuccessful", Toast.LENGTH_LONG).show();
+			// Toast.makeText(getApplicationContext(),
+			// "Registration Unsuccessful", Toast.LENGTH_LONG).show();
+			Crouton.makeText(RegisterActivity.this,
+					"Registration Unsuccessful", Style.ALERT).show();
 		} else {
-			parseSDKRegistration(result);
+			// parseSDKRegistration2nd(result);
+
+			/* Switched the order of register */
+			ParseUser parseUser = ParseUser.getCurrentUser();
+			parseUser.put("backendId", result.getID());
+			parseUser.put("phone", result.getPhone());
+			parseUser.put("company", result.getCompany());
+			parseUser.put("title", result.getTitle());
+			parseUser.put("location", result.getLocation());
+
+			displayLogin(result);
+
 		}
 
 	}
 
-	private void parseSDKRegistration(final User user) {
+	private void displayLogin(User user) {
+		Bundle extras = new Bundle();
+		extras.putString(Intent.EXTRA_EMAIL, user.getEmail());
+		extras.putBoolean("registerSuccess", mRegisterSuccess);
+		setResult(RESULT_OK);
+		tryToDisplayLogin(extras);
+	}
+
+	private void parseSDKRegistration1st(final String name, final String email) {
+		ParseUser parseUser = new ParseUser();
+		final String pass = passwordText.getText().toString();
+		parseUser.setUsername(name);
+		parseUser.setPassword(pass);
+		parseUser.setEmail(email);
+
+		parseUser.signUpInBackground(new SignUpCallback() {
+
+			@Override
+			public void done(ParseException e) {
+				if (e == null) {
+					registerUser(name, email, pass);
+				} else {
+					if (e.getMessage().contains(
+							"username " + name + " already taken")) {
+						nameText.setError("Username already taken");
+						nameText.requestFocus();
+					} else if (e.getMessage().contains(
+							"the email address " + email
+									+ " has already been taken")) {
+						emailText
+								.setError("Account with this email already exists");
+						emailText.requestFocus();
+					}
+					Log.e(TAG, e.getLocalizedMessage());
+				}
+			}
+		});
+
+	}
+
+	private void parseSDKRegistration2nd(final User user) {
 		ParseUser parseUser = new ParseUser();
 		parseUser.setUsername(user.getDisplayName());
 		parseUser.setPassword(passwordText.getText().toString().trim());
@@ -258,11 +320,7 @@ public class RegisterActivity extends Activity implements AsyncResponse<User> {
 			@Override
 			public void done(ParseException e) {
 				if (e == null) {
-					Intent goLogin = new Intent();
-					goLogin.putExtra(Intent.EXTRA_EMAIL, user.getEmail());
-					goLogin.putExtra("registerSuccess", mRegisterSuccess);
-					setResult(RESULT_OK, goLogin);
-					finish();
+					displayLogin(user);
 				} else {
 					e.printStackTrace();
 				}
@@ -289,8 +347,6 @@ public class RegisterActivity extends Activity implements AsyncResponse<User> {
 				return UserDatabaseAdapter.register(registerMe, params[2]);
 			} catch (IOException e) {
 				Log.e("DB Adapter", "Error: Register failed");
-				Log.e("REGISTER_ERR", e.toString());
-			} catch (Exception e) {
 				Log.e("REGISTER_ERR", e.toString());
 			}
 			return null;

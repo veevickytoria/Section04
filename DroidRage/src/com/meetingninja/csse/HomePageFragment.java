@@ -81,12 +81,15 @@ public class HomePageFragment extends Fragment {
 	}
 
 	private void setUpViews(View v) {
-		meetingAdpt = new MeetingItemAdapter(getActivity(),	R.layout.list_item_meeting, meetings);
-		meetingList = (ListView) v.findViewById(R.id.homepage_meetings);
+		View meetingView = v.findViewById(R.id.homepage_meetings_view);
+		meetingAdpt = new MeetingItemAdapter(getActivity(),	R.layout.list_item_meeting, this.meetings);
+		meetingList = (ListView) v.findViewById(R.id.homepage_meetingList);
+		meetingList.setEmptyView(meetingView.findViewById(android.R.id.empty));
 		meetingList.setAdapter(meetingAdpt);
-
-		taskAdpt = new TaskItemAdapter(getActivity(), R.layout.list_item_task,	tasks, false);
-		taskList = (ListView) v.findViewById(R.id.homepage_tasks);
+		View taskView = v.findViewById(R.id.homepage_tasks_view);
+		taskAdpt = new TaskItemAdapter(getActivity(), R.layout.list_item_task,	this.tasks, false);
+		taskList = (ListView) v.findViewById(R.id.homepage_tasksList);
+		taskList.setEmptyView(taskView.findViewById(android.R.id.empty));
 		taskList.setAdapter(taskAdpt);
 
 		meetingList.setOnItemClickListener(new AdapterView.OnItemClickListener() {

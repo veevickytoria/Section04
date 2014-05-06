@@ -110,7 +110,7 @@ public class MainActivity extends FragmentActivity {
 
 	// Fields local to this activity
 	private CharSequence actionBarTitle;
-	private SessionManager session = SessionManager.getInstance();
+	private static final SessionManager session = SessionManager.getInstance();
 	private boolean isDataCached;
 	private static final String KEY_SQL_CACHE = "SQL_DATA_CACHE";
 
@@ -123,6 +123,7 @@ public class MainActivity extends FragmentActivity {
 		// Check if logged in
 		if (!session.isLoggedIn()) {
 			Log.v(TAG, "User is not logged in");
+			session.clear();
 			showLogin();
 		} else { // Else continue
 			Log.v(TAG, "UserID " + SessionManager.getUserID() + " is logged in");
@@ -142,8 +143,8 @@ public class MainActivity extends FragmentActivity {
 	}
 
 	/**
-	 * // Check to see if data has been cached in the local database
-	 * 
+	 * Check to see if data has been cached in the local database
+	 *
 	 * @param icicle
 	 */
 	private void checkAndPreloadData(Bundle icicle) {
@@ -169,7 +170,7 @@ public class MainActivity extends FragmentActivity {
 		login.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
 		// User cannot go back to this activity
-		// login.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+//		 login.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
 		login.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 		startActivity(login);
@@ -304,7 +305,7 @@ public class MainActivity extends FragmentActivity {
 
 	/**
 	 * Highlight the selected item, update the title, and close the drawer
-	 * 
+	 *
 	 * @param position
 	 */
 	private boolean selectFromLeftDrawer(int position, FragmentManager fm) {
@@ -341,7 +342,7 @@ public class MainActivity extends FragmentActivity {
 	}
 
 	private void handleSpeech(ArrayList<String> speechArray, Intent data) {
-		if(speechArray.contains("homepage")){ 
+		if(speechArray.contains("homepage")){
 			selectItem(DrawerLabel.HOMEPAGE.getPosition());
 		} else if (speechArray.contains("meetings")) {
 			selectItem(DrawerLabel.MEETINGS.getPosition());

@@ -393,13 +393,13 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 
 	/**
 	 * Registers a passed in User and returns that user with an assigned UserID
-	 * 
+	 *
 	 * @param registerMe
 	 * @param password
 	 * @return the passed-in user with an assigned ID by the server
 	 * @throws Exception
 	 */
-	public static User register(User registerMe, String password)throws Exception {
+	public static User register(User registerMe, String password) throws IOException {
 		// Server URL setup
 		String _url = getBaseUri().build().toString();
 
@@ -418,11 +418,17 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		// Create a generator to build the JSON string
 		JsonGenerator jgen = JFACTORY.createGenerator(ps, JsonEncoding.UTF8);
 
-		password = NinjaTextUtils.computeHash(password);
+		String hashedPass = password;
+		try {
+			hashedPass = NinjaTextUtils.computeHash(password);
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		// Build JSON Object
 		jgen.writeStartObject();
 		jgen.writeStringField(Keys.User.NAME, registerMe.getDisplayName());
-		jgen.writeStringField("password", password);
+		jgen.writeStringField("password", hashedPass);
 		jgen.writeStringField(Keys.User.EMAIL, registerMe.getEmail());
 		jgen.writeStringField(Keys.User.PHONE, registerMe.getPhone());
 		jgen.writeStringField(Keys.User.COMPANY, registerMe.getCompany());

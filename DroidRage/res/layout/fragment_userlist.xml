@@ -25,6 +25,22 @@
         </ListView>
         -->
 
+        <RelativeLayout
+            android:id="@android:id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center" >
+
+            <TextView
+                android:id="@+id/contacts_empty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No Contacts"
+                android:textAppearance="?android:attr/textAppearance"
+                android:textSize="18sp" />
+
+        </RelativeLayout>
+
         <de.timroes.android.listview.EnhancedListView
             android:id="@+id/contacts_list"
             android:layout_width="match_parent"
@@ -32,27 +48,5 @@
             android:dividerHeight="2dp" >
         </de.timroes.android.listview.EnhancedListView>
     </LinearLayout>
-
-    <RelativeLayout
-        android:id="@android:id/empty"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center|center_vertical" >
-
-        <ProgressBar
-            android:id="@+id/loading"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true" />
-
-        <TextView
-            android:id="@+id/profile_empty"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/loading"
-            android:text="Getting Contacts" />
-    </RelativeLayout>
 
 </FrameLayout>

@@ -16,17 +16,33 @@
             android:orientation="vertical" >
 
             <TextView
-                android:id="@+id/news_feed_textview"
-                android:layout_width="match_parent"
+                android:id="@+id/homepage_tasksHeader"
                 style="@style/SectionHeader"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Tasks:" />
 
             <ListView
-                android:id="@+id/homepage_tasks"
+                android:id="@+id/homepage_tasksList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
             </ListView>
+
+            <RelativeLayout
+                android:id="@android:id/empty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:gravity="center" >
+
+                <TextView
+                    android:id="@android:id/text1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No tasks assigned"
+                    android:textAppearance="?android:attr/textAppearance"
+                    android:textSize="18sp" />
+            </RelativeLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -47,7 +63,6 @@
                 android:layout_height="wrap_content" >
             </ListView>
         </LinearLayout>
-
     </LinearLayout>
 
 </FrameLayout>
