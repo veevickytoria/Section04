@@ -17,13 +17,13 @@ import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.ProjectDatabaseAdapter;
-import com.meetingninja.csse.database.local.SQLiteNoteAdapter;
 import com.meetingninja.csse.extras.AlertDialogUtil;
 import com.meetingninja.csse.meetings.EditMeetingActivity;
 import com.meetingninja.csse.meetings.MeetingFetcherTask;
 import com.meetingninja.csse.meetings.MeetingItemAdapter;
 import com.meetingninja.csse.notes.EditNoteActivity;
 import com.meetingninja.csse.notes.NoteArrayAdapter;
+import com.meetingninja.csse.notes.NoteFetcher;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -51,13 +51,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-public class ViewProjectActivity extends FragmentActivity implements
-		ActionBar.TabListener {
+public class ViewProjectActivity extends FragmentActivity implements ActionBar.TabListener {
 	ArrayList<String> navItems;
 	private static int prevSelectedItem = 0;
 	// private ProjectTypeAdapter typeAdapter;
 	private Project project;
 	private int resultCode = Activity.RESULT_CANCELED;
+	private int currentpos=0;
 	private MemberListFragment memberFrag;
 	private MeetingsProjectFragment meetingFrag;
 	private NotesProjectFragment notesFrag;
@@ -74,17 +74,13 @@ public class ViewProjectActivity extends FragmentActivity implements
 		project = getIntent().getExtras().getParcelable(Keys.Project.PARCEL);
 
 		getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		getActionBar().addTab(
-				getActionBar().newTab().setText("Meetings")
-						.setTabListener(this));
-		getActionBar().addTab(
-				getActionBar().newTab().setText("Notes").setTabListener(this));
-		getActionBar()
-				.addTab(getActionBar().newTab().setText("Members")
-						.setTabListener(this));
+		getActionBar().addTab(getActionBar().newTab().setText("Meetings").setTabListener(this));
+		getActionBar().addTab(getActionBar().newTab().setText("Notes").setTabListener(this));
+		getActionBar().addTab(getActionBar().newTab().setText("Members").setTabListener(this));
 		getActionBar().setTitle(project.getProjectTitle());
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-
+		refreshProject();
+		
 	}
 
 	@Override
@@ -96,16 +92,11 @@ public class ViewProjectActivity extends FragmentActivity implements
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-
 		switch (item.getItemId()) {
 		case R.id.action_new:
 			editProject();
 			return true;
 		case R.id.action_refresh:
-			// TaskDeleter deleter = new TaskDeleter();
-			// deleter.deleteTask(displayedTask.getID());
-			// setResult(RESULT_OK);
-			// finish();
 			refreshProject();
 			return true;
 		case R.id.action_edit:
@@ -114,80 +105,82 @@ public class ViewProjectActivity extends FragmentActivity implements
 		case android.R.id.home:
 			Intent i = new Intent();
 			i.putExtra(Keys.Project.PARCEL, project);
+			resultCode = Activity.RESULT_OK;
 			setResult(resultCode, i);
 			finish();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
-
 	}
 
 	private void refreshProject() {
-		// TODO
+		new AsyncTask<Project, Void, Project>() {
+			@Override
+			protected void onPostExecute(Project p) {
+				getActionBar().setTitle(p.getProjectTitle());
+				project=p;
+				System.out.println(p.getNotes());
+				setProjectTab(currentpos);
+			}
+
+			@Override
+			protected Project doInBackground(Project... params) {
+				Project p = new Project();
+				try {
+					p = ProjectDatabaseAdapter.getProject(params[0].getProjectID());
+				} catch (IOException e) {
+					System.out.println("failed to refresh project");
+					e.printStackTrace();
+				}
+				return p;
+			}
+
+		}.execute(project);
 	}
 
 	private void editTitle() {
 		final EditText title = new EditText(this);
 		title.setText(project.getProjectTitle());
 		title.selectAll();
-		new AlertDialog.Builder(this).setTitle("Enter a title")
-				.setPositiveButton("OK", new OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						project.setProjectTitle(title.getText().toString());
-						getActionBar().setTitle(project.getProjectTitle());
-						updateProject();
-					}
-				}).setView(title).show();
+		new AlertDialog.Builder(this).setTitle("Enter a title").setPositiveButton("OK", new OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				project.setProjectTitle(title.getText().toString());
+				getActionBar().setTitle(project.getProjectTitle());
+				updateProject();
+			}
+		}).setView(title).show();
 	}
 
 	private void editProject() {
 		switch (prevSelectedItem) {
 		case 0:
-			AlertDialogUtil
-					.showTwoOptionsDialog(
-							this,
-							"Select an option",
-							"Would you like to create a meeting or select an existing meeting?",
-							"Create a meeting", "Select a meeting",
-							new OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
-									createMeeting();
-								}
+			AlertDialogUtil.showTwoOptionsDialog(this,"Select an option","Would you like to create a meeting or select an existing meeting?","Create a meeting", "Select a meeting",new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog,int which) {
+					createMeeting();
+				}
 
-							}, new OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
-									selectMeeting();
-								}
-							});
+			}, new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog,int which) {
+					selectMeeting();
+				}
+			});
 			break;
 		case 1:
-			AlertDialogUtil
-					.showTwoOptionsDialog(
-							this,
-							"Select an option",
-							"Would you like to create a note or select an existing note?",
-							"Create a note", "Select a note",
-							new OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
-									createNote();
-								}
-
-							}, new OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
-									selectNote();
-								}
-							});
+			AlertDialogUtil.showTwoOptionsDialog(this,"Select an option","Would you like to create a note or select an existing note?","Create a note", "Select a note",new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog,int which) {
+					createNote();
+				}
+			}, new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog,int which) {
+					selectNote();
+				}
+			});
 			break;
 		case 2:
 			// addMember();
@@ -207,14 +200,13 @@ public class ViewProjectActivity extends FragmentActivity implements
 	}
 
 	public void selectMeeting() {
-		MeetingFetcherTask fetcher = new MeetingFetcherTask(
-				new AsyncResponse<List<Meeting>>() {
-					@Override
-					public void processFinish(List<Meeting> result) {
-						selectMeeting(result);
-					}
+		MeetingFetcherTask fetcher = new MeetingFetcherTask(new AsyncResponse<List<Meeting>>() {
+			@Override
+			public void processFinish(List<Meeting> result) {
+				selectMeeting(result);
+			}
 
-				});
+		});
 		fetcher.execute(SessionManager.getUserID());
 	}
 
@@ -223,8 +215,7 @@ public class ViewProjectActivity extends FragmentActivity implements
 		LayoutInflater li = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View v = li.inflate(R.layout.activity_project_custom_dialog, null);
 		ListView lv = (ListView) v.findViewById(R.id.dialog_list);
-		final MeetingItemAdapter adpt = new MeetingItemAdapter(this,
-				R.layout.list_item_meeting, meetings);
+		final MeetingItemAdapter adpt = new MeetingItemAdapter(this,R.layout.list_item_meeting, meetings);
 		lv.setAdapter(adpt);
 		Button cancel = (Button) v.findViewById(R.id.button);
 		cancel.setOnClickListener(new View.OnClickListener() {
@@ -237,8 +228,7 @@ public class ViewProjectActivity extends FragmentActivity implements
 		lv.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parantAdpt, View v,
-					int position, long id) {
+			public void onItemClick(AdapterView<?> parantAdpt, View v,int position, long id) {
 				addMeeting(adpt.getItem(position));
 				dlg.dismiss();
 			}
@@ -252,12 +242,16 @@ public class ViewProjectActivity extends FragmentActivity implements
 		Intent createNote = new Intent(this, EditNoteActivity.class);
 		createNote.putExtra(Note.CREATE_NOTE, true);
 		startActivityForResult(createNote, 3);
-
 	}
 
 	public void selectNote() {
-		SQLiteNoteAdapter mySQLiteAdapter = new SQLiteNoteAdapter(this);
-		selectNote(mySQLiteAdapter.getAllNotes());
+		NoteFetcher fetcher = new NoteFetcher(new AsyncResponse<List<Note>>() {
+			@Override
+			public void processFinish(List<Note> result) {
+				selectNote(result);
+			}
+		});
+		fetcher.execute(SessionManager.getUserID());
 	}
 
 	public void selectNote(List<Note> notes) {
@@ -265,8 +259,7 @@ public class ViewProjectActivity extends FragmentActivity implements
 		LayoutInflater li = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View v = li.inflate(R.layout.activity_project_custom_dialog, null);
 		ListView lv = (ListView) v.findViewById(R.id.dialog_list);
-		final NoteArrayAdapter adpt = new NoteArrayAdapter(this,
-				R.layout.list_item_meeting, notes);
+		final NoteArrayAdapter adpt = new NoteArrayAdapter(this,R.layout.list_item_meeting, notes);
 		lv.setAdapter(adpt);
 		Button cancel = (Button) v.findViewById(R.id.button);
 		cancel.setOnClickListener(new View.OnClickListener() {
@@ -277,14 +270,11 @@ public class ViewProjectActivity extends FragmentActivity implements
 
 		});
 		lv.setOnItemClickListener(new OnItemClickListener() {
-
 			@Override
-			public void onItemClick(AdapterView<?> parantAdpt, View v,
-					int position, long id) {
+			public void onItemClick(AdapterView<?> parantAdpt, View v,int position, long id) {
 				addNote(adpt.getItem(position));
 				dlg.dismiss();
 			}
-
 		});
 		dlg.setContentView(v);
 		dlg.show();
@@ -293,8 +283,7 @@ public class ViewProjectActivity extends FragmentActivity implements
 	protected void addMember(User user) {
 		for (int i = 0; i < project.getMembers().size(); i++) {
 			if (user.getID().equals(project.getMembers().get(i).getID())) {
-				AlertDialogUtil.showErrorDialog(this,
-						"This user is already a member of your group");
+				AlertDialogUtil.showErrorDialog(this,"This user is already a member of this project");
 				return;
 			}
 		}
@@ -344,9 +333,9 @@ public class ViewProjectActivity extends FragmentActivity implements
 	}
 
 	private void updateProject() {
+		refreshProject();
 		resultCode = Activity.RESULT_OK;
 		new AsyncTask<Project, Void, Void>() {
-
 			@Override
 			protected Void doInBackground(Project... params) {
 				try {
@@ -357,7 +346,6 @@ public class ViewProjectActivity extends FragmentActivity implements
 				}
 				return null;
 			}
-
 		}.execute(project);
 	}
 
@@ -371,6 +359,7 @@ public class ViewProjectActivity extends FragmentActivity implements
 				addNote(new ParcelDataFactory(data.getExtras()).getNote());
 			}
 		}
+		refreshProject();
 	}
 
 	private void setProjectTab(int pos) {
@@ -381,11 +370,9 @@ public class ViewProjectActivity extends FragmentActivity implements
 		Bundle args = new Bundle();
 		switch (pos) {
 		case 0:
-			meetingFrag = new MeetingsProjectFragment()
-					.setProjectController(this);
+			meetingFrag = new MeetingsProjectFragment().setProjectController(this);
 			frag = meetingFrag;
-			args.putParcelableArrayList(Keys.Project.MEETINGS,
-					(ArrayList<Meeting>) project.getMeetings());
+			args.putParcelableArrayList(Keys.Project.MEETINGS,(ArrayList<Meeting>) project.getMeetings());
 			break;
 		case 1:
 			notesFrag = new NotesProjectFragment().setProjectController(this);
@@ -409,6 +396,7 @@ public class ViewProjectActivity extends FragmentActivity implements
 			Log.e("View Project", "Cannot change tab");
 			return;
 		}
+		currentpos = pos;
 		if (frag != null) {
 			frag.setArguments(args);
 			FragmentTransaction ft = fm.beginTransaction();

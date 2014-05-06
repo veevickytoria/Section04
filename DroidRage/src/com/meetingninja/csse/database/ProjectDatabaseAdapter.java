@@ -33,6 +33,7 @@ import android.net.Uri;
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.extras.JsonUtils;
 
 public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
@@ -45,11 +46,10 @@ public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 		return Uri.parse(getBaseUrl()).buildUpon();
 	}
 
-	public static Project getProject(Project p) throws IOException {
-
+	public static Project getProject(String id) throws IOException {
+		
 		// Server URL setup
-		String _url = getBaseUri().appendPath(p.getProjectID()).build()
-				.toString();
+		String _url = getBaseUri().appendPath(id).build().toString();
 
 		// Establish connection
 		URL url = new URL(_url);
@@ -63,15 +63,18 @@ public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 		conn.getResponseCode();
 		String response = getServerResponse(conn);
 		JsonNode projectNode = MAPPER.readTree(response);
+		Project p = new Project();
+		p.setProjectID(id);
 
 		return parseProject(projectNode, p);
 	}
 
-	public static Project createProject(Project p) throws IOException,
-			MalformedURLException {
+	public static Project createProject(Project p) throws IOException,MalformedURLException {
 		// Server URL setup
 		String _url = getBaseUri().build().toString();
-
+		System.out.println(_url);
+		SessionManager session= SessionManager.getInstance();
+		String userId = session.getUserID();
 		// establish connection
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -90,28 +93,30 @@ public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 		jgen.writeStartObject();
 		jgen.writeStringField(Keys.Project.TITLE, p.getProjectTitle());
 		jgen.writeArrayFieldStart(Keys.Project.MEETINGS);
-		for (Meeting meeting : p.getMeetings()) {
-			jgen.writeStartObject();
-			jgen.writeStringField(Keys.Meeting.ID, meeting.getID());
-			jgen.writeEndObject();
+//		for (Meeting meeting : p.getMeetings()) {
+//			jgen.writeStartObject();
+//			jgen.writeStringField(Keys.Meeting.ID, meeting.getID());
+//			jgen.writeEndObject();
 
-		}
+//		}
 		jgen.writeEndArray();
 		jgen.writeArrayFieldStart(Keys.Project.NOTES);
-		for (Note note : p.getNotes()) {
-			jgen.writeStartObject();
-			jgen.writeStringField(Keys.Note.ID, note.getID());
-			jgen.writeEndObject();
+//		for (Note note : p.getNotes()) {
+//			jgen.writeStartObject();
+//			jgen.writeStringField(Keys.Note.ID, note.getID());
+//			jgen.writeEndObject();
 
-		}
+//		}
 		jgen.writeEndArray();
 		jgen.writeArrayFieldStart(Keys.Project.MEMBERS);
-		for (User member : p.getMembers()) {
-			jgen.writeStartObject();
-			jgen.writeStringField(Keys.User.ID, member.getID());
-			jgen.writeEndObject();
-
-		}
+//		for (User member : p.getMembers()) {
+//			jgen.writeStartObject();
+//			jgen.writeStringField(Keys.User.ID, member.getID());
+//			jgen.writeEndObject();
+//		}
+		jgen.writeStartObject();
+		jgen.writeStringField(Keys.User.ID, userId);
+		jgen.writeEndObject();
 		jgen.writeEndArray();
 		jgen.writeEndObject();
 		jgen.close();
@@ -232,7 +237,7 @@ public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 		updateHelper(payloadMeetings);
 		updateHelper(payloadNotes);
 		System.out.println(updateHelper(payloadMembers));
-
+		
 	}
 
 	protected static String updateHelper(String jsonPayload) throws IOException {
@@ -256,8 +261,7 @@ public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 	public static void deleteProject(Project p) throws IOException {
 
 		// Server URL setup
-		String _url = getBaseUri().appendPath(p.getProjectID()).build()
-				.toString();
+		String _url = getBaseUri().appendPath(p.getProjectID()).build().toString();
 
 		// Establish connection
 		URL url = new URL(_url);
@@ -273,8 +277,7 @@ public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 
 	}
 
-	public static Project parseProject(JsonNode projectNode, Project p)
-			throws IOException {
+	public static Project parseProject(JsonNode projectNode, Project p)throws IOException {
 		String projectID = projectNode.get(Keys.Project.ID).asText();
 		List<Meeting> meetinglist = new ArrayList<Meeting>();
 		List<Note> notelist = new ArrayList<Note>();
@@ -321,5 +324,4 @@ public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 
 		return p;
 	}
-
 }

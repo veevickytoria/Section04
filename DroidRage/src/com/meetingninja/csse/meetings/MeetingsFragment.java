@@ -52,8 +52,7 @@ import com.meetingninja.csse.extras.IRefreshable;
 
 import de.timroes.android.listview.EnhancedListView;
 
-public class MeetingsFragment extends Fragment implements
-		AsyncResponse<List<Meeting>>, IRefreshable {
+public class MeetingsFragment extends Fragment implements AsyncResponse<List<Meeting>>, IRefreshable {
 
 	private static final String TAG = MeetingsFragment.class.getSimpleName();
 
