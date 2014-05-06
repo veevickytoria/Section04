@@ -54,8 +54,7 @@ import com.meetingninja.csse.database.local.SQLiteNoteAdapter;
 import com.meetingninja.csse.extras.IRefreshable;
 import com.meetingninja.csse.notes.tasks.DeleteNoteTask;
 
-public class NotesFragment extends Fragment implements
-		AsyncResponse<List<Note>>, IRefreshable {
+public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>, IRefreshable {
 
 	private static final String TAG = NotesFragment.class.getSimpleName();
 

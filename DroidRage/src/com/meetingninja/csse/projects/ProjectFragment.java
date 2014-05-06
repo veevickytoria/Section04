@@ -53,8 +53,7 @@ public class ProjectFragment extends Fragment {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 		// super.onCreate(savedInstanceState);
 		// setContentView(R.layout.activity_project_fragment);
 		setHasOptionsMenu(true);
@@ -64,11 +63,11 @@ public class ProjectFragment extends Fragment {
 
 		refreshProjects();
 		return v;
-
 	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		refreshProjects();
 		if (resultCode == Activity.RESULT_OK) {
 			if (requestCode == 6) {
 				refreshProjects();
@@ -104,20 +103,15 @@ public class ProjectFragment extends Fragment {
 	public void createProjectOption() {
 		final EditText title = new EditText(getActivity());
 		// title.setText(getProjectTitle());
-		new AlertDialog.Builder(getActivity()).setTitle("Enter a title")
-				.setPositiveButton("OK", new OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						createProject(title.getText().toString());
-					}
-				}).setNegativeButton("Cancel", new OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.cancel();
-					}
-				}).setView(title).show();
-
+		new AlertDialog.Builder(getActivity()).setTitle("Enter a title").setPositiveButton("OK", new OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				createProject(title.getText().toString());
+			}}).setNegativeButton("Cancel", new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.cancel();
+				}}).setView(title).show();
 	}
 
 	public void createProject(String title) {
@@ -172,8 +166,7 @@ public class ProjectFragment extends Fragment {
 				for (int i = 0; i < projectList.size(); i++) {
 					Project p = null;
 					try {
-						p = ProjectDatabaseAdapter.getProject(projectList
-								.get(i));
+						p = ProjectDatabaseAdapter.getProject(projectList.get(i).getProjectID());
 					} catch (IOException e) {
 						System.out.println("fialed to get project info");
 						e.printStackTrace();
@@ -206,8 +199,7 @@ public class ProjectFragment extends Fragment {
 
 	private void loadProject(Project project) {
 		// while (project.getEndTimeInMillis() == 0L);
-		Intent viewProject = new Intent(getActivity(),
-				ViewProjectActivity.class);
+		Intent viewProject = new Intent(getActivity(),ViewProjectActivity.class);
 		viewProject.putExtra(Keys.Project.PARCEL, project);
 		startActivityForResult(viewProject, 6);
 	}
@@ -218,8 +210,7 @@ public class ProjectFragment extends Fragment {
 	}
 
 	private void setUpListView(View v) {
-		projectAdpt = new ProjectItemAdapter(getActivity(),
-				R.layout.list_item_task, projectsList);
+		projectAdpt = new ProjectItemAdapter(getActivity(),R.layout.list_item_task, projectsList);
 
 		l = (EnhancedListView) v.findViewById(R.id.project_list);
 		l.setAdapter(projectAdpt);
@@ -263,8 +254,7 @@ public class ProjectFragment extends Fragment {
 		l.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View v, int position,
-					long id) {
+			public void onItemClick(AdapterView<?> arg0, View v, int position,long id) {
 				// Intent viewProject = new Intent(getActivity(),
 				// ViewProjectActivity.class);
 				// startActivity(viewProject);
@@ -285,8 +275,7 @@ class ProjectItemAdapter extends ArrayAdapter<Project> {
 	private List<Project> projects;
 	private Context context;
 
-	public ProjectItemAdapter(Context context, int textViewResourceId,
-			List<Project> projects) {
+	public ProjectItemAdapter(Context context, int textViewResourceId,List<Project> projects) {
 		super(context, textViewResourceId, projects);
 		this.context = context;
 		this.projects = projects;
@@ -319,13 +308,11 @@ class ProjectItemAdapter extends ArrayAdapter<Project> {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View rowView = convertView;
-		LayoutInflater inflater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		if (rowView == null) {
 			rowView = inflater.inflate(R.layout.list_item_project, null);
 			viewHolder = new ViewHolder();
-			viewHolder.title = (TextView) rowView
-					.findViewById(R.id.list_project_title);
+			viewHolder.title = (TextView) rowView.findViewById(R.id.list_project_title);
 
 			rowView.setTag(viewHolder);
 		} else {

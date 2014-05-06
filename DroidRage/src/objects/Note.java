@@ -13,23 +13,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.meetingninja.csse.database.Keys;
 
-@JsonDeserialize(builder = NoteBuilder.class)
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "noteID", "createdBy", "title", "description", "content",
-		"dateCreated" })
 public class Note extends AbstractJSONObject<Note> {
 
-	@JsonProperty("noteID")
 	private String noteID;
-	@JsonProperty("createdBy")
 	private String createdBy;
-	@JsonProperty("title")
 	private String title;
-	@JsonProperty("description")
 	private String description;
-	@JsonProperty("content")
 	private String content;
-	@JsonProperty("dateCreated")
 	private String dateCreated;
 
 	public static final String CREATE_NOTE = "createNote";
@@ -70,81 +60,63 @@ public class Note extends AbstractJSONObject<Note> {
 	}
 
 	@Override
-	@JsonProperty("noteID")
 	public String getID() {
 		return noteID;
 	}
 
 	@Override
-	@JsonProperty("noteID")
 	public void setID(String id) {
-		int testInt = Integer.valueOf(id);
-		setID(testInt);
-
+		this.noteID = id;
 	}
 
 	@Override
 	@JsonIgnore
 	protected void setID(int id) {
 		this.noteID = Integer.toString(id);
-
 	}
 
-	@JsonProperty("createdBy")
 	public String getCreatedBy() {
 		return !(createdBy == null || createdBy.isEmpty()) ? createdBy : "";
 	}
 
-	@JsonProperty("createdBy")
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
 
-	@JsonProperty("title")
 	public String getTitle() {
 		return !(title == null || title.isEmpty()) ? title : "";
 	}
 
-	@JsonProperty("title")
 	public void setTitle(String title) {
 		this.title = title;
 	}
 
-	@JsonProperty("description")
 	public String getDescription() {
-		return !(description == null || description.isEmpty()) ? description
-				: "";
+		return !(description == null || description.isEmpty()) ? description: "";
 	}
 
-	@JsonProperty("description")
 	public void setDescription(String description) {
 		this.description = description;
 	}
 
-	@JsonProperty("content")
 	public String getContent() {
 		return !(content == null || content.isEmpty()) ? content : "";
 	}
 
-	@JsonProperty("content")
 	public void setContent(String content) {
 		this.content = content;
 	}
 
-	@JsonProperty("dateCreated")
 	public String getDateCreated() {
-		return !(dateCreated == null || dateCreated.isEmpty()) ? dateCreated
-				: "";
+		return !(dateCreated == null || dateCreated.isEmpty()) ? dateCreated: "";
 	}
 
-	@JsonProperty("dateCreated")
 	public void setDateCreated(String dateCreated) {
 		this.dateCreated = dateCreated;
 	}
 
 	public void mergeWith(Note selected) {
 		setContent(getContent() + "\n" + selected.getContent());
-
 	}
 
 	@Override

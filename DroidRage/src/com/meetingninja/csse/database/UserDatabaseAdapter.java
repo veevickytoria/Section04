@@ -149,11 +149,9 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 
 	}
 
-	public static Schedule getSchedule(String userID)
-			throws JsonParseException, JsonMappingException, IOException {
+	public static Schedule getSchedule(String userID) throws JsonParseException, JsonMappingException, IOException {
 		// Server URL setup
-		String _url = getBaseUri().appendPath("Schedule").appendPath(userID)
-				.build().toString();
+		String _url = getBaseUri().appendPath("Schedule").appendPath(userID).build().toString();
 		// establish connection
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -171,11 +169,9 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		return sched;
 	}
 
-	public static List<Meeting> getMeetings(String userID)
-			throws JsonParseException, JsonMappingException, IOException {
+	public static List<Meeting> getMeetings(String userID)throws JsonParseException, JsonMappingException, IOException {
 		// Server URL setup
-		String _url = getBaseUri().appendPath("Meetings").appendPath(userID)
-				.build().toString();
+		String _url = getBaseUri().appendPath("Meetings").appendPath(userID).build().toString();
 
 		// establish connection
 		URL url = new URL(_url);
@@ -243,8 +239,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 
 	public static List<Group> getGroups(String userID) throws IOException {
 		// Server URL setup
-		String _url = getBaseUri().appendPath("Groups").appendPath(userID)
-				.build().toString();
+		String _url = getBaseUri().appendPath("Groups").appendPath(userID).build().toString();
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
@@ -279,8 +274,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 
 	public static List<Project> getProject(String userID) throws IOException {
 		// Server URL setup
-		String _url = getBaseUri().appendPath("Projects").appendPath(userID)
-				.build().toString();
+		String _url = getBaseUri().appendPath("Projects").appendPath(userID).build().toString();
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
@@ -298,7 +292,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 			for (final JsonNode projectNode : projectArray) {
 				Project p = new Project();
 				p.setProjectID(projectNode.get(Keys.Project.ID).asText());
-				ProjectDatabaseAdapter.getProject(p);
+				ProjectDatabaseAdapter.getProject(p.getProjectID());
 				if (p.getProjectID() != null && !p.getProjectID().isEmpty()) {
 					projectList.add(p);
 				}
@@ -312,8 +306,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 
 	public static List<Note> getNotes(String userID) throws IOException {
 		// Server URL setup
-		String _url = getBaseUri().appendPath("Notes").appendPath(userID)
-				.build().toString();
+		String _url = getBaseUri().appendPath("Notes").appendPath(userID).build().toString();
 		Log.d("GETNOTES", _url);
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -328,8 +321,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		// Initialize ObjectMapper
 		List<Note> noteList = new ArrayList<Note>();
 		List<String> noteIds = new ArrayList<String>();
-		final JsonNode noteArray = MAPPER.readTree(response)
-				.get(Keys.Note.LIST);
+		final JsonNode noteArray = MAPPER.readTree(response).get(Keys.Note.LIST);
 
 		if (noteArray.isArray()) {
 			for (final JsonNode noteNode : noteArray) {
@@ -350,11 +342,9 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		return noteList;
 	}
 
-	public static List<Task> getTasks(String userID) throws JsonParseException,
-			JsonMappingException, IOException {
+	public static List<Task> getTasks(String userID) throws JsonParseException,JsonMappingException, IOException {
 		// Server URL setup
-		String _url = getBaseUri().appendPath("Tasks").appendPath(userID)
-				.build().toString();
+		String _url = getBaseUri().appendPath("Tasks").appendPath(userID).build().toString();
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
@@ -465,8 +455,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		return createUser;
 	}
 
-	public static User update(String userID, Map<String, String> key_values)
-			throws JsonGenerationException, IOException, InterruptedException {
+	public static User update(String userID, Map<String, String> key_values)throws JsonGenerationException, IOException, InterruptedException {
 		// prepare POST payload
 		ByteArrayOutputStream json = new ByteArrayOutputStream();
 		// this type of print stream allows us to get a string easily
@@ -598,8 +587,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 			for (final JsonNode meetingOrTaskNode : scheduleArray) {
 				if ((_id = meetingOrTaskNode.get(Keys._ID)) != null) {
 					// Get the type of event
-					String type = JsonUtils.getJSONValue(meetingOrTaskNode,
-							Keys.TYPE);
+					String type = JsonUtils.getJSONValue(meetingOrTaskNode,Keys.TYPE);
 
 					if (TextUtils.equals(type, "meeting")) {
 						event = new Meeting();
