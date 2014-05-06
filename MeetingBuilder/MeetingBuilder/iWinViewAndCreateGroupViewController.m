@@ -45,6 +45,7 @@
 -(void)selectedUsers:(NSMutableArray *)userList
 {
     self.userList = userList;
+    [self.userList addObject:[self getContactForID:self.userID]];
     [self.memberTableView reloadData];
 }
 
@@ -253,9 +254,13 @@
             
             NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Contact" inManagedObjectContext:self.context];
             Contact *c = [[Contact alloc] initWithEntity:entityDesc insertIntoManagedObjectContext:self.context];
-            c.userID = (NSNumber*)[deserializedDictionary objectForKey:@"userID"];
+            c.userID = [NSNumber numberWithInt: userID];
             c.name = (NSString *)[deserializedDictionary objectForKey:@"name"];
             c.email = (NSString *)[deserializedDictionary objectForKey:@"email"];
+            c.title = (NSString *)[deserializedDictionary objectForKey:@"title"];
+            c.company = (NSString *)[deserializedDictionary objectForKey:@"company"];
+            c.location = (NSString *)[deserializedDictionary objectForKey:@"location"];
+            c.phone = (NSString *)[deserializedDictionary objectForKey:@"phone"];
             return c;
             
         }

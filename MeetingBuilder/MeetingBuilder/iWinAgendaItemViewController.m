@@ -32,7 +32,7 @@
     self.descriptionField.layer.borderWidth = FIELD_BORDER_WIDTH;
     self.descriptionField.layer.cornerRadius = FIELD_CORNER_RADIUS;
     self.headerLabel.text = self.itemTitle;
-    self.titleTextField.text = self.itemTitle;
+    self.titleTextField.text = @"";
     self.durationTextField.text = self.itemDuration;
     self.descriptionField.text = self.itemDescription;
 }

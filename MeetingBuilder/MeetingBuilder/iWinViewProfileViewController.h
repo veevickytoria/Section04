@@ -8,8 +8,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "iWinViewAndCreateGroupViewController.h"
+#import "iWinProjectListViewController.h"
+#import "iWinViewAndCreateProjectViewController.h"
 
-@interface iWinViewProfileViewController : UIViewController
+@interface iWinViewProfileViewController : UIViewController <GroupDelegate>
 
 - (IBAction)onEditProfile:(id)sender;
 - (IBAction)onCancel:(id)sender;

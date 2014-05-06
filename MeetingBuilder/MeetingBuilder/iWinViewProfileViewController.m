@@ -7,9 +7,6 @@
 //
 
 #import "iWinViewProfileViewController.h"
-#import "iWinViewAndCreateGroupViewController.h"
-#import "iWinProjectListViewController.h"
-#import "iWinViewAndCreateProjectViewController.h"
 #import "iWinBackEndUtility.h"
 #import "iWinAppDelegate.h"
 #import "Contact.h"
@@ -190,8 +187,8 @@
     
     if (!deserializedDictionary)
     {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Group not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
-        [alert show];
+        //UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Group not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        //[alert show];
     }
     else
     {
@@ -217,8 +214,8 @@
         
         if (!deserializedDictionary)
         {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Group details not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
-            [alert show];
+            //UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Group details not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+            //[alert show];
         }
         else
         {
