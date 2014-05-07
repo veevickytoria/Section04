@@ -149,6 +149,25 @@ public class Agenda implements IJSONObject<Agenda> {
 		return subDepth;
 	}
 
+	public boolean removeTopic(Topic t) {
+		if (this.getTopics().isEmpty())
+			return false;
+		for (Iterator<Topic> iter = getTopics().iterator(); iter.hasNext();) {
+			Topic rootTopic = iter.next();
+			// test top-level equality
+			if (rootTopic.equals(t)) {
+				rootTopic.getTopics().clear();
+				iter.remove();
+				return true;
+			}
+			// else, try to remove in nested lists
+			else if (rootTopic.removeSubTopic(t)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public ArrayList<Topic> flatten() {
 		ArrayList<Topic> flat_topics = new ArrayList<Topic>();
 		if (topics.isEmpty())

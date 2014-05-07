@@ -221,7 +221,7 @@ public class AgendaActivity extends FragmentActivity {
 	}
 
 	public void removeTopicRecursively(Topic topic) {
-		if (displayedAgenda.getTopics().remove(topic)) {
+		if (displayedAgenda.removeTopic(topic)) {
 			manager.removeNodeRecursively(topic);
 			manager.notifyDataSetChanged();
 			reconstructTree();

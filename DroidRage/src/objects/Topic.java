@@ -2,6 +2,7 @@ package objects;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -95,5 +96,27 @@ public class Topic implements Serializable {
 	@Override
 	public String toString() {
 		return String.format("%s (%d)", this.topic, this.subTopics.size());
+	}
+
+	public boolean removeSubTopic(Topic t) {
+		if (this.getTopics().isEmpty()) {
+			return false;
+		}
+		else {
+			for (Iterator<Topic> iter = getTopics().iterator(); iter.hasNext();) {
+				Topic rootTopic = iter.next();
+				// test top-level equality
+				if (rootTopic.equals(t)) {
+					rootTopic.getTopics().clear();
+					iter.remove();
+					return true;
+				}
+				// else, try to remove recursively
+				else if (rootTopic.removeSubTopic(t)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }
