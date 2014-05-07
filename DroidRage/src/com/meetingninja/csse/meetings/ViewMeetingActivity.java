@@ -16,6 +16,7 @@
 package com.meetingninja.csse.meetings;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.joda.time.format.DateTimeFormatter;
 
@@ -109,7 +110,7 @@ public class ViewMeetingActivity extends Activity {
 		}
 	}
 
-	private void setAttendees(ArrayList<User> attendance) {
+	private void setAttendees(List<User> attendance) {
 		Log.i(TAG, attendance.toString());
 		this.attendance.clear();
 		this.adpt.clear();

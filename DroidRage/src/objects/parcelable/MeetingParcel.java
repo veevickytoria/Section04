@@ -1,5 +1,7 @@
 package objects.parcelable;
 
+import java.util.ArrayList;
+
 import objects.Meeting;
 import objects.User;
 import android.os.Parcel;
@@ -23,7 +25,11 @@ public class MeetingParcel extends DataParcel<Meeting> {
 		dest.writeString(data.getStartTime());
 		dest.writeString(data.getEndTime());
 		dest.writeString(data.getDescription());
-		dest.writeList(data.getAttendance());
+		ArrayList<UserParcel> userList = new ArrayList<UserParcel>();
+		for (User user : data.getAttendance()){
+			userList.add(new UserParcel(user));
+		}
+		dest.writeList(userList);
 
 	}
 
@@ -37,7 +43,10 @@ public class MeetingParcel extends DataParcel<Meeting> {
 		data.setStartTime(in.readString());
 		data.setEndTime(in.readString());
 		data.setDescription(in.readString());
-		data.setAttendance(in.readArrayList(User.class.getClassLoader()));
+		ArrayList<UserParcel> userParcelList = in.readArrayList(UserParcel.class.getClassLoader());
+		for (int i=0;i<userParcelList.size();i++){
+			data.addAttendee((User) userParcelList.get(i).getData());
+		}
 
 	}
 

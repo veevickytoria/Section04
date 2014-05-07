@@ -2,8 +2,13 @@ package objects;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+
+import objects.parcelable.ParcelDataFactory;
+import objects.parcelable.UserParcel;
 
 import android.database.Cursor;
+import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -24,7 +29,7 @@ public class Meeting extends Event implements Parcelable {
 	private String meetingID;
 	protected String location;
 
-	private ArrayList<User> attendance = new ArrayList<User>();
+	private List<User> attendance = new ArrayList<User>();
 
 	private enum Attendance_Status {
 		YES(1), MAYBE(0), NO(-1), NO_RESPONSE(-2);
@@ -112,8 +117,8 @@ public class Meeting extends Event implements Parcelable {
 
 	}
 
-	public ArrayList<User> getAttendance() {
-		return attendance;
+	public List<User> getAttendance() {
+		return this.attendance;
 	}
 
 	public String getLocation() {
@@ -124,17 +129,18 @@ public class Meeting extends Event implements Parcelable {
 		this.location = location;
 	}
 
-	public void setAttendance(ArrayList<User> attendance) {
+	public void setAttendance(List<User> attendance) {
 		this.attendance = attendance;
 	}
 
-	public void addAttendeeWithID(String userID) {
-		UserVolleyAdapter.fetchUserInfo(userID, new AsyncResponse<User>() {
+	public void addAttendeeWithID(User user) {
+		UserVolleyAdapter.fetchUserInfo(user.getID(), new AsyncResponse<User>() {
 
 			@Override
 			public void processFinish(User result) {
-				Meeting.this.attendance.add(result);
-
+				System.out.println(result);
+				addAttendee(result);
+				System.out.println(attendance);
 			}
 		});
 	}
@@ -159,8 +165,12 @@ public class Meeting extends Event implements Parcelable {
 		dest.writeString(getStartTime());
 		dest.writeString(getEndTime());
 		dest.writeString(getDescription());
-		dest.writeList(getAttendance());
-
+		ArrayList<UserParcel> userList = new ArrayList<UserParcel>();
+		for (User user:getAttendance()){
+			userList.add(new UserParcel(user));
+		}
+		dest.writeList(userList);
+		System.out.println("write " + getAttendance());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -171,7 +181,11 @@ public class Meeting extends Event implements Parcelable {
 		startTime = in.readString();
 		endTime = in.readString();
 		description = in.readString();
-		attendance = in.readArrayList(User.class.getClassLoader());
+		ArrayList<UserParcel> userParcelList = in.readArrayList(UserParcel.class.getClassLoader());
+		for (int i=0;i<userParcelList.size();i++){
+			attendance.add((User) userParcelList.get(i).getData());
+		}
+		System.out.println("read " + attendance);
 	}
 
 	public static final Parcelable.Creator<Meeting> CREATOR = new Parcelable.Creator<Meeting>() {
@@ -231,7 +245,7 @@ public class Meeting extends Event implements Parcelable {
 		builder.append(", description=");
 		builder.append(description);
 		builder.append(", attendance=");
-		builder.append(this.getAttendance());
+		builder.append(attendance);
 		builder.append("]");
 		return builder.toString();
 	}

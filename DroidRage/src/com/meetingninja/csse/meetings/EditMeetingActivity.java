@@ -237,6 +237,11 @@ public class EditMeetingActivity extends FragmentActivity implements
 		View bottom = findViewById(R.id.attendees_group);
 		mDescription = (EditText) findViewById(R.id.description);
 		mGuestsComplete = (ContactTokenTextView) findViewById(R.id.guests_Complete);
+		if (displayedMeeting != null) {
+			for (User user : displayedMeeting.getAttendance()) {
+				mGuestsComplete.addObject(user);
+			}
+		}
 	}
 
 	private void trimTextViews() {
@@ -299,7 +304,7 @@ public class EditMeetingActivity extends FragmentActivity implements
 			newMeeting.setStartTime(start.getTimeInMillis());
 			newMeeting.setEndTime(end.getTimeInMillis());
 			newMeeting.setDescription(desc);
-			// TODO: newMeeting.setAttendance();
+			newMeeting.setAttendance(addedUsers);
 
 			if (displayedMeeting != null) {
 				// UserVolleyAdapter.fetchUserInfo(SessionManager.getUserID(),
@@ -326,7 +331,6 @@ public class EditMeetingActivity extends FragmentActivity implements
 				UpdateMeetingTask task = new UpdateMeetingTask();
 				newMeeting.setAttendance(addedUsers);
 				task.updateMeeting(newMeeting);
-
 				displayedMeeting = newMeeting;
 
 			} else {

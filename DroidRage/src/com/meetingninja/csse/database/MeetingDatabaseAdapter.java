@@ -76,29 +76,26 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 				Keys.Meeting.OTHEREND, meeting.getEndTime());
 		String descPayload = getEditPayload(meetingID, Keys.Meeting.DESC,
 				meeting.getDescription());
-		// String attendancePayload =
-		// getEditPayload(meetingID,
-		// Keys.Meeting.ATTEND,meeting.getAttendance());
 
-		// TODO: ByteArrayOutputStream json = new ByteArrayOutputStream();
-		// PrintStream ps = new PrintStream(json);
-		// JsonGenerator jgen = JFACTORY.createGenerator(ps, JsonEncoding.UTF8);
-		//
-		// jgen = JFACTORY.createGenerator(ps, JsonEncoding.UTF8);
-		// jgen.writeStartObject();
-		// jgen.writeStringField(Keys.Meeting.ID,meetingID);
-		// jgen.writeStringField("field",Keys.Meeting.ATTEND);
-		// jgen.writeArrayFieldStart("value");
-		// for (User member : meeting.getAttendance()){
-		// jgen.writeStartObject();
-		// jgen.writeStringField(Keys.User.ID,member.getID());
-		// jgen.writeEndObject();
-		// }
-		// jgen.writeEndArray();
-		// jgen.writeEndObject();
-		// jgen.close();
-		// String attendancePayload = json.toString("UTF8");
-		// TODO: ps.close();
+		ByteArrayOutputStream json = new ByteArrayOutputStream();
+		PrintStream ps = new PrintStream(json);
+		JsonGenerator jgen = JFACTORY.createGenerator(ps, JsonEncoding.UTF8);
+
+		jgen = JFACTORY.createGenerator(ps, JsonEncoding.UTF8);
+		jgen.writeStartObject();
+		jgen.writeStringField(Keys.Meeting.ID, meetingID);
+		jgen.writeStringField("field", Keys.Meeting.ATTEND);
+		jgen.writeArrayFieldStart("value");
+		for (User member : meeting.getAttendance()) {
+			jgen.writeStartObject();
+			jgen.writeStringField(Keys.User.ID, member.getID());
+			jgen.writeEndObject();
+		}
+		jgen.writeEndArray();
+		jgen.writeEndObject();
+		jgen.close();
+		String attendancePayload = json.toString("UTF8");
+		ps.close();
 
 		// Get server response
 		sendSingleEdit(meetingID, titlePayload);
@@ -106,7 +103,7 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 		sendSingleEdit(meetingID, locationPayload);
 		sendSingleEdit(meetingID, endDateTimePayload);
 		String response = sendSingleEdit(meetingID, descPayload);// TODO
-		// TODO: String response = sendSingleEdit(attendancePayload);
+		response = sendSingleEdit(meetingID, attendancePayload);
 		final JsonNode meetingNode = MAPPER.readTree(response);
 		Meeting m = parseMeeting(meetingNode);
 		return m;
@@ -176,7 +173,7 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 			jgen.writeStartObject();
 			jgen.writeStringField(Keys.User.ID, attendee.getID());
 			jgen.writeEndObject();
-		 }
+		}
 		jgen.writeEndArray();
 		jgen.writeEndObject();
 		jgen.close();
@@ -212,8 +209,6 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 	public static Meeting parseMeeting(JsonNode node) {
 		logPrint(node.toString());
 		final Meeting m = new Meeting();
-		// if (m.getID().isEmpty())
-		// m.setID(node.get(KEY_ID).asText());
 		m.setTitle(node.get(Keys.Meeting.TITLE).asText());
 		m.setLocation(node.get(Keys.Meeting.LOCATION).asText());
 		m.setStartTime(node.get(Keys.Meeting.DATETIME).asText());
@@ -222,8 +217,14 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 		JsonNode attendance = node.get(Keys.Meeting.ATTEND);
 		if (attendance != null && attendance.isArray()) {
 			for (final JsonNode attendeeNode : attendance) {
-				String _id = attendeeNode.get("userID").asText();
-				m.addAttendeeWithID(_id);
+				User user = new User();
+				user.setID(attendeeNode.get(Keys.User.ID).asText());
+				try {
+					user = UserDatabaseAdapter.getUserInfo(user.getID());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				m.addAttendee(user);
 			}
 		} else
 			Log.e(TAG, "Error: Unable to parse meeting attendance");
