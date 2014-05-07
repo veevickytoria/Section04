@@ -29,24 +29,32 @@
       <th></th>
     </tr>
   </thead>
-
   <% if !(@groups.any?) %>
-    <tr>
-      <td colspan="3" style="text-align: center;">YOU ARE NOT A MEMBER OF ANY GROUPS</td>
-    </tr>
-  <% else %>
-    <% for group in @groups %>
       <tr>
-        <td style='cursor: pointer' onclick="showViewGroupModal(<%= group['groupID'] %>,'<%= @allUsers %>')">
-          <%= group['groupTitle'] %>
-        </td>
-        <td style="width: 7%">
-          <span style='font-size: 1.3em; color: white; cursor: pointer;' onclick='showDeleteGroupModal(<%= group["groupID"] %>)' class='glyphicon glyphicon-trash'></span>
-        </td>
-        <td style="width: 7%">
-          <span style='font-size: 1.3em; color: white; cursor: pointer;' onclick="showEditGroupModal(<%= group["groupID"] %>, '<%= @allUsers %>')" class='glyphicon glyphicon-pencil' ></span>
-        </td>
+        <td colspan="3" style="text-align: center;">YOU ARE NOT A MEMBER OF ANY GROUPS</td>
       </tr>
+  <% else %>
+    <% counter = 0; max= @groups.length; addedGroups = [ ]; %>
+      <% for group in @groups %>
+        <% if counter >= max %>
+          <%break%>
+        <% elsif addedGroups.include? group['groupID'] %>
+          <% next %>
+        <% else %>
+          <tr>
+            <td style='cursor: pointer' onclick="showViewGroupModal(<%= group['groupID'] %>,'<%= @allUsers %>')">
+              <%= group['groupTitle'] %>
+            </td>
+            <td style="width: 7%">
+              <span style='font-size: 1.3em; color: white; cursor: pointer;' onclick='showDeleteGroupModal(<%= group["groupID"] %>)' class='glyphicon glyphicon-trash'></span>
+            </td>
+            <td style="width: 7%">
+              <span style='font-size: 1.3em; color: white; cursor: pointer;' onclick="showEditGroupModal(<%= group["groupID"] %>, '<%= @allUsers %>')" class='glyphicon glyphicon-pencil' ></span>
+            </td>
+          </tr>
+          <% addedGroups.push(group['groupID']) %>
+          <% counter = counter + 1 %>
+      <% end %>
     <% end %>
   <% end %>
 </table>

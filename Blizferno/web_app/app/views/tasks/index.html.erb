@@ -31,29 +31,40 @@
       <th>Task Name</th>
       <th>Completion Criteria</th>
       <th></th>
+      <th></th>
     </tr>
   </thead>
-  <% if !(@tasksParsed.any?) %>
+  <% if !(@tasks.any?) %>
     <tr>
       <td colspan="3" style="text-align: center;">YOU DO NOT HAVE ANY TASKS</td>
     </tr>
   <% else %>
-    <% for task in @tasks%>
-      <tr>
-        <td onClick="showViewTaskModal(<%= task['taskID'] %>, '<%= @allUsers %>')" data-refresh="true" data-toggle='modal'><%= Time.at(task['deadline']) %>
-        </td>
-        <td onClick="showViewTaskModal(<%= task['taskID'] %>, '<%= @allUsers %>')" data-refresh="true" data-toggle='modal'><%= task['title'] %>
-        </td>
-        <td onClick="showViewTaskModal(<%= task['taskID'] %>, '<%= @allUsers %>')" data-refresh="true" data-toggle='modal'><%= task['completionCriteria'] %>
-        </td>
-        <td colspan='1' style='cursor: pointer; text-align: center' onClick="showDeleteTaskModal(<%= task['taskID'] %>)"  data-refresh="true" data-toggle='modal'>
-          <span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'>
-          </span>
-        </td>
-        <td onclick="showEditTaskModal(<%= task['taskID'] %> %>, '<%= @allUsers %>')">
-          <span style='font-size: 1.3em; color: white; cursor: pointer;' class='glyphicon glyphicon-pencil' >
-          </span>
-        </td>
-      </tr>
-    <% end %>
+    <% counter = 0; max= @tasks.length; addedTasks = [ ]; %>
+      <% for task in @tasks%>
+        <% if counter >= max %>
+          <%break%>
+        <% elsif addedTasks.include? task['taskID'] %>
+          <% next %>
+        <% else %>
+          <tr>
+            <td onClick="showViewTaskModal(<%= task['taskID'] %>, '<%= @allUsers %>')" data-refresh="true" data-toggle='modal'><%= Time.at(task['deadline']) %>
+            </td>
+            <td onClick="showViewTaskModal(<%= task['taskID'] %>, '<%= @allUsers %>')" data-refresh="true" data-toggle='modal'><%= task['title'] %>
+            </td>
+            <td onClick="showViewTaskModal(<%= task['taskID'] %>, '<%= @allUsers %>')" data-refresh="true" data-toggle='modal'><%= task['completionCriteria'] %>
+            </td>
+            <td colspan='1' style='cursor: pointer; text-align: center' onClick="showDeleteTaskModal(<%= task['taskID'] %>)"  data-refresh="true" data-toggle='modal'>
+              <span style='font-size: 1.3em; color: white;' class='glyphicon glyphicon-trash'>
+              </span>
+            </td>
+            <td onclick="showEditTaskModal(<%= task['taskID'] %> %>, '<%= @allUsers %>')">
+              <span style='font-size: 1.3em; color: white; cursor: pointer;' class='glyphicon glyphicon-pencil' >
+              </span>
+            </td>
+          </tr>
+          <% addedTasks.push(task['taskID']) %>
+          <% counter = counter + 1%>
+        <% end %>
+      <% end %>
+  <% end %>
 </table>

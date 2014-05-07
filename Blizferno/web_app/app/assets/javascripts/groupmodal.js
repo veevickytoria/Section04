@@ -106,6 +106,7 @@ function NewGroupModal(documentID, blankID){
 				data: postData,
 				success:function(data){
 					parentClose.call(this);
+					alert("Group successfully created! Reloading page...")
 					window.location.reload(true);
 				}
 			});

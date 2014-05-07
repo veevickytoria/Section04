@@ -41,7 +41,7 @@ function NewTaskModal(documentID, blankID){
 
 		parentAddElement.call(this, "hidden", "false", "isCompleted", "isCompleted", "form-control", "body");
 
-		parentAddText.call(this, "Description:*", "","". "body");
+		parentAddText.call(this, "Description:*", "","", "body");
 		parentAddElement.call(this, "text", "","description","description", "form-control", "body");
 		parentAddText.call(this, "Required", "descriptionR", "required", "body");
 		parentAddBreak.call(this, "body");
@@ -49,6 +49,7 @@ function NewTaskModal(documentID, blankID){
 		parentAddText.call(this, "Deadline:* ", "", "", "body");
 		parentAddElement.call(this, "date","","deadlinedate", "deadlinedate", "form-control formDate", "body");
 		parentAddText.call(this, "Required", "deadlinedateR", "required", "body");
+		parentAddBreak.call(this, "body");
 
 		parentAddElement.call(this, "time", "", "deadlinetime", "deadlinetime", "form-control formTime", "body");
 		parentAddText.call(this, "Required", "deadlinetimeR", "required", "body");
@@ -79,12 +80,12 @@ function NewTaskModal(documentID, blankID){
 
 		today = mm +'-' + dd + '-' + yyyy + ' ' + HH + ':' + MM; 
 
-		parentAddElement.call(this, "hidden", today, "dateCreated", "dateCreated", "form-control", "body")
-		parentAddElement.call(this, "hidden", today, "dateAssigned", "dateAssigned", "form-control", "body")
+		parentAddElement.call(this, "hidden", today, "dateCreated", "dateCreated", "form-control", "body");
+		parentAddElement.call(this, "hidden", today, "dateAssigned", "dateAssigned", "form-control", "body");
 		
-		parentAddText.call(this, "Completion Criteria:*", "","". "body");
+		parentAddText.call(this, "Completion Criteria:*", "","", "body");
 		parentAddElement.call(this, "text", "","completionCriteria","completionCriteria", "form-control", "body");
-		parentAddText.call(this, "Required", "completionCriteria", "required", "body");
+		parentAddText.call(this, "Required", "completionCriteriaR", "required", "body");
 		parentAddBreak.call(this, "body");
 
 		parentAddText.call(this, "Assigned To*","","", "body");
@@ -126,59 +127,81 @@ function NewTaskModal(documentID, blankID){
 	}
 
 	newModal.executeAction = function(){
-		var invalid = newModal.validate();
+		var form = parentConvertToJSON.call(this, document.getElementById("body"))
+		var invalid = newModal.validate(form);
 		if(!invalid){
-			var form = parentConvertToJSON.call(this, document.getElementById("body"))
 			
 			var uid = getCookie('userID');
 		    var postTitle = form.title;
-		    var ass = newModal.getMembers('members');
+		    var postisCompleted = false;
+		    var postDescription = form.description;
 
-		    var postMembers = [{"userID":uid}];
+		    // Dates will need fixed upon merging
+		    var date = form.deadlinedate.split("-");
+			var time = form.deadlinetime.split(":");
+			var datetime = new Date(date[0], date[1]-1, date[2], time[0], time[1]);
+			datetime = datetime.getTime()/1000.0;
+			var postDeadline = datetime;
 
-		    for (var i = members.length - 1; i >= 0; i--) {
-		        postMembers.push({"userID":members[i]});
-		    };
+			var dt = form.dateCreated.split(" ");
+			date = dt[0].split("-");
+			time = dt[1].split(":");
+			datetime = new Date(date[0], date[1]-1, date[2], time[0], time[1]);
+			datetime = datetime.getTime()/1000.0;
+			var postDateCreated = datetime;
 
-		    //set up the data for the call
-		    var postData = JSON.stringify({
-		        "groupTitle":postTitle,
-		        "members":postMembers
-		    });
+			dt = form.dateAssigned.split(" ");
+			date = dt[0].split("-");
+			time = dt[1].split(":");
+			datetime = new Date(date[0], date[1]-1, date[2], time[0], time[1]);
+			datetime = datetime.getTime()/1000.0;
+			var postDateAssigned = datetime;
 
+		    var postCompletionCriteria = form.completionCriteria;
+			var postAssignedFrom = uid;
+			var postCreatedBy = uid;
+			var postAssignedTo = form.assignedTo;
+
+			//set up the data for the call
+			var postData = JSON.stringify({
+				"title":postTitle,
+				"isCompleted":postisCompleted,
+				"description":postDescription,
+				"deadline":postDeadline,
+				"dateCreated":postDateCreated,
+				"dateAssigned":postDateAssigned,
+				"completionCriteria":postCompletionCriteria,
+				"assignedTo":postAssignedTo,
+				"assignedFrom":postAssignedFrom,
+				"createdBy":postCreatedBy
+			});
+				
+			//make the POST request to the backend
 			$.ajax({
 				type: 'POST',
-				url: 'http://csse371-04.csse.rose-hulman.edu/Group/',
+				url: 'http://csse371-04.csse.rose-hulman.edu/Task/',
 				data: postData,
 				success:function(data){
 					parentClose.call(this);
+					alert("Task successfully created! Reloading page...")
 					window.location.reload(true);
 				}
 			});
 		}
 	}
 
-	newModal.validate = function(){
+	newModal.validate = function(JSONForm){
 		var invalidFields = false;
-  
-		if(document.getElementById("title") != null && document.getElementById("titleR") != null){
-			if(document.getElementById("title").value == ""){
-				invalidFields = true;
-				document.getElementById("titleR").style.display = "inline";
-			}
-			else{
-				document.getElementById("titleR").style.display = "none";
-			}
-		}
-
-		if(document.getElementById("members") != null && document.getElementById("membersR") != null){
-			var result = parentHasSelected.call(this, document.getElementById("members"));
-			if(!result){
-				invalidFields = true;
-				document.getElementById("membersR").style.display = "inline";
-			}
-			else{
-				document.getElementById("membersR").style.display = "none";
+		
+		for (key in JSONForm){
+			if(document.getElementById(key+"R") != null){
+				if(JSONForm[key] == ""){
+					invalidFields = true;
+					document.getElementById(key+"R").style.display = "inline";
+				}
+				else{
+					document.getElementById(key+"R").style.display = "none";
+				}
 			}
 		}
 
@@ -197,7 +220,7 @@ function NewTaskModal(documentID, blankID){
 }
 
 // EditTask Modal
-function EditTaskModal(documentID, groupID){
+function EditTaskModal(documentID, taskID){
 	var editModal = NinjaModal(documentID, groupID);
 
 	var parentShow = editModal.showModal;
@@ -404,8 +427,8 @@ function EditTaskModal(documentID, groupID){
 }
 
 // ViewTask Modal
-function ViewTaskModal(documentID, groupID){
-	var viewModal = NinjaModal(documentID, groupID);
+function ViewTaskModal(documentID, taskID){
+	var viewModal = NinjaModal(documentID, taskID);
 
 	var parentShow = viewModal.showModal;
 	var parentAddText = viewModal.addText;
@@ -424,50 +447,55 @@ function ViewTaskModal(documentID, groupID){
 	viewModal.createHeader = function(){
 		var header = document.createElement("h1");
 		header.setAttribute("class", "modal-title");
-		var text = document.createTextNode("View Group Details");
+		var text = document.createTextNode("View Task Details");
 		header.appendChild(text);
 		var doc = document.getElementById("header");
 		doc.appendChild(header);
 	}
 
 	viewModal.createBody = function(){
-		// Get Group Info
-		var membInfo;
-  		var membs = new Array();
-
+		// Get Task Info
 		$.ajax({
 			type: 'GET',
-			url: 'http://csse371-04.csse.rose-hulman.edu/Group/' + groupID,
+			url: 'http://csse371-04.csse.rose-hulman.edu/Task/' + taskID,
 			success:function(data){
-				groupArray = JSON.parse(data);
+				taskArray = JSON.parse(data);
 			},
 			async: false
 		});
 
-		for (i in groupArray['members']){
-			$.ajax({
-				type: 'GET',
-				url: 'http://csse371-04.csse.rose-hulman.edu/User/' + groupArray['members'][i]['userID'],
-				success:function(data){
-					membInfo = JSON.parse(data);
-					membs.push({'name':membInfo['name']});
-				},
-				async: false
-			});
-		}
+		// Get assignee, creator info
+		$.ajax({
+			type: 'GET',
+	        url: "http://csse371-04.csse.rose-hulman.edu/User/" + taskArray["assignedTo"],
+	        success:function(data){
+	          assignedTo = JSON.parse(data);
+	        },
+	        async: false
+		});
 
-		parentAddText.call(this, "Group Title: ","","viewLabel", "body");
-		parentAddText.call(this, groupArray["groupTitle"],"title","viewData", "body");
-		parentAddText.call(this, "Members: ","","viewLabel", "body");
+		$.ajax({
+			type: 'GET',
+	        url: "http://csse371-04.csse.rose-hulman.edu/User/" + taskArray["assignedFrom"],
+	        success:function(data){
+	          assignedFrom = JSON.parse(data);
+	        },
+	        async: false
+		});
 
-		var table = document.createElement("table");
-		table.setAttribute("id", "members");
-		table.setAttribute("class", "viewData");
+		$.ajax({
+			type: 'GET',
+	        url: "http://csse371-04.csse.rose-hulman.edu/User/" + taskArray["createdBy"],
+	        success:function(data){
+	          createdBy = JSON.parse(data);
+	        },
+	        async: false
+		});
 
-
-		tableMems = parentPopulateTableRows.call(this, membs, "name", table);
-		var doc = document.getElementById("body");
-		doc.appendChild(tableMems);
+		parentAddText.call(this, "Task Title: ","","viewLabel", "body");
+		parentAddText.call(this, taskArray["title"],"title","viewData", "body");
+		parentAddText.call(this, "Deadline: ","","viewLabel", "body");
+		parentAddText.call(this, taskArray[])
 	}
 
 	viewModal.createFooter = function(users){

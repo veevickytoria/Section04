@@ -20,6 +20,7 @@
 //= require modalfactory.js
 //= require groupmodal.js
 //= require meetingmodal.js
+//= require taskmodaltypes.js
 
 function areCookiesEnabled(){
     var cookiesEnabled = (navigator.cookiesEnabled) ? true : false;

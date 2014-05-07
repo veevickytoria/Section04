@@ -20,11 +20,11 @@ class GroupsController < ApplicationController
 		@listOfID = JSON.parse(group_api_wrapper.get_user_groups(@userID))
 		@groups = Array.new
 
-		groupString = ''
+		
 
 		@listOfID['groups'].each do |group|
 			groupID = group['groupID'].to_s
-			groupString = group_api_wrapper.get_group(groupID) 
+			groupString = "\'" + group_api_wrapper.get_group(groupID) + "\'"
 			@groups.push(JSON.parse(groupString))
 		end
 	end

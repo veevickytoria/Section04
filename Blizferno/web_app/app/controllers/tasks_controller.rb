@@ -20,9 +20,11 @@ class TasksController < ApplicationController
 		@tasks = Array.new
 		
 		taskString = ''
+		taskIDs = Array.new
 
-		getUserTasks['tasks'].each do |task|
+		@listOfID['tasks'].each do |task|
 			taskID = task['id'].to_s
+			taskIDs
 			taskString = task_api_wrapper.get_task(taskID)
 			@tasks.push(JSON.parse(taskString))
 		end	
