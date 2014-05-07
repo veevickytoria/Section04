@@ -140,7 +140,41 @@ function switchLightbox(type){
 			for(var value in schedule.schedule){
 
 				var start_date = schedule.schedule[value].datetimeStart;
+//alert("start_date: "+start_date);
+var mydate = new Date(start_date*1000);
+var myminutes = mydate.getMinutes();
+if(mydate.getMinutes().toString().length == 1){
+	myminutes = "0"+myminutes;
+}
+var mydatestring = 
+    (mydate.getMonth() + 1) + "/" +
+    mydate.getDate() + "/" +
+    mydate.getFullYear() + " " +
+    mydate.getHours() + ":" +
+    myminutes;
+
+start_date = mydatestring;
+
+
+	//				alert("mydate: "+mydatestring);
 				var end_date = schedule.schedule[value].datetimeEnd;
+
+//alert("start_date: "+start_date);
+var mydateend = new Date(end_date*1000);
+var myminutesend = mydateend.getMinutes();
+if(mydateend.getMinutes().toString().length == 1){
+	myminutesend = "0"+myminutesend;
+}
+var mydatestringend = 
+    (mydateend.getMonth() + 1) + "/" +
+    mydateend.getDate() + "/" +
+    mydateend.getFullYear() + " " +
+    mydateend.getHours() + ":" +
+    myminutesend;
+
+end_date = mydatestringend;
+
+
 				var text = schedule.schedule[value].title;
 				var color = (schedule.schedule[value].type == "meeting") ? 'blue' : 'orange';
 				var type = schedule.schedule[value].type;
@@ -153,6 +187,10 @@ function switchLightbox(type){
 			events = "["+events+"]";
 
 			//alert("Events:" + events);
+
+
+//scheduler.config.xml_date="%Y-%m-%d %H:%i";
+
 
 	
 	//working on custom lightbox
