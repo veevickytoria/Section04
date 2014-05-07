@@ -7,9 +7,6 @@
 //
 
 #import "iWinViewProfileViewController.h"
-#import "iWinViewAndCreateGroupViewController.h"
-#import "iWinProjectListViewController.h"
-#import "iWinViewAndCreateProjectViewController.h"
 #import "iWinBackEndUtility.h"
 #import "iWinAppDelegate.h"
 #import "Contact.h"
@@ -286,7 +283,7 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     self.createGroupVC = [[iWinViewAndCreateGroupViewController alloc] initWithNibName:@"iWinViewAndCreateGroupViewController" bundle:nil withUserID:self.userID withGroupID:[self.groupID[indexPath.row] integerValue]];
-    //self.viewProjectVC.viewProjectDelegate = self;
+    self.createGroupVC.groupDelegate = self;
     [self.createGroupVC setModalPresentationStyle:UIModalPresentationPageSheet];
     [self.createGroupVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     

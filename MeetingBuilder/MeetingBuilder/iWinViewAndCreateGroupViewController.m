@@ -25,6 +25,7 @@
 @property (nonatomic) NSInteger groupID;
 @property (nonatomic) NSUInteger rowToDelete;
 @property (strong, nonatomic) NSManagedObjectContext *context;
+@property (nonatomic) UIAlertView *deleteAlertView;
 @end
 
 @implementation iWinViewAndCreateGroupViewController
@@ -45,6 +46,7 @@
 -(void)selectedUsers:(NSMutableArray *)userList
 {
     self.userList = userList;
+    [self.userList addObject:[self getContactForID:self.userID]];
     [self.memberTableView reloadData];
 }
 
@@ -52,27 +54,21 @@
 {
     [super viewDidLoad];
     self.backEndUtility = [[iWinBackEndUtility alloc] init];
-	// Do any additional setup after loading the view.
     self.userList = [[NSMutableArray alloc] init];
     self.userIDList = [[NSMutableArray alloc] init];
     iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     self.context = [appDelegate managedObjectContext];
+    [self.userIDList addObject:[NSNumber numberWithInt:self.userID]];
+    [self.userList addObject:[self getContactForID:self.userID]];
+    self.titleLabel.text = @"Create a Group";
+    self.deleteButton.hidden = YES;
     if(self.groupID != -1){
         [self initView];
     }
-    
-    [self.userIDList addObject:[NSNumber numberWithInt:self.userID]];
-    [self.userList addObject:[self getContactForID:self.userID]];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 -(void) saveNewGroup
-{    
+{
     NSMutableArray *userIDJsonDictionary = [[NSMutableArray alloc] init];
     for (int i = 0; i<[self.userList count]; i++)
     {
@@ -83,35 +79,32 @@
         [userIDJsonDictionary addObject:dict];
     }
     
-    
     NSArray *keys = [NSArray arrayWithObjects:@"groupTitle", @"members", nil];
     NSArray *objects = [NSArray arrayWithObjects: self.groupTitleField.text, userIDJsonDictionary, nil];
     
-    NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-    NSData *jsonData;
-    NSString *jsonString;
+    NSDictionary *deserializedDictionary;
     
-    if ([NSJSONSerialization isValidJSONObject:jsonDictionary])
+    if(self.groupID != -1)
     {
-        jsonData = [NSJSONSerialization dataWithJSONObject:jsonDictionary options:0 error:nil];
-        jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        NSArray *putKeys = [NSArray arrayWithObjects:@"groupID", @"field", @"value", nil];
+        
+        for (int i = 0; i < keys.count; i++) {
+            
+            NSArray *putObjects = [NSArray arrayWithObjects:[NSNumber numberWithInt:self.groupID], keys[i], objects[i], nil];
+            NSString *url = [NSString stringWithFormat:@"%@/Group/", DATABASE_URL];
+            NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:putObjects forKeys:putKeys];
+            [self.backEndUtility putRequestForUrl:url withDictionary:jsonDictionary];
+        }
     }
-    NSString *url = [NSString stringWithFormat:@"%@/Group/", DATABASE_URL];
+    else
+    {
+        NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+        NSString *url = [NSString stringWithFormat:@"%@/Group/", DATABASE_URL];
+        deserializedDictionary = [self.backEndUtility postRequestForUrl:url withDictionary:jsonDictionary];
+    }
     
-    NSMutableURLRequest * urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
-    [urlRequest setHTTPMethod:@"POST"];
-    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    [urlRequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [urlRequest setValue:[NSString stringWithFormat:@"%d", [jsonData length]] forHTTPHeaderField:@"Content-length"];
-    [urlRequest setHTTPBody:jsonData];
-    NSURLResponse * response = nil;
-    NSError * error = nil;
-    NSData * data =[NSURLConnection sendSynchronousRequest:urlRequest
-                                         returningResponse:&response
-                                                     error:&error];
-    NSError *jsonParsingError = nil;
-    NSDictionary *deserializedDictionary = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments|NSJSONReadingMutableContainers error:&jsonParsingError];
-    self.groupID = [[deserializedDictionary objectForKey:@"groupID"] integerValue];
+    if (deserializedDictionary)
+        self.groupID = [[deserializedDictionary objectForKey:@"groupID"] integerValue];
 }
 
 - (IBAction)onClickSave:(UIButton *)sender {
@@ -134,13 +127,17 @@
 
 -(void)initView
 {
-    self.saveButton.hidden = TRUE;
-    self.addMembersButton.hidden = TRUE;
+    self.saveButton.hidden = NO;
+    self.addMembersButton.hidden = NO;
+    self.titleLabel.text = @"Edit Group";
+    self.deleteButton.hidden = NO;
     [self populateMembers];
 }
 
 -(void)populateMembers
 {
+    self.userList = [[NSMutableArray alloc] init];
+    self.userIDList = [[NSMutableArray alloc] init];
     NSString *url = [NSString stringWithFormat:@"%@/Group/%d", DATABASE_URL,self.groupID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *deserializedDictionary = [self.backEndUtility getRequestForUrl:url];
@@ -253,9 +250,13 @@
             
             NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Contact" inManagedObjectContext:self.context];
             Contact *c = [[Contact alloc] initWithEntity:entityDesc insertIntoManagedObjectContext:self.context];
-            c.userID = (NSNumber*)[deserializedDictionary objectForKey:@"userID"];
+            c.userID = [NSNumber numberWithInt: userID];
             c.name = (NSString *)[deserializedDictionary objectForKey:@"name"];
             c.email = (NSString *)[deserializedDictionary objectForKey:@"email"];
+            c.title = (NSString *)[deserializedDictionary objectForKey:@"title"];
+            c.company = (NSString *)[deserializedDictionary objectForKey:@"company"];
+            c.location = (NSString *)[deserializedDictionary objectForKey:@"location"];
+            c.phone = (NSString *)[deserializedDictionary objectForKey:@"phone"];
             return c;
             
         }
@@ -263,4 +264,28 @@
     
     return nil;
 }
+- (IBAction)onClickDelete
+{
+    self.deleteAlertView = [[UIAlertView alloc] initWithTitle:@"Confirm Delete" message:@"Are you sure you want to delete this contact?" delegate:self cancelButtonTitle:@"No, just kidding!" otherButtonTitles:@"Yes, please", nil];
+    [self.deleteAlertView show];
+}
+
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1)
+    {
+        //Perform deletion
+        NSString *url = [NSString stringWithFormat:@"%@/Group/%d", DATABASE_URL,self.groupID];
+        NSError * error = [self.backEndUtility deleteRequestForUrl:url];
+        
+        if (!error){
+            [self.groupDelegate refreshGroupList];
+            [self dismissViewControllerAnimated:YES completion:nil];
+        }
+        
+    }
+    
+}
+
 @end

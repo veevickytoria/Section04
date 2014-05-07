@@ -34,7 +34,7 @@ NSString* const MAIN_CONTROLLER_NIB = @"iWinMainViewController";
     [Parse setApplicationId:PARSE_APP_ID clientKey:PARSE_CLIENT_KEY];
     
     [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound];
-
+    
     
     return YES;
 }

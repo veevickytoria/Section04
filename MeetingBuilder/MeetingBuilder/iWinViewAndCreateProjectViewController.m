@@ -50,6 +50,7 @@
 -(void)selectedUsers:(NSMutableArray *)userList
 {
     self.userList = userList;
+    [self.userList addObject:[self getContactForID:self.userID]];
     [self.membersTableView reloadData];
     
 }
@@ -237,6 +238,7 @@
 
 -(void) initAttendees
 {
+    self.userList = [[NSMutableArray alloc] init];
     NSMutableArray *attendeeArray = [[NSMutableArray alloc]init];
     NSArray* attendeeFromDatabase = [self.existProject objectForKey:@"members"];
     for(int i = 0; i < [attendeeFromDatabase count]; i++){

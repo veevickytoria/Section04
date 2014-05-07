@@ -88,10 +88,10 @@
                     //Specify only 2 M for month, 2 d for day and 2 h for hour
                     [dateFormatter setDateFormat:@"MM/dd/yyyy hh:mm a"];
                     
-                    NSDate *date = [dateFormatter dateFromString:[meetings objectForKey:@"datetimeStart"]];
+                    NSDate *date = [dateFormatter dateFromString:[iWinScheduleViewMeetingViewController getStringDateTimeFromDate:[NSDate dateWithTimeIntervalSince1970:[[meetings objectForKey:@"datetimeStart"] doubleValue]]]];
                     event.startDate = date;
                     
-                    date = [dateFormatter dateFromString:[meetings objectForKey:@"datetimeEnd"]];
+                    date = [dateFormatter dateFromString:[iWinScheduleViewMeetingViewController getStringDateTimeFromDate:[NSDate dateWithTimeIntervalSince1970:[[meetings objectForKey:@"datetimeEnd"] doubleValue]]]];
                     event.endDate = date;
                     
                     [ret addObject:event];

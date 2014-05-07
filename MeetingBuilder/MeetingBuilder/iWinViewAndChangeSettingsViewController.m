@@ -52,17 +52,12 @@
     self.passwordEdited = NO;
     
     iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    
     self.context = [appDelegate managedObjectContext];
-    
     NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"Contact" inManagedObjectContext:self.context];
-    
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:entityDesc];
-    
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"userID = %d", self.userID];
     [request setPredicate:predicate];
-    
     NSError *error;
     NSArray *result = [self.context executeFetchRequest:request
                                              error:&error];
@@ -84,19 +79,34 @@
     self.settings = (Settings*)[result1 objectAtIndex:0];
     
     self.emailTextField.text = self.contact.email;
-    [self.shouldNotifySwitch setOn:[self.settings.shouldNotify boolValue]];
     
+    [self initializeNotificationSettings];
 }
 
--(IBAction)changeSwitch:(id)sender
+-(void) initializeNotificationSettings
 {
-    //Don't think this method is worthwhile
-    if([self.shouldNotifySwitch isOn]){
-        self.settings.shouldNotify = [NSNumber numberWithInt:1];
-    } else {
-        self.settings.shouldNotify = [NSNumber numberWithInt:0];
+    NSString *url = [NSString stringWithFormat:@"%@/UserSettings/%d", DATABASE_URL, self.userID];
+    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    NSDictionary *settingsInfo = [self.backEndUtility getRequestForUrl:url];
+    
+    BOOL shouldNotify = YES;
+    self.tableIndex = [NSNumber numberWithInt: 2];
+    
+    NSString *shouldNotifyString = (NSString *)[settingsInfo objectForKey:@"shouldNotify"];
+    NSString *whenToNotifyString = (NSString *)[settingsInfo objectForKey:@"whenToNotify"];
+    
+    if (shouldNotifyString.length > 0){
+        shouldNotify = [shouldNotifyString boolValue];
     }
-    [self saveChanges];
+    
+    if (whenToNotifyString){
+        self.tableIndex = [NSNumber numberWithInt: [whenToNotifyString intValue]];
+    }
+    
+    [self.shouldNotifySwitch setOn:shouldNotify];
+    
+    [self.whenToNotifyPicker reloadData];
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -108,7 +118,7 @@
 {
     UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"PickerCell"];
     cell.textLabel.text = [self.options objectAtIndex:indexPath.row];
-    if ([[NSNumber numberWithInt:indexPath.row] isEqual:self.settings.whenToNotify])
+    if ([[NSNumber numberWithInt:indexPath.row] isEqual:self.tableIndex])
     {
         [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
     }
@@ -131,13 +141,6 @@
             [cell setAccessoryType:UITableViewCellAccessoryNone];
         }
     }
-   // [self saveChanges];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 -(IBAction)onCancel:(id)sender
@@ -151,8 +154,6 @@
     self.isEditing = NO;
     self.oldPasswordTextField.text = @"********";
     self.saveAndEditButton.hidden = NO;
-    
-    //Pull Email from DB
 }
 
 -(IBAction)onDelete:(id)sender
@@ -243,21 +244,31 @@
     self.oldPasswordTextField.text = @"********";
 }
 
-- (IBAction)onSaveSwitch:(id)sender
+- (IBAction)onSave:(id)sender
 {
-    [self saveShouldNotifySwitchSetting];
-    [self saveWhenToNotifySwitchSetting];
+    [self saveSettingsToServer];
     
     BOOL validPassword = [self validatePassword];
-    
     if (validPassword) {
         [self savePasswordAndEmail];
         [self launchSuccessfulSaveMessage];
     }
 }
-- (IBAction)onSaveTable:(id)sender
+
+- (void) saveSettingsToServer
 {
-    self.settings.whenToNotify = self.tableIndex;
+    NSString *url = [NSString stringWithFormat:@"%@/UserSettings/", DATABASE_URL];
+    NSArray *fields = [NSArray arrayWithObjects:@"shouldNotify", @"whenToNotify",nil];
+    NSArray *values = [NSArray arrayWithObjects:[NSString stringWithFormat:@"%hhd", [self.shouldNotifySwitch isOn]], self.tableIndex,nil];
+    NSArray *keys = [NSArray arrayWithObjects:@"userID", @"field", @"value", nil];
+    
+    for (int i = 0; i < fields.count; i++) {
+        
+        NSArray *objects = [NSArray arrayWithObjects:[NSNumber numberWithInt:self.userID], fields[i], values[i], nil];
+        
+        NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+        [self.backEndUtility putRequestForUrl:url withDictionary:jsonDictionary];
+    }
 }
 
 -(NSNumber*)getNotificationOption
@@ -284,11 +295,11 @@
     NSError *error;
     [self.context save:&error];
     if (self.passwordEdited){
-        [self saveToServer];
+        [self savePasswordToServer];
     }
 }
 
--(void)saveToServer
+-(void)savePasswordToServer
 {
     NSArray *keys = [NSArray arrayWithObjects:@"userID", @"field", @"value", nil];
     NSArray *objects = [NSArray arrayWithObjects:[[NSNumber numberWithInt:self.userID] stringValue], @"email", self.emailTextField.text,nil];

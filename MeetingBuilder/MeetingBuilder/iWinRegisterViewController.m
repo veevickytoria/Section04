@@ -12,6 +12,7 @@
 #import "iWinBackEndUtility.h"
 #import "Contact.h"
 #import "iWinConstants.h"
+#import <Parse/Parse.h>
 
 @interface iWinRegisterViewController ()
 @property (strong, nonatomic) iWinAppDelegate *appDelegate;
@@ -158,12 +159,30 @@ NSString* const COMPANY_KEY = @"company";
         
         [self.registerDelegate onRegister:userID];
         
+        [self parseSDKRegistration:userID];
+        
     }
     else
     {
         [self failRegisterValidation:error];
     }
 
+}
+
+-(void) parseSDKRegistration:(NSInteger)userID
+{
+    PFUser* pUser = [[PFUser alloc] init];
+    [pUser setEmail:[[self.emailField text] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
+    [pUser setUsername:self.nameField.text];
+    [pUser setPassword:[self sha256HashFor: [self.passwordField text]]];
+    
+    
+    NSArray *keys = [NSArray arrayWithObjects:@"backendId", nil];
+    NSArray *objects = [NSArray arrayWithObjects:[NSNumber numberWithInt:userID], nil];
+    NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+    [pUser setValuesForKeysWithDictionary:jsonDictionary];
+    
+    [pUser signUpInBackground];
 }
 
 -(NSArray*) getRememberMeInfo
