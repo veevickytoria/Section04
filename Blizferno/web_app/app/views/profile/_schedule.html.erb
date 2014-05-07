@@ -105,7 +105,7 @@ var configs = {
 			{name:"description", height:50, type:"textarea", map_to:"description",},
 			{name:"location", height:50, type:"textarea", map_to:"location"},
 			{name:"attendance", height:50, type:"multiselect", map_to:"attendance", options:members},
-			{name:"time", height:50, type:"time", map_to:"auto"}
+			{name:"time", height:30, type:"time", map_to:"auto"}
       ]
 };
 
@@ -210,6 +210,8 @@ end_date = mydatestringend;
 	scheduler.config.buttons_right = ["taskButton","meetingButton"];
 
 	scheduler.config.lightbox.sections = configs["meeting"];
+	//scheduler.config.xy.lightbox_additional_height = 40;
+
 
 	scheduler.config.collision_limit = 3;
 	scheduler.config.drag_move = false;
@@ -347,6 +349,8 @@ alert("postData:"+postData);
 
 		return true;
 	});// end attachEvent
+
+scheduler.setLightboxSize();
 
 			scheduler.init('scheduler_here',new Date(),"agenda");
 			scheduler.parse(events, "json");
