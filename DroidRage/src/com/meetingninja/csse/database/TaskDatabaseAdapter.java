@@ -140,12 +140,14 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 
 	public static Task editTask(Task task) throws IOException {
 		String _url = getBaseUri().build().toString();
-		String titlePayload = getEditPayload(task.getID(), Keys.Task.TITLE,task.getTitle());
-		String descPayload = getEditPayload(task.getID(), Keys.Task.DESC,task.getDescription());
-		String isCompPayload = getEditPayload(task.getID(),Keys.Task.COMPLETED, Boolean.toString(task.getIsCompleted()));
-		String deadlinePayload = getEditPayload(task.getID(),Keys.Task.DEADLINE, task.getEndTime());
-		String compCritPayload = getEditPayload(task.getID(),Keys.Task.CRITERIA, task.getCompletionCriteria());
-		String assignedToPayload = getEditPayload(task.getID(),Keys.Task.ASSIGNED_TO, task.getAssignedTo());
+		String keyValue = Keys.Task.ID;
+
+		String titlePayload = getEditPayload(task.getID(), Keys.Task.TITLE,task.getTitle(),keyValue);
+		String descPayload = getEditPayload(task.getID(), Keys.Task.DESC,task.getDescription(),keyValue);
+		String isCompPayload = getEditPayload(task.getID(),Keys.Task.COMPLETED, Boolean.toString(task.getIsCompleted()),keyValue);
+		String deadlinePayload = getEditPayload(task.getID(),Keys.Task.DEADLINE, task.getEndTime(),keyValue);
+		String compCritPayload = getEditPayload(task.getID(),Keys.Task.CRITERIA, task.getCompletionCriteria(),keyValue);
+		String assignedToPayload = getEditPayload(task.getID(),Keys.Task.ASSIGNED_TO, task.getAssignedTo(),keyValue);
 		// Get server response
 		sendSingleEdit(titlePayload,_url);
 		sendSingleEdit(descPayload,_url);
@@ -156,34 +158,6 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 		final JsonNode taskNode = MAPPER.readTree(response);
 		parseTaskNoCheck(taskNode, task);
 		return task;
-	}
-
-//	private static String sendSingleEdit(String payload) throws IOException {
-//		String _url = getBaseUri().build().toString();
-//		URL url = new URL(_url);
-//		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//		conn.setRequestMethod(IRequest.PUT);
-//		addRequestHeader(conn, false);
-//		sendPostPayload(conn, payload);
-//		return getServerResponse(conn);
-//	}
-
-	private static String getEditPayload(String taskID, String field,String value) throws IOException {
-		ByteArrayOutputStream json = new ByteArrayOutputStream();
-		// this type of print stream allows us to get a string easily
-		PrintStream ps = new PrintStream(json);
-		// Create a generator to build the JSON string
-		JsonGenerator jgen = JFACTORY.createGenerator(ps, JsonEncoding.UTF8);
-		// Build JSON Object for Title
-		jgen.writeStartObject();
-		jgen.writeStringField(Keys.Task.ID, taskID);
-		jgen.writeStringField("field", field);
-		jgen.writeStringField("value", value);
-		jgen.writeEndObject();
-		jgen.close();
-		String payload = json.toString("UTF8");
-		ps.close();
-		return payload;
 	}
 
 	public static void parseTask(JsonNode node, Task t) {

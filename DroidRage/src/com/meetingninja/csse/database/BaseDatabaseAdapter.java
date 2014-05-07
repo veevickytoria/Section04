@@ -16,9 +16,11 @@
 package com.meetingninja.csse.database;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -27,7 +29,9 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.android.volley.Request;
+import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meetingninja.csse.ApplicationController;
@@ -111,6 +115,23 @@ public abstract class BaseDatabaseAdapter {
 		addRequestHeader(conn, false);
 		sendPostPayload(conn, payload);
 		return getServerResponse(conn);
+	}
+	protected static String getEditPayload(String objectID, String field,String value,String keyValue) throws IOException {
+		ByteArrayOutputStream json = new ByteArrayOutputStream();
+		// this type of print stream allows us to get a string easily
+		PrintStream ps = new PrintStream(json);
+		// Create a generator to build the JSON string
+		JsonGenerator jgen = JFACTORY.createGenerator(ps, JsonEncoding.UTF8);
+		// Build JSON Object for Title
+		jgen.writeStartObject();
+		jgen.writeStringField(keyValue, objectID);
+		jgen.writeStringField("field", field);
+		jgen.writeStringField("value", value);
+		jgen.writeEndObject();
+		jgen.close();
+		String payload = json.toString("UTF8");
+		ps.close();
+		return payload;
 	}
 
 	protected static void addToRequestQueue(Request<?> req) {

@@ -157,39 +157,13 @@ public class NotesDatabaseAdapter extends BaseDatabaseAdapter {
 	public static void updateNote(Note n) throws IOException {
 		String _url = getBaseUri().build().toString();
 		Log.d("updatenote", "update");
-		String titlePayload = getEditPayload(n.getID(), Keys.Note.TITLE,n.getTitle());
-		String descPayload = getEditPayload(n.getID(), Keys.Note.CONTENT,n.getContent());
+		String keyValue = Keys.Note.ID;
+
+		String titlePayload = getEditPayload(n.getID(), Keys.Note.TITLE,n.getTitle(),keyValue);
+		String descPayload = getEditPayload(n.getID(), Keys.Note.CONTENT,n.getContent(),keyValue);
 		// Get server response
 		sendSingleEdit(titlePayload,_url);
 		sendSingleEdit(descPayload,_url);
 	}
 
-//	private static String sendSingleEdit(String payload) throws IOException {
-//		String _url = getBaseUri().build().toString();
-//		URL url = new URL(_url);
-//		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//		conn.setRequestMethod(IRequest.PUT);
-//		addRequestHeader(conn, false);
-//		sendPostPayload(conn, payload);
-//		return getServerResponse(conn);
-//	}
-
-	private static String getEditPayload(String noteID, String field,String value) throws IOException {
-		ByteArrayOutputStream json = new ByteArrayOutputStream();
-		// this type of print stream allows us to get a string easily
-		PrintStream ps = new PrintStream(json);
-		// Create a generator to build the JSON string
-		JsonGenerator jgen = JFACTORY.createGenerator(ps, JsonEncoding.UTF8);
-		// Build JSON Object for Title
-		jgen.writeStartObject();
-		jgen.writeStringField(Keys.Note.ID, noteID);
-		jgen.writeStringField("field", field);
-		jgen.writeStringField("value", value);
-		jgen.writeEndObject();
-		jgen.close();
-		String payload = json.toString("UTF8");
-		ps.close();
-		Log.d("updatenotepayload", payload);
-		return payload;
-	}
 }

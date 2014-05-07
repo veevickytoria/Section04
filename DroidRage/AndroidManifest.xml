@@ -182,7 +182,8 @@
         <activity
             android:name="com.meetingninja.csse.tasks.EditTaskActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/title_activity_edit_task" >
+            android:label="@string/title_activity_edit_task" 
+            android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
         <activity
             android:name="com.meetingninja.csse.group.EditGroupActivity"

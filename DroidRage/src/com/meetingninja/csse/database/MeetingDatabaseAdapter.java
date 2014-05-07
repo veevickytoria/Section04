@@ -32,8 +32,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
 
 public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
-	private final static String TAG = MeetingDatabaseAdapter.class
-			.getSimpleName();
+	private final static String TAG = MeetingDatabaseAdapter.class.getSimpleName();
 
 	public static String getBaseUrl() {
 		return BASE_URL + "Meeting";
@@ -66,16 +65,12 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 
 	public static Meeting editMeeting(Meeting meeting) throws IOException {
 		String meetingID = meeting.getID();
-		String titlePayload = getEditPayload(meetingID, Keys.Meeting.TITLE,
-				meeting.getTitle());
-		String startdateTimePayload = getEditPayload(meetingID,
-				Keys.Meeting.DATETIME, meeting.getStartTime());
-		String locationPayload = getEditPayload(meetingID,
-				Keys.Meeting.LOCATION, meeting.getLocation());
-		String endDateTimePayload = getEditPayload(meetingID,
-				Keys.Meeting.OTHEREND, meeting.getEndTime());
-		String descPayload = getEditPayload(meetingID, Keys.Meeting.DESC,
-				meeting.getDescription());
+		String keyValue = Keys.Meeting.ID;
+		String titlePayload = getEditPayload(meetingID, Keys.Meeting.TITLE,meeting.getTitle(),keyValue);
+		String startdateTimePayload = getEditPayload(meetingID,Keys.Meeting.DATETIME, meeting.getStartTime(),keyValue);
+		String locationPayload = getEditPayload(meetingID,Keys.Meeting.LOCATION, meeting.getLocation(),keyValue);
+		String endDateTimePayload = getEditPayload(meetingID,Keys.Meeting.OTHEREND, meeting.getEndTime(),keyValue);
+		String descPayload = getEditPayload(meetingID, Keys.Meeting.DESC,meeting.getDescription(),keyValue);
 
 		ByteArrayOutputStream json = new ByteArrayOutputStream();
 		PrintStream ps = new PrintStream(json);
@@ -108,36 +103,6 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 		Meeting m = parseMeeting(meetingNode);
 		return m;
 	}
-
-	private static String getEditPayload(String meetingID, String field,String value) throws IOException {
-		ByteArrayOutputStream json = new ByteArrayOutputStream();
-		// this type of print stream allows us to get a string easily
-		PrintStream ps = new PrintStream(json);
-		// Create a generator to build the JSON string
-		JsonGenerator jgen = JFACTORY.createGenerator(ps, JsonEncoding.UTF8);
-		// Build JSON Object for Title
-		jgen.writeStartObject();
-		jgen.writeStringField(Keys.Meeting.ID, meetingID);
-		jgen.writeStringField("field", field);
-		jgen.writeStringField("value", value);
-		jgen.writeEndObject();
-		jgen.close();
-		String payload = json.toString("UTF8");
-		ps.close();
-		return payload;
-	}
-
-//	private static String sendSingleEdit(String meetingID, String payload)
-//			throws IOException {
-//		String _url = getBaseUri().appendPath(meetingID).build().toString();
-//		URL url = new URL(_url);
-//		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//		conn.setRequestMethod(IRequest.PUT);
-//		addRequestHeader(conn, false);
-//		sendPostPayload(conn, payload);
-//		return getServerResponse(conn);
-//
-//	}
 
 	public static Meeting createMeeting(String userID, Meeting m)
 			throws IOException, MalformedURLException {
