@@ -476,6 +476,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		String response = sendSingleEdit(phone,_url);
 		final JsonNode userNode = MAPPER.readTree(response);
 		User newUser = parseUser(userNode);
+		updateParseSDKUser(newUser);
 		return newUser;
 	}
 	public static void updateParseSDKUser(User user) {
