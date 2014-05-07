@@ -51,7 +51,8 @@ public class GroupsFragment extends Fragment implements AsyncResponse<List<Group
 		setHasOptionsMenu(true);
 
 		SessionManager.getInstance();
-		groupsList = (ListView) v.findViewById(R.id.groupsList);
+		groupsList = (ListView) v.findViewById(R.id.group_list);
+		groupsList.setEmptyView(v.findViewById(android.R.id.empty));
 		groupAdpt = new GroupItemAdapter(getActivity(),R.layout.list_item_group, groups);
 		groupsList.setAdapter(groupAdpt);
 

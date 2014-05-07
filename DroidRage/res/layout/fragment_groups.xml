@@ -8,7 +8,7 @@
     android:paddingTop="@dimen/activity_vertical_margin" >
 
     <ListView
-        android:id="@+id/groupsList"
+        android:id="@+id/group_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:listitem="@android:layout/simple_list_item_1" >
@@ -22,7 +22,7 @@
         android:gravity="center" >
 
         <TextView
-            android:id="@android:id/text1"
+            android:id="@+id/groups_empty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="No Groups"
