@@ -3,6 +3,7 @@ package com.meetingninja.csse.projects;
 import objects.Note;
 
 import com.meetingninja.csse.notes.NotesFragment;
+import com.meetingninja.csse.notes.tasks.DeleteNoteTask;
 
 public class NotesProjectFragment extends NotesFragment{
 
@@ -12,7 +13,10 @@ public class NotesProjectFragment extends NotesFragment{
 	protected void deleteNote(Note note){
 		pCont.deleteNote(note);
 	}
-
+	@Override
+	protected void delete(Note note) {
+		pCont.deleteNote(note);
+	}
 	@Override
 	public void editNote(){
 		pCont.createNote();

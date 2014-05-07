@@ -12,6 +12,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -55,7 +56,33 @@ public class EditGroupActivity extends Activity implements TokenListener {
 	private AutoCompleteAdapter autoAdapter;
 	private ArrayList<User> addedUsers = new ArrayList<User>();
 	private Dialog dlg;
-
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_edit_group);
+		setupActionBar();
+		Bundle data = getIntent().getExtras();
+		if (data != null){
+			displayedGroup = data.getParcelable(Keys.Group.PARCEL);
+		}else{
+			Log.e(TAG, "Error: Unable to get group from parcel");
+		}
+		setupTitle();
+		keyboardCanHide();
+		displayMembers();
+		deleteMember();
+		mListView.setRequireTouchBeforeDismiss(false);
+		mListView.setUndoHideDelay(5000);
+		clickingAndViewingAUser();
+		enableSwiping();
+		fetchUsers();
+		fetchContacts();
+		bothUsers.addAll(allUsers);
+	}
+	public void onConfigurationChanged(Configuration newConfig){
+		super.onConfigurationChanged(newConfig);
+		
+	}
 	private void keyboardCanHide() {
 		findViewById(R.id.group_edit_main_container).setOnTouchListener(new OnTouchListener() {
 			@Override
@@ -65,7 +92,7 @@ public class EditGroupActivity extends Activity implements TokenListener {
 			}
 		});
 	}
-
+	
 	private void displayMembers() {
 		mUserAdapter = new UserArrayAdapter(this, R.layout.list_item_user,displayedGroup.getMembers());
 		mListView = (EnhancedListView) findViewById(R.id.group_list);
@@ -83,6 +110,17 @@ public class EditGroupActivity extends Activity implements TokenListener {
 	private void setupTitle() {
 		titleText = (EditText) findViewById(R.id.group_edit_title);
 		titleText.setText(displayedGroup.getGroupTitle());
+	}
+	public void addMember(View view) {
+		dlg = new Dialog(this);
+		dlg.setTitle("Search by name or email:");
+		View autocompleteView = getLayoutInflater().inflate(R.layout.fragment_autocomplete, null);
+		final ContactTokenTextView input = (ContactTokenTextView) autocompleteView.findViewById(R.id.my_autocomplete);
+		autoAdapter = new AutoCompleteAdapter(this, allUsers);
+		input.setAdapter(autoAdapter);
+		input.setTokenListener(this);
+		dlg.setContentView(autocompleteView);
+		dlg.show();
 	}
 
 	private void deleteMember() {
@@ -119,35 +157,6 @@ public class EditGroupActivity extends Activity implements TokenListener {
 			}
 
 		});
-	}
-
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_edit_group);
-		setupActionBar();
-
-		Bundle data = getIntent().getExtras();
-		if (data != null){
-			displayedGroup = data.getParcelable(Keys.Group.PARCEL);
-		}else{
-			Log.e(TAG, "Error: Unable to get group from parcel");
-		}
-		setupTitle();
-		keyboardCanHide();
-		displayMembers();
-		deleteMember();
-
-		mListView.setUndoHideDelay(5000);
-		clickingAndViewingAUser();
-
-		enableSwiping();
-		fetchUsers();
-
-		fetchContacts();
-
-		bothUsers.addAll(allUsers);
-
 	}
 
 	private void fetchUsers() {
@@ -249,19 +258,6 @@ public class EditGroupActivity extends Activity implements TokenListener {
 		finish();
 	}
 
-	public void addMember(View view) {
-		dlg = new Dialog(this);
-		dlg.setTitle("Search by name or email:");
-		View autocompleteView = getLayoutInflater().inflate(R.layout.fragment_autocomplete, null);
-		final ContactTokenTextView input = (ContactTokenTextView) autocompleteView.findViewById(R.id.my_autocomplete);
-		// autoAdapter = new AutoCompleteAdapter(this, bothUsers);
-		autoAdapter = new AutoCompleteAdapter(this, allUsers);
-		input.setAdapter(autoAdapter);
-		input.setTokenListener(this);
-		dlg.setContentView(autocompleteView);
-		dlg.show();
-	}
-
 	private void loadUser(String userID) {
 		UserVolleyAdapter.fetchUserInfo(userID, new AsyncResponse<User>() {
 			@Override
@@ -274,14 +270,12 @@ public class EditGroupActivity extends Activity implements TokenListener {
 
 	@Override
 	public void onTokenAdded(Object arg0) {
-		// String className = arg0.getClass().getSimpleName();
-		// System.out.println("Adding a " + className);
-
 		SerializableUser added = null;
-		if (arg0 instanceof SerializableUser)
+		if (arg0 instanceof SerializableUser){
 			added = (SerializableUser) arg0;
-		else if (arg0 instanceof User)
+		} else if (arg0 instanceof User){
 			added = new SerializableUser((User) arg0);
+		}
 
 		if (added != null) {
 			addedUsers.add(added);
@@ -290,7 +284,6 @@ public class EditGroupActivity extends Activity implements TokenListener {
 			addedUsers.clear();
 			mUserAdapter.notifyDataSetChanged();
 		}
-
 	}
 
 	@Override
@@ -304,7 +297,5 @@ public class EditGroupActivity extends Activity implements TokenListener {
 		if (removed != null) {
 			addedUsers.remove(removed);
 		}
-
 	}
-
 }

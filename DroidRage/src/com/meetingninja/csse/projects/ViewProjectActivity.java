@@ -120,7 +120,6 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 			protected void onPostExecute(Project p) {
 				getActionBar().setTitle(p.getProjectTitle());
 				project=p;
-				System.out.println(p.getNotes());
 				setProjectTab(currentpos);
 			}
 
@@ -289,7 +288,6 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 		}
 		project.addMember(user);
 		updateProject();
-		setProjectTab(2);
 	}
 
 	protected void deleteMember(User user) {
@@ -333,9 +331,12 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 	}
 
 	private void updateProject() {
-		refreshProject();
 		resultCode = Activity.RESULT_OK;
 		new AsyncTask<Project, Void, Void>() {
+			@Override
+			protected void onPostExecute(Void v) {
+				refreshProject();
+			}
 			@Override
 			protected Void doInBackground(Project... params) {
 				try {

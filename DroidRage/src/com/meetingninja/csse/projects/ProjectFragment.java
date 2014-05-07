@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -54,8 +55,6 @@ public class ProjectFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-		// super.onCreate(savedInstanceState);
-		// setContentView(R.layout.activity_project_fragment);
 		setHasOptionsMenu(true);
 		SessionManager.getInstance();
 		View v = inflater.inflate(R.layout.fragment_project, container, false);
@@ -79,7 +78,6 @@ public class ProjectFragment extends Fragment {
 			}
 		}
 	}
-
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -102,7 +100,6 @@ public class ProjectFragment extends Fragment {
 
 	public void createProjectOption() {
 		final EditText title = new EditText(getActivity());
-		// title.setText(getProjectTitle());
 		new AlertDialog.Builder(getActivity()).setTitle("Enter a title").setPositiveButton("OK", new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -139,9 +136,7 @@ public class ProjectFragment extends Fragment {
 				}
 				return p;
 			}
-
 		}.execute(project);
-
 	}
 
 	private void refreshProjects() {
@@ -215,8 +210,6 @@ public class ProjectFragment extends Fragment {
 		l = (EnhancedListView) v.findViewById(R.id.project_list);
 		l.setAdapter(projectAdpt);
 		l.setEmptyView(v.findViewById(android.R.id.empty));
-		// final EditText input = (EditText)
-		// v.findViewById(R.id.my_autocomplete);
 
 		l.setDismissCallback(new de.timroes.android.listview.EnhancedListView.OnDismissCallback() {
 			@Override
@@ -224,15 +217,12 @@ public class ProjectFragment extends Fragment {
 					EnhancedListView listView, final int position) {
 
 				final Project item = projectAdpt.getItem(position);
-				// tempDeletedContacts.add(item);
 				projectsList.remove(item);
-				// projectAdpt.remove(item);
 
 				return new EnhancedListView.Undoable() {
 					@Override
 					public void undo() {
 						projectsList.add(item);
-						// tempDeletedContacts.remove(item);
 						projectAdpt.notifyDataSetChanged();
 					}
 
@@ -250,14 +240,12 @@ public class ProjectFragment extends Fragment {
 				};
 			}
 		});
+		l.setRequireTouchBeforeDismiss(false);
 		l.setUndoHideDelay(5000);
 		l.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View v, int position,long id) {
-				// Intent viewProject = new Intent(getActivity(),
-				// ViewProjectActivity.class);
-				// startActivity(viewProject);
 				Project p = projectAdpt.getItem(position);
 				loadProject(p);
 			}

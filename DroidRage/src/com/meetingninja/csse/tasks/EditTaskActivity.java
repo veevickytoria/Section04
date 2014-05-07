@@ -321,6 +321,7 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 				};
 			}
 		});
+		l.setRequireTouchBeforeDismiss(false);
 		l.setUndoHideDelay(5000);
 		l.setOnItemClickListener(new OnItemClickListener() {
 

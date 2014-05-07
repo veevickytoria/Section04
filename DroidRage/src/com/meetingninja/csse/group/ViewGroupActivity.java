@@ -110,16 +110,6 @@ public class ViewGroupActivity extends Activity {
 			}
 		}
 	}
-//	private void deleteGroup(){
-//		new AsyncGroupDeleteTask(){
-//			@Override
-//			protected void onPostExecute(Boolean success) {
-//				if(success){
-//					
-//				}
-//			}
-//		}.execute(group.getID());
-//	}
 
 	private void setGroup() {
 		titleText.setText(group.getGroupTitle());

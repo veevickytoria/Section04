@@ -126,26 +126,6 @@ public class GroupsFragment extends Fragment implements AsyncResponse<List<Group
 	public void deleteGroup(String groupID) {
 		GroupDeleteTask deltask = new GroupDeleteTask();
 		deltask.deleteGroup(groupID);
-		// String url = GroupDatabaseAdapter.getBaseUri().appendPath(groupID)
-		// .build().toString();
-		// StringRequest dr = new StringRequest(
-		// com.android.volley.Request.Method.DELETE, url,
-		// new Response.Listener<String>() {
-		// @Override
-		// public void onResponse(String response) {
-		// // response
-		// Toast.makeText(getActivity(), response,
-		// Toast.LENGTH_SHORT).show();
-		// }
-		// }, new Response.ErrorListener() {
-		// @Override
-		// public void onErrorResponse(VolleyError error) {
-		// // error.
-		//
-		// }
-		//
-		// });
-		// ApplicationController.getInstance().addToRequestQueue(dr);
 	}
 
 	@Override

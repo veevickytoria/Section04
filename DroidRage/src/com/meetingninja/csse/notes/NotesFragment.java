@@ -149,25 +149,20 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 		registerForContextMenu(notesList);
 
 		// Item long-click event
-		notesList
-				.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
-					@Override
-					public void onCreateContextMenu(ContextMenu menu, View v,
-							ContextMenuInfo menuInfo) {
-						AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) menuInfo;
+		notesList.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
+			@Override
+			public void onCreateContextMenu(ContextMenu menu, View v,ContextMenuInfo menuInfo) {
+				AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) menuInfo;
 
-						noteAdpt.getItem(aInfo.position);
-						menu.setHeaderTitle("Note options");
-						String[] labels = new String[] { "Edit", "Delete",
-								"Merge" };
-						for (int i = 1; i <= labels.length; i++) {
-							menu.add(MainActivity.DrawerLabel.NOTES
-									.getPosition(), aInfo.position, i,
-									labels[i - 1]);
-						}
-					}
+				noteAdpt.getItem(aInfo.position);
+				menu.setHeaderTitle("Note options");
+				String[] labels = new String[] { "Edit", "Delete","Merge" };
+				for (int i = 1; i <= labels.length; i++) {
+					menu.add(MainActivity.DrawerLabel.NOTES.getPosition(), aInfo.position, i,labels[i - 1]);
+				}
+			}
 
-				});
+		});
 	}
 
 	@Override
@@ -184,9 +179,7 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 		if (item.getGroupId() == MainActivity.DrawerLabel.NOTES.getPosition()) {
 			switch (item.getOrder()) {
 			case 1: // Add Content
-				Toast.makeText(getActivity(),
-						String.format("%s", item.getTitle()),
-						Toast.LENGTH_SHORT).show();
+				Toast.makeText(getActivity(),String.format("%s", item.getTitle()),Toast.LENGTH_SHORT).show();
 				handled = true;
 				break;
 			case 2: // Delete
@@ -213,24 +206,15 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 		if (mergeNote == null) {
 			Log.d("MERGE", "merge_a: " + selected.getID());
 			mergeNote = selected;
-			Toast.makeText(getActivity(),
-					String.format("Select second note to merge."),
-					Toast.LENGTH_LONG).show();
+			Toast.makeText(getActivity(),String.format("Select second note to merge."),Toast.LENGTH_LONG).show();
 		} else if (mergeNote.getID().equals(selected.getID())) {
-			Log.d("MERGE",
-					"merge_b: " + selected.getID() + " : " + mergeNote.getID());
+			Log.d("MERGE","merge_b: " + selected.getID() + " : " + mergeNote.getID());
 			mergeNote = null;
-			Toast.makeText(
-					getActivity(),
-					String.format("Error: Same note selected twice. Please reselect notes to merge."),
+			Toast.makeText(getActivity(),String.format("Error: Same note selected twice. Please reselect notes to merge."),
 					Toast.LENGTH_LONG).show();
 		} else {
-			Log.d("MERGE",
-					"merge_c: " + selected.getID() + " : " + mergeNote.getID());
-			Toast.makeText(
-					getActivity(),
-					String.format("Merging " + selected.getTitle() + " into "
-							+ mergeNote.getTitle()), Toast.LENGTH_LONG).show();
+			Log.d("MERGE","merge_c: " + selected.getID() + " : " + mergeNote.getID());
+			Toast.makeText(getActivity(),String.format("Merging " + selected.getTitle() + " into "+ mergeNote.getTitle()), Toast.LENGTH_LONG).show();
 
 			mergeNote.mergeWith(selected);
 			delete(selected);
@@ -245,7 +229,7 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 		refresh();
 	}
 
-	private void delete(Note note) {
+	protected void delete(Note note) {
 		new DeleteNoteTask().execute(note.getID());
 		refresh();
 	}
@@ -264,15 +248,7 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 			if (resultCode == Activity.RESULT_OK) {
 				if (data != null) {
 					data.getIntExtra("listPosition", -1);
-					Note editedNote = new ParcelDataFactory(data.getExtras())
-							.getNote();
-
-					Integer.valueOf(editedNote.getID());
-
-					// if (listPosition != -1)
-					// updateNote(listPosition, editedNote);
-					// else
-					// updateNote(_id, editedNote);
+					Note editedNote = new ParcelDataFactory(data.getExtras()).getNote();
 
 					mySQLiteAdapter.updateNote(editedNote);
 					refresh();

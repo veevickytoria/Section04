@@ -125,10 +125,8 @@ public class MeetingsFragment extends Fragment implements AsyncResponse<List<Mee
 	}
 
 	private void loadMeeting(Meeting meeting) {
-		while (meeting.getEndTimeInMillis() == 0L)
-			;
-		Intent viewMeeting = new Intent(getActivity(),
-				ViewMeetingActivity.class);
+		while (meeting.getEndTimeInMillis() == 0L);
+		Intent viewMeeting = new Intent(getActivity(),ViewMeetingActivity.class);
 		viewMeeting.putExtra(Keys.Meeting.PARCEL, meeting);
 		startActivityForResult(viewMeeting, 6);
 	}
@@ -137,39 +135,29 @@ public class MeetingsFragment extends Fragment implements AsyncResponse<List<Mee
 		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parentAdapter, View v,
-					int position, long id) {
+			public void onItemClick(AdapterView<?> parentAdapter, View v,int position, long id) {
 				Meeting clicked = meetingAdpt.getItem(position);
 				loadMeeting(clicked);
 			}
 		});
 
-		mListView
-				.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
+		mListView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
+			@Override
+			public void onCreateContextMenu(ContextMenu menu, View v,ContextMenuInfo menuInfo) {
+				AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) menuInfo;
 
-					@Override
-					public void onCreateContextMenu(ContextMenu menu, View v,
-							ContextMenuInfo menuInfo) {
-						AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) menuInfo;
+				Meeting longClicked = meetingAdpt.getItem(aInfo.position);
 
-						Meeting longClicked = meetingAdpt
-								.getItem(aInfo.position);
-
-						menu.setHeaderTitle("Options for "
-								+ longClicked.getTitle());
-						menu.add(
-								MainActivity.DrawerLabel.MEETINGS.getPosition(),
-								aInfo.position, 1, "Edit");
-						menu.add(
-								MainActivity.DrawerLabel.MEETINGS.getPosition(),
-								aInfo.position, 2, "Delete");
-
-					}
-				});
+				menu.setHeaderTitle("Options for "+ longClicked.getTitle());
+				menu.add(MainActivity.DrawerLabel.MEETINGS.getPosition(),aInfo.position, 1, "Edit");
+				menu.add(MainActivity.DrawerLabel.MEETINGS.getPosition(),aInfo.position, 2, "Delete");
+			}
+		});
+		mListView.setRequireTouchBeforeDismiss(false);
+		mListView.setUndoHideDelay(5000);
 		mListView.setDismissCallback(new EnhancedListView.OnDismissCallback() {
 			@Override
-			public EnhancedListView.Undoable onDismiss(
-					EnhancedListView listView, final int position) {
+			public EnhancedListView.Undoable onDismiss(EnhancedListView listView, final int position) {
 
 				final Meeting item = meetingAdpt.getItem(position);
 				meetingAdpt.remove(item);
@@ -218,8 +206,7 @@ public class MeetingsFragment extends Fragment implements AsyncResponse<List<Mee
 		int position = item.getItemId();
 		boolean handled = false;
 		item.getMenuInfo();
-		if (item.getGroupId() == MainActivity.DrawerLabel.MEETINGS
-				.getPosition()) {
+		if (item.getGroupId() == MainActivity.DrawerLabel.MEETINGS.getPosition()) {
 			switch (item.getOrder()) {
 			case 1: // Edit
 				Toast.makeText(getActivity(), item.getTitle(),

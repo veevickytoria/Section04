@@ -186,6 +186,7 @@
         </activity>
         <activity
             android:name="com.meetingninja.csse.group.EditGroupActivity"
+           	android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_edit_group" >
         </activity>
         <activity
@@ -198,6 +199,7 @@
         </activity>
         <activity
             android:name="com.meetingninja.csse.projects.ViewProjectActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_view_project" >
         </activity>
     </application>

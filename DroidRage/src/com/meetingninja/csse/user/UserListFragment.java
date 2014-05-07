@@ -275,6 +275,7 @@ public class UserListFragment extends Fragment implements TokenListener {
 				};
 			}
 		});
+		l.setRequireTouchBeforeDismiss(false);
 		l.setUndoHideDelay(5000);
 		l.setOnItemClickListener(new OnItemClickListener() {
 			@Override
