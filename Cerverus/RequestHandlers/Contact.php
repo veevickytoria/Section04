@@ -63,4 +63,8 @@ class Contact extends RequestHandler{
         
     }
 
+    protected function addRelationsToArray($node, $infoArray) {
+        
+    }
+
 }
