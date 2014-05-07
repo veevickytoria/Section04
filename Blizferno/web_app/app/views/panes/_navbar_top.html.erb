@@ -14,7 +14,7 @@
   <!-- Collect the nav links, forms, and other content for toggling -->
   <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
     <ul class="nav navbar-nav navbar-right">
-    <li><a onclick= showCalendar()><span class='glyphicon glyphicon-calendar'>&nbsp</span></a></li>
+    
       <p class="navbar-text">Welcome <a href="/profile/index" class="navbar-link"><%= @userInfo['name'] %></a>!</p>
       <li><a href="/meetings/index">Meetings <span class='glyphicon glyphicon-time'></span>&nbsp<span class="badge"><%= @Meeting %></span><!-- <span class='glyphicon glyphicon-calendar'></span> --></a></li>
       <li><a href="/tasks/index">Tasks <span class='glyphicon glyphicon-tasks'></span>&nbsp<span class="badge"><%= @Task %></span></a></li>
@@ -31,7 +31,7 @@
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             </div>
             <div class="modal-body">
-            <%= render "profile/schedule" %>
+
             </div>
             <div class="modal-footer">
               <button type="button" id='cCrGrp' class="btn btn-default" data-dismiss="modal">Close</button>
