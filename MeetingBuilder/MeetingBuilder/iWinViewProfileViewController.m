@@ -187,8 +187,8 @@
     
     if (!deserializedDictionary)
     {
-        //UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Group not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
-        //[alert show];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Group not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        [alert show];
     }
     else
     {
@@ -214,8 +214,8 @@
         
         if (!deserializedDictionary)
         {
-            //UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Group details not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
-            //[alert show];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Group details not found" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+            [alert show];
         }
         else
         {
@@ -283,7 +283,7 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     self.createGroupVC = [[iWinViewAndCreateGroupViewController alloc] initWithNibName:@"iWinViewAndCreateGroupViewController" bundle:nil withUserID:self.userID withGroupID:[self.groupID[indexPath.row] integerValue]];
-    //self.viewProjectVC.viewProjectDelegate = self;
+    self.createGroupVC.groupDelegate = self;
     [self.createGroupVC setModalPresentationStyle:UIModalPresentationPageSheet];
     [self.createGroupVC setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
     
