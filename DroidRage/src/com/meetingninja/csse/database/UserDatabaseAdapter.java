@@ -195,9 +195,9 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		if (meetingsArray != null && meetingsArray.isArray()) {
 			for (final JsonNode meetingNode : meetingsArray) {
 				String _id = meetingNode.get(Keys._ID).asText();
-//				if (!meetingNode.get("type").asText().equals("MADE_MEETING")) {
+				if(!meetingIDList.contains(_id)){
 					meetingIDList.add(_id);
-//				}
+				}
 			}
 		} else {
 			logError(TAG, responseNode);
@@ -459,6 +459,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 	}
 
 	public static User update(User user)throws JsonGenerationException, IOException, InterruptedException {
+		String _url = getBaseUri().build().toString();
 		String name = getEditPayload(user.getID(), Keys.User.NAME,user.getDisplayName());
 		String title = getEditPayload(user.getID(), Keys.User.TITLE,user.getTitle());
 		String company = getEditPayload(user.getID(),Keys.User.COMPANY, user.getCompany());
@@ -467,11 +468,11 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 
 
 		// Get server response
-		sendSingleEdit(name);
-		sendSingleEdit(title);
-		sendSingleEdit(company);
-		sendSingleEdit(location);
-		String response = sendSingleEdit(phone);
+		sendSingleEdit(name,_url);
+		sendSingleEdit(title,_url);
+		sendSingleEdit(company,_url);
+		sendSingleEdit(location,_url);
+		String response = sendSingleEdit(phone,_url);
 		final JsonNode userNode = MAPPER.readTree(response);
 		User newUser = parseUser(userNode);
 		return newUser;
@@ -493,15 +494,15 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		ps.close();
 		return payload;
 	}
-	private static String sendSingleEdit(String payload) throws IOException {
-		String _url = getBaseUri().build().toString();
-		URL url = new URL(_url);
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-		conn.setRequestMethod(IRequest.PUT);
-		addRequestHeader(conn, false);
-		sendPostPayload(conn, payload);
-		return getServerResponse(conn);
-	}
+//	private static String sendSingleEdit(String payload) throws IOException {
+//		String _url = getBaseUri().build().toString();
+//		URL url = new URL(_url);
+//		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//		conn.setRequestMethod(IRequest.PUT);
+//		addRequestHeader(conn, false);
+//		sendPostPayload(conn, payload);
+//		return getServerResponse(conn);
+//	}
 	public static void updateParseSDKUser(User user) {
 		ParseUser parseUser = ParseUser.getCurrentUser();
 

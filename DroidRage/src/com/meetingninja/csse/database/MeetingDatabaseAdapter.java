@@ -96,21 +96,20 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 		jgen.close();
 		String attendancePayload = json.toString("UTF8");
 		ps.close();
-
+		String _url = getBaseUri().appendPath(meetingID).build().toString();
 		// Get server response
-		sendSingleEdit(meetingID, titlePayload);
-		sendSingleEdit(meetingID, startdateTimePayload);
-		sendSingleEdit(meetingID, locationPayload);
-		sendSingleEdit(meetingID, endDateTimePayload);
-		String response = sendSingleEdit(meetingID, descPayload);// TODO
-		response = sendSingleEdit(meetingID, attendancePayload);
+		sendSingleEdit(titlePayload,_url);
+		sendSingleEdit(startdateTimePayload,_url);
+		sendSingleEdit(locationPayload,_url);
+		sendSingleEdit(endDateTimePayload,_url);
+		sendSingleEdit(descPayload,_url);
+		String response = sendSingleEdit(attendancePayload,_url);
 		final JsonNode meetingNode = MAPPER.readTree(response);
 		Meeting m = parseMeeting(meetingNode);
 		return m;
 	}
 
-	private static String getEditPayload(String meetingID, String field,
-			String value) throws IOException {
+	private static String getEditPayload(String meetingID, String field,String value) throws IOException {
 		ByteArrayOutputStream json = new ByteArrayOutputStream();
 		// this type of print stream allows us to get a string easily
 		PrintStream ps = new PrintStream(json);
@@ -128,17 +127,17 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 		return payload;
 	}
 
-	private static String sendSingleEdit(String meetingID, String payload)
-			throws IOException {
-		String _url = getBaseUri().appendPath(meetingID).build().toString();
-		URL url = new URL(_url);
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-		conn.setRequestMethod(IRequest.PUT);
-		addRequestHeader(conn, false);
-		sendPostPayload(conn, payload);
-		return getServerResponse(conn);
-
-	}
+//	private static String sendSingleEdit(String meetingID, String payload)
+//			throws IOException {
+//		String _url = getBaseUri().appendPath(meetingID).build().toString();
+//		URL url = new URL(_url);
+//		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//		conn.setRequestMethod(IRequest.PUT);
+//		addRequestHeader(conn, false);
+//		sendPostPayload(conn, payload);
+//		return getServerResponse(conn);
+//
+//	}
 
 	public static Meeting createMeeting(String userID, Meeting m)
 			throws IOException, MalformedURLException {

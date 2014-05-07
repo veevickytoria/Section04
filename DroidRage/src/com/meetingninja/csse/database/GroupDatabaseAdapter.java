@@ -120,6 +120,7 @@ public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
 	}
 
 	public static Group updateGroup(Group group) throws IOException {
+		String _url = getBaseUri().build().toString();
 		ByteArrayOutputStream json = new ByteArrayOutputStream();
 		// this type of print stream allows us to get a string easily
 		PrintStream ps = new PrintStream(json);
@@ -154,8 +155,8 @@ public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
 		String payloadMembers = json.toString("UTF8");
 		ps.close();
 		// Establish connection
-		sendSingleEdit(payloadMembers);
-		String response = sendSingleEdit(payloadTitle);
+		sendSingleEdit(payloadMembers,_url);
+		String response = sendSingleEdit(payloadTitle,_url);
 		JsonNode groupNode = MAPPER.readTree(response);
 		return parseGroup(groupNode, new Group());
 	}
@@ -180,15 +181,15 @@ public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
 		return result;
 	}
 
-	private static String sendSingleEdit(String payload) throws IOException {
-		String _url = getBaseUri().build().toString();
-		URL url = new URL(_url);
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-		conn.setRequestMethod(IRequest.PUT);
-		addRequestHeader(conn, false);
-		sendPostPayload(conn, payload);
-		return getServerResponse(conn);
-	}
+//	private static String sendSingleEdit(String payload) throws IOException {
+//		String _url = getBaseUri().build().toString();
+//		URL url = new URL(_url);
+//		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//		conn.setRequestMethod(IRequest.PUT);
+//		addRequestHeader(conn, false);
+//		sendPostPayload(conn, payload);
+//		return getServerResponse(conn);
+//	}
 
 	public static Group parseGroup(JsonNode groupNode, Group g) {
 		// Group g = new Group();

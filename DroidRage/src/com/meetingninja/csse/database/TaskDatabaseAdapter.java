@@ -139,6 +139,7 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 	}
 
 	public static Task editTask(Task task) throws IOException {
+		String _url = getBaseUri().build().toString();
 		String titlePayload = getEditPayload(task.getID(), Keys.Task.TITLE,task.getTitle());
 		String descPayload = getEditPayload(task.getID(), Keys.Task.DESC,task.getDescription());
 		String isCompPayload = getEditPayload(task.getID(),Keys.Task.COMPLETED, Boolean.toString(task.getIsCompleted()));
@@ -146,26 +147,26 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 		String compCritPayload = getEditPayload(task.getID(),Keys.Task.CRITERIA, task.getCompletionCriteria());
 		String assignedToPayload = getEditPayload(task.getID(),Keys.Task.ASSIGNED_TO, task.getAssignedTo());
 		// Get server response
-		sendSingleEdit(titlePayload);
-		sendSingleEdit(descPayload);
-		sendSingleEdit(isCompPayload);
-		sendSingleEdit(deadlinePayload);
-		sendSingleEdit(compCritPayload);
-		String response = sendSingleEdit(assignedToPayload);
+		sendSingleEdit(titlePayload,_url);
+		sendSingleEdit(descPayload,_url);
+		sendSingleEdit(isCompPayload,_url);
+		sendSingleEdit(deadlinePayload,_url);
+		sendSingleEdit(compCritPayload,_url);
+		String response = sendSingleEdit(assignedToPayload,_url);
 		final JsonNode taskNode = MAPPER.readTree(response);
 		parseTaskNoCheck(taskNode, task);
 		return task;
 	}
 
-	private static String sendSingleEdit(String payload) throws IOException {
-		String _url = getBaseUri().build().toString();
-		URL url = new URL(_url);
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-		conn.setRequestMethod(IRequest.PUT);
-		addRequestHeader(conn, false);
-		sendPostPayload(conn, payload);
-		return getServerResponse(conn);
-	}
+//	private static String sendSingleEdit(String payload) throws IOException {
+//		String _url = getBaseUri().build().toString();
+//		URL url = new URL(_url);
+//		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//		conn.setRequestMethod(IRequest.PUT);
+//		addRequestHeader(conn, false);
+//		sendPostPayload(conn, payload);
+//		return getServerResponse(conn);
+//	}
 
 	private static String getEditPayload(String taskID, String field,String value) throws IOException {
 		ByteArrayOutputStream json = new ByteArrayOutputStream();

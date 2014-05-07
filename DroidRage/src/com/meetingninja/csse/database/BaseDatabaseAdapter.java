@@ -57,8 +57,7 @@ public abstract class BaseDatabaseAdapter {
 		return Uri.parse(getBaseUrl()).buildUpon();
 	}
 
-	protected static void addRequestHeader(URLConnection connection,
-			boolean isPost) {
+	protected static void addRequestHeader(URLConnection connection,boolean isPost) {
 		connection.setRequestProperty("User-Agent", USER_AGENT);
 		connection.setRequestProperty("Accept", ACCEPT_TYPE);
 		connection.setDoOutput(isPost);
@@ -67,8 +66,7 @@ public abstract class BaseDatabaseAdapter {
 		}
 	}
 
-	protected static int sendPostPayload(URLConnection connection,
-			String payload) throws IOException {
+	protected static int sendPostPayload(URLConnection connection,String payload) throws IOException {
 		Log.d(IRequest.POST, "[URL] " + connection.getURL().toString());
 		logPrint(payload);
 
@@ -79,11 +77,9 @@ public abstract class BaseDatabaseAdapter {
 		return ((HttpURLConnection) connection).getResponseCode();
 	}
 
-	protected static String getServerResponse(URLConnection connection)
-			throws IOException {
+	protected static String getServerResponse(URLConnection connection)throws IOException {
 		// Read server response
-		BufferedReader in = new BufferedReader(new InputStreamReader(
-				connection.getInputStream()));
+		BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 		String inputLine;
 		StringBuffer response = new StringBuffer();
 
@@ -96,8 +92,7 @@ public abstract class BaseDatabaseAdapter {
 		return response.toString();
 	}
 
-	protected static String updateHelper(String updateURL, String jsonPayload)
-			throws IOException {
+	protected static String updateHelper(String updateURL, String jsonPayload)throws IOException {
 		URL url = new URL(updateURL);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
@@ -108,6 +103,14 @@ public abstract class BaseDatabaseAdapter {
 		String response = getServerResponse(conn);
 		conn.disconnect();
 		return response;
+	}
+	protected static String sendSingleEdit(String payload,String _url) throws IOException {
+		URL url = new URL(_url);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setRequestMethod(IRequest.PUT);
+		addRequestHeader(conn, false);
+		sendPostPayload(conn, payload);
+		return getServerResponse(conn);
 	}
 
 	protected static void addToRequestQueue(Request<?> req) {

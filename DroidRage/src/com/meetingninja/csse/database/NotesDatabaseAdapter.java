@@ -155,28 +155,26 @@ public class NotesDatabaseAdapter extends BaseDatabaseAdapter {
 	}
 
 	public static void updateNote(Note n) throws IOException {
-		Log.d("updatenote", "update");
-		String titlePayload = getEditPayload(n.getID(), Keys.Note.TITLE,
-				n.getTitle());
-		String descPayload = getEditPayload(n.getID(), Keys.Note.CONTENT,
-				n.getContent());
-		// Get server response
-		sendSingleEdit(titlePayload);
-		sendSingleEdit(descPayload);
-	}
-
-	private static String sendSingleEdit(String payload) throws IOException {
 		String _url = getBaseUri().build().toString();
-		URL url = new URL(_url);
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-		conn.setRequestMethod(IRequest.PUT);
-		addRequestHeader(conn, false);
-		sendPostPayload(conn, payload);
-		return getServerResponse(conn);
+		Log.d("updatenote", "update");
+		String titlePayload = getEditPayload(n.getID(), Keys.Note.TITLE,n.getTitle());
+		String descPayload = getEditPayload(n.getID(), Keys.Note.CONTENT,n.getContent());
+		// Get server response
+		sendSingleEdit(titlePayload,_url);
+		sendSingleEdit(descPayload,_url);
 	}
 
-	private static String getEditPayload(String noteID, String field,
-			String value) throws IOException {
+//	private static String sendSingleEdit(String payload) throws IOException {
+//		String _url = getBaseUri().build().toString();
+//		URL url = new URL(_url);
+//		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//		conn.setRequestMethod(IRequest.PUT);
+//		addRequestHeader(conn, false);
+//		sendPostPayload(conn, payload);
+//		return getServerResponse(conn);
+//	}
+
+	private static String getEditPayload(String noteID, String field,String value) throws IOException {
 		ByteArrayOutputStream json = new ByteArrayOutputStream();
 		// this type of print stream allows us to get a string easily
 		PrintStream ps = new PrintStream(json);
