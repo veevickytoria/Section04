@@ -3,65 +3,9 @@
 Options +FollowSymLinks
 RewriteEngine On
 
-#RewriteRule ^([A-Za-z]+)/$ Controller.php?class1=$1 [NC,L]
-#RewriteRule ^([A-Za-z]+)/([0-9]+)$ Controller.php?class1=$1&id1=$2 [NC,L]
-#RewriteRule ^([A-Za-z]+)/([0-9]+)/$ Controller.php?class1=$1&id1=$2 [NC,L]
-#RewriteRule ^([A-Za-z]+)/([A-Za-z]+)/([0-9]+)/?$ Controller.php?class1=$1&class2=$2&id1=$3&id2=null [NC,L]
-#RewriteRule ^([A-Za-z]+)/([A-Za-z]+)/([0-9]+)/([0-9]+)/?$ Controller.php?class1=$1&class2=$2&id1=$3&id2=$4 [NC,L]
-
-RewriteRule ^User/([0-9]+)/?$ User.php?id=$1 [NC,L]
-RewriteRule ^User/Test/?$ User.php?cat=login [NC,L]
-RewriteRule ^User/Push/?$ User.php?cat=push [NC,L]
-RewriteRule ^User/Login/?$ User.php?cat=login [NC,L]
-RewriteRule ^User/Schedule/([0-9]+)/?$ User.php?cat=schedule&id=$1 [NC,L]
-RewriteRule ^User/Schedules/?$ User.php?cat=schedule [NC,L]
-RewriteRule ^User/Groups/([0-9]+)/?$ User.php?cat=groups&id=$1 [NC,L]
-RewriteRule ^User/Users/?$ User.php?cat=users [NC,L]
-RewriteRule ^User/Projects/([0-9]+)/?$ User.php?cat=projects&id=$1 [NC,L]
-RewriteRule ^User/Tasks/([0-9]+)/?$ User.php?cat=tasks&id=$1 [NC,L]
-RewriteRule ^User/Meetings/([0-9]+)/?$ User.php?cat=meetings&id=$1 [NC,L]
-RewriteRule ^User/Notes/([0-9]+)/?$ User.php?cat=notes&id=$1 [NC,L]
-RewriteRule ^User/Comments/([0-9]+)/?$ User.php?cat=comments&id=$1 [NC,L]
-RewriteRule ^User/Agenda/([0-9]+)/?$ User.php?cat=Agendas&id=$1 [NC,L]
-RewriteRule ^User/([0-9]+)/?$ User.php?id=$1 [NC,L]
-RewriteRule ^User/?$ User.php [NC,L]
-
-RewriteRule ^UserSettings/?$ UserSettings.php [NC,L]
-RewriteRule ^UserSettings/([0-9]+)/?$ UserSettings.php?id=$1 [NC,L]
-
-RewriteRule ^Note/?$ Note.php [NC,L]
-RewriteRule ^Note/([0-9]+)/?$ Note.php?noteID=$1 [NC,L]
-RewriteRule ^Note/Sharing/?$ Sharing.php? [NC,L]
-RewriteRule ^User/Sharing/([0-9]+)/?$ Sharing.php?userID=$1&cat=users [NC,L]
-RewriteRule ^Note/Sharing/([0-9]+)/?$ Sharing.php?noteID=$1&cat=notes [NC,L]
-RewriteRule ^Note/Sharing/([0-9]+)/([0-9]+)/?$ Sharing.php?noteID=$1&userID=$2 [NC,L]
-
-
-RewriteRule ^Meeting/$ Meeting.php [NC,L]
-RewriteRule ^Meeting/([0-9]+)/?$ Meeting.php?id=$1 [NC,L]
-RewriteRule ^Meeting/Notes/?$ Meeting.php?cat=notes [NC,L]
-RewriteRule ^Meeting/Tasks/([0-9]+)/?$ Meeting.php?cat=tasks&id=$1 [NC,L]
-RewriteRule ^Meeting/Agenda/([0-9]+)/?$ Meeting.php?cat=agendas&id=$1 [NC,L]
-
-RewriteRule ^Task/?$ Task.php [NC,L]
-RewriteRule ^Task/([0-9]+)/?$ Task.php?id=$1 [NC,L]
-
-RewriteRule ^Comment/?$ Comment.php [NC,L]
-RewriteRule ^Comment/([0-9]+)/?$ Comment.php?id=$1 [NC,L]
-RewriteRule ^Comment/All/([0-9]+)/?$ Comment.php?cat=all&id=$1 [NC,L]
-
-RewriteRule ^Agenda/?$ Agenda.php [NC,L]
-RewriteRule ^Agenda/([0-9]+)/?$ Agenda.php?id=$1 [NC,L]
-
-RewriteRule ^Notification/?$ Notification.php [NC,L]
-RewriteRule ^Notification/([0-9]+)/?$ Notification.php?id=$1 [NC,L]
-
-RewriteRule ^Project/?$ Project.php [NC,L]
-RewriteRule ^Project/([0-9]+)/?$ Project.php?id=$1 [NC,L]
-
-RewriteRule ^Group/?$ Group.php [NC,L]
-RewriteRule ^Group/([0-9]+)/?$ Group.php?id=$1 [NC,L]
-
-RewriteRule ^Contact/?$ Contact.php [NC,L]
-RewriteRule ^Contact/([0-9]+)/?$ Contact.php?id=$1 [NC,L]
-RewriteRule ^Contact/Relations/([0-9]+)/?$ Contact.php?cat=relations&id=$1 [NC,L]
+RewriteRule ^([A-Za-z]+)/$ Controller.php?class1=$1 [NC,L]
+RewriteRule ^([A-Za-z]+)/([0-9]+)$ Controller.php?class1=$1&id1=$2 [NC,L]
+RewriteRule ^([A-Za-z]+)/([0-9]+)/$ Controller.php?class1=$1&id1=$2 [NC,L]
+RewriteRule ^([A-Za-z]+)/([A-Za-z]+)/$ Controller.php?class1=$1&class2=$2&id1=null&id2=null [NC,L]
+RewriteRule ^([A-Za-z]+)/([A-Za-z]+)/([0-9]+)/?$ Controller.php?class1=$1&class2=$2&id1=$3&id2=null [NC,L]
+RewriteRule ^([A-Za-z]+)/([A-Za-z]+)/([0-9]+)/([0-9]+)/?$ Controller.php?class1=$1&class2=$2&id1=$3&id2=$4 [NC,L]

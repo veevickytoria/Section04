@@ -9,6 +9,7 @@ require_once "RequestHandlers\Note.php";
 require_once "RequestHandlers\Meeting.php";
 require_once "RequestHandlers\Group.php";
 require_once "RequestHandlers\Project.php";
+require_once "RequestHandlers\UserUsers.php";
 
 
 /**
@@ -19,7 +20,7 @@ class Controller {
     public static function parse($class, $id, $type, $postContent){
     
         $aClient = new Client();
-	$c = '\\Everyman\\Neo4j\\'.$class;
+		$c = '\\Everyman\\Neo4j\\'.$class;
         $handler= new $c($aClient);
         
         if ($type == "GET" || $type == "DELETE") {
@@ -38,8 +39,15 @@ class Controller {
     }
     
     public static function parseSpecial($class1, $class2, $id1, $id2, $type, $postContent){
-        //parse special request
-        
+		$aClient = new Client();
+        $className = '\\Everyman\\Neo4j\\'.$class1.$class2;
+		$handler = new $className($aClient);
+		if ($type == "GET" || $type == "DELETE") {
+            $requestResult =  $handler->$type();
+        }
+        if (!$requestResult) {echo "REQUEST RESULT WAS FALSE";} else {
+			echo $requestResult;
+        }
     }        
     /*
     *This function initializes the headers needed for the application
@@ -78,7 +86,7 @@ class Controller {
 Controller::initHeaders();
 
 if (isset($_REQUEST['class2'])) {
-    Controller::parseSpecial($_GET['class1'].'Handler', 
+    Controller::parseSpecial($_GET['class1'], 
                             $_GET['class2'], 
                             $_GET['id1'], 
                             $_GET['id2'],
