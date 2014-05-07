@@ -10,7 +10,7 @@ A meeting handler across 3 front-ends Web; iOS; and Android, connecting with a s
 - Dr. Shawn Bohner's CSSE 375 Section 01 Spring 2013-2014  
 
 ##### Client Information
-- Victoria Cheng 
+- Victoria Zheng
 
 ### Links
 Check teams' feature documentation on the [Project Wiki](https://github.com/RH-CSSE-371-F2013/Section04/wiki)  
