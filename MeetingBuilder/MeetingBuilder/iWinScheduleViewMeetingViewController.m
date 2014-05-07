@@ -629,10 +629,13 @@ const int POP_OVER_HEIGHT = 250;
     
     self.headerLabel.text = SCHEDULE_MEETING_TITLE;
     self.titleField.text = EMPTY_STRING;
-    self.startDateLabel.text = EMPTY_STRING;
-    self.endDateLabel.text = EMPTY_STRING;
+    self.startDate = [NSDate date];
+    self.endDate = [NSDate date];
+    [self formatTime:[NSDate date]];
     self.placeField.text = EMPTY_STRING;
     [self.addAgendaButton setTitle:ADD_AGENDA_TITLE forState:UIControlStateNormal];
+    self.userList = [[NSMutableArray alloc] init];
+    [self.attendeeTableView reloadData];
 }
 
 - (IBAction)onDeleteMeeting {
@@ -644,7 +647,7 @@ const int POP_OVER_HEIGHT = 250;
 
 - (IBAction)onClickCancel
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self.viewMeetingDelegate refreshMeetingList];
 }
 
 

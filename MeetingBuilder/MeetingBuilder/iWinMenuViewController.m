@@ -44,32 +44,32 @@
 
 - (IBAction)onClickHome {
     [self updateSelectedMenu:self.homePageButton];
-    [self.menuDelegate goToHomePage];
+    [self.menuDelegate goToHomePage:YES];
 }
 
 - (IBAction)onClickMeetings {
     [self updateSelectedMenu:self.meetingsButton];
-    [self.menuDelegate goToMeetings];
+    [self.menuDelegate goToMeetings:YES];
 }
 
 - (IBAction)onClickProfile {
     [self updateSelectedMenu:self.profileButton];
-    [self.menuDelegate goToProfile];
+    [self.menuDelegate goToProfile:YES];
 }
 
 - (IBAction)onClickTasks {
     [self updateSelectedMenu:self.tasksButton];
-    [self.menuDelegate goToTasks];
+    [self.menuDelegate goToTasks:YES];
 }
 
 - (IBAction)onClickNotes {
     [self updateSelectedMenu:self.notesButton];
-    [self.menuDelegate goToNotes];
+    [self.menuDelegate goToNotes:YES];
 }
 
 - (IBAction)onClickSettings {
     [self updateSelectedMenu:self.settingsButton];
-    [self.menuDelegate goToSettings];
+    [self.menuDelegate goToSettings:YES];
 }
 
 - (IBAction)onClickLogout {

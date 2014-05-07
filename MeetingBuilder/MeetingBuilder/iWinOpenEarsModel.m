@@ -80,27 +80,27 @@
 {
     if (([hypothesis rangeOfString:@"GO"].location != NSNotFound) && ([hypothesis rangeOfString:@"HOME"].location != NSNotFound))
     {
-        [self.menuDelegate goToHomePage];
+        [self.menuDelegate goToHomePage:NO];
     }
     else if (([hypothesis rangeOfString:@"GO"].location != NSNotFound) && ([hypothesis rangeOfString:@"MEETINGS"].location != NSNotFound))
     {
-        [self.menuDelegate goToMeetings];
+        [self.menuDelegate goToMeetings:NO];
     }
     else if (([hypothesis rangeOfString:@"GO"].location != NSNotFound) && ([hypothesis rangeOfString:@"PROFILE"].location != NSNotFound))
     {
-        [self.menuDelegate goToProfile];
+        [self.menuDelegate goToProfile:NO];
     }
     else if (([hypothesis rangeOfString:@"GO"].location != NSNotFound) && ([hypothesis rangeOfString:@"TASK"].location != NSNotFound))
     {
-        [self.menuDelegate goToTasks];
+        [self.menuDelegate goToTasks:NO];
     }
     else if (([hypothesis rangeOfString:@"GO"].location != NSNotFound) && ([hypothesis rangeOfString:@"NOTES"].location != NSNotFound))
     {
-        [self.menuDelegate goToNotes];
+        [self.menuDelegate goToNotes:NO];
     }
     else if (([hypothesis rangeOfString:@"GO"].location != NSNotFound) && ([hypothesis rangeOfString:@"SETTINGS"].location != NSNotFound))
     {
-        [self.menuDelegate goToSettings];
+        [self.menuDelegate goToSettings:NO];
     }
     else if (([hypothesis rangeOfString:@"LOG"].location != NSNotFound) && ([hypothesis rangeOfString:@"OUT"].location != NSNotFound))
     {

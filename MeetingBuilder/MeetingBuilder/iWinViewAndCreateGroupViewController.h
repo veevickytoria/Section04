@@ -27,6 +27,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *viewTitle;
 @property (weak, nonatomic) IBOutlet UITextField *groupName;
 @property (weak, nonatomic) IBOutlet UIButton *addMembersButton;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+@property (weak, nonatomic) IBOutlet UIButton *deleteButton;
+- (IBAction)onClickDelete;
 
 @end
 
