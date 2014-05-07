@@ -16,6 +16,7 @@
 #import "iWinScheduleViewController.h"
 #import "iWinMeetingViewController.h"
 #import "iWinConstants.h"
+#import <Parse/Parse.h>
 
 @interface iWinMainViewController ()
 @property (strong, nonatomic) iWinLoginViewController *loginViewController;
@@ -173,6 +174,7 @@ const float ANIMATION_DURATION = 0.4;
     self.homeScreenViewController = [[iWinHomeScreenViewController alloc] initWithNibName:HOME_SCREEN_VC_NIB_NAME bundle:nil withUserID:userID];
     [self.mainView  addSubview:self.homeScreenViewController.view];
     [self.homeScreenViewController.view setBounds:self.mainView.bounds];
+    
     
 }
 
@@ -338,6 +340,12 @@ const float ANIMATION_DURATION = 0.4;
     self.menuButton.hidden = YES;
     self.scheduleButton.hidden = YES;
     self.voiceCommand.hidden = YES;
+    
+    PFInstallation* pInstall = [PFInstallation currentInstallation];
+    [pInstall removeObjectForKey:@"user"];
+    [pInstall removeObjectForKey:@"userId"];
+    [pInstall saveInBackground];
+    [PFUser logOut];
 }
 
 -(void)prepareForControllerChange:(BOOL) shouldSlide

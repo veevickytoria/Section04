@@ -15,6 +15,7 @@
 #import "iWinBackEndUtility.h"
 #include <CommonCrypto/CommonDigest.h>
 #import "iWinConstants.h"
+#import <Parse/Parse.h>
 
 @interface iWinLoginViewController ()
 @property (strong, nonatomic) iWinAppDelegate *appDelegate;
@@ -110,6 +111,27 @@ NSString* const WHEN_TO_NOTIFY_KEY = @"whenToNotify";
                 }
                 
                 [self.loginDelegate login:userID];
+                
+                NSString *url = [NSString stringWithFormat:USER_ID_URL, DATABASE_URL,userID];
+                url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
+                
+                [PFUser logInWithUsername:[deserializedDictionary objectForKey:NAME_KEY] password:[self sha256HashFor:[self.passwordField text]]];
+                
+                [PFAnalytics trackAppOpenedWithLaunchOptions:nil];
+                PFUser* pUser = [PFUser currentUser];
+                if (pUser != nil)
+                {
+                    NSArray *keys = [NSArray arrayWithObjects:@"user", @"userId", nil];
+                    NSArray *objects = [NSArray arrayWithObjects:pUser, [pUser objectId], nil];
+                    NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+                    
+                    PFInstallation* pInstall = [PFInstallation currentInstallation];
+                    [pInstall setValuesForKeysWithDictionary:jsonDictionary];
+                    
+                    [pInstall saveEventually];
+                }
+                
             }
             else
             {

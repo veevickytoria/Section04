@@ -10,7 +10,6 @@
 		0A04455A17F3825D000FF2A0 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A04455917F3825D000FF2A0 /* UIKit.framework */; };
 		0A04455C17F3825D000FF2A0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A04455B17F3825D000FF2A0 /* Foundation.framework */; };
 		0A04455E17F3825D000FF2A0 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A04455D17F3825D000FF2A0 /* CoreGraphics.framework */; };
-		0A04456017F3825D000FF2A0 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A04455F17F3825D000FF2A0 /* CoreData.framework */; };
 		0A04456617F3825D000FF2A0 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0A04456417F3825D000FF2A0 /* InfoPlist.strings */; };
 		0A04456817F3825D000FF2A0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A04456717F3825D000FF2A0 /* main.m */; };
 		0A04456C17F3825D000FF2A0 /* iWinAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A04456B17F3825D000FF2A0 /* iWinAppDelegate.m */; };
@@ -20,7 +19,6 @@
 		0A04457517F3825D000FF2A0 /* MeetingBuilder.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0A04457317F3825D000FF2A0 /* MeetingBuilder.xcdatamodeld */; };
 		0A0B702018E1CD0100765B8B /* AcousticModelEnglish.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A0B701B18E1CD0100765B8B /* AcousticModelEnglish.bundle */; };
 		0A0B702118E1CD0100765B8B /* AcousticModelSpanish.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A0B701C18E1CD0100765B8B /* AcousticModelSpanish.bundle */; };
-		0A0B702218E1CD0100765B8B /* OpenEars.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A0B701D18E1CD0100765B8B /* OpenEars.framework */; };
 		0A0B702318E1CD0100765B8B /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A0B701E18E1CD0100765B8B /* Parse.framework */; };
 		0A0B702418E1CD0100765B8B /* Slt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A0B701F18E1CD0100765B8B /* Slt.framework */; };
 		0A1A727D1819E1F5009A49E5 /* iWinHomeScreenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A1A727B1819E1F5009A49E5 /* iWinHomeScreenViewController.m */; };
@@ -40,7 +38,6 @@
 		0A30739518921CB300C2D5F6 /* iWinMergeNoteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A30739318921CB300C2D5F6 /* iWinMergeNoteViewController.xib */; };
 		0A65DEC218DBCF6B0067CC23 /* iWinMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A65DEC018DBCF6B0067CC23 /* iWinMenuViewController.m */; };
 		0A65DEC318DBCF6B0067CC23 /* iWinMenuViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A65DEC118DBCF6B0067CC23 /* iWinMenuViewController.xib */; };
-		0A739E1318ECACF1003156CA /* OpenEars.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A739E1218ECACF1003156CA /* OpenEars.framework */; };
 		0A739E1618ECADA9003156CA /* iWinBackendUtilityTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A739E1518ECADA9003156CA /* iWinBackendUtilityTest.m */; };
 		0A7E515B17FBEA9700A4B8B7 /* iWinMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7E515917FBEA9700A4B8B7 /* iWinMainViewController.m */; };
 		0A7E515C17FBEA9700A4B8B7 /* iWinMainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A7E515A17FBEA9700A4B8B7 /* iWinMainViewController.xib */; };
@@ -100,6 +97,7 @@
 		5B3B629A188CBDF600C0E53E /* iWinViewAndCreateGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B3B6299188CBDF600C0E53E /* iWinViewAndCreateGroupViewController.m */; };
 		5B3B62AE188CCB7000C0E53E /* iWinViewAndCreateGroupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B3B62AD188CCB7000C0E53E /* iWinViewAndCreateGroupViewController.xib */; };
 		5B904DB4189F24D200552014 /* iWinProjectTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B904DB3189F24D200552014 /* iWinProjectTest.m */; };
+		791918B319174BA8006195E6 /* OpenEars.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A0B701D18E1CD0100765B8B /* OpenEars.framework */; };
 		7941FDC81828843500AAA92E /* iWinViewAndChangeSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7941FDC61828843500AAA92E /* iWinViewAndChangeSettingsViewController.m */; };
 		7941FDC91828843500AAA92E /* iWinViewAndChangeSettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7941FDC71828843500AAA92E /* iWinViewAndChangeSettingsViewController.xib */; };
 		7941FDD5182A0DCE00AAA92E /* iWinViewProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7941FDD3182A0DCE00AAA92E /* iWinViewProfileViewController.m */; };
@@ -554,6 +552,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				791918B319174BA8006195E6 /* OpenEars.framework in Frameworks */,
 				0A0B702418E1CD0100765B8B /* Slt.framework in Frameworks */,
 				0A8F7F1818998D320071C825 /* MessageUI.framework in Frameworks */,
 				0A8C13A8187DEA65005A25DE /* StoreKit.framework in Frameworks */,
@@ -568,13 +567,10 @@
 				0ACE33B117FD245B003B9C0A /* MobileCoreServices.framework in Frameworks */,
 				0ACE33AF17FD244B003B9C0A /* CFNetwork.framework in Frameworks */,
 				0A98D54018B5427D004EC561 /* Parse.framework in Frameworks */,
-				0A739E1318ECACF1003156CA /* OpenEars.framework in Frameworks */,
 				0A0B702318E1CD0100765B8B /* Parse.framework in Frameworks */,
 				0A04455A17F3825D000FF2A0 /* UIKit.framework in Frameworks */,
 				0A04455C17F3825D000FF2A0 /* Foundation.framework in Frameworks */,
 				0A04455E17F3825D000FF2A0 /* CoreGraphics.framework in Frameworks */,
-				0A04456017F3825D000FF2A0 /* CoreData.framework in Frameworks */,
-				0A0B702218E1CD0100765B8B /* OpenEars.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1652,7 +1648,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Dharu Shah (MPG5D9G2TU)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Dharu Shah (MPG5D9G2TU)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1678,7 +1674,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "Meeting Ninja";
-				PROVISIONING_PROFILE = "9CABC824-AA05-42C8-BA8B-03831B800CED";
+				PROVISIONING_PROFILE = "";
 				USER_HEADER_SEARCH_PATHS = "\"$(BUILT_PRODUCTS_DIR)/../../Headers\"";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1710,7 +1706,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "Meeting Ninja";
-				PROVISIONING_PROFILE = "9CABC824-AA05-42C8-BA8B-03831B800CED";
+				PROVISIONING_PROFILE = "";
 				USER_HEADER_SEARCH_PATHS = "\"$(BUILT_PRODUCTS_DIR)/../../Headers\"";
 				WRAPPER_EXTENSION = app;
 			};
