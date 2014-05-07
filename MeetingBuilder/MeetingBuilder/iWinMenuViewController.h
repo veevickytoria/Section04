@@ -16,7 +16,7 @@
 -(void)goToTasks:(BOOL) shouldSlide;
 -(void)goToNotes:(BOOL) shouldSlide;
 -(void)goToSettings:(BOOL) shouldSlide;
--(void)goToLogout;
+-(void)goToLogout:(BOOL) shouldSlide;
 
 @end
 

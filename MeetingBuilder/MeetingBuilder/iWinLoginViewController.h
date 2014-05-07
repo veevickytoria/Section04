@@ -24,5 +24,6 @@
 @property (weak, nonatomic) IBOutlet UISwitch *rememberSwitch;
 - (IBAction)onClickLogin:(id)sender;
 - (IBAction)onClickJoinUs:(id)sender;
+- (void)clearFields;
 
 @end
