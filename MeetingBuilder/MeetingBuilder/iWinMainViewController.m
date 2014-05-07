@@ -314,9 +314,9 @@ const float ANIMATION_DURATION = 0.4;
     self.movedRightView = !self.movedRightView;
 }
 
-- (void)goToHomePage
+- (void)goToHomePage:(BOOL) shouldSlide
 {
-    [self prepareForControllerChange];
+    [self prepareForControllerChange:shouldSlide];
     self.homeScreenViewController = [[iWinHomeScreenViewController alloc] initWithNibName:HOME_SCREEN_VC_NIB_NAME bundle:nil withUserID:self.userID];
     [self.mainView  addSubview:self.homeScreenViewController.view];
     [self.homeScreenViewController.view setBounds:self.mainView.bounds];
@@ -339,51 +339,53 @@ const float ANIMATION_DURATION = 0.4;
     self.voiceCommand.hidden = YES;
 }
 
--(void)prepareForControllerChange
+-(void)prepareForControllerChange:(BOOL) shouldSlide
 {
     [self removeSubViews];
+    if (shouldSlide)
+        [self animateSlidingMenu:NO];
     [self enableSliding];
     [self removeTapRecognizer];
-    [self animateSlidingMenu:NO];
     [self resetSliding];
 }
 
-- (void)goToMeetings
+- (void)goToMeetings:(BOOL) shouldSlide
 {
-    [self prepareForControllerChange];
+    [self prepareForControllerChange:shouldSlide];
     self.meetingListViewController = [[iWinMeetingViewController alloc] initWithNibName:MEETING_VC_NIB_NAME bundle:nil withID:self.userID];
     [self.mainView  addSubview:self.meetingListViewController.view];
     [self.meetingListViewController.view setBounds:self.mainView.bounds];
     self.meetingListViewController.reloadScheduleDelegate = self.scheduleController;
 }
 
-- (void)goToNotes
+- (void)goToNotes:(BOOL) shouldSlide
 {
-    [self prepareForControllerChange];
+    [self prepareForControllerChange:shouldSlide];
     self.noteViewController = [[iWinNoteListViewController alloc] initWithNibName:NOTES_VC_NIB_NAME bundle:nil withUserID:self.userID];
     [self.mainView addSubview:self.noteViewController.view];
     [self.noteViewController.view setBounds:self.mainView.bounds];
 }
 
-- (void)goToTasks
+- (void)goToTasks:(BOOL) shouldSlide
 {
-    [self prepareForControllerChange];
+    [self prepareForControllerChange:shouldSlide];
     self.taskListViewController = [[iWinTaskListViewController alloc] initWithNibName:TASK_VC_NIB_NAME bundle:nil userID:self.userID];
     [self.mainView  addSubview:self.taskListViewController.view];
     [self.taskListViewController.view setBounds:self.mainView.bounds];
 }
 
-- (void)goToSettings
+- (void)goToSettings:(BOOL) shouldSlide
 {
-    [self prepareForControllerChange];
+    [self prepareForControllerChange:shouldSlide];
     self.settingsViewController = [[iWinViewAndChangeSettingsViewController alloc] initWithNibName:SETTINGS_VC_NIB_NAME bundle:nil withID:self.userID];
     [self.mainView  addSubview:self.settingsViewController.view];
     [self.settingsViewController.view setBounds:self.mainView.bounds];
     self.settingsViewController.settingsDelegate = self;
 }
 
-- (void)goToProfile{
-    [self prepareForControllerChange];
+- (void)goToProfile:(BOOL) shouldSlide
+{
+    [self prepareForControllerChange:shouldSlide];
     self.profileViewController = [[iWinViewProfileViewController alloc] initWithNibName:PROFILE_VC_NIB_NAME bundle:nil withID: self.userID];
     [self.mainView  addSubview:self.profileViewController.view];
     [self.profileViewController.view setBounds:self.mainView.bounds];

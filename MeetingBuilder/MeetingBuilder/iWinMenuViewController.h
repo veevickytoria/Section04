@@ -10,12 +10,12 @@
 
 @protocol MenuDelegate <NSObject>
 
--(void)goToHomePage;
--(void)goToMeetings;
--(void)goToProfile;
--(void)goToTasks;
--(void)goToNotes;
--(void)goToSettings;
+-(void)goToHomePage:(BOOL) shouldSlide;
+-(void)goToMeetings:(BOOL) shouldSlide;
+-(void)goToProfile:(BOOL) shouldSlide;
+-(void)goToTasks:(BOOL) shouldSlide;
+-(void)goToNotes:(BOOL) shouldSlide;
+-(void)goToSettings:(BOOL) shouldSlide;
 -(void)goToLogout;
 
 @end

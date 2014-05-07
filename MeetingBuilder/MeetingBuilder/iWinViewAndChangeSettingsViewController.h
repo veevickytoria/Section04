@@ -17,11 +17,10 @@
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withID:(NSInteger) userID;
 
-- (IBAction)changeSwitch:(id)sender;
 - (IBAction)onCancel:(id)sender;
 - (IBAction)onEdit:(id)sender;
 - (IBAction)onDelete:(id)sender;
-- (IBAction)onSaveSwitch:(id)sender;
+- (IBAction)onSave:(id)sender;
 
 @property (weak, nonatomic) IBOutlet UITextField *emailTextField;
 @property (weak, nonatomic) IBOutlet UITextField *oldPasswordTextField;
