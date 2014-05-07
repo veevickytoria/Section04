@@ -1,87 +1,39 @@
 <?php
 
-/**
- *  Calls the request and returns the request
- */
-// spl_autoload_extensions(".php");
-// spl_autoload_register();
-///require_once("RequestHandlers/Contact.php");
 
 namespace Everyman\Neo4j;
 require "phar://neo4jphp.phar";
 
 require_once "RequestHandlers\Contact.php";
 require_once "RequestHandlers\Note.php";
+require_once "RequestHandlers\Meeting.php";
+require_once "RequestHandlers\Group.php";
+require_once "RequestHandlers\Project.php";
 
+
+/**
+ *  Directs a request to the proper class and returns the result
+ */
 class Controller {
     
     public static function parse($class, $id, $type, $postContent){
     
         $aClient = new Client();
-		$c = '\\Everyman\\Neo4j\\'.$class;
+	$c = '\\Everyman\\Neo4j\\'.$class;
         $handler= new $c($aClient);
-        /*
-        switch ($class) {
-            case "Note":
-                $handler = new Note($aClient);
-                break;
-            case "Contact":
-                $handler = new Contact($aClient);
-                break;
-            case "Meeting":        
-                echo json_encode("This call is not implemented");
-                return;
-            case "User":        
-                echo json_encode("This call is not implemented");
-                return;
-            case "Agenda":        
-                echo json_encode("This call is not implemented");
-                return;
-            case "Comment":        
-                echo json_encode("This call is not implemented");
-                return;
-            case "Group":        
-                echo json_encode("This call is not implemented");
-                return;
-            case "Project":        
-                echo json_encode("This call is not implemented");
-                return;
-            case "Notification":        
-                echo json_encode("This call is not implemented");
-                return;
-            default:        
-                echo json_encode("This call is not implemented");
-                return;
-        }
-        */
-        if ($type == "GET" || $type == "DELETE")
-            {$requestResult =  $handler->$type($id);}
-        else {
+        
+        if ($type == "GET" || $type == "DELETE") {
+             if ($id == NULL){
+                 echo json_encode("ERROR: ID cannot be null!");
+                 return;
+             }
+             $requestResult =  $handler->$type($id);
+        } else {
             $requestResult =  $handler->$type((array)$postContent);
         }
         if (!$requestResult) {echo "REQUEST RESULT WAS FALSE";} else {
             echo json_encode($requestResult);
         }
-        
-        /*
-        echo ($class);
-        $genericHeader = new $class($aClient);
-        $getGenericResult = $genericHeader->GET($id);
-        if (!$getGenericResult) {echo "GET GENERIC WAS FALSE";} else {
-            echo json_encode($getGenericResult);
-        }
-         */        
-        /*
-        //parse normal request
-        if(class_exists($class)){
-            $instnace = new $class(new Client);
-            //if id==null, assume /Class/ so PUT or POST and pass postcontent
-            //if id!=null, assume /Class/# so GET or DELETE and pass id
-            echo $instnace.$type($id==null ? $postContent : $id);
-        }else{
-            echo "Error: file not recognized";
-        }
-        */
          
     }
     
