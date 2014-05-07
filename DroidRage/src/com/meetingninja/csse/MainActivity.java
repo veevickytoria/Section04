@@ -38,6 +38,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.foound.widget.AmazingListView;
@@ -399,7 +400,7 @@ public class MainActivity extends FragmentActivity {
 			startActivityForResult(createNote, 3);
 			return true;
 		case R.id.action_logout:
-			ApplicationController.getInstance().logout();
+			this.logout();
 			return true;
 		case R.id.action_speak:
 			Intent speechIntent = new Intent(
@@ -420,6 +421,11 @@ public class MainActivity extends FragmentActivity {
 			return super.onOptionsItemSelected(item);
 		}
 
+	}
+
+	private void logout() {
+		ApplicationController.getInstance().logout();
+		this.finish();
 	}
 
 	/* Called whenever we call invalidateOptionsMenu() */

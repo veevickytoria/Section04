@@ -142,8 +142,16 @@ public class LoginActivity extends Activity {
 		if (mLoginStatusView.isShown()) {
 			mAuthTask.cancel(true);
 			showProgress(false);
-		} else
+		} else {
+			this.finish();
 			super.onBackPressed();
+		}
+	}
+
+	@Override
+	public void finish() {
+		SessionManager.getInstance().clear();
+		super.finish();
 	}
 
 	/**
@@ -211,7 +219,7 @@ public class LoginActivity extends Activity {
 			mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
 			showProgress(true);
 			mAuthTask = new UserLoginTask();
-			mAuthTask.execute((Void) null); 
+			mAuthTask.execute((Void) null);
 //			if (ApplicationController.getInstance().isConnectedToBackend(LoginActivity.this)) {
 //				mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
 //				showProgress(true);
@@ -234,45 +242,8 @@ public class LoginActivity extends Activity {
 		}
 	}
 
-	/**
-	 * Shows the progress UI and hides the login form.
-	 */
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
 	private void showProgress(final boolean show) {
-		// On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-		// for very easy animations. If available, use these APIs to fade-in
-		// the progress spinner.
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-			int shortAnimTime = getResources().getInteger(
-					android.R.integer.config_shortAnimTime);
-
-			mLoginStatusView.setVisibility(View.VISIBLE);
-			mLoginStatusView.animate().setDuration(shortAnimTime)
-					.alpha(show ? 1 : 0)
-					.setListener(new AnimatorListenerAdapter() {
-						@Override
-						public void onAnimationEnd(Animator animation) {
-							mLoginStatusView.setVisibility(show ? View.VISIBLE
-									: View.GONE);
-						}
-					});
-
-			mLoginFormView.setVisibility(View.VISIBLE);
-			mLoginFormView.animate().setDuration(shortAnimTime)
-					.alpha(show ? 0 : 1)
-					.setListener(new AnimatorListenerAdapter() {
-						@Override
-						public void onAnimationEnd(Animator animation) {
-							mLoginFormView.setVisibility(show ? View.GONE
-									: View.VISIBLE);
-						}
-					});
-		} else {
-			// The ViewPropertyAnimator APIs are not available, so simply show
-			// and hide the relevant UI components.
-			mLoginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
-			mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-		}
+		ApplicationController.getInstance().showProgress(show, mLoginStatusView, mLoginFormView);
 	}
 
 	/**
@@ -335,6 +306,7 @@ public class LoginActivity extends Activity {
 							}
 						});
 				Intent main = new Intent(LoginActivity.this, MainActivity.class);
+				main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 				startActivity(main);
 				overridePendingTransition(anim.fade_in, anim.fade_out);
 			} else {

@@ -34,6 +34,7 @@ public class LogoutFragment extends Fragment {
 
 		Log.d(TAG, "Logging out");
 		ApplicationController.getInstance().logout();
+		((MainActivity) getActivity()).finish();
 
 		return v;
 

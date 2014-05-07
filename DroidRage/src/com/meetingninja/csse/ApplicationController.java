@@ -20,13 +20,18 @@ import java.net.URL;
 
 import objects.User;
 import objects.parcelable.UserParcel;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.util.Log;
+import android.view.View;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -117,32 +122,76 @@ public class ApplicationController extends Application {
 		final NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
 		try {
-	        if (netInfo != null && netInfo.isConnected()) {
-	            // Network is available but check if we can get access from the
-	            // network.
-	            URL url = new java.net.URL(BaseDatabaseAdapter.getBaseUrl());
-	            HttpURLConnection urlc = (HttpURLConnection) url.openConnection();
-	            urlc.setRequestProperty("Connection", "close");
-	            urlc.setConnectTimeout(2000); // Timeout 2 seconds.
-	            urlc.connect();
+			if (netInfo != null && netInfo.isConnected()) {
+				// Network is available but check if we can get access from the
+				// network.
+				URL url = new java.net.URL(BaseDatabaseAdapter.getBaseUrl());
+				HttpURLConnection urlc = (HttpURLConnection) url
+						.openConnection();
+				urlc.setRequestProperty("Connection", "close");
+				urlc.setConnectTimeout(2000); // Timeout 2 seconds.
+				urlc.connect();
 
-	            if (urlc.getResponseCode() == 200) // Successful response.
-	            {
-	            	urlc.disconnect();
-	            	return true;
-	            } else {
-	                Log.d("NO INTERNET", "NO INTERNET");
-	                Crouton.makeText(activity, "Internet Connectivity Issue", Style.ALERT).show();
-	                return false;
-	            }
-	        } else {
-	        	Crouton.makeText(activity, "Internet Connection Unavailable", Style.ALERT).show();
-	        	return false;
-	        }
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
-	    return false;
+				if (urlc.getResponseCode() == 200) // Successful response.
+				{
+					urlc.disconnect();
+					return true;
+				} else {
+					Log.d("NO INTERNET", "NO INTERNET");
+					Crouton.makeText(activity, "Internet Connectivity Issue",
+							Style.ALERT).show();
+					return false;
+				}
+			} else {
+				Crouton.makeText(activity, "Internet Connection Unavailable",
+						Style.ALERT).show();
+				return false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	/**
+	 * Shows the progress UI and hides the login form.
+	 */
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+	public void showProgress(final boolean show, final View statusView,
+			final View defaultView) {
+		// On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+		// for very easy animations. If available, use these APIs to fade-in
+		// the progress spinner.
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+			int shortAnimTime = getResources().getInteger(
+					android.R.integer.config_shortAnimTime);
+
+			statusView.setVisibility(View.VISIBLE);
+			statusView.animate().setDuration(shortAnimTime).alpha(show ? 1 : 0)
+					.setListener(new AnimatorListenerAdapter() {
+						@Override
+						public void onAnimationEnd(Animator animation) {
+							statusView.setVisibility(show ? View.VISIBLE
+									: View.GONE);
+						}
+					});
+
+			defaultView.setVisibility(View.VISIBLE);
+			defaultView.animate().setDuration(shortAnimTime)
+					.alpha(show ? 0 : 1)
+					.setListener(new AnimatorListenerAdapter() {
+						@Override
+						public void onAnimationEnd(Animator animation) {
+							defaultView.setVisibility(show ? View.GONE
+									: View.VISIBLE);
+						}
+					});
+		} else {
+			// The ViewPropertyAnimator APIs are not available, so simply show
+			// and hide the relevant UI components.
+			statusView.setVisibility(show ? View.VISIBLE : View.GONE);
+			defaultView.setVisibility(show ? View.GONE : View.VISIBLE);
+		}
 	}
 
 	public void logout() {

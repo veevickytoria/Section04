@@ -52,6 +52,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 public class ViewProjectActivity extends FragmentActivity implements ActionBar.TabListener {
+	protected static final String TAG = ViewProjectActivity.class.getSimpleName();
 	ArrayList<String> navItems;
 	private static int prevSelectedItem = 0;
 	// private ProjectTypeAdapter typeAdapter;
@@ -74,13 +75,13 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 		project = getIntent().getExtras().getParcelable(Keys.Project.PARCEL);
 
 		getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		getActionBar().addTab(getActionBar().newTab().setText("Meetings").setTabListener(this));
-		getActionBar().addTab(getActionBar().newTab().setText("Notes").setTabListener(this));
-		getActionBar().addTab(getActionBar().newTab().setText("Members").setTabListener(this));
+		for (String name : navItems) {
+			getActionBar().addTab(getActionBar().newTab().setText(name).setTabListener(this));
+		}
 		getActionBar().setTitle(project.getProjectTitle());
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		refreshProject();
-		
+
 	}
 
 	@Override
@@ -129,7 +130,7 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 				try {
 					p = ProjectDatabaseAdapter.getProject(params[0].getProjectID());
 				} catch (IOException e) {
-					System.out.println("failed to refresh project");
+					Log.e(TAG, "failed to refresh project");
 					e.printStackTrace();
 				}
 				return p;
@@ -343,7 +344,7 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 					ProjectDatabaseAdapter.updateProject(params[0]);
 				} catch (IOException e) {
 					Log.e("UPDATEPROJECT", "Could not update project");
-					e.printStackTrace();
+					Log.e(TAG, e.getLocalizedMessage());
 				}
 				return null;
 			}
