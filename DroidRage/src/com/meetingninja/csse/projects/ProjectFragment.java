@@ -33,6 +33,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class ProjectFragment extends Fragment {
@@ -103,7 +104,11 @@ public class ProjectFragment extends Fragment {
 		new AlertDialog.Builder(getActivity()).setTitle("Enter a title").setPositiveButton("OK", new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				createProject(title.getText().toString());
+				if (!title.getText().toString().trim().equals("")) {
+					createProject(title.getText().toString());
+				}else{
+					Toast.makeText(getActivity(), "Project Title can't be empty", Toast.LENGTH_LONG).show();
+				}
 			}}).setNegativeButton("Cancel", new OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {

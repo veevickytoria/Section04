@@ -40,6 +40,7 @@ import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.SessionManager;
@@ -128,7 +129,11 @@ public class EditNoteActivity extends Activity implements AsyncResponse<String> 
 		displayedNote.setDateCreated(NinjaDateUtils.JODA_SERVER_DATE_FORMAT.print(now));
 
 		Intent backToNotes = new Intent();
-
+		if(displayedNote.getTitle().equals("")){
+			Toast.makeText(this, "Empty Note not created", Toast.LENGTH_LONG).show();
+			setResult(RESULT_CANCELED, backToNotes);
+			finish();
+		}
 		if (isCreationMode) {
 			createNoteTask = new CreateNoteTask(this);
 			createNoteTask.execute(displayedNote);

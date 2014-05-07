@@ -27,6 +27,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.SessionManager;
@@ -54,7 +55,6 @@ public class EditGroupActivity extends Activity implements TokenListener {
 	private List<User> bothUsers = new ArrayList<User>();
 
 	private AutoCompleteAdapter autoAdapter;
-	private ArrayList<User> addedUsers = new ArrayList<User>();
 	private Dialog dlg;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -245,8 +245,8 @@ public class EditGroupActivity extends Activity implements TokenListener {
 	}
 
 	private void save() {
-		String title = titleText.getText().toString();
-		if (TextUtils.isEmpty(title)||title.equals("")) {
+		String title = titleText.getText().toString().trim();
+		if (title.equals("")) {
 			AlertDialogUtil.showErrorDialog(this, "Cannot have an empty title");
 			return;
 		}
@@ -278,11 +278,13 @@ public class EditGroupActivity extends Activity implements TokenListener {
 		}
 
 		if (added != null) {
-			addedUsers.add(added);
+			if(displayedGroup.getMembers().contains(added)){
+				Toast.makeText(this, "This User is already added to this group", Toast.LENGTH_LONG).show();
+			}else{
+				displayedGroup.addMember(added);
+				mUserAdapter.notifyDataSetChanged();
+			}
 			dlg.dismiss();
-			displayedGroup.addMembers(addedUsers);
-			addedUsers.clear();
-			mUserAdapter.notifyDataSetChanged();
 		}
 	}
 
@@ -295,7 +297,7 @@ public class EditGroupActivity extends Activity implements TokenListener {
 			removed = new SerializableUser((User) arg0);
 
 		if (removed != null) {
-			addedUsers.remove(removed);
+			System.out.println("token was removed");
 		}
 	}
 }

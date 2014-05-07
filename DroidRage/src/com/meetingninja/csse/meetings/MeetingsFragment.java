@@ -209,16 +209,15 @@ public class MeetingsFragment extends Fragment implements AsyncResponse<List<Mee
 		if (item.getGroupId() == MainActivity.DrawerLabel.MEETINGS.getPosition()) {
 			switch (item.getOrder()) {
 			case 1: // Edit
-				Toast.makeText(getActivity(), item.getTitle(),
-						Toast.LENGTH_SHORT).show();
+				Toast.makeText(getActivity(), item.getTitle(),Toast.LENGTH_SHORT).show();
 				handled = true;
 				break;
 			case 2: // Delete
 				Meeting meeting = meetingAdpt.getItem(position);
-				// mySQLiteAdapter.deleteMeeting(meeting); Need to implement
-				MeetingVolleyAdapter.deleteMeeting(meeting.getID());
-				meetings.remove(position);
-				meetingAdpt.notifyDataSetChanged();
+				deleteMeeting(meeting);
+//				MeetingVolleyAdapter.deleteMeeting(meeting.getID());
+//				meetings.remove(position);
+//				meetingAdpt.notifyDataSetChanged();
 				handled = true;
 				break;
 			default:

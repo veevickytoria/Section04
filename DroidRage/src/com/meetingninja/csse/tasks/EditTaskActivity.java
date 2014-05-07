@@ -104,7 +104,7 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 		}
 		if (!displayTask.getID().equals("-1")) {
 			// allows keyboard to hide when not editing text
-			
+
 			loadTask(displayTask.getID());
 
 			cal = Calendar.getInstance();
@@ -118,7 +118,7 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 		}else{
 			cal = Calendar.getInstance();
 			cal.setTimeZone(TimeZone.getTimeZone("UTC"));
-			
+
 			Calendar now = Calendar.getInstance();
 			now.set(Calendar.HOUR_OF_DAY, 0);
 			cal.setTimeInMillis(now.getTimeInMillis());
@@ -242,9 +242,13 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 		}
 
 		if (added != null) {
-			displayTask.addMember(added);
+			if(displayTask.getMembers().contains(added)){
+				Toast.makeText(this, "This User is already assigned to this task", Toast.LENGTH_LONG).show();
+			}else{
+				displayTask.addMember(added);
+				mUserAdapter.notifyDataSetChanged();
+			}
 			dlg.dismiss();
-			mUserAdapter.notifyDataSetChanged();
 		}
 	}
 
@@ -271,7 +275,7 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 	}
 
 	private void save() {
-		if (TextUtils.isEmpty(mTitle.getText())) {
+		if (mTitle.getText().toString().trim().equals("")) {
 			Toast.makeText(this, "Empty Task not created", Toast.LENGTH_LONG).show();
 			setResult(RESULT_CANCELED);
 			finish();
@@ -287,7 +291,7 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 				displayTask.setAssignedTo(displayTask.getMembers().get(0).getID());
 			} else {
 				displayTask.setAssignedTo(userId);
-//				displayTask.setAssignedTo("");
+				//				displayTask.setAssignedTo("");
 			}
 			// TODO: fetcher for assigned to
 			Toast.makeText(this, String.format("Saving Task"),Toast.LENGTH_SHORT).show();

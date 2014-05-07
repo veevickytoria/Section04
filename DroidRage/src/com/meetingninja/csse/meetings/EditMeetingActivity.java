@@ -94,10 +94,8 @@ public class EditMeetingActivity extends FragmentActivity implements
 			displayedMeeting = extras.getParcelable(EXTRA_MEETING);
 		}
 
-		is24 = android.text.format.DateFormat
-				.is24HourFormat(getApplicationContext());
-		timeFormat = is24 ? NinjaDateUtils.JODA_24_TIME_FORMAT
-				: NinjaDateUtils.JODA_12_TIME_FORMAT;
+		is24 = android.text.format.DateFormat.is24HourFormat(getApplicationContext());
+		timeFormat = is24 ? NinjaDateUtils.JODA_24_TIME_FORMAT: NinjaDateUtils.JODA_12_TIME_FORMAT;
 
 		getAllUsers();
 	}
@@ -131,20 +129,16 @@ public class EditMeetingActivity extends FragmentActivity implements
 			start.setTimeInMillis(displayedMeeting.getStartTimeInMillis());
 			end.setTimeInMillis(displayedMeeting.getEndTimeInMillis());
 		}
-		mFromDate.setOnClickListener(new DateClickListener(mFromDate, start,
-				end, mToDate, true, mFromTime, mToTime));
+		mFromDate.setOnClickListener(new DateClickListener(mFromDate, start,end, mToDate, true, mFromTime, mToTime));
 		mFromDate.setText(dateFormat.print(start.getTimeInMillis()));
 
-		mToDate.setOnClickListener(new DateClickListener(mToDate, end, start,
-				mFromDate, false, mToTime, mFromTime));
+		mToDate.setOnClickListener(new DateClickListener(mToDate, end, start,mFromDate, false, mToTime, mFromTime));
 		mToDate.setText(dateFormat.print(end.getTimeInMillis()));
 
-		mFromTime.setOnClickListener(new TimeClickListener(mFromTime, start,
-				this, end, mToTime, true));
+		mFromTime.setOnClickListener(new TimeClickListener(mFromTime, start,this, end, mToTime, true));
 		mFromTime.setText(timeFormat.print(start.getTimeInMillis()));
 
-		mToTime.setOnClickListener(new TimeClickListener(mToTime, end, this,
-				start, mFromTime, false));
+		mToTime.setOnClickListener(new TimeClickListener(mToTime, end, this,start, mFromTime, false));
 		mToTime.setText(timeFormat.print(end.getTimeInMillis()));
 	}
 
@@ -169,18 +163,15 @@ public class EditMeetingActivity extends FragmentActivity implements
 
 		// token listener when autocompleted
 
-				addedAdapter = new UserArrayAdapter(EditMeetingActivity.this,
-						R.layout.list_item_user, addedUsers);
+		addedAdapter = new UserArrayAdapter(EditMeetingActivity.this,R.layout.list_item_user, addedUsers);
 
 
 	}
 
 	private final View.OnClickListener mActionBarListener = new OnClickListener() {
-
 		@Override
 		public void onClick(View v) {
 			onActionBarItemSelected(v);
-
 		}
 	};
 
@@ -191,11 +182,9 @@ public class EditMeetingActivity extends FragmentActivity implements
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		// Make an Ok/Cancel ActionBar
-		View actionBarButtons = inflater.inflate(R.layout.actionbar_ok_cancel,
-				new LinearLayout(this), false);
+		View actionBarButtons = inflater.inflate(R.layout.actionbar_ok_cancel,new LinearLayout(this), false);
 
-		View cancelActionView = actionBarButtons
-				.findViewById(R.id.action_cancel);
+		View cancelActionView = actionBarButtons.findViewById(R.id.action_cancel);
 		cancelActionView.setOnClickListener(mActionBarListener);
 
 		View doneActionView = actionBarButtons.findViewById(R.id.action_done);
@@ -253,8 +242,7 @@ public class EditMeetingActivity extends FragmentActivity implements
 	public boolean handleClick(View v) {
 		switch (v.getId()) {
 		case R.id.add_agenda_button:
-			Intent toAgenda = new Intent(EditMeetingActivity.this,
-					AgendaActivity.class);
+			Intent toAgenda = new Intent(EditMeetingActivity.this,AgendaActivity.class);
 
 			// TODO: Get and set the agenda ID values
 
@@ -279,13 +267,12 @@ public class EditMeetingActivity extends FragmentActivity implements
 			setResult(RESULT_OK, msgIntent);
 			finish();
 		} else {
-			Toast.makeText(this, "Failed to save meeting", Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(this, "Failed to save meeting", Toast.LENGTH_SHORT).show();
 		}
 	}
 
 	private void save() {
-		if (TextUtils.isEmpty(mTitle.getText())) {
+		if (mTitle.getText().toString().trim().equals("")) {
 			Toast.makeText(this, "Empty meeting not created",Toast.LENGTH_SHORT).show();
 			setResult(RESULT_CANCELED);
 			finish();
@@ -352,19 +339,8 @@ public class EditMeetingActivity extends FragmentActivity implements
 		}
 	}
 
-	// private static void addUser(User user) {
-	// attendees.add(user);
-	// System.out.println("i hope it happens twice first");
-	// }
-
-	// private static void setUser(User newuser) {
-	// System.out.println("got the user: " + newuser);
-	// user = newuser;
-	// }
-
 	// TODO: abstract date click listener and timeclick listener
-	private class DateClickListener implements OnClickListener,
-			OnDateSetListener {
+	private class DateClickListener implements OnClickListener,	OnDateSetListener {
 		Button button, otherButton, timeButton, otherTimeButton;
 		Calendar cal, other;
 		boolean start;

@@ -50,6 +50,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class ViewProjectActivity extends FragmentActivity implements ActionBar.TabListener {
 	protected static final String TAG = ViewProjectActivity.class.getSimpleName();
@@ -146,9 +147,11 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 		new AlertDialog.Builder(this).setTitle("Enter a title").setPositiveButton("OK", new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				project.setProjectTitle(title.getText().toString());
-				getActionBar().setTitle(project.getProjectTitle());
-				updateProject();
+				if (!title.getText().toString().trim().equals("")) {
+					project.setProjectTitle(title.getText().toString());
+					getActionBar().setTitle(project.getProjectTitle());
+					updateProject();
+				}
 			}
 		}).setView(title).show();
 	}
@@ -205,7 +208,6 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 			public void processFinish(List<Meeting> result) {
 				selectMeeting(result);
 			}
-
 		});
 		fetcher.execute(SessionManager.getUserID());
 	}
@@ -310,6 +312,12 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 	}
 
 	protected void addNote(Note note) {
+		for(Note note1:project.getNotes()){
+			if(note1.getID().equals(note.getID())){
+				Toast.makeText(this, "This note is already added to this project", Toast.LENGTH_LONG).show();
+				return;
+			}
+		}
 		project.addNote(note);
 		setProjectTab(1);
 		updateProject();
@@ -325,7 +333,12 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 	}
 
 	protected void addMeeting(Meeting meeting) {
-		// new SQLiteMeetingAdapter(this).updateMeeting(meeting);
+		for(Meeting meeting1:project.getMeetings()){
+			if(meeting1.getID().equals(meeting.getID())){
+				Toast.makeText(this, "This meeting is already added to this project", Toast.LENGTH_LONG).show();
+				return;
+			}
+		}
 		project.addMeeting(meeting);
 		setProjectTab(0);
 		updateProject();
