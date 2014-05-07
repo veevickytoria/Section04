@@ -35,6 +35,7 @@ import objects.SerializableUser;
 import objects.Task;
 import objects.User;
 import android.net.Uri;
+import android.service.textservice.SpellCheckerService.Session;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -44,6 +45,8 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.meetingninja.csse.SessionManager;
+import com.meetingninja.csse.database.BaseDatabaseAdapter.IRequest;
 import com.meetingninja.csse.extras.JsonUtils;
 import com.meetingninja.csse.extras.NinjaTextUtils;
 import com.meetingninja.csse.extras.SleeperThread;
@@ -455,50 +458,50 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		return createUser;
 	}
 
-	public static User update(String userID, Map<String, String> key_values)throws JsonGenerationException, IOException, InterruptedException {
-		// prepare POST payload
+	public static User update(User user)throws JsonGenerationException, IOException, InterruptedException {
+		String name = getEditPayload(user.getID(), Keys.User.NAME,user.getDisplayName());
+		String title = getEditPayload(user.getID(), Keys.User.TITLE,user.getTitle());
+		String company = getEditPayload(user.getID(),Keys.User.COMPANY, user.getCompany());
+		String location = getEditPayload(user.getID(),Keys.User.LOCATION, user.getLocation());
+		String phone = getEditPayload(user.getID(),Keys.User.PHONE, user.getPhone());
+
+
+		// Get server response
+		sendSingleEdit(name);
+		sendSingleEdit(title);
+		sendSingleEdit(company);
+		sendSingleEdit(location);
+		String response = sendSingleEdit(phone);
+		final JsonNode userNode = MAPPER.readTree(response);
+		User newUser = parseUser(userNode);
+		return newUser;
+	}
+	private static String getEditPayload(String userID, String field,String value) throws IOException {
 		ByteArrayOutputStream json = new ByteArrayOutputStream();
 		// this type of print stream allows us to get a string easily
 		PrintStream ps = new PrintStream(json);
-
 		// Create a generator to build the JSON string
 		JsonGenerator jgen = JFACTORY.createGenerator(ps, JsonEncoding.UTF8);
-		for (String key : key_values.keySet()) {
-			if (key.equals(Keys.User.EMAIL)
-					&& !NinjaTextUtils.isValidEmailAddress(key_values
-							.get(Keys.User.EMAIL)))
-				throw new IOException(
-						"Error : [Update User] Incorrect email format");
-			else {
-				jgen.flush();
-				// Build JSON Object
-				jgen.writeStartObject();
-				jgen.writeStringField(Keys.User.ID, userID);
-				jgen.writeStringField("field", key);
-				jgen.writeStringField("value", key_values.get(key));
-				jgen.writeEndObject();
-				jgen.writeRaw("\f");
-			}
-		}
-
+		// Build JSON Object for Title
+		jgen.writeStartObject();
+		jgen.writeStringField(Keys.User.ID, userID);
+		jgen.writeStringField("field", field);
+		jgen.writeStringField("value", value);
+		jgen.writeEndObject();
 		jgen.close();
-		// Get JSON Object payload from print stream
 		String payload = json.toString("UTF8");
 		ps.close();
-		String[] payloads = payload.split("\f\\s*");
-
-		Thread sleeperThread = new SleeperThread(500);
-		String response = "";
-		for (String p : payloads) {
-			sleeperThread.run();
-			response = updateHelper(getBaseUri().build().toString(), p);
-		}
-
-		User parsedFromBackend = parseUser(MAPPER.readTree(response));
-		updateParseSDKUser(parsedFromBackend);
-		return parsedFromBackend;
+		return payload;
 	}
-
+	private static String sendSingleEdit(String payload) throws IOException {
+		String _url = getBaseUri().build().toString();
+		URL url = new URL(_url);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setRequestMethod(IRequest.PUT);
+		addRequestHeader(conn, false);
+		sendPostPayload(conn, payload);
+		return getServerResponse(conn);
+	}
 	public static void updateParseSDKUser(User user) {
 		ParseUser parseUser = ParseUser.getCurrentUser();
 

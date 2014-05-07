@@ -137,14 +137,12 @@ public class EditProfileActivity extends Activity {
 	}
 
 	private void saveUser() {
-		HashMap<String, String> fields = new HashMap<String, String>();
-
-		fields.put(Keys.User.NAME, displayedUser.getDisplayName());
-		fields.put(Keys.User.COMPANY, displayedUser.getCompany());
-		fields.put(Keys.User.LOCATION, displayedUser.getLocation());
-		fields.put(Keys.User.PHONE, displayedUser.getPhone());
-
-		new UpdateUserTask(fields).execute(displayedUser.getID());
+		new UpdateUserTask(){
+			@Override
+			protected void onPostExecute(User user) {
+				setUser(user);
+			}
+		}.execute(displayedUser);
 	}
 
 	private void setupViews() {

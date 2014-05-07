@@ -19,25 +19,23 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import objects.User;
+
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
 
-public class UpdateUserTask extends AsyncTask<String, Void, Void> {
+public class UpdateUserTask extends AsyncTask<User, Void, User> {
 
 	private static final String TAG = UpdateUserTask.class.getSimpleName();
-	private Map<String, String> key_values = new LinkedHashMap<String, String>();
-
-	public UpdateUserTask(Map<String, String> values) {
-		this.key_values = values;
-	}
 
 	@Override
-	protected Void doInBackground(String... params) {
+	protected User doInBackground(User... params) {
+		User u = new User();
 		try {
-			UserDatabaseAdapter.update(params[0], key_values);
+			u=UserDatabaseAdapter.update(params[0]);
 		} catch (JsonGenerationException e) {
 			Log.e(TAG, e.getLocalizedMessage());
 		} catch (IOException e) {
@@ -45,7 +43,11 @@ public class UpdateUserTask extends AsyncTask<String, Void, Void> {
 		} catch (InterruptedException e) {
 			Log.e(TAG, e.getLocalizedMessage());
 		}
-		return null;
+		return u;
+	}
+	@Override
+	protected void onPostExecute(User user) {
+		super.onPostExecute(user);
 	}
 
 }

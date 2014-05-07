@@ -165,7 +165,6 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 		addRequestHeader(conn, false);
 		sendPostPayload(conn, payload);
 		return getServerResponse(conn);
-
 	}
 
 	private static String getEditPayload(String taskID, String field,String value) throws IOException {
