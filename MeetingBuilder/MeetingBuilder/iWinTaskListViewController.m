@@ -77,36 +77,29 @@ NSString* const DELETE_TASK_MESSAGE = @"Are you sure you want to delete this tas
 {
     NSString *url = [NSString stringWithFormat:USER_TASK_URL, DATABASE_URL,self.userID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:30];
-    [urlRequest setHTTPMethod:@"GET"];
-    NSURLResponse * response = nil;
-    NSError * error = nil;
-    NSData * data = [NSURLConnection sendSynchronousRequest:urlRequest
-                                          returningResponse:&response
-                                                      error:&error];
+    NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
     NSArray *jsonArray;
-    if (error)
+    
+    if (!deserializedDictionary)
     {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_MESSAGE message:TASK_NOT_FOUND_MESSAGE delegate:self cancelButtonTitle:OK_BUTTON otherButtonTitles: nil];
         [alert show];
     }
     else
     {
-        NSError *jsonParsingError = nil;
-        NSDictionary *deserializedDictionary = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers|NSJSONReadingAllowFragments error:&jsonParsingError];
         jsonArray = [deserializedDictionary objectForKey:TASKS_KEY];
-    }
-    if (jsonArray.count > 0)
-    {
-        for (NSDictionary* tasks in jsonArray)
+        if (jsonArray.count > 0)
         {
-            NSString *relationship = [tasks objectForKey:TYPE_KEY];
-            if ([relationship isEqual:ASSIGEND_TO_STRING]){
-                [self.itemList addObject:[tasks objectForKey:TITLE_KEY]];
-                [self.taskIDs addObject:[tasks objectForKey:ID_KEY]];
+            for (NSDictionary* tasks in jsonArray)
+            {
+                NSString *relationship = [tasks objectForKey:TYPE_KEY];
+                if ([relationship isEqual:ASSIGEND_TO_STRING]){
+                    [self.itemList addObject:[tasks objectForKey:TITLE_KEY]];
+                    [self.taskIDs addObject:[tasks objectForKey:ID_KEY]];
+                }
             }
+            [self populateTaskDetails];
         }
-        [self populateTaskDetails];
     }
     
 }
