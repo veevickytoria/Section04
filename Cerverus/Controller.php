@@ -12,23 +12,15 @@ require "phar://neo4jphp.phar";
 
 require_once "RequestHandlers\Contact.php";
 require_once "RequestHandlers\Note.php";
-require_once "RequestHandlers\Meeting.php";
-require_once "RequestHandlers\Group.php";
-require_once "RequestHandlers\Project.php";
-
 
 class Controller {
     
-    /**
-     * This method did not turn out as nicely as we would have liked. We were
-     * planning on using $class->$type($id) or $class->$type($postContent), but
-     * we could not quite get it working, so instead we have the following ugly,
-     * but functional, case statement.
-     * 
-     */
-    public static function parse($class, $id, $type, $postContent){    
-        $aClient = new Client();        
-        $handler = NULL;        
+    public static function parse($class, $id, $type, $postContent){
+    
+        $aClient = new Client();
+		$c = '\\Everyman\\Neo4j\\'.$class;
+        $handler= new $c($aClient);
+        /*
         switch ($class) {
             case "Note":
                 $handler = new Note($aClient);
@@ -37,9 +29,8 @@ class Controller {
                 $handler = new Contact($aClient);
                 break;
             case "Meeting":        
-                $handler = new Meeting($aClient);
-                //echo json_encode("This call is not implemented");
-                break;
+                echo json_encode("This call is not implemented");
+                return;
             case "User":        
                 echo json_encode("This call is not implemented");
                 return;
@@ -49,13 +40,12 @@ class Controller {
             case "Comment":        
                 echo json_encode("This call is not implemented");
                 return;
-            case "Group":
-                $handler = new Group($aClient);
-                //echo json_encode("This call is not implemented");
-                break;
-            case "Project":
-                $handler = new Project($aClient);
-                break;
+            case "Group":        
+                echo json_encode("This call is not implemented");
+                return;
+            case "Project":        
+                echo json_encode("This call is not implemented");
+                return;
             case "Notification":        
                 echo json_encode("This call is not implemented");
                 return;
@@ -63,14 +53,9 @@ class Controller {
                 echo json_encode("This call is not implemented");
                 return;
         }
-        
-        if ($type == "GET" || $type == "DELETE") {
-            if ($id == NULL){
-                echo json_encode("ERROR: ID cannot be null!");
-                return;
-            }
-            $requestResult =  $handler->$type($id);
-        }
+        */
+        if ($type == "GET" || $type == "DELETE")
+            {$requestResult =  $handler->$type($id);}
         else {
             $requestResult =  $handler->$type((array)$postContent);
         }
