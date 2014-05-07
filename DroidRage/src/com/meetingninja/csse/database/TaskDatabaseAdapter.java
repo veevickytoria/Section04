@@ -139,18 +139,12 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 	}
 
 	public static Task editTask(Task task) throws IOException {
-		String titlePayload = getEditPayload(task.getID(), Keys.Task.TITLE,
-				task.getTitle());
-		String descPayload = getEditPayload(task.getID(), Keys.Task.DESC,
-				task.getDescription());
-		String isCompPayload = getEditPayload(task.getID(),
-				Keys.Task.COMPLETED, Boolean.toString(task.getIsCompleted()));
-		String deadlinePayload = getEditPayload(task.getID(),
-				Keys.Task.DEADLINE, task.getEndTime());
-		String compCritPayload = getEditPayload(task.getID(),
-				Keys.Task.CRITERIA, task.getCompletionCriteria());
-		String assignedToPayload = getEditPayload(task.getID(),
-				Keys.Task.ASSIGNED_TO, task.getAssignedTo());
+		String titlePayload = getEditPayload(task.getID(), Keys.Task.TITLE,task.getTitle());
+		String descPayload = getEditPayload(task.getID(), Keys.Task.DESC,task.getDescription());
+		String isCompPayload = getEditPayload(task.getID(),Keys.Task.COMPLETED, Boolean.toString(task.getIsCompleted()));
+		String deadlinePayload = getEditPayload(task.getID(),Keys.Task.DEADLINE, task.getEndTime());
+		String compCritPayload = getEditPayload(task.getID(),Keys.Task.CRITERIA, task.getCompletionCriteria());
+		String assignedToPayload = getEditPayload(task.getID(),Keys.Task.ASSIGNED_TO, task.getAssignedTo());
 		// Get server response
 		sendSingleEdit(titlePayload);
 		sendSingleEdit(descPayload);
@@ -174,8 +168,7 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 
 	}
 
-	private static String getEditPayload(String taskID, String field,
-			String value) throws IOException {
+	private static String getEditPayload(String taskID, String field,String value) throws IOException {
 		ByteArrayOutputStream json = new ByteArrayOutputStream();
 		// this type of print stream allows us to get a string easily
 		PrintStream ps = new PrintStream(json);

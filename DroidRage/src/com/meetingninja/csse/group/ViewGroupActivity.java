@@ -36,19 +36,16 @@ public class ViewGroupActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_view_group);
 		Bundle data = getIntent().getExtras();
-		if (data != null)
+		if (data != null){
 			group = data.getParcelable(Keys.Group.PARCEL);
-		else
+		}else{
 			Log.e(TAG, "Error: Unable to get group from parcel");
-
+		}
 		titleText = (TextView) findViewById(R.id.group_view_title);
-
 		mListView = (EnhancedListView) findViewById(R.id.group_list);
 		setGroup();
 		for (int k = 0; k < group.getMembers().size(); k++) {
-
-			if (group.getMembers().get(k).getDisplayName() == null
-					|| group.getMembers().get(k).getDisplayName().isEmpty()) {
+			if (group.getMembers().get(k).getDisplayName() == null|| group.getMembers().get(k).getDisplayName().isEmpty()) {
 				loadUser(group.getMembers().get(k).getID());
 				group.getMembers().remove(k);
 				k--;
@@ -56,18 +53,13 @@ public class ViewGroupActivity extends Activity {
 		}
 
 		mListView.setOnItemClickListener(new OnItemClickListener() {
-
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View v, int position,
-					long id) {
+			public void onItemClick(AdapterView<?> arg0, View v, int position,long id) {
 				User clicked = mUserAdapter.getItem(position);
-				Intent profileIntent = new Intent(v.getContext(),
-						ProfileActivity.class);
+				Intent profileIntent = new Intent(v.getContext(),ProfileActivity.class);
 				profileIntent.putExtra(Keys.User.PARCEL, new UserParcel(clicked));
 				startActivity(profileIntent);
-
 			}
-
 		});
 	}
 
@@ -81,16 +73,20 @@ public class ViewGroupActivity extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-
 		switch (item.getItemId()) {
 		case R.id.edit_item_group:
 			editGroup();
 			return true;
 		case R.id.delete_item_group:
-			// TaskDeleter deleter = new TaskDeleter();
-			// deleter.deleteTask(displayedTask.getID());
-			setResult(RESULT_OK);
-			finish();
+			new AsyncGroupDeleteTask(){
+				@Override
+				protected void onPostExecute(Boolean success) {
+					if(success){
+						setResult(RESULT_OK);
+						finish();
+					}
+				}
+			}.execute(group.getID());
 		case android.R.id.home:
 			setResult(resultCode);
 			finish();
@@ -106,17 +102,28 @@ public class ViewGroupActivity extends Activity {
 		if (resultCode == Activity.RESULT_OK) {
 			if (requestCode == 8) {
 				group = data.getParcelableExtra(Keys.Group.PARCEL);
+				System.out.println("test the id in view mode");
+				System.out.println(group.getID());
 				GroupUpdaterTask updater = new GroupUpdaterTask();
 				updater.updateGroup(group);
 				setGroup();
 			}
 		}
 	}
+//	private void deleteGroup(){
+//		new AsyncGroupDeleteTask(){
+//			@Override
+//			protected void onPostExecute(Boolean success) {
+//				if(success){
+//					
+//				}
+//			}
+//		}.execute(group.getID());
+//	}
 
 	private void setGroup() {
 		titleText.setText(group.getGroupTitle());
-		mUserAdapter = new UserArrayAdapter(this, R.layout.list_item_user,
-				group.getMembers());
+		mUserAdapter = new UserArrayAdapter(this, R.layout.list_item_user,group.getMembers());
 		mListView.setAdapter(mUserAdapter);
 	}
 

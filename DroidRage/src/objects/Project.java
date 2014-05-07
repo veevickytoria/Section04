@@ -132,8 +132,8 @@ public class Project implements Comparable<Project>, Parcelable{
 		}
 		dest.writeList(noteList);
 		ArrayList<UserParcel> userList = new ArrayList<UserParcel>();
-		for (User use:getMembers()){
-			userList.add(new UserParcel(use));
+		for (User user:getMembers()){
+			userList.add(new UserParcel(user));
 		}
 		dest.writeList(userList);
 
@@ -151,7 +151,6 @@ public class Project implements Comparable<Project>, Parcelable{
 			notes.add(dataFac.getNote());
 		}
 		ArrayList<User> userParcelList = in.readArrayList(User.class.getClassLoader());
-		
 		for (int i=0;i<userParcelList.size();i++){
 			Bundle extras = new Bundle();
 			extras.putParcelable(Keys.User.PARCEL, (Parcelable) userParcelList.get(i));

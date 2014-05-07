@@ -59,8 +59,7 @@ public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
 		return parseGroup(groupNode, new Group());
 	}
 
-	public static Group createGroup(Group g) throws IOException,
-			MalformedURLException {
+	public static Group createGroup(Group g) throws IOException,MalformedURLException {
 		// Server URL setup
 		String _url = getBaseUri().build().toString();
 
@@ -83,6 +82,8 @@ public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
 		jgen.writeStringField(Keys.Group.TITLE, g.getGroupTitle());
 		jgen.writeArrayFieldStart(Keys.Group.MEMBERS);
 		for (User member : g.getMembers()) {
+			System.out.println("in backend call");
+			System.out.println(member);
 			jgen.writeStartObject();
 			jgen.writeStringField(Keys.User.ID, member.getID());
 			jgen.writeEndObject();
@@ -146,7 +147,6 @@ public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
 			jgen.writeStartObject();
 			jgen.writeStringField(Keys.User.ID, member.getID());
 			jgen.writeEndObject();
-
 		}
 		jgen.writeEndArray();
 		jgen.writeEndObject();
@@ -154,10 +154,9 @@ public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
 		String payloadMembers = json.toString("UTF8");
 		ps.close();
 		// Establish connection
-		sendSingleEdit(payloadTitle);
-		String response = sendSingleEdit(payloadMembers);
+		sendSingleEdit(payloadMembers);
+		String response = sendSingleEdit(payloadTitle);
 		JsonNode groupNode = MAPPER.readTree(response);
-
 		return parseGroup(groupNode, new Group());
 	}
 
@@ -179,7 +178,6 @@ public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
 		}
 		conn.disconnect();
 		return result;
-
 	}
 
 	private static String sendSingleEdit(String payload) throws IOException {
@@ -190,25 +188,21 @@ public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
 		addRequestHeader(conn, false);
 		sendPostPayload(conn, payload);
 		return getServerResponse(conn);
-
 	}
 
 	public static Group parseGroup(JsonNode groupNode, Group g) {
 		// Group g = new Group();
 		String groupID = groupNode.get(Keys.Group.ID).asText();
-		if (groupID != null) {
-			g.setID(groupID);
-			g.setGroupTitle(groupNode.get(Keys.Group.TITLE).asText());
-			JsonNode members = groupNode.get(Keys.Group.MEMBERS);
-			if (members != null && members.isArray()) {
-				for (final JsonNode memberNode : members) {
-					User user = new User();
-					user.setID(memberNode.get(Keys.User.ID).asText());
-					g.addMember(user);
-				}
+		g.setID(groupID);
+		g.setGroupTitle(groupNode.get(Keys.Group.TITLE).asText());
+		JsonNode members = groupNode.get(Keys.Group.MEMBERS);
+		if (members != null && members.isArray()) {
+			for (final JsonNode memberNode : members) {
+				User user = new User();
+				user.setID(memberNode.get(Keys.User.ID).asText());
+				g.addMember(user);
 			}
 		}
-
 		return g;
 	}
 

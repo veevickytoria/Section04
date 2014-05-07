@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import objects.Group;
+import objects.User;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,13 +23,11 @@ import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.extras.ConnectivityUtils;
 
-public class GroupsFragment extends Fragment implements
-		AsyncResponse<List<Group>> {
+public class GroupsFragment extends Fragment implements AsyncResponse<List<Group>> {
 	private ListView groupsList;
 	private static List<Group> groups = new ArrayList<Group>();;
 	private GroupItemAdapter groupAdpt;
 	private GroupFetcherTask fetcher;
-	private GroupCreateTask creator;
 
 	public GroupsFragment() {
 		// Empty
@@ -44,35 +43,28 @@ public class GroupsFragment extends Fragment implements
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		super.onCreateView(inflater, container, savedInstanceState);
 		View v = inflater.inflate(R.layout.fragment_groups, container, false);
 		setHasOptionsMenu(true);
 
-		creator = new GroupCreateTask(this);
-
 		SessionManager.getInstance();
 		groupsList = (ListView) v.findViewById(R.id.groupsList);
-		groupAdpt = new GroupItemAdapter(getActivity(),
-				R.layout.list_item_group, groups);
+		groupAdpt = new GroupItemAdapter(getActivity(),R.layout.list_item_group, groups);
 		groupsList.setAdapter(groupAdpt);
 
 		fetchGroups();
 
 		groupAdpt.notifyDataSetChanged();
-		groupsList
-				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-					@Override
-					public void onItemClick(AdapterView<?> parentAdapter,
-							View v, int position, long id) {
-						Group clicked = groupAdpt.getItem(position);
-						viewGroup(clicked);
-					}
-				});
+		groupsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parentAdapter,View v, int position, long id) {
+				Group clicked = groupAdpt.getItem(position);
+				viewGroup(clicked);
+			}
+		});
 		registerForContextMenu(groupsList);
 		return v;
 	}
@@ -101,27 +93,27 @@ public class GroupsFragment extends Fragment implements
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		
 		if (resultCode == Activity.RESULT_OK) {
-
 			if (requestCode == 7) {
 				Group g = data.getParcelableExtra(Keys.Group.PARCEL);
 				groups.add(g);
+				GroupCreateTask creator = new GroupCreateTask(this);
 				creator.createGroup(g);
-				// TODO: implement DB calls
 			} else if (requestCode == 8) {
 				fetchGroups();
 			}
 			groupAdpt.notifyDataSetChanged();
-
+			return;
 		}
+		fetchGroups();
 	}
 
 	public void fetchGroups() {
 		if (ConnectivityUtils.isConnected(getActivity()) && isAdded()) {
 
 			fetcher = new GroupFetcherTask(this);
-			fetcher.execute(SessionManager.getUserID()); // calls
-															// processFinish()
+			fetcher.execute(SessionManager.getUserID()); // calls processFinish()
 		}
 	}
 
@@ -160,9 +152,7 @@ public class GroupsFragment extends Fragment implements
 	public void processFinish(List<Group> result) {
 		groups.clear();
 		groupAdpt.clear();
-
 		groups.addAll(result);
-
 		groupAdpt.notifyDataSetChanged();
 	}
 

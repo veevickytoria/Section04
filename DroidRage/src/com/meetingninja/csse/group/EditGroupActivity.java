@@ -56,10 +56,6 @@ public class EditGroupActivity extends Activity implements TokenListener {
 	private ArrayList<User> addedUsers = new ArrayList<User>();
 	private Dialog dlg;
 
-	// public static EditGroupActivity newInstance(Bundle args){
-	// EditGroupActivity act = new EditGroupActivity();
-	// act.set
-	// }
 	private void keyboardCanHide() {
 		findViewById(R.id.group_edit_main_container).setOnTouchListener(new OnTouchListener() {
 			@Override
@@ -113,7 +109,6 @@ public class EditGroupActivity extends Activity implements TokenListener {
 
 	private void clickingAndViewingAUser() {
 		mListView.setOnItemClickListener(new OnItemClickListener() {
-
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View v, int position,long id) {
 				User clicked = mUserAdapter.getItem(position);
@@ -133,11 +128,11 @@ public class EditGroupActivity extends Activity implements TokenListener {
 		setupActionBar();
 
 		Bundle data = getIntent().getExtras();
-		if (data != null)
+		if (data != null){
 			displayedGroup = data.getParcelable(Keys.Group.PARCEL);
-		else
+		}else{
 			Log.e(TAG, "Error: Unable to get group from parcel");
-
+		}
 		setupTitle();
 		keyboardCanHide();
 		displayMembers();
@@ -188,16 +183,6 @@ public class EditGroupActivity extends Activity implements TokenListener {
 		return true;
 	}
 
-	// private void addContacts(List<Contact> allContacts){
-	// for(Contact c : allContacts){
-	// bothUsers.add(c.getContact());
-	// allUsers.remove(c.getContact());
-	// }
-	// //TODO: check if above code is useful?
-	// //TODO: add current user to list?
-	// bothUsers.addAll(allUsers);
-	// }
-
 	private void hideKeyboard() {
 		InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
@@ -215,11 +200,9 @@ public class EditGroupActivity extends Activity implements TokenListener {
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		// Make an Ok/Cancel ActionBar
-		View actionBarButtons = inflater.inflate(R.layout.actionbar_ok_cancel,
-				new LinearLayout(this), false);
+		View actionBarButtons = inflater.inflate(R.layout.actionbar_ok_cancel,new LinearLayout(this), false);
 
-		View cancelActionView = actionBarButtons
-				.findViewById(R.id.action_cancel);
+		View cancelActionView = actionBarButtons.findViewById(R.id.action_cancel);
 		cancelActionView.setOnClickListener(gActionBarListener);
 
 		View doneActionView = actionBarButtons.findViewById(R.id.action_done);
@@ -254,7 +237,7 @@ public class EditGroupActivity extends Activity implements TokenListener {
 
 	private void save() {
 		String title = titleText.getText().toString();
-		if (TextUtils.isEmpty(title)) {
+		if (TextUtils.isEmpty(title)||title.equals("")) {
 			AlertDialogUtil.showErrorDialog(this, "Cannot have an empty title");
 			return;
 		}
