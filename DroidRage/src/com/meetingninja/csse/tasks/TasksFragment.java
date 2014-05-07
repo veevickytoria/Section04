@@ -153,6 +153,7 @@ public class TasksFragment extends Fragment implements AsyncResponse<List<Task>>
 			Intent editIntent = new Intent(getActivity(), EditTaskActivity.class);
 			Task newTask = new Task();
 			editIntent.putExtra(Keys.Task.PARCEL, newTask);
+			newTask.setID(-1);
 			startActivityForResult(editIntent, 7);
 			return true;
 		default:

@@ -102,7 +102,7 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 		if (extras != null) {
 			displayTask = extras.getParcelable(EXTRA_TASK);
 		}
-		if (displayTask != null) {
+		if (!displayTask.getID().equals("-1")) {
 			// allows keyboard to hide when not editing text
 			
 			loadTask(displayTask.getID());
@@ -112,8 +112,21 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 			cal.setTimeInMillis(displayTask.getEndTimeInMillis());
 
 			mDeadlineBtn.setOnClickListener(new DateClickListener(mDeadlineBtn,cal, this));
+			setUpListView();
 			// assignedDateLabel.setText(dateFormat.format(assignedDate));
 			// createdDateLabel.setText(dateFormat.format(createdDate));
+		}else{
+			cal = Calendar.getInstance();
+			cal.setTimeZone(TimeZone.getTimeZone("UTC"));
+			
+			Calendar now = Calendar.getInstance();
+			now.set(Calendar.HOUR_OF_DAY, 0);
+			cal.setTimeInMillis(now.getTimeInMillis());
+			mDeadlineBtn.setOnClickListener(new DateClickListener(mDeadlineBtn,cal, this));
+			setUpListView();
+			displayTask.setEndTime(now.getTimeInMillis());
+			displayTask.setDateCreated(String.valueOf(now.getTimeInMillis()));
+			setTask();
 		}
 	}
 	private void loadTask(String id){
@@ -140,8 +153,6 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 		assignedUsers.addAll(displayTask.getMembers());
 
 		setCompletedViews();
-		// TODO: use string.xml
-
 	}
 
 	private void setCompletedViews() {
