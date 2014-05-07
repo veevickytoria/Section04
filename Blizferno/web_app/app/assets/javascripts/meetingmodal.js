@@ -107,7 +107,7 @@ function NewMeetingModal(documentID, blankID){
 	newModal.executeAction = function(){
 		var invalid = newModal.validate();
 		if(!invalid){
-			alert();
+			
 			var form = parentConvertToJSON.call(this, document.getElementById("body"))
 			
 			var postUid = getCookie('userID');
@@ -118,48 +118,48 @@ function NewMeetingModal(documentID, blankID){
 			for (var i = members.length - 1; i >= 0; i--) {
 				postMembers.push({"userID":members[i]});
 			}
-				var splitTime = form.timeStart.split(":");
-				var splitDate = form.dateStart.split("-");
-				var startDateTime = new Date(splitDate[0], splitDate[1]-1, splitDate[2], splitTime[0], splitTime[1]);
-				startDateTime = startDateTime.getTime()/1000.0;
-				var postDatetime = startDateTime;
+			var splitTime = form.timeStart.split(":");
+			var splitDate = form.dateStart.split("-");
+			var startDateTime = new Date(splitDate[0], splitDate[1]-1, splitDate[2], splitTime[0], splitTime[1]);
+			startDateTime = startDateTime.getTime()/1000.0;
+			var postDatetime = startDateTime;
 
-				splitTime = form.timeEnd.split(":");
-				splitDate = form.dateEnd.split("-");
-				var endDateTime = new Date(splitDate[0], splitDate[1]-1, splitDate[2], splitTime[0], splitTime[1]);
-				endDateTime = endDateTime.getTime()/1000.0;
-				var postEndDatetime = endDateTime;
-				var postDescription = form.description;
-				var postLocation = form.location;
+			splitTime = form.timeEnd.split(":");
+			splitDate = form.dateEnd.split("-");
+			var endDateTime = new Date(splitDate[0], splitDate[1]-1, splitDate[2], splitTime[0], splitTime[1]);
+			endDateTime = endDateTime.getTime()/1000.0;
+			var postEndDatetime = endDateTime;
+			var postDescription = form.description;
+			var postLocation = form.location;
 
-				var postData = JSON.stringify({
-					"userID":postUid,
-					"title":postTitle,
-					"location":postLocation,
-					"datetime":postDatetime,
-					"endDatetime":postEndDatetime,
-					"description":postDescription,
-					"attendance":postMembers
-				});
+			var postData = JSON.stringify({
+				"userID":postUid,
+				"title":postTitle,
+				"location":postLocation,
+				"datetime":postDatetime,
+				"endDatetime":postEndDatetime,
+				"description":postDescription,
+				"attendance":postMembers
+			});
 
 
 
-				$.ajax({
-					type: 'POST',
-					url: 'http://csse371-04.csse.rose-hulman.edu/Meeting/',
-					data: postData,
-					success:function(data){
-						parentClose.call(this);
-						window.location.reload(true);
-					}
-				});
+			$.ajax({
+				type: 'POST',
+				url: 'http://csse371-04.csse.rose-hulman.edu/Meeting/',
+				data: postData,
+				success:function(data){
+					parentClose.call(this);
+					window.location.reload(true);
+				}
+			});
 
 			
-			}
 		}
+	}
 
 
-newModal.validate = function(){
+	newModal.validate = function(){
 	var invalidFields = false;
 
 	if(document.getElementById("title") != null && document.getElementById("titleR") != null){
@@ -184,20 +184,17 @@ newModal.validate = function(){
 	}
 
 	return invalidFields
-}
+	}
 
-newModal.getMembers = function(id){
+	newModal.getMembers = function(id){
 	var newMembers = [];
 	$( '#' + id + ' :selected' ).each( function( i, selected ) {
 		newMembers[i] = $( selected ).val();
 	});
 	return newMembers;
-}
-		
-		return newModal
-	
-}
+	}
 
+	return newModal}
 
 
 
@@ -298,9 +295,21 @@ function ViewMeetingModal(documentID, meetingID){
 		parentAddBreak.call(this, "body");
 
 		//fix get time for parsing
-		//var date = epochToDate(meetingArray["endDatetime"]);
 
-		//parentAddText.call(this, date,"endDatetime","viewData", "body");
+		parentAddText.call(this, "Start Time:","","viewLabel", "body");
+		var date = epochToDate(meetingArray["datetime"]);
+		var time = epochToTime(meetingArray["datetime"]);
+		parentAddText.call(this, date,"datetime","viewData", "body");
+		parentAddText.call(this, time,"datetime","viewData", "body");
+		parentAddBreak.call(this, "body");
+
+		parentAddText.call(this, "End Time:","","viewLabel", "body");
+		date = epochToDate(meetingArray["endDatetime"]);
+		time = epochToTime(meetingArray["endDatetime"]);
+		parentAddText.call(this, date,"endDatetime","viewData", "body");
+		parentAddText.call(this, time,"endDatetime","viewData", "body");
+		parentAddBreak.call(this, "body");
+
 
 		parentAddText.call(this, "Description:", "", "viewLabel", "body");
 		parentAddText.call(this, meetingArray["description"],"description","viewData", "body");
@@ -326,8 +335,16 @@ function ViewMeetingModal(documentID, meetingID){
 		elementClose.innerHTML = "Close";
 		elementClose.onclick = viewModal.close;
 
+		// ActionButton
+		var elementSubmit = document.createElement("input");
+		elementSubmit.setAttribute("type", "button");
+		elementSubmit.onclick = function(){self.executeAction(users);};
+		elementSubmit.setAttribute("class", "btn btn-primary");
+		elementSubmit.value = "Edit";
+
 		var doc = document.getElementById("footer");
 		doc.appendChild(elementClose);
+		doc.appendChild(elementSubmit);
 	}
 
 	viewModal.close = function(){
@@ -340,13 +357,11 @@ function ViewMeetingModal(documentID, meetingID){
 		var ModalFactory = abstractModalFactory();
 		var modal = ModalFactory.createModal(EditMeetingModal, "MeetingModal", meetingID);
 
-		modal.showModal(users);
+  		modal.showModal(users);
 	}
 
 	return viewModal
 }
-
-
 
 
 function EditMeetingModal(documentID, meetingID){
@@ -397,6 +412,7 @@ function EditMeetingModal(documentID, meetingID){
 		parentAddText.call(this, "Start Date:", "", "", "body");
 		parentAddElement.call(this, "date", "", "dateStart", "dateStart", "form-control formDate", "body");
 		parentAddText.call(this, "Required", "dateStartR", "required", "body");
+
 
 		parentAddText.call(this, "Start Time:", "", "", "body");
 		parentAddElement.call(this, "time", "", "timeStart", "timeStart", "form-control formTime", "body");
@@ -464,6 +480,21 @@ function EditMeetingModal(documentID, meetingID){
 		document.getElementById("title").value = meetingArray["title"];
 		document.getElementById("location").value = meetingArray["location"];
 		//figure out how to do this for datetime
+
+		var date = epochToDate(meetingArray["datetime"]);
+		var time = epochToTime(meetingArray["datetime"]);
+
+		document.getElementById("dateStart").value = date;
+		document.getElementById("timeStart").value = time;
+
+		date = epochToDate(meetingArray["endDatetime"]);
+		time = epochToTime(meetingArray["endDatetime"]);
+
+		document.getElementById("dateEnd").value = date;
+		document.getElementById("timeEnd").value = time;
+
+
+
 		document.getElementById("description").value = meetingArray["description"];
 
 		parentPopulateSelect.call(this,[], "name", "mid", currentMembs, document.getElementById("members"));
@@ -502,8 +533,11 @@ function EditMeetingModal(documentID, meetingID){
 	editModal.executeAction = function(users){
 		var invalid = editModal.validate();
 		if(!invalid){
+
+
 			var form = parentConvertToJSON.call(this, document.getElementById("body"))
 			
+			var postUid = getCookie('userID');
 			var postTitle = form.title;
 			var members = editModal.getMembers('members');
 
@@ -513,11 +547,48 @@ function EditMeetingModal(documentID, meetingID){
 				postMembers.push({"userID":members[i]});
 			};
 
-			//set up the data for the call
+			var splitTime = form.timeStart.split(":");
+			var splitDate = form.dateStart.split("-");
+			var startDateTime = new Date(splitDate[0], splitDate[1]-1, splitDate[2], splitTime[0], splitTime[1]);
+			startDateTime = startDateTime.getTime()/1000.0;
+			var postDatetime = startDateTime;
+
+			splitTime = form.timeEnd.split(":");
+			splitDate = form.dateEnd.split("-");
+			var endDateTime = new Date(splitDate[0], splitDate[1]-1, splitDate[2], splitTime[0], splitTime[1]);
+			endDateTime = endDateTime.getTime()/1000.0;
+			var postEndDatetime = endDateTime;
+			var postDescription = form.description;
+			var postLocation = form.location;
+
 			var updateTitle = JSON.stringify({
 				"meetingID":meetingID,
-				"field":"meetingTitle",
+				"field":"title",
 				"value":postTitle
+			});
+
+			var updateLocation = JSON.stringify({
+				"meetingID":meetingID,
+				"field":"location",
+				"value":postLocation
+			});
+
+			var updateDatetime = JSON.stringify({
+				"meetingID":meetingID,
+				"field":"datetime",
+				"value":postDatetime
+			});
+
+			var updateEndDatetime = JSON.stringify({
+				"meetingID":meetingID,
+				"field":"endDatetime",
+				"value":postEndDatetime
+			});
+
+			var updateDescription = JSON.stringify({
+				"meetingID":meetingID,
+				"field":"description",
+				"value":postDescription
 			});
 
 			var updateMembers = JSON.stringify({
@@ -537,6 +608,47 @@ function EditMeetingModal(documentID, meetingID){
 			})
 
 			$.ajax({
+				type: 'PUT',
+				url: 'http://csse371-04.csse.rose-hulman.edu/Meeting/',
+				data: updateLocation,
+				success:function(data){
+				// do nothing
+				},
+				async: false
+			})
+
+			$.ajax({
+				type: 'PUT',
+				url: 'http://csse371-04.csse.rose-hulman.edu/Meeting/',
+				data: updateDatetime,
+				success:function(data){
+				// do nothing
+				},
+				async: false
+			})
+
+			$.ajax({
+				type: 'PUT',
+				url: 'http://csse371-04.csse.rose-hulman.edu/Meeting/',
+				data: updateEndDatetime,
+				success:function(data){
+				// do nothing
+				},
+				async: false
+			})
+
+			$.ajax({
+				type: 'PUT',
+				url: 'http://csse371-04.csse.rose-hulman.edu/Meeting/',
+				data: updateDescription,
+				success:function(data){
+				// do nothing
+				},
+				async: false
+			})
+
+			//if there is an editing error, this is probably where it is
+			$.ajax({
 			type: 'PUT',
 				url: 'http://csse371-04.csse.rose-hulman.edu/Meeting/',
 				data: updateMembers,
@@ -549,6 +661,8 @@ function EditMeetingModal(documentID, meetingID){
 			  		modal.showModal(users);
 				}
 			});
+
+
 		}
 	}
 
