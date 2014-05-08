@@ -1,6 +1,7 @@
 package com.meetingninja.csse.group;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import objects.Contact;
@@ -36,6 +37,7 @@ import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.volley.UserVolleyAdapter;
 import com.meetingninja.csse.extras.AlertDialogUtil;
 import com.meetingninja.csse.extras.ContactTokenTextView;
+import com.meetingninja.csse.extras.NinjaTextUtils;
 import com.meetingninja.csse.user.AutoCompleteAdapter;
 import com.meetingninja.csse.user.ProfileActivity;
 import com.meetingninja.csse.user.UserArrayAdapter;
@@ -76,12 +78,12 @@ public class EditGroupActivity extends Activity implements TokenListener {
 		clickingAndViewingAUser();
 		enableSwiping();
 		fetchUsers();
-		fetchContacts();
+//		fetchContacts();
 		bothUsers.addAll(allUsers);
 	}
 	public void onConfigurationChanged(Configuration newConfig){
 		super.onConfigurationChanged(newConfig);
-		
+
 	}
 	private void keyboardCanHide() {
 		findViewById(R.id.group_edit_main_container).setOnTouchListener(new OnTouchListener() {
@@ -92,11 +94,12 @@ public class EditGroupActivity extends Activity implements TokenListener {
 			}
 		});
 	}
-	
+
 	private void displayMembers() {
-		mUserAdapter = new UserArrayAdapter(this, R.layout.list_item_user,displayedGroup.getMembers());
+		mUserAdapter = new UserArrayAdapter(this, R.layout.list_item_user_reversed,displayedGroup.getMembers());
 		mListView = (EnhancedListView) findViewById(R.id.group_list);
 		mListView.setAdapter(mUserAdapter);
+
 		for (int k = 0; k < displayedGroup.getMembers().size(); k++) {
 			User kthUser = displayedGroup.getMembers().get(k);
 			if (TextUtils.isEmpty(kthUser.getDisplayName())) {
@@ -111,6 +114,11 @@ public class EditGroupActivity extends Activity implements TokenListener {
 		titleText = (EditText) findViewById(R.id.group_edit_title);
 		titleText.setText(displayedGroup.getGroupTitle());
 	}
+
+	/**
+	 * Click event for button
+	 * @param view
+	 */
 	public void addMember(View view) {
 		dlg = new Dialog(this);
 		dlg.setTitle("Search by name or email:");
@@ -169,14 +177,14 @@ public class EditGroupActivity extends Activity implements TokenListener {
 		});
 	}
 
-	private void fetchContacts() {
-		new GetContactsTask(new AsyncResponse<List<Contact>>() {
-			@Override
-			public void processFinish(List<Contact> result) {
-				// addContacts(result);
-			}
-		}).execute(SessionManager.getUserID());
-	}
+//	private void fetchContacts() {
+//		new GetContactsTask(new AsyncResponse<List<Contact>>() {
+//			@Override
+//			public void processFinish(List<Contact> result) {
+//
+//			}
+//		}).execute(SessionManager.getUserID());
+//	}
 
 	private void enableSwiping() {
 		mListView.enableSwipeToDismiss();
@@ -246,7 +254,7 @@ public class EditGroupActivity extends Activity implements TokenListener {
 
 	private void save() {
 		String title = titleText.getText().toString().trim();
-		if (title.equals("")) {
+		if (NinjaTextUtils.isEmpty(title)) {
 			AlertDialogUtil.showErrorDialog(this, "Cannot have an empty title");
 			return;
 		}
@@ -297,7 +305,8 @@ public class EditGroupActivity extends Activity implements TokenListener {
 			removed = new SerializableUser((User) arg0);
 
 		if (removed != null) {
-			System.out.println("token was removed");
+			// ignored
+
 		}
 	}
 }

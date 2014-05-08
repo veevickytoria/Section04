@@ -43,6 +43,7 @@ public class ViewGroupActivity extends Activity {
 		}
 		titleText = (TextView) findViewById(R.id.group_view_title);
 		mListView = (EnhancedListView) findViewById(R.id.group_list);
+		mListView.setEmptyView(findViewById(android.R.id.empty));
 		setGroup();
 		for (int k = 0; k < group.getMembers().size(); k++) {
 			if (group.getMembers().get(k).getDisplayName() == null|| group.getMembers().get(k).getDisplayName().isEmpty()) {
@@ -113,7 +114,7 @@ public class ViewGroupActivity extends Activity {
 
 	private void setGroup() {
 		titleText.setText(group.getGroupTitle());
-		mUserAdapter = new UserArrayAdapter(this, R.layout.list_item_user,group.getMembers());
+		mUserAdapter = new UserArrayAdapter(this, R.layout.list_item_user_reversed,group.getMembers());
 		mListView.setAdapter(mUserAdapter);
 	}
 

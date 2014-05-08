@@ -10,75 +10,46 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".EditGroupActivity" >
 
-    <EditText
-        android:id="@+id/group_edit_title"
+    <RelativeLayout
+        android:id="@+id/RelativeLayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:enabled="true"
-        android:gravity="center"
-        android:hint="@string/group_name"
-        android:inputType="text"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:textSize="25sp" />
+        android:layout_gravity="fill_horizontal"
+        android:orientation="horizontal" >
 
-    <Button
-        android:id="@+id/group_add_member"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="0dip"
-        android:background="@drawable/button_selector"
-        android:hint="+ Add a member"
-        android:minHeight="28dp"
-        android:onClick="addMember"        
-        android:textColor="#FF777777"
-        android:textSize="18sp" />
-
-    <FrameLayout
-    android:id="@+id/groupListFram"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-
-    <LinearLayout
-        android:id="@+id/LinearLayout1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".UserlistFragment" >
-
-        <de.timroes.android.listview.EnhancedListView
-            android:id="@+id/group_list"
+        <EditText
+            android:id="@+id/group_edit_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:dividerHeight="2dp" />
-    </LinearLayout>
+            android:layout_alignBaseline="@+id/group_add_member"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/group_add_member"
+            android:ems="10"
+            android:enabled="true"
+            android:hint="@string/group_name"
+            android:inputType="text"
+            android:textSize="25sp" />
 
-    <RelativeLayout
-        android:id="@android:id/empty"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:visibility="gone" >
-
-        <LinearLayout
+        <ImageButton
+            android:id="@+id/group_add_member"
+            style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical" >
-
-            <ProgressBar
-                android:id="@+id/progressBar1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/group_empty"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Getting members" />
-        </LinearLayout>
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/btn_transparent_holo_light"
+            android:contentDescription="@string/group_add_member"
+            android:onClick="addMember"
+            android:src="@drawable/ic_action_new_holo_light" />
     </RelativeLayout>
 
-</FrameLayout>
+    <de.timroes.android.listview.EnhancedListView
+        android:id="@+id/group_list"
+        style="?android:attr/listViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:dividerHeight="2dp" >
+    </de.timroes.android.listview.EnhancedListView>
 
 </LinearLayout>
