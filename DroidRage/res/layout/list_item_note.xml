@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/ListItemContainerBase"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="?android:attr/listPreferredItemHeight"
     android:baselineAligned="false"
     android:orientation="vertical" 
     android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft">

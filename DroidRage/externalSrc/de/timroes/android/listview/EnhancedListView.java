@@ -611,7 +611,10 @@ public class EnhancedListView extends ListView {
 			undoable.discard();
 		}
 		mUndoActions.clear();
-		mUndoPopup.dismiss();
+		if(this.isAttachedToWindow()){
+			mUndoPopup.dismiss();
+
+		}
 	}
 
 	/**

@@ -80,8 +80,7 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		View v = inflater.inflate(R.layout.fragment_notes, container, false);
 		setupViews(v);
@@ -106,7 +105,7 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 
 	}
 
-	public void editNote() {
+	public void createNote() {			
 		Intent createNote = new Intent(getActivity(), EditNoteActivity.class);
 		createNote.putExtra(Note.CREATE_NOTE, true);
 		startActivity(createNote);
@@ -114,8 +113,7 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 
 	private void setupViews(View v) {
 		ListView notesList = (ListView) v.findViewById(R.id.notesList);
-		noteAdpt = new NoteArrayAdapter(getActivity(), R.layout.list_item_note,
-				notes);
+		noteAdpt = new NoteArrayAdapter(getActivity(), R.layout.list_item_note,notes);
 		notesList.setAdapter(noteAdpt);
 
 		// pretty images are better than boring text
@@ -124,23 +122,20 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 		notesImageButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				editNote();
+				createNote();
 			}
 		});
 
 		// Item click event
 		notesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
 			@Override
-			public void onItemClick(AdapterView<?> parentAdapter, View v,
-					int position, long id) {
+			public void onItemClick(AdapterView<?> parentAdapter, View v,int position, long id) {
 				Note clickedNote = noteAdpt.getItem(position);
 
-				Intent editNote = new Intent(getActivity(),
-						ViewNoteActivity.class);
-				editNote.putExtra("listPosition", position);
-				editNote.putExtra(Keys.Note.PARCEL, new NoteParcel(clickedNote));
-				startActivityForResult(editNote, 1);
+				Intent viewNote = new Intent(getActivity(),ViewNoteActivity.class);
+				viewNote.putExtra("listPosition", position);
+				viewNote.putExtra(Keys.Note.PARCEL, new NoteParcel(clickedNote));
+				startActivityForResult(viewNote, 1);
 
 			}
 		});
@@ -179,7 +174,12 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 		if (item.getGroupId() == MainActivity.DrawerLabel.NOTES.getPosition()) {
 			switch (item.getOrder()) {
 			case 1: // Add Content
-				Toast.makeText(getActivity(),String.format("%s", item.getTitle()),Toast.LENGTH_SHORT).show();
+				Intent editNote = new Intent(getActivity(),EditNoteActivity.class);
+				editNote.putExtra("listPosition", position);
+				editNote.putExtra(Keys.Note.PARCEL, new NoteParcel(noteAdpt.getItem(position)));
+				startActivityForResult(editNote, 1);
+				
+//				Toast.makeText(getActivity(),String.format("%s", item.getTitle()),Toast.LENGTH_SHORT).show();
 				handled = true;
 				break;
 			case 2: // Delete
@@ -210,14 +210,13 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 		} else if (mergeNote.getID().equals(selected.getID())) {
 			Log.d("MERGE","merge_b: " + selected.getID() + " : " + mergeNote.getID());
 			mergeNote = null;
-			Toast.makeText(getActivity(),String.format("Error: Same note selected twice. Please reselect notes to merge."),
-					Toast.LENGTH_LONG).show();
+			Toast.makeText(getActivity(),"Error: Same note selected twice. Please reselect notes to merge.",Toast.LENGTH_LONG).show();
 		} else {
 			Log.d("MERGE","merge_c: " + selected.getID() + " : " + mergeNote.getID());
-			Toast.makeText(getActivity(),String.format("Merging " + selected.getTitle() + " into "+ mergeNote.getTitle()), Toast.LENGTH_LONG).show();
+			Toast.makeText(getActivity(),"Merging " + selected.getTitle() + " into "+ mergeNote.getTitle(), Toast.LENGTH_LONG).show();
 
 			mergeNote.mergeWith(selected);
-			delete(selected);
+//			delete(selected);
 			updateNote(mergeNote);
 			mergeNote = null;
 			refresh();
@@ -234,13 +233,6 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 		refresh();
 	}
 
-	protected void deleteNote(Note note) {
-		mySQLiteAdapter.deleteNote(note);
-		notes.remove(note);
-		noteAdpt.notifyDataSetChanged();
-		refresh();
-	}
-
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -249,20 +241,10 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 				if (data != null) {
 					data.getIntExtra("listPosition", -1);
 					Note editedNote = new ParcelDataFactory(data.getExtras()).getNote();
-
-					mySQLiteAdapter.updateNote(editedNote);
 					refresh();
 				}
 			} // end EditNoteActivity
-		} else if (requestCode == 3) { // CreateNoteActivity
-			if (resultCode == Activity.RESULT_OK) {
-				Toast.makeText(getActivity(), "New Note Created",
-						Toast.LENGTH_SHORT).show();
-				mySQLiteAdapter.insertNote(new ParcelDataFactory(data
-						.getExtras()).getNote());
-				refresh();
-			}
-		} // end CreateNoteActivity
+		}
 	}
 
 	public void populateList() {

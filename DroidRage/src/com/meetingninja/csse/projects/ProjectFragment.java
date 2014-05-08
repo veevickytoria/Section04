@@ -11,6 +11,8 @@ import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.ProjectDatabaseAdapter;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
+import com.meetingninja.csse.extras.IRefreshable;
+
 import de.timroes.android.listview.EnhancedListView;
 
 import android.os.AsyncTask;
@@ -36,7 +38,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class ProjectFragment extends Fragment {
+public class ProjectFragment extends Fragment implements IRefreshable{
 
 	private static ProjectFragment sInstance = null;
 	private List<Project> projectsList = new ArrayList<Project>();
@@ -61,16 +63,16 @@ public class ProjectFragment extends Fragment {
 		View v = inflater.inflate(R.layout.fragment_project, container, false);
 		setUpListView(v);
 
-		refreshProjects();
+		refresh();
 		return v;
 	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		refreshProjects();
+		refresh();
 		if (resultCode == Activity.RESULT_OK) {
 			if (requestCode == 6) {
-				refreshProjects();
+				refresh();
 			} else if (requestCode == 7) {
 				Project p = data.getParcelableExtra(Keys.Project.PARCEL);
 				projectsList.add(p);
@@ -83,7 +85,7 @@ public class ProjectFragment extends Fragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_refresh:
-			refreshProjects();
+			refresh();
 			return true;
 		case R.id.action_new:
 			createProjectOption();
@@ -143,8 +145,9 @@ public class ProjectFragment extends Fragment {
 			}
 		}.execute(project);
 	}
-
-	private void refreshProjects() {
+	
+	@Override
+	public void refresh() {
 
 		new AsyncTask<String, Void, List<Project>>() {
 			@Override
@@ -183,7 +186,10 @@ public class ProjectFragment extends Fragment {
 	private void deleteProject(Project p) {
 
 		new AsyncTask<Project, Void, Void>() {
-
+			@Override
+			protected void onPostExecute(Void result) {
+				refresh();
+			}
 			@Override
 			protected Void doInBackground(Project... params) {
 				try {
@@ -218,8 +224,7 @@ public class ProjectFragment extends Fragment {
 
 		l.setDismissCallback(new de.timroes.android.listview.EnhancedListView.OnDismissCallback() {
 			@Override
-			public EnhancedListView.Undoable onDismiss(
-					EnhancedListView listView, final int position) {
+			public EnhancedListView.Undoable onDismiss(EnhancedListView listView, final int position) {
 
 				final Project item = projectAdpt.getItem(position);
 				projectsList.remove(item);
@@ -239,8 +244,6 @@ public class ProjectFragment extends Fragment {
 					@Override
 					public void discard() {
 						deleteProject(item);
-						// tempDeletedContacts.remove(item);
-
 					}
 				};
 			}
