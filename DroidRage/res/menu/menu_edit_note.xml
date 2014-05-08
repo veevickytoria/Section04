@@ -2,16 +2,16 @@
 
     <item
         android:id="@+id/edit_note_action_save"
-        android:icon="@drawable/ic_menu_save"
+        android:icon="@drawable/ic_action_save_holo_dark"
         android:orderInCategory="100"
-        android:showAsAction="withText|ifRoom"
+        android:showAsAction="ifRoom"
         android:title="@string/action_save"/>
-    
+
     <item
         android:id="@+id/edit_note_action_discard"
-        android:icon="@drawable/ic_undo"
-        android:orderInCategory="100"
-        android:showAsAction="withText|ifRoom"
+        android:icon="@drawable/ic_action_undo_holo_dark"
+        android:orderInCategory="200"
+        android:showAsAction="ifRoom"
         android:title="@string/action_discard"
         />
 

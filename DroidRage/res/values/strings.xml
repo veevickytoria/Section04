@@ -100,5 +100,6 @@
     <string name="title_activity_edit_profile">Edit Profile</string>
     <string name="title_activity_view_project">View Project</string>
     <string name="title_activity_project_custom_dialog">ProjectCustomDialog</string>
+    <string name="action_create">Create</string>
 
 </resources>

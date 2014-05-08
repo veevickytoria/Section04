@@ -4,7 +4,14 @@
         android:id="@+id/edit_meeting_action"
         android:icon="@drawable/ic_action_edit"
         android:orderInCategory="100"
-        android:showAsAction="withText|ifRoom"
+        android:showAsAction="always"
         android:title="@string/action_edit"/>
+    <item
+        android:id="@+id/delete_meeting_action"
+        android:icon="@drawable/ic_action_discard_light"
+        android:orderInCategory="100"
+        android:showAsAction="always"
+        android:title="@string/action_delete">
+    </item>
 
 </menu>
