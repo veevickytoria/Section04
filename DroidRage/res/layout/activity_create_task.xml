@@ -106,7 +106,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:hint="More text" />
+                android:hint="Criteria" />
         </LinearLayout>
 
         <View style="@style/EditEventSeparator" />
@@ -130,7 +130,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Chumps" />
+            android:hint="Assignees" />
 
         <ListView
             android:id="@+id/task_users_assigned"

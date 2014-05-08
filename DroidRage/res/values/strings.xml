@@ -46,7 +46,7 @@
     <!-- Nav Drawer List Item Icons -->
     <!-- Keep them in order as the titles are in -->
     <array name="nav_drawer_icons">
-        <item>@drawable/ic_action_homepage</item>
+        <item>@drawable/ic_menu_home</item>
         <item>@drawable/ic_action_meetings</item>
         <item>@drawable/ic_action_edit</item>
         <item>@drawable/ic_action_tasks</item>
@@ -54,8 +54,6 @@
         <item>@drawable/ic_action_group</item>
         <item>@drawable/ic_action_projects</item>
         <item>@drawable/ic_action_group</item>
-        <item>@drawable/ic_action_settings</item>
-        <item>@drawable/ic_action_about</item>
         <item>@drawable/ic_action_accounts</item>
     </array>
 
@@ -89,18 +87,18 @@
     <!-- <string name="parse_client_key">pmsPdsBrpUyQIQfYR8sFe5sNpeHnLKlz1rfLuaEP</string> -->
     <string name="parse_application_id">o4UYE8YSQMmLOcyTOv7pj2z9qYkNnUpKBaqezGWx</string>
     <string name="parse_client_key">MfwhwCpIweZmhpQa2Z1yrrrm7y6zAH9elHPfazyB</string>
-    <string name="title_activity_agenda">AgendaActivity</string>
-    <string name="title_activity_profile">ProfileActivity</string>
-    <string name="title_activity_view_task">ViewTaskActivity</string>
-    <string name="title_activity_edit_task">EditTaskActivity</string>
-    <string name="title_activity_tasks">CreateTaskActivity</string>
-    <string name="title_activity_view_note">ViewNoteActivity</string>
-    <string name="title_activity_edit_group">EditGroupActivity</string>
+    <string name="title_activity_agenda">Edit Agenda</string>
+    <string name="title_activity_profile">View Profile</string>
+    <string name="title_activity_view_task">View Task</string>
+    <string name="title_activity_edit_task">Edit Task</string>
+    <string name="title_activity_tasks">Edit Task</string>
+    <string name="title_activity_view_note">View Note</string>
+    <string name="title_activity_edit_group">Edit Group</string>
     <string name="title_activity_groups">Groups</string>
-    <string name="title_activity_groups_fragment">GroupsFragment</string>
-    <string name="title_activity_view_group">ViewGroupActivity</string>
-    <string name="title_activity_edit_profile">EditProfileActivity</string>
-    <string name="title_activity_view_project">ViewProjectActivity</string>
+    <string name="title_activity_groups_fragment">Group List</string>
+    <string name="title_activity_view_group">View Group</string>
+    <string name="title_activity_edit_profile">Edit Profile</string>
+    <string name="title_activity_view_project">View Project</string>
     <string name="title_activity_project_custom_dialog">ProjectCustomDialog</string>
 
 </resources>

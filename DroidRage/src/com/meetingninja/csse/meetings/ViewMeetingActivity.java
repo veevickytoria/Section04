@@ -85,6 +85,7 @@ public class ViewMeetingActivity extends Activity {
 		startTime = (TextView) this.findViewById(R.id.meeting_from_time_view);
 		endTime = (TextView) this.findViewById(R.id.meeting_to_time_view);
 		attendeesList = (ListView) this.findViewById(R.id.guests_attending);
+		attendeesList.setEmptyView(this.findViewById(android.R.id.empty));
 		adpt = new UserArrayAdapter(this, R.layout.list_item_user, attendance);
 		attendeesList.setAdapter(adpt);
 	}

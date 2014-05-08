@@ -16,12 +16,12 @@
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+
     </style>
 
-    <style name="LoginFormContainer">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">16dp</item>
+    <style name="treeViewListStyle" parent="@android:attr/listViewStyle">
+        <item name="android:background">@android:color/white</item>
+        <item name="android:divider">@drawable/divider</item>
     </style>
 
     <style name="EditEvent_Layout" parent="android:Theme.Holo.Light"></style>
@@ -227,10 +227,7 @@
     <style name="aosp_day_of_week_label_condensed" />
 
     <!-- TreeView -->
-    <style name="treeViewListStyle" parent="@android:attr/listViewStyle">
-        <item name="android:background">@android:color/white</item>
-        <item name="android:divider">@drawable/divider</item>
-    </style>
+
 
     <!-- EnhancedListView -->
     <style name="SectionHeader" parent="android:Widget.TextView">
