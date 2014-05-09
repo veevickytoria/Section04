@@ -63,7 +63,7 @@ public class MeetingsFragment extends Fragment implements AsyncResponse<List<Mee
 
 	private SQLiteMeetingAdapter mySQLiteAdapter;
 
-	private MeetingFetcherTask fetcher;
+	private MeetingsFetcherTask fetcher;
 
 	public MeetingsFragment() {
 		// Empty
@@ -266,7 +266,7 @@ public class MeetingsFragment extends Fragment implements AsyncResponse<List<Mee
 	}
 
 	public void populateList() {
-		fetcher = new MeetingFetcherTask(this);
+		fetcher = new MeetingsFetcherTask(this);
 		fetcher.execute(SessionManager.getUserID());
 		// calls processFinish()
 	}

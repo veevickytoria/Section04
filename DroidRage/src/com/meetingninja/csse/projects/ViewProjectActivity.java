@@ -19,8 +19,8 @@ import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.ProjectDatabaseAdapter;
 import com.meetingninja.csse.extras.AlertDialogUtil;
 import com.meetingninja.csse.meetings.EditMeetingActivity;
-import com.meetingninja.csse.meetings.MeetingFetcherTask;
 import com.meetingninja.csse.meetings.MeetingItemAdapter;
+import com.meetingninja.csse.meetings.MeetingsFetcherTask;
 import com.meetingninja.csse.notes.EditNoteActivity;
 import com.meetingninja.csse.notes.NoteArrayAdapter;
 import com.meetingninja.csse.notes.NoteFetcher;
@@ -203,7 +203,7 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 	}
 
 	public void selectMeeting() {
-		MeetingFetcherTask fetcher = new MeetingFetcherTask(new AsyncResponse<List<Meeting>>() {
+		MeetingsFetcherTask fetcher = new MeetingsFetcherTask(new AsyncResponse<List<Meeting>>() {
 			@Override
 			public void processFinish(List<Meeting> result) {
 				selectMeeting(result);

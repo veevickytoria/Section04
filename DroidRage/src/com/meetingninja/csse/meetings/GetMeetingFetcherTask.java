@@ -24,36 +24,37 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.meetingninja.csse.database.AsyncResponse;
+import com.meetingninja.csse.database.MeetingDatabaseAdapter;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
 
 /**
  * Represents an asynchronous task to receive meetings from the database
  */
-public class MeetingFetcherTask extends AsyncTask<String, Void, List<Meeting>> {
-	private AsyncResponse<List<Meeting>> delegate;
+public class GetMeetingFetcherTask extends AsyncTask<String, Void, Meeting> {
+	private AsyncResponse<Meeting> delegate;
 
-	public MeetingFetcherTask(AsyncResponse<List<Meeting>> delegate) {
+	public GetMeetingFetcherTask(AsyncResponse<Meeting> delegate) {
 		this.delegate = delegate;
 	}
 
 	@Override
-	protected List<Meeting> doInBackground(String... params) {
-		List<Meeting> dbMeetings = new ArrayList<Meeting>();
+	protected Meeting doInBackground(String... params) {
+		Meeting meeting = new Meeting();
 
 		try {
-			dbMeetings = UserDatabaseAdapter.getMeetings(params[0]);
+			meeting = MeetingDatabaseAdapter.getMeetingInfo(params[0]);
 		} catch (IOException e) {
-			Log.e("MeetingFetch", "Error: Unable to get meetings");
+			Log.e("MeetingFetch", "Error: Unable to get meeting info");
 			Log.e("MEETINGS_ERR", e.getLocalizedMessage());
 		}
 
-		return dbMeetings;
+		return meeting;
 	}
 
 	@Override
-	protected void onPostExecute(List<Meeting> list) {
-		super.onPostExecute(list);
-		delegate.processFinish(list);
+	protected void onPostExecute(Meeting meeting) {
+		super.onPostExecute(meeting);
+		delegate.processFinish(meeting);
 	}
 
 	@Override

@@ -89,8 +89,7 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 		Bundle args = getArguments();
 		if (args != null && args.containsKey(Keys.Project.NOTES)) {
 			notes.clear();
-			List<NoteParcel> temp = getArguments().getParcelableArrayList(
-					Keys.Project.NOTES);
+			List<NoteParcel> temp = getArguments().getParcelableArrayList(Keys.Project.NOTES);
 			for (NoteParcel noteParcel : temp) {
 				notes.add(noteParcel.getData());
 			}
@@ -238,13 +237,13 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == 1) { // EditNoteActivity
 			if (resultCode == Activity.RESULT_OK) {
-				if (data != null) {
-					data.getIntExtra("listPosition", -1);
-					Note editedNote = new ParcelDataFactory(data.getExtras()).getNote();
-					refresh();
-				}
+//				if (data != null) {
+//					System.out.println(data.getIntExtra("listPosition", -1));
+//					Note editedNote = new ParcelDataFactory(data.getExtras()).getNote();
+//				}
 			} // end EditNoteActivity
 		}
+		refresh();
 	}
 
 	public void populateList() {

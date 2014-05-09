@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.meetingninja.csse.R;
+import com.meetingninja.csse.notes.tasks.DeleteNoteTask;
 
 public class ViewNoteActivity extends Activity {
 
@@ -93,8 +94,17 @@ public class ViewNoteActivity extends Activity {
 		case R.id.note_edit_action:
 			edit();
 			return true;
+		case R.id.note_discard_action:
+			System.out.println("delete");
+			System.out.println(item);
+			delete(displayedNote);
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	protected void delete(Note note) {
+		new DeleteNoteTask().execute(note.getID());
+		NavUtils.navigateUpFromSameTask(this);
 	}
 
 	@Override
@@ -105,8 +115,7 @@ public class ViewNoteActivity extends Activity {
 	}
 
 	private void edit() {
-		Intent editNote = new Intent(ViewNoteActivity.this,
-				EditNoteActivity.class);
+		Intent editNote = new Intent(ViewNoteActivity.this,EditNoteActivity.class);
 
 		editNote.putExtras(extras);
 		startActivityForResult(editNote, 1);
