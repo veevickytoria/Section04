@@ -8,11 +8,8 @@
 
     <TextView
         android:id="@+id/meeting_title_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Meeting Title"
-        android:layout_marginBottom="6dp"
-        android:textSize="25sp" />
+        style="@style/ViewObjectTitle"
+        android:hint="Meeting Title" />
 
     <TextView
         android:id="@+id/meeting_location_view"
@@ -71,7 +68,7 @@
         <TextView
             android:id="@+id/to_label"
             style="@style/TextAppearance.EditEvent_Small"
-           android:layout_width="match_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="6dip"
             android:text="To"
@@ -124,7 +121,6 @@
                 android:layout_height="wrap_content"
                 android:text="No one is attending this meeting"
                 android:textSize="18sp" />
-
         </RelativeLayout>
 
         <ListView
@@ -136,7 +132,6 @@
             android:smoothScrollbar="true"
             tools:listitem="@android:layout/simple_list_item_1" >
         </ListView>
-
     </LinearLayout>
 
 </LinearLayout>

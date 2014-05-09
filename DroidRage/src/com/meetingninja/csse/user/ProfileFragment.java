@@ -34,6 +34,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -56,6 +57,8 @@ public class ProfileFragment extends Fragment {
 	private SessionManager session;
 	private User displayedUser;
 	private int menu;
+
+	private ImageButton smsButton;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -140,6 +143,9 @@ public class ProfileFragment extends Fragment {
 		v.findViewById(R.id.profile_phone_row).setVisibility(View.GONE);
 		mPhone.setOnClickListener(new ContactListener());
 
+		smsButton = (ImageButton) v.findViewById(R.id.profile_chat_button);
+		smsButton.setOnClickListener(new ContactListener());
+
 	}
 
 	private void fetchUserInfo(final String userID) {
@@ -192,9 +198,21 @@ public class ProfileFragment extends Fragment {
 				try {
 					startActivity(dialerIntent);
 				} catch (Exception e) {
-					System.out.println("it didn't work!");
+					Log.e(TAG, e.getLocalizedMessage());
 				}
+				break;
 
+			case R.id.profile_chat_button:
+				Intent smsIntent = new Intent(Intent.ACTION_VIEW);
+				smsIntent.setType("vnd.android-dir/mms-sms");
+				smsIntent.putExtra("address", mPhone.getText().toString());
+
+				try {
+					startActivity(smsIntent);
+				} catch (Exception e) {
+					Log.e(TAG, e.getLocalizedMessage());
+				}
+				break;
 			default:
 				break;
 			}

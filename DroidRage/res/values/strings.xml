@@ -102,5 +102,6 @@
     <string name="title_activity_project_custom_dialog">ProjectCustomDialog</string>
     <string name="action_create">Create</string>
     <string name="group_add_member">Add Member</string>
+    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ut orci est. Cras eu vestibulum lorem. Integer hendrerit, ipsum et commodo pharetra, lectus urna suscipit lectus, id eleifend lectus arcu non elit. Fusce euismod suscipit augue, at sagittis ante ullamcorper eu. Morbi nec faucibus nisl, non vulputate diam. Aliquam diam magna, adipiscing ac urna ut, volutpat elementum sapien. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nullam fringilla nibh nibh, id imperdiet sem placerat ac. Sed suscipit dignissim lectus, pellentesque mollis felis pharetra suscipit. Sed ullamcorper sodales lacus, eget tempor risus molestie ut. Nulla dolor neque, molestie id.</string>
 
 </resources>

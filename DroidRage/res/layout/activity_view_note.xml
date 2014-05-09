@@ -2,29 +2,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content_scroller"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".notes.ViewNoteActivity" >
 
     <LinearLayout
-        android:id="@+id/LinearLayout1"
+        android:id="@+id/note_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="@dimen/content_padding_normal" >
 
         <TextView
             android:id="@+id/titleText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Title"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            style="@style/ViewObjectTitle"
+            android:text="Note title" />
 
         <TextView
             android:id="@+id/note_creator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Creator"
+            android:text="Created By: MeetingNinja"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <RelativeLayout
@@ -33,12 +30,12 @@
 
             <TextView
                 android:id="@+id/contentsText"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:text="contents"
+                android:text="@string/lorem_ipsum"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
@@ -48,7 +45,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_below="@id/contentsText"
                 android:layout_marginTop="8dp"
-                android:text="Edited"
+                android:text="Edited at 5:20 PM on Jan 01, 1900"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
         </RelativeLayout>
     </LinearLayout>

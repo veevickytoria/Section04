@@ -9,19 +9,18 @@
 
     <TextView
         android:id="@+id/group_view_title"
+        style="@style/ViewObjectTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:enabled="true"
-        android:hint="@string/group_name"
-        android:textSize="25sp" />
+        android:hint="@string/group_name" />
 
     <LinearLayout
         android:id="@+id/group_member_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="8dp"
+        android:orientation="vertical" >
 
         <TextView
             style="@style/SectionHeader"
