@@ -1,6 +1,7 @@
 package com.meetingninja.csse.notes;
 
 import objects.Note;
+import objects.parcelable.NoteParcel;
 import objects.parcelable.ParcelDataFactory;
 import android.app.Activity;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.meetingninja.csse.R;
+import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.notes.tasks.DeleteNoteTask;
 
 public class ViewNoteActivity extends Activity {
@@ -21,6 +23,7 @@ public class ViewNoteActivity extends Activity {
 	private TextView creatorText;
 	private TextView lastModifiedText;
 	private Note displayedNote;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -88,23 +91,23 @@ public class ViewNoteActivity extends Activity {
 			//
 			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
 			//
-			NavUtils.navigateUpFromSameTask(this);
+//			NavUtils.navigateUpFromSameTask(this);
+			finish();
 			return true;
 
 		case R.id.note_edit_action:
 			edit();
 			return true;
 		case R.id.note_discard_action:
-			System.out.println("delete");
-			System.out.println(item);
 			delete(displayedNote);
+			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
 	protected void delete(Note note) {
-		new DeleteNoteTask().execute(note.getID());
-		NavUtils.navigateUpFromSameTask(this);
+			new DeleteNoteTask().execute(note.getID());
+			finish();
 	}
 
 	@Override

@@ -302,9 +302,9 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 		}
 	}
 
-	protected void deleteNote(Note note) {
+	protected void deleteNote(String noteID) {
 		for (int i = 0; i < project.getNotes().size(); i++) {
-			if (note.getID().equals(project.getNotes().get(i).getID())) {
+			if (noteID.equals(project.getNotes().get(i).getID())) {
 				project.getNotes().remove(i);
 				updateProject();
 			}
@@ -366,14 +366,23 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if(resultCode==5243){
+			Note note = new ParcelDataFactory(data.getExtras()).getNote();
+			deleteNote(note.getID());
+		}
 		if (resultCode == Activity.RESULT_OK) {
-			if (requestCode == 2) {
-				Meeting created = data.getParcelableExtra(Keys.Meeting.PARCEL);
-				addMeeting(created);
-			} else if (requestCode == 3) {
-				addNote(new ParcelDataFactory(data.getExtras()).getNote());
+			
+			if(data!=null){
+				if (requestCode == 2) {
+					Meeting created = data.getParcelableExtra(Keys.Meeting.PARCEL);
+					addMeeting(created);
+				} else if (requestCode == 3) {
+					addNote(new ParcelDataFactory(data.getExtras()).getNote());
+				}
 			}
 		}
+
+
 		refreshProject();
 	}
 

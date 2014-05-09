@@ -58,7 +58,7 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 
 	private static final String TAG = NotesFragment.class.getSimpleName();
 
-	private NoteArrayAdapter noteAdpt;
+	protected NoteArrayAdapter noteAdpt;
 	private ImageButton notesImageButton;
 	private SQLiteNoteAdapter mySQLiteAdapter;
 	private PopulateTask populateTask;
@@ -129,13 +129,7 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 		notesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parentAdapter, View v,int position, long id) {
-				Note clickedNote = noteAdpt.getItem(position);
-
-				Intent viewNote = new Intent(getActivity(),ViewNoteActivity.class);
-				viewNote.putExtra("listPosition", position);
-				viewNote.putExtra(Keys.Note.PARCEL, new NoteParcel(clickedNote));
-				startActivityForResult(viewNote, 1);
-
+				clickedNote(position);
 			}
 		});
 
@@ -157,6 +151,14 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 			}
 
 		});
+	}
+	protected void clickedNote(int position) {
+		Note clickedNote = noteAdpt.getItem(position);
+
+		Intent viewNote = new Intent(getActivity(),ViewNoteActivity.class);
+		viewNote.putExtra("listPosition", position);
+		viewNote.putExtra(Keys.Note.PARCEL, new NoteParcel(clickedNote));
+		startActivityForResult(viewNote, 1);
 	}
 
 	@Override

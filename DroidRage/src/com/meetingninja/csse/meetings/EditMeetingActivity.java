@@ -321,7 +321,6 @@ public class EditMeetingActivity extends FragmentActivity implements
 				displayedMeeting = newMeeting;
 
 			} else {
-				System.out.println("save this meeting: "+newMeeting.getTitle());
 				MeetingSaveTask task = new MeetingSaveTask(EditMeetingActivity.this);
 				task.execute(newMeeting);
 				msgIntent.putExtra("method", "insert");
