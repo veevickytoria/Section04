@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="task_name">Task Name</string>
-    <string name="date_created">Date Created:</string>
+    <string name="date_created">Created On:</string>
     <string name="unknown_date">Unknown</string>
     <string name="date_assigned">Date Assigned:</string>
     <string name="deadline">Deadline:</string>
@@ -11,5 +11,5 @@
     <string name="assigned_to">Assigned To:</string>
     <string name="mark_as_complete">Mark As Complete</string>
     <string name="mark_as_incomplete">Mark As Incomplete</string>
-    
+
 </resources>
