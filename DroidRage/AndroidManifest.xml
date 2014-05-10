@@ -67,18 +67,17 @@
         <activity
             android:name="com.meetingninja.csse.meetings.EditMeetingActivity"
             android:label="@string/title_activity_meetings"
-            android:windowSoftInputMode="adjustPan|adjustResize"
-             android:parentActivityName="com.meetingninja.csse.MainActivity">
+            android:parentActivityName="com.meetingninja.csse.MainActivity"
+            android:windowSoftInputMode="adjustPan|adjustResize" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.meetingninja.csse.MainActivity" />
         </activity>
-
         <activity
             android:name="com.meetingninja.csse.notes.EditNoteActivity"
             android:label="@string/title_activity_edit_note"
-            android:windowSoftInputMode="adjustPan|adjustResize"
-            android:parentActivityName="com.meetingninja.csse.MainActivity" >
+            android:parentActivityName="com.meetingninja.csse.MainActivity"
+            android:windowSoftInputMode="adjustPan|adjustResize" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.meetingninja.csse.MainActivity" />
@@ -91,7 +90,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.meetingninja.csse.MainActivity" />
         </activity>
-
         <activity
             android:name="com.meetingninja.csse.meetings.ViewMeetingActivity"
             android:label="@string/title_activity_view_meeting"
@@ -174,9 +172,9 @@
         </activity>
         <activity
             android:name="com.meetingninja.csse.group.EditGroupActivity"
-           	android:configChanges="keyboardHidden|orientation|screenSize"
-           	android:windowSoftInputMode="adjustPan|adjustResize"
-            android:label="@string/title_activity_edit_group" >
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/title_activity_edit_group"
+            android:windowSoftInputMode="adjustPan|adjustResize" >
         </activity>
         <activity
             android:name="com.meetingninja.csse.group.ViewGroupActivity"
@@ -185,8 +183,7 @@
         <activity
             android:name="com.meetingninja.csse.user.EditProfileActivity"
             android:label="@string/title_activity_edit_profile"
-            android:windowSoftInputMode="adjustResize"
-           >
+            android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity
             android:name="com.meetingninja.csse.projects.ViewProjectActivity"

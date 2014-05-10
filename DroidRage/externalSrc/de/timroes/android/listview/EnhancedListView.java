@@ -54,7 +54,7 @@ import com.nineoldandroids.view.ViewPropertyAnimator;
  * A {@link android.widget.ListView} offering enhanced features like Swipe To
  * Dismiss and an undo functionality. See the documentation on GitHub for more
  * information.
- * 
+ *
  * @author Tim Roes <mail@timroes.de>
  */
 public class EnhancedListView extends ListView {
@@ -145,7 +145,7 @@ public class EnhancedListView extends ListView {
 		 * <p>
 		 * If the user should get the possibility to swipe the item, return
 		 * true. Otherwise, return false to disable swiping for this item.
-		 * 
+		 *
 		 * @param listView
 		 *            The {@link EnhancedListView} the item is wiping from.
 		 * @param position
@@ -187,7 +187,7 @@ public class EnhancedListView extends ListView {
 		 * are free to return an {@code Undoable} for some items, and
 		 * {@code null} for others, though it might be a horrible user
 		 * experience.
-		 * 
+		 *
 		 * @param listView
 		 *            The {@link EnhancedListView} the item has been deleted
 		 *            from.
@@ -231,7 +231,7 @@ public class EnhancedListView extends ListView {
 		 * implementation returns {@code null}, what will lead in a default
 		 * message to be displayed in the undo window. Don't call the super
 		 * method, when overriding this method.
-		 * 
+		 *
 		 * @return The title for a special string.
 		 */
 		public String getTitle() {
@@ -280,7 +280,7 @@ public class EnhancedListView extends ListView {
 
 		/**
 		 * Called when a view has been clicked.
-		 * 
+		 *
 		 * @param v
 		 *            The view that was clicked.
 		 */
@@ -451,7 +451,7 @@ public class EnhancedListView extends ListView {
 	 * {@link de.timroes.android.listview.EnhancedListView.OnDismissCallback#onDismiss(EnhancedListView, int)}
 	 * . Return {@code null}, if you don't want the <i>undo</i> feature enabled.
 	 * Read the README file or the demo project for more detailed samples.
-	 * 
+	 *
 	 * @return The {@link de.timroes.android.listview.EnhancedListView}
 	 * @throws java.lang.IllegalStateException
 	 *             when you haven't passed an
@@ -473,7 +473,7 @@ public class EnhancedListView extends ListView {
 
 	/**
 	 * Disables the <i>Swipe to Dismiss</i> feature for this list.
-	 * 
+	 *
 	 * @return This {@link de.timroes.android.listview.EnhancedListView}
 	 */
 	public EnhancedListView disableSwipeToDismiss() {
@@ -487,7 +487,7 @@ public class EnhancedListView extends ListView {
 	 * or by deleting it with {@link #delete(int)}). You must call this, before
 	 * you call {@link #delete(int)} or {@link #enableSwipeToDismiss()}
 	 * otherwise you will get an {@link java.lang.IllegalStateException}.
-	 * 
+	 *
 	 * @param dismissCallback
 	 *            The callback used to handle dismisses of list items.
 	 * @return This {@link de.timroes.android.listview.EnhancedListView}
@@ -500,7 +500,7 @@ public class EnhancedListView extends ListView {
 	/**
 	 * Sets the callback to be called when the user is swiping an item from the
 	 * list.
-	 * 
+	 *
 	 * @param shouldSwipeCallback
 	 *            The callback used to handle swipes of list items.
 	 * @return This {@link de.timroes.android.listview.EnhancedListView}
@@ -518,7 +518,7 @@ public class EnhancedListView extends ListView {
 	 * never call this method) is
 	 * {@link de.timroes.android.listview.EnhancedListView.UndoStyle#SINGLE_POPUP}
 	 * .
-	 * 
+	 *
 	 * @param undoStyle
 	 *            The style of this listview.
 	 * @return This {@link de.timroes.android.listview.EnhancedListView}
@@ -533,7 +533,7 @@ public class EnhancedListView extends ListView {
 	 * disappears. The countdown will start when the user touches the screen. If
 	 * you want to start the countdown immediately when the popups appears, call
 	 * {@link #setRequireTouchBeforeDismiss(boolean)} with {@code false}.
-	 * 
+	 *
 	 * @param hideDelay
 	 *            The delay in milliseconds.
 	 * @return This {@link de.timroes.android.listview.EnhancedListView}
@@ -547,12 +547,12 @@ public class EnhancedListView extends ListView {
 	 * Sets whether another touch on the view is required before the popup
 	 * counts down to dismiss the undo popup. By default this is set to
 	 * {@code true}.
-	 * 
+	 *
 	 * @param touchBeforeDismiss
 	 *            Whether the screen needs to be touched before the countdown
 	 *            starts.
 	 * @return This {@link de.timroes.android.listview.EnhancedListView}
-	 * 
+	 *
 	 * @see #setUndoHideDelay(int)
 	 */
 	public EnhancedListView setRequireTouchBeforeDismiss(
@@ -568,7 +568,7 @@ public class EnhancedListView extends ListView {
 	 * <p>
 	 * <b>Note:</b> This method requires the <i>Swipe to Dismiss</i> feature
 	 * enabled. Use {@link #enableSwipeToDismiss()} to enable the feature.
-	 * 
+	 *
 	 * @param direction
 	 *            The direction to which the swipe should be limited.
 	 * @return This {@link de.timroes.android.listview.EnhancedListView}
@@ -590,7 +590,7 @@ public class EnhancedListView extends ListView {
 	 * <p>
 	 * <b>Note:</b> This method requires the <i>Swipe to Dismiss</i> feature
 	 * enabled. Use {@link #enableSwipeToDismiss()} to enable the feature.
-	 * 
+	 *
 	 * @param swipingLayoutId
 	 *            The id (from R.id) of the view, that should be swiped.
 	 * @return This {@link de.timroes.android.listview.EnhancedListView}
@@ -611,10 +611,8 @@ public class EnhancedListView extends ListView {
 			undoable.discard();
 		}
 		mUndoActions.clear();
-		if(this.isAttachedToWindow()){
-			mUndoPopup.dismiss();
+		mUndoPopup.dismiss();
 
-		}
 	}
 
 	/**
@@ -628,7 +626,7 @@ public class EnhancedListView extends ListView {
 	 * list headers as {@code position}. Most of the times that shouldn't be a
 	 * problem, since you most probably will evaluate the position which should
 	 * be deleted in a way, that respects the list headers.
-	 * 
+	 *
 	 * @param position
 	 *            The position of the item in the list.
 	 * @throws java.lang.IndexOutOfBoundsException
@@ -664,7 +662,7 @@ public class EnhancedListView extends ListView {
 	 * Slide out a view to the right or left of the list. After the animation
 	 * has finished, the view will be dismissed by calling
 	 * {@link #performDismiss(android.view.View, android.view.View, int)}.
-	 * 
+	 *
 	 * @param view
 	 *            The view, that should be slided out.
 	 * @param childView
@@ -865,7 +863,7 @@ public class EnhancedListView extends ListView {
 	/**
 	 * Animate the dismissed list item to zero-height and fire the dismiss
 	 * callback when all dismissed list item animations have completed.
-	 * 
+	 *
 	 * @param dismissView
 	 *            The view that has been slided out.
 	 * @param listItemView
@@ -1018,7 +1016,7 @@ public class EnhancedListView extends ListView {
 	 * Checks whether the delta of a swipe indicates, that the swipe is in the
 	 * correct direction, regarding the direction set via
 	 * {@link #setSwipeDirection(de.timroes.android.listview.EnhancedListView.SwipeDirection)}
-	 * 
+	 *
 	 * @param deltaX
 	 *            The delta of x coordinate of the swipe.
 	 * @return Whether the delta of a swipe is in the right direction.

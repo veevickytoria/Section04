@@ -74,7 +74,7 @@ public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 		String _url = getBaseUri().build().toString();
 		System.out.println(_url);
 		SessionManager session= SessionManager.getInstance();
-		String userId = session.getUserID();
+		String userId = SessionManager.getUserID();
 		// establish connection
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();

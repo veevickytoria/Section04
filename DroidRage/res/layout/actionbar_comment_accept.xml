@@ -13,7 +13,7 @@
 
         <ImageView
             style="@style/EditEventCustomActionButtonImage"
-            android:src="@drawable/ic_menu_close_clear_cancel" />
+            android:src="@drawable/ic_action_edit" />
 
         <TextView
             style="@style/EditEventCustomActionButtonText"

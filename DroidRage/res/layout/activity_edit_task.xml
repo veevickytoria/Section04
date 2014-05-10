@@ -131,7 +131,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/task_response_row"
+            android:id="@+id/task_detail_row"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:focusable="true"

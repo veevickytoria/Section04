@@ -19,7 +19,7 @@ package com.doomonafireball.betterpickers.radialtimepicker;
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Locale;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
@@ -36,7 +36,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.doomonafireball.betterpickers.Utils;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialPickerLayout.OnValueSelectedListener;
 import com.meetingninja.csse.R;
@@ -45,6 +44,7 @@ import com.nineoldandroids.animation.ObjectAnimator;
 /**
  * Dialog to set a time.
  */
+@SuppressLint("ValidFragment")
 public class RadialTimePickerDialog extends DialogFragment implements
 		OnValueSelectedListener {
 
@@ -462,7 +462,7 @@ public class RadialTimePickerDialog extends DialogFragment implements
 
 	/**
 	 * For keyboard mode, processes key events.
-	 * 
+	 *
 	 * @param keyCode
 	 *            the pressed key.
 	 * @return true if the key was successfully processed, false otherwise.
@@ -545,7 +545,7 @@ public class RadialTimePickerDialog extends DialogFragment implements
 	/**
 	 * Try to start keyboard mode with the specified key, as long as the
 	 * timepicker is not in the middle of a touch-event.
-	 * 
+	 *
 	 * @param keyCode
 	 *            The key to use as the first press. Keyboard mode will not be
 	 *            started if the key is not legal to start with. Or, pass in -1
@@ -636,7 +636,7 @@ public class RadialTimePickerDialog extends DialogFragment implements
 	/**
 	 * Get out of keyboard mode. If there is nothing in typedTimes, revert to
 	 * TimePicker's time.
-	 * 
+	 *
 	 * @param changeDisplays
 	 *            If true, update the displays with the relevant time.
 	 */
@@ -660,7 +660,7 @@ public class RadialTimePickerDialog extends DialogFragment implements
 	 * Update the hours, minutes, and AM/PM displays with the typed times. If
 	 * the typedTimes is empty, either show an empty display (filled with the
 	 * placeholder text), or update from the timepicker's values.
-	 * 
+	 *
 	 * @param allowEmptyDisplay
 	 *            if true, then if the typedTimes is empty, use the placeholder
 	 *            text. Otherwise, revert to the timepicker's values.
@@ -730,7 +730,7 @@ public class RadialTimePickerDialog extends DialogFragment implements
 	/**
 	 * Get the currently-entered time, as integer values of the hours and
 	 * minutes typed.
-	 * 
+	 *
 	 * @param enteredZeros
 	 *            A size-2 boolean array, which the caller should initialize,
 	 *            and which may then be used for the caller to know whether

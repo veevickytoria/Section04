@@ -16,9 +16,6 @@
 package com.meetingninja.csse.user.tasks;
 
 import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import objects.User;
 
 import android.os.AsyncTask;

@@ -1,10 +1,8 @@
 package com.meetingninja.csse.group;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import objects.Contact;
 import objects.Group;
 import objects.SerializableUser;
 import objects.User;
@@ -31,7 +29,6 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.meetingninja.csse.R;
-import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.volley.UserVolleyAdapter;
@@ -41,7 +38,6 @@ import com.meetingninja.csse.extras.NinjaTextUtils;
 import com.meetingninja.csse.user.AutoCompleteAdapter;
 import com.meetingninja.csse.user.ProfileActivity;
 import com.meetingninja.csse.user.UserArrayAdapter;
-import com.meetingninja.csse.user.tasks.GetContactsTask;
 import com.tokenautocomplete.TokenCompleteTextView.TokenListener;
 
 import de.timroes.android.listview.EnhancedListView;
@@ -81,6 +77,7 @@ public class EditGroupActivity extends Activity implements TokenListener {
 //		fetchContacts();
 		bothUsers.addAll(allUsers);
 	}
+	@Override
 	public void onConfigurationChanged(Configuration newConfig){
 		super.onConfigurationChanged(newConfig);
 

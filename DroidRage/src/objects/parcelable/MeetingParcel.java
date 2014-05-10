@@ -45,7 +45,7 @@ public class MeetingParcel extends DataParcel<Meeting> {
 		data.setDescription(in.readString());
 		ArrayList<UserParcel> userParcelList = in.readArrayList(UserParcel.class.getClassLoader());
 		for (int i=0;i<userParcelList.size();i++){
-			data.addAttendee((User) userParcelList.get(i).getData());
+			data.addAttendee(userParcelList.get(i).getData());
 		}
 
 	}

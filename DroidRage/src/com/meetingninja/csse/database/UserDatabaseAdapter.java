@@ -23,8 +23,6 @@ import java.net.URL;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
 import objects.Event;
 import objects.Group;
 import objects.Meeting;
@@ -35,7 +33,6 @@ import objects.SerializableUser;
 import objects.Task;
 import objects.User;
 import android.net.Uri;
-import android.service.textservice.SpellCheckerService.Session;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -45,11 +42,8 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.meetingninja.csse.SessionManager;
-import com.meetingninja.csse.database.BaseDatabaseAdapter.IRequest;
 import com.meetingninja.csse.extras.JsonUtils;
 import com.meetingninja.csse.extras.NinjaTextUtils;
-import com.meetingninja.csse.extras.SleeperThread;
 import com.parse.ParseUser;
 
 public class UserDatabaseAdapter extends BaseDatabaseAdapter {
