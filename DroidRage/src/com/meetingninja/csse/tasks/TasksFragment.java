@@ -198,6 +198,7 @@ public class TasksFragment extends Fragment implements AsyncResponse<List<Task>>
 		startActivityForResult(viewTask, 6);
 	}
 
+	@Override
 	public void refresh() {
 		taskListfetcher = new GetTaskListTask(this);
 		taskListfetcher.execute(SessionManager.getUserID());
