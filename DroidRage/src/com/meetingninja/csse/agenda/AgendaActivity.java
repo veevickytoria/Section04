@@ -51,7 +51,6 @@ import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.extras.JsonUtils;
 import com.meetingninja.csse.tasks.tasks.CreateTaskTask;
-import com.parse.gdata.Escaper;
 
 public class AgendaActivity extends FragmentActivity {
 
