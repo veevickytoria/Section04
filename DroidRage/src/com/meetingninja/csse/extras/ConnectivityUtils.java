@@ -15,20 +15,10 @@
  ******************************************************************************/
 package com.meetingninja.csse.extras;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketAddress;
-import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
-
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
-import android.util.Log;
-
-import com.meetingninja.csse.database.BaseDatabaseAdapter;
 
 /**
  * Check device's network connectivity and speed

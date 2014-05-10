@@ -4,9 +4,7 @@ import objects.Note;
 import android.view.Menu;
 import android.view.MenuInflater;
 
-import com.meetingninja.csse.R;
 import com.meetingninja.csse.notes.NotesFragment;
-import com.meetingninja.csse.notes.tasks.DeleteNoteTask;
 
 public class NotesProjectFragment extends NotesFragment{
 

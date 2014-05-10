@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import objects.Group;
-import objects.User;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;

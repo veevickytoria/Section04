@@ -1,21 +1,16 @@
 package objects;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import objects.parcelable.ParcelDataFactory;
 import objects.parcelable.UserParcel;
 
 import android.database.Cursor;
-import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.volley.UserVolleyAdapter;
@@ -183,7 +178,7 @@ public class Meeting extends Event implements Parcelable {
 		description = in.readString();
 		ArrayList<UserParcel> userParcelList = in.readArrayList(UserParcel.class.getClassLoader());
 		for (int i=0;i<userParcelList.size();i++){
-			attendance.add((User) userParcelList.get(i).getData());
+			attendance.add(userParcelList.get(i).getData());
 		}
 		System.out.println("read " + attendance);
 	}

@@ -5,12 +5,8 @@ import java.io.IOException;
 import objects.builders.NoteBuilder;
 import android.database.Cursor;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.meetingninja.csse.database.Keys;
 
 public class Note extends AbstractJSONObject<Note> {

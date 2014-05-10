@@ -8,7 +8,6 @@ import android.util.Log;
 
 import com.meetingninja.csse.database.AgendaDatabaseAdapter;
 import com.meetingninja.csse.database.AsyncResponse;
-import com.meetingninja.csse.extras.JsonUtils;
 
 public class AgendaSaveTask extends AsyncTask<Agenda, Void, String> {
 

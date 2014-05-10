@@ -1,7 +1,5 @@
 package com.meetingninja.csse.user;
 
-import java.util.HashMap;
-
 import objects.User;
 import objects.parcelable.ParcelDataFactory;
 import objects.parcelable.UserParcel;
