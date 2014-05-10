@@ -133,6 +133,7 @@ public class EditNoteActivity extends Activity implements AsyncResponse<String> 
 			Toast.makeText(this, "Empty Note not created", Toast.LENGTH_LONG).show();
 			setResult(RESULT_CANCELED, backToNotes);
 			finish();
+			return;
 		}
 		if (isCreationMode) {
 			createNoteTask = new CreateNoteTask(this);
@@ -159,8 +160,7 @@ public class EditNoteActivity extends Activity implements AsyncResponse<String> 
 		} else {
 			new AlertDialog.Builder(this).setMessage("Are you sure you want to discard changes?").setCancelable(true).setPositiveButton("Yes",new DialogInterface.OnClickListener() {
 				@Override
-				public void onClick(DialogInterface dialog,
-						int id) {
+				public void onClick(DialogInterface dialog,int id) {
 					Intent intentMessage = new Intent();
 					setResult(RESULT_CANCELED, intentMessage);
 					finish();

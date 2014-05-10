@@ -123,7 +123,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/vertical_spacer"
-                    android:hint="this is where the text goes"
+                    android:hint="Task Desctription"
                     android:inputType="text" />
             </LinearLayout>
         </LinearLayout>
@@ -156,7 +156,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/vertical_spacer"
-                    android:hint="this is where the criteria goes"
+                    android:hint="Task Completion criteria"
                     android:inputType="text" />
             </LinearLayout>
 
@@ -235,51 +235,6 @@
         </LinearLayout>
 
         <!-- REMINDERS -->
-
-        <LinearLayout
-            android:id="@+id/task_reminders_row"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/vertical_spacer"
-            android:focusable="true"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/task_reminders_group_label"
-                style="@style/TextAppearance.EditEvent_LabelSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="0dip"
-                android:gravity="center_vertical"
-                android:text="@string/event_info_reminders_label" />
-
-            <LinearLayout
-                android:id="@+id/task_reminder_items_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dip"
-                android:layout_marginRight="8dip"
-                android:layout_marginTop="-8dip"
-                android:orientation="vertical" />
-
-            <Button
-                android:id="@+id/task_reminder_add"
-                style="@style/TextAppearance.EditEvent_LabelSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginBottom="0dip"
-                android:layout_marginTop="0dip"
-                android:background="?android:attr/selectableItemBackground"
-                android:contentDescription="@string/reminders_label"
-                android:gravity="top"
-                android:minHeight="20dip"
-                android:paddingBottom="12dp"
-                android:text="@string/reminders_label"
-                android:textAllCaps="false"
-                android:textColor="#FF777777"
-                android:textSize="18sp" />
-        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

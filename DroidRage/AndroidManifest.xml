@@ -190,6 +190,13 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_view_project" >
         </activity>
+        <activity
+            android:name="com.meetingninja.csse.projects.ViewNotesProject"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/title_activity_view_project" 
+            android:parentActivityName="com.meetingninja.csse.projects.ViewProjectActivity">
+           
+        </activity>
     </application>
 
 </manifest>

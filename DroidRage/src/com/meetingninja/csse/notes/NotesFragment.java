@@ -58,7 +58,7 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 
 	private static final String TAG = NotesFragment.class.getSimpleName();
 
-	private NoteArrayAdapter noteAdpt;
+	protected NoteArrayAdapter noteAdpt;
 	private ImageButton notesImageButton;
 	private SQLiteNoteAdapter mySQLiteAdapter;
 	private PopulateTask populateTask;
@@ -89,8 +89,7 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 		Bundle args = getArguments();
 		if (args != null && args.containsKey(Keys.Project.NOTES)) {
 			notes.clear();
-			List<NoteParcel> temp = getArguments().getParcelableArrayList(
-					Keys.Project.NOTES);
+			List<NoteParcel> temp = getArguments().getParcelableArrayList(Keys.Project.NOTES);
 			for (NoteParcel noteParcel : temp) {
 				notes.add(noteParcel.getData());
 			}
@@ -130,13 +129,7 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 		notesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parentAdapter, View v,int position, long id) {
-				Note clickedNote = noteAdpt.getItem(position);
-
-				Intent viewNote = new Intent(getActivity(),ViewNoteActivity.class);
-				viewNote.putExtra("listPosition", position);
-				viewNote.putExtra(Keys.Note.PARCEL, new NoteParcel(clickedNote));
-				startActivityForResult(viewNote, 1);
-
+				clickedNote(position);
 			}
 		});
 
@@ -158,6 +151,14 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 			}
 
 		});
+	}
+	protected void clickedNote(int position) {
+		Note clickedNote = noteAdpt.getItem(position);
+
+		Intent viewNote = new Intent(getActivity(),ViewNoteActivity.class);
+		viewNote.putExtra("listPosition", position);
+		viewNote.putExtra(Keys.Note.PARCEL, new NoteParcel(clickedNote));
+		startActivityForResult(viewNote, 1);
 	}
 
 	@Override
@@ -238,13 +239,13 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == 1) { // EditNoteActivity
 			if (resultCode == Activity.RESULT_OK) {
-				if (data != null) {
-					data.getIntExtra("listPosition", -1);
-					Note editedNote = new ParcelDataFactory(data.getExtras()).getNote();
-					refresh();
-				}
+//				if (data != null) {
+//					System.out.println(data.getIntExtra("listPosition", -1));
+//					Note editedNote = new ParcelDataFactory(data.getExtras()).getNote();
+//				}
 			} // end EditNoteActivity
 		}
+		refresh();
 	}
 
 	public void populateList() {
