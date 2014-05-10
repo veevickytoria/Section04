@@ -24,6 +24,9 @@ import java.io.PrintStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.List;
+
+import objects.Contact;
 
 import android.net.Uri;
 import android.util.Log;
@@ -35,6 +38,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meetingninja.csse.ApplicationController;
+import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.extras.JsonUtils;
 
 public abstract class BaseDatabaseAdapter {
@@ -132,6 +136,27 @@ public abstract class BaseDatabaseAdapter {
 		String payload = json.toString("UTF8");
 		ps.close();
 		return payload;
+	}
+	
+	public static Boolean deleteItem(String _url) throws IOException {
+		URL url = new URL(_url);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+		// add request header
+		conn.setRequestMethod(IRequest.DELETE);
+		addRequestHeader(conn, false);
+		int responseCode = conn.getResponseCode();
+		String response = getServerResponse(conn);
+
+		boolean result = false;
+		JsonNode tree = MAPPER.readTree(response);
+		if (!response.isEmpty()) {
+			if (!tree.has(Keys.DELETED)) {
+				result = true;
+			}
+		}
+		conn.disconnect();
+		return result;
 	}
 
 	protected static void addToRequestQueue(Request<?> req) {

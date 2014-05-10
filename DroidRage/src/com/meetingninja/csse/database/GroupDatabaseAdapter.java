@@ -163,33 +163,9 @@ public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
 
 	public static Boolean deleteGroup(String groupID) throws IOException {
 		String _url = getBaseUri().appendPath(groupID).build().toString();
-		URL url = new URL(_url);
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-		conn.setRequestMethod(IRequest.DELETE);
-		addRequestHeader(conn, false);
-		conn.getResponseCode();
-		String response = getServerResponse(conn);
-		boolean result = false;
-		JsonNode tree = MAPPER.readTree(response);
-		if (!response.isEmpty()) {
-			if (!tree.has(Keys.DELETED)) {
-				result = true;
-			}
-		}
-		conn.disconnect();
+		Boolean result = deleteItem(_url);
 		return result;
 	}
-
-//	private static String sendSingleEdit(String payload) throws IOException {
-//		String _url = getBaseUri().build().toString();
-//		URL url = new URL(_url);
-//		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//		conn.setRequestMethod(IRequest.PUT);
-//		addRequestHeader(conn, false);
-//		sendPostPayload(conn, payload);
-//		return getServerResponse(conn);
-//	}
 
 	public static Group parseGroup(JsonNode groupNode, Group g) {
 		// Group g = new Group();

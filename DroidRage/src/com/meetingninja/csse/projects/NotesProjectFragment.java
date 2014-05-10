@@ -17,7 +17,6 @@ import com.meetingninja.csse.notes.tasks.DeleteNoteTask;
 public class NotesProjectFragment extends NotesFragment{
 
 	private ViewProjectActivity pCont;
-	private Note clickedNote;
 	@Override
 	protected void delete(Note note) {
 		pCont.deleteNote(note.getID());
@@ -38,8 +37,8 @@ public class NotesProjectFragment extends NotesFragment{
 	}
 	@Override
 	protected void clickedNote(int position){
-		Intent intent = new Intent(getActivity(),ViewNotesProject.class);
-		clickedNote = noteAdpt.getItem(position);
+		Intent intent = new Intent(getActivity(),ViewNoteProjectActivity.class);
+		Note clickedNote = noteAdpt.getItem(position);
 		intent.putExtra(Keys.Note.PARCEL, new NoteParcel(clickedNote));
 		
 		startActivityForResult(intent, 8);

@@ -95,7 +95,7 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 			}
 			noteAdpt.notifyDataSetChanged();
 		} else {
-			populateList();
+			refresh();
 		}
 
 		mySQLiteAdapter = new SQLiteNoteAdapter(getActivity());
@@ -248,7 +248,7 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 		refresh();
 	}
 
-	public void populateList() {
+	public void refresh() {
 		populateTask = new PopulateTask(this);
 		populateTask.execute(SessionManager.getUserID());
 	}
@@ -317,11 +317,5 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 			super.onPostExecute(result);
 			// delegate.processFinish(result);
 		}
-	}
-
-	@Override
-	public void refresh() {
-		this.populateList();
-
 	}
 }

@@ -92,7 +92,7 @@ public class UserListFragment extends Fragment implements TokenListener {
 
 		} else {
 			setHasOptionsMenu(true);
-			populateList(true); // uses async-task
+			refresh(); // uses async-task
 		}
 		return v;
 	}
@@ -106,7 +106,7 @@ public class UserListFragment extends Fragment implements TokenListener {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_refresh:
-			populateList(false);
+			refresh();
 			return true;
 		case R.id.action_new:
 			addContactsOption();
@@ -203,20 +203,29 @@ public class UserListFragment extends Fragment implements TokenListener {
 		}
 		mContactAdapter.notifyDataSetChanged();
 		input.setText("");
-//		mContactAdapter.getFilter().filter("");
 	}
 
 	protected void addContact(User user) {
 		AddContactTask adder = new AddContactTask(this);
 		adder.addContact(user.getID());
 		input.setText("");
-//		System.out.println("addedcontact");
-//		input.setText(input.getText());
 	}
 
 	protected void deleteContact(Contact item) {
-		DeleteContactTask deleter = new DeleteContactTask(this);
-		deleter.deleteContact(item.getRelationID());
+//		DeleteContactTask deleter = new DeleteContactTask(this);
+//		deleter.deleteContact(item.getRelationID());
+		new DeleteContactTask(new AsyncResponse<Boolean>(){
+			@Override
+			public void processFinish(Boolean result) {
+				refresh();
+//				allUsers = new ArrayList<User>(result);
+//				addContactsOptionLoaded();
+			}
+			
+		}).execute(item.getRelationID());
+		
+		
+		mContactAdapter.remove(item);
 		mContactAdapter.notifyDataSetChanged();
 	}
 
@@ -226,9 +235,9 @@ public class UserListFragment extends Fragment implements TokenListener {
 		super.onPause();
 	}
 
-	private void populateList(boolean add) {
+	public void refresh() {
 		SessionManager.getInstance();
-		fetcher = new RetContactsObj(add);
+		fetcher = new RetContactsObj();
 		fetcher.execute(SessionManager.getUserID());
 		// TODO: also remeve tempDeletedContacts
 	}
@@ -248,6 +257,7 @@ public class UserListFragment extends Fragment implements TokenListener {
 					public void undo() {
 						contacts.add(item);
 						tempDeletedContacts.remove(item);
+						mContactAdapter.insert(item, position);
 						mContactAdapter.notifyDataSetChanged();
 					}
 
@@ -310,7 +320,7 @@ public class UserListFragment extends Fragment implements TokenListener {
 
 		private GetContactsTask contactsFetcher;
 
-		public RetContactsObj(boolean add) {
+		public RetContactsObj() {
 			contactsFetcher = new GetContactsTask(this);
 		}
 

@@ -79,8 +79,7 @@ public class MeetingsFragment extends Fragment implements AsyncResponse<List<Mee
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		View v = inflater.inflate(R.layout.fragment_meetings, container, false);
 		setupViews(v);
@@ -99,7 +98,7 @@ public class MeetingsFragment extends Fragment implements AsyncResponse<List<Mee
 			meetingAdpt.notifyDataSetChanged();
 		} else if (ConnectivityUtils.isConnected(getActivity()) && isAdded()) {
 			setHasOptionsMenu(true);
-			populateList();
+			refresh();
 		}
 
 		meetingImageButton.setOnClickListener(new View.OnClickListener() {
@@ -114,7 +113,6 @@ public class MeetingsFragment extends Fragment implements AsyncResponse<List<Mee
 
 	private void setupViews(View v) {
 		mListView = (EnhancedListView) v.findViewById(android.R.id.list);
-		// pretty images are better than boring text
 		meetingImageButton = (ImageButton) v.findViewById(android.R.id.empty);
 		mListView.setEmptyView(meetingImageButton);
 
@@ -124,7 +122,7 @@ public class MeetingsFragment extends Fragment implements AsyncResponse<List<Mee
 		setupSwipeList();
 	}
 
-	private void loadMeeting(Meeting meeting) {
+	protected void loadMeeting(Meeting meeting) {
 		while (meeting.getEndTimeInMillis() == 0L);
 		Intent viewMeeting = new Intent(getActivity(),ViewMeetingActivity.class);
 		viewMeeting.putExtra(Keys.Meeting.PARCEL, meeting);
@@ -185,7 +183,9 @@ public class MeetingsFragment extends Fragment implements AsyncResponse<List<Mee
 	}
 
 	protected void deleteMeeting(Meeting item) {
-		MeetingVolleyAdapter.deleteMeeting(item.getID());
+//		MeetingVolleyAdapter.deleteMeeting(item.getID());
+		DeleteMeetingTask deltask = new DeleteMeetingTask();
+		deltask.deleteMeeting(item.getID());
 		meetings.remove(item);
 		meetingAdpt.notifyDataSetChanged();
 	}
@@ -215,9 +215,6 @@ public class MeetingsFragment extends Fragment implements AsyncResponse<List<Mee
 			case 2: // Delete
 				Meeting meeting = meetingAdpt.getItem(position);
 				deleteMeeting(meeting);
-//				MeetingVolleyAdapter.deleteMeeting(meeting.getID());
-//				meetings.remove(position);
-//				meetingAdpt.notifyDataSetChanged();
 				handled = true;
 				break;
 			default:
@@ -234,14 +231,14 @@ public class MeetingsFragment extends Fragment implements AsyncResponse<List<Mee
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		populateList();
+		System.out.println("retured to meetingfrag");
+		refresh();
 
 		if (requestCode == 2) {
 			if (resultCode == Activity.RESULT_OK) {
 				if (data != null) {
 					int listPosition = data.getIntExtra("listPosition", -1);
-					Meeting created = data
-							.getParcelableExtra(Keys.Meeting.PARCEL);
+					Meeting created = data.getParcelableExtra(Keys.Meeting.PARCEL);
 
 					if (data.getStringExtra("method").equals("update")) {
 						Log.d(TAG, "Updating Meeting");
@@ -254,7 +251,7 @@ public class MeetingsFragment extends Fragment implements AsyncResponse<List<Mee
 					} else if (data.getStringExtra("method").equals("insert")) {
 						Log.d(TAG, "Inserting Meeting");
 						// created = mySQLiteAdapter.insertMeeting(created);
-						populateList();
+						refresh();
 					}
 				}
 			} else {
@@ -265,7 +262,8 @@ public class MeetingsFragment extends Fragment implements AsyncResponse<List<Mee
 		}
 	}
 
-	public void populateList() {
+	public void refresh() {
+		System.out.println("populating list");
 		fetcher = new MeetingsFetcherTask(this);
 		fetcher.execute(SessionManager.getUserID());
 		// calls processFinish()
@@ -320,10 +318,5 @@ public class MeetingsFragment extends Fragment implements AsyncResponse<List<Mee
 
 		if (isAdded())
 			meetingAdpt.notifyDataSetChanged();
-	}
-
-	@Override
-	public void refresh() {
-		this.populateList();
 	}
 }

@@ -91,7 +91,6 @@ public class ViewNoteActivity extends Activity {
 			//
 			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
 			//
-//			NavUtils.navigateUpFromSameTask(this);
 			finish();
 			return true;
 
@@ -106,8 +105,8 @@ public class ViewNoteActivity extends Activity {
 	}
 
 	protected void delete(Note note) {
-			new DeleteNoteTask().execute(note.getID());
-			finish();
+		new DeleteNoteTask().execute(note.getID());
+		finish();
 	}
 
 	@Override
