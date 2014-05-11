@@ -43,6 +43,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -66,13 +67,13 @@ import com.tokenautocomplete.TokenCompleteTextView.TokenListener;
 
 import de.timroes.android.listview.EnhancedListView;
 
-public class EditTaskActivity extends FragmentActivity implements AsyncResponse<Boolean>, TokenListener {
-	final String MARK_AS_COMPLETE = "Mark As Complete";
-	final String MARK_AS_INCOMPLETE = "Mark As Incomplete";
+public class EditTaskActivity extends FragmentActivity implements
+		AsyncResponse<Boolean>, TokenListener {
 
 	private EditText mDescription, completionCriteria, mTitle;
-	private TextView assignedDateLabel, createdDateLabel, isCompleted;
-	private Button mDeadlineBtn, mCompleteBtn;
+	private TextView assignedDateLabel, createdDateLabel;
+	private Button mDeadlineBtn;
+	private CheckBox mCompletedCheck;
 	private DateTimeFormatter dateFormat = NinjaDateUtils.JODA_APP_DATE_FORMAT;
 	private AutoCompleteAdapter autoAdapter;
 	private ArrayList<User> allUsers = new ArrayList<User>();
@@ -80,13 +81,12 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 	Dialog dlg;
 
 	// private SessionManager session;
-	private Task displayTask;
+	private Task displayedTask;
 	Calendar cal = null;
 	public static final String EXTRA_TASK = Keys.Task.PARCEL;
 	private UserArrayAdapter mUserAdapter;
-	private EnhancedListView l;
+	private EnhancedListView listView;
 	private String userId;
-	private SessionManager session;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -96,87 +96,80 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 		setupViews();
 		Bundle extras = getIntent().getExtras();
 
-		session = SessionManager.getInstance();
 		userId = SessionManager.getUserID();
 
+		cal = Calendar.getInstance();
+		cal.setTimeZone(TimeZone.getTimeZone("UTC"));
+
 		if (extras != null) {
-			displayTask = extras.getParcelable(EXTRA_TASK);
+			displayedTask = extras.getParcelable(EXTRA_TASK);
 		}
-		if (!displayTask.getID().equals("-1")) {
-			// allows keyboard to hide when not editing text
+		if (!displayedTask.getID().equals("-1")) {
 
-			loadTask(displayTask.getID());
+			loadTaskFromBackend(displayedTask.getID());
 
-			cal = Calendar.getInstance();
-			cal.setTimeZone(TimeZone.getTimeZone("UTC"));
-			cal.setTimeInMillis(displayTask.getEndTimeInMillis());
+			cal.setTimeInMillis(displayedTask.getEndTimeInMillis());
 
-			mDeadlineBtn.setOnClickListener(new DateClickListener(mDeadlineBtn,cal, this));
-			setUpListView();
 			// assignedDateLabel.setText(dateFormat.format(assignedDate));
 			// createdDateLabel.setText(dateFormat.format(createdDate));
-		}else{
-			cal = Calendar.getInstance();
-			cal.setTimeZone(TimeZone.getTimeZone("UTC"));
-
+		} else {
 			Calendar now = Calendar.getInstance();
 			now.set(Calendar.HOUR_OF_DAY, 0);
 			cal.setTimeInMillis(now.getTimeInMillis());
-			mDeadlineBtn.setOnClickListener(new DateClickListener(mDeadlineBtn,cal, this));
-			setUpListView();
-			displayTask.setEndTime(now.getTimeInMillis());
-			displayTask.setDateCreated(String.valueOf(now.getTimeInMillis()));
-			setTask();
+
+			displayedTask.setEndTime(now.getTimeInMillis());
+			// displayedTask.setDateCreated(String.valueOf(now.getTimeInMillis()));
+			loadTask(displayedTask);
 		}
+		mDeadlineBtn.setOnClickListener(new DateClickListener(mDeadlineBtn,
+				cal, this));
+		hideInputOnTouch();
 	}
-	private void loadTask(String id){
+
+	private void loadTaskFromBackend(String id) {
 		TaskVolleyAdapter.getTaskInfo(id, new AsyncResponse<Task>() {
 			@Override
 			public void processFinish(Task result) {
-				displayTask = result;
-				setTask();
-				setUpListView();
+				displayedTask = result;
+				loadTask(displayedTask);
+				hideInputOnTouch();
 			}
 
 		});
 	}
-	private void setTask() {
-		mTitle.setText(displayTask.getTitle());
-		completionCriteria.setText(displayTask.getCompletionCriteria());
-		mDescription.setText(displayTask.getDescription());
-		String format = dateFormat.print(displayTask.getEndTimeInMillis());
+
+	private void loadTask(Task t) {
+		mTitle.setText(t.getTitle());
+		completionCriteria.setText(t.getCompletionCriteria());
+		mDescription.setText(t.getDescription());
+		String format = dateFormat.print(t.getEndTimeInMillis());
 		mDeadlineBtn.setText(format);
-		format = dateFormat.print(Long.parseLong(displayTask.getDateCreated()));
+		format = dateFormat.print(Long.parseLong(t.getDateCreated()));
 		createdDateLabel.setText(format);
 		assignedUsers.clear();
-		//		TODO: change to a loop when backend allows for multiple assigned to
-		assignedUsers.addAll(displayTask.getMembers());
+		// TODO: change to a loop when backend allows for multiple assigned to
+		assignedUsers.addAll(t.getMembers());
 
 		setCompletedViews();
 	}
 
 	private void setCompletedViews() {
-		if (displayTask.getIsCompleted()) {
-			isCompleted.setText("Yes");
-			mCompleteBtn.setText(MARK_AS_INCOMPLETE);
-		} else {
-			isCompleted.setText("No");
-			mCompleteBtn.setText(MARK_AS_COMPLETE);
-		}
+		mCompletedCheck.setChecked(displayedTask.getIsCompleted());
 	}
 
 	public void toggleCompleted(View v) {
-		displayTask.setIsCompleted(!displayTask.getIsCompleted());
+		displayedTask.setIsCompleted(!displayedTask.getIsCompleted());
 		setCompletedViews();
 	}
 
 	private void trimTextView() {
 		mTitle.setText(mTitle.getText().toString().trim());
 		mDescription.setText(mDescription.getText().toString().trim());
-		completionCriteria.setText(completionCriteria.getText().toString().trim());
+		completionCriteria.setText(completionCriteria.getText().toString()
+				.trim());
 	}
 
-	private final View.OnClickListener tActionBarListener = new OnClickListener() {
+	private final View.OnClickListener mActionBarListener = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
 			onActionBarItemSelected(v);
@@ -187,13 +180,15 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		// Make an Ok/Cancel ActionBar
-		View actionBarButtons = inflater.inflate(R.layout.actionbar_ok_cancel,	new LinearLayout(this), false);
+		View actionBarButtons = inflater.inflate(R.layout.actionbar_ok_cancel,
+				new LinearLayout(this), false);
 
-		View cancelActionView = actionBarButtons.findViewById(R.id.action_cancel);
-		cancelActionView.setOnClickListener(tActionBarListener);
+		View cancelActionView = actionBarButtons
+				.findViewById(R.id.action_cancel);
+		cancelActionView.setOnClickListener(mActionBarListener);
 
 		View doneActionView = actionBarButtons.findViewById(R.id.action_done);
-		doneActionView.setOnClickListener(tActionBarListener);
+		doneActionView.setOnClickListener(mActionBarListener);
 
 		getActionBar().setHomeButtonEnabled(false);
 		getActionBar().setDisplayShowHomeEnabled(false);
@@ -227,25 +222,28 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 		mDescription = (EditText) findViewById(R.id.task_edit_desc);
 		completionCriteria = (EditText) findViewById(R.id.task_edit_comp_crit);
 		mDeadlineBtn = (Button) findViewById(R.id.task_edit_deadline);
-		mCompleteBtn = (Button) findViewById(R.id.task_mark_complete_button);
-		isCompleted = (TextView) findViewById(R.id.task_edit_completed);
-		//		assignedDateLabel = (TextView) findViewById(R.id.task_edit_date_assigned);
+		mCompletedCheck = (CheckBox) findViewById(R.id.task_completed_checkbox);
+		// assignedDateLabel = (TextView)
+		// findViewById(R.id.task_edit_date_assigned);
 		createdDateLabel = (TextView) findViewById(R.id.task_edit_date_created);
 	}
+
 	@Override
 	public void onTokenAdded(Object arg0) {
 		SerializableUser added = null;
-		if (arg0 instanceof SerializableUser){
+		if (arg0 instanceof SerializableUser) {
 			added = (SerializableUser) arg0;
-		} 	else if (arg0 instanceof User){
+		} else if (arg0 instanceof User) {
 			added = new SerializableUser((User) arg0);
 		}
 
 		if (added != null) {
-			if(displayTask.getMembers().contains(added)){
-				Toast.makeText(this, "This User is already assigned to this task", Toast.LENGTH_LONG).show();
-			}else{
-				displayTask.addMember(added);
+			if (displayedTask.getMembers().contains(added)) {
+				Toast.makeText(this,
+						"This User is already assigned to this task",
+						Toast.LENGTH_LONG).show();
+			} else {
+				displayedTask.addMember(added);
 				mUserAdapter.notifyDataSetChanged();
 			}
 			dlg.dismiss();
@@ -255,9 +253,9 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 	@Override
 	public void onTokenRemoved(Object arg0) {
 		SerializableUser removed = null;
-		if (arg0 instanceof SerializableUser){
+		if (arg0 instanceof SerializableUser) {
 			removed = (SerializableUser) arg0;
-		} 	else if (arg0 instanceof User){
+		} else if (arg0 instanceof User) {
 			removed = new SerializableUser((User) arg0);
 		}
 		if (removed != null) {
@@ -270,53 +268,60 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 		if (result) {
 			finish();
 		} else {
-			Toast.makeText(this, "Failed to save task", Toast.LENGTH_LONG).show();
+			Toast.makeText(this, "Failed to save task", Toast.LENGTH_LONG)
+					.show();
 		}
 	}
 
 	private void save() {
 		if (mTitle.getText().toString().trim().equals("")) {
-			Toast.makeText(this, "Empty Task not created", Toast.LENGTH_LONG).show();
+			Toast.makeText(this, "Empty Task not created", Toast.LENGTH_LONG)
+					.show();
 			setResult(RESULT_CANCELED);
 			finish();
 		} else {
 			trimTextView();
-			displayTask.setTitle(mTitle.getText().toString());
-			displayTask.setDescription(mDescription.getText().toString());
-			displayTask.setCompletionCriteria(completionCriteria.getText().toString());
-			displayTask.setEndTime(cal.getTimeInMillis());
-			displayTask.setAssignedFrom(userId);
+			displayedTask.setTitle(mTitle.getText().toString());
+			displayedTask.setDescription(mDescription.getText().toString());
+			displayedTask.setCompletionCriteria(completionCriteria.getText()
+					.toString());
+			displayedTask.setEndTime(cal.getTimeInMillis());
+			displayedTask.setAssignedFrom(userId);
 			// TODO: change this for multiple assigned to's
-			if (!displayTask.getMembers().isEmpty()) {
-				displayTask.setAssignedTo(displayTask.getMembers().get(0).getID());
+			if (!displayedTask.getMembers().isEmpty()) {
+				displayedTask.setAssignedTo(displayedTask.getMembers().get(0)
+						.getID());
 			} else {
-				displayTask.setAssignedTo(userId);
-				//				displayTask.setAssignedTo("");
+				displayedTask.setAssignedTo(userId);
+				// displayTask.setAssignedTo("");
 			}
 			// TODO: fetcher for assigned to
-			Toast.makeText(this, String.format("Saving Task"),Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, String.format("Saving Task"),
+					Toast.LENGTH_SHORT).show();
 
 			Intent msgIntent = new Intent();
-			msgIntent.putExtra(EXTRA_TASK, displayTask);
+			msgIntent.putExtra(EXTRA_TASK, displayedTask);
 			setResult(RESULT_OK, msgIntent);
 			finish();
 		}
 	}
 
-	private void setUpListView() {
+	private void hideInputOnTouch() {
 		// allows keyboard to hide when not editing text
-		findViewById(R.id.edit_task_container).setOnTouchListener(new OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				hideKeyboard();
-				return false;
-			}
-		});
+		findViewById(R.id.edit_task_container).setOnTouchListener(
+				new OnTouchListener() {
+					@Override
+					public boolean onTouch(View v, MotionEvent event) {
+						hideKeyboard();
+						return false;
+					}
+				});
 
-		mUserAdapter = new UserArrayAdapter(this, R.layout.list_item_user,displayTask.getMembers());
-		l = (EnhancedListView) findViewById(R.id.edit_task_members_list);
-		l.setAdapter(mUserAdapter);
-		l.setDismissCallback(new de.timroes.android.listview.EnhancedListView.OnDismissCallback() {
+		mUserAdapter = new UserArrayAdapter(this, R.layout.list_item_user,
+				displayedTask.getMembers());
+		listView = (EnhancedListView) findViewById(R.id.edit_task_members_list);
+		listView.setAdapter(mUserAdapter);
+		listView.setDismissCallback(new de.timroes.android.listview.EnhancedListView.OnDismissCallback() {
 			@Override
 			public EnhancedListView.Undoable onDismiss(
 					EnhancedListView listView, final int position) {
@@ -336,24 +341,27 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 				};
 			}
 		});
-		l.setRequireTouchBeforeDismiss(false);
-		l.setUndoHideDelay(5000);
-		l.setOnItemClickListener(new OnItemClickListener() {
+		listView.setRequireTouchBeforeDismiss(false);
+		listView.setUndoHideDelay(5000);
+		listView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View v, int position,long id) {
+			public void onItemClick(AdapterView<?> arg0, View v, int position,
+					long id) {
 				User clicked = mUserAdapter.getItem(position);
-				Intent profileIntent = new Intent(v.getContext(),ProfileActivity.class);
-				profileIntent.putExtra(Keys.User.PARCEL, new UserParcel(clicked));
+				Intent profileIntent = new Intent(v.getContext(),
+						ProfileActivity.class);
+				profileIntent.putExtra(Keys.User.PARCEL,
+						new UserParcel(clicked));
 				startActivity(profileIntent);
 
 			}
 
 		});
-		l.enableSwipeToDismiss();
-		l.setSwipingLayout(R.id.list_group_item_frame_1);
+		listView.enableSwipeToDismiss();
+		listView.setSwipingLayout(R.id.list_group_item_frame_1);
 
-		l.setSwipeDirection(EnhancedListView.SwipeDirection.BOTH);
+		listView.setSwipeDirection(EnhancedListView.SwipeDirection.BOTH);
 
 		// List<User> mems = new ArrayList<User>();
 		// mems = displayTask.getMembers();
@@ -363,25 +371,29 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 
 		// TODO: change to a loop when backend catches up
 		String mem;
-		if(displayTask.getMembers().size()>0){
-			mem = displayTask.getMembers().get(0).getID();
-		}else{
-			mem=displayTask.getAssignedTo();
+		if (displayedTask.getMembers().size() > 0) {
+			mem = displayedTask.getMembers().get(0).getID();
+		} else {
+			mem = displayedTask.getAssignedTo();
 		}
-		loadUser(mem, false);
+		loadUserFromBackend(mem, false);
 		mUserAdapter.notifyDataSetChanged();
 
 	}
 
 	private void hideKeyboard() {
 		InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-		inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+		inputMethodManager.hideSoftInputFromWindow(getCurrentFocus()
+				.getWindowToken(), 0);
 	}
-	public void addMemberDialog(final View view){
+
+	public void addMemberDialog(final View view) {
 		dlg = new Dialog(this);
 		dlg.setTitle("Search by name or email:");
-		View autocompleteView = getLayoutInflater().inflate(R.layout.fragment_autocomplete, null);
-		final ContactTokenTextView input = (ContactTokenTextView) autocompleteView.findViewById(R.id.my_autocomplete);
+		View autocompleteView = getLayoutInflater().inflate(
+				R.layout.fragment_autocomplete, null);
+		final ContactTokenTextView input = (ContactTokenTextView) autocompleteView
+				.findViewById(R.id.my_autocomplete);
 		autoAdapter = new AutoCompleteAdapter(this, allUsers);
 		input.setAdapter(autoAdapter);
 		input.setTokenListener(this);
@@ -398,21 +410,25 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 			}
 		});
 	}
-	private void addAssignedUser(User user){
-		displayTask.addMember(user);
+
+	private void addAssignedUser(User user) {
+		displayedTask.addMember(user);
 		assignedUsers.add(user);
 		mUserAdapter.notifyDataSetChanged();
 	}
-	private void loadUser(String userID, final boolean add) {
+
+	private void loadUserFromBackend(String userID, final boolean add) {
 		UserVolleyAdapter.fetchUserInfo(userID, new AsyncResponse<User>() {
 			@Override
 			public void processFinish(User result) {
 				if (add) {
-					displayTask.addMember(result);
+					displayedTask.addMember(result);
 				}
-				// TODO: eliminate when i can change assignedto to a list. this is becuase members isn't intially being set to have what is in assigned to
-				if (displayTask.getMembers().isEmpty()) {
-					displayTask.addMember(result);
+				// TODO: eliminate when i can change assignedto to a list. this
+				// is becuase members isn't intially being set to have what is
+				// in assigned to
+				if (displayedTask.getMembers().isEmpty()) {
+					displayedTask.addMember(result);
 				}
 
 				mUserAdapter.notifyDataSetChanged();
@@ -420,7 +436,8 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 		});
 	}
 
-	private class DateClickListener implements OnClickListener,	OnDateSetListener {
+	private class DateClickListener implements OnClickListener,
+			OnDateSetListener {
 		Calendar cal;
 		FragmentActivity activity;
 
@@ -432,12 +449,16 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 		@Override
 		public void onClick(View v) {
 			FragmentManager fm = getSupportFragmentManager();
-			CalendarDatePickerDialog calendarDatePickerDialog = CalendarDatePickerDialog.newInstance(DateClickListener.this,cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH));
+			CalendarDatePickerDialog calendarDatePickerDialog = CalendarDatePickerDialog
+					.newInstance(DateClickListener.this,
+							cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
+							cal.get(Calendar.DAY_OF_MONTH));
 			calendarDatePickerDialog.show(fm, "fragment_date_picker_name");
 		}
 
 		@Override
-		public void onDateSet(CalendarDatePickerDialog dialog, int year, int monthOfYear, int dayOfMonth) {
+		public void onDateSet(CalendarDatePickerDialog dialog, int year,
+				int monthOfYear, int dayOfMonth) {
 			Calendar tempcal = Calendar.getInstance();
 			tempcal.set(year, monthOfYear, dayOfMonth);
 			Calendar today = Calendar.getInstance();
@@ -449,7 +470,9 @@ public class EditTaskActivity extends FragmentActivity implements AsyncResponse<
 				String format = dateFormat.print(cal.getTimeInMillis());
 				mDeadlineBtn.setText(format);
 			} else {
-				AlertDialogUtil.displayDialog(activity, "Error","A deadline can not be set before today's date", "OK",null);
+				AlertDialogUtil.displayDialog(activity, "Error",
+						"A deadline can not be set before today's date", "OK",
+						null);
 			}
 		}
 	}
