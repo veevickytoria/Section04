@@ -8,6 +8,7 @@ import objects.Meeting;
 import objects.Note;
 import objects.Project;
 import objects.User;
+import objects.parcelable.MeetingParcel;
 import objects.parcelable.NoteParcel;
 import objects.parcelable.ParcelDataFactory;
 import objects.parcelable.UserParcel;
@@ -412,7 +413,7 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 
 			if(data!=null){
 				if (requestCode == 2) {
-					Meeting created = data.getParcelableExtra(Keys.Meeting.PARCEL);
+					Meeting created = new ParcelDataFactory(data.getExtras()).getMeeting();
 					addMeeting(created);
 				} else if (requestCode == 3) {
 					addNote(new ParcelDataFactory(data.getExtras()).getNote());
@@ -432,7 +433,11 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 		case 0:
 			meetingFrag = new MeetingsProjectFragment().setProjectController(this);
 			frag = meetingFrag;
-			args.putParcelableArrayList(Keys.Project.MEETINGS,(ArrayList<Meeting>) displayedProject.getMeetings());
+			ArrayList<MeetingParcel> parcels = new ArrayList<MeetingParcel>();
+			for (Meeting m : displayedProject.getMeetings()) {
+				parcels.add(new MeetingParcel(m));
+			}
+			args.putParcelableArrayList(Keys.Project.MEETINGS, parcels);
 			break;
 		case 1:
 			notesFrag = new NotesProjectFragment().setProjectController(this);

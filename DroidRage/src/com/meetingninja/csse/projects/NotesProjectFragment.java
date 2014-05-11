@@ -36,7 +36,7 @@ public class NotesProjectFragment extends NotesFragment{
 		return; // don't want to duplicate super menu
 	}
 	@Override
-	protected void clickedNote(int position){
+	protected void viewNoteAtPosition(int position){
 		Intent intent = new Intent(getActivity(),ViewNoteProjectActivity.class);
 		Note clickedNote = noteAdpt.getItem(position);
 		intent.putExtra(Keys.Note.PARCEL, new NoteParcel(clickedNote));

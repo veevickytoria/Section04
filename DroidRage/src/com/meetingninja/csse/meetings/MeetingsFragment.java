@@ -21,6 +21,8 @@ import java.util.Comparator;
 import java.util.List;
 
 import objects.Meeting;
+import objects.parcelable.MeetingParcel;
+import objects.parcelable.ParcelDataFactory;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -96,9 +98,10 @@ public class MeetingsFragment extends Fragment implements
 		mListView.setAdapter(meetingAdpt);
 		if (getArguments() != null
 				&& getArguments().containsKey(Keys.Project.MEETINGS)) {
-			ArrayList<Meeting> temp = getArguments().getParcelableArrayList(
-					Keys.Project.MEETINGS);
-			meetings.addAll(temp);
+			ArrayList<MeetingParcel> temp = getArguments().getParcelableArrayList(Keys.Project.MEETINGS);
+			for (MeetingParcel meetingParcel : temp) {
+				meetings.add(meetingParcel.getData());
+			}
 			meetingAdpt.notifyDataSetChanged();
 		} else if (ConnectivityUtils.isConnected(getActivity()) && isAdded()) {
 			setHasOptionsMenu(true);
@@ -131,7 +134,7 @@ public class MeetingsFragment extends Fragment implements
 			;
 		Intent viewMeeting = new Intent(getActivity(),
 				ViewMeetingActivity.class);
-		viewMeeting.putExtra(Keys.Meeting.PARCEL, meeting);
+		viewMeeting.putExtra(Keys.Meeting.PARCEL, new MeetingParcel(meeting));
 		startActivityForResult(viewMeeting, 6);
 	}
 
@@ -256,8 +259,7 @@ public class MeetingsFragment extends Fragment implements
 			if (resultCode == Activity.RESULT_OK) {
 				if (data != null) {
 					int listPosition = data.getIntExtra("listPosition", -1);
-					Meeting created = data
-							.getParcelableExtra(Keys.Meeting.PARCEL);
+					Meeting created = new ParcelDataFactory(data.getExtras()).getMeeting();
 
 					if (data.getStringExtra("method").equals("update")) {
 						Log.d(TAG, "Updating Meeting");
@@ -296,7 +298,7 @@ public class MeetingsFragment extends Fragment implements
 		Intent editMeeting = new Intent(getActivity(),
 				EditMeetingActivity.class);
 		if (null != editMe) {
-			editMeeting.putExtra(Keys.Meeting.PARCEL, editMe);
+			editMeeting.putExtra(Keys.Meeting.PARCEL, new MeetingParcel(editMe));
 		}
 		if (position >= 0) {
 			editMeeting.putExtra("listPosition", position);

@@ -9,9 +9,17 @@ import objects.Task;
 
 
 
+
+
+
+
+
+import objects.parcelable.MeetingParcel;
+
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.volley.TaskVolleyAdapter;
+import com.meetingninja.csse.extras.IRefreshable;
 import com.meetingninja.csse.meetings.MeetingItemAdapter;
 import com.meetingninja.csse.meetings.ViewMeetingActivity;
 import com.meetingninja.csse.meetings.tasks.GetMeetingInfoTask;
@@ -24,12 +32,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-public class HomePageFragment extends Fragment {
+public class HomePageFragment extends Fragment implements IRefreshable {
 
 	private ListView taskList;
 	private ListView meetingList;
@@ -44,13 +55,14 @@ public class HomePageFragment extends Fragment {
 		super.onCreateView(inflater, container, savedInstanceState);
 		View fragView = inflater.inflate(R.layout.fragment_home_page, container, false);
 		setUpViews(fragView);
+		setHasOptionsMenu(true);
 		refresh();
 		return fragView;
 	}
 
 	public void viewMeeting(Meeting meeting) {
 		Intent viewMeeting = new Intent(getActivity(), ViewMeetingActivity.class);
-		viewMeeting.putExtra(Keys.Meeting.PARCEL, meeting);
+		viewMeeting.putExtra(Keys.Meeting.PARCEL, new MeetingParcel(meeting));
 		startActivityForResult(viewMeeting, 6);
 	}
 
@@ -109,6 +121,23 @@ public class HomePageFragment extends Fragment {
 		});
 
 	}
+	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.menu_home_page, menu);
+	}
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.action_refresh:
+			refresh();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+	
+	@Override
 	public void refresh(){
 		meetingAdpt.clear();
 		taskAdpt.clear();

@@ -23,6 +23,7 @@ import objects.Meeting;
 import objects.SerializableUser;
 import objects.User;
 import objects.parcelable.MeetingParcel;
+import objects.parcelable.ParcelDataFactory;
 
 import org.joda.time.format.DateTimeFormatter;
 
@@ -82,16 +83,15 @@ AsyncResponse<String>, TokenListener {
 
 	private Meeting displayedMeeting;
 
-	public static final String EXTRA_TITLE = "title";
-	public static final String EXTRA_LOCATION = "location";
-	public static final String EXTRA_DESCRIPTION = "description";
+//	public static final String EXTRA_TITLE = "title";
+//	public static final String EXTRA_LOCATION = "location";
+//	public static final String EXTRA_DESCRIPTION = "description";
 	public static final String EXTRA_EDIT_MODE = "editing";
-	public static final String EXTRA_MEETING = Keys.Meeting.PARCEL;
 
 	private void init() {
 		extras = getIntent().getExtras();
 		if (extras != null && !extras.isEmpty()) {
-			displayedMeeting = extras.getParcelable(EXTRA_MEETING);
+			displayedMeeting = new ParcelDataFactory(extras).getMeeting();
 		}
 
 		is24 = android.text.format.DateFormat.is24HourFormat(getApplicationContext());
@@ -224,7 +224,6 @@ AsyncResponse<String>, TokenListener {
 		mFromTime = (Button) findViewById(R.id.start_time);
 		mToTime = (Button) findViewById(R.id.end_time);
 
-		// Get the bottom half of the meeting page (radiogroup - privacy)
 		View bottom = findViewById(R.id.attendees_group);
 		mDescription = (EditText) findViewById(R.id.description);
 		mGuestsComplete = (ContactTokenTextView) findViewById(R.id.guests_Complete);
@@ -265,7 +264,7 @@ AsyncResponse<String>, TokenListener {
 			displayedMeeting.setID(result);
 			Intent msgIntent = new Intent();
 			msgIntent.putExtra("method", "insert");
-			msgIntent.putExtra(Keys.Meeting.PARCEL, displayedMeeting);
+			msgIntent.putExtra(Keys.Meeting.PARCEL, new MeetingParcel(displayedMeeting));
 			setResult(RESULT_OK, msgIntent);
 			finish();
 		} else {

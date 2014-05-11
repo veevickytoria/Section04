@@ -60,7 +60,6 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 
 	protected NoteArrayAdapter noteAdpt;
 	private ImageButton notesImageButton;
-	private SQLiteNoteAdapter mySQLiteAdapter;
 	private PopulateTask populateTask;
 	private Note mergeNote;
 
@@ -98,7 +97,6 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 			refresh();
 		}
 
-		mySQLiteAdapter = new SQLiteNoteAdapter(getActivity());
 
 		return v;
 
@@ -129,7 +127,7 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 		notesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parentAdapter, View v,int position, long id) {
-				clickedNote(position);
+				viewNoteAtPosition(position);
 			}
 		});
 
@@ -152,7 +150,7 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 
 		});
 	}
-	protected void clickedNote(int position) {
+	protected void viewNoteAtPosition(int position) {
 		Note clickedNote = noteAdpt.getItem(position);
 
 		Intent viewNote = new Intent(getActivity(),ViewNoteActivity.class);

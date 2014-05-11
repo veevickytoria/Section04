@@ -196,7 +196,6 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 		} else
 			Log.e(TAG, "Error: Unable to parse meeting attendance");
 
-		Log.i(TAG, "[Parsed] " + m.toString());
 		return m;
 	}
 }

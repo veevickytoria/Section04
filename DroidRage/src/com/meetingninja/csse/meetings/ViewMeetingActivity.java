@@ -64,7 +64,7 @@ public class ViewMeetingActivity extends Activity {
 
 		extras = getIntent().getExtras();
 		if (extras != null) {
-			displayedMeeting = extras.getParcelable(Keys.Meeting.PARCEL);
+			displayedMeeting = new ParcelDataFactory(extras).getMeeting();
 		} else {
 			Log.w(TAG, "Error: Unable to find Meeting Parcel");
 			displayedMeeting = new Meeting();
@@ -132,9 +132,9 @@ public class ViewMeetingActivity extends Activity {
 		return true;
 	}
 
-	private void edit() {
+	private void editMeeting(Meeting m) {
 		Intent editMeeting = new Intent(ViewMeetingActivity.this,EditMeetingActivity.class);
-		editMeeting.putExtra(Keys.Meeting.PARCEL, displayedMeeting);
+		editMeeting.putExtra(Keys.Meeting.PARCEL, new MeetingParcel(m));
 		startActivityForResult(editMeeting, 5);
 	}
 
@@ -144,7 +144,7 @@ public class ViewMeetingActivity extends Activity {
 			if (resultCode == RESULT_OK) {
 				if (data != null) {
 					displayedMeeting = new ParcelDataFactory(data.getExtras()).getMeeting();
-					getIntent().putExtra(Keys.Meeting.PARCEL, displayedMeeting);
+					getIntent().putExtra(Keys.Meeting.PARCEL, new MeetingParcel(displayedMeeting));
 					setMeeting(displayedMeeting);
 				}
 			} else if (resultCode == RESULT_CANCELED) {
@@ -166,7 +166,7 @@ public class ViewMeetingActivity extends Activity {
 			finish();
 			return true;
 		case R.id.edit_meeting_action:
-			edit();
+			editMeeting(displayedMeeting);
 			return true;
 		case R.id.delete_meeting_action:
 			AlertDialogUtil.deleteDialog(this, "meeting", new OnClickListener() {

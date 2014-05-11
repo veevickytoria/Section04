@@ -18,6 +18,12 @@ public class MeetingParcel extends DataParcel<Meeting> {
 	}
 
 	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(data.getID());
 		dest.writeString(data.getTitle());
@@ -26,15 +32,13 @@ public class MeetingParcel extends DataParcel<Meeting> {
 		dest.writeString(data.getEndTime());
 		dest.writeString(data.getDescription());
 		ArrayList<UserParcel> userList = new ArrayList<UserParcel>();
-		for (User user : data.getAttendance()){
+		for (User user : data.getAttendance()) {
 			userList.add(new UserParcel(user));
 		}
 		dest.writeList(userList);
-
 	}
 
 	@SuppressWarnings("unchecked")
-	@Override
 	public void readFromParcel(Parcel in) {
 		data = new Meeting();
 		data.setID(in.readString());
@@ -43,11 +47,11 @@ public class MeetingParcel extends DataParcel<Meeting> {
 		data.setStartTime(in.readString());
 		data.setEndTime(in.readString());
 		data.setDescription(in.readString());
-		ArrayList<UserParcel> userParcelList = in.readArrayList(UserParcel.class.getClassLoader());
-		for (int i=0;i<userParcelList.size();i++){
+		ArrayList<UserParcel> userParcelList = in
+				.readArrayList(UserParcel.class.getClassLoader());
+		for (int i = 0; i < userParcelList.size(); i++) {
 			data.addAttendee(userParcelList.get(i).getData());
 		}
-
 	}
 
 	public static final Parcelable.Creator<MeetingParcel> CREATOR = new Parcelable.Creator<MeetingParcel>() {
