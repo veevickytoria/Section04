@@ -489,7 +489,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 
 		final JsonNode userNode = MAPPER.readTree(response);
 		User newUser = parseUser(userNode);
-		Log.d("Userinfo updated", newUser.toString());
+//		Log.d("Userinfo updated", newUser.toString());
 		updateParseSDKUser(newUser); // TODO: having null pointer exception
 		return newUser;
 	}
