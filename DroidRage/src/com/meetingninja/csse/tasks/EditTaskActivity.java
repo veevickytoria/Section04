@@ -59,9 +59,9 @@ import com.meetingninja.csse.database.volley.UserVolleyAdapter;
 import com.meetingninja.csse.extras.AlertDialogUtil;
 import com.meetingninja.csse.extras.ContactTokenTextView;
 import com.meetingninja.csse.extras.NinjaDateUtils;
-import com.meetingninja.csse.user.AutoCompleteAdapter;
 import com.meetingninja.csse.user.ProfileActivity;
-import com.meetingninja.csse.user.UserArrayAdapter;
+import com.meetingninja.csse.user.adapters.AutoCompleteAdapter;
+import com.meetingninja.csse.user.adapters.UserArrayAdapter;
 import com.tokenautocomplete.TokenCompleteTextView.TokenListener;
 
 import de.timroes.android.listview.EnhancedListView;

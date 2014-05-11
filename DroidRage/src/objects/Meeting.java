@@ -26,28 +26,6 @@ public class Meeting extends Event implements Parcelable {
 
 	private List<User> attendance = new ArrayList<User>();
 
-	private enum Attendance_Status {
-		YES(1), MAYBE(0), NO(-1), NO_RESPONSE(-2);
-
-		Attendance_Status(int stat) {
-		}
-
-		@Override
-		public String toString() {
-			switch (this) {
-			case YES:
-				return "Yes";
-			case NO:
-				return "No";
-			case MAYBE:
-				return "Maybe";
-			default:
-				break;
-			}
-			return "No Repsonse";
-		}
-	}
-
 	public Meeting() {
 		// Required empty constructor
 		setStartTime(0L);
@@ -85,22 +63,6 @@ public class Meeting extends Event implements Parcelable {
 		this.description = crsr.getString(idxDESCRIPTION);
 	}
 
-	// public Meeting(JsonNode node) {
-	// this.meetingID = node.get(Keys.Meeting.ID).asText();
-	// this.title = node.get(Keys.Meeting.TITLE).asText();
-	// this.location = node.get(Keys.Meeting.LOCATION).asText();
-	// this.startTime = node.get(Keys.Meeting.START).asText();
-	// this.endTime = node.get(Keys.Meeting.END).asText();
-	// this.description = node.get(Keys.Meeting.DESC).asText();
-	// JsonNode attendees = node.get(Keys.Meeting.ATTEND);
-	// attendance.clear();
-	// if (attendees.isArray()) {
-	// for (final JsonNode attendee : attendees) {
-	// attendance.add(attendee.get(Keys.User.ID).asText());
-	// }
-	// }
-	// }
-
 	@Override
 	public String getID() {
 		return this.meetingID;
@@ -129,15 +91,14 @@ public class Meeting extends Event implements Parcelable {
 	}
 
 	public void addAttendeeWithID(User user) {
-		UserVolleyAdapter.fetchUserInfo(user.getID(), new AsyncResponse<User>() {
+		UserVolleyAdapter.fetchUserInfo(user.getID(),
+				new AsyncResponse<User>() {
 
-			@Override
-			public void processFinish(User result) {
-				System.out.println(result);
-				addAttendee(result);
-				System.out.println(attendance);
-			}
-		});
+					@Override
+					public void processFinish(User result) {
+						addAttendee(result);
+					}
+				});
 	}
 
 	public void addAttendee(User user) {
@@ -161,11 +122,10 @@ public class Meeting extends Event implements Parcelable {
 		dest.writeString(getEndTime());
 		dest.writeString(getDescription());
 		ArrayList<UserParcel> userList = new ArrayList<UserParcel>();
-		for (User user:getAttendance()){
+		for (User user : getAttendance()) {
 			userList.add(new UserParcel(user));
 		}
 		dest.writeList(userList);
-		System.out.println("write " + getAttendance());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -176,8 +136,9 @@ public class Meeting extends Event implements Parcelable {
 		startTime = in.readString();
 		endTime = in.readString();
 		description = in.readString();
-		ArrayList<UserParcel> userParcelList = in.readArrayList(UserParcel.class.getClassLoader());
-		for (int i=0;i<userParcelList.size();i++){
+		ArrayList<UserParcel> userParcelList = in
+				.readArrayList(UserParcel.class.getClassLoader());
+		for (int i = 0; i < userParcelList.size(); i++) {
 			attendance.add(userParcelList.get(i).getData());
 		}
 		System.out.println("read " + attendance);
@@ -196,37 +157,6 @@ public class Meeting extends Event implements Parcelable {
 		}
 
 	};
-
-	public class AttendeeWrapper {
-		private String _id;
-		private Meeting.Attendance_Status _attending;
-
-		public AttendeeWrapper() {
-			// empty
-		}
-
-		public AttendeeWrapper(String userID, Attendance_Status attending) {
-			_id = userID;
-			_attending = attending;
-		}
-
-		public boolean isAttending() {
-			switch (_attending) {
-			case YES:
-			case MAYBE:
-			case NO_RESPONSE:
-				return true;
-			case NO:
-				return false;
-			}
-			return false;
-		}
-
-		public String getID() {
-			return _id;
-		}
-
-	}
 
 	@Override
 	public String toString() {

@@ -25,9 +25,12 @@ import objects.User;
 import objects.parcelable.MeetingParcel;
 import objects.parcelable.ParcelDataFactory;
 import android.app.Activity;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,8 +40,10 @@ import android.widget.TextView;
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.volley.MeetingVolleyAdapter;
+import com.meetingninja.csse.extras.AlertDialogUtil;
 import com.meetingninja.csse.extras.NinjaDateUtils;
-import com.meetingninja.csse.user.UserArrayAdapter;
+import com.meetingninja.csse.meetings.tasks.DeleteMeetingTask;
+import com.meetingninja.csse.user.adapters.UserArrayAdapter;
 
 public class ViewMeetingActivity extends Activity {
 	private static final String TAG = ViewMeetingActivity.class.getSimpleName();
@@ -48,9 +53,9 @@ public class ViewMeetingActivity extends Activity {
 	private DateTimeFormatter dateFormat = NinjaDateUtils.JODA_APP_DATE_FORMAT;
 	private DateTimeFormatter timeFormat;
 	private Boolean is24;
-	UserArrayAdapter adpt;
-	ArrayList<User> attendance = new ArrayList<User>();
-	Bundle extras;
+	private UserArrayAdapter adpt;
+	private ArrayList<User> attendance = new ArrayList<User>();
+	private Bundle extras;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +67,10 @@ public class ViewMeetingActivity extends Activity {
 			displayedMeeting = extras.getParcelable(Keys.Meeting.PARCEL);
 		} else {
 			Log.w(TAG, "Error: Unable to find Meeting Parcel");
+			displayedMeeting = new Meeting();
 		}
 
-		is24 = android.text.format.DateFormat.is24HourFormat(getApplicationContext());
+		is24 = DateFormat.is24HourFormat(getApplicationContext());
 
 		timeFormat = is24 ? NinjaDateUtils.JODA_24_TIME_FORMAT: NinjaDateUtils.JODA_12_TIME_FORMAT;
 
@@ -163,7 +169,14 @@ public class ViewMeetingActivity extends Activity {
 			edit();
 			return true;
 		case R.id.delete_meeting_action:
-			deleteMeeting(displayedMeeting);
+			AlertDialogUtil.deleteDialog(this, "meeting", new OnClickListener() {
+
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					deleteMeeting(displayedMeeting);					
+				}
+				
+			});
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -171,8 +184,7 @@ public class ViewMeetingActivity extends Activity {
 	
 	protected void deleteMeeting(Meeting meeting) {
 //		MeetingVolleyAdapter.deleteMeeting(meeting.getID());
-		DeleteMeetingTask deltask = new DeleteMeetingTask();
-		deltask.deleteMeeting(meeting.getID());
+		new DeleteMeetingTask().deleteMeeting(meeting.getID());
 		finish();
 	}
 

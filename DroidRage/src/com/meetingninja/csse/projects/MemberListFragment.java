@@ -3,9 +3,9 @@ package com.meetingninja.csse.projects;
 import objects.Contact;
 import objects.User;
 
-import com.meetingninja.csse.user.UserListFragment;
+import com.meetingninja.csse.user.ContactsFragment;
 
-public class MemberListFragment extends UserListFragment {
+public class MemberListFragment extends ContactsFragment {
 	
 	ViewProjectActivity pCont;
 	public MemberListFragment setProjectController(ViewProjectActivity pCont){

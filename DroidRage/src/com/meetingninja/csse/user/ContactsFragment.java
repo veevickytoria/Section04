@@ -47,6 +47,9 @@ import com.meetingninja.csse.database.local.SQLiteUserAdapter;
 import com.meetingninja.csse.database.volley.UserVolleyAdapter;
 import com.meetingninja.csse.extras.AlertDialogUtil;
 import com.meetingninja.csse.extras.ContactTokenTextView;
+import com.meetingninja.csse.extras.NinjaToastUtil;
+import com.meetingninja.csse.user.adapters.AutoCompleteAdapter;
+import com.meetingninja.csse.user.adapters.ContactArrayAdapter;
 import com.meetingninja.csse.user.tasks.AddContactTask;
 import com.meetingninja.csse.user.tasks.DeleteContactTask;
 import com.meetingninja.csse.user.tasks.GetContactsTask;
@@ -54,7 +57,7 @@ import com.tokenautocomplete.TokenCompleteTextView.TokenListener;
 
 import de.timroes.android.listview.EnhancedListView;
 
-public class UserListFragment extends Fragment implements TokenListener {
+public class ContactsFragment extends Fragment implements TokenListener {
 
 	private SQLiteUserAdapter dbHelper;
 	private ContactArrayAdapter mContactAdapter;
@@ -69,7 +72,7 @@ public class UserListFragment extends Fragment implements TokenListener {
 	private Dialog dlg;
 	EditText input;
 
-	public UserListFragment() {
+	public ContactsFragment() {
 		// Required empty public constructor
 	}
 
@@ -211,13 +214,16 @@ public class UserListFragment extends Fragment implements TokenListener {
 		input.setText("");
 	}
 
-	protected void deleteContact(Contact item) {
+	protected void deleteContact(final Contact item) {
 //		DeleteContactTask deleter = new DeleteContactTask(this);
 //		deleter.deleteContact(item.getRelationID());
 		new DeleteContactTask(new AsyncResponse<Boolean>(){
 			@Override
 			public void processFinish(Boolean result) {
 				refresh();
+				if (result) {
+					NinjaToastUtil.show(getActivity(), item.getContact().getDisplayName() + " was removed as a contact");
+				}
 //				allUsers = new ArrayList<User>(result);
 //				addContactsOptionLoaded();
 			}

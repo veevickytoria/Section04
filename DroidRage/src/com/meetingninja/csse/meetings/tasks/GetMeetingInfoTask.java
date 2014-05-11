@@ -13,58 +13,52 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.meetingninja.csse.meetings;
+package com.meetingninja.csse.meetings.tasks;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+import objects.Meeting;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.MeetingDatabaseAdapter;
+import com.meetingninja.csse.database.UserDatabaseAdapter;
 
-public class DeleteMeetingTask implements AsyncResponse<Boolean> {
+/**
+ * Represents an asynchronous task to receive meetings from the database
+ */
+public class GetMeetingInfoTask extends AsyncTask<String, Void, Meeting> {
+	private AsyncResponse<Meeting> delegate;
 
-	private MeetingDeleterTask deleter = null;
-
-	public DeleteMeetingTask() {
-		this.deleter = new MeetingDeleterTask(this);
-	}
-
-	public void deleteMeeting(String meetingID) {
-		this.deleter.execute(meetingID);
-	}
-
-	@Override
-	public void processFinish(Boolean result) {
-		if (!result) {
-			// do something?
-		}
-	}
-}
-
-class MeetingDeleterTask extends AsyncTask<String, Void, Boolean> {
-	private AsyncResponse<Boolean> delegate;
-
-	public MeetingDeleterTask(AsyncResponse<Boolean> delegate) {
+	public GetMeetingInfoTask(AsyncResponse<Meeting> delegate) {
 		this.delegate = delegate;
 	}
 
 	@Override
-	protected Boolean doInBackground(String... params) {
+	protected Meeting doInBackground(String... params) {
+		Meeting meeting = new Meeting();
+
 		try {
-			return MeetingDatabaseAdapter.deleteMeeting(params[0]);
+			meeting = MeetingDatabaseAdapter.getMeetingInfo(params[0]);
 		} catch (IOException e) {
-			Log.e("MeetingDelete", "Error: Unable to delete meeting");
-			Log.e("MeetingS_ERR", e.getLocalizedMessage());
+			Log.e("MeetingFetch", "Error: Unable to get meeting info");
+			Log.e("MEETINGS_ERR", e.getLocalizedMessage());
 		}
-		return false;
+
+		return meeting;
 	}
 
 	@Override
-	protected void onPostExecute(Boolean b) {
-		super.onPostExecute(b);
-		delegate.processFinish(b);
+	protected void onPostExecute(Meeting meeting) {
+		super.onPostExecute(meeting);
+		delegate.processFinish(meeting);
 	}
 
+	@Override
+	protected void onCancelled() {
+		super.onCancelled();
+	}
 }

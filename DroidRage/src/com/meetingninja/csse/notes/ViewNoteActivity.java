@@ -4,15 +4,20 @@ import objects.Note;
 import objects.parcelable.NoteParcel;
 import objects.parcelable.ParcelDataFactory;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.Keys;
+import com.meetingninja.csse.extras.AlertDialogUtil;
 import com.meetingninja.csse.notes.tasks.DeleteNoteTask;
 
 public class ViewNoteActivity extends Activity {
@@ -98,7 +103,12 @@ public class ViewNoteActivity extends Activity {
 			edit();
 			return true;
 		case R.id.note_discard_action:
-			delete(displayedNote);
+			AlertDialogUtil.deleteDialog(this, "noe", new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					delete(displayedNote);					
+				}
+			});
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

@@ -24,9 +24,7 @@ public class AgendaSaveTask extends AsyncTask<Agenda, Void, String> {
 		Agenda create = params[0];
 		String id = "";
 		try {
-//			System.out.println(JsonUtils.getObjectMapper().writeValueAsString(
-//					create));
-//			create =
+
 			id = AgendaDatabaseAdapter.createAgenda(create);
 		} catch (IOException e) {
 			Log.e(TAG, e.getLocalizedMessage());

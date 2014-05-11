@@ -3,6 +3,7 @@ package com.meetingninja.csse.user;
 import objects.User;
 import objects.parcelable.ParcelDataFactory;
 import objects.parcelable.UserParcel;
+import android.R.menu;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -110,12 +111,15 @@ public class EditProfileActivity extends Activity {
 	}
 
 	private void save() {
+		mName.setError(null);
+		mEmail.setError(null);
+		
 		if (TextUtils.isEmpty(mName.getText())) {
-			// TODO: stuff
+			mName.setError("Field cannot be empty");
 			return;
 		}
 		if (TextUtils.isEmpty(mEmail.getText())) {
-			// TODO: stuff
+			mEmail.setError("Field cannot be empty");
 			return;
 		}
 

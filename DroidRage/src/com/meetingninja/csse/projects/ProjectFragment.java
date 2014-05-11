@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import objects.Project;
+
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.Keys;
@@ -14,7 +15,6 @@ import com.meetingninja.csse.database.UserDatabaseAdapter;
 import com.meetingninja.csse.extras.IRefreshable;
 
 import de.timroes.android.listview.EnhancedListView;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
@@ -24,6 +24,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -37,8 +38,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class ProjectFragment extends Fragment implements IRefreshable{
+public class ProjectFragment extends Fragment implements IRefreshable {
 
+	protected static final String TAG = ProjectFragment.class.getSimpleName();
 	private static ProjectFragment sInstance = null;
 	private List<Project> projectsList = new ArrayList<Project>();
 	private ProjectItemAdapter projectAdpt;
@@ -56,7 +58,8 @@ public class ProjectFragment extends Fragment implements IRefreshable{
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 		setHasOptionsMenu(true);
 		SessionManager.getInstance();
 		View v = inflater.inflate(R.layout.fragment_project, container, false);
@@ -80,6 +83,7 @@ public class ProjectFragment extends Fragment implements IRefreshable{
 			}
 		}
 	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -102,19 +106,24 @@ public class ProjectFragment extends Fragment implements IRefreshable{
 
 	public void createProjectOption() {
 		final EditText title = new EditText(getActivity());
-		new AlertDialog.Builder(getActivity()).setTitle("Enter a title").setPositiveButton("OK", new OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				if (!title.getText().toString().trim().equals("")) {
-					createProject(title.getText().toString());
-				}else{
-					Toast.makeText(getActivity(), "Project Title can't be empty", Toast.LENGTH_LONG).show();
-				}
-			}}).setNegativeButton("Cancel", new OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					dialog.cancel();
-				}}).setView(title).show();
+		new AlertDialog.Builder(getActivity()).setTitle("Enter a title")
+				.setPositiveButton("OK", new OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						if (!title.getText().toString().trim().equals("")) {
+							createProject(title.getText().toString());
+						} else {
+							Toast.makeText(getActivity(),
+									"Project Title can't be empty",
+									Toast.LENGTH_LONG).show();
+						}
+					}
+				}).setNegativeButton("Cancel", new OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.cancel();
+					}
+				}).setView(title).show();
 	}
 
 	public void createProject(String title) {
@@ -137,14 +146,14 @@ public class ProjectFragment extends Fragment implements IRefreshable{
 				try {
 					p = ProjectDatabaseAdapter.createProject(params[0]);
 				} catch (IOException e) {
-					System.out.println("failed to create project");
+					Log.e(TAG, "failed to create project");
 					e.printStackTrace();
 				}
 				return p;
 			}
 		}.execute(project);
 	}
-	
+
 	@Override
 	public void refresh() {
 
@@ -162,16 +171,16 @@ public class ProjectFragment extends Fragment implements IRefreshable{
 				try {
 					projectList = UserDatabaseAdapter.getProject(params[0]);
 				} catch (IOException e) {
-					System.out.println("failed to get projects");
-					e.printStackTrace();
+					Log.e(TAG, "failed to get projects");
+					Log.e(TAG, e.getLocalizedMessage());
 				}
 				for (int i = 0; i < projectList.size(); i++) {
 					Project p = null;
 					try {
 						p = ProjectDatabaseAdapter.getProject(projectList.get(i).getProjectID());
 					} catch (IOException e) {
-						System.out.println("fialed to get project info");
-						e.printStackTrace();
+						Log.e(TAG, "failed to get project info");
+						Log.e(TAG, e.getLocalizedMessage());
 					}
 					projectList.set(i, p);
 				}
@@ -189,13 +198,14 @@ public class ProjectFragment extends Fragment implements IRefreshable{
 			protected void onPostExecute(Void result) {
 				refresh();
 			}
+
 			@Override
 			protected Void doInBackground(Project... params) {
 				try {
 					ProjectDatabaseAdapter.deleteProject(params[0]);
 				} catch (IOException e) {
-					System.out.println("failed to delete project");
-					e.printStackTrace();
+					Log.e(TAG, "failed to delete project");
+					Log.e(TAG, e.getLocalizedMessage());
 				}
 				return null;
 			}
@@ -204,7 +214,8 @@ public class ProjectFragment extends Fragment implements IRefreshable{
 
 	private void loadProject(Project project) {
 		// while (project.getEndTimeInMillis() == 0L);
-		Intent viewProject = new Intent(getActivity(),ViewProjectActivity.class);
+		Intent viewProject = new Intent(getActivity(),
+				ViewProjectActivity.class);
 		viewProject.putExtra(Keys.Project.PARCEL, project);
 		startActivityForResult(viewProject, 6);
 	}
@@ -215,7 +226,8 @@ public class ProjectFragment extends Fragment implements IRefreshable{
 	}
 
 	private void setUpListView(View v) {
-		projectAdpt = new ProjectItemAdapter(getActivity(),R.layout.list_item_task, projectsList);
+		projectAdpt = new ProjectItemAdapter(getActivity(),
+				R.layout.list_item_task, projectsList);
 
 		l = (EnhancedListView) v.findViewById(R.id.project_list);
 		l.setAdapter(projectAdpt);
@@ -223,7 +235,8 @@ public class ProjectFragment extends Fragment implements IRefreshable{
 
 		l.setDismissCallback(new de.timroes.android.listview.EnhancedListView.OnDismissCallback() {
 			@Override
-			public EnhancedListView.Undoable onDismiss(EnhancedListView listView, final int position) {
+			public EnhancedListView.Undoable onDismiss(
+					EnhancedListView listView, final int position) {
 
 				final Project item = projectAdpt.getItem(position);
 				projectsList.remove(item);
@@ -252,7 +265,8 @@ public class ProjectFragment extends Fragment implements IRefreshable{
 		l.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View v, int position,long id) {
+			public void onItemClick(AdapterView<?> arg0, View v, int position,
+					long id) {
 				Project p = projectAdpt.getItem(position);
 				loadProject(p);
 			}
@@ -270,7 +284,8 @@ class ProjectItemAdapter extends ArrayAdapter<Project> {
 	private List<Project> projects;
 	private Context context;
 
-	public ProjectItemAdapter(Context context, int textViewResourceId,List<Project> projects) {
+	public ProjectItemAdapter(Context context, int textViewResourceId,
+			List<Project> projects) {
 		super(context, textViewResourceId, projects);
 		this.context = context;
 		this.projects = projects;
@@ -303,11 +318,13 @@ class ProjectItemAdapter extends ArrayAdapter<Project> {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View rowView = convertView;
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater inflater = (LayoutInflater) context
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		if (rowView == null) {
 			rowView = inflater.inflate(R.layout.list_item_project, null);
 			viewHolder = new ViewHolder();
-			viewHolder.title = (TextView) rowView.findViewById(R.id.list_project_title);
+			viewHolder.title = (TextView) rowView
+					.findViewById(R.id.list_project_title);
 
 			rowView.setTag(viewHolder);
 		} else {

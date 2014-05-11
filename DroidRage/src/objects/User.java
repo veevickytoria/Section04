@@ -5,14 +5,17 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 import android.database.Cursor;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.meetingninja.csse.database.Keys;
+import com.meetingninja.csse.extras.JsonUtils;
 import com.meetingninja.csse.extras.NinjaTextUtils;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -264,15 +267,11 @@ public class User extends AbstractJSONObject<User> {
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("User [getID()=");
-		builder.append(getID());
-		builder.append(", getDisplayName()=");
-		builder.append(getDisplayName());
-		builder.append(", getEmail()=");
-		builder.append(getEmail());
-		builder.append("]");
-		return builder.toString();
+		try {
+			return JsonUtils.getObjectMapper().writeValueAsString(this);
+		} catch (JsonProcessingException e) {
+			return "!JSON!";
+		}
 	}
 
 }

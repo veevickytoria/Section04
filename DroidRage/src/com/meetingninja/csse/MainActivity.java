@@ -17,6 +17,7 @@ package com.meetingninja.csse;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import objects.Note;
 import objects.Schedule;
@@ -45,16 +46,19 @@ import com.foound.widget.AmazingListView;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
 import com.meetingninja.csse.extras.NinjaToastUtil;
 import com.meetingninja.csse.group.GroupsFragment;
+import com.meetingninja.csse.login.LoginActivity;
 import com.meetingninja.csse.meetings.MeetingsFragment;
 import com.meetingninja.csse.notes.EditNoteActivity;
 import com.meetingninja.csse.notes.NotesFragment;
 import com.meetingninja.csse.projects.ProjectFragment;
 import com.meetingninja.csse.schedule.ScheduleAdapter;
 import com.meetingninja.csse.tasks.TasksFragment;
-import com.meetingninja.csse.user.LoginActivity;
 import com.meetingninja.csse.user.ProfileFragment;
-import com.meetingninja.csse.user.UserListFragment;
+import com.meetingninja.csse.user.ContactsFragment;
 import com.parse.ParseAnalytics;
+
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
 
 public class MainActivity extends FragmentActivity {
 
@@ -107,7 +111,7 @@ public class MainActivity extends FragmentActivity {
 	private static final ProfileFragment frag_profile = new ProfileFragment();
 	private static final GroupsFragment frag_groups = new GroupsFragment();
 	private static final ProjectFragment frag_projects = new ProjectFragment();
-	private static final UserListFragment frag_contacts = new UserListFragment();
+	private static final ContactsFragment frag_contacts = new ContactsFragment();
 
 	// Fields local to this activity
 	private CharSequence actionBarTitle;
@@ -127,7 +131,12 @@ public class MainActivity extends FragmentActivity {
 			session.clear();
 			showLogin();
 		} else { // Else continue
+			HashMap<String, String> userDetails = SessionManager.getInstance().getUserDetails();
 			Log.v(TAG, "UserID " + SessionManager.getUserID() + " is logged in");
+			Crouton.makeText(
+					MainActivity.this,
+					getString(R.string.prompt_welcome,
+							userDetails.get(SessionManager.USER)), Style.INFO);
 
 			setContentView(R.layout.activity_main);
 			setupActionBar();
@@ -145,7 +154,7 @@ public class MainActivity extends FragmentActivity {
 
 	/**
 	 * Check to see if data has been cached in the local database
-	 *
+	 * 
 	 * @param icicle
 	 */
 	private void checkAndPreloadData(Bundle icicle) {
@@ -155,7 +164,7 @@ public class MainActivity extends FragmentActivity {
 		if (!isDataCached || session.needsSync()) {
 			ApplicationController.getInstance().loadUsers();
 
-			// TODO : Preload more data
+			// TODO : Load up the SQLite tables 
 
 			isDataCached = true;
 			session.setSynced();
@@ -171,7 +180,7 @@ public class MainActivity extends FragmentActivity {
 		login.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
 		// User cannot go back to this activity
-//		 login.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+		// login.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
 		login.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 		startActivity(login);
@@ -223,8 +232,8 @@ public class MainActivity extends FragmentActivity {
 		drawerToggle = new ActionBarDrawerToggle(this, // host activity
 				drawerLayout, // DrawerLayout object
 				R.drawable.ic_drawer, // nav drawer icon
-				R.string.drawer_open, // "open drawer" description
-				R.string.drawer_close) // "closed drawer" description
+				R.string.action_open_drawer, // "open drawer" description
+				R.string.action_close_drawer) // "closed drawer" description
 		{
 			/** Called when a drawer has settled in a completely closed state. */
 			@Override
@@ -306,7 +315,7 @@ public class MainActivity extends FragmentActivity {
 
 	/**
 	 * Highlight the selected item, update the title, and close the drawer
-	 *
+	 * 
 	 * @param position
 	 */
 	private boolean selectFromLeftDrawer(int position, FragmentManager fm) {
@@ -343,7 +352,7 @@ public class MainActivity extends FragmentActivity {
 	}
 
 	private void handleSpeech(ArrayList<String> speechArray, Intent data) {
-		if(speechArray.contains("homepage")){
+		if (speechArray.contains("homepage")) {
 			selectItem(DrawerLabel.HOMEPAGE.getPosition());
 		} else if (speechArray.contains("meetings")) {
 			selectItem(DrawerLabel.MEETINGS.getPosition());

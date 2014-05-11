@@ -25,8 +25,8 @@ import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.volley.UserVolleyAdapter;
 import com.meetingninja.csse.extras.ContactTokenTextView;
 import com.meetingninja.csse.extras.NinjaTextUtils;
-import com.meetingninja.csse.user.AutoCompleteAdapter;
-import com.meetingninja.csse.user.UserArrayAdapter;
+import com.meetingninja.csse.user.adapters.AutoCompleteAdapter;
+import com.meetingninja.csse.user.adapters.UserArrayAdapter;
 import com.tokenautocomplete.TokenCompleteTextView.TokenListener;
 
 /**

@@ -49,10 +49,13 @@ import com.meetingninja.csse.database.local.SQLiteMeetingAdapter;
 import com.meetingninja.csse.database.volley.MeetingVolleyAdapter;
 import com.meetingninja.csse.extras.ConnectivityUtils;
 import com.meetingninja.csse.extras.IRefreshable;
+import com.meetingninja.csse.meetings.tasks.DeleteMeetingTask;
+import com.meetingninja.csse.meetings.tasks.MeetingsFetcherTask;
 
 import de.timroes.android.listview.EnhancedListView;
 
-public class MeetingsFragment extends Fragment implements AsyncResponse<List<Meeting>>, IRefreshable {
+public class MeetingsFragment extends Fragment implements
+		AsyncResponse<List<Meeting>>, IRefreshable {
 
 	private static final String TAG = MeetingsFragment.class.getSimpleName();
 
@@ -79,7 +82,8 @@ public class MeetingsFragment extends Fragment implements AsyncResponse<List<Mee
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		View v = inflater.inflate(R.layout.fragment_meetings, container, false);
 		setupViews(v);
@@ -123,8 +127,10 @@ public class MeetingsFragment extends Fragment implements AsyncResponse<List<Mee
 	}
 
 	protected void loadMeeting(Meeting meeting) {
-		while (meeting.getEndTimeInMillis() == 0L);
-		Intent viewMeeting = new Intent(getActivity(),ViewMeetingActivity.class);
+		while (meeting.getEndTimeInMillis() == 0L)
+			;
+		Intent viewMeeting = new Intent(getActivity(),
+				ViewMeetingActivity.class);
 		viewMeeting.putExtra(Keys.Meeting.PARCEL, meeting);
 		startActivityForResult(viewMeeting, 6);
 	}
@@ -133,29 +139,39 @@ public class MeetingsFragment extends Fragment implements AsyncResponse<List<Mee
 		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parentAdapter, View v,int position, long id) {
+			public void onItemClick(AdapterView<?> parentAdapter, View v,
+					int position, long id) {
 				Meeting clicked = meetingAdpt.getItem(position);
 				loadMeeting(clicked);
 			}
 		});
 
-		mListView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
-			@Override
-			public void onCreateContextMenu(ContextMenu menu, View v,ContextMenuInfo menuInfo) {
-				AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) menuInfo;
+		mListView
+				.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
+					@Override
+					public void onCreateContextMenu(ContextMenu menu, View v,
+							ContextMenuInfo menuInfo) {
+						AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) menuInfo;
 
-				Meeting longClicked = meetingAdpt.getItem(aInfo.position);
+						Meeting longClicked = meetingAdpt
+								.getItem(aInfo.position);
 
-				menu.setHeaderTitle("Options for "+ longClicked.getTitle());
-				menu.add(MainActivity.DrawerLabel.MEETINGS.getPosition(),aInfo.position, 1, "Edit");
-				menu.add(MainActivity.DrawerLabel.MEETINGS.getPosition(),aInfo.position, 2, "Delete");
-			}
-		});
+						menu.setHeaderTitle("Options for "
+								+ longClicked.getTitle());
+						menu.add(
+								MainActivity.DrawerLabel.MEETINGS.getPosition(),
+								aInfo.position, 1, "Edit");
+						menu.add(
+								MainActivity.DrawerLabel.MEETINGS.getPosition(),
+								aInfo.position, 2, "Delete");
+					}
+				});
 		mListView.setRequireTouchBeforeDismiss(false);
 		mListView.setUndoHideDelay(5000);
 		mListView.setDismissCallback(new EnhancedListView.OnDismissCallback() {
 			@Override
-			public EnhancedListView.Undoable onDismiss(EnhancedListView listView, final int position) {
+			public EnhancedListView.Undoable onDismiss(
+					EnhancedListView listView, final int position) {
 
 				final Meeting item = meetingAdpt.getItem(position);
 				meetingAdpt.remove(item);
@@ -183,7 +199,7 @@ public class MeetingsFragment extends Fragment implements AsyncResponse<List<Mee
 	}
 
 	protected void deleteMeeting(Meeting item) {
-//		MeetingVolleyAdapter.deleteMeeting(item.getID());
+		// MeetingVolleyAdapter.deleteMeeting(item.getID());
 		DeleteMeetingTask deltask = new DeleteMeetingTask();
 		deltask.deleteMeeting(item.getID());
 		meetings.remove(item);
@@ -206,10 +222,12 @@ public class MeetingsFragment extends Fragment implements AsyncResponse<List<Mee
 		int position = item.getItemId();
 		boolean handled = false;
 		item.getMenuInfo();
-		if (item.getGroupId() == MainActivity.DrawerLabel.MEETINGS.getPosition()) {
+		if (item.getGroupId() == MainActivity.DrawerLabel.MEETINGS
+				.getPosition()) {
 			switch (item.getOrder()) {
 			case 1: // Edit
-				Toast.makeText(getActivity(), item.getTitle(),Toast.LENGTH_SHORT).show();
+				Toast.makeText(getActivity(), item.getTitle(),
+						Toast.LENGTH_SHORT).show();
 				handled = true;
 				break;
 			case 2: // Delete
@@ -231,14 +249,15 @@ public class MeetingsFragment extends Fragment implements AsyncResponse<List<Mee
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		System.out.println("retured to meetingfrag");
+		Log.i(TAG, "Showing Meeting Fragment");
 		refresh();
 
 		if (requestCode == 2) {
 			if (resultCode == Activity.RESULT_OK) {
 				if (data != null) {
 					int listPosition = data.getIntExtra("listPosition", -1);
-					Meeting created = data.getParcelableExtra(Keys.Meeting.PARCEL);
+					Meeting created = data
+							.getParcelableExtra(Keys.Meeting.PARCEL);
 
 					if (data.getStringExtra("method").equals("update")) {
 						Log.d(TAG, "Updating Meeting");
@@ -262,8 +281,8 @@ public class MeetingsFragment extends Fragment implements AsyncResponse<List<Mee
 		}
 	}
 
+	@Override
 	public void refresh() {
-		System.out.println("populating list");
 		fetcher = new MeetingsFetcherTask(this);
 		fetcher.execute(SessionManager.getUserID());
 		// calls processFinish()

@@ -1,4 +1,4 @@
-package com.meetingninja.csse.group;
+package com.meetingninja.csse.group.tasks;
 
 import java.io.IOException;
 
@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.GroupDatabaseAdapter;
+import com.meetingninja.csse.group.GroupsFragment;
 
 public class GroupCreateTask implements AsyncResponse<Void> {
 

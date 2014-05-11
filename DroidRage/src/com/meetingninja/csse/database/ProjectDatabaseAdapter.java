@@ -29,6 +29,7 @@ import objects.Note;
 import objects.Project;
 import objects.User;
 import android.net.Uri;
+import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -72,8 +73,6 @@ public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 	public static Project createProject(Project p) throws IOException,MalformedURLException {
 		// Server URL setup
 		String _url = getBaseUri().build().toString();
-		System.out.println(_url);
-		SessionManager session= SessionManager.getInstance();
 		String userId = SessionManager.getUserID();
 		// establish connection
 		URL url = new URL(_url);
@@ -236,7 +235,8 @@ public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 		updateHelper(payloadTitle);
 		updateHelper(payloadMeetings);
 		updateHelper(payloadNotes);
-		System.out.println(updateHelper(payloadMembers));
+		String response  = updateHelper(payloadMembers);
+		Log.d("ProjectDB Update", response);
 		
 	}
 

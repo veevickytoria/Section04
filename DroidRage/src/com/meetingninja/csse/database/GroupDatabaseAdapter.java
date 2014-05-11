@@ -82,8 +82,6 @@ public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
 		jgen.writeStringField(Keys.Group.TITLE, g.getGroupTitle());
 		jgen.writeArrayFieldStart(Keys.Group.MEMBERS);
 		for (User member : g.getMembers()) {
-			System.out.println("in backend call");
-			System.out.println(member);
 			jgen.writeStartObject();
 			jgen.writeStringField(Keys.User.ID, member.getID());
 			jgen.writeEndObject();

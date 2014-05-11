@@ -1,10 +1,15 @@
 package com.meetingninja.csse.notes.tasks;
 
 import java.io.IOException;
+
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.meetingninja.csse.ApplicationController;
 import com.meetingninja.csse.database.NotesDatabaseAdapter;
+import com.meetingninja.csse.extras.NinjaToastUtil;
 
 public class DeleteNoteTask extends AsyncTask<String, Void, Boolean> {
 
@@ -26,6 +31,9 @@ public class DeleteNoteTask extends AsyncTask<String, Void, Boolean> {
 
 	@Override
 	protected void onPostExecute(Boolean result) {
-		super.onPostExecute(result);
+		Context app = ApplicationController.getInstance().getApplicationContext();
+		if (result) {
+			NinjaToastUtil.show(app, "Note deleted");
+		}
 	}
 }

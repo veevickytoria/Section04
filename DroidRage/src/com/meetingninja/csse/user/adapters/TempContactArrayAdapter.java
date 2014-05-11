@@ -1,4 +1,4 @@
-package com.meetingninja.csse.user;
+package com.meetingninja.csse.user.adapters;
 
 import java.util.List;
 

@@ -21,6 +21,8 @@ import objects.User;
 import org.joda.time.format.DateTimeFormatter;
 
 import android.app.Activity;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -36,6 +38,7 @@ import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.volley.TaskVolleyAdapter;
 import com.meetingninja.csse.database.volley.UserVolleyAdapter;
+import com.meetingninja.csse.extras.AlertDialogUtil;
 import com.meetingninja.csse.extras.NinjaDateUtils;
 import com.meetingninja.csse.tasks.tasks.DeleteTaskTask;
 import com.meetingninja.csse.tasks.tasks.UpdateTaskTask;
@@ -65,7 +68,7 @@ public class ViewTaskActivity extends Activity {
 		}
 		setupViews();
 		if(displayedTask != null){
-			setTask();
+			setTask(displayedTask);
 		}
 		
 	}
@@ -88,10 +91,14 @@ public class ViewTaskActivity extends Activity {
 			this.startActivityForResult(editTask, 5);
 			return true;
 		case R.id.delete_item_task:
-			DeleteTaskTask deleter = new DeleteTaskTask();
-			deleter.deleteTask(displayedTask.getID());
-			setResult(RESULT_OK);
-			finish();
+			AlertDialogUtil.deleteDialog(this, "task", new OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					deleteTask(displayedTask);
+				}
+			});
+			return true;
 		case android.R.id.home:
 			setResult(resultCode);
 			finish();
@@ -102,6 +109,13 @@ public class ViewTaskActivity extends Activity {
 
 	}
 
+	private void deleteTask(Task t) {
+		DeleteTaskTask deleter = new DeleteTaskTask();
+		deleter.deleteTask(t.getID());
+		setResult(RESULT_OK);
+		finish();
+	}
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == 5) {
@@ -109,7 +123,7 @@ public class ViewTaskActivity extends Activity {
 				if (data != null) {
 					displayedTask = data.getParcelableExtra(Keys.Task.PARCEL);
 					getIntent().putExtra(Keys.Task.PARCEL, displayedTask);
-					setTask();
+					setTask(displayedTask);
 					UpdateTaskTask tUpdate = new UpdateTaskTask();
 					tUpdate.updateTask(displayedTask);
 					this.resultCode = resultCode;
@@ -124,7 +138,7 @@ public class ViewTaskActivity extends Activity {
 		UpdateTaskTask updater = new UpdateTaskTask();
 		displayedTask.setIsCompleted(true);
 		updater.updateTask(displayedTask);
-		setTask();
+		setTask(displayedTask);
 		resultCode = Activity.RESULT_OK;
 	}
 
@@ -141,34 +155,34 @@ public class ViewTaskActivity extends Activity {
 		taskCompleteButton = (Button) this.findViewById(R.id.task_complete_button);
 	}
 
-	private void setTask() {
-		taskName.setText(displayedTask.getTitle());
-		String format = dateFormat.print(Long.parseLong(displayedTask.getDateCreated()));
+	private void setTask(Task t) {
+		taskName.setText(t.getTitle());
+		String format = dateFormat.print(Long.parseLong(t.getDateCreated()));
 		dateCreated.setText(format);
 		// TODO: change this to the real date assigned
 //		dateAssigned.setText(displayedTask.getDateAssigned());
-		format = dateFormat.print(displayedTask.getEndTimeInMillis());
+		format = dateFormat.print(t.getEndTimeInMillis());
 		deadline.setText(format);
-		description.setText(displayedTask.getDescription());
-		completionCriteria.setText(displayedTask.getCompletionCriteria());
-		if (displayedTask.getIsCompleted()) {
+		description.setText(t.getDescription());
+		completionCriteria.setText(t.getCompletionCriteria());
+		if (t.getIsCompleted()) {
 			isCompleted.setText("Yes"); // TODO: change this to use string xml
 			taskCompleteButton.setVisibility(View.INVISIBLE);
 		} else {
 			isCompleted.setText("No"); // TODO: change this to use string xml
 			taskCompleteButton.setVisibility(View.VISIBLE);
 		}
-//		System.out.println("got here for testing");
-//		System.out.println(displayedTask.getType());
-		if(displayedTask.getType()!=null){
+
+		if(t.getType()!=null){
 //			if (displayedTask.getType().equals("ASSIGNED_TO")) {
 //				assignedLabel.setText("Assigned From:");
 //				fetchUserName(displayedTask.getAssignedFrom());
 //			} else {
 //				assignedLabel.setText("Assigned To:");
 //				if (!displayedTask.getAssignedTo().toString().equals("")) {
-					fetchUserName(displayedTask.getAssignedTo());
-					System.out.println(displayedTask.getAssignedTo());
+				
+					Log.d(TAG, "Assigned to: " + t.getAssignedTo());
+					fetchUserName(t.getAssignedTo());
 //				} else {
 //					assignedText.setText("Unassigned");
 //				}
@@ -178,7 +192,7 @@ public class ViewTaskActivity extends Activity {
 				@Override
 				public void processFinish(Task result) {
 					displayedTask = result;
-					setTask();
+					setTask(displayedTask);
 				}
 			});
 

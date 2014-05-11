@@ -23,6 +23,7 @@ import java.net.URL;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+
 import objects.Event;
 import objects.Group;
 import objects.Meeting;
@@ -44,7 +45,9 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.meetingninja.csse.extras.JsonUtils;
 import com.meetingninja.csse.extras.NinjaTextUtils;
+import com.parse.ParseException;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 
@@ -146,9 +149,11 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 
 	}
 
-	public static Schedule getSchedule(String userID) throws JsonParseException, JsonMappingException, IOException {
+	public static Schedule getSchedule(String userID)
+			throws JsonParseException, JsonMappingException, IOException {
 		// Server URL setup
-		String _url = getBaseUri().appendPath("Schedule").appendPath(userID).build().toString();
+		String _url = getBaseUri().appendPath("Schedule").appendPath(userID)
+				.build().toString();
 		// establish connection
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -166,9 +171,11 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		return sched;
 	}
 
-	public static List<Meeting> getMeetings(String userID)throws JsonParseException, JsonMappingException, IOException {
+	public static List<Meeting> getMeetings(String userID)
+			throws JsonParseException, JsonMappingException, IOException {
 		// Server URL setup
-		String _url = getBaseUri().appendPath("Meetings").appendPath(userID).build().toString();
+		String _url = getBaseUri().appendPath("Meetings").appendPath(userID)
+				.build().toString();
 
 		// establish connection
 		URL url = new URL(_url);
@@ -189,7 +196,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		if (meetingsArray != null && meetingsArray.isArray()) {
 			for (final JsonNode meetingNode : meetingsArray) {
 				String _id = meetingNode.get(Keys._ID).asText();
-				if(!meetingIDList.contains(_id)){
+				if (!meetingIDList.contains(_id)) {
 					meetingIDList.add(_id);
 				}
 			}
@@ -236,7 +243,8 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 
 	public static List<Group> getGroups(String userID) throws IOException {
 		// Server URL setup
-		String _url = getBaseUri().appendPath("Groups").appendPath(userID).build().toString();
+		String _url = getBaseUri().appendPath("Groups").appendPath(userID)
+				.build().toString();
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
@@ -246,7 +254,6 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 
 		conn.getResponseCode();
 		String response = getServerResponse(conn);
-
 
 		// Initialize ObjectMapper
 		List<Group> groupList = new ArrayList<Group>();
@@ -271,7 +278,8 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 
 	public static List<Project> getProject(String userID) throws IOException {
 		// Server URL setup
-		String _url = getBaseUri().appendPath("Projects").appendPath(userID).build().toString();
+		String _url = getBaseUri().appendPath("Projects").appendPath(userID)
+				.build().toString();
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
@@ -303,7 +311,8 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 
 	public static List<Note> getNotes(String userID) throws IOException {
 		// Server URL setup
-		String _url = getBaseUri().appendPath("Notes").appendPath(userID).build().toString();
+		String _url = getBaseUri().appendPath("Notes").appendPath(userID)
+				.build().toString();
 		Log.d("GETNOTES", _url);
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -318,7 +327,8 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		// Initialize ObjectMapper
 		List<Note> noteList = new ArrayList<Note>();
 		List<String> noteIds = new ArrayList<String>();
-		final JsonNode noteArray = MAPPER.readTree(response).get(Keys.Note.LIST);
+		final JsonNode noteArray = MAPPER.readTree(response)
+				.get(Keys.Note.LIST);
 
 		if (noteArray.isArray()) {
 			for (final JsonNode noteNode : noteArray) {
@@ -339,9 +349,11 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		return noteList;
 	}
 
-	public static List<Task> getTasks(String userID) throws JsonParseException,JsonMappingException, IOException {
+	public static List<Task> getTasks(String userID) throws JsonParseException,
+			JsonMappingException, IOException {
 		// Server URL setup
-		String _url = getBaseUri().appendPath("Tasks").appendPath(userID).build().toString();
+		String _url = getBaseUri().appendPath("Tasks").appendPath(userID)
+				.build().toString();
 		URL url = new URL(_url);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
@@ -354,7 +366,8 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 
 		// Initialize ObjectMapper
 		List<Task> taskList = new ArrayList<Task>();
-		final JsonNode taskArray = MAPPER.readTree(response).get(Keys.Task.LIST);
+		final JsonNode taskArray = MAPPER.readTree(response)
+				.get(Keys.Task.LIST);
 
 		if (taskArray.isArray()) {
 			for (final JsonNode taskNode : taskArray) {
@@ -379,13 +392,14 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 
 	/**
 	 * Registers a passed in User and returns that user with an assigned UserID
-	 *
+	 * 
 	 * @param registerMe
 	 * @param password
 	 * @return the passed-in user with an assigned ID by the server
 	 * @throws Exception
 	 */
-	public static User register(User registerMe, String password) throws IOException {
+	public static User register(User registerMe, String password)
+			throws IOException {
 		// Server URL setup
 		String _url = getBaseUri().build().toString();
 
@@ -451,38 +465,60 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		return createUser;
 	}
 
-	public static User update(User user)throws JsonGenerationException, IOException, InterruptedException {
+	public static User update(User user) throws JsonGenerationException,
+			IOException, InterruptedException {
 		String _url = getBaseUri().build().toString();
 		String keyValue = Keys.User.ID;
-		String name = getEditPayload(user.getID(), Keys.User.NAME,user.getDisplayName(),keyValue);
-		String title = getEditPayload(user.getID(), Keys.User.TITLE,user.getTitle(),keyValue);
-		String company = getEditPayload(user.getID(),Keys.User.COMPANY, user.getCompany(),keyValue);
-		String location = getEditPayload(user.getID(),Keys.User.LOCATION, user.getLocation(),keyValue);
-		String phone = getEditPayload(user.getID(),Keys.User.PHONE, user.getPhone(),keyValue);
-
+		String name = getEditPayload(user.getID(), Keys.User.NAME, user
+				.getDisplayName().trim(), keyValue);
+		String title = getEditPayload(user.getID(), Keys.User.TITLE, user
+				.getTitle().trim(), keyValue);
+		String company = getEditPayload(user.getID(), Keys.User.COMPANY, user
+				.getCompany().trim(), keyValue);
+		String location = getEditPayload(user.getID(), Keys.User.LOCATION, user
+				.getLocation().trim(), keyValue);
+		String phone = getEditPayload(user.getID(), Keys.User.PHONE, user
+				.getPhone().trim(), keyValue);
 
 		// Get server response
-		sendSingleEdit(name,_url);
-		sendSingleEdit(title,_url);
-		sendSingleEdit(company,_url);
-		sendSingleEdit(location,_url);
-		String response = sendSingleEdit(phone,_url);
+		sendSingleEdit(name, _url);
+		sendSingleEdit(title, _url);
+		sendSingleEdit(company, _url);
+		sendSingleEdit(location, _url);
+		String response = sendSingleEdit(phone, _url);
+
 		final JsonNode userNode = MAPPER.readTree(response);
 		User newUser = parseUser(userNode);
-//		updateParseSDKUser(newUser); //TODO: having null pointer exception
+		Log.d("Userinfo updated", newUser.toString());
+		updateParseSDKUser(newUser); // TODO: having null pointer exception
 		return newUser;
 	}
+
 	public static void updateParseSDKUser(User user) {
 		ParseUser parseUser = ParseUser.getCurrentUser();
 
-		parseUser.setUsername(user.getDisplayName());
-		parseUser.put("title", user.getTitle());
-		parseUser.put("company", user.getCompany());
-		parseUser.put("location", user.getLocation());
-		parseUser.put("phone", user.getPhone());
+		if (parseUser != null) {
+			if (!NinjaTextUtils.isEmpty(user.getDisplayName())) {
+				parseUser.setUsername(user.getDisplayName());
+			}
+			parseUser.put("title", user.getTitle());
+			parseUser.put("company", user.getCompany());
+			parseUser.put("location", user.getLocation());
+			parseUser.put("phone", user.getPhone());
 
-		parseUser.saveInBackground();
+			parseUser.saveEventually(new SaveCallback() {
 
+				@Override
+				public void done(ParseException e) {
+					if (e.getCause() == null) {
+						Log.i(TAG, "Parse.com User Updated!");
+					} else {
+						Log.e(TAG, "Error: Unable to update Parse.com user");
+						Log.e(TAG, e.getLocalizedMessage());
+					}
+				}
+			});
+		}
 	}
 
 	public static SerializableUser parseUser(JsonNode node) {
@@ -492,7 +528,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 			String email = node.get(Keys.User.EMAIL).asText();
 			// if their email is in a reasonable format
 			// set the required fields
-			if (node.hasNonNull(Keys.User.ID)){
+			if (node.hasNonNull(Keys.User.ID)) {
 				u.setID(node.get(Keys.User.ID).asText());
 			}
 			u.setDisplayName(node.get(Keys.User.NAME).asText());
@@ -553,7 +589,8 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 			for (final JsonNode meetingOrTaskNode : scheduleArray) {
 				if ((_id = meetingOrTaskNode.get(Keys._ID)) != null) {
 					// Get the type of event
-					String type = JsonUtils.getJSONValue(meetingOrTaskNode,Keys.TYPE);
+					String type = JsonUtils.getJSONValue(meetingOrTaskNode,
+							Keys.TYPE);
 
 					if (TextUtils.equals(type, "meeting")) {
 						event = new Meeting();
@@ -562,10 +599,14 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 					}
 					if (event != null) {
 						event.setID(_id.asText());
-						event.setTitle(JsonUtils.getJSONValue(meetingOrTaskNode, Keys.Meeting.TITLE));
-						event.setDescription(JsonUtils.getJSONValue(meetingOrTaskNode, Keys.Meeting.DESC));
-						event.setStartTime(JsonUtils.getJSONValue(meetingOrTaskNode, Keys.Meeting.START));
-						event.setEndTime(JsonUtils.getJSONValue(meetingOrTaskNode, Keys.Meeting.END));
+						event.setTitle(JsonUtils.getJSONValue(
+								meetingOrTaskNode, Keys.Meeting.TITLE));
+						event.setDescription(JsonUtils.getJSONValue(
+								meetingOrTaskNode, Keys.Meeting.DESC));
+						event.setStartTime(JsonUtils.getJSONValue(
+								meetingOrTaskNode, Keys.Meeting.START));
+						event.setEndTime(JsonUtils.getJSONValue(
+								meetingOrTaskNode, Keys.Meeting.END));
 
 						// Add event to the schedule
 						if (event instanceof Meeting)

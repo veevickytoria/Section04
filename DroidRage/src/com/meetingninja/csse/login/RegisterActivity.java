@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.meetingninja.csse.user;
+package com.meetingninja.csse.login;
 
 import java.io.IOException;
 
@@ -31,6 +31,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+
 import com.meetingninja.csse.ApplicationController;
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.AsyncResponse;

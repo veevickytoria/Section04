@@ -26,7 +26,7 @@ import android.util.Log;
 
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.ContactDatabaseAdapter;
-import com.meetingninja.csse.user.UserListFragment;
+import com.meetingninja.csse.user.ContactsFragment;
 
 public class DeleteContactTask extends AsyncTask<String, Void, Boolean> {
 	private AsyncResponse<Boolean> delegate;

@@ -35,9 +35,9 @@ import com.meetingninja.csse.database.volley.UserVolleyAdapter;
 import com.meetingninja.csse.extras.AlertDialogUtil;
 import com.meetingninja.csse.extras.ContactTokenTextView;
 import com.meetingninja.csse.extras.NinjaTextUtils;
-import com.meetingninja.csse.user.AutoCompleteAdapter;
 import com.meetingninja.csse.user.ProfileActivity;
-import com.meetingninja.csse.user.UserArrayAdapter;
+import com.meetingninja.csse.user.adapters.AutoCompleteAdapter;
+import com.meetingninja.csse.user.adapters.UserArrayAdapter;
 import com.tokenautocomplete.TokenCompleteTextView.TokenListener;
 
 import de.timroes.android.listview.EnhancedListView;
@@ -58,7 +58,7 @@ public class EditGroupActivity extends Activity implements TokenListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_group);
-		setupActionBar();
+		setupActionBar(true);
 		Bundle data = getIntent().getExtras();
 		if (data != null){
 			displayedGroup = data.getParcelable(Keys.Group.PARCEL);
@@ -202,7 +202,7 @@ public class EditGroupActivity extends Activity implements TokenListener {
 		inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
 	}
 
-	private final View.OnClickListener gActionBarListener = new OnClickListener() {
+	private final View.OnClickListener mActionBarListener = new OnClickListener() {
 
 		@Override
 		public void onClick(View v) {
@@ -210,26 +210,29 @@ public class EditGroupActivity extends Activity implements TokenListener {
 		}
 	};
 
-	private void setupActionBar() {
+	private void setupActionBar(boolean okCancel) {
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		// Make an Ok/Cancel ActionBar
-		View actionBarButtons = inflater.inflate(R.layout.actionbar_ok_cancel,new LinearLayout(this), false);
+		getActionBar().setTitle("");
+		getActionBar().setHomeButtonEnabled(!okCancel);
+		getActionBar().setDisplayShowHomeEnabled(!okCancel);
+		getActionBar().setDisplayHomeAsUpEnabled(!okCancel);
+		getActionBar().setDisplayShowTitleEnabled(!okCancel);
 
-		View cancelActionView = actionBarButtons.findViewById(R.id.action_cancel);
-		cancelActionView.setOnClickListener(gActionBarListener);
+		if (okCancel) {
+			// Make an Ok/Cancel ActionBar
+			View actionBarButtons = inflater.inflate(R.layout.actionbar_ok_cancel, new LinearLayout(this), false);
 
-		View doneActionView = actionBarButtons.findViewById(R.id.action_done);
-		doneActionView.setOnClickListener(gActionBarListener);
+			View cancelActionView = actionBarButtons.findViewById(R.id.action_cancel);
+			cancelActionView.setOnClickListener(mActionBarListener);
 
-		getActionBar().setHomeButtonEnabled(false);
-		getActionBar().setDisplayShowHomeEnabled(false);
-		getActionBar().setDisplayHomeAsUpEnabled(false);
-		getActionBar().setDisplayShowTitleEnabled(false);
+			View doneActionView = actionBarButtons.findViewById(R.id.action_done);
+			doneActionView.setOnClickListener(mActionBarListener);
 
-		getActionBar().setDisplayShowCustomEnabled(true);
-		getActionBar().setCustomView(actionBarButtons);
-		// end Ok-Cancel ActionBar
+			getActionBar().setCustomView(actionBarButtons);
+			getActionBar().setDisplayShowCustomEnabled(okCancel);
+			// end Ok-Cancel ActionBar
+		}
 
 	}
 

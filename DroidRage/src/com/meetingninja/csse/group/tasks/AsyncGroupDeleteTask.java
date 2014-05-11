@@ -1,26 +1,16 @@
-package com.meetingninja.csse.group;
+package com.meetingninja.csse.group.tasks;
 
 import java.io.IOException;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.meetingninja.csse.ApplicationController;
 import com.meetingninja.csse.database.GroupDatabaseAdapter;
+import com.meetingninja.csse.extras.NinjaToastUtil;
 
-public class GroupDeleteTask {
-	private AsyncGroupDeleteTask deleter;
-
-	public GroupDeleteTask() {
-		this.deleter = new AsyncGroupDeleteTask();
-	}
-
-	public void deleteGroup(String groupID) {
-		this.deleter.execute(groupID);
-	}
-
-}
-
-class AsyncGroupDeleteTask extends AsyncTask<String, Void, Boolean> {
+public class AsyncGroupDeleteTask extends AsyncTask<String, Void, Boolean> {
 	// private AsyncResponse<Group> delegate;
 
 	public AsyncGroupDeleteTask() {
@@ -40,9 +30,11 @@ class AsyncGroupDeleteTask extends AsyncTask<String, Void, Boolean> {
 	}
 
 	@Override
-	protected void onPostExecute(Boolean success) {
-		super.onPostExecute(success);
-		// delegate.processFinish(g);
+	protected void onPostExecute(Boolean result) {
+		Context app = ApplicationController.getInstance()
+				.getApplicationContext();
+		if (result) {
+			NinjaToastUtil.show(app, "Group deleted");
+		}
 	}
-
 }

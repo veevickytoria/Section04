@@ -4,6 +4,7 @@ import objects.Group;
 import objects.User;
 import objects.parcelable.UserParcel;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,17 +19,22 @@ import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.volley.UserVolleyAdapter;
+import com.meetingninja.csse.extras.AlertDialogUtil;
+import com.meetingninja.csse.extras.NinjaToastUtil;
+import com.meetingninja.csse.group.tasks.AsyncGroupDeleteTask;
+import com.meetingninja.csse.group.tasks.GroupDeleteTask;
+import com.meetingninja.csse.group.tasks.GroupUpdaterTask;
 import com.meetingninja.csse.user.ProfileActivity;
-import com.meetingninja.csse.user.UserArrayAdapter;
+import com.meetingninja.csse.user.adapters.UserArrayAdapter;
 
 import de.timroes.android.listview.EnhancedListView;
 
 public class ViewGroupActivity extends Activity {
 	private static final String TAG = ViewGroupActivity.class.getSimpleName();
-	private Group group;
+	private Group displayedGroup;
 	private UserArrayAdapter mUserAdapter;
-	TextView titleText;
-	EnhancedListView mListView;
+	private TextView titleText;
+	private EnhancedListView mListView;
 	private int resultCode = Activity.RESULT_CANCELED;
 
 	@Override
@@ -37,18 +43,21 @@ public class ViewGroupActivity extends Activity {
 		setContentView(R.layout.activity_view_group);
 		Bundle data = getIntent().getExtras();
 		if (data != null){
-			group = data.getParcelable(Keys.Group.PARCEL);
+			displayedGroup = data.getParcelable(Keys.Group.PARCEL);
 		}else{
-			Log.e(TAG, "Error: Unable to get group from parcel");
+			Log.e(TAG, "Error: Unable to get group from parcel"); 
+			displayedGroup = new Group();
 		}
 		titleText = (TextView) findViewById(R.id.group_view_title);
 		mListView = (EnhancedListView) findViewById(R.id.group_list);
 		mListView.setEmptyView(findViewById(android.R.id.empty));
-		setGroup();
-		for (int k = 0; k < group.getMembers().size(); k++) {
-			if (group.getMembers().get(k).getDisplayName() == null|| group.getMembers().get(k).getDisplayName().isEmpty()) {
-				loadUser(group.getMembers().get(k).getID());
-				group.getMembers().remove(k);
+		showGroup(displayedGroup);
+		
+		for (int k = 0; k < displayedGroup.getMembers().size(); k++) {
+			User kthMember = displayedGroup.getMembers().get(k);
+			if (kthMember.getDisplayName() == null|| kthMember.getDisplayName().isEmpty()) {
+				loadUser(kthMember.getID());
+				displayedGroup.getMembers().remove(k);
 				k--;
 			}
 		}
@@ -79,15 +88,15 @@ public class ViewGroupActivity extends Activity {
 			editGroup();
 			return true;
 		case R.id.delete_item_group:
-			new AsyncGroupDeleteTask(){
+			AlertDialogUtil.deleteDialog(this, "group", new DialogInterface.OnClickListener() {
+				
 				@Override
-				protected void onPostExecute(Boolean success) {
-					if(success){
-						setResult(RESULT_OK);
-						finish();
-					}
+				public void onClick(DialogInterface dialog, int which) {
+					delete(displayedGroup);
+					
 				}
-			}.execute(group.getID());
+			});
+			return true;
 		case android.R.id.home:
 			setResult(resultCode);
 			finish();
@@ -98,30 +107,44 @@ public class ViewGroupActivity extends Activity {
 
 	}
 
+	private void delete(Group group) {
+		new AsyncGroupDeleteTask(){
+			@Override
+			protected void onPostExecute(Boolean success) {
+				super.onPostExecute(success);
+				if(success){
+					setResult(RESULT_OK);
+					finish();
+				}
+			}
+		}.execute(group.getID());
+		
+	}
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == Activity.RESULT_OK) {
 			if (requestCode == 8) {
-				group = data.getParcelableExtra(Keys.Group.PARCEL);
-				System.out.println("test the id in view mode");
-				System.out.println(group.getID());
+				displayedGroup = data.getParcelableExtra(Keys.Group.PARCEL);
+				
+				Log.d(TAG, "Showing group: " + displayedGroup.getID());
 				GroupUpdaterTask updater = new GroupUpdaterTask();
-				updater.updateGroup(group);
-				setGroup();
+				updater.updateGroup(displayedGroup);
+				showGroup(displayedGroup);
 			}
 		}
 	}
 
-	private void setGroup() {
-		titleText.setText(group.getGroupTitle());
-		mUserAdapter = new UserArrayAdapter(this, R.layout.list_item_user_reversed,group.getMembers());
+	private void showGroup(Group g) {
+		titleText.setText(g.getGroupTitle());
+		mUserAdapter = new UserArrayAdapter(this, R.layout.list_item_user_reversed,g.getMembers());
 		mListView.setAdapter(mUserAdapter);
 	}
 
 	private void editGroup() {
 		resultCode = Activity.RESULT_OK;
 		Intent i = new Intent(this, EditGroupActivity.class);
-		i.putExtra(Keys.Group.PARCEL, group);
+		i.putExtra(Keys.Group.PARCEL, displayedGroup);
 		startActivityForResult(i, 8);
 	}
 
@@ -129,7 +152,7 @@ public class ViewGroupActivity extends Activity {
 		UserVolleyAdapter.fetchUserInfo(userID, new AsyncResponse<User>() {
 			@Override
 			public void processFinish(User result) {
-				group.addMember(result);
+				displayedGroup.addMember(result);
 				mUserAdapter.notifyDataSetChanged();
 			}
 		});

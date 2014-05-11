@@ -13,62 +13,62 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.meetingninja.csse.meetings;
+package com.meetingninja.csse.meetings.tasks;
 
 import java.io.IOException;
 
-import objects.Meeting;
-
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.meetingninja.csse.ApplicationController;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.MeetingDatabaseAdapter;
+import com.meetingninja.csse.extras.NinjaToastUtil;
 
-public class UpdateMeetingTask implements AsyncResponse<Meeting> {
-	private MeetingUpdateTask updater;
+public class DeleteMeetingTask implements AsyncResponse<Boolean> {
 
-	public UpdateMeetingTask() {
-		this.updater = new MeetingUpdateTask(this);
+	private MeetingDeleterTask deleter = null;
+
+	public DeleteMeetingTask() {
+		this.deleter = new MeetingDeleterTask(this);
 	}
 
-	public void updateMeeting(Meeting meeting) {
-		this.updater.execute(meeting);
+	public void deleteMeeting(String meetingID) {
+		this.deleter.execute(meetingID);
 	}
 
 	@Override
-	public void processFinish(Meeting result) {
-		// TODO Auto-generated method stub
-
+	public void processFinish(Boolean result) {
+		Context app = ApplicationController.getInstance().getApplicationContext();
+		if (result) {
+			NinjaToastUtil.show(app, "Meeting deleted");
+		}
 	}
-
 }
 
-class MeetingUpdateTask extends AsyncTask<Meeting, Void, Meeting> {
+class MeetingDeleterTask extends AsyncTask<String, Void, Boolean> {
+	private AsyncResponse<Boolean> delegate;
 
-	private AsyncResponse<Meeting> delegate;
-
-	public MeetingUpdateTask(AsyncResponse<Meeting> delegate) {
+	public MeetingDeleterTask(AsyncResponse<Boolean> delegate) {
 		this.delegate = delegate;
 	}
 
 	@Override
-	protected Meeting doInBackground(Meeting... params) {
-		Meeting m = null;
+	protected Boolean doInBackground(String... params) {
 		try {
-			m = MeetingDatabaseAdapter.editMeeting(params[0]);
+			return MeetingDatabaseAdapter.deleteMeeting(params[0]);
 		} catch (IOException e) {
-			System.out.println(params[0]);
-			Log.e("MeetingUpdate", "Error: Unable to update Meeting info");
+			Log.e("MeetingDelete", "Error: Unable to delete meeting");
 			Log.e("MeetingS_ERR", e.getLocalizedMessage());
 		}
-		return m;
+		return false;
 	}
 
 	@Override
-	protected void onPostExecute(Meeting m) {
-		super.onPostExecute(m);
-		delegate.processFinish(m);
+	protected void onPostExecute(Boolean result) {
+		super.onPostExecute(result);
+		delegate.processFinish(result);
 	}
 
 }

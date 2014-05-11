@@ -128,9 +128,7 @@ public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 		final LinearLayout rowView = (LinearLayout) view;
 		final Topic rowTopic = treeNodeInfo.getId();
 
-		// System.out.println("Echo: Checked" + rowTopic + " " + counter + " "
-		// + Comparison.size() + " " + checked);
-
+	
 		final EditText topicTitle = (EditText) rowView
 				.findViewById(R.id.agenda_edit_topic);
 		final TextView timeTxtView = (TextView) rowView
@@ -139,9 +137,6 @@ public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 			topicTitle.removeTextChangedListener(textHandlers.get(topicTitle));
 		}
 		topicTitle.setText(rowTopic.getTitle());
-
-		// System.out.println("Echo: Here" + rowTopic.getTitle() + " " +
-		// rowView);
 
 		TextWatcher c = new TextWatcher() {
 
@@ -306,9 +301,8 @@ public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 			subT.setTime("0");
 			parent.addTopic(subT);
 
-			// System.out.println("Echo: Created" + subT + " " + parent);
+			
 			// List<Topic> childList = getManager().getChildren(parent);
-			// System.out.println(childList.size());
 			// if(childList.size()!=0){
 			//
 			// Topic nextChild = childList.get(childList.size()-1);

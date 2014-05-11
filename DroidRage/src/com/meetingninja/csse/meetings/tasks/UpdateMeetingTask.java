@@ -13,52 +13,61 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.meetingninja.csse.meetings;
+package com.meetingninja.csse.meetings.tasks;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import objects.Meeting;
+
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.MeetingDatabaseAdapter;
-import com.meetingninja.csse.database.UserDatabaseAdapter;
 
-/**
- * Represents an asynchronous task to receive meetings from the database
- */
-public class GetMeetingFetcherTask extends AsyncTask<String, Void, Meeting> {
+public class UpdateMeetingTask implements AsyncResponse<Meeting> {
+	private MeetingUpdateTask updater;
+
+	public UpdateMeetingTask() {
+		this.updater = new MeetingUpdateTask(this);
+	}
+
+	public void updateMeeting(Meeting meeting) {
+		this.updater.execute(meeting);
+	}
+
+	@Override
+	public void processFinish(Meeting result) {
+		// TODO Auto-generated method stub
+
+	}
+
+}
+
+class MeetingUpdateTask extends AsyncTask<Meeting, Void, Meeting> {
+
 	private AsyncResponse<Meeting> delegate;
 
-	public GetMeetingFetcherTask(AsyncResponse<Meeting> delegate) {
+	public MeetingUpdateTask(AsyncResponse<Meeting> delegate) {
 		this.delegate = delegate;
 	}
 
 	@Override
-	protected Meeting doInBackground(String... params) {
-		Meeting meeting = new Meeting();
-
+	protected Meeting doInBackground(Meeting... params) {
+		Meeting m = null;
 		try {
-			meeting = MeetingDatabaseAdapter.getMeetingInfo(params[0]);
+			m = MeetingDatabaseAdapter.editMeeting(params[0]);
 		} catch (IOException e) {
-			Log.e("MeetingFetch", "Error: Unable to get meeting info");
-			Log.e("MEETINGS_ERR", e.getLocalizedMessage());
+			Log.e("MeetingUpdate", "Error: Unable to update Meeting info");
+			Log.e("MeetingS_ERR", e.getLocalizedMessage());
 		}
-
-		return meeting;
+		return m;
 	}
 
 	@Override
-	protected void onPostExecute(Meeting meeting) {
-		super.onPostExecute(meeting);
-		delegate.processFinish(meeting);
+	protected void onPostExecute(Meeting m) {
+		super.onPostExecute(m);
+		delegate.processFinish(m);
 	}
 
-	@Override
-	protected void onCancelled() {
-		super.onCancelled();
-	}
 }

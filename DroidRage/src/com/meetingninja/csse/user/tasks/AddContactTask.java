@@ -25,15 +25,15 @@ import android.util.Log;
 
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.ContactDatabaseAdapter;
-import com.meetingninja.csse.user.UserListFragment;
+import com.meetingninja.csse.user.ContactsFragment;
 
 public class AddContactTask implements AsyncResponse<List<Contact>> {
 
 	private static final String TAG = AddContactTask.class.getSimpleName();
 	private ContactAdder adder;
-	private UserListFragment frag;
+	private ContactsFragment frag;
 
-	public AddContactTask(UserListFragment frag) {
+	public AddContactTask(ContactsFragment frag) {
 		this.frag = frag;
 		adder = new ContactAdder(this);
 	}

@@ -17,11 +17,15 @@ package com.meetingninja.csse.tasks.tasks;
 
 import java.io.IOException;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.meetingninja.csse.ApplicationController;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.TaskDatabaseAdapter;
+import com.meetingninja.csse.extras.NinjaToastUtil;
 
 public class DeleteTaskTask implements AsyncResponse<Boolean> {
 
@@ -37,8 +41,9 @@ public class DeleteTaskTask implements AsyncResponse<Boolean> {
 
 	@Override
 	public void processFinish(Boolean result) {
-		if (!result) {
-			// do something?
+		Context app = ApplicationController.getInstance().getApplicationContext();
+		if (result) {
+			NinjaToastUtil.show(app, "Task deleted");
 		}
 
 	}

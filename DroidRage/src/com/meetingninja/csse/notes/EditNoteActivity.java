@@ -65,15 +65,14 @@ public class EditNoteActivity extends Activity implements AsyncResponse<String> 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_note);
-		// Show the Up button in the action bar.
-		setupActionBar(false);
-		new SQLiteNoteAdapter(this);
+
+		setupActionBar(true);
 
 		mTextEditor = (EditText) findViewById(R.id.noteContentEditor);
 		mNoteTitle = (EditText) findViewById(R.id.noteTitleEditor);
 
 		extras = getIntent().getExtras();
-		
+
 		if (extras.getBoolean(Note.CREATE_NOTE, false)) {
 			displayedNote = new Note();
 			isCreationMode = true;
@@ -126,11 +125,13 @@ public class EditNoteActivity extends Activity implements AsyncResponse<String> 
 
 		displayedNote.setTitle(title);
 		displayedNote.setContent(content);
-		displayedNote.setDateCreated(NinjaDateUtils.JODA_SERVER_DATE_FORMAT.print(now));
+		displayedNote.setDateCreated(NinjaDateUtils.JODA_SERVER_DATE_FORMAT
+				.print(now));
 
 		Intent backToNotes = new Intent();
-		if(displayedNote.getTitle().equals("")){
-			Toast.makeText(this, "Empty Note not created", Toast.LENGTH_LONG).show();
+		if (displayedNote.getTitle().equals("")) {
+			Toast.makeText(this, "Empty Note not created", Toast.LENGTH_LONG)
+					.show();
 			setResult(RESULT_CANCELED, backToNotes);
 			finish();
 			return;
@@ -153,19 +154,25 @@ public class EditNoteActivity extends Activity implements AsyncResponse<String> 
 
 	public void discard() {
 		// Check if modifications have been made
-		if (TextUtils.equals(displayedNote.getTitle(),this.mNoteTitle.getText())&& TextUtils.equals(displayedNote.getContent(),this.mTextEditor.getText())) {
-			Intent intentMessage = new Intent();
-			setResult(RESULT_CANCELED, intentMessage);
+		boolean hasChanged = TextUtils.equals(displayedNote.getTitle(),
+				this.mNoteTitle.getText())
+				&& TextUtils.equals(displayedNote.getContent(),
+						this.mTextEditor.getText());
+		if (hasChanged) {
+			setResult(RESULT_CANCELED);
 			finish();
 		} else {
-			new AlertDialog.Builder(this).setMessage("Are you sure you want to discard changes?").setCancelable(true).setPositiveButton("Yes",new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog,int id) {
-					Intent intentMessage = new Intent();
-					setResult(RESULT_CANCELED, intentMessage);
-					finish();
-				}
-			}).setNegativeButton("No", null).show();
+			new AlertDialog.Builder(this)
+					.setMessage("Are you sure you want to discard changes?")
+					.setPositiveButton("Yes",
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int id) {
+									setResult(RESULT_CANCELED);
+									finish();
+								}
+							}).setNegativeButton("No", null).show();
 		}
 	}
 
@@ -174,7 +181,6 @@ public class EditNoteActivity extends Activity implements AsyncResponse<String> 
 		@Override
 		public void onClick(View v) {
 			onActionBarItemSelected(v);
-
 		}
 	};
 
@@ -192,12 +198,16 @@ public class EditNoteActivity extends Activity implements AsyncResponse<String> 
 
 		if (okCancel) {
 			// Make an Ok/Cancel ActionBar
-			View actionBarButtons = inflater.inflate(R.layout.actionbar_ok_cancel, new LinearLayout(this), false);
+			View actionBarButtons = inflater
+					.inflate(R.layout.actionbar_ok_cancel, new LinearLayout(
+							this), false);
 
-			View cancelActionView = actionBarButtons.findViewById(R.id.action_cancel);
+			View cancelActionView = actionBarButtons
+					.findViewById(R.id.action_cancel);
 			cancelActionView.setOnClickListener(mActionBarListener);
 
-			View doneActionView = actionBarButtons.findViewById(R.id.action_done);
+			View doneActionView = actionBarButtons
+					.findViewById(R.id.action_done);
 			doneActionView.setOnClickListener(mActionBarListener);
 
 			getActionBar().setCustomView(actionBarButtons);
@@ -212,7 +222,8 @@ public class EditNoteActivity extends Activity implements AsyncResponse<String> 
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.menu_edit_note, menu);
 
-		return true;
+		// false does not show menu
+		return false;
 	}
 
 	@Override
@@ -299,8 +310,8 @@ public class EditNoteActivity extends Activity implements AsyncResponse<String> 
 		backToNotes.putExtra(Keys.Note.PARCEL, new NoteParcel(displayedNote));
 
 		if (result != null) {
-			//test with regular note creation
-			if (isCreationMode){
+			// test with regular note creation
+			if (isCreationMode) {
 				displayedNote.setID(result);
 				setResult(RESULT_OK, backToNotes);
 				finish();

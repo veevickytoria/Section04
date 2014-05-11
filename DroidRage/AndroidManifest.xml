@@ -44,7 +44,7 @@
             android:name="com.meetingninja.csse.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustPan|adjustResize" >
+            android:windowSoftInputMode="adjustResize" >
             <intent-filter android:label="@string/app_name" >
                 <action android:name="android.intent.action.MAIN" />
 
@@ -52,14 +52,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.meetingninja.csse.user.LoginActivity"
+            android:name="com.meetingninja.csse.login.LoginActivity"
             android:label="@string/title_activity_login"
             android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
         <activity
-            android:name="com.meetingninja.csse.user.RegisterActivity"
+            android:name="com.meetingninja.csse.login.RegisterActivity"
             android:label="@string/title_activity_register"
-            android:parentActivityName="com.meetingninja.csse.user.LoginActivity" >
+            android:parentActivityName="com.meetingninja.csse.login.LoginActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.meetingninja.csse.user.LoginActivity" />
@@ -68,7 +68,7 @@
             android:name="com.meetingninja.csse.meetings.EditMeetingActivity"
             android:label="@string/title_activity_meetings"
             android:parentActivityName="com.meetingninja.csse.MainActivity"
-            android:windowSoftInputMode="adjustPan|adjustResize" >
+            android:windowSoftInputMode="adjustResize" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.meetingninja.csse.MainActivity" />
@@ -77,7 +77,7 @@
             android:name="com.meetingninja.csse.notes.EditNoteActivity"
             android:label="@string/title_activity_edit_note"
             android:parentActivityName="com.meetingninja.csse.MainActivity"
-            android:windowSoftInputMode="adjustPan|adjustResize" >
+            android:windowSoftInputMode="adjustResize" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.meetingninja.csse.MainActivity" />
@@ -103,7 +103,7 @@
             android:configChanges="keyboardHidden"
             android:label="@string/title_activity_agenda"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|adjustResize" >
+            android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity
             android:name="com.meetingninja.csse.agenda.ReviewAgendaActivity"
@@ -168,13 +168,13 @@
             android:name="com.meetingninja.csse.tasks.EditTaskActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_edit_task"
-            android:windowSoftInputMode="adjustPan|adjustResize" >
+            android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity
             android:name="com.meetingninja.csse.group.EditGroupActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_edit_group"
-            android:windowSoftInputMode="adjustPan|adjustResize" >
+            android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity
             android:name="com.meetingninja.csse.group.ViewGroupActivity"
@@ -194,13 +194,17 @@
             android:name="com.meetingninja.csse.projects.ViewNoteProjectActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_view_note"
-            android:parentActivityName="com.meetingninja.csse.projects.ViewProjectActivity">
+            android:parentActivityName="com.meetingninja.csse.projects.ViewProjectActivity" >
         </activity>
         <activity
             android:name="com.meetingninja.csse.projects.ViewMeetingProjectActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_view_meeting"
-            android:parentActivityName="com.meetingninja.csse.projects.ViewProjectActivity">
+            android:parentActivityName="com.meetingninja.csse.projects.ViewProjectActivity" >
+        </activity>
+        <activity
+            android:name="com.meetingninja.csse.OkCancelActivity"
+            android:label="@string/title_activity_ok_cancel" >
         </activity>
     </application>
 

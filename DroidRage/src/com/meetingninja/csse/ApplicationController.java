@@ -98,7 +98,6 @@ public class ApplicationController extends Application {
 
 		Log.d(TAG, "Saving Parse Installation");
 		ParseInstallation.getCurrentInstallation().saveInBackground();
-
 	}
 
 	public void loadUsers() {
@@ -115,6 +114,15 @@ public class ApplicationController extends Application {
 		// sqlite.cacheNotes(false);
 		// sqlite.cacheNotes(true);
 		sqlite.close();
+	}
+	
+	public String getResString(int resId) {
+		return getString(resId);
+	}
+
+	
+	public String getResString(int resId, Object... params) {
+		return getString(resId, params);
 	}
 
 	public boolean isConnectedToBackend(Activity activity) {

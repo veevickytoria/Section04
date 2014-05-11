@@ -39,7 +39,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:background="@drawable/btn_transparent_holo_light"
-            android:contentDescription="@string/group_add_member"
+            android:contentDescription="@string/action_add_member"
             android:onClick="addMember"
             android:src="@drawable/ic_action_new_holo_light" />
     </RelativeLayout>

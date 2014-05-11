@@ -1,11 +1,13 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/view_task_scroller"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:padding="@dimen/content_padding_normal"
+    android:fillViewport="true" >
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical" >
 
         <LinearLayout
@@ -15,18 +17,10 @@
 
             <TextView
                 android:id="@+id/task_title_label"
+                style="@style/ViewObjectTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:enabled="true"
-                android:gravity="center"
-                android:hint="@string/task_name"
-                android:textSize="25sp" />
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray" />
+                android:hint="@string/task_name" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -36,8 +30,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin" >
+                    android:layout_height="wrap_content" >
 
                     <TextView
                         android:id="@+id/dateCreated"
@@ -57,7 +50,8 @@
                         android:minHeight="16dp" />
                 </LinearLayout>
 
-                <!-- LinearLayout
+                <!--
+                LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin" >
@@ -78,12 +72,12 @@
                         android:layout_weight="2"
                         android:hint="@string/unknown_date"
                         android:minHeight="16dp" />
-                </LinearLayout-->
+                </LinearLayout
+                -->
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin" >
+                    android:layout_height="wrap_content" >
 
                     <TextView
                         android:id="@+id/dateDeadline"
@@ -107,24 +101,19 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:orientation="vertical" >
 
                 <TextView
                     android:id="@+id/task_desc_view"
+                    style="@style/SectionHeader"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/vertical_spacer"
-                    android:hint="@string/description"
-                    android:inputType="text" />
+                    android:text="@string/description" />
 
                 <TextView
                     android:id="@+id/task_desc_text"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/vertical_spacer"
-                    android:hint="Task Desctription"
-                    android:inputType="text" />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
         </LinearLayout>
 
@@ -140,24 +129,20 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:orientation="vertical" >
 
                 <TextView
                     android:id="@+id/task_comp_crit_view"
+                    style="@style/SectionHeader"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/vertical_spacer"
-                    android:hint="@string/comp_crit"
-                    android:inputType="text" />
+                    android:text="@string/comp_crit" />
 
                 <TextView
                     android:id="@+id/task_comp_crit_text"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/vertical_spacer"
-                    android:hint="Task Completion criteria"
-                    android:inputType="text" />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
             <TextView
@@ -172,8 +157,6 @@
                 android:id="@+id/task_response_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dip"
-                android:layout_marginRight="8dip"
                 android:orientation="horizontal"
                 android:paddingTop="5dip" >
 
@@ -205,7 +188,6 @@
                     android:textAllCaps="false"
                     android:textColor="#FF777777"
                     android:textSize="18sp" />
-
             </LinearLayout>
 
             <View style="@style/EditEventSeparator" />
@@ -214,7 +196,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_weight="1"
             android:orientation="vertical" >
 
@@ -227,14 +208,10 @@
             <TextView
                 android:id="@+id/task_assigned_text"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:ems="10"
-                android:text="User assigned to" >
+                android:layout_height="wrap_content" >
             </TextView>
         </LinearLayout>
 
-        <!-- REMINDERS -->
     </LinearLayout>
 
-</LinearLayout>
+</ScrollView>

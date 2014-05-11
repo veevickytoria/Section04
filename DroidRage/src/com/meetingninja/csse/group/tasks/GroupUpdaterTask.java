@@ -1,4 +1,4 @@
-package com.meetingninja.csse.group;
+package com.meetingninja.csse.group.tasks;
 
 import java.io.IOException;
 

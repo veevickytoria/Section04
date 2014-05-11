@@ -7,13 +7,15 @@ import objects.Meeting;
 import objects.Task;
 
 
+
+
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.volley.TaskVolleyAdapter;
-import com.meetingninja.csse.meetings.GetMeetingFetcherTask;
 import com.meetingninja.csse.meetings.MeetingItemAdapter;
-import com.meetingninja.csse.meetings.MeetingsFetcherTask;
 import com.meetingninja.csse.meetings.ViewMeetingActivity;
+import com.meetingninja.csse.meetings.tasks.GetMeetingInfoTask;
+import com.meetingninja.csse.meetings.tasks.MeetingsFetcherTask;
 import com.meetingninja.csse.tasks.TaskItemAdapter;
 import com.meetingninja.csse.tasks.ViewTaskActivity;
 import com.meetingninja.csse.tasks.tasks.GetTaskListTask;

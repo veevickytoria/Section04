@@ -39,7 +39,7 @@
 
         <TextView
             style="@style/EditEventCustomActionButtonText"
-            android:text="@string/save_label" />
+            android:text="@string/label_done" />
     </LinearLayout>
 
 </LinearLayout>

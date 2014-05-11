@@ -74,8 +74,7 @@ public class ProfileFragment extends Fragment {
 		if (extras != null && extras.containsKey(Keys.User.PARCEL)) {
 			displayedUser = new ParcelDataFactory(extras).getUser();
 			try {
-				System.out.println(JsonUtils.getObjectMapper()
-						.writeValueAsString(displayedUser));
+				Log.d(TAG, JsonUtils.getObjectMapper().writeValueAsString(displayedUser));
 			} catch (JsonProcessingException e) {
 				e.printStackTrace();
 			}

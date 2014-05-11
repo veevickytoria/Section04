@@ -65,7 +65,7 @@ public class ReviewAgendaActivity extends FragmentActivity {
 		boolean newCollapsible;
 		setContentView(R.layout.activity_agenda_review);
 
-		setupActionBar();
+		setupActionBar(true);
 
 		if (savedInstanceState == null) {
 			manager = new InMemoryTreeStateManager<Topic>();
@@ -171,29 +171,29 @@ public class ReviewAgendaActivity extends FragmentActivity {
 	/**
 	 * Set up the {@link android.app.ActionBar}.
 	 */
-	private void setupActionBar() {
+	private void setupActionBar(boolean okCancel) {
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		// Make an Ok/Cancel ActionBar
-		View actionBarButtons = inflater.inflate(
-				R.layout.actionbar_comment_accept, new LinearLayout(this),
-				false);
-
-		View cancelActionView = actionBarButtons
-				.findViewById(R.id.action_comment);
-		cancelActionView.setOnClickListener(mActionBarListener);
-
-		View doneActionView = actionBarButtons.findViewById(R.id.action_done);
-		doneActionView.setOnClickListener(mActionBarListener);
-
-		getActionBar().setHomeButtonEnabled(false);
-		getActionBar().setDisplayShowHomeEnabled(false);
-		getActionBar().setDisplayHomeAsUpEnabled(false);
-		getActionBar().setDisplayShowTitleEnabled(false);
-
-		getActionBar().setDisplayShowCustomEnabled(true);
-		getActionBar().setCustomView(actionBarButtons);
-		// end Ok-Cancel ActionBar
+		getActionBar().setTitle("");
+		getActionBar().setHomeButtonEnabled(!okCancel);
+		getActionBar().setDisplayShowHomeEnabled(!okCancel);
+		getActionBar().setDisplayHomeAsUpEnabled(!okCancel);
+		getActionBar().setDisplayShowTitleEnabled(!okCancel);
+		
+		if (okCancel) {
+			// Make an Ok/Cancel ActionBar
+			View actionBarButtons = inflater.inflate(R.layout.actionbar_comment_accept, new LinearLayout(this),	false);
+	
+			View cancelActionView = actionBarButtons.findViewById(R.id.action_comment);
+			cancelActionView.setOnClickListener(mActionBarListener);
+	
+			View doneActionView = actionBarButtons.findViewById(R.id.action_done);
+			doneActionView.setOnClickListener(mActionBarListener);
+	
+			getActionBar().setDisplayShowCustomEnabled(okCancel);
+			getActionBar().setCustomView(actionBarButtons);
+			// end Ok-Cancel ActionBar
+		}
 	}
 
 	private boolean onActionBarItemSelected(View v) {

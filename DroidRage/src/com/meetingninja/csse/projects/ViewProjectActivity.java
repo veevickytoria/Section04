@@ -20,7 +20,7 @@ import com.meetingninja.csse.database.ProjectDatabaseAdapter;
 import com.meetingninja.csse.extras.AlertDialogUtil;
 import com.meetingninja.csse.meetings.EditMeetingActivity;
 import com.meetingninja.csse.meetings.MeetingItemAdapter;
-import com.meetingninja.csse.meetings.MeetingsFetcherTask;
+import com.meetingninja.csse.meetings.tasks.MeetingsFetcherTask;
 import com.meetingninja.csse.notes.EditNoteActivity;
 import com.meetingninja.csse.notes.NoteArrayAdapter;
 import com.meetingninja.csse.notes.NoteFetcher;
@@ -56,7 +56,7 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 	protected static final String TAG = ViewProjectActivity.class.getSimpleName();
 	ArrayList<String> navItems;
 	private static int prevSelectedItem = 0;
-	private Project project;
+	private Project displayedProject;
 	private int resultCode = Activity.RESULT_CANCELED;
 	private int currentpos=0;
 	private MemberListFragment memberFrag;
@@ -71,15 +71,21 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 		navItems.add("Meetings");
 		navItems.add("Notes");
 		navItems.add("Members");
+		
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+//			displayedProject = new ParcelDataFactory(extras).getProject();
+			displayedProject = extras.getParcelable(Keys.Project.PARCEL);
+			
+		}
 
-		project = getIntent().getExtras().getParcelable(Keys.Project.PARCEL);
 
+		getActionBar().setTitle(displayedProject.getProjectTitle());
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		for (String name : navItems) {
 			getActionBar().addTab(getActionBar().newTab().setText(name).setTabListener(this));
 		}
-		getActionBar().setTitle(project.getProjectTitle());
-		getActionBar().setDisplayHomeAsUpEnabled(true);
 		refreshProject();
 
 	}
@@ -87,7 +93,7 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu_edit_new_and_refresh, menu);
+		getMenuInflater().inflate(R.menu.menu_view_project, menu);
 		return true;
 	}
 
@@ -103,9 +109,20 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 		case R.id.action_edit:
 			editTitle();
 			return true;
+		case R.id.action_delete:
+			AlertDialogUtil.deleteDialog(this, "project", new OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					delete(displayedProject);
+					
+				}
+
+				
+			});
 		case android.R.id.home:
 			Intent i = new Intent();
-			i.putExtra(Keys.Project.PARCEL, project);
+			i.putExtra(Keys.Project.PARCEL, displayedProject);
 			resultCode = Activity.RESULT_OK;
 			setResult(resultCode, i);
 			finish();
@@ -114,13 +131,36 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 			return super.onOptionsItemSelected(item);
 		}
 	}
+	
+	private void delete(Project project) {
+		new AsyncTask<Project, Void, Boolean>() {
+			@Override
+			protected Boolean doInBackground(Project... params) {
+				try {
+					return ProjectDatabaseAdapter.deleteProject(params[0]);
+				} catch (IOException e) {
+					Log.e(TAG, "Error: Unable to delete project");
+					Log.e(TAG, e.getLocalizedMessage());
+				}
+				return false;
+			}
+			
+			@Override
+			protected void onPostExecute(Boolean result) {
+				if (result) {
+					Toast.makeText(ViewProjectActivity.this, "Project Deleted", Toast.LENGTH_SHORT).show();
+				}
+			}
+		}.execute(this.displayedProject);
+		
+	}
 
 	private void refreshProject() {
 		new AsyncTask<Project, Void, Project>() {
 			@Override
 			protected void onPostExecute(Project p) {
 				getActionBar().setTitle(p.getProjectTitle());
-				project=p;
+				displayedProject=p;
 				setProjectTab(currentpos);
 			}
 
@@ -131,24 +171,24 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 					p = ProjectDatabaseAdapter.getProject(params[0].getProjectID());
 				} catch (IOException e) {
 					Log.e(TAG, "failed to refresh project");
-					e.printStackTrace();
+					Log.e(TAG, e.getLocalizedMessage());
 				}
 				return p;
 			}
 
-		}.execute(project);
+		}.execute(displayedProject);
 	}
 
 	private void editTitle() {
 		final EditText title = new EditText(this);
-		title.setText(project.getProjectTitle());
+		title.setText(displayedProject.getProjectTitle());
 		title.selectAll();
 		new AlertDialog.Builder(this).setTitle("Enter a title").setPositiveButton("OK", new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				if (!title.getText().toString().trim().equals("")) {
-					project.setProjectTitle(title.getText().toString());
-					getActionBar().setTitle(project.getProjectTitle());
+					displayedProject.setProjectTitle(title.getText().toString());
+					getActionBar().setTitle(displayedProject.getProjectTitle());
 					updateProject();
 				}
 			}
@@ -282,63 +322,63 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 	}
 
 	protected void addMember(User user) {
-		for (int i = 0; i < project.getMembers().size(); i++) {
-			if (user.getID().equals(project.getMembers().get(i).getID())) {
+		for (int i = 0; i < displayedProject.getMembers().size(); i++) {
+			if (user.getID().equals(displayedProject.getMembers().get(i).getID())) {
 				AlertDialogUtil.showErrorDialog(this,"This user is already a member of this project");
 				return;
 			}
 		}
-		project.addMember(user);
+		displayedProject.addMember(user);
 		updateProject();
 	}
 
 	protected void deleteMember(User user) {
-		for (int i = 0; i < project.getMembers().size(); i++) {
-			if (user.getID().equals(project.getMembers().get(i).getID())) {
-				project.getMembers().remove(i);
+		for (int i = 0; i < displayedProject.getMembers().size(); i++) {
+			if (user.getID().equals(displayedProject.getMembers().get(i).getID())) {
+				displayedProject.getMembers().remove(i);
 				updateProject();
 			}
 		}
 	}
 
 	protected void deleteNote(String noteID) {
-		for (int i = 0; i < project.getNotes().size(); i++) {
-			if (noteID.equals(project.getNotes().get(i).getID())) {
-				project.getNotes().remove(i);
+		for (int i = 0; i < displayedProject.getNotes().size(); i++) {
+			if (noteID.equals(displayedProject.getNotes().get(i).getID())) {
+				displayedProject.getNotes().remove(i);
 				updateProject();
 			}
 		}
 	}
 
 	protected void addNote(Note note) {
-		for(Note note1:project.getNotes()){
+		for(Note note1:displayedProject.getNotes()){
 			if(note1.getID().equals(note.getID())){
 				Toast.makeText(this, "This note is already added to this project", Toast.LENGTH_LONG).show();
 				return;
 			}
 		}
-		project.addNote(note);
+		displayedProject.addNote(note);
 		setProjectTab(1);
 		updateProject();
 	}
 
 	protected void deleteMeeting(Meeting meeting) {
-		for (int i = 0; i < project.getMeetings().size(); i++) {
-			if (meeting.getID().equals(project.getMeetings().get(i).getID())) {
-				project.getMeetings().remove(i);
+		for (int i = 0; i < displayedProject.getMeetings().size(); i++) {
+			if (meeting.getID().equals(displayedProject.getMeetings().get(i).getID())) {
+				displayedProject.getMeetings().remove(i);
 				updateProject();
 			}
 		}
 	}
 
 	protected void addMeeting(Meeting meeting) {
-		for(Meeting meeting1:project.getMeetings()){
+		for(Meeting meeting1:displayedProject.getMeetings()){
 			if(meeting1.getID().equals(meeting.getID())){
 				Toast.makeText(this, "This meeting is already added to this project", Toast.LENGTH_LONG).show();
 				return;
 			}
 		}
-		project.addMeeting(meeting);
+		displayedProject.addMeeting(meeting);
 		setProjectTab(0);
 		updateProject();
 	}
@@ -360,7 +400,7 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 				}
 				return null;
 			}
-		}.execute(project);
+		}.execute(displayedProject);
 	}
 
 	@Override
@@ -396,13 +436,13 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 		case 0:
 			meetingFrag = new MeetingsProjectFragment().setProjectController(this);
 			frag = meetingFrag;
-			args.putParcelableArrayList(Keys.Project.MEETINGS,(ArrayList<Meeting>) project.getMeetings());
+			args.putParcelableArrayList(Keys.Project.MEETINGS,(ArrayList<Meeting>) displayedProject.getMeetings());
 			break;
 		case 1:
 			notesFrag = new NotesProjectFragment().setProjectController(this);
 			frag = notesFrag;
 			ArrayList<NoteParcel> list = new ArrayList<NoteParcel>();
-			for (Note note : project.getNotes()) {
+			for (Note note : displayedProject.getNotes()) {
 				list.add(new NoteParcel(note));
 			}
 			args.putParcelableArrayList(Keys.Project.NOTES, list);
@@ -411,7 +451,7 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 			memberFrag = new MemberListFragment().setProjectController(this);
 			frag = memberFrag;
 			ArrayList<UserParcel> userParcels = new ArrayList<UserParcel>();
-			for (User user : project.getMembers()) {
+			for (User user : displayedProject.getMembers()) {
 				userParcels.add(new UserParcel(user));
 			}
 			args.putParcelableArrayList(Keys.Project.MEMBERS, userParcels);

@@ -23,7 +23,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
-import com.meetingninja.csse.user.LoginActivity;
+import com.meetingninja.csse.login.LoginActivity;
 
 // http://stackoverflow.com/a/19613702
 public class SessionManager {

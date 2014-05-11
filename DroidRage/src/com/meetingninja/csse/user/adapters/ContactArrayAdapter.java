@@ -1,27 +1,27 @@
-package com.meetingninja.csse.user;
+package com.meetingninja.csse.user.adapters;
 
 import java.util.List;
 
+import objects.Contact;
 import objects.User;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.loopj.android.image.SmartImageView;
 import com.meetingninja.csse.R;
+import com.tokenautocomplete.FilteredArrayAdapter;
 
-public class UserArrayAdapter extends ArrayAdapter<User> {
+public class ContactArrayAdapter extends FilteredArrayAdapter<Contact> {
 
 	private int mLayoutId;
 	private final LayoutInflater mLayoutInflater;
-	private List<User> users;
 
-	public UserArrayAdapter(Context context, int resourceId, List<User> users) {
-		super(context, resourceId, users);
-		this.users = users;
+	public ContactArrayAdapter(Context context, int resourceId,
+			List<Contact> contacts) {
+		super(context, resourceId, contacts);
 		mLayoutInflater = LayoutInflater.from(context);
 		mLayoutId = resourceId;
 	}
@@ -51,11 +51,18 @@ public class UserArrayAdapter extends ArrayAdapter<User> {
 			convertView.setTag(viewHolder);
 		} else
 			viewHolder = (ViewHolder) convertView.getTag();
-
-		User user = users.get(position);
-		viewHolder.name.setText(user.getDisplayName());
-		viewHolder.email.setText(user.getEmail());
+		Contact contact = getItem(position);
+		viewHolder.name.setText(contact.getContact().getDisplayName());
+		viewHolder.email.setText(contact.getContact().getEmail());
 		return convertView;
+	}
+
+	@Override
+	protected boolean keepObject(Contact contact, String mask) {
+		mask = mask.toLowerCase();
+		User user = contact.getContact();
+		return user.getDisplayName().toLowerCase().startsWith(mask)
+				|| user.getEmail().toLowerCase().startsWith(mask);
 	}
 
 }

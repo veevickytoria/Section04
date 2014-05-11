@@ -239,10 +239,9 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == 1) { // EditNoteActivity
 			if (resultCode == Activity.RESULT_OK) {
-//				if (data != null) {
-//					System.out.println(data.getIntExtra("listPosition", -1));
+				if (data != null) {
 //					Note editedNote = new ParcelDataFactory(data.getExtras()).getNote();
-//				}
+				}
 			} // end EditNoteActivity
 		}
 		refresh();
@@ -285,10 +284,10 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 
 		@Override
 		protected void onPostExecute(List<Note> result) {
-			Log.d("populatenotes", "stuff");
-			super.onPostExecute(result);
+			Log.d("populatenotes", "Populating Notes...");
 			if (result != null)
 				delegate.processFinish(result);
+			super.onPostExecute(result);
 		}
 	}
 

@@ -1,4 +1,4 @@
-package com.meetingninja.csse.meetings;
+package com.meetingninja.csse.meetings.tasks;
 
 import objects.Meeting;
 import android.os.AsyncTask;

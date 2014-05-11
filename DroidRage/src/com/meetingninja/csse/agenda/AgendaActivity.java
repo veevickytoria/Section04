@@ -259,7 +259,6 @@ public class AgendaActivity extends FragmentActivity {
 
 				final EditText mTitle = (EditText) ((View) v.getParent())
 						.findViewById(R.id.agenda_title_edittext);
-				System.out.println("FOUND:" + mTitle);
 				displayedAgenda.setTitle(mTitle.getText().toString());
 
 				displayedAgenda.addTopic(newTopic);
