@@ -2,7 +2,11 @@ package com.meetingninja.csse.projects;
 
 import objects.Meeting;
 
+import android.content.Intent;
+
+import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.meetings.MeetingsFragment;
+import com.meetingninja.csse.meetings.ViewMeetingActivity;
 
 public class MeetingsProjectFragment extends MeetingsFragment{
 	ViewProjectActivity pCont;
@@ -17,5 +21,12 @@ public class MeetingsProjectFragment extends MeetingsFragment{
 	public MeetingsProjectFragment setProjectController(ViewProjectActivity pCont){
 		this.pCont = pCont;
 		return this;
+	}
+	@Override
+	protected void loadMeeting(Meeting meeting) {
+		while (meeting.getEndTimeInMillis() == 0L);
+		Intent viewMeeting = new Intent(getActivity(),ViewMeetingProjectActivity.class);
+		viewMeeting.putExtra(Keys.Meeting.PARCEL, meeting);
+		startActivityForResult(viewMeeting, 6);
 	}
 }

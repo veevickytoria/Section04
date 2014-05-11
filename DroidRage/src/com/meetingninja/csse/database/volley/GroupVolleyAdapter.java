@@ -8,26 +8,25 @@ import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.GroupDatabaseAdapter;
 
 public class GroupVolleyAdapter extends GroupDatabaseAdapter {
-	public static void fetchGroupInfo(final String groupID,
-			final AsyncResponse<Group> delegate) {
+
+	public static void fetchGroupInfo(final String groupID,	final AsyncResponse<Group> delegate) {
 		String _url = getBaseUri().appendPath(groupID).build().toString();
 
-		JsonNodeRequest req = new JsonNodeRequest(_url, null,
-				new JsonRequestListener() {
+		JsonNodeRequest req = new JsonNodeRequest(_url, null,new JsonRequestListener() {
 
-					@Override
-					public void onResponse(JsonNode response, int statusCode,
-							VolleyError error) {
-						if (response != null) {
-							Group retGroup = parseGroup(response, new Group());
-							retGroup.setID(groupID);
-							delegate.processFinish(retGroup);
-						} else {
-							error.printStackTrace();
-						}
+			@Override
+			public void onResponse(JsonNode response, int statusCode,
+					VolleyError error) {
+				if (response != null) {
+					Group retGroup = parseGroup(response, new Group());
+					retGroup.setID(groupID);
+					delegate.processFinish(retGroup);
+				} else {
+					error.printStackTrace();
+				}
 
-					}
-				});
+			}
+		});
 
 		addToRequestQueue(req);
 	}

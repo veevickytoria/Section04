@@ -13,40 +13,58 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.meetingninja.csse.user.tasks;
+package com.meetingninja.csse.meetings;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
-import objects.Contact;
-import objects.Meeting;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.meetingninja.csse.database.AsyncResponse;
-import com.meetingninja.csse.database.ContactDatabaseAdapter;
-import com.meetingninja.csse.user.UserListFragment;
+import com.meetingninja.csse.database.MeetingDatabaseAdapter;
 
-public class DeleteContactTask extends AsyncTask<String, Void, Boolean> {
+public class DeleteMeetingTask implements AsyncResponse<Boolean> {
+
+	private MeetingDeleterTask deleter = null;
+
+	public DeleteMeetingTask() {
+		this.deleter = new MeetingDeleterTask(this);
+	}
+
+	public void deleteMeeting(String meetingID) {
+		this.deleter.execute(meetingID);
+	}
+
+	@Override
+	public void processFinish(Boolean result) {
+		if (!result) {
+			// do something?
+		}
+	}
+}
+
+class MeetingDeleterTask extends AsyncTask<String, Void, Boolean> {
 	private AsyncResponse<Boolean> delegate;
 
-	public DeleteContactTask(AsyncResponse<Boolean> delegate) {
+	public MeetingDeleterTask(AsyncResponse<Boolean> delegate) {
 		this.delegate = delegate;
 	}
+
 	@Override
 	protected Boolean doInBackground(String... params) {
-		Boolean success=false;
 		try {
-			success = ContactDatabaseAdapter.deleteContact(params[0]);
+			return MeetingDatabaseAdapter.deleteMeeting(params[0]);
 		} catch (IOException e) {
-			Log.e("ContactDeleter", "Error: Unable delete contact");
-			Log.e("ContactDeleter", e.getLocalizedMessage());
+			Log.e("MeetingDelete", "Error: Unable to delete meeting");
+			Log.e("MeetingS_ERR", e.getLocalizedMessage());
 		}
-		return success;
+		return false;
 	}
+
 	@Override
-	protected void onPostExecute(Boolean success) {
-		super.onPostExecute(success);
+	protected void onPostExecute(Boolean b) {
+		super.onPostExecute(b);
+		delegate.processFinish(b);
 	}
+
 }

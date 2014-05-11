@@ -56,7 +56,6 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 	protected static final String TAG = ViewProjectActivity.class.getSimpleName();
 	ArrayList<String> navItems;
 	private static int prevSelectedItem = 0;
-	// private ProjectTypeAdapter typeAdapter;
 	private Project project;
 	private int resultCode = Activity.RESULT_CANCELED;
 	private int currentpos=0;
@@ -366,9 +365,12 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if(resultCode==5243){
+		if(resultCode==10){
 			Note note = new ParcelDataFactory(data.getExtras()).getNote();
 			deleteNote(note.getID());
+		}else if(resultCode==11){
+			Meeting meeting = new ParcelDataFactory(data.getExtras()).getMeeting();
+			deleteMeeting(meeting);
 		}
 		if (resultCode == Activity.RESULT_OK) {
 			
@@ -382,12 +384,10 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 			}
 		}
 
-
 		refreshProject();
 	}
 
 	private void setProjectTab(int pos) {
-		// Parcel parcel = new Parcel()
 		prevSelectedItem = pos;
 		Fragment frag = null;
 		FragmentManager fm = getSupportFragmentManager();

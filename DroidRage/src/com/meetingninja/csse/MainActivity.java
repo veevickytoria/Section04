@@ -329,7 +329,7 @@ public class MainActivity extends FragmentActivity {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (requestCode == 3)
-			frag_notes.populateList();
+			frag_notes.refresh();
 
 		if (data != null) {
 

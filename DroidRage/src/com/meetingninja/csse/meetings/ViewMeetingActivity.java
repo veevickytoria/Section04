@@ -36,6 +36,7 @@ import android.widget.TextView;
 
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.Keys;
+import com.meetingninja.csse.database.volley.MeetingVolleyAdapter;
 import com.meetingninja.csse.extras.NinjaDateUtils;
 import com.meetingninja.csse.user.UserArrayAdapter;
 
@@ -63,11 +64,9 @@ public class ViewMeetingActivity extends Activity {
 			Log.w(TAG, "Error: Unable to find Meeting Parcel");
 		}
 
-		is24 = android.text.format.DateFormat
-				.is24HourFormat(getApplicationContext());
+		is24 = android.text.format.DateFormat.is24HourFormat(getApplicationContext());
 
-		timeFormat = is24 ? NinjaDateUtils.JODA_24_TIME_FORMAT
-				: NinjaDateUtils.JODA_12_TIME_FORMAT;
+		timeFormat = is24 ? NinjaDateUtils.JODA_24_TIME_FORMAT: NinjaDateUtils.JODA_12_TIME_FORMAT;
 
 		getActionBar().setTitle("");
 		setupViews();
@@ -118,7 +117,7 @@ public class ViewMeetingActivity extends Activity {
 		this.attendance.addAll(attendance);
 		this.adpt.notifyDataSetChanged();
 	}
-
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -158,15 +157,23 @@ public class ViewMeetingActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-//			NavUtils.navigateUpFromSameTask(this);
 			finish();
 			return true;
-
 		case R.id.edit_meeting_action:
 			edit();
 			return true;
+		case R.id.delete_meeting_action:
+			deleteMeeting(displayedMeeting);
+			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	protected void deleteMeeting(Meeting meeting) {
+//		MeetingVolleyAdapter.deleteMeeting(meeting.getID());
+		DeleteMeetingTask deltask = new DeleteMeetingTask();
+		deltask.deleteMeeting(meeting.getID());
+		finish();
 	}
 
 }

@@ -96,10 +96,11 @@ public class NotesDatabaseAdapter extends BaseDatabaseAdapter {
 		String _id = null;
 		if (!response.isEmpty()) {
 			JsonNode tree = MAPPER.readTree(response);
-			if (!tree.hasNonNull(Keys.Note.ID))
+			if (!tree.hasNonNull(Keys.Note.ID)){
 				_id = "-1";
-			else
+			}else{
 				_id = tree.get(Keys.Note.ID).asText();
+			}
 		}
 
 		conn.disconnect();
@@ -108,28 +109,7 @@ public class NotesDatabaseAdapter extends BaseDatabaseAdapter {
 
 	public static Boolean deleteNote(String noteID) throws IOException {
 		String _url = getBaseUri().appendPath(noteID).build().toString();
-		URL url = new URL(_url);
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-		// add request header
-		conn.setRequestMethod(IRequest.DELETE);
-		addRequestHeader(conn, false);
-
-		conn.getResponseCode();
-		String response = getServerResponse(conn);
-
-		boolean result = false;
-		JsonNode tree = MAPPER.readTree(response);
-		if (!response.isEmpty()) {
-			if (!tree.has(Keys.DELETED)) {
-				result = true;
-			} else {
-				logError("note.del.err", tree);
-			}
-		}
-
-		conn.disconnect();
-		return result;
+		return deleteItem(_url);
 	}
 
 	public static Note parseNote(JsonNode node, String noteID) {

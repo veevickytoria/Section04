@@ -61,27 +61,27 @@ public class UserVolleyAdapter extends UserDatabaseAdapter {
 
 	}
 
-	public static void deleteUser(String userID,
-			final AsyncResponse<Boolean> delegate) {
-		String url = UserDatabaseAdapter.getBaseUri().appendPath(userID)
-				.build().toString();
+//	public static void deleteUser(String userID,
+//			final AsyncResponse<Boolean> delegate) {
+//		String url = UserDatabaseAdapter.getBaseUri().appendPath(userID)
+//				.build().toString();
+//
+//		JsonNodeRequest del_req = new JsonNodeRequest(Request.Method.DELETE,
+//				url, null, new JsonRequestListener() {
+//
+//					@Override
+//					public void onResponse(JsonNode response, int statusCode,
+//							VolleyError error) {
+//						if (response != null) {
+//							delegate.processFinish(response.get(Keys.DELETED)
+//									.asBoolean(false));
+//						} else {
+//							error.printStackTrace();
+//						}
+//
+//					}
+//				});
+//		addToRequestQueue(del_req);
+//	}
 
-		JsonNodeRequest del_req = new JsonNodeRequest(Request.Method.DELETE,
-				url, null, new JsonRequestListener() {
-
-					@Override
-					public void onResponse(JsonNode response, int statusCode,
-							VolleyError error) {
-						if (response != null) {
-							delegate.processFinish(response.get(Keys.DELETED)
-									.asBoolean(false));
-						} else {
-							error.printStackTrace();
-						}
-
-					}
-				});
-		addToRequestQueue(del_req);
-
-	}
 }

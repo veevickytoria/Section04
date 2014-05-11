@@ -59,7 +59,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 	}
 
 	public static String getBaseContactUrl() {// TODO: get rid of this put
-												// append path in path place
+		// append path in path place
 		return BASE_URL + "Contact";
 	}
 
@@ -354,8 +354,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 
 		// Initialize ObjectMapper
 		List<Task> taskList = new ArrayList<Task>();
-		final JsonNode taskArray = MAPPER.readTree(response)
-				.get(Keys.Task.LIST);
+		final JsonNode taskArray = MAPPER.readTree(response).get(Keys.Task.LIST);
 
 		if (taskArray.isArray()) {
 			for (final JsonNode taskNode : taskArray) {
@@ -470,7 +469,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 		String response = sendSingleEdit(phone,_url);
 		final JsonNode userNode = MAPPER.readTree(response);
 		User newUser = parseUser(userNode);
-		updateParseSDKUser(newUser);
+//		updateParseSDKUser(newUser); //TODO: having null pointer exception
 		return newUser;
 	}
 	public static void updateParseSDKUser(User user) {
@@ -489,28 +488,21 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 	public static SerializableUser parseUser(JsonNode node) {
 		SerializableUser u = new SerializableUser(); // start parsing a user
 		// if they at least have an id, email, and name
-		if (node.hasNonNull(Keys.User.EMAIL) && node.hasNonNull(Keys.User.NAME)
-		// && node.hasNonNull(KEY_ID)
-		) {
+		if (node.hasNonNull(Keys.User.EMAIL) && node.hasNonNull(Keys.User.NAME)) {
 			String email = node.get(Keys.User.EMAIL).asText();
 			// if their email is in a reasonable format
-			if (!TextUtils.isEmpty(node.get(Keys.User.NAME).asText())
-					&& NinjaTextUtils.isValidEmailAddress(email)) {
-				// set the required fields
-				if (node.hasNonNull(Keys.User.ID))
-					u.setID(node.get(Keys.User.ID).asText());
-				u.setDisplayName(node.get(Keys.User.NAME).asText());
-				u.setEmail(email);
-
-				// check and set the optional fields
-				u.setLocation(JsonUtils.getJSONValue(node, Keys.User.LOCATION));
-				u.setPhone(JsonUtils.getJSONValue(node, Keys.User.PHONE));
-				u.setCompany(JsonUtils.getJSONValue(node, Keys.User.COMPANY));
-				u.setTitle(JsonUtils.getJSONValue(node, Keys.User.TITLE));
-			} else {
-				// Log.w(TAG, "Parsed null user");
-				return null;
+			// set the required fields
+			if (node.hasNonNull(Keys.User.ID)){
+				u.setID(node.get(Keys.User.ID).asText());
 			}
+			u.setDisplayName(node.get(Keys.User.NAME).asText());
+			u.setEmail(email);
+
+			// check and set the optional fields
+			u.setLocation(JsonUtils.getJSONValue(node, Keys.User.LOCATION));
+			u.setPhone(JsonUtils.getJSONValue(node, Keys.User.PHONE));
+			u.setCompany(JsonUtils.getJSONValue(node, Keys.User.COMPANY));
+			u.setTitle(JsonUtils.getJSONValue(node, Keys.User.TITLE));
 		} else {
 			// Log.w(TAG, "Parsed null user");
 			return null;

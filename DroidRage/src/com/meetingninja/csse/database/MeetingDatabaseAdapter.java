@@ -30,6 +30,7 @@ import android.util.Log;
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.meetingninja.csse.database.BaseDatabaseAdapter.IRequest;
 
 public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 	private final static String TAG = MeetingDatabaseAdapter.class.getSimpleName();
@@ -53,11 +54,9 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 		// add request header
 		conn.setRequestMethod("GET");
 		addRequestHeader(conn, false);
-
 		conn.getResponseCode();
 		String response = getServerResponse(conn);
 		JsonNode meetingNode = MAPPER.readTree(response);
-
 		Meeting ret = parseMeeting(meetingNode);
 		ret.setID(meetingID);
 		return ret;
@@ -104,8 +103,7 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 		return m;
 	}
 
-	public static Meeting createMeeting(String userID, Meeting m)
-			throws IOException, MalformedURLException {
+	public static Meeting createMeeting(String userID, Meeting m)throws IOException, MalformedURLException {
 		// Server URL setup
 		String _url = getBaseUri().appendPath(userID).build().toString();
 
@@ -168,6 +166,11 @@ public class MeetingDatabaseAdapter extends BaseDatabaseAdapter {
 
 		conn.disconnect();
 		return created;
+	}
+	
+	public static Boolean deleteMeeting(String meetingID) throws IOException {
+		String _url = getBaseUri().appendPath(meetingID).build().toString();
+		return deleteItem(_url);
 	}
 
 	public static Meeting parseMeeting(JsonNode node) {

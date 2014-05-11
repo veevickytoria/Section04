@@ -32,8 +32,7 @@ import com.meetingninja.csse.SessionManager;
 
 public class ContactDatabaseAdapter extends BaseDatabaseAdapter {
 
-	private static final String TAG = ContactDatabaseAdapter.class
-			.getSimpleName();
+	private static final String TAG = ContactDatabaseAdapter.class.getSimpleName();
 
 	public static String getBaseUrl() {
 		return BASE_URL + "Contact";
@@ -79,8 +78,7 @@ public class ContactDatabaseAdapter extends BaseDatabaseAdapter {
 		return contacts;
 	}
 
-	public static List<Contact> addContact(String contactUserID)
-			throws IOException {
+	public static List<Contact> addContact(String contactUserID)throws IOException {
 
 		String _url = getBaseUri().build().toString();
 		URL url = new URL(_url);
@@ -135,30 +133,8 @@ public class ContactDatabaseAdapter extends BaseDatabaseAdapter {
 		return contacts;
 	}
 
-	public static List<Contact> deleteContact(String relationID)
-			throws IOException {
-
-		String _url = getBaseUri().appendPath("Relations")
-				.appendPath(relationID).build().toString();
-		URL url = new URL(_url);
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-		conn.setRequestMethod(IRequest.DELETE);
-
-		addRequestHeader(conn, false);
-		conn.getResponseCode();
-		String response = getServerResponse(conn);
-
-		JsonNode tree = MAPPER.readTree(response);
-		if (!response.isEmpty()) {
-			if (!tree.has(Keys.DELETED)) {
-			} else {
-				logError(TAG, tree);
-			}
-		}
-
-		conn.disconnect();
-		SessionManager.getInstance();
-		List<Contact> contacts = getContacts(SessionManager.getUserID());
-		return contacts;
+	public static Boolean deleteContact(String relationID)throws IOException {
+		String _url = getBaseUri().appendPath("Relations").appendPath(relationID).build().toString();
+		return deleteItem(_url);
 	}
 }

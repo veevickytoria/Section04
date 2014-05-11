@@ -75,9 +75,4 @@ public class AddContactTask implements AsyncResponse<List<Contact>> {
 
 	}
 
-	// @Override
-	// protected void onCancelled() {
-	// super.onCancelled();
-	// }
-
 }

@@ -86,11 +86,9 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 		// Build JSON Object for Title
 		jgen.writeStartObject();
 		jgen.writeStringField(Keys.Task.TITLE, t.getTitle());
-		jgen.writeStringField(Keys.Task.COMPLETED,
-				Boolean.toString(t.getIsCompleted()));
+		jgen.writeStringField(Keys.Task.COMPLETED,Boolean.toString(t.getIsCompleted()));
 		jgen.writeStringField(Keys.Task.DESC, t.getDescription());
-		jgen.writeStringField(Keys.Task.DEADLINE,
-				Long.toString(t.getEndTimeInMillis()));
+		jgen.writeStringField(Keys.Task.DEADLINE,Long.toString(t.getEndTimeInMillis()));
 		jgen.writeStringField(Keys.Task.DATE_CREATED, t.getDateCreated());
 		jgen.writeStringField(Keys.Task.DATE_ASSIGNED, t.getDateAssigned());
 		jgen.writeStringField(Keys.Task.CRITERIA, t.getCompletionCriteria());
@@ -114,28 +112,7 @@ public class TaskDatabaseAdapter extends BaseDatabaseAdapter {
 
 	public static Boolean deleteTask(String taskID) throws IOException {
 		String _url = getBaseUri().appendPath(taskID).build().toString();
-		URL url = new URL(_url);
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-		// add request header
-		conn.setRequestMethod(IRequest.DELETE);
-		addRequestHeader(conn, false);
-		int responseCode = conn.getResponseCode();
-		String response = getServerResponse(conn);
-
-		boolean result = false;
-		JsonNode tree = MAPPER.readTree(response);
-		if (!response.isEmpty()) {
-			if (!tree.has(Keys.DELETED)) {
-				result = true;
-			} else {
-				logError(TAG, tree);
-			}
-		}
-
-		conn.disconnect();
-		return result;
-
+		return deleteItem(_url);
 	}
 
 	public static Task editTask(Task task) throws IOException {

@@ -258,23 +258,9 @@ public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 		return response;
 	}
 
-	public static void deleteProject(Project p) throws IOException {
-
-		// Server URL setup
+	public static Boolean deleteProject(Project p) throws IOException {
 		String _url = getBaseUri().appendPath(p.getProjectID()).build().toString();
-
-		// Establish connection
-		URL url = new URL(_url);
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-		// add request header
-		conn.setRequestMethod("DELETE");
-		addRequestHeader(conn, false);
-
-		// Get server response
-		conn.getResponseCode();
-		getServerResponse(conn);
-
+		return deleteItem(_url);
 	}
 
 	public static Project parseProject(JsonNode projectNode, Project p)throws IOException {
@@ -293,8 +279,7 @@ public class ProjectDatabaseAdapter extends BaseDatabaseAdapter {
 				for (final JsonNode meetingNode : meetings) {
 					Meeting meeting = new Meeting();
 					meeting.setID(meetingNode.get(Keys.Meeting.ID).asText());
-					meeting = MeetingDatabaseAdapter.getMeetingInfo(meeting
-							.getID());
+					meeting = MeetingDatabaseAdapter.getMeetingInfo(meeting.getID());
 					p.addMeeting(meeting);
 				}
 			}
