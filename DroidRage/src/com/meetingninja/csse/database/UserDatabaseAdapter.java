@@ -510,7 +510,7 @@ public class UserDatabaseAdapter extends BaseDatabaseAdapter {
 
 				@Override
 				public void done(ParseException e) {
-					if (e.getCause() == null) {
+					if (e == null) {
 						Log.i(TAG, "Parse.com User Updated!");
 					} else {
 						Log.e(TAG, "Error: Unable to update Parse.com user");
