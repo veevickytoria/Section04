@@ -133,10 +133,6 @@ public class MainActivity extends FragmentActivity {
 		} else { // Else continue
 			HashMap<String, String> userDetails = SessionManager.getInstance().getUserDetails();
 			Log.v(TAG, "UserID " + SessionManager.getUserID() + " is logged in");
-			Crouton.makeText(
-					MainActivity.this,
-					getString(R.string.prompt_welcome,
-							userDetails.get(SessionManager.USER)), Style.INFO);
 
 			setContentView(R.layout.activity_main);
 			setupActionBar();
@@ -154,7 +150,7 @@ public class MainActivity extends FragmentActivity {
 
 	/**
 	 * Check to see if data has been cached in the local database
-	 * 
+	 *
 	 * @param icicle
 	 */
 	private void checkAndPreloadData(Bundle icicle) {
@@ -164,7 +160,7 @@ public class MainActivity extends FragmentActivity {
 		if (!isDataCached || session.needsSync()) {
 			ApplicationController.getInstance().loadUsers();
 
-			// TODO : Load up the SQLite tables 
+			// TODO : Load up the SQLite tables
 
 			isDataCached = true;
 			session.setSynced();
@@ -315,7 +311,7 @@ public class MainActivity extends FragmentActivity {
 
 	/**
 	 * Highlight the selected item, update the title, and close the drawer
-	 * 
+	 *
 	 * @param position
 	 */
 	private boolean selectFromLeftDrawer(int position, FragmentManager fm) {

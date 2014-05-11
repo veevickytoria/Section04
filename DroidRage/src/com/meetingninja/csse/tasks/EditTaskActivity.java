@@ -78,7 +78,7 @@ public class EditTaskActivity extends FragmentActivity implements
 	private AutoCompleteAdapter autoAdapter;
 	private ArrayList<User> allUsers = new ArrayList<User>();
 	private ArrayList<User> assignedUsers = new ArrayList<User>();
-	Dialog dlg;
+	private Dialog dlg;
 
 	// private SessionManager session;
 	private Task displayedTask;
