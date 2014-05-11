@@ -117,7 +117,6 @@ public class ViewMeetingActivity extends Activity {
 	}
 
 	private void setAttendees(List<User> attendance) {
-		Log.i(TAG, attendance.toString());
 		this.attendance.clear();
 		this.adpt.clear();
 		this.attendance.addAll(attendance);
@@ -173,7 +172,7 @@ public class ViewMeetingActivity extends Activity {
 
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					deleteMeeting(displayedMeeting);					
+					deleteMeeting(displayedMeeting);
 				}
 				
 			});
