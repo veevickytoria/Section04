@@ -1649,7 +1649,7 @@
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Dharu Shah (MPG5D9G2TU)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/csse/Documents/CSSE371/Section04/MeetingBuilder/MeetingBuilder/Framework,
@@ -1684,8 +1684,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Dharu Shah (MPG5D9G2TU)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Dharu Shah (MPG5D9G2TU)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					/Users/brodielockard/Documents/Section04/MeetingBuilder/MeetingBuilder,
 					/Users/brodielockard/Documents/Section04/MeetingBuilder/MeetingBuilder/Framework,

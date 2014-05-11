@@ -178,4 +178,10 @@ int SOMETHING = 1;
     SOMETHING = 2;
 }
 
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler
+{
+    [[[UIAlertView alloc] initWithTitle:@"Push Notification" message:[NSString stringWithFormat:@"Received Notification from backend %d", SOMETHING] delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil] show];
+    SOMETHING = 2;
+}
+
 @end

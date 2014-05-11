@@ -325,9 +325,10 @@ const float ANIMATION_DURATION = 0.4;
     [self.scheduleController setUserID:self.userID];
 }
 
-- (void)goToLogout
+- (void)goToLogout:(BOOL) shouldSlide
 {
-    [self animateSlidingMenu:NO];
+    if (shouldSlide)
+        [self animateSlidingMenu:NO];
     [self removeSubViews];
     [self removeTapRecognizer];
     [self disableSliding];
@@ -432,7 +433,8 @@ const float ANIMATION_DURATION = 0.4;
 
 -(void) onDeleteAccount
 {
-    [self goToLogout];
+    [self goToLogout:NO];
+    [self.loginViewController clearFields];
 }
 
 - (IBAction)startListening:(id)sender

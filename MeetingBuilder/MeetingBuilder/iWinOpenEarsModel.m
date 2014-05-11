@@ -104,7 +104,7 @@
     }
     else if (([hypothesis rangeOfString:@"LOG"].location != NSNotFound) && ([hypothesis rangeOfString:@"OUT"].location != NSNotFound))
     {
-        [self.menuDelegate goToLogout];
+        [self.menuDelegate goToLogout:NO];
     }
     [self.voiceCommand setTitle:@"Voice Command" forState:UIControlStateNormal];
     self.voiceCommand.userInteractionEnabled = YES;

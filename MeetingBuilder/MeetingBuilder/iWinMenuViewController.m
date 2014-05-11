@@ -74,6 +74,6 @@
 
 - (IBAction)onClickLogout {
     [self updateSelectedMenu:self.logOutButton];
-    [self.menuDelegate goToLogout];
+    [self.menuDelegate goToLogout:YES];
 }
 @end

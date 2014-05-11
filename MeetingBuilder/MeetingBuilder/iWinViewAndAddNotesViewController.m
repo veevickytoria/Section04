@@ -241,12 +241,6 @@
     [self dismissViewControllerAnimated:YES completion:Nil];
 }
 
-
-- (IBAction)saveSharedNoteUsers:(id)sender
-{
-    
-}
-
 - (IBAction)shareNotesButton:(id)sender {
     self.userViewController = [[iWinAddUsersViewController alloc] initWithNibName:@"iWinAddUsersViewController" bundle:nil withPageName:@"ShareNotes" inEditMode:self.isEditing];
     [self.userViewController setModalPresentationStyle:UIModalPresentationPageSheet];

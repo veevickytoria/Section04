@@ -116,7 +116,20 @@ NSString* const WHEN_TO_NOTIFY_KEY = @"whenToNotify";
                 url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
                 NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
                 
-                [PFUser logInWithUsername:[deserializedDictionary objectForKey:NAME_KEY] password:[self sha256HashFor:[self.passwordField text]]];
+                [PFUser logInWithUsernameInBackground:[deserializedDictionary objectForKey:NAME_KEY] password:[self sha256HashFor:[self.passwordField text]]
+                                                block:^(PFUser *user, NSError *error) {
+                                                    if (user) {
+                                                        NSArray *keys = [NSArray arrayWithObjects:@"user", @"userId", nil];
+                                                        NSArray *objects = [NSArray arrayWithObjects:user, [user objectId], nil];
+                                                        NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+                                                        
+                                                        PFInstallation* pInstall = [PFInstallation currentInstallation];
+                                                        [pInstall setValuesForKeysWithDictionary:jsonDictionary];
+                                                        [pInstall saveEventually];
+                                                    } else {
+                                                                [[[UIAlertView alloc] initWithTitle:@"Push Notification" message:[NSString stringWithFormat:@"Unable to find User for Notifications"] delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil] show];
+                                                    }
+                                                }];
                 
                 [PFAnalytics trackAppOpenedWithLaunchOptions:nil];
                 PFUser* pUser = [PFUser currentUser];
@@ -249,6 +262,12 @@ NSString* const WHEN_TO_NOTIFY_KEY = @"whenToNotify";
         [self onClickLogin:nil];
     }
     return YES;
+}
+
+-(void) clearFields
+{
+    self.passwordField.text = @"";
+    self.userNameField.text = @"";
 }
 
 @end
