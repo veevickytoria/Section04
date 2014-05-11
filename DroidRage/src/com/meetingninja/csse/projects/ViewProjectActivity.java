@@ -71,12 +71,12 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 		navItems.add("Meetings");
 		navItems.add("Notes");
 		navItems.add("Members");
-		
+
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-//			displayedProject = new ParcelDataFactory(extras).getProject();
+			//			displayedProject = new ParcelDataFactory(extras).getProject();
 			displayedProject = extras.getParcelable(Keys.Project.PARCEL);
-			
+
 		}
 
 
@@ -110,16 +110,13 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 			editTitle();
 			return true;
 		case R.id.action_delete:
-			AlertDialogUtil.deleteDialog(this, "project", new OnClickListener() {
-				
+			AlertDialogUtil.deleteDialog(this, "project", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					delete(displayedProject);
-					
 				}
-
-				
 			});
+			return true;
 		case android.R.id.home:
 			Intent i = new Intent();
 			i.putExtra(Keys.Project.PARCEL, displayedProject);
@@ -131,7 +128,7 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
+
 	private void delete(Project project) {
 		new AsyncTask<Project, Void, Boolean>() {
 			@Override
@@ -144,15 +141,14 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 				}
 				return false;
 			}
-			
 			@Override
 			protected void onPostExecute(Boolean result) {
 				if (result) {
 					Toast.makeText(ViewProjectActivity.this, "Project Deleted", Toast.LENGTH_SHORT).show();
+					finish();
 				}
 			}
 		}.execute(this.displayedProject);
-		
 	}
 
 	private void refreshProject() {
@@ -413,7 +409,7 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 			deleteMeeting(meeting);
 		}
 		if (resultCode == Activity.RESULT_OK) {
-			
+
 			if(data!=null){
 				if (requestCode == 2) {
 					Meeting created = data.getParcelableExtra(Keys.Meeting.PARCEL);

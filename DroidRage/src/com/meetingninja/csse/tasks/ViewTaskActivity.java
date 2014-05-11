@@ -47,7 +47,7 @@ import com.meetingninja.csse.tasks.tasks.UpdateTaskTask;
 public class ViewTaskActivity extends Activity {
 	private static final String TAG = ViewTaskActivity.class.getSimpleName();
 	private TextView taskName, dateCreated, dateAssigned, deadline,
-			description, completionCriteria, assignedLabel, assignedText;
+	description, completionCriteria, assignedLabel, assignedText;
 	private CheckBox taskCompleteCheckbox;
 	private Task displayedTask;
 	private DateTimeFormatter dateFormat = NinjaDateUtils.JODA_APP_DATE_FORMAT;
@@ -104,6 +104,7 @@ public class ViewTaskActivity extends Activity {
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+		
 
 	}
 
@@ -188,14 +189,13 @@ public class ViewTaskActivity extends Activity {
 			// }
 			// }
 		} else {
-			TaskVolleyAdapter.getTaskInfo(displayedTask.getID(),
-					new AsyncResponse<Task>() {
-						@Override
-						public void processFinish(Task result) {
-							displayedTask = result;
-							setTask(displayedTask);
-						}
-					});
+			TaskVolleyAdapter.getTaskInfo(displayedTask.getID(),new AsyncResponse<Task>() {
+				@Override
+				public void processFinish(Task result) {
+					displayedTask = result;
+					setTask(displayedTask);
+				}
+			});
 
 		}
 

@@ -60,7 +60,7 @@ import com.meetingninja.csse.user.adapters.UserArrayAdapter;
 import com.tokenautocomplete.TokenCompleteTextView.TokenListener;
 
 public class EditMeetingActivity extends FragmentActivity implements
-		AsyncResponse<String>, TokenListener {
+AsyncResponse<String>, TokenListener {
 
 	private Bundle extras;
 	private EditText mTitle, mLocation, mDescription;
@@ -94,10 +94,8 @@ public class EditMeetingActivity extends FragmentActivity implements
 			displayedMeeting = extras.getParcelable(EXTRA_MEETING);
 		}
 
-		is24 = android.text.format.DateFormat
-				.is24HourFormat(getApplicationContext());
-		timeFormat = is24 ? NinjaDateUtils.JODA_24_TIME_FORMAT
-				: NinjaDateUtils.JODA_12_TIME_FORMAT;
+		is24 = android.text.format.DateFormat.is24HourFormat(getApplicationContext());
+		timeFormat = is24 ? NinjaDateUtils.JODA_24_TIME_FORMAT: NinjaDateUtils.JODA_12_TIME_FORMAT;
 
 		getAllUsers();
 	}
@@ -119,6 +117,9 @@ public class EditMeetingActivity extends FragmentActivity implements
 	private void textFieldinit() {
 		if (displayedMeeting != null) {
 			mTitle.setText(displayedMeeting.getTitle());
+			if(!mTitle.getText().toString().trim().isEmpty()){
+				mTitle.setSelection(mTitle.getText().length());
+			}
 			mLocation.setText(displayedMeeting.getLocation());
 			mDescription.setText(displayedMeeting.getDescription());
 		}
@@ -131,20 +132,16 @@ public class EditMeetingActivity extends FragmentActivity implements
 			start.setTimeInMillis(displayedMeeting.getStartTimeInMillis());
 			end.setTimeInMillis(displayedMeeting.getEndTimeInMillis());
 		}
-		mFromDate.setOnClickListener(new DateClickListener(mFromDate, start,
-				end, mToDate, true, mFromTime, mToTime));
+		mFromDate.setOnClickListener(new DateClickListener(mFromDate, start,end, mToDate, true, mFromTime, mToTime));
 		mFromDate.setText(dateFormat.print(start.getTimeInMillis()));
 
-		mToDate.setOnClickListener(new DateClickListener(mToDate, end, start,
-				mFromDate, false, mToTime, mFromTime));
+		mToDate.setOnClickListener(new DateClickListener(mToDate, end, start,mFromDate, false, mToTime, mFromTime));
 		mToDate.setText(dateFormat.print(end.getTimeInMillis()));
 
-		mFromTime.setOnClickListener(new TimeClickListener(mFromTime, start,
-				this, end, mToTime, true));
+		mFromTime.setOnClickListener(new TimeClickListener(mFromTime, start,this, end, mToTime, true));
 		mFromTime.setText(timeFormat.print(start.getTimeInMillis()));
 
-		mToTime.setOnClickListener(new TimeClickListener(mToTime, end, this,
-				start, mFromTime, false));
+		mToTime.setOnClickListener(new TimeClickListener(mToTime, end, this,start, mFromTime, false));
 		mToTime.setText(timeFormat.print(end.getTimeInMillis()));
 	}
 
@@ -163,15 +160,13 @@ public class EditMeetingActivity extends FragmentActivity implements
 
 	private void setupAutoComplete() {
 		getAllUsers();
-		autoAdapter = new AutoCompleteAdapter(EditMeetingActivity.this,
-				allUsers);
+		autoAdapter = new AutoCompleteAdapter(EditMeetingActivity.this,allUsers);
 		mGuestsComplete.setAdapter(autoAdapter);
 		mGuestsComplete.setTokenListener(this);
 
 		// token listener when autocompleted
 
-		addedAdapter = new UserArrayAdapter(EditMeetingActivity.this,
-				R.layout.list_item_user, addedUsers);
+		addedAdapter = new UserArrayAdapter(EditMeetingActivity.this,R.layout.list_item_user, addedUsers);
 
 	}
 
@@ -189,11 +184,9 @@ public class EditMeetingActivity extends FragmentActivity implements
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		// Make an Ok/Cancel ActionBar
-		View actionBarButtons = inflater.inflate(R.layout.actionbar_ok_cancel,
-				new LinearLayout(this), false);
+		View actionBarButtons = inflater.inflate(R.layout.actionbar_ok_cancel,new LinearLayout(this), false);
 
-		View cancelActionView = actionBarButtons
-				.findViewById(R.id.action_cancel);
+		View cancelActionView = actionBarButtons.findViewById(R.id.action_cancel);
 		cancelActionView.setOnClickListener(mActionBarListener);
 
 		View doneActionView = actionBarButtons.findViewById(R.id.action_done);
@@ -251,8 +244,7 @@ public class EditMeetingActivity extends FragmentActivity implements
 	public boolean handleClick(View v) {
 		switch (v.getId()) {
 		case R.id.add_agenda_button:
-			Intent toAgenda = new Intent(EditMeetingActivity.this,
-					AgendaActivity.class);
+			Intent toAgenda = new Intent(EditMeetingActivity.this,AgendaActivity.class);
 
 			// TODO: Get and set the agenda ID values
 
@@ -277,15 +269,13 @@ public class EditMeetingActivity extends FragmentActivity implements
 			setResult(RESULT_OK, msgIntent);
 			finish();
 		} else {
-			Toast.makeText(this, "Failed to save meeting", Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(this, "Failed to save meeting", Toast.LENGTH_SHORT).show();
 		}
 	}
 
 	private void save() {
 		if (mTitle.getText().toString().trim().equals("")) {
-			Toast.makeText(this, "Empty meeting not created",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Empty meeting not created",Toast.LENGTH_SHORT).show();
 			setResult(RESULT_CANCELED);
 			finish();
 		} else {
@@ -314,21 +304,17 @@ public class EditMeetingActivity extends FragmentActivity implements
 				displayedMeeting = newMeeting;
 
 			} else {
-				MeetingSaveTask task = new MeetingSaveTask(
-						EditMeetingActivity.this);
+				MeetingSaveTask task = new MeetingSaveTask(EditMeetingActivity.this);
 				task.execute(newMeeting);
 				msgIntent.putExtra("method", "insert");
 				displayedMeeting = newMeeting;
 				return;
 			}
-			Toast.makeText(this, String.format("Saving Meeting"),
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, String.format("Saving Meeting"),Toast.LENGTH_SHORT).show();
 
-			msgIntent.putExtra(Keys.Meeting.PARCEL, new MeetingParcel(
-					newMeeting));
+			msgIntent.putExtra(Keys.Meeting.PARCEL, new MeetingParcel(newMeeting));
 			if (extras != null) {
-				msgIntent.putExtra("listPosition",
-						extras.getInt("listPosition", -1));
+				msgIntent.putExtra("listPosition",extras.getInt("listPosition", -1));
 			}
 			setResult(RESULT_OK, msgIntent);
 			finish();
@@ -337,14 +323,12 @@ public class EditMeetingActivity extends FragmentActivity implements
 
 	// TODO: abstract date click listener and timeclick listener
 	private class DateClickListener implements OnClickListener,
-			OnDateSetListener {
+	OnDateSetListener {
 		Button button, otherButton, timeButton, otherTimeButton;
 		Calendar cal, other;
 		boolean start;
 
-		public DateClickListener(Button b, Calendar c, Calendar other,
-				Button b1, Boolean start, Button timeButton,
-				Button otherTimeButton) {
+		public DateClickListener(Button b, Calendar c, Calendar other,Button b1, Boolean start, Button timeButton,Button otherTimeButton) {
 			this.button = b;
 			this.otherButton = b1;
 			this.other = other;
@@ -357,34 +341,23 @@ public class EditMeetingActivity extends FragmentActivity implements
 		@Override
 		public void onClick(View v) {
 			FragmentManager fm = getSupportFragmentManager();
-			CalendarDatePickerDialog calendarDatePickerDialog = CalendarDatePickerDialog
-					.newInstance(this, cal.get(Calendar.YEAR),
-							cal.get(Calendar.MONTH),
-							cal.get(Calendar.DAY_OF_MONTH));
+			CalendarDatePickerDialog calendarDatePickerDialog = CalendarDatePickerDialog.newInstance(this, cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH));
 			calendarDatePickerDialog.show(fm, "fragment_date_picker_name");
 		}
 
 		@Override
 		// TODO: make functions for setting calendars or such
-		public void onDateSet(CalendarDatePickerDialog dialog, int year,
-				int monthOfYear, int dayOfMonth) {
+		public void onDateSet(CalendarDatePickerDialog dialog, int year,int monthOfYear, int dayOfMonth) {
 			Calendar tempcal = Calendar.getInstance();
-			// tempcal.setTimeZone(TimeZone.getDefault());
-			tempcal.set(year, monthOfYear, dayOfMonth,
-					cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE));
+			tempcal.set(year, monthOfYear, dayOfMonth,cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE));
 			Calendar now = Calendar.getInstance();
-			// now.setTimeZone(TimeZone.getTimeZone("UTC"));
 			now = Calendar.getInstance();
 			if (tempcal.after(now)) {
 				cal.set(year, monthOfYear, dayOfMonth);
 				String format = dateFormat.print(cal.getTimeInMillis());
-				if ((start && cal.after(other))
-						|| ((!start) && cal.before(other))) {
-					other.set(year, monthOfYear, dayOfMonth,
-							cal.get(Calendar.HOUR_OF_DAY),
-							cal.get(Calendar.MINUTE));
-					otherTimeButton.setText(timeFormat.print(other
-							.getTimeInMillis()));
+				if ((start && cal.after(other))|| ((!start) && cal.before(other))) {
+					other.set(year, monthOfYear, dayOfMonth,cal.get(Calendar.HOUR_OF_DAY),cal.get(Calendar.MINUTE));
+					otherTimeButton.setText(timeFormat.print(other.getTimeInMillis()));
 					otherButton.setText(format);
 				}
 				button.setText(format);
@@ -398,39 +371,29 @@ public class EditMeetingActivity extends FragmentActivity implements
 				if (tempcal.after(now)) {
 					cal.set(year, monthOfYear, dayOfMonth, hour, minute);
 					String format = dateFormat.print(cal.getTimeInMillis());
-					if ((start && cal.after(other))
-							|| ((!start) && cal.before(other))) {
+					if ((start && cal.after(other))|| ((!start) && cal.before(other))) {
 						other.set(year, monthOfYear, dayOfMonth, hour, minute);
-						otherTimeButton.setText(timeFormat.print(other
-								.getTimeInMillis()));
+						otherTimeButton.setText(timeFormat.print(other.getTimeInMillis()));
 						otherButton.setText(format);
 					}
 					timeButton.setText(timeFormat.print(cal.getTimeInMillis()));
 					button.setText(format);
 				} else {
-					AlertDialogUtil
-							.displayDialog(
-									EditMeetingActivity.this,
-									"Error",
-									"A Meeting can not be set to start or end before now",
-									"OK", null);
+					AlertDialogUtil.displayDialog(EditMeetingActivity.this,"Error","A Meeting can not be set to start or end before now","OK", null);
 				}
 			}
 		}
 	}
 
 	private class TimeClickListener implements OnClickListener,
-			OnTimeSetListener {
+	OnTimeSetListener {
 		Button button, otherButton;
 		Calendar cal, other;
 		boolean start;
 
-		public TimeClickListener(Button b, Calendar c,
-				FragmentActivity activity, Calendar other, Button b1,
-				Boolean start) {
+		public TimeClickListener(Button b, Calendar c,FragmentActivity activity, Calendar other, Button b1,Boolean start) {
 			this.button = b;
-			is24 = android.text.format.DateFormat
-					.is24HourFormat(getApplicationContext());
+			is24 = android.text.format.DateFormat.is24HourFormat(getApplicationContext());
 			this.cal = c;
 			this.otherButton = b1;
 			this.other = other;
@@ -439,43 +402,30 @@ public class EditMeetingActivity extends FragmentActivity implements
 
 		@Override
 		public void onClick(View v) {
-			is24 = android.text.format.DateFormat
-					.is24HourFormat(getApplicationContext());
+			is24 = android.text.format.DateFormat.is24HourFormat(getApplicationContext());
 			FragmentManager fm = getSupportFragmentManager();
-			RadialTimePickerDialog timePickerDialog = RadialTimePickerDialog
-					.newInstance(TimeClickListener.this,
-							cal.get(Calendar.HOUR_OF_DAY),
-							cal.get(Calendar.MINUTE), is24);
+			RadialTimePickerDialog timePickerDialog = RadialTimePickerDialog.newInstance(TimeClickListener.this,cal.get(Calendar.HOUR_OF_DAY),cal.get(Calendar.MINUTE), is24);
 			timePickerDialog.show(fm, "fragment_time_picker_name");
 		}
 
 		@Override
-		public void onTimeSet(RadialPickerLayout dialog, int hourOfDay,
-				int minute) {
+		public void onTimeSet(RadialPickerLayout dialog, int hourOfDay,int minute) {
 			Calendar tempcal = Calendar.getInstance();
-			// tempcal.setTimeZone(TimeZone.getDefault());
-			tempcal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
-					cal.get(Calendar.DAY_OF_MONTH), hourOfDay, minute);
+			tempcal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH), hourOfDay, minute);
 			Calendar now = Calendar.getInstance();
-			// now.setTimeZone(TimeZone.getTimeZone("UTC"));
 			now = Calendar.getInstance();
 
 			if (tempcal.after(now)) {
 				cal.set(Calendar.HOUR_OF_DAY, hourOfDay);
 				cal.set(Calendar.MINUTE, minute);
-				if ((start && cal.after(other))
-						|| ((!start) && cal.before(other))) {
+				if ((start && cal.after(other))|| ((!start) && cal.before(other))) {
 					other.set(Calendar.HOUR_OF_DAY, hourOfDay);
 					other.set(Calendar.MINUTE, minute);
-					otherButton
-							.setText(timeFormat.print(cal.getTimeInMillis()));
+					otherButton.setText(timeFormat.print(cal.getTimeInMillis()));
 				}
 				button.setText(timeFormat.print(cal.getTimeInMillis()));
 			} else {
-				AlertDialogUtil.displayDialog(EditMeetingActivity.this,
-						"Error",
-						"A Meeting can not be set to start or end before now",
-						"OK", null);
+				AlertDialogUtil.displayDialog(EditMeetingActivity.this,"Error","A Meeting can not be set to start or end before now","OK", null);
 			}
 		}
 
@@ -494,12 +444,8 @@ public class EditMeetingActivity extends FragmentActivity implements
 			if (!TextUtils.equals(added.getID(), "")) {
 				addedIds.add(added.getID());
 			}
-			// else {
-			// addedIds.add(added.getEmail());
-			// }
 		}
 		addedAdapter.notifyDataSetChanged();
-
 	}
 
 	@Override
@@ -515,12 +461,7 @@ public class EditMeetingActivity extends FragmentActivity implements
 			if (!TextUtils.equals(removed.getID(), "")) {
 				addedIds.remove(removed.getID());
 			}
-			// else {
-			// addedIds.remove(removed.getEmail());
-			// }
 			addedAdapter.notifyDataSetChanged();
 		}
-
 	}
-
 }

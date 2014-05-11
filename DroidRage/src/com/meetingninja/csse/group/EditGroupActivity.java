@@ -74,7 +74,6 @@ public class EditGroupActivity extends Activity implements TokenListener {
 		clickingAndViewingAUser();
 		enableSwiping();
 		fetchUsers();
-//		fetchContacts();
 		bothUsers.addAll(allUsers);
 	}
 	@Override
@@ -110,6 +109,9 @@ public class EditGroupActivity extends Activity implements TokenListener {
 	private void setupTitle() {
 		titleText = (EditText) findViewById(R.id.group_edit_title);
 		titleText.setText(displayedGroup.getGroupTitle());
+		if(!titleText.getText().toString().trim().isEmpty()){
+			titleText.setSelection(titleText.getText().length());
+		}
 	}
 
 	/**

@@ -134,12 +134,14 @@ public class EditTaskActivity extends FragmentActivity implements
 				loadTask(displayedTask);
 				hideInputOnTouch();
 			}
-
 		});
 	}
 
 	private void loadTask(Task t) {
 		mTitle.setText(t.getTitle());
+		if(!mTitle.getText().toString().trim().isEmpty()){
+			mTitle.setSelection(mTitle.getText().length());
+		}
 		completionCriteria.setText(t.getCompletionCriteria());
 		mDescription.setText(t.getDescription());
 		String format = dateFormat.print(t.getEndTimeInMillis());
@@ -165,8 +167,7 @@ public class EditTaskActivity extends FragmentActivity implements
 	private void trimTextView() {
 		mTitle.setText(mTitle.getText().toString().trim());
 		mDescription.setText(mDescription.getText().toString().trim());
-		completionCriteria.setText(completionCriteria.getText().toString()
-				.trim());
+		completionCriteria.setText(completionCriteria.getText().toString().trim());
 	}
 
 	private final View.OnClickListener mActionBarListener = new OnClickListener() {
@@ -183,8 +184,7 @@ public class EditTaskActivity extends FragmentActivity implements
 		View actionBarButtons = inflater.inflate(R.layout.actionbar_ok_cancel,
 				new LinearLayout(this), false);
 
-		View cancelActionView = actionBarButtons
-				.findViewById(R.id.action_cancel);
+		View cancelActionView = actionBarButtons.findViewById(R.id.action_cancel);
 		cancelActionView.setOnClickListener(mActionBarListener);
 
 		View doneActionView = actionBarButtons.findViewById(R.id.action_done);
@@ -275,29 +275,25 @@ public class EditTaskActivity extends FragmentActivity implements
 
 	private void save() {
 		if (mTitle.getText().toString().trim().equals("")) {
-			Toast.makeText(this, "Empty Task not created", Toast.LENGTH_LONG)
-					.show();
+			Toast.makeText(this, "Empty Task not created", Toast.LENGTH_LONG).show();
 			setResult(RESULT_CANCELED);
 			finish();
 		} else {
 			trimTextView();
 			displayedTask.setTitle(mTitle.getText().toString());
 			displayedTask.setDescription(mDescription.getText().toString());
-			displayedTask.setCompletionCriteria(completionCriteria.getText()
-					.toString());
+			displayedTask.setCompletionCriteria(completionCriteria.getText().toString());
 			displayedTask.setEndTime(cal.getTimeInMillis());
 			displayedTask.setAssignedFrom(userId);
 			// TODO: change this for multiple assigned to's
 			if (!displayedTask.getMembers().isEmpty()) {
-				displayedTask.setAssignedTo(displayedTask.getMembers().get(0)
-						.getID());
+				displayedTask.setAssignedTo(displayedTask.getMembers().get(0).getID());
 			} else {
 				displayedTask.setAssignedTo(userId);
 				// displayTask.setAssignedTo("");
 			}
 			// TODO: fetcher for assigned to
-			Toast.makeText(this, String.format("Saving Task"),
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, String.format("Saving Task"),Toast.LENGTH_SHORT).show();
 
 			Intent msgIntent = new Intent();
 			msgIntent.putExtra(EXTRA_TASK, displayedTask);

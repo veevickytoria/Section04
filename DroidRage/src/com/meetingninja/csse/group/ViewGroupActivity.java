@@ -89,11 +89,9 @@ public class ViewGroupActivity extends Activity {
 			return true;
 		case R.id.delete_item_group:
 			AlertDialogUtil.deleteDialog(this, "group", new DialogInterface.OnClickListener() {
-				
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					delete(displayedGroup);
-					
 				}
 			});
 			return true;
@@ -104,7 +102,6 @@ public class ViewGroupActivity extends Activity {
 		default:
 			return super.onOptionsItemSelected(item);
 		}
-
 	}
 
 	private void delete(Group group) {

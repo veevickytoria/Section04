@@ -70,6 +70,7 @@ public class EditNoteActivity extends Activity implements AsyncResponse<String> 
 
 		mTextEditor = (EditText) findViewById(R.id.noteContentEditor);
 		mNoteTitle = (EditText) findViewById(R.id.noteTitleEditor);
+		
 
 		extras = getIntent().getExtras();
 
@@ -88,17 +89,12 @@ public class EditNoteActivity extends Activity implements AsyncResponse<String> 
 
 		mNoteTitle.setText(displayedNote.getTitle());
 		mTextEditor.setText(displayedNote.getContent());
-
-		// Scroll to the top of the note content
-		// https://stackoverflow.com/a/3310376
-		final ScrollView scroller = (ScrollView) findViewById(R.id.contentScroller);
-		scroller.post(new Runnable() {
-
-			@Override
-			public void run() {
-				scroller.fullScroll(View.FOCUS_UP);
-			}
-		});
+		if(isCreationMode){
+			mNoteTitle.setSelection(mNoteTitle.getText().length());
+		}else{
+			mTextEditor.requestFocus();
+			mTextEditor.setSelection(mTextEditor.getText().length());
+		}
 	}
 
 	public boolean onActionBarItemSelected(View v) {
@@ -107,7 +103,8 @@ public class EditNoteActivity extends Activity implements AsyncResponse<String> 
 			save();
 			break;
 		case R.id.action_cancel:
-			discard();
+			setResult(RESULT_CANCELED);
+			finish();
 			break;
 		}
 		return true;
@@ -125,13 +122,11 @@ public class EditNoteActivity extends Activity implements AsyncResponse<String> 
 
 		displayedNote.setTitle(title);
 		displayedNote.setContent(content);
-		displayedNote.setDateCreated(NinjaDateUtils.JODA_SERVER_DATE_FORMAT
-				.print(now));
+		displayedNote.setDateCreated(NinjaDateUtils.JODA_SERVER_DATE_FORMAT.print(now));
 
 		Intent backToNotes = new Intent();
 		if (displayedNote.getTitle().equals("")) {
-			Toast.makeText(this, "Empty Note not created", Toast.LENGTH_LONG)
-					.show();
+			Toast.makeText(this, "Empty Note not created", Toast.LENGTH_LONG).show();
 			setResult(RESULT_CANCELED, backToNotes);
 			finish();
 			return;
@@ -154,30 +149,22 @@ public class EditNoteActivity extends Activity implements AsyncResponse<String> 
 
 	public void discard() {
 		// Check if modifications have been made
-		boolean hasChanged = TextUtils.equals(displayedNote.getTitle(),
-				this.mNoteTitle.getText())
-				&& TextUtils.equals(displayedNote.getContent(),
-						this.mTextEditor.getText());
+		boolean hasChanged = TextUtils.equals(displayedNote.getTitle(),this.mNoteTitle.getText())&& TextUtils.equals(displayedNote.getContent(),this.mTextEditor.getText());
 		if (hasChanged) {
 			setResult(RESULT_CANCELED);
 			finish();
 		} else {
-			new AlertDialog.Builder(this)
-					.setMessage("Are you sure you want to discard changes?")
-					.setPositiveButton("Yes",
-							new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,
-										int id) {
-									setResult(RESULT_CANCELED);
-									finish();
-								}
-							}).setNegativeButton("No", null).show();
+			new AlertDialog.Builder(this).setMessage("Are you sure you want to discard changes?").setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog,int id) {
+					setResult(RESULT_CANCELED);
+					finish();
+				}
+			}).setNegativeButton("No", null).show();
 		}
 	}
 
 	private final View.OnClickListener mActionBarListener = new OnClickListener() {
-
 		@Override
 		public void onClick(View v) {
 			onActionBarItemSelected(v);
@@ -198,16 +185,12 @@ public class EditNoteActivity extends Activity implements AsyncResponse<String> 
 
 		if (okCancel) {
 			// Make an Ok/Cancel ActionBar
-			View actionBarButtons = inflater
-					.inflate(R.layout.actionbar_ok_cancel, new LinearLayout(
-							this), false);
+			View actionBarButtons = inflater.inflate(R.layout.actionbar_ok_cancel, new LinearLayout(this), false);
 
-			View cancelActionView = actionBarButtons
-					.findViewById(R.id.action_cancel);
+			View cancelActionView = actionBarButtons.findViewById(R.id.action_cancel);
 			cancelActionView.setOnClickListener(mActionBarListener);
 
-			View doneActionView = actionBarButtons
-					.findViewById(R.id.action_done);
+			View doneActionView = actionBarButtons.findViewById(R.id.action_done);
 			doneActionView.setOnClickListener(mActionBarListener);
 
 			getActionBar().setCustomView(actionBarButtons);
@@ -224,24 +207,6 @@ public class EditNoteActivity extends Activity implements AsyncResponse<String> 
 
 		// false does not show menu
 		return false;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			save();
-			return true;
-
-		case R.id.edit_note_action_save:
-			save();
-			return true;
-
-		case R.id.edit_note_action_discard:
-			discard();
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
 	}
 
 	private class CreateNoteTask extends AsyncTask<Note, Void, String> {

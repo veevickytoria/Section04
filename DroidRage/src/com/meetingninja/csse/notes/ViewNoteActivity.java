@@ -37,18 +37,6 @@ public class ViewNoteActivity extends Activity {
 		// Show the Up button in the action bar.
 		setupActionBar();
 		setupViews();
-		refresh();
-	}
-
-	private void setupViews() {
-		titleText = (TextView) findViewById(R.id.titleText);
-		creatorText = (TextView) findViewById(R.id.note_creator);
-		contentsText = (TextView) findViewById(R.id.contentsText);
-		lastModifiedText = (TextView) findViewById(R.id.editedText);
-
-	}
-
-	protected void refresh() {
 		extras = getIntent().getExtras();
 		if (extras != null) {
 			// noteContent = extras.getString("NoteContent");
@@ -57,7 +45,17 @@ public class ViewNoteActivity extends Activity {
 			// creator = extras.getString(EditNoteActivity.EXTRA_CREATOR);
 			displayedNote = new ParcelDataFactory(extras).getNote();
 		}
+		refresh();
+	}
 
+	private void setupViews() {
+		titleText = (TextView) findViewById(R.id.titleText);
+		creatorText = (TextView) findViewById(R.id.note_creator);
+		contentsText = (TextView) findViewById(R.id.contentsText);
+		lastModifiedText = (TextView) findViewById(R.id.editedText);
+	}
+
+	protected void refresh() {
 		if (displayedNote != null) {
 			titleText.setText(displayedNote.getTitle());
 			creatorText.setText("Created by: " + displayedNote.getCreatedBy());
@@ -122,14 +120,16 @@ public class ViewNoteActivity extends Activity {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		setResult(resultCode, data);
-		finish();
+		if (resultCode == RESULT_OK) {
+			displayedNote = new ParcelDataFactory(data.getExtras()).getNote();
+			refresh();
+		}
 	}
 
 	private void edit() {
 		Intent editNote = new Intent(ViewNoteActivity.this,EditNoteActivity.class);
-
-		editNote.putExtras(extras);
+		editNote.putExtra(Keys.Note.PARCEL, new NoteParcel(displayedNote));
+//		editNote.putExtras(extras);
 		startActivityForResult(editNote, 1);
 	}
 

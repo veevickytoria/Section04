@@ -16,14 +16,11 @@ public class AlertDialogUtil {
 				.setPositiveButton(buttonText, positiveListener).show();
 	}
 
-	public static void deleteDialog(Context context, CharSequence objectName,
-			DialogInterface.OnClickListener positiveListener) {
+	public static void deleteDialog(Context context, CharSequence objectName,DialogInterface.OnClickListener positiveListener) {
 		AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
 
 		// Setting Dialog Message
-		alertDialog.setMessage(ApplicationController.getInstance()
-				.getResString(R.string.prompt_delete,
-						objectName.toString().toLowerCase()));
+		alertDialog.setMessage(ApplicationController.getInstance().getResString(R.string.prompt_delete,	objectName.toString().toLowerCase()));
 
 		// Setting Positive "Yes" Button
 		alertDialog.setPositiveButton("Yes", positiveListener);
