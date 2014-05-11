@@ -264,4 +264,10 @@ NSString* const WHEN_TO_NOTIFY_KEY = @"whenToNotify";
     return YES;
 }
 
+-(void) clearFields
+{
+    self.passwordField.text = @"";
+    self.userNameField.text = @"";
+}
+
 @end
