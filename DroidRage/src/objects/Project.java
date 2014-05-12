@@ -3,10 +3,10 @@ package objects;
 import java.util.ArrayList;
 import java.util.List;
 
+import objects.parcelable.MeetingParcel;
 import objects.parcelable.NoteParcel;
 import objects.parcelable.ParcelDataFactory;
 import objects.parcelable.UserParcel;
-
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -21,12 +21,12 @@ public class Project implements Comparable<Project>, Parcelable{
 	private List<Note> notes = new ArrayList<Note>();
 	private List<User> members = new ArrayList<User>();
 
-	public Project(Parcel in){
-		readFromParcel(in);
+	public Project() {
+		// do nothing
 	}
 
-	public Project() {
-		// do nothign
+	public Project(Parcel in){
+		readFromParcel(in);
 	}
 
 	public String getProjectID() {
@@ -89,6 +89,14 @@ public class Project implements Comparable<Project>, Parcelable{
 	}
 
 	@Override
+	public boolean equals(Object p){
+		if(p instanceof Project){
+			return this.getProjectID().equals(((Project) p).getProjectID());
+		}
+		return false;
+	}
+
+	@Override
 	public int describeContents() {
 		// TODO Auto-generated method stub
 		return 0;
@@ -109,25 +117,22 @@ public class Project implements Comparable<Project>, Parcelable{
 	};
 
 	@Override
-	public boolean equals(Object p){
-		if(p instanceof Project){
-			return this.getProjectID().equals(((Project) p).getProjectID());
-		}
-		return false;
-	}
-
-	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		// TODO Auto-generated method stub
 		dest.writeString(getProjectID());
 		dest.writeString(getProjectTitle());
-		dest.writeList(getMeetings());
+		
+		ArrayList<MeetingParcel> meetingList = new ArrayList<MeetingParcel>();
+		for (Meeting meeting : getMeetings()) {
+			meetingList.add(new MeetingParcel(meeting));
+		}
+		dest.writeList(meetingList);
 		
 		ArrayList<NoteParcel> noteList = new ArrayList<NoteParcel>();
 		for (Note note : getNotes()) {
 			noteList.add(new NoteParcel(note));
 		}
 		dest.writeList(noteList);
+		
 		ArrayList<UserParcel> userList = new ArrayList<UserParcel>();
 		for (User user:getMembers()){
 			userList.add(new UserParcel(user));
@@ -140,20 +145,22 @@ public class Project implements Comparable<Project>, Parcelable{
 		projectID = in.readString();
 		projectTitle = in.readString();
 		meetings = in.readArrayList(Meeting.class.getClassLoader());
-		ArrayList<Note> noteParcelList = in.readArrayList(Note.class.getClassLoader());
-		for (int i=0;i<noteParcelList.size();i++){
-			Bundle extras = new Bundle();
-			extras.putParcelable(Keys.Note.PARCEL, (Parcelable) noteParcelList.get(i));
-			ParcelDataFactory dataFac = new ParcelDataFactory(extras);
-			notes.add(dataFac.getNote());
+		
+		ArrayList<MeetingParcel> meetingParcelList = in.readArrayList(MeetingParcel.class.getClassLoader());
+		for (MeetingParcel parcel : meetingParcelList) {
+			meetings.add(parcel.getData());
 		}
-		ArrayList<User> userParcelList = in.readArrayList(User.class.getClassLoader());
-		for (int i=0;i<userParcelList.size();i++){
-			Bundle extras = new Bundle();
-			extras.putParcelable(Keys.User.PARCEL, (Parcelable) userParcelList.get(i));
-			ParcelDataFactory dataFac = new ParcelDataFactory(extras);
-			members.add(dataFac.getUser());
+		
+		ArrayList<NoteParcel> noteParcelList = in.readArrayList(NoteParcel.class.getClassLoader());
+		for (NoteParcel parcel : noteParcelList) {
+			notes.add(parcel.getData());
 		}
+		
+		ArrayList<UserParcel> userParcelList = in.readArrayList(UserParcel.class.getClassLoader());
+		for (UserParcel parcel : userParcelList) {
+			members.add(parcel.getData());
+		}
+		
 	}
 
 }
