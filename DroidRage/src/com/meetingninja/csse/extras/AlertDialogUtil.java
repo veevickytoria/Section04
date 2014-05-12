@@ -31,6 +31,22 @@ public class AlertDialogUtil {
 		// Showing Alert Message
 		alertDialog.show();
 	}
+	
+	public static void logoutDialog(Context context, DialogInterface.OnClickListener positiveListener, DialogInterface.OnClickListener negativeListener) {
+		AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+
+		// Setting Dialog Message
+		alertDialog.setMessage(ApplicationController.getInstance().getResString(R.string.prompt_logout));
+
+		// Setting Positive "Yes" Button
+		alertDialog.setPositiveButton("Yes", positiveListener);
+
+		// Setting Negative "NO" Button
+		alertDialog.setNegativeButton("No", negativeListener);
+		
+		// Showing Alert Message
+		alertDialog.show();
+	}
 
 	public static void showErrorDialog(Context context, String message) {
 		displayDialog(context, "Error", message, "OK",

@@ -33,8 +33,7 @@ public class LogoutFragment extends Fragment {
 		View v = inflater.inflate(R.layout.fragment_dummy, container, false);
 
 		Log.d(TAG, "Logging out");
-		ApplicationController.getInstance().logout();
-		((MainActivity) getActivity()).finish();
+		((MainActivity) getActivity()).logout();
 
 		return v;
 

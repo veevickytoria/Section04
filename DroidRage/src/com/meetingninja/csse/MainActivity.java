@@ -17,16 +17,23 @@ package com.meetingninja.csse;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 import objects.Note;
 import objects.Schedule;
+import android.content.DialogInterface.OnClickListener;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -44,6 +51,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.foound.widget.AmazingListView;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
+import com.meetingninja.csse.extras.AlertDialogUtil;
 import com.meetingninja.csse.extras.NinjaToastUtil;
 import com.meetingninja.csse.group.GroupsFragment;
 import com.meetingninja.csse.login.LoginActivity;
@@ -131,7 +139,8 @@ public class MainActivity extends FragmentActivity {
 			session.clear();
 			showLogin();
 		} else { // Else continue
-			HashMap<String, String> userDetails = SessionManager.getInstance().getUserDetails();
+			HashMap<String, String> userDetails = SessionManager.getInstance()
+					.getUserDetails();
 			Log.v(TAG, "UserID " + SessionManager.getUserID() + " is logged in");
 
 			setContentView(R.layout.activity_main);
@@ -348,22 +357,32 @@ public class MainActivity extends FragmentActivity {
 	}
 
 	private void handleSpeech(ArrayList<String> speechArray, Intent data) {
-		if (speechArray.contains("homepage")) {
-			selectItem(DrawerLabel.HOMEPAGE.getPosition());
-		} else if (speechArray.contains("meetings")) {
-			selectItem(DrawerLabel.MEETINGS.getPosition());
-		} else if (speechArray.contains("groups")) {
-			selectItem(DrawerLabel.GROUPS.getPosition());
-		} else if (speechArray.contains("notes")) {
-			selectItem(DrawerLabel.NOTES.getPosition());
-		} else if (speechArray.contains("profile")) {
-			selectItem(DrawerLabel.PROFILE.getPosition());
-		} else if (speechArray.contains("tasks")) {
-			selectItem(DrawerLabel.TASKS.getPosition());
-		} else if (speechArray.contains("projects")) {
-			selectItem(DrawerLabel.PROJECTS.getPosition());
-		} else if (speechArray.contains("contacts")) {
-			selectItem(DrawerLabel.CONTACTS.getPosition());
+		for (Iterator<String> iterator = speechArray.iterator(); iterator
+				.hasNext();) {
+			String speech = iterator.next().toLowerCase();
+			List<String> possibleWords = Arrays.asList(speech.split("\\s+"));
+			Log.d(SpeechRecognizer.class.getSimpleName(), possibleWords.toString());
+
+			if (possibleWords.contains("homepage") || possibleWords.contains("home")) {
+				selectItem(DrawerLabel.HOMEPAGE.getPosition());
+			} else if (possibleWords.contains("meetings") || possibleWords.contains("meeting")) {
+				selectItem(DrawerLabel.MEETINGS.getPosition());
+			} else if (possibleWords.contains("notes") || possibleWords.contains("note")) {
+				selectItem(DrawerLabel.NOTES.getPosition());
+			} else if (possibleWords.contains("tasks") || possibleWords.contains("task")) {
+				selectItem(DrawerLabel.TASKS.getPosition());
+			} else if (possibleWords.contains("profile")) {
+				selectItem(DrawerLabel.PROFILE.getPosition());
+			} else if (possibleWords.contains("groups") || possibleWords.contains("group")) {
+				selectItem(DrawerLabel.GROUPS.getPosition());
+			} else if (possibleWords.contains("projects") || possibleWords.contains("project")) {
+				selectItem(DrawerLabel.PROJECTS.getPosition());
+			} else if (possibleWords.contains("contacts")) {
+				selectItem(DrawerLabel.CONTACTS.getPosition());
+			} else if (possibleWords.contains("logout") ||
+					(possibleWords.contains("log") && possibleWords.contains("out"))) {
+				selectItem(DrawerLabel.LOGOUT.getPosition());
+			}
 		}
 
 	}
@@ -412,7 +431,7 @@ public class MainActivity extends FragmentActivity {
 					RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
 			speechIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
 					"en-US");
-			speechIntent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Go to...");
+			speechIntent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Say \"GO TO __\"");
 			try {
 				startActivityForResult(speechIntent,
 						VOICE_RECOGNITION_REQUEST_CODE);
@@ -428,9 +447,22 @@ public class MainActivity extends FragmentActivity {
 
 	}
 
-	private void logout() {
-		ApplicationController.getInstance().logout();
-		this.finish();
+	public void logout() {
+		AlertDialogUtil.logoutDialog(MainActivity.this, new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				ApplicationController.getInstance().logout();
+				MainActivity.this.finish();
+			}
+		}, new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				MainActivity.this.selectItem(0);
+				
+			}
+		});
 	}
 
 	/* Called whenever we call invalidateOptionsMenu() */
