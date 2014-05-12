@@ -76,11 +76,9 @@ public class EditProfileActivity extends Activity {
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		// Make an Ok/Cancel ActionBar
-		View actionBarButtons = inflater.inflate(R.layout.actionbar_ok_cancel,
-				new LinearLayout(this), false);
+		View actionBarButtons = inflater.inflate(R.layout.actionbar_ok_cancel,new LinearLayout(this), false);
 
-		View cancelActionView = actionBarButtons
-				.findViewById(R.id.action_cancel);
+		View cancelActionView = actionBarButtons.findViewById(R.id.action_cancel);
 		cancelActionView.setOnClickListener(gActionBarListener);
 
 		View doneActionView = actionBarButtons.findViewById(R.id.action_done);
@@ -168,34 +166,11 @@ public class EditProfileActivity extends Activity {
 	private void setUser(User user) {
 		this.displayedUser = user;
 		if (user != null) {
-			// set display name
 			mName.setText(user.getDisplayName());
-
-			// set email
 			mEmail.setText(user.getEmail());
-
-			// set title & company
 			mTitle.setText(user.getTitle());
-
 			mCompany.setText(user.getCompany());
-			// StringBuilder sb = new StringBuilder();
-			// if (!(user.getTitle().isEmpty() || user.getCompany().isEmpty()))
-			// {
-			// if (!user.getTitle().isEmpty())
-			// sb.append(user.getTitle());
-			// if (!user.getTitle().isEmpty())
-			// sb.append(", " + user.getCompany());
-			// mTitleCompany.setText(sb);
-			// mTitleCompany.setVisibility(View.VISIBLE);
-			// } else {
-			// mTitleCompany.setVisibility(View.GONE);
-			// }
-
-			// set location
 			mLocation.setText(user.getLocation());
-
-			// set phone
-
 			mPhone.setText(user.getPhone());
 
 		} else {

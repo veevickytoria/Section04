@@ -165,7 +165,10 @@ public class ContactsFragment extends Fragment implements TokenListener {
 			if (contains) {
 				AlertDialogUtil.displayDialog(getActivity(),"Unable to add contact","This user is already added as a contact", "OK", null);
 				addedUser = null;
-			} else {
+			} else if(added.getID().equals(SessionManager.getInstance().getUserID())){
+				AlertDialogUtil.displayDialog(getActivity(),"Unable to add contact","You cannot add yourself as a contact", "OK", null);
+				addedUser = null;
+			}else{
 				addContact(addedUser);
 				addedUser = null;
 			}
@@ -242,9 +245,8 @@ public class ContactsFragment extends Fragment implements TokenListener {
 	}
 
 	public void refresh() {
-		SessionManager.getInstance();
 		fetcher = new RetContactsObj();
-		fetcher.execute(SessionManager.getUserID());
+		fetcher.execute(SessionManager.getInstance().getUserID());
 		// TODO: also remeve tempDeletedContacts
 	}
 
