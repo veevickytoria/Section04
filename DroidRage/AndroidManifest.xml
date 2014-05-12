@@ -62,7 +62,7 @@
             android:parentActivityName="com.meetingninja.csse.login.LoginActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.meetingninja.csse.user.LoginActivity" />
+                android:value="com.meetingninja.csse.login.LoginActivity" />
         </activity>
         <activity
             android:name="com.meetingninja.csse.meetings.EditMeetingActivity"
