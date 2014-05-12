@@ -139,8 +139,6 @@ public class MainActivity extends FragmentActivity {
 			session.clear();
 			showLogin();
 		} else { // Else continue
-			HashMap<String, String> userDetails = SessionManager.getInstance()
-					.getUserDetails();
 			Log.v(TAG, "UserID " + SessionManager.getUserID() + " is logged in");
 
 			setContentView(R.layout.activity_main);
