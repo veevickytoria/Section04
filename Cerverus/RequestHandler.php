@@ -187,13 +187,12 @@ abstract class RequestHandler {
         if ($node == NULL) {
             echo json_encode("Node not found");
             return false;
-        } 
-        //TODO add the node to the index during post, then uncomment this
-//        if (!NodeUtility::checkInIndex($node, $this->index, $this->indexKey)) {
-//            echo json_encode("Node not in index");
-//            return false;
-//        } //TODO Use fancier error message
-
+        }
+        $index = $this->index;
+        if (!NodeUtility::checkInIndex($node, $this->index, $this->indexKey)){
+            echo json_encode("ERROR: Node not in index. Perhaps you are looking for a different type of node.");
+            return false;
+        }
         return $this->nodeToOutput($node);
     }
 
@@ -257,6 +256,12 @@ abstract class RequestHandler {
         $this->setNodeRelationships($node, $postList);
         $this->setNodeNestedRelationships($node, $postList);
         $this->index->add($node, 'ID', $node->getId());
+        $index = $this->index;
+        if ($this->indexKey == "ID"){            
+            $this->index->add($node, 'ID', $node->getId());
+        } else {            
+            $index->add($node, $this->indexKey, $node->getProperty($this->indexKey));
+        }
         return $this->nodeToOutput($node);
     }
 

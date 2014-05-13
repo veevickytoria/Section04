@@ -185,10 +185,20 @@ class NodeUtility {
      * @return Boolean True if node exists in the index, otherwise false
      */
     public static function checkInIndex($node, $index, $indexKey = "ID") {
-        $match = $index->findOne($indexKey, $node->getId());
+        $match = false;
+        if ($indexKey == "ID"){            
+            $match = $index->findOne($indexKey, $node->getId());
+        } else {            
+            $match = $index->findOne($indexKey, $node->getProperty($indexKey));
+        }
         return ($match != null);
     }
 
+    
+    public static function retrieveFromIndex($keyValue, $index, $indexKey="ID"){
+        return $index->findOne($indexKey, $keyValue);
+    }
+    
     /**
      * Updates the specified relation type of a given node. Deletes the old
      * relations of the given type, then adds new relations of the given type

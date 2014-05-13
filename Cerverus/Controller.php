@@ -8,9 +8,9 @@ require_once "RequestHandlers\Note.php";
 require_once "RequestHandlers\Meeting.php";
 require_once "RequestHandlers\Group.php";
 require_once "RequestHandlers\Project.php";
+require_once "RequestHandlers\User.php";
 require_once "RequestHandlers\Task.php";
-//require_once "RequestHandlers\User.php";
-//require_once "RequestHandlers\UserLogin.php";
+require_once "RequestHandlers\UserLogin.php";
 require_once "RequestHandlers\UserMeetings.php";
 require_once "RequestHandlers\UserUsers.php";
 require_once "RequestHandlers\UserGroups.php";
@@ -44,7 +44,7 @@ class Controller {
         } else {
             $requestResult =  $handler->$type((array)$postContent);
         }
-        if (!$requestResult) {echo "REQUEST RESULT WAS FALSE";} else {
+        if (!$requestResult) {echo "ERROR: Something went wrong";} else {
             echo json_encode($requestResult);
         }
          
