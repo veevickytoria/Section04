@@ -22,4 +22,13 @@ class UserUsers extends RequestHandler {
         }
         return array("users"=>$response);
 	}
+	public function POST(){
+		return "Cannot create or POST on this request. Try GET";
+	}
+	public function DELETE(){
+		return "Cannot delete on this request. Try GET";
+	}
+	public function PUT(){
+		return "Cannot update or PUT on this request. Try GET";
+	}
 }

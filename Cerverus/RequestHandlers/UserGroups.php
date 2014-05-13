@@ -15,7 +15,7 @@ class UserGroups extends RequestHandler {
         
     }
 	public function GET($id1){
-        //GET getUserMeetings
+        //GET getUserGroups
         $userNode = NodeUtility::getNodeByID($id1, $this->client);
         if ($userNode == NULL)
             return false;
@@ -28,5 +28,14 @@ class UserGroups extends RequestHandler {
 		}
 		$lastArray = array('groups'=>$membersArray);
 		return $lastArray;
+	}
+	public function POST(){
+		return "Cannot create or POST on this request. Try GET";
+	}
+	public function DELETE(){
+		return "Cannot delete on this request. Try GET";
+	}
+	public function PUT(){
+		return "Cannot update or PUT on this request. Try GET";
 	}
 }
