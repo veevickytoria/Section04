@@ -20,7 +20,7 @@ class UserUsers extends RequestHandler {
         foreach($this->index->query($this->indexKey.':*') as $user){
             array_push($response, $this->nodeToOutput($user));
         }
-        return json_encode(array("users"=>$response));
+        return array("users"=>$response);
 	}
 	function addRelationsToArray($node, $infoArray){
 		foreach($this->relationList as $relationType) {
