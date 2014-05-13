@@ -10,7 +10,7 @@ class UserGroups extends RequestHandler {
     }
 	protected function nodeToOutput($node) {
         if ($node == NULL) {return false;} //make pretty exception
-        $nodeInfo = array_merge(array("groupID"=>$node->getId()), $node->getProperties());
+        $nodeInfo = array("groupID"=>$node->getId());
         return $nodeInfo;
         
     }
