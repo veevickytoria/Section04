@@ -14,6 +14,13 @@ require_once "RequestHandlers\UserLogin.php";
 require_once "RequestHandlers\UserMeetings.php";
 require_once "RequestHandlers\UserUsers.php";
 require_once "RequestHandlers\UserGroups.php";
+require_once "RequestHandlers\UserProjects.php";
+require_once "RequestHandlers\UserNotes.php";
+require_once "RequestHandlers\Agenda.php";
+require_once "RequestHandlers\UserAgendas.php";
+require_once "RequestHandlers\Comments.php";
+require_once "RequestHandlers\UserComments.php";
+require_once "RequestHandlers\UserSettings.php";
 
 
 /**

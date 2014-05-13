@@ -3,32 +3,30 @@
 namespace Everyman\Neo4j;
 require_once 'RequestHandler.php';
 
-class UserMeetings extends RequestHandler {
+class UserComments extends RequestHandler {
     
     function __construct($client){
         parent::__construct($client, "Users", "email");
     }
 	protected function nodeToOutput($node) {
         if ($node == NULL) {return false;} //make pretty exception
-        $nodeInfo = array_merge(array("meetingID"=>$node->getId()), $node->getProperties());
+        $nodeInfo = array_merge(array("commentID"=>$node->getId()), $node->getProperties());
         return $nodeInfo;
         
     }
 	public function GET($id1){
-        //GET getUserMeetings
+        //GET getUsercomments
         $userNode = NodeUtility::getNodeByID($id1, $this->client);
         if ($userNode == NULL)
             return false;
-		$createdMeetingRels = NodeUtility::getNodeRelations($userNode, "createdBy","in");
-		$attendedMeetingRels = NodeUtility::getNodeRelations($userNode, "attendance", "in");
-		$meetingRels = $createdMeetingRels + $attendedMeetingRels;
-		$meetingArray = array();
-		foreach($meetingRels as $rel){
-			$meetingNode = $rel->getStartNode();
-			$propertyArray = $this->nodeToOutput($meetingNode);
-			array_push($meetingArray, $propertyArray);
+		$commentRels = NodeUtility::getNodeRelations($userNode, "commentBy","in");
+		$commentArray = array();
+		foreach($commentRels as $rel){
+			$commentNode = $rel->getStartNode();
+			$propertyArray = $this->nodeToOutput($commentNode);
+			array_push($commentArray, $propertyArray);
 		}
-		$lastArray = array('meetings'=>$meetingArray);
+		$lastArray = array('comments'=>$commentArray);
 		return $lastArray;
 	}
 	public function POST(){
