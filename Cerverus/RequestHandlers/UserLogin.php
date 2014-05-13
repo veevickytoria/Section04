@@ -6,7 +6,7 @@ require_once 'RequestHandler.php';
 class UserLogin extends RequestHandler {
     
     function __construct($client){
-        parent::__construct($client, "User", "ID");
+        parent::__construct($client, "User", "email");
         
         $this->idName = "userID";
         
@@ -24,33 +24,20 @@ class UserLogin extends RequestHandler {
      * @param type $postList
      */
     public function POST($postList) {
-        //check email is valid
         $email = $postList['email'];
-        //check password is valid
-        
-        //user index
-        $userIndex = new Index\NodeIndex($this->client, 'Users');
-        //get all users
-        $matchedEmail = $userIndex->findOne('email', $email);
-        if (sizeof($matchedEmail) > 0){
-            echo $matchedEmail;
-            return true;
-        } else {
-            echo "notfound";
-            return false;
+        $index = $this->index;
+        $matchedEmail = $index->findOne($this->indexKey, $email);
+        if ($matchedEmail == null){
+            return "Email not found";
         }
-            
-        //for each user
         
-        //check email
+        $nodePassword = $matchedEmail->getProperty("password");
+        if ($nodePassword == $postList['password']){
+            $outputArray = array();
+            $outputArray[$this->idName] = ($matchedEmail->getId());
+            return $outputArray;
+        }
         
-        //if email matches, check password
-        
-        //if pass matches, return userid
-        
-        //if pass doesn't match, return invalid pass
-        
-        //if email doesn't match, return invalid email
-    }
-    
+        return "Password is invalid";
+    }   
 }
