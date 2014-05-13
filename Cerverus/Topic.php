@@ -3,8 +3,8 @@
  * Include the API PHP file for neo4j
  */
 namespace Everyman\Neo4j;
+require_once "NodeUtility.php";
 //require("phar://neo4jphp.phar");
-require_once("CommonFunctions.php");
 
 //Make each if-else here a function. Then require Topic.php in Agenda and call the functions from there.
 
@@ -143,22 +143,30 @@ function deleteTopicOLD($id){
 }
 
 function getTopicInfo($id, $client){
-	$topicNode = getNodeByID($id, $client);
-	$result = array();
-	$result["title"] = $topicNode->getProperty("title");
-	$result["time"] = $topicNode->getProperty("time");
-	$result["description"] = $topicNode->getProperty("description");
-	
-	//get subtopics
-	$subtopics = getRelatedNodeIDs($topicNode, "HAS_TOPIC", "topicID", "OUT");
-	$topicList = array();
-	$i = sizeof($subtopics);
-	foreach($subtopics as $subtopic){
-		$topicList[$i--] = getTopicInfo($subtopic["topicID"], $client);
+	if($id!=NULL){
+		$topicNode = NodeUtility::getNodeByID($id, $client);
+		$result = array();
+		$result["title"] = $topicNode->getProperty("title");
+		$result["time"] = $topicNode->getProperty("time");
+		$result["description"] = $topicNode->getProperty("description");
+		
+		//get subtopics
+		$topics=NodeUtility::getNodeRelations($topicNode, 'HAS_TOPIC', 'out');
+		$subtopics=array();
+		foreach($topics as $top){
+			$topNode = $top->getEndNode();
+			array_push($subtopics,$topNode->getID());
+		}
+		$topicList = array();
+		$i = sizeof($subtopics);
+		foreach($subtopics as $subtopic){
+			$topicList[$i--] = getTopicInfo($subtopic, $client);
+		}
+		$result["content"] = $topicList;
+		
+		return $result;
 	}
-	$result["content"] = $topicList;
-	
-	return $result;
+	return array();
 }
 
 function deleteTopic($topic, $client){
@@ -169,8 +177,8 @@ function deleteTopic($topic, $client){
 	}
 
 	//get subtopics
-	$subTopics = getRelatedNodes($topic, "HAS_TOPIC", "OUT");
-	
+	$rels = NodeUtility::getNodeRelations($topic, "HAS_TOPIC", "in");
+	$subTopics = NodeUtility::getNodesFromRelations($rels, "OUT");
 	//delete relations
 	$relations = $topic->getRelationships();
 	foreach($relations as $rel){
@@ -178,8 +186,10 @@ function deleteTopic($topic, $client){
 	}
 	
 	//delete subtopics
-	foreach ($subTopics as $subTopic){
-		deleteTopic($subTopic, $client);
+	if($subTopics!=NULL){
+		foreach ($subTopics as $subTopic){
+			deleteTopic($subTopic, $client);
+		}
 	}
 	
 	//delete topic
