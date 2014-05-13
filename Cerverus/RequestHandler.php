@@ -103,9 +103,11 @@ abstract class RequestHandler {
      * @param array $infoArray Array to add relations to
      */
     protected function addRelationsToArray($node, $infoArray) {
-        foreach ($this->relationList as $relationType) {
-            $relationList = NodeUtility::getNodeRelations($node, $relationType, "out");
-            $infoArray[$relationType] = $relationList[0]->getEndNode()->getId();
+        $relationNames = array_keys($this->relationList);
+        foreach ($relationNames as $relationName) {
+            $relationList = NodeUtility::getNodeRelations($node, $relationName, "out");
+            $APIName = $this->relationList[$relationName];
+            $infoArray[$APIName] = $relationList[0]->getEndNode()->getId();
         }
         return $infoArray;
     }
@@ -152,10 +154,12 @@ abstract class RequestHandler {
      * @param array $postList
      */
     protected function setNodeRelationships($node, $postList) {
-        foreach ($this->relationList as $relation) {
-            $relatedID = $postList[$relation];
+        $relationNames = array_keys($this->relationList);
+        foreach ($relationNames as $relationName) {
+            $APIName = $this->relationList[$relationName];
+            $relatedID = $postList[$APIName];
             $relatedNode = NodeUtility::getNodeByID($relatedID, $this->client);
-            $node->relateTo($relatedNode, $relation)->save();
+            $node->relateTo($relatedNode, $relationName)->save();
         }
     }
 
@@ -181,10 +185,14 @@ abstract class RequestHandler {
     public function GET($id) {
         $node = NodeUtility::getNodeByID($id, $this->client);
         if ($node == NULL) {
+            echo json_encode("Node not found");
             return false;
-        } if (!NodeUtility::checkInIndex($node, $this->index, $this->indexKey)) {
-            return false;
-        } //TODO Use fancier error message
+        } 
+        //TODO add the node to the index during post, then uncomment this
+//        if (!NodeUtility::checkInIndex($node, $this->index, $this->indexKey)) {
+//            echo json_encode("Node not in index");
+//            return false;
+//        } //TODO Use fancier error message
 
         return $this->nodeToOutput($node);
     }
@@ -222,7 +230,7 @@ abstract class RequestHandler {
             $node->setProperty($field, $value);
             NodeUtility::storeNodeInDatabase($node);
         } else if (in_array($field, $this->relationList)) {
-            NodeUtility::updateRelation($node, $field, "DirectionOut", $value, $this->client);
+            NodeUtility::updateRelation($node, array_search($field, $this->relationList), Relationship::DirectionOut, $value, $this->client);
         } else if (array_key_exists($field, $this->nestedRelationList)) {
             NodeUtility::updateNestedRelation($node, $field, "DirectionOut", $value, $this->client, $this->nestedRelationList[$field]);
         } else {

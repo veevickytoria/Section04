@@ -204,7 +204,7 @@ class NodeUtility {
     public static function updateRelation($node, $relationName, $direction, $newValues, $client) {
         //delete old relations
         //$relationArray = $node->getRelationships(array('relation'), Relationship::$direction);
-        $relationArray = $node->getRelationships($relationName, Relationship::$direction);
+        $relationArray = $node->getRelationships($relationName, $direction);
         foreach ($relationArray as $rel) {
             $rel->delete();
         }
@@ -215,9 +215,9 @@ class NodeUtility {
         //add new relations
         foreach ($newValues as $newVal) {
             $relatedNode = NodeUtility::getNodeByID($newVal, $client);
-            if ($direction == "DirectionIn") {
+            if ($direction == Relationship::DirectionIn) {
                 $relatedNode->relateTo($node, $relationName)->save();
-            } else if ($direction == "DirectionOut") {
+            } else if ($direction == Relationship::DirectionOut) {
                 $node->relateTo($relatedNode, $relationName)->save();
             }
         }
