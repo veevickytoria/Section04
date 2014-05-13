@@ -21,22 +21,6 @@ class Note extends RequestHandler {
         array_push($this->propertyList, "dateCreated");
         array_push($this->propertyList, "content");
         
-        array_push($this->relationList, "createdBy");
+        $this->relationList["createdBy"] = "userID";
     }
-
-    protected function addRelationsToArray($node, $infoArray) {
-        
-        //NodeUtility::getAllNodeRelations($node);
-        
-        //$relationList = NodeUtility::getNodeRelations($node, "createdBy", "out");
-        
-        
-        foreach($this->relationList as $relationType) {
-            $relationList = NodeUtility::getNodeRelations($node, $relationType, "out");
-            $infoArray[$relationType] = $relationList[0]->getEndNode()->getId();
-        }
-        return $infoArray;
-         
-    }
-
 }

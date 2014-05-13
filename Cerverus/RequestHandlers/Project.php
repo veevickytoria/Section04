@@ -16,13 +16,4 @@ class Project extends RequestHandler {
         $this->nestedRelationList["notes"] = "noteID";
         $this->nestedRelationList["members"] = "userID";
     }
-    
-    protected function addRelationsToArray($node, $infoArray) {
-        foreach($this->relationList as $relationType) {
-            $relationList = NodeUtility::getNodeRelations($node, $relationType, "out");
-            $infoArray[$relationType] = $relationList[0]->getEndNode()->getId();
-        }
-        return $infoArray;
-    }
-
 }

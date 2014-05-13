@@ -3,9 +3,15 @@
 Options +FollowSymLinks
 RewriteEngine On
 
+# Standard POST/PUT Request
 RewriteRule ^([A-Za-z]+)/$ Controller.php?class1=$1 [NC,L]
+# Standard GET/DELETE Request
 RewriteRule ^([A-Za-z]+)/([0-9]+)$ Controller.php?class1=$1&id1=$2 [NC,L]
+# Standard GET/DELETE Request with a slash at the end
 RewriteRule ^([A-Za-z]+)/([0-9]+)/$ Controller.php?class1=$1&id1=$2 [NC,L]
+# Request with 2 classes and no id
 RewriteRule ^([A-Za-z]+)/([A-Za-z]+)/$ Controller.php?class1=$1&class2=$2&id1=null&id2=null [NC,L]
+# Request with 2 classes and 1 id
 RewriteRule ^([A-Za-z]+)/([A-Za-z]+)/([0-9]+)/?$ Controller.php?class1=$1&class2=$2&id1=$3&id2=null [NC,L]
+# Request with 2 classes and 2 ids
 RewriteRule ^([A-Za-z]+)/([A-Za-z]+)/([0-9]+)/([0-9]+)/?$ Controller.php?class1=$1&class2=$2&id1=$3&id2=$4 [NC,L]

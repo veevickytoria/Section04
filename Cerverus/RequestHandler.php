@@ -40,7 +40,7 @@ abstract class RequestHandler {
      * @var array<string>
      */
     protected $relationList = array();
-    
+
     /**
      * The list of relationships with multiple values to be stored with the
      * node (e.g. attendance, members). In the format:
@@ -91,29 +91,10 @@ abstract class RequestHandler {
         }
 
         $nodeInfo = $this->addRelationsToArray($node, $nodeInfo);
-        
+
         $nodeInfo = $this->addNestedRelationsToArray($node, $nodeInfo);
 
         return $nodeInfo;
-        /*
-          $checkedRelations = array();
-          foreach (NodeUtility::getAllNodeRelations($node) as $relation){
-          $relationName = $relation->getType();
-          $relationDirection = $relation->getDirection();
-          }
-         */
-        /*
-          foreach (NodeUtility::getAllNodeRelations($node) as $relation){
-          $nodeInfo[$relation->]
-          $nodeInfo["name of relation"] = NodeUtility::getNodesFromRelations($relations, $direction)
-          }
-         */
-        /*
-          foreach ($this->relationList as $relation){
-          $nodeInfo[$relation] = NodeUtility::getNodesFromRelations($relation, $direction);
-          }
-         */
-        //$nodeInfo['createdBy'] = $node->getRe
     }
 
     /**
@@ -121,7 +102,13 @@ abstract class RequestHandler {
      * @param Node $node Node to get relations of
      * @param array $infoArray Array to add relations to
      */
-    protected abstract function addRelationsToArray($node, $infoArray);
+    protected function addRelationsToArray($node, $infoArray) {
+        foreach ($this->relationList as $relationType) {
+            $relationList = NodeUtility::getNodeRelations($node, $relationType, "out");
+            $infoArray[$relationType] = $relationList[0]->getEndNode()->getId();
+        }
+        return $infoArray;
+    }
 
     /**
      * Add each nested relation of a given node to a given array
@@ -134,20 +121,20 @@ abstract class RequestHandler {
     //protected abstract function addNestedRelationsToArray($node, $infoArray)
     protected function addNestedRelationsToArray($node, $infoArray) {
         $keys = array_keys($this->nestedRelationList);
-        foreach($keys as $key) {
+        foreach ($keys as $key) {
             $valueName = $this->nestedRelationList[$key];
             $relationList = NodeUtility::getNodeRelations($node, $key, "out");
             $relatedNodes = array();
-            foreach($relationList as $relation){
+            foreach ($relationList as $relation) {
                 $item = array();
-                $item[$valueName]=$relation->getEndNode()->getId();
+                $item[$valueName] = $relation->getEndNode()->getId();
                 array_push($relatedNodes, $item);
             }
             $infoArray[$key] = $relatedNodes;
         }
         return $infoArray;
     }
-    
+
     /**
      * sets a node's properties from a list (for creating a new node)
      * @param Node $node
@@ -171,13 +158,13 @@ abstract class RequestHandler {
             $node->relateTo($relatedNode, $relation)->save();
         }
     }
-    
-    protected function setNodeNestedRelationships($node, $postList){
+
+    protected function setNodeNestedRelationships($node, $postList) {
         $keys = array_keys($this->nestedRelationList);
-        foreach ($keys as $key){
+        foreach ($keys as $key) {
             $relatedIDs = $postList[$key];
             $valueName = $this->nestedRelationList[$key];
-            foreach ($relatedIDs as $relatedID){
+            foreach ($relatedIDs as $relatedID) {
                 $relatedNode = NodeUtility::getNodeByID($relatedID->$valueName, $this->client);
                 $node->relateTo($relatedNode, $key)->save();
             }
@@ -193,30 +180,30 @@ abstract class RequestHandler {
      */
     public function GET($id) {
         $node = NodeUtility::getNodeByID($id, $this->client);
-        if ($node == NULL)
+        if ($node == NULL) {
             return false;
-        if (!NodeUtility::checkInIndex($node, $this->index, $this->indexKey)) {
+        } if (!NodeUtility::checkInIndex($node, $this->index, $this->indexKey)) {
             return false;
         } //TODO Use fancier error message
 
         return $this->nodeToOutput($node);
     }
 
-     /**
+    /**
      * Recursively searches an array for a key
      * @param type $toFind
      * @param type $array
      * @return boolean
      */
-    private function in_array_r($toFind, $anArray){
-        foreach($anArray as $item){
-            if(($item == $toFind) || (is_array($item) && $this->in_array_r($toFind, $item))){
+    private function in_array_r($toFind, $anArray) {
+        foreach ($anArray as $item) {
+            if (($item == $toFind) || (is_array($item) && $this->in_array_r($toFind, $item))) {
                 return true;
             }
         }
         return false;
     }
-    
+
     /**
      * The request for editing a node which already exists in the database.
      * 
@@ -236,17 +223,15 @@ abstract class RequestHandler {
             NodeUtility::storeNodeInDatabase($node);
         } else if (in_array($field, $this->relationList)) {
             NodeUtility::updateRelation($node, $field, "DirectionOut", $value, $this->client);
-        } else if (array_key_exists($field, $this->nestedRelationList)){
+        } else if (array_key_exists($field, $this->nestedRelationList)) {
             NodeUtility::updateNestedRelation($node, $field, "DirectionOut", $value, $this->client, $this->nestedRelationList[$field]);
-        }else {
+        } else {
             echo ("notInArrays");
             return false;
         }
         return $this->nodeToOutput($node);
     }
-    
-   
-    
+
     /**
      * The request for adding a new node to the database. Uses the template
      * pattern to allow sub-classes to specify their class-specific behavior.

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Everyman\Neo4j;
 require "phar://neo4jphp.phar";
 
@@ -9,7 +8,8 @@ require_once "RequestHandlers\Note.php";
 require_once "RequestHandlers\Meeting.php";
 require_once "RequestHandlers\Group.php";
 require_once "RequestHandlers\Project.php";
-require_once "RequestHandlers\UserUsers.php";
+require_once "RequestHandlers\User.php";
+require_once "RequestHandlers\UserLogin.php";
 
 
 /**
@@ -17,10 +17,18 @@ require_once "RequestHandlers\UserUsers.php";
  */
 class Controller {
     
-    public static function parse($class, $id, $type, $postContent){
+    /**
+     * Parse a regular GET/POST/PUT/DELETE request
+     * @param type $class
+     * @param type $id
+     * @param type $type
+     * @param type $postContent
+     * @return type
+     */
+    public static function parseStandard($class, $id, $type, $postContent){
     
         $aClient = new Client();
-		$c = '\\Everyman\\Neo4j\\'.$class;
+	$c = '\\Everyman\\Neo4j\\'.$class;
         $handler= new $c($aClient);
         
         if ($type == "GET" || $type == "DELETE") {
@@ -38,16 +46,31 @@ class Controller {
          
     }
     
+    /**
+     * Parse a non-standard request
+     * @param type $class1
+     * @param type $class2
+     * @param type $id1
+     * @param type $id2
+     * @param type $type
+     * @param type $postContent
+     */
     public static function parseSpecial($class1, $class2, $id1, $id2, $type, $postContent){
-		$aClient = new Client();
-        $className = '\\Everyman\\Neo4j\\'.$class1.$class2;
-		$handler = new $className($aClient);
-		if ($type == "GET" || $type == "DELETE") {
-            $requestResult =  $handler->$type();
+        //parse special request
+        $aClient = new Client();
+        
+        $c = '\\Everyman\\Neo4j\\'.$class1.$class2;
+        $handler = new $c($aClient);
+        
+         if ($type == "GET" || $type == "DELETE") {
+             $requestResult =  $handler->$type($id1, $id2);
+        } else {
+            $requestResult =  $handler->$type((array)$postContent);
         }
         if (!$requestResult) {echo "REQUEST RESULT WAS FALSE";} else {
-			echo $requestResult;
+            echo json_encode($requestResult);
         }
+        
     }        
     /*
     *This function initializes the headers needed for the application
@@ -86,14 +109,14 @@ class Controller {
 Controller::initHeaders();
 
 if (isset($_REQUEST['class2'])) {
-    Controller::parseSpecial($_GET['class1'], 
+    Controller::parseSpecial($_GET['class1'],//.'Handler', 
                             $_GET['class2'], 
                             $_GET['id1'], 
                             $_GET['id2'],
                             $_SERVER['REQUEST_METHOD'], 
                             json_decode(file_get_contents('php://input')));
 } else {
-    Controller::parse($_GET['class1'],//.'Handler', 
+    Controller::parseStandard($_GET['class1'],//.'Handler', 
                     (isset($_GET['id1']) ? $_GET['id1'] : null), 
                     $_SERVER['REQUEST_METHOD'], 
                     json_decode(file_get_contents('php://input')));
