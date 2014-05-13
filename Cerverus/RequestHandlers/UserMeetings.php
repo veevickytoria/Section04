@@ -23,10 +23,9 @@ class UserMeetings extends RequestHandler {
 		$attendedMeetingRels = NodeUtility::getNodeRelations($userNode, "attendance", "in");
 		$meetingRels = $createdMeetingRels + $attendedMeetingRels;
 		$meetingArray = array();
-		foreach($createdMeetingRels as $rel){
-			$meetingNode = $rel->getEndNode();
-			$propertyArray = $meetingNode->getProperties();
-			$propertyArray['id'] = $meetingNode->getId();
+		foreach($meetingRels as $rel){
+			$meetingNode = $rel->getStartNode();
+			$propertyArray = $this->nodeToOutput($meetingNode);
 			array_push($meetingArray, $propertyArray);
 		}
 		$lastArray = array('meetings'=>$meetingArray);
