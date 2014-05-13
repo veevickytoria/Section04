@@ -111,19 +111,20 @@ class NodeUtility {
      * @return boolean|array List of nodes, or false if direction is invalid
      */
     public static function getNodesFromRelations($relations, $direction) {
-        $nodeToRetrieve = null;
+        $relatedNodes = array();
+        
         if ($direction == "DirectionIn") {
-            $nodeToRetrieve = getStartNode();
+            foreach ($relations as $rel) {
+                array_push($relatedNodes, $rel->getStartNode());
+            }
         } else if ($direction == "DirectionOut") {
-            $nodeToRetrieve = getEndNode();
+            foreach ($relations as $rel) {
+                array_push($relatedNodes, $rel->getEndNode());
+            }
         } else {
             return false;
         }
-
-        $relatedNodes = array();
-        foreach ($relations as $rel) {
-            $relatedNodes->add($rel->nodeToRetrieve);
-        }
+        
         return $relatedNodes;
     }
 
