@@ -3,25 +3,26 @@
 namespace Everyman\Neo4j;
 require "phar://neo4jphp.phar";
 
+require_once "RequestHandlers\Agenda.php";
+require_once "RequestHandlers\Comments.php";
 require_once "RequestHandlers\Contact.php";
-require_once "RequestHandlers\Note.php";
-require_once "RequestHandlers\Meeting.php";
 require_once "RequestHandlers\Group.php";
+require_once "RequestHandlers\Note.php";
+require_once "RequestHandlers\NoteSharing.php";
+require_once "RequestHandlers\Meeting.php";
 require_once "RequestHandlers\Project.php";
-require_once "RequestHandlers\User.php";
 require_once "RequestHandlers\Task.php";
+require_once "RequestHandlers\User.php";
+require_once "RequestHandlers\UserAgendas.php";
+require_once "RequestHandlers\UserComments.php";
+require_once "RequestHandlers\UserGroups.php";
 require_once "RequestHandlers\UserLogin.php";
 require_once "RequestHandlers\UserMeetings.php";
-require_once "RequestHandlers\UserUsers.php";
-require_once "RequestHandlers\UserGroups.php";
-require_once "RequestHandlers\UserProjects.php";
 require_once "RequestHandlers\UserNotes.php";
-require_once "RequestHandlers\Agenda.php";
-require_once "RequestHandlers\UserAgendas.php";
-require_once "RequestHandlers\Comments.php";
-require_once "RequestHandlers\UserComments.php";
+require_once "RequestHandlers\UserProjects.php";
 require_once "RequestHandlers\UserSettings.php";
-
+require_once "RequestHandlers\UserSharing.php";
+require_once "RequestHandlers\UserUsers.php";
 
 /**
  *  Directs a request to the proper class and returns the result
@@ -37,7 +38,11 @@ class Controller {
      * @return type
      */
     public static function parseStandard($class, $id, $type, $postContent){
-    
+        
+        if ($class == "Comment"){
+            $class = "Comments";
+        }
+        
         $aClient = new Client();
 	$c = '\\Everyman\\Neo4j\\'.$class;
         $handler= new $c($aClient);
@@ -67,6 +72,7 @@ class Controller {
      * @param type $postContent
      */
     public static function parseSpecial($class1, $class2, $id1, $id2, $type, $postContent){
+        
         //parse special request
         $aClient = new Client();
         
