@@ -8,6 +8,7 @@ require_once "RequestHandlers\Note.php";
 require_once "RequestHandlers\Meeting.php";
 require_once "RequestHandlers\Group.php";
 require_once "RequestHandlers\Project.php";
+require_once "RequestHandlers\Task.php";
 //require_once "RequestHandlers\User.php";
 //require_once "RequestHandlers\UserLogin.php";
 require_once "RequestHandlers\UserMeetings.php";
