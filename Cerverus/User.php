@@ -3,14 +3,18 @@ namespace Everyman\Neo4j;
 require "phar://neo4jphp.phar";
 require_once "RequestHandler.php";
 
+/**
+ * 
+ */
 class User extends RequestHandler{
 		
     function __construct($client){	
             parent::__construct($client, "Users", "email");
+            array_push($this->propertyList, "name", "password", "email", "phone", "company", "title", "location" );
     }
 	
     protected function nodeToOutput($node) {
-        if ($node == NULL) {return false;} //make pretty exception
+        if ($node == NULL) {return false;}
         $nodeInfo = array_merge(array("userID"=>$node->getId()), $node->getProperties());
         unset($nodeInfo['password']);
         return json_encode($nodeInfo);
@@ -37,29 +41,35 @@ class User extends RequestHandler{
      */
     public function POST($postContent){
         if($this->index->findOne('email', $postContent->email) == NULL){
-            $tempUserNode= $this->client->makeNode();
-
-            $tempUserNode->setProperty('email', $postContent->email);
-            $tempUserNode->setProperty('password',$postContent->password);
-            $tempUserNode->setProperty('phone',$postContent->phone);
-            $tempUserNode->setProperty('company',$postContent->company);
-            $tempUserNode->setProperty('title',$postContent->title);
-            $tempUserNode->setProperty('location',$postContent->location);
-            $tempUserNode->setProperty('name',$postContent->name);
-
-            NodeUtility::storeNodeInDatabase($tempUserNode);        
-            $this->index->add($tempUserNode, $this->indexKey, $postContent->email);
-            $this->createSettings($tempUserNode->getId());
-            return json_encode(array("userID"=>$tempUserNode->getId()));
+            $userNode = $this->client->makeNode();
+            $userNode->setProperty('email', $postContent->email)
+                    ->setProperty('password',$postContent->password)
+                    ->setProperty('phone',$postContent->phone)
+                    ->setProperty('company',$postContent->company)
+                    ->setProperty('title',$postContent->title)
+                    ->setProperty('location',$postContent->location)
+                    ->setProperty('name',$postContent->name)
+                    ->save();
+            
+            $this->index->add($userNode, $this->indexKey, $postContent->email);
+            $this->createSettings($userNode->getId());
+            return $this->nodeToOutput($userNode);
         } else {
             return json_encode(array('errorID'=>'13', 'errorMessage'=>$postContent->email.' already exists for a user.'));            
         }
+    }
+    
+    public function GET($id){
+        $node = NodeUtility::getNodeByID($id, $this->client);
+        if (!NodeUtility::checkNodeInIndex($node, $this->index, $this->indexKey, $node->getProperty('email')))
+            {return array("errorID"=>11, "errorMessage"=>$id." is not a vaild User node.");} //!!Use fancier error message
+        return $this->nodeToOutput($node);
     }
 	
     function getAllUsers(){
         $response = array();
         foreach($this->index->query($this->indexKey.':*') as $user){
-            array_push($response, $this->nodeToOutput($user));
+            array_push($response, json_decode($this->nodeToOutput($user)));
         }
         return json_encode(array("users"=>$response));
     }
@@ -82,13 +92,14 @@ class User extends RequestHandler{
         if ($user == NULL){
             return json_encode(array('errorID'=>'10', 'errorMessage'=>$user->getId().' is an not a node.'));
         }
-        if (!NodeUtility::checkInIndex($user, $this->index) ){
+        
+        if (!(NodeUtility::checkNodeInIndex($user, $this->index, $this->indexKey, $user->getProperty('email'))) ){
             return json_encode(array('errorID'=>'11', 'errorMessage'=>$user->getId().' is an not a user node.'));
         }
-
-        if(NodeUtility::isValidField($user, $putList->field)){	
+        
+        if(in_array($putList->field, $this->propertyList)){	
             if(strcasecmp($putList->field, 'email') == 0){
-                $this->updateUserEmail($putList->value);
+                $this->updateUserEmail($putList->value, $user);
             }
 
             $user->setProperty($putList->field, $putList->value);
@@ -97,19 +108,18 @@ class User extends RequestHandler{
         }        
     }    
 	
-    function updateUserEmail($newEmail){
-        $user = $this->index->findOne('email', $newEmail);
-        if($user != NULL){
+    function updateUserEmail($newEmail, $user){
+        if($this->index->findOne('email', $newEmail) == NULL){
             $this->index->remove($user);
             $this->index->add($user, 'email', $newEmail);
         } else {
-            return json_encode(array('errorID'=>'11', 'errorMessage'=>'Email already linked to another account'));
+            return json_encode(array('errorID'=>'13', 'errorMessage'=>'Email already linked to another account'));
         }
     }
     
     public function DELETE($id){
         $node = NodeUtility::getNodeByID($id, $this->client);
-        if (!NodeUtility::checkInIndex($node, $this->index, $this->indexKey, $node->getProperty('email')))
+        if (!NodeUtility::checkNodeInIndex($node, $this->index, $this->indexKey, $node->getProperty('email')))
             {return json_encode(array('errorID'=>'11', 'errorMessage'=>$id.' is an not a user node.'));} //!!Use fancier error message   
         $this->index->remove($node);            
         
@@ -203,7 +213,6 @@ class User extends RequestHandler{
         $settiIndex = new Index\NodeIndex($this->client, 'UserSettings');
         $settiIndex->save();
 
-        $userNode = $this->client->getNode($userID);
         if(isUserNode($userNode)){
             $relationArray = $userNode->getRelationships(array('SETFOR'), Relationship::DirectionIn);
 
@@ -238,7 +247,7 @@ class User extends RequestHandler{
 //================this section is for testing with our test suite without controller==========
 
 $postContent = json_decode(file_get_contents('php://input'));
-$client = new Client();
+$client = new Client(new Transport('localhost', 7474));
 $User = new User($client);
 
 
