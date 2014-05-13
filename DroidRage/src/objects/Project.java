@@ -144,7 +144,7 @@ public class Project implements Comparable<Project>, Parcelable{
 	public void readFromParcel(Parcel in){
 		projectID = in.readString();
 		projectTitle = in.readString();
-		meetings = in.readArrayList(Meeting.class.getClassLoader());
+//		meetings = in.readArrayList(Meeting.class.getClassLoader());
 		
 		ArrayList<MeetingParcel> meetingParcelList = in.readArrayList(MeetingParcel.class.getClassLoader());
 		for (MeetingParcel parcel : meetingParcelList) {
