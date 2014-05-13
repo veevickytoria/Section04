@@ -22,13 +22,4 @@ class UserUsers extends RequestHandler {
         }
         return array("users"=>$response);
 	}
-	function addRelationsToArray($node, $infoArray){
-		foreach($this->relationList as $relationType) {
-			$relationList = NodeUtility::getNodeRelations($node, $relationType, "out");
-			$infoArray;
-			$node = $relationList[0]->getEndNode();
-			
-		}
-        return $infoArray;
-	}
 }

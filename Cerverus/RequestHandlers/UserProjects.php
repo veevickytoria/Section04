@@ -3,14 +3,14 @@
 namespace Everyman\Neo4j;
 require_once 'RequestHandler.php';
 
-class UserGroups extends RequestHandler {
+class UserProjects extends RequestHandler {
     
     function __construct($client){
         parent::__construct($client, "Users", "email");
     }
 	protected function nodeToOutput($node) {
         if ($node == NULL) {return false;} //make pretty exception
-        $nodeInfo = array("groupID"=>$node->getId());
+        $nodeInfo = array("projectID"=>$node->getId());
         return $nodeInfo;
         
     }
@@ -22,11 +22,11 @@ class UserGroups extends RequestHandler {
 		$membersRels = NodeUtility::getNodeRelations($userNode, "members","in");
 		$membersArray = array();
 		foreach($membersRels as $rel){
-			$groupNode = $rel->getStartNode();
-			$propertyArray = $this->nodeToOutput($groupNode);
+			$projectNode = $rel->getStartNode();
+			$propertyArray = $this->nodeToOutput($projectNode);
 			array_push($membersArray, $propertyArray);
 		}
-		$lastArray = array('groups'=>$membersArray);
+		$lastArray = array('projects'=>$membersArray);
 		return $lastArray;
 	}
 }
