@@ -252,12 +252,20 @@ abstract class RequestHandler {
         $node = $this->client->makeNode();
         // make sure methods pass $node by reference
         $this->setNodeProperties($node, $postList);
+ 
+        //Check the index for duplicate key values
+        $index = $this->index;
+        if ($this->indexKey != "ID"){
+            $duplicates = $index->findOne($this->indexKey, $postList[$this->indexKey]);
+            if ($duplicates){
+                return ("An entry with that index key already exists!");
+            }
+        }
+        
         NodeUtility::storeNodeInDatabase($node);
         $this->setNodeRelationships($node, $postList);
-        $this->setNodeNestedRelationships($node, $postList);
-        $this->index->add($node, 'ID', $node->getId());
-        $index = $this->index;
-        if ($this->indexKey == "ID"){            
+        $this->setNodeNestedRelationships($node, $postList);        
+        if ($this->indexKey == "ID"){
             $this->index->add($node, 'ID', $node->getId());
         } else {            
             $index->add($node, $this->indexKey, $node->getProperty($this->indexKey));
