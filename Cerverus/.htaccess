@@ -3,6 +3,14 @@
 Options +FollowSymLinks
 RewriteEngine On
 
+#Reroute Notification to old way
+RewriteRule ^Notification/?$ Notification.php [NC,L]
+RewriteRule ^Notification/([0-9]+)/?$ Notification.php?id=$1 [NC,L]
+
+#Reroute Schedules to old way
+RewriteRule ^User/Schedule/([0-9]+)/?$ User.php?cat=schedule&id=$1 [NC,L]
+RewriteRule ^User/Schedules/?$ User.php?cat=schedule [NC,L]
+
 # Standard POST/PUT Request
 RewriteRule ^([A-Za-z]+)/$ Controller.php?class1=$1 [NC,L]
 # Standard GET/DELETE Request
