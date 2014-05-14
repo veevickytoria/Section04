@@ -87,6 +87,7 @@ AsyncResponse<String>, TokenListener {
 //	public static final String EXTRA_LOCATION = "location";
 //	public static final String EXTRA_DESCRIPTION = "description";
 	public static final String EXTRA_EDIT_MODE = "editing";
+	public static final int REQUEST_CODE = 2;
 
 	private void init() {
 		extras = getIntent().getExtras();

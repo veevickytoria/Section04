@@ -282,7 +282,7 @@ public class AgendaItemAdapter extends AbstractTreeViewAdapter<Topic> {
 		protected void createTask(Task createTask) {
 			Intent editTaskIntent = new Intent(getActivity(), EditTaskActivity.class);
 			editTaskIntent.putExtra(Keys.Task.PARCEL, new TaskParcel(createTask));
-			getActivity().startActivityForResult(editTaskIntent, 7);
+			getActivity().startActivityForResult(editTaskIntent, EditTaskActivity.REQUEST_CODE);
 		}
 	}
 

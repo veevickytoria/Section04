@@ -154,7 +154,7 @@ public class TasksFragment extends Fragment implements AsyncResponse<List<Task>>
 			Task newTask = new Task();
 			editIntent.putExtra(Keys.Task.PARCEL, newTask);
 			newTask.setID(-1);
-			startActivityForResult(editIntent, 7);
+			startActivityForResult(editIntent, EditTaskActivity.REQUEST_CODE);
 			return true;
 		default:
 			return super.onContextItemSelected(item);
@@ -181,12 +181,17 @@ public class TasksFragment extends Fragment implements AsyncResponse<List<Task>>
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == Activity.RESULT_OK) {
 			if (data != null) {
-				if (requestCode == 6) {
+				switch (requestCode) {
+				case ViewTaskActivity.REQUEST_CODE:
 					refresh();
-				} else if (requestCode == 7) {
+					break;
+				case EditTaskActivity.REQUEST_CODE:
 					Task t = data.getParcelableExtra(Keys.Task.PARCEL);
 					t.setCreatedBy(SessionManager.getUserID());
 					creator.createTask(t);
+					break;
+				default:
+					break;
 				}
 			}
 		}
@@ -195,7 +200,7 @@ public class TasksFragment extends Fragment implements AsyncResponse<List<Task>>
 	private void viewTask(Task task) {
 		Intent viewTask = new Intent(getActivity(), ViewTaskActivity.class);
 		viewTask.putExtra(Keys.Task.PARCEL, task);
-		startActivityForResult(viewTask, 6);
+		startActivityForResult(viewTask, ViewTaskActivity.REQUEST_CODE);
 	}
 
 	@Override

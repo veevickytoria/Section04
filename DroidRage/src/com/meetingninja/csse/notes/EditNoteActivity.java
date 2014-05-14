@@ -52,6 +52,7 @@ import com.meetingninja.csse.extras.NinjaDateUtils;
 
 public class EditNoteActivity extends Activity implements AsyncResponse<String> {
 
+	public static final int REQUEST_CODE = 1;
 	private Bundle extras;
 	private EditText mTextEditor, mNoteTitle;
 

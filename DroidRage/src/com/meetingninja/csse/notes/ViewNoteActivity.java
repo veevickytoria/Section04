@@ -22,6 +22,7 @@ import com.meetingninja.csse.notes.tasks.DeleteNoteTask;
 
 public class ViewNoteActivity extends Activity {
 
+	public static final int REQUEST_CODE = 1;
 	private Bundle extras;
 	private TextView contentsText;
 	private TextView titleText;
@@ -104,7 +105,7 @@ public class ViewNoteActivity extends Activity {
 			AlertDialogUtil.deleteDialog(this, "noe", new OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					delete(displayedNote);					
+					delete(displayedNote);
 				}
 			});
 			return true;
@@ -121,8 +122,14 @@ public class ViewNoteActivity extends Activity {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == RESULT_OK) {
-			displayedNote = new ParcelDataFactory(data.getExtras()).getNote();
-			refresh();
+//			switch (resultCode) {
+//			case EditNoteActivity.REQUEST_CODE:
+				displayedNote = new ParcelDataFactory(data.getExtras()).getNote();
+				refresh();
+//				break;
+//			default:
+//				break;
+//			}
 		}
 	}
 
@@ -130,7 +137,7 @@ public class ViewNoteActivity extends Activity {
 		Intent editNote = new Intent(ViewNoteActivity.this,EditNoteActivity.class);
 		editNote.putExtra(Keys.Note.PARCEL, new NoteParcel(displayedNote));
 //		editNote.putExtras(extras);
-		startActivityForResult(editNote, 1);
+		startActivityForResult(editNote, EditNoteActivity.REQUEST_CODE);
 	}
 
 }

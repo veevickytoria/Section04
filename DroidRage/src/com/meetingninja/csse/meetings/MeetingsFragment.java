@@ -135,7 +135,7 @@ public class MeetingsFragment extends Fragment implements
 		Intent viewMeeting = new Intent(getActivity(),
 				ViewMeetingActivity.class);
 		viewMeeting.putExtra(Keys.Meeting.PARCEL, new MeetingParcel(meeting));
-		startActivityForResult(viewMeeting, 6);
+		startActivityForResult(viewMeeting, ViewMeetingActivity.REQUEST_CODE);
 	}
 
 	private void setupSwipeList() {
@@ -255,7 +255,7 @@ public class MeetingsFragment extends Fragment implements
 		Log.i(TAG, "Showing Meeting Fragment");
 		refresh();
 
-		if (requestCode == 2) {
+		if (requestCode == EditMeetingActivity.REQUEST_CODE) {
 			if (resultCode == Activity.RESULT_OK) {
 				if (data != null) {
 					int listPosition = data.getIntExtra("listPosition", -1);
@@ -305,7 +305,7 @@ public class MeetingsFragment extends Fragment implements
 		}
 
 		editMeeting.putExtra(EditMeetingActivity.EXTRA_EDIT_MODE, true);
-		startActivityForResult(editMeeting, 2);
+		startActivityForResult(editMeeting, EditMeetingActivity.REQUEST_CODE);
 	}
 
 	private boolean updateMeeting(Meeting updated) {

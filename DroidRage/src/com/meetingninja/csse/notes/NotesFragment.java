@@ -102,7 +102,7 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 
 	}
 
-	public void createNote() {			
+	public void createNote() {
 		Intent createNote = new Intent(getActivity(), EditNoteActivity.class);
 		createNote.putExtra(Note.CREATE_NOTE, true);
 		startActivity(createNote);
@@ -156,7 +156,7 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 		Intent viewNote = new Intent(getActivity(),ViewNoteActivity.class);
 		viewNote.putExtra("listPosition", position);
 		viewNote.putExtra(Keys.Note.PARCEL, new NoteParcel(clickedNote));
-		startActivityForResult(viewNote, 1);
+		startActivityForResult(viewNote, ViewNoteActivity.REQUEST_CODE);
 	}
 
 	@Override
@@ -176,7 +176,7 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 				Intent editNote = new Intent(getActivity(),EditNoteActivity.class);
 				editNote.putExtra("listPosition", position);
 				editNote.putExtra(Keys.Note.PARCEL, new NoteParcel(noteAdpt.getItem(position)));
-				startActivityForResult(editNote, 1);
+				startActivityForResult(editNote, EditNoteActivity.REQUEST_CODE);
 				
 //				Toast.makeText(getActivity(),String.format("%s", item.getTitle()),Toast.LENGTH_SHORT).show();
 				handled = true;
@@ -235,7 +235,7 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == 1) { // EditNoteActivity
+		if (requestCode == EditNoteActivity.REQUEST_CODE) { // EditNoteActivity
 			if (resultCode == Activity.RESULT_OK) {
 				if (data != null) {
 //					Note editedNote = new ParcelDataFactory(data.getExtras()).getNote();

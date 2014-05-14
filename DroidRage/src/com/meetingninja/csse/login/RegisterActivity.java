@@ -52,6 +52,7 @@ public class RegisterActivity extends Activity implements AsyncResponse<User> {
 	private EditText confirmPasswordText;
 	public static final String ARG_USERNAME = "user";
 	protected static final String TAG = RegisterActivity.class.getSimpleName();
+	protected static final int REQUEST_CODE = 0;
 
 	private RegisterTask registerTask;
 	private boolean mRegisterSuccess;

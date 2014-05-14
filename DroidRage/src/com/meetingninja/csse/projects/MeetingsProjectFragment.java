@@ -27,6 +27,6 @@ public class MeetingsProjectFragment extends MeetingsFragment{
 		while (meeting.getEndTimeInMillis() == 0L);
 		Intent viewMeeting = new Intent(getActivity(),ViewMeetingProjectActivity.class);
 		viewMeeting.putExtra(Keys.Meeting.PARCEL, new MeetingParcel(meeting));
-		startActivityForResult(viewMeeting, 6);
+		startActivityForResult(viewMeeting, ViewMeetingProjectActivity.REQUEST_CODE);
 	}
 }

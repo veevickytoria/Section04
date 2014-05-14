@@ -340,7 +340,7 @@ public class MainActivity extends FragmentActivity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (requestCode == 3)
+		if (requestCode == EditNoteActivity.REQUEST_CODE)
 			frag_notes.refresh();
 
 		if (data != null) {
@@ -419,7 +419,7 @@ public class MainActivity extends FragmentActivity {
 		case R.id.action_new_note:
 			Intent createNote = new Intent(this, EditNoteActivity.class);
 			createNote.putExtra(Note.CREATE_NOTE, true);
-			startActivityForResult(createNote, 3);
+			startActivityForResult(createNote, EditNoteActivity.REQUEST_CODE);
 			return true;
 		case R.id.action_logout:
 			this.logout();
@@ -431,8 +431,7 @@ public class MainActivity extends FragmentActivity {
 					"en-US");
 			speechIntent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Say \"GO TO __\"");
 			try {
-				startActivityForResult(speechIntent,
-						VOICE_RECOGNITION_REQUEST_CODE);
+				startActivityForResult(speechIntent, VOICE_RECOGNITION_REQUEST_CODE);
 
 			} catch (Exception e) {
 				NinjaToastUtil.show(this,

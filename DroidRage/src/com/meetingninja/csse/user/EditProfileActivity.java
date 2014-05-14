@@ -26,6 +26,8 @@ import com.meetingninja.csse.user.tasks.UpdateUserTask;
 public class EditProfileActivity extends Activity {
 	private static final String TAG = EditProfileActivity.class.getSimpleName();
 
+	public static final int REQUEST_CODE = 7;
+
 	private EditText mTitle, mCompany, mName, mPhone, mEmail, mLocation;
 	private SessionManager session;
 	private User displayedUser;

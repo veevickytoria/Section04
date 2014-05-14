@@ -11,6 +11,8 @@ import com.meetingninja.csse.meetings.ViewMeetingActivity;
 import com.meetingninja.csse.notes.ViewNoteActivity;
 
 public class ViewMeetingProjectActivity extends ViewMeetingActivity{
+	
+	public static final int REQUEST_CODE = 6;
 
 	@Override
 	protected void deleteMeeting(Meeting meeting) {

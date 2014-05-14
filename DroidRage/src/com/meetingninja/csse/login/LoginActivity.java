@@ -100,7 +100,7 @@ public class LoginActivity extends Activity {
 						if (!TextUtils.isEmpty(mEmail)) {
 							register.putExtra(Intent.EXTRA_EMAIL, mEmail);
 						}
-						startActivityForResult(register, 0);
+						startActivityForResult(register, RegisterActivity.REQUEST_CODE);
 					}
 				});
 	}
@@ -193,34 +193,14 @@ public class LoginActivity extends Activity {
 			cancel = true;
 		}
 
-		/*
-		 * SessionManager session = new SessionManager(
-		 * getApplicationContext()); session.clear();
-		 * session.createLoginSession(mUsername); Intent main = new
-		 * Intent(mLoginFormView.getContext(), MainActivity.class);
-		 * main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		 * main.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-		 *
-		 * startActivityForResult(main, 0);
-		 * overridePendingTransition(anim.fade_in, anim.fade_out);
-		 */
-
 		if (cancel) {
-			// There was an error; don't attempt login and focus the first
-			// form field with an error.
 			focusView.requestFocus();
 		} else {
-			// Show a progress spinner, and kick off a background task to
-			// perform the user login attempt.
+//			if (ApplicationController.getInstance().isConnectedToBackend(LoginActivity.this)) {
 			mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
 			showProgress(true);
 			mAuthTask = new UserLoginTask();
 			mAuthTask.execute((Void) null);
-//			if (ApplicationController.getInstance().isConnectedToBackend(LoginActivity.this)) {
-//				mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
-//				showProgress(true);
-//				mAuthTask = new UserLoginTask();
-//				mAuthTask.execute(); // runs on background thread
 //			}
 		}
 	}
@@ -228,7 +208,7 @@ public class LoginActivity extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == 0) {
+		if (requestCode == RegisterActivity.REQUEST_CODE) {
 			if (resultCode == Activity.RESULT_OK) {
 				if (data != null) {
 					ParseUser.logOut();

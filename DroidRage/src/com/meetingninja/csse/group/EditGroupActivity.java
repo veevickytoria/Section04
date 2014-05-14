@@ -45,6 +45,7 @@ import de.timroes.android.listview.EnhancedListView;
 public class EditGroupActivity extends Activity implements TokenListener {
 
 	private static final String TAG = EditGroupActivity.class.getSimpleName();
+	public static final int REQUEST_CODE = 7;
 	private Group displayedGroup;
 	private UserArrayAdapter mUserAdapter;
 	EditText titleText;

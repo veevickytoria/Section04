@@ -55,6 +55,7 @@ import android.widget.Toast;
 
 public class ViewProjectActivity extends FragmentActivity implements ActionBar.TabListener {
 	protected static final String TAG = ViewProjectActivity.class.getSimpleName();
+	protected static final int REQUEST_CODE = 7;
 	ArrayList<String> navItems;
 	private static int prevSelectedItem = 0;
 	private Project displayedProject;
@@ -235,7 +236,7 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 	public void createMeeting() {
 		Intent editMeeting = new Intent(this, EditMeetingActivity.class);
 		editMeeting.putExtra(EditMeetingActivity.EXTRA_EDIT_MODE, true);
-		startActivityForResult(editMeeting, 2);
+		startActivityForResult(editMeeting, EditMeetingActivity.REQUEST_CODE);
 	}
 
 	public void selectMeeting() {
@@ -279,7 +280,7 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 	public void createNote() {
 		Intent createNote = new Intent(this, EditNoteActivity.class);
 		createNote.putExtra(Note.CREATE_NOTE, true);
-		startActivityForResult(createNote, 3);
+		startActivityForResult(createNote, EditNoteActivity.REQUEST_CODE);
 	}
 
 	public void selectNote() {
@@ -412,10 +413,10 @@ public class ViewProjectActivity extends FragmentActivity implements ActionBar.T
 		if (resultCode == Activity.RESULT_OK) {
 
 			if(data!=null){
-				if (requestCode == 2) {
+				if (requestCode == EditMeetingActivity.REQUEST_CODE) {
 					Meeting created = new ParcelDataFactory(data.getExtras()).getMeeting();
 					addMeeting(created);
-				} else if (requestCode == 3) {
+				} else if (requestCode == EditNoteActivity.REQUEST_CODE) {
 					addNote(new ParcelDataFactory(data.getExtras()).getNote());
 				}
 			}

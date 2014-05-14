@@ -63,14 +63,14 @@ public class HomePageFragment extends Fragment implements IRefreshable {
 	public void viewMeeting(Meeting meeting) {
 		Intent viewMeeting = new Intent(getActivity(), ViewMeetingActivity.class);
 		viewMeeting.putExtra(Keys.Meeting.PARCEL, new MeetingParcel(meeting));
-		startActivityForResult(viewMeeting, 6);
+		startActivityForResult(viewMeeting, ViewMeetingActivity.REQUEST_CODE);
 	}
 
 //	private void loadMeeting(Meeting meeting) {
 //		new GetMeetingFetcherTask(new AsyncResponse<Meeting>(){
 //			@Override
 //			public void processFinish(Meeting result) {
-//				viewMeeting(result);				
+//				viewMeeting(result);
 //			}
 //		}).execute(meeting.getID());
 //	}
@@ -78,7 +78,7 @@ public class HomePageFragment extends Fragment implements IRefreshable {
 	public void viewTask(Task task) {
 		Intent viewTask = new Intent(getActivity(), ViewTaskActivity.class);
 		viewTask.putExtra(Keys.Task.PARCEL, task);
-		startActivityForResult(viewTask, 6);
+		startActivityForResult(viewTask, ViewTaskActivity.REQUEST_CODE);
 	}
 
 //	private void loadTask(Task task) {

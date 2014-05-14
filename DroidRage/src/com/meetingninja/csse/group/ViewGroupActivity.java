@@ -31,6 +31,7 @@ import de.timroes.android.listview.EnhancedListView;
 
 public class ViewGroupActivity extends Activity {
 	private static final String TAG = ViewGroupActivity.class.getSimpleName();
+	public static final int REQUEST_CODE = 8;
 	private Group displayedGroup;
 	private UserArrayAdapter mUserAdapter;
 	private TextView titleText;
@@ -45,7 +46,7 @@ public class ViewGroupActivity extends Activity {
 		if (data != null){
 			displayedGroup = data.getParcelable(Keys.Group.PARCEL);
 		}else{
-			Log.e(TAG, "Error: Unable to get group from parcel"); 
+			Log.e(TAG, "Error: Unable to get group from parcel");
 			displayedGroup = new Group();
 		}
 		titleText = (TextView) findViewById(R.id.group_view_title);
@@ -121,7 +122,7 @@ public class ViewGroupActivity extends Activity {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == Activity.RESULT_OK) {
-			if (requestCode == 8) {
+			if (requestCode == EditGroupActivity.REQUEST_CODE) {
 				displayedGroup = data.getParcelableExtra(Keys.Group.PARCEL);
 				
 				Log.d(TAG, "Showing group: " + displayedGroup.getID());
@@ -142,7 +143,7 @@ public class ViewGroupActivity extends Activity {
 		resultCode = Activity.RESULT_OK;
 		Intent i = new Intent(this, EditGroupActivity.class);
 		i.putExtra(Keys.Group.PARCEL, displayedGroup);
-		startActivityForResult(i, 8);
+		startActivityForResult(i, EditGroupActivity.REQUEST_CODE);
 	}
 
 	private void loadUser(String userID) {

@@ -84,6 +84,7 @@ public class EditTaskActivity extends FragmentActivity implements
 	private Task displayedTask;
 	Calendar cal = null;
 	public static final String EXTRA_TASK = Keys.Task.PARCEL;
+	public static final int REQUEST_CODE = 7;
 	private UserArrayAdapter mUserAdapter;
 	private EnhancedListView listView;
 	private String userId;

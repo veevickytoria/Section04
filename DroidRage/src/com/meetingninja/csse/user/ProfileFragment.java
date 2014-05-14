@@ -105,7 +105,7 @@ public class ProfileFragment extends Fragment {
 		case R.id.edit_item_profile:
 			Intent i = new Intent(getActivity(), EditProfileActivity.class);
 			i.putExtra(Keys.User.PARCEL, new UserParcel(displayedUser));
-			startActivityForResult(i, 7);
+			startActivityForResult(i, EditProfileActivity.REQUEST_CODE);
 			return true;
 		default:
 			return super.onContextItemSelected(item);
@@ -115,10 +115,11 @@ public class ProfileFragment extends Fragment {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == Activity.RESULT_OK) {
-			if (requestCode == 7) {
-				displayedUser = new ParcelDataFactory(data.getExtras())
-						.getUser();
-				setUser(displayedUser);
+			if (data != null) {
+				if (requestCode == EditProfileActivity.REQUEST_CODE) {
+					displayedUser = new ParcelDataFactory(data.getExtras()).getUser();
+					setUser(displayedUser);
+				}
 			}
 		}
 	}

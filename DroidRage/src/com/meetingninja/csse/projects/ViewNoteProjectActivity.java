@@ -8,6 +8,8 @@ import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.notes.ViewNoteActivity;
 
 public class ViewNoteProjectActivity extends ViewNoteActivity{
+	
+	public static final int REQUEST_CODE = 8;
 
 	@Override
 	protected void delete(Note note) {

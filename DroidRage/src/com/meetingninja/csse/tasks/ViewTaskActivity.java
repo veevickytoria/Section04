@@ -46,6 +46,7 @@ import com.meetingninja.csse.tasks.tasks.UpdateTaskTask;
 
 public class ViewTaskActivity extends Activity {
 	private static final String TAG = ViewTaskActivity.class.getSimpleName();
+	public static final int REQUEST_CODE = 6;
 	private TextView taskName, dateCreated, dateAssigned, deadline,
 	description, completionCriteria, assignedLabel, assignedText;
 	private CheckBox taskCompleteCheckbox;
@@ -86,7 +87,7 @@ public class ViewTaskActivity extends Activity {
 		case R.id.edit_item_task:
 			Intent editTask = new Intent(this, EditTaskActivity.class);
 			editTask.putExtra(Keys.Task.PARCEL, displayedTask);
-			this.startActivityForResult(editTask, 5);
+			this.startActivityForResult(editTask, EditTaskActivity.REQUEST_CODE);
 			return true;
 		case R.id.delete_item_task:
 			AlertDialogUtil.deleteDialog(this, "task", new OnClickListener() {
@@ -122,7 +123,7 @@ public class ViewTaskActivity extends Activity {
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == 5) {
+		if (requestCode == EditTaskActivity.REQUEST_CODE) {
 			if (resultCode == RESULT_OK) {
 				if (data != null) {
 					displayedTask = data.getParcelableExtra(Keys.Task.PARCEL);

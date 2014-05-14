@@ -73,9 +73,9 @@ public class ProjectFragment extends Fragment implements IRefreshable {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		refresh();
 		if (resultCode == Activity.RESULT_OK) {
-			if (requestCode == 6) {
+			if (requestCode == ViewProjectActivity.REQUEST_CODE - 1) {
 				refresh();
-			} else if (requestCode == 7) {
+			} else if (requestCode == ViewProjectActivity.REQUEST_CODE) {
 				Project p = data.getParcelableExtra(Keys.Project.PARCEL);
 				projectsList.add(p);
 				Collections.sort(projectsList);
@@ -135,7 +135,7 @@ public class ProjectFragment extends Fragment implements IRefreshable {
 				super.onPostExecute(p);
 				Intent i = new Intent(getActivity(), ViewProjectActivity.class);
 				i.putExtra(Keys.Project.PARCEL, p);
-				startActivityForResult(i, 7);
+				startActivityForResult(i, ViewProjectActivity.REQUEST_CODE);
 				// TODO: check if you add yourself to a project if it
 				// automatically updates fragment list
 			}
@@ -214,10 +214,9 @@ public class ProjectFragment extends Fragment implements IRefreshable {
 
 	private void loadProject(Project project) {
 		// while (project.getEndTimeInMillis() == 0L);
-		Intent viewProject = new Intent(getActivity(),
-				ViewProjectActivity.class);
+		Intent viewProject = new Intent(getActivity(), ViewProjectActivity.class);
 		viewProject.putExtra(Keys.Project.PARCEL, project);
-		startActivityForResult(viewProject, 6);
+		startActivityForResult(viewProject, ViewProjectActivity.REQUEST_CODE - 1);
 	}
 
 	@Override

@@ -88,7 +88,7 @@ public class GroupsFragment extends Fragment implements AsyncResponse<List<Group
 			Intent i = new Intent(getActivity(), EditGroupActivity.class);
 			Group g = new Group();
 			i.putExtra(Keys.Group.PARCEL, g);
-			startActivityForResult(i, 7);
+			startActivityForResult(i, EditGroupActivity.REQUEST_CODE);
 			return true;
 		default:
 			return super.onContextItemSelected(item);
@@ -99,12 +99,12 @@ public class GroupsFragment extends Fragment implements AsyncResponse<List<Group
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		
 		if (resultCode == Activity.RESULT_OK) {
-			if (requestCode == 7) {
+			if (requestCode == EditGroupActivity.REQUEST_CODE) {
 				Group g = data.getParcelableExtra(Keys.Group.PARCEL);
 				groups.add(g);
 				GroupCreateTask creator = new GroupCreateTask(this);
 				creator.createGroup(g);
-			} else if (requestCode == 8) {
+			} else if (requestCode == ViewGroupActivity.REQUEST_CODE) {
 				fetchGroups();
 			}
 			groupAdpt.notifyDataSetChanged();
@@ -124,7 +124,7 @@ public class GroupsFragment extends Fragment implements AsyncResponse<List<Group
 	private void viewGroup(Group group) {
 		Intent i = new Intent(getActivity(), ViewGroupActivity.class);
 		i.putExtra(Keys.Group.PARCEL, group);
-		startActivityForResult(i, 8);
+		startActivityForResult(i, ViewGroupActivity.REQUEST_CODE);
 	}
 
 	public void deleteGroup(String groupID) {

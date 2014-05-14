@@ -24,6 +24,7 @@ import objects.Meeting;
 import objects.User;
 import objects.parcelable.MeetingParcel;
 import objects.parcelable.ParcelDataFactory;
+import objects.parcelable.UserParcel;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -34,8 +35,11 @@ import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.Keys;
@@ -43,10 +47,12 @@ import com.meetingninja.csse.database.volley.MeetingVolleyAdapter;
 import com.meetingninja.csse.extras.AlertDialogUtil;
 import com.meetingninja.csse.extras.NinjaDateUtils;
 import com.meetingninja.csse.meetings.tasks.DeleteMeetingTask;
+import com.meetingninja.csse.user.ProfileActivity;
 import com.meetingninja.csse.user.adapters.UserArrayAdapter;
 
 public class ViewMeetingActivity extends Activity {
 	private static final String TAG = ViewMeetingActivity.class.getSimpleName();
+	public static final int REQUEST_CODE = 6;
 	private Meeting displayedMeeting;
 	private TextView meetingName, location, startDate, endDate, startTime,endTime, description;
 	private ListView attendeesList;
@@ -90,9 +96,25 @@ public class ViewMeetingActivity extends Activity {
 		startTime = (TextView) this.findViewById(R.id.meeting_from_time_view);
 		endTime = (TextView) this.findViewById(R.id.meeting_to_time_view);
 		attendeesList = (ListView) this.findViewById(R.id.guests_attending);
-		attendeesList.setEmptyView(this.findViewById(android.R.id.empty));
+		
+		
 		adpt = new UserArrayAdapter(this, R.layout.list_item_user, attendance);
 		attendeesList.setAdapter(adpt);
+		attendeesList.setEmptyView(this.findViewById(android.R.id.empty));
+		
+		attendeesList.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+					User clicked = adpt.getItem(position);
+					Intent profileIntent = new Intent(view.getContext(), ProfileActivity.class);
+					profileIntent.putExtra(Keys.User.PARCEL,new UserParcel(clicked));
+					startActivity(profileIntent);
+				
+			}
+			
+		});
 	}
 
 	private void setMeeting(Meeting meeting) {
@@ -134,12 +156,12 @@ public class ViewMeetingActivity extends Activity {
 	private void editMeeting(Meeting m) {
 		Intent editMeeting = new Intent(ViewMeetingActivity.this,EditMeetingActivity.class);
 		editMeeting.putExtra(Keys.Meeting.PARCEL, new MeetingParcel(m));
-		startActivityForResult(editMeeting, 5);
+		startActivityForResult(editMeeting, EditMeetingActivity.REQUEST_CODE);
 	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == 5) {
+		if (requestCode == EditMeetingActivity.REQUEST_CODE) {
 			if (resultCode == RESULT_OK) {
 				if (data != null) {
 					displayedMeeting = new ParcelDataFactory(data.getExtras()).getMeeting();
