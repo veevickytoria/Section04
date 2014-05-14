@@ -17,40 +17,12 @@ package com.meetingninja.csse.tasks.tasks;
 
 import java.io.IOException;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
-
-import com.meetingninja.csse.ApplicationController;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.TaskDatabaseAdapter;
-import com.meetingninja.csse.extras.NinjaToastUtil;
 
-public class DeleteTaskTask implements AsyncResponse<Boolean> {
-
-	private TaskDeleterTask deleter = null;
-
-	public DeleteTaskTask() {
-		this.deleter = new TaskDeleterTask(this);
-	}
-
-	public void deleteTask(String taskID) {
-		this.deleter.execute(taskID);
-	}
-
-	@Override
-	public void processFinish(Boolean result) {
-		Context app = ApplicationController.getInstance().getApplicationContext();
-		if (result) {
-			NinjaToastUtil.show(app, "Task deleted");
-		}
-
-	}
-
-}
-
-class TaskDeleterTask extends AsyncTask<String, Void, Boolean> {
+public class TaskDeleterTask extends AsyncTask<String, Void, Boolean> {
 	private AsyncResponse<Boolean> delegate;
 
 	public TaskDeleterTask(AsyncResponse<Boolean> delegate) {

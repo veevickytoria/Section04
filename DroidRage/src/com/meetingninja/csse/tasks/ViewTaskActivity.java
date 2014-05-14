@@ -30,9 +30,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.database.AsyncResponse;
@@ -41,7 +41,7 @@ import com.meetingninja.csse.database.volley.TaskVolleyAdapter;
 import com.meetingninja.csse.database.volley.UserVolleyAdapter;
 import com.meetingninja.csse.extras.AlertDialogUtil;
 import com.meetingninja.csse.extras.NinjaDateUtils;
-import com.meetingninja.csse.tasks.tasks.DeleteTaskTask;
+import com.meetingninja.csse.tasks.tasks.TaskDeleterTask;
 import com.meetingninja.csse.tasks.tasks.UpdateTaskTask;
 
 public class ViewTaskActivity extends Activity {
@@ -107,10 +107,15 @@ public class ViewTaskActivity extends Activity {
 		
 
 	}
-
+	
 	private void deleteTask(Task t) {
-		DeleteTaskTask deleter = new DeleteTaskTask();
-		deleter.deleteTask(t.getID());
+		new TaskDeleterTask(new AsyncResponse<Boolean>(){
+			@Override
+			public void processFinish(Boolean result) {
+				Toast.makeText(getApplicationContext(), "Task Deleted", Toast.LENGTH_LONG).show();
+			}
+		
+		}).execute(t.getID());
 		setResult(RESULT_OK);
 		finish();
 	}
