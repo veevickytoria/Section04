@@ -12,6 +12,7 @@ import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.ProjectDatabaseAdapter;
 import com.meetingninja.csse.database.UserDatabaseAdapter;
+import com.meetingninja.csse.extras.AlertDialogUtil;
 import com.meetingninja.csse.extras.IRefreshable;
 
 import de.timroes.android.listview.EnhancedListView;
@@ -44,7 +45,7 @@ public class ProjectFragment extends Fragment implements IRefreshable {
 	private static ProjectFragment sInstance = null;
 	private List<Project> projectsList = new ArrayList<Project>();
 	private ProjectItemAdapter projectAdpt;
-	private EnhancedListView l;
+	private EnhancedListView listView;
 
 	public ProjectFragment() {
 		// Empty
@@ -106,24 +107,32 @@ public class ProjectFragment extends Fragment implements IRefreshable {
 
 	public void createProjectOption() {
 		final EditText title = new EditText(getActivity());
-		new AlertDialog.Builder(getActivity()).setTitle("Enter a title")
-				.setPositiveButton("OK", new OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						if (!title.getText().toString().trim().equals("")) {
-							createProject(title.getText().toString());
-						} else {
-							Toast.makeText(getActivity(),
-									"Project Title can't be empty",
-									Toast.LENGTH_LONG).show();
-						}
-					}
-				}).setNegativeButton("Cancel", new OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.cancel();
-					}
-				}).setView(title).show();
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		builder.setTitle("Enter a title");
+		builder.setView(title);
+		builder.setPositiveButton("OK", new OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				if (!title.getText().toString().trim().equals("")) {
+					createProject(title.getText().toString());
+				} else {
+					Toast.makeText(getActivity(),
+							"Project Title can't be empty", Toast.LENGTH_LONG)
+							.show();
+				}
+			}
+		});
+		builder.setNegativeButton("Cancel", new OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+			}
+		});
+
+		builder.show();
 	}
 
 	public void createProject(String title) {
@@ -177,7 +186,8 @@ public class ProjectFragment extends Fragment implements IRefreshable {
 				for (int i = 0; i < projectList.size(); i++) {
 					Project p = null;
 					try {
-						p = ProjectDatabaseAdapter.getProject(projectList.get(i).getProjectID());
+						p = ProjectDatabaseAdapter.getProject(projectList
+								.get(i).getProjectID());
 					} catch (IOException e) {
 						Log.e(TAG, "failed to get project info");
 						Log.e(TAG, e.getLocalizedMessage());
@@ -214,9 +224,11 @@ public class ProjectFragment extends Fragment implements IRefreshable {
 
 	private void loadProject(Project project) {
 		// while (project.getEndTimeInMillis() == 0L);
-		Intent viewProject = new Intent(getActivity(), ViewProjectActivity.class);
+		Intent viewProject = new Intent(getActivity(),
+				ViewProjectActivity.class);
 		viewProject.putExtra(Keys.Project.PARCEL, project);
-		startActivityForResult(viewProject, ViewProjectActivity.REQUEST_CODE - 1);
+		startActivityForResult(viewProject,
+				ViewProjectActivity.REQUEST_CODE - 1);
 	}
 
 	@Override
@@ -228,11 +240,11 @@ public class ProjectFragment extends Fragment implements IRefreshable {
 		projectAdpt = new ProjectItemAdapter(getActivity(),
 				R.layout.list_item_task, projectsList);
 
-		l = (EnhancedListView) v.findViewById(R.id.project_list);
-		l.setAdapter(projectAdpt);
-		l.setEmptyView(v.findViewById(android.R.id.empty));
+		listView = (EnhancedListView) v.findViewById(R.id.project_list);
+		listView.setAdapter(projectAdpt);
+		listView.setEmptyView(v.findViewById(android.R.id.empty));
 
-		l.setDismissCallback(new de.timroes.android.listview.EnhancedListView.OnDismissCallback() {
+		listView.setDismissCallback(new de.timroes.android.listview.EnhancedListView.OnDismissCallback() {
 			@Override
 			public EnhancedListView.Undoable onDismiss(
 					EnhancedListView listView, final int position) {
@@ -259,9 +271,9 @@ public class ProjectFragment extends Fragment implements IRefreshable {
 				};
 			}
 		});
-		l.setRequireTouchBeforeDismiss(false);
-		l.setUndoHideDelay(5000);
-		l.setOnItemClickListener(new OnItemClickListener() {
+		listView.setRequireTouchBeforeDismiss(false);
+		listView.setUndoHideDelay(5000);
+		listView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View v, int position,
@@ -271,70 +283,10 @@ public class ProjectFragment extends Fragment implements IRefreshable {
 			}
 
 		});
-		l.enableSwipeToDismiss();
-		l.setSwipingLayout(R.id.list_group_item_frame_1);
+		listView.enableSwipeToDismiss();
+		listView.setSwipingLayout(R.id.list_group_item_frame_1);
 
-		l.setSwipeDirection(EnhancedListView.SwipeDirection.BOTH);
+		listView.setSwipeDirection(EnhancedListView.SwipeDirection.BOTH);
 	}
 
-}
-
-class ProjectItemAdapter extends ArrayAdapter<Project> {
-	private List<Project> projects;
-	private Context context;
-
-	public ProjectItemAdapter(Context context, int textViewResourceId,
-			List<Project> projects) {
-		super(context, textViewResourceId, projects);
-		this.context = context;
-		this.projects = projects;
-	}
-
-	public void setProjects(List<Project> projects) {
-		this.projects = projects;
-	}
-
-	@Override
-	public int getCount() {
-		return this.projects.size();
-	}
-
-	@Override
-	public Project getItem(int position) {
-		return this.projects.get(position);
-	}
-
-	private class ViewHolder {
-		TextView title;
-	}
-
-	ViewHolder viewHolder;
-
-	/*
-	 * we are overriding the getView method here - this is what defines how each
-	 * list item will look.
-	 */
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		View rowView = convertView;
-		LayoutInflater inflater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		if (rowView == null) {
-			rowView = inflater.inflate(R.layout.list_item_project, null);
-			viewHolder = new ViewHolder();
-			viewHolder.title = (TextView) rowView
-					.findViewById(R.id.list_project_title);
-
-			rowView.setTag(viewHolder);
-		} else {
-			viewHolder = (ViewHolder) rowView.getTag();
-		}
-
-		// Setup from the meeting_item XML file
-		Project project = projects.get(position);
-
-		viewHolder.title.setText(project.getProjectTitle());
-
-		return rowView;
-	}
 }
