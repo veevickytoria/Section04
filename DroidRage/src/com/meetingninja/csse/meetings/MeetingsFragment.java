@@ -57,7 +57,7 @@ import com.meetingninja.csse.meetings.tasks.MeetingsFetcherTask;
 import de.timroes.android.listview.EnhancedListView;
 
 public class MeetingsFragment extends Fragment implements
-		AsyncResponse<List<Meeting>>, IRefreshable {
+AsyncResponse<List<Meeting>>, IRefreshable {
 
 	private static final String TAG = MeetingsFragment.class.getSimpleName();
 
@@ -84,20 +84,17 @@ public class MeetingsFragment extends Fragment implements
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		View v = inflater.inflate(R.layout.fragment_meetings, container, false);
 		setupViews(v);
 
 		SessionManager.getInstance();
 		mySQLiteAdapter = new SQLiteMeetingAdapter(getActivity());
-		meetingAdpt = new MeetingItemAdapter(getActivity(),
-				R.layout.list_item_meeting, meetings);
+		meetingAdpt = new MeetingItemAdapter(getActivity(),R.layout.list_item_meeting, meetings);
 
 		mListView.setAdapter(meetingAdpt);
-		if (getArguments() != null
-				&& getArguments().containsKey(Keys.Project.MEETINGS)) {
+		if (getArguments() != null&& getArguments().containsKey(Keys.Project.MEETINGS)) {
 			ArrayList<MeetingParcel> temp = getArguments().getParcelableArrayList(Keys.Project.MEETINGS);
 			for (MeetingParcel meetingParcel : temp) {
 				meetings.add(meetingParcel.getData());
@@ -130,51 +127,38 @@ public class MeetingsFragment extends Fragment implements
 	}
 
 	protected void loadMeeting(Meeting meeting) {
-		while (meeting.getEndTimeInMillis() == 0L)
-			;
-		Intent viewMeeting = new Intent(getActivity(),
-				ViewMeetingActivity.class);
+		while (meeting.getEndTimeInMillis() == 0L);
+		Intent viewMeeting = new Intent(getActivity(),ViewMeetingActivity.class);
 		viewMeeting.putExtra(Keys.Meeting.PARCEL, new MeetingParcel(meeting));
 		startActivityForResult(viewMeeting, ViewMeetingActivity.REQUEST_CODE);
 	}
 
 	private void setupSwipeList() {
 		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
 			@Override
-			public void onItemClick(AdapterView<?> parentAdapter, View v,
-					int position, long id) {
+			public void onItemClick(AdapterView<?> parentAdapter, View v, int position, long id) {
 				Meeting clicked = meetingAdpt.getItem(position);
 				loadMeeting(clicked);
 			}
 		});
 
-		mListView
-				.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
-					@Override
-					public void onCreateContextMenu(ContextMenu menu, View v,
-							ContextMenuInfo menuInfo) {
-						AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) menuInfo;
+		mListView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
+			@Override
+			public void onCreateContextMenu(ContextMenu menu, View v,ContextMenuInfo menuInfo) {
+				AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) menuInfo;
 
-						Meeting longClicked = meetingAdpt
-								.getItem(aInfo.position);
+				Meeting longClicked = meetingAdpt.getItem(aInfo.position);
 
-						menu.setHeaderTitle("Options for "
-								+ longClicked.getTitle());
-						menu.add(
-								MainActivity.DrawerLabel.MEETINGS.getPosition(),
-								aInfo.position, 1, "Edit");
-						menu.add(
-								MainActivity.DrawerLabel.MEETINGS.getPosition(),
-								aInfo.position, 2, "Delete");
-					}
-				});
+				menu.setHeaderTitle("Options for "+ longClicked.getTitle());
+				menu.add(MainActivity.DrawerLabel.MEETINGS.getPosition(),aInfo.position, 1, "Edit");
+				menu.add(MainActivity.DrawerLabel.MEETINGS.getPosition(),aInfo.position, 2, "Delete");
+			}
+		});
 		mListView.setRequireTouchBeforeDismiss(false);
 		mListView.setUndoHideDelay(5000);
 		mListView.setDismissCallback(new EnhancedListView.OnDismissCallback() {
 			@Override
-			public EnhancedListView.Undoable onDismiss(
-					EnhancedListView listView, final int position) {
+			public EnhancedListView.Undoable onDismiss(EnhancedListView listView, final int position) {
 
 				final Meeting item = meetingAdpt.getItem(position);
 				meetingAdpt.remove(item);
@@ -225,12 +209,11 @@ public class MeetingsFragment extends Fragment implements
 		int position = item.getItemId();
 		boolean handled = false;
 		item.getMenuInfo();
-		if (item.getGroupId() == MainActivity.DrawerLabel.MEETINGS
-				.getPosition()) {
+		if (item.getGroupId() == MainActivity.DrawerLabel.MEETINGS.getPosition()) {
 			switch (item.getOrder()) {
 			case 1: // Edit
-				Toast.makeText(getActivity(), item.getTitle(),
-						Toast.LENGTH_SHORT).show();
+				editMeeting(meetingAdpt.getItem(position),position);
+//				Toast.makeText(getActivity(), item.getTitle(),Toast.LENGTH_SHORT).show();
 				handled = true;
 				break;
 			case 2: // Delete
@@ -295,8 +278,7 @@ public class MeetingsFragment extends Fragment implements
 	}
 
 	public void editMeeting(Meeting editMe, int position) {
-		Intent editMeeting = new Intent(getActivity(),
-				EditMeetingActivity.class);
+		Intent editMeeting = new Intent(getActivity(),EditMeetingActivity.class);
 		if (null != editMe) {
 			editMeeting.putExtra(Keys.Meeting.PARCEL, new MeetingParcel(editMe));
 		}

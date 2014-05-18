@@ -9,11 +9,8 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 
 public class AlertDialogUtil {
-	public static void displayDialog(Context context, String title,
-			String message, String buttonText,
-			DialogInterface.OnClickListener positiveListener) {
-		new AlertDialog.Builder(context).setTitle(title).setMessage(message)
-				.setPositiveButton(buttonText, positiveListener).show();
+	public static void displayDialog(Context context, String title,String message, String buttonText,DialogInterface.OnClickListener positiveListener) {
+		new AlertDialog.Builder(context).setTitle(title).setMessage(message).setPositiveButton(buttonText, positiveListener).show();
 	}
 
 	public static void deleteDialog(Context context, CharSequence objectName,DialogInterface.OnClickListener positiveListener) {

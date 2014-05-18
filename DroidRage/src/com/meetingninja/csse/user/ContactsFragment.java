@@ -23,7 +23,9 @@ import objects.Contact;
 import objects.SerializableUser;
 import objects.User;
 import objects.parcelable.UserParcel;
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -71,6 +73,7 @@ public class ContactsFragment extends Fragment implements TokenListener {
 	private List<Contact> tempDeletedContacts = new ArrayList<Contact>();
 	private Dialog dlg;
 	EditText input;
+	private Context activity;
 
 	public ContactsFragment() {
 		// Required empty public constructor
@@ -81,7 +84,7 @@ public class ContactsFragment extends Fragment implements TokenListener {
 		// Inflate the layout for this fragment
 		View v = inflater.inflate(R.layout.fragment_userlist, container, false);
 
-		dbHelper = new SQLiteUserAdapter(getActivity());
+		dbHelper = new SQLiteUserAdapter(activity);
 
 		setUpAutoCompelete(v);
 		Bundle args = getArguments();
@@ -130,11 +133,12 @@ public class ContactsFragment extends Fragment implements TokenListener {
 	}
 
 	public void addContactsOptionLoaded() {
-		dlg = new Dialog(getActivity());
+			dlg = new Dialog(activity);
+		
 		dlg.setTitle("Search by name or email:");
-		View autocompleteView = getActivity().getLayoutInflater().inflate(R.layout.fragment_autocomplete, null);
+		View autocompleteView = ((Activity) activity).getLayoutInflater().inflate(R.layout.fragment_autocomplete, null);
 		final ContactTokenTextView input1 = (ContactTokenTextView) autocompleteView.findViewById(R.id.my_autocomplete);
-		autoAdapter = new AutoCompleteAdapter(getActivity(), allUsers);
+		autoAdapter = new AutoCompleteAdapter(activity, allUsers);
 		input1.setAdapter(autoAdapter);
 		input1.setTokenListener(this);
 		dlg.setContentView(autocompleteView);
@@ -149,7 +153,7 @@ public class ContactsFragment extends Fragment implements TokenListener {
 		} else if (arg0 instanceof User) {
 			added = new SerializableUser((User) arg0);
 		}
-
+		
 		if (added != null) {
 			addedUser = added;
 			dlg.dismiss();
@@ -162,19 +166,29 @@ public class ContactsFragment extends Fragment implements TokenListener {
 					contains = true;
 				}
 			}
-			if (contains) {
-				AlertDialogUtil.displayDialog(getActivity(),"Unable to add contact","This user is already added as a contact", "OK", null);
-				addedUser = null;
-			} else if(added.getID().equals(SessionManager.getInstance().getUserID())){
-				AlertDialogUtil.displayDialog(getActivity(),"Unable to add contact","You cannot add yourself as a contact", "OK", null);
-				addedUser = null;
-			}else{
-				addContact(addedUser);
-				addedUser = null;
-			}
+			addUserErrorCheck(added,contains);				
+		}
+	}
+	
+	protected void addUserErrorCheck(SerializableUser added,Boolean bool){
+		if(bool){
+			AlertDialogUtil.displayDialog(activity,"Unable to add contact","This user is already added as a contact", "OK", null);
+			addedUser = null;
+		} else if(added.getID().equals(SessionManager.getInstance().getUserID())){
+			AlertDialogUtil.displayDialog(activity,"Unable to add contact","You cannot add yourself as a contact", "OK", null);
+			addedUser = null;
+		}else{
+			addContact(addedUser);
+			addedUser = null;
 		}
 	}
 
+	@Override
+	public void onAttach(android.app.Activity activity){
+		super.onAttach(activity);
+		this.activity = activity;
+	};
+	
 	@Override
 	public void onTokenRemoved(Object arg0) {
 		SerializableUser removed = null;
@@ -225,7 +239,7 @@ public class ContactsFragment extends Fragment implements TokenListener {
 			public void processFinish(Boolean result) {
 				refresh();
 				if (result) {
-					NinjaToastUtil.show(getActivity(), item.getContact().getDisplayName() + " was removed as a contact");
+					NinjaToastUtil.show(activity, item.getContact().getDisplayName() + " was removed as a contact");
 				}
 //				allUsers = new ArrayList<User>(result);
 //				addContactsOptionLoaded();
@@ -301,7 +315,7 @@ public class ContactsFragment extends Fragment implements TokenListener {
 	}
 
 	private void setUpAutoCompelete(View v) {
-		mContactAdapter = new ContactArrayAdapter(getActivity(),R.layout.list_item_user, contacts);
+		mContactAdapter = new ContactArrayAdapter(activity,R.layout.list_item_user, contacts);
 
 		l = (EnhancedListView) v.findViewById(R.id.contacts_list);
 		l.setAdapter(mContactAdapter);

@@ -20,9 +20,7 @@ import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.database.volley.UserVolleyAdapter;
 import com.meetingninja.csse.extras.AlertDialogUtil;
-import com.meetingninja.csse.extras.NinjaToastUtil;
 import com.meetingninja.csse.group.tasks.AsyncGroupDeleteTask;
-import com.meetingninja.csse.group.tasks.GroupDeleteTask;
 import com.meetingninja.csse.group.tasks.GroupUpdaterTask;
 import com.meetingninja.csse.user.ProfileActivity;
 import com.meetingninja.csse.user.adapters.UserArrayAdapter;
@@ -106,17 +104,14 @@ public class ViewGroupActivity extends Activity {
 	}
 
 	private void delete(Group group) {
-		new AsyncGroupDeleteTask(){
+		new AsyncGroupDeleteTask(new AsyncResponse<Boolean>() {
+
 			@Override
-			protected void onPostExecute(Boolean success) {
-				super.onPostExecute(success);
-				if(success){
-					setResult(RESULT_OK);
-					finish();
-				}
+			public void processFinish(Boolean result) {
+				setResult(RESULT_OK);
+				finish();				
 			}
-		}.execute(group.getID());
-		
+		}).execute(group.getID()); 	
 	}
 
 	@Override

@@ -177,15 +177,6 @@ public class EditGroupActivity extends Activity implements TokenListener {
 		});
 	}
 
-//	private void fetchContacts() {
-//		new GetContactsTask(new AsyncResponse<List<Contact>>() {
-//			@Override
-//			public void processFinish(List<Contact> result) {
-//
-//			}
-//		}).execute(SessionManager.getUserID());
-//	}
-
 	private void enableSwiping() {
 		mListView.enableSwipeToDismiss();
 		mListView.setSwipingLayout(R.id.list_group_item_frame_1);

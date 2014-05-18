@@ -96,10 +96,7 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 		} else {
 			refresh();
 		}
-
-
 		return v;
-
 	}
 
 	public void createNote() {
@@ -215,7 +212,6 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 			Toast.makeText(getActivity(),"Merging " + selected.getTitle() + " into "+ mergeNote.getTitle(), Toast.LENGTH_LONG).show();
 
 			mergeNote.mergeWith(selected);
-//			delete(selected);
 			updateNote(mergeNote);
 			mergeNote = null;
 			refresh();
@@ -235,13 +231,13 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == EditNoteActivity.REQUEST_CODE) { // EditNoteActivity
-			if (resultCode == Activity.RESULT_OK) {
-				if (data != null) {
-//					Note editedNote = new ParcelDataFactory(data.getExtras()).getNote();
-				}
-			} // end EditNoteActivity
-		}
+//		if (requestCode == EditNoteActivity.REQUEST_CODE) { // EditNoteActivity
+//			if (resultCode == Activity.RESULT_OK) {
+//				if (data != null) {
+////					Note editedNote = new ParcelDataFactory(data.getExtras()).getNote();
+//				}
+//			} // end EditNoteActivity
+//		}
 		refresh();
 	}
 

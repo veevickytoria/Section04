@@ -111,11 +111,6 @@ public class EditNoteActivity extends Activity implements AsyncResponse<String> 
 		return true;
 	}
 
-	@Override
-	public void onBackPressed() {
-		save();
-	}
-
 	public void save() {
 		String title = mNoteTitle.getText().toString().trim();
 		String content = mTextEditor.getText().toString().trim();

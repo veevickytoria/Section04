@@ -7,14 +7,15 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.meetingninja.csse.ApplicationController;
+import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.GroupDatabaseAdapter;
 import com.meetingninja.csse.extras.NinjaToastUtil;
 
 public class AsyncGroupDeleteTask extends AsyncTask<String, Void, Boolean> {
-	// private AsyncResponse<Group> delegate;
+	 private AsyncResponse<Boolean> delegate;
 
-	public AsyncGroupDeleteTask() {
-		// this.delegate = delegate;
+	public AsyncGroupDeleteTask(AsyncResponse<Boolean> delegate) {
+		 this.delegate = delegate;
 	}
 
 	@Override
@@ -31,10 +32,10 @@ public class AsyncGroupDeleteTask extends AsyncTask<String, Void, Boolean> {
 
 	@Override
 	protected void onPostExecute(Boolean result) {
-		Context app = ApplicationController.getInstance()
-				.getApplicationContext();
+		Context app = ApplicationController.getInstance().getApplicationContext();
 		if (result) {
 			NinjaToastUtil.show(app, "Group deleted");
+			delegate.processFinish(result);
 		}
 	}
 }

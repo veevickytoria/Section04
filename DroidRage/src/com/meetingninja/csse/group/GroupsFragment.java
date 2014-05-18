@@ -4,31 +4,42 @@ import java.util.ArrayList;
 import java.util.List;
 
 import objects.Group;
+import objects.Meeting;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.View.OnCreateContextMenuListener;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 
+import com.meetingninja.csse.MainActivity;
 import com.meetingninja.csse.R;
 import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.extras.ConnectivityUtils;
+import com.meetingninja.csse.group.tasks.AsyncGroupDeleteTask;
 import com.meetingninja.csse.group.tasks.GroupCreateTask;
-import com.meetingninja.csse.group.tasks.GroupDeleteTask;
 import com.meetingninja.csse.group.tasks.GroupFetcherTask;
+import com.meetingninja.csse.group.tasks.GroupUpdaterTask;
+import com.meetingninja.csse.meetings.MeetingsFragment;
 
 public class GroupsFragment extends Fragment implements AsyncResponse<List<Group>> {
+	private static final String TAG = GroupsFragment.class.getSimpleName();
 	private ListView groupsList;
-	private static List<Group> groups = new ArrayList<Group>();;
+	private static List<Group> groups = new ArrayList<Group>();
 	private GroupItemAdapter groupAdpt;
 	private GroupFetcherTask fetcher;
 
@@ -70,7 +81,53 @@ public class GroupsFragment extends Fragment implements AsyncResponse<List<Group
 			}
 		});
 		registerForContextMenu(groupsList);
+
+		groupsList.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
+			@Override
+			public void onCreateContextMenu(ContextMenu menu, View v,ContextMenuInfo menuInfo) {
+				AdapterContextMenuInfo aInfo = (AdapterContextMenuInfo) menuInfo;
+
+				Group longClicked = groupAdpt.getItem(aInfo.position);
+
+				menu.setHeaderTitle("Options for "+ longClicked.getTitle());
+				menu.add(MainActivity.DrawerLabel.GROUPS.getPosition(),aInfo.position, 1, "Edit");
+				menu.add(MainActivity.DrawerLabel.GROUPS.getPosition(),aInfo.position, 2, "Delete");
+			}
+		});
 		return v;
+	}
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		int position = item.getItemId();
+		boolean handled = false;
+		item.getMenuInfo();
+		if (item.getGroupId() == MainActivity.DrawerLabel.GROUPS.getPosition()) {
+			switch (item.getOrder()) {
+			case 1: // Edit
+				//				Toast.makeText(getActivity(), item.getTitle()+"yoyoma mi shizzal",Toast.LENGTH_SHORT).show();
+				editGroup(groupAdpt.getItem(position));
+				handled = true;
+				break;
+			case 2: // Delete
+				Group group = groupAdpt.getItem(position);
+				deleteGroup(group.getID());
+				handled = true;
+				break;
+			default:
+				Log.wtf(TAG, "Invalid context menu option selected");
+				break;
+			}
+		} else {
+			Log.wtf(TAG, "What happened here?");
+		}
+
+		return handled;
+	}
+
+	private void editGroup(Group group){
+		Intent i = new Intent(getActivity(), EditGroupActivity.class);
+		i.putExtra(Keys.Group.PARCEL, group);
+		startActivityForResult(i, 0);
 	}
 
 	@Override
@@ -97,7 +154,7 @@ public class GroupsFragment extends Fragment implements AsyncResponse<List<Group
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		
+
 		if (resultCode == Activity.RESULT_OK) {
 			if (requestCode == EditGroupActivity.REQUEST_CODE) {
 				Group g = data.getParcelableExtra(Keys.Group.PARCEL);
@@ -106,6 +163,19 @@ public class GroupsFragment extends Fragment implements AsyncResponse<List<Group
 				creator.createGroup(g);
 			} else if (requestCode == ViewGroupActivity.REQUEST_CODE) {
 				fetchGroups();
+			} else if(requestCode == 0){
+				Group group = data.getParcelableExtra(Keys.Group.PARCEL);
+				GroupUpdaterTask updater = new GroupUpdaterTask();
+				updater.updateGroup(group);
+				if(!groups.contains(group)){
+					for(int i=0;i<groups.size();i++){
+						if(groups.get(i).getID().equals(group.getID())){
+							groups.set(i, group);
+							break;
+						}
+					}
+					fetchGroups();
+				}
 			}
 			groupAdpt.notifyDataSetChanged();
 			return;
@@ -128,8 +198,12 @@ public class GroupsFragment extends Fragment implements AsyncResponse<List<Group
 	}
 
 	public void deleteGroup(String groupID) {
-		GroupDeleteTask deltask = new GroupDeleteTask();
-		deltask.deleteGroup(groupID);
+		new AsyncGroupDeleteTask(new AsyncResponse<Boolean>() {
+			@Override
+			public void processFinish(Boolean result) {
+				fetchGroups();
+			}
+		}).execute(groupID); 
 	}
 
 	@Override

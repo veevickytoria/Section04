@@ -122,14 +122,8 @@ public class ViewNoteActivity extends Activity {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == RESULT_OK) {
-//			switch (resultCode) {
-//			case EditNoteActivity.REQUEST_CODE:
-				displayedNote = new ParcelDataFactory(data.getExtras()).getNote();
-				refresh();
-//				break;
-//			default:
-//				break;
-//			}
+			displayedNote = new ParcelDataFactory(data.getExtras()).getNote();
+			refresh();
 		}
 	}
 
