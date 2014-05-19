@@ -80,7 +80,8 @@ public class ContactsFragment extends Fragment implements TokenListener {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		View v = inflater.inflate(R.layout.fragment_userlist, container, false);
 
@@ -89,10 +90,12 @@ public class ContactsFragment extends Fragment implements TokenListener {
 		setUpAutoCompelete(v);
 		Bundle args = getArguments();
 		if (args != null && args.containsKey(Keys.Project.MEMBERS)) {
-			List<UserParcel> members = args.getParcelableArrayList(Keys.Project.MEMBERS);
+			List<UserParcel> members = args
+					.getParcelableArrayList(Keys.Project.MEMBERS);
 			for (UserParcel memberParcel : members) {
 				contacts.add(new Contact(memberParcel.getData(), ""));
 			}
+			Collections.sort(contacts);
 			mContactAdapter.notifyDataSetChanged();
 			mContactAdapter.getFilter().filter("");
 
@@ -133,11 +136,13 @@ public class ContactsFragment extends Fragment implements TokenListener {
 	}
 
 	public void addContactsOptionLoaded() {
-			dlg = new Dialog(activity);
-		
+		dlg = new Dialog(activity);
+
 		dlg.setTitle("Search by name or email:");
-		View autocompleteView = ((Activity) activity).getLayoutInflater().inflate(R.layout.fragment_autocomplete, null);
-		final ContactTokenTextView input1 = (ContactTokenTextView) autocompleteView.findViewById(R.id.my_autocomplete);
+		View autocompleteView = ((Activity) activity).getLayoutInflater()
+				.inflate(R.layout.fragment_autocomplete, null);
+		final ContactTokenTextView input1 = (ContactTokenTextView) autocompleteView
+				.findViewById(R.id.my_autocomplete);
 		autoAdapter = new AutoCompleteAdapter(activity, allUsers);
 		input1.setAdapter(autoAdapter);
 		input1.setTokenListener(this);
@@ -153,7 +158,7 @@ public class ContactsFragment extends Fragment implements TokenListener {
 		} else if (arg0 instanceof User) {
 			added = new SerializableUser((User) arg0);
 		}
-		
+
 		if (added != null) {
 			addedUser = added;
 			dlg.dismiss();
@@ -166,29 +171,32 @@ public class ContactsFragment extends Fragment implements TokenListener {
 					contains = true;
 				}
 			}
-			addUserErrorCheck(added,contains);				
+			addUserErrorCheck(added, contains);
 		}
 	}
-	
-	protected void addUserErrorCheck(SerializableUser added,Boolean bool){
-		if(bool){
-			AlertDialogUtil.displayDialog(activity,"Unable to add contact","This user is already added as a contact", "OK", null);
+
+	protected void addUserErrorCheck(SerializableUser added, Boolean bool) {
+		if (bool) {
+			AlertDialogUtil.displayDialog(activity, "Unable to add contact",
+					"This user is already added as a contact", "OK", null);
 			addedUser = null;
-		} else if(added.getID().equals(SessionManager.getInstance().getUserID())){
-			AlertDialogUtil.displayDialog(activity,"Unable to add contact","You cannot add yourself as a contact", "OK", null);
+		} else if (added.getID().equals(
+				SessionManager.getInstance().getUserID())) {
+			AlertDialogUtil.displayDialog(activity, "Unable to add contact",
+					"You cannot add yourself as a contact", "OK", null);
 			addedUser = null;
-		}else{
+		} else {
 			addContact(addedUser);
 			addedUser = null;
 		}
 	}
 
 	@Override
-	public void onAttach(android.app.Activity activity){
+	public void onAttach(android.app.Activity activity) {
 		super.onAttach(activity);
 		this.activity = activity;
 	};
-	
+
 	@Override
 	public void onTokenRemoved(Object arg0) {
 		SerializableUser removed = null;
@@ -214,7 +222,12 @@ public class ContactsFragment extends Fragment implements TokenListener {
 				// contact
 				// contacts.remove(tempDeletedContacts.get(i));
 				for (int j = 0; j < contacts.size(); j++) {
-					if (contacts.get(j).getContact().getID().equals(tempDeletedContacts.get(i).getContact().getID())) {
+					if (contacts
+							.get(j)
+							.getContact()
+							.getID()
+							.equals(tempDeletedContacts.get(i).getContact()
+									.getID())) {
 						contacts.remove(j);
 						break;
 					}
@@ -232,22 +245,22 @@ public class ContactsFragment extends Fragment implements TokenListener {
 	}
 
 	protected void deleteContact(final Contact item) {
-//		DeleteContactTask deleter = new DeleteContactTask(this);
-//		deleter.deleteContact(item.getRelationID());
-		new DeleteContactTask(new AsyncResponse<Boolean>(){
+		// DeleteContactTask deleter = new DeleteContactTask(this);
+		// deleter.deleteContact(item.getRelationID());
+		new DeleteContactTask(new AsyncResponse<Boolean>() {
 			@Override
 			public void processFinish(Boolean result) {
 				refresh();
 				if (result) {
-					NinjaToastUtil.show(activity, item.getContact().getDisplayName() + " was removed as a contact");
+					NinjaToastUtil.show(activity, item.getContact()
+							.getDisplayName() + " was removed as a contact");
 				}
-//				allUsers = new ArrayList<User>(result);
-//				addContactsOptionLoaded();
+				// allUsers = new ArrayList<User>(result);
+				// addContactsOptionLoaded();
 			}
-			
+
 		}).execute(item.getRelationID());
-		
-		
+
 		mContactAdapter.remove(item);
 		mContactAdapter.notifyDataSetChanged();
 	}
@@ -267,7 +280,8 @@ public class ContactsFragment extends Fragment implements TokenListener {
 	private void setUpListOnDismiss(View v) {
 		l.setDismissCallback(new de.timroes.android.listview.EnhancedListView.OnDismissCallback() {
 			@Override
-			public EnhancedListView.Undoable onDismiss(EnhancedListView listView, final int position) {
+			public EnhancedListView.Undoable onDismiss(
+					EnhancedListView listView, final int position) {
 
 				final Contact item = mContactAdapter.getItem(position);
 				tempDeletedContacts.add(item);
@@ -301,10 +315,13 @@ public class ContactsFragment extends Fragment implements TokenListener {
 		l.setUndoHideDelay(5000);
 		l.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View v, int position,long id) {
+			public void onItemClick(AdapterView<?> arg0, View v, int position,
+					long id) {
 				User clicked = mContactAdapter.getItem(position).getContact();
-				Intent profileIntent = new Intent(v.getContext(),ProfileActivity.class);
-				profileIntent.putExtra(Keys.User.PARCEL,new UserParcel(clicked));
+				Intent profileIntent = new Intent(v.getContext(),
+						ProfileActivity.class);
+				profileIntent.putExtra(Keys.User.PARCEL,
+						new UserParcel(clicked));
 				startActivity(profileIntent);
 			}
 		});
@@ -315,7 +332,8 @@ public class ContactsFragment extends Fragment implements TokenListener {
 	}
 
 	private void setUpAutoCompelete(View v) {
-		mContactAdapter = new ContactArrayAdapter(activity,R.layout.list_item_user, contacts);
+		mContactAdapter = new ContactArrayAdapter(activity,
+				R.layout.list_item_user, contacts);
 
 		l = (EnhancedListView) v.findViewById(R.id.contacts_list);
 		l.setAdapter(mContactAdapter);
@@ -329,10 +347,13 @@ public class ContactsFragment extends Fragment implements TokenListener {
 			}
 
 			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,int after) {
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
 			}
+
 			@Override
-			public void onTextChanged(CharSequence s, int start, int before,int count) {
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
 			}
 		});
 		setUpListOnDismiss(v);
@@ -354,11 +375,17 @@ public class ContactsFragment extends Fragment implements TokenListener {
 		public void processFinish(List<Contact> result) {
 			contacts.clear();
 			contacts.addAll(result);
+			Collections.sort(contacts);
 			for (int i = 0; i < tempDeletedContacts.size(); i++) {
 				// why doesn't this work?
 				// contacts.remove(tempDeletedContacts.get(i));
 				for (int j = 0; j < contacts.size(); j++) {
-					if (contacts.get(j).getContact().getID().equals(tempDeletedContacts.get(i).getContact().getID())) {
+					if (contacts
+							.get(j)
+							.getContact()
+							.getID()
+							.equals(tempDeletedContacts.get(i).getContact()
+									.getID())) {
 						contacts.remove(j);
 						break;
 					}
@@ -366,7 +393,7 @@ public class ContactsFragment extends Fragment implements TokenListener {
 			}
 			mContactAdapter.notifyDataSetChanged();
 			input.setText("");
-//			mContactAdapter.getFilter().filter("");
+			// mContactAdapter.getFilter().filter("");
 		}
 	}
 
