@@ -18,7 +18,7 @@ public class GroupParcel extends DataParcel<Group> {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(data.getGroupID());
-		dest.writeString(data.getGroupTitle());
+		dest.writeString(data.getTitle());
 		dest.writeList(data.getMembers());
 
 	}

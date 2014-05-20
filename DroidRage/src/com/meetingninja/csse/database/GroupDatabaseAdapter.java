@@ -79,7 +79,7 @@ public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
 
 		// Build JSON Object
 		jgen.writeStartObject();
-		jgen.writeStringField(Keys.Group.TITLE, g.getGroupTitle());
+		jgen.writeStringField(Keys.Group.TITLE, g.getTitle());
 		jgen.writeArrayFieldStart(Keys.Group.MEMBERS);
 		for (User member : g.getMembers()) {
 			jgen.writeStartObject();
@@ -127,7 +127,7 @@ public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
 		jgen.writeStartObject();
 		jgen.writeStringField(Keys.Group.ID, group.getGroupID());
 		jgen.writeStringField("field", Keys.Group.TITLE);
-		jgen.writeStringField("value", group.getGroupTitle());
+		jgen.writeStringField("value", group.getTitle());
 		jgen.writeEndObject();
 		jgen.close();
 		String payloadTitle = json.toString("UTF8");
@@ -169,7 +169,7 @@ public class GroupDatabaseAdapter extends BaseDatabaseAdapter {
 		// Group g = new Group();
 		String groupID = groupNode.get(Keys.Group.ID).asText();
 		g.setID(groupID);
-		g.setGroupTitle(groupNode.get(Keys.Group.TITLE).asText());
+		g.setTitle(groupNode.get(Keys.Group.TITLE).asText());
 		JsonNode members = groupNode.get(Keys.Group.MEMBERS);
 		if (members != null && members.isArray()) {
 			for (final JsonNode memberNode : members) {

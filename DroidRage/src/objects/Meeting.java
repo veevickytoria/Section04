@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import objects.parcelable.UserParcel;
-
 import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -22,6 +21,7 @@ import com.meetingninja.csse.extras.NinjaTextUtils;
 		"endDatetime", "description", "attendance" })
 public class Meeting extends Event {
 	private String meetingID;
+	private String agendaID;
 	protected String location;
 
 	private List<User> attendance = new ArrayList<User>();
@@ -41,7 +41,7 @@ public class Meeting extends Event {
 		setDescription(copyMeeting.getDescription());
 		setAttendance(copyMeeting.getAttendance());
 	}
-
+	
 	public Meeting(Cursor crsr) {
 		// get columns
 		int idxID = crsr.getColumnIndex(Keys._ID);
@@ -59,6 +59,7 @@ public class Meeting extends Event {
 		this.description = crsr.getString(idxDESCRIPTION);
 	}
 
+
 	@Override
 	public String getID() {
 		return this.meetingID;
@@ -71,8 +72,15 @@ public class Meeting extends Event {
 	}
 
 	public boolean hasAgenda() {
-		// TODO : Chcek for an agenda
-		return false;
+		return !NinjaTextUtils.isEmpty(agendaID);
+	}
+	
+	public void setAgendaID(String agId) {
+		this.agendaID = agId;
+	}
+	
+	public int getAgendaID() {
+		return Integer.parseInt(agendaID);
 	}
 
 	public List<User> getAttendance() {
@@ -108,6 +116,12 @@ public class Meeting extends Event {
 
 	}
 
+	@Override
+	public int compareTo(Event another) {
+		 //reversed
+		return -1 * super.compareTo(another);
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();

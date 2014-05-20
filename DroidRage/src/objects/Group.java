@@ -11,7 +11,7 @@ import android.os.Parcelable;
 
 import com.meetingninja.csse.database.Keys;
 
-public class Group extends Event implements Parcelable {
+public class Group implements Parcelable, Comparable<Group> {
 
 	private String groupID;
 	private String groupTitle;
@@ -27,29 +27,27 @@ public class Group extends Event implements Parcelable {
 
 	public Group(String groupID, String title) {
 		setID(groupID);
-		setGroupTitle(title);
+		setTitle(title);
 	}
 
 	public String getGroupID() {
 		return groupID;
 	}
 
-	@Override
 	public void setID(String id) {
 		int testInt = Integer.valueOf(id);
 		setID(testInt);
 	}
 
-	@Override
 	public void setID(int id) {
 		this.groupID = Integer.toString(id);
 	}
 
-	public String getGroupTitle() {
+	public String getTitle() {
 		return groupTitle;
 	}
 
-	public void setGroupTitle(String groupTitle) {
+	public void setTitle(String groupTitle) {
 		this.groupTitle = groupTitle;
 	}
 
@@ -74,7 +72,7 @@ public class Group extends Event implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(getGroupID());
-		dest.writeString(getGroupTitle());
+		dest.writeString(getTitle());
 //		dest.writeList(getMembers());
 		ArrayList<UserParcel> userList = new ArrayList<UserParcel>();
 		for (User user:getMembers()){
@@ -110,12 +108,16 @@ public class Group extends Event implements Parcelable {
 
 	};
 
-	@Override
 	public String getID() {
 		return groupID;
 	}
 
 	public void addMembers(ArrayList<User> members) {
 		this.members.addAll(members);
+	}
+
+	@Override
+	public int compareTo(Group another) {
+		return this.getTitle().compareToIgnoreCase(another.getTitle());
 	}
 }

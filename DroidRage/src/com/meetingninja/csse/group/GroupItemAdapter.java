@@ -56,7 +56,7 @@ public class GroupItemAdapter extends ArrayAdapter<Group> {
 		// Setup from the meeting_item XML file
 		Group group = groups.get(position);
 
-		viewHolder.title.setText(group.getGroupTitle());
+		viewHolder.title.setText(group.getTitle());
 		viewHolder.numMembers.setText("Number of members:  "
 				+ group.getMembers().size());
 		return rowView;

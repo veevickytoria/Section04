@@ -109,7 +109,7 @@ public class EditGroupActivity extends Activity implements TokenListener {
 
 	private void setupTitle() {
 		titleText = (EditText) findViewById(R.id.group_edit_title);
-		titleText.setText(displayedGroup.getGroupTitle());
+		titleText.setText(displayedGroup.getTitle());
 		if(!titleText.getText().toString().trim().isEmpty()){
 			titleText.setSelection(titleText.getText().length());
 		}
@@ -253,7 +253,7 @@ public class EditGroupActivity extends Activity implements TokenListener {
 			return;
 		}
 
-		displayedGroup.setGroupTitle(title);
+		displayedGroup.setTitle(title);
 		Intent i = new Intent();
 		i.putExtra(Keys.Group.PARCEL, displayedGroup);
 		setResult(RESULT_OK, i);

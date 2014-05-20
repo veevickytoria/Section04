@@ -129,7 +129,7 @@ public class ViewGroupActivity extends Activity {
 	}
 
 	private void showGroup(Group g) {
-		titleText.setText(g.getGroupTitle());
+		titleText.setText(g.getTitle());
 		mUserAdapter = new UserArrayAdapter(this, R.layout.list_item_user_reversed,g.getMembers());
 		mListView.setAdapter(mUserAdapter);
 	}

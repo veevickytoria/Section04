@@ -1,6 +1,8 @@
 package com.meetingninja.csse.group;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import objects.Group;
@@ -30,13 +32,14 @@ import com.meetingninja.csse.SessionManager;
 import com.meetingninja.csse.database.AsyncResponse;
 import com.meetingninja.csse.database.Keys;
 import com.meetingninja.csse.extras.ConnectivityUtils;
+import com.meetingninja.csse.extras.IRefreshable;
 import com.meetingninja.csse.group.tasks.AsyncGroupDeleteTask;
 import com.meetingninja.csse.group.tasks.GroupCreateTask;
 import com.meetingninja.csse.group.tasks.GroupFetcherTask;
 import com.meetingninja.csse.group.tasks.GroupUpdaterTask;
 import com.meetingninja.csse.meetings.MeetingsFragment;
 
-public class GroupsFragment extends Fragment implements AsyncResponse<List<Group>> {
+public class GroupsFragment extends Fragment implements AsyncResponse<List<Group>>, IRefreshable {
 	private static final String TAG = GroupsFragment.class.getSimpleName();
 	private ListView groupsList;
 	private static List<Group> groups = new ArrayList<Group>();
@@ -104,7 +107,6 @@ public class GroupsFragment extends Fragment implements AsyncResponse<List<Group
 		if (item.getGroupId() == MainActivity.DrawerLabel.GROUPS.getPosition()) {
 			switch (item.getOrder()) {
 			case 1: // Edit
-				//				Toast.makeText(getActivity(), item.getTitle()+"yoyoma mi shizzal",Toast.LENGTH_SHORT).show();
 				editGroup(groupAdpt.getItem(position));
 				handled = true;
 				break;
@@ -128,6 +130,12 @@ public class GroupsFragment extends Fragment implements AsyncResponse<List<Group
 		Intent i = new Intent(getActivity(), EditGroupActivity.class);
 		i.putExtra(Keys.Group.PARCEL, group);
 		startActivityForResult(i, 0);
+	}
+
+	private void viewGroup(Group group) {
+		Intent i = new Intent(getActivity(), ViewGroupActivity.class);
+		i.putExtra(Keys.Group.PARCEL, group);
+		startActivityForResult(i, ViewGroupActivity.REQUEST_CODE);
 	}
 
 	@Override
@@ -158,29 +166,29 @@ public class GroupsFragment extends Fragment implements AsyncResponse<List<Group
 		if (resultCode == Activity.RESULT_OK) {
 			if (requestCode == EditGroupActivity.REQUEST_CODE) {
 				Group g = data.getParcelableExtra(Keys.Group.PARCEL);
-				groups.add(g);
+//				groups.add(g);
 				GroupCreateTask creator = new GroupCreateTask(this);
 				creator.createGroup(g);
 			} else if (requestCode == ViewGroupActivity.REQUEST_CODE) {
-				fetchGroups();
+//				fetchGroups();
 			} else if(requestCode == 0){
 				Group group = data.getParcelableExtra(Keys.Group.PARCEL);
 				GroupUpdaterTask updater = new GroupUpdaterTask();
 				updater.updateGroup(group);
-				if(!groups.contains(group)){
-					for(int i=0;i<groups.size();i++){
-						if(groups.get(i).getID().equals(group.getID())){
-							groups.set(i, group);
-							break;
-						}
-					}
-					fetchGroups();
-				}
+//				if(!groups.contains(group)){
+//					for(int i=0;i<groups.size();i++){
+//						if(groups.get(i).getID().equals(group.getID())){
+//							groups.set(i, group);
+//							break;
+//						}
+//					}
+//					fetchGroups();
+//				}
 			}
-			groupAdpt.notifyDataSetChanged();
+			fetchGroups();
+//			groupAdpt.notifyDataSetChanged();
 			return;
 		}
-		fetchGroups();
 	}
 
 	public void fetchGroups() {
@@ -191,19 +199,13 @@ public class GroupsFragment extends Fragment implements AsyncResponse<List<Group
 		}
 	}
 
-	private void viewGroup(Group group) {
-		Intent i = new Intent(getActivity(), ViewGroupActivity.class);
-		i.putExtra(Keys.Group.PARCEL, group);
-		startActivityForResult(i, ViewGroupActivity.REQUEST_CODE);
-	}
-
 	public void deleteGroup(String groupID) {
 		new AsyncGroupDeleteTask(new AsyncResponse<Boolean>() {
 			@Override
 			public void processFinish(Boolean result) {
 				fetchGroups();
 			}
-		}).execute(groupID); 
+		}).execute(groupID);
 	}
 
 	@Override
@@ -211,11 +213,17 @@ public class GroupsFragment extends Fragment implements AsyncResponse<List<Group
 		groups.clear();
 		groupAdpt.clear();
 		groups.addAll(result);
+		Collections.sort(groups);
 		groupAdpt.notifyDataSetChanged();
 	}
 
 	public void notifyAdapter() {
 		groupAdpt.notifyDataSetChanged();
+	}
+
+	@Override
+	public void refresh() {
+		processFinish(groups);
 	}
 
 }
