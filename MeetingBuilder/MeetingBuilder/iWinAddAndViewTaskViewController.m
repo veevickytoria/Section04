@@ -20,7 +20,6 @@
 @interface iWinAddAndViewTaskViewController ()
 @property (nonatomic) NSInteger taskID;
 @property (nonatomic) NSInteger userID;
-@property (strong, nonatomic) Task *task;
 @property (nonatomic) BOOL isEditing;
 @property (strong, nonatomic) iWinAddUsersViewController *userViewController;
 @property (nonatomic) NSDate *endDate;
@@ -123,18 +122,7 @@ NSString* const VIEW_TASK_TITLE = @"View/Modify Task";
     self.saveAndAddMoreButton.hidden = YES;
     
     
-    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:TASK_ENTITY inManagedObjectContext:self.context];
     
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:entityDesc];
-    
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"taskID = %d", self.taskID];
-    [request setPredicate:predicate];
-    
-    NSError *error;
-    NSArray *result = [self.context executeFetchRequest:request
-                                                  error:&error];
-    self.task = (Task*)[result objectAtIndex:0];
     
     NSString *url = [NSString stringWithFormat:TASK_URL, DATABASE_URL,self.taskID];
     url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
@@ -164,10 +152,10 @@ NSString* const VIEW_TASK_TITLE = @"View/Modify Task";
     }
 }
 
--(void) initAttendees
-{
-    [self.userList addObject:[self getContactForID:[self.task.assignedTo integerValue]]];
-}
+//-(void) initAttendees
+//{
+//    [self.userList addObject:[self getContactForID:[self.task.assignedTo integerValue]]];
+//}
 
 -(Contact *)getContactForID:(NSInteger)userID
 {
@@ -216,13 +204,30 @@ NSString* const VIEW_TASK_TITLE = @"View/Modify Task";
 
 -(void) initDateTimeLabels
 {
-    NSArray *endDateAndTime = [self.task.deadline componentsSeparatedByString:@" "];
-    NSString *enddate = [endDateAndTime objectAtIndex:0];
-    NSString *endtime = [NSString stringWithFormat:DATE_TIME_STRING_FORMAT, [endDateAndTime objectAtIndex:1], [endDateAndTime objectAtIndex:2]];
+    NSString *url = [NSString stringWithFormat:TASK_URL, DATABASE_URL,self.taskID];
+    url = [url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *deserializedDictionary = [self.backendUtility getRequestForUrl:url];
     
-    self.endDateLabel.text = enddate;
-    self.endTimeLabel.text = endtime;
-    self.endDate = [self.dateFormatter dateFromString:enddate];
+    if (!deserializedDictionary) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_MESSAGE message:TASK_NOT_FOUND_MESSAGE delegate:self cancelButtonTitle:OK_BUTTON otherButtonTitles: nil];
+        [alert show];
+    }
+    else
+    {
+        NSDate* endDateAndTime = [NSDate dateWithTimeIntervalSince1970:[[deserializedDictionary objectForKey:DEADLINE_KEY] doubleValue]];
+        
+        
+        NSString *enddate = [iWinScheduleViewMeetingViewController getStringDateFromDate:endDateAndTime];
+        NSString *endtime = [iWinScheduleViewMeetingViewController getStringTimeFromDate:endDateAndTime];
+
+//        NSArray *endDateAndTime = [self.task.deadline componentsSeparatedByString:@" "];
+//        NSString *enddate = [endDateAndTime objectAtIndex:0];
+//        NSString *endtime = [NSString stringWithFormat:DATE_TIME_STRING_FORMAT, [endDateAndTime objectAtIndex:1], [endDateAndTime objectAtIndex:2]];
+        
+        self.endDateLabel.text = enddate;
+        self.endTimeLabel.text = endtime;
+        self.endDate = [self.dateFormatter dateFromString:enddate];
+    }
 }
 
 -(void) setGestureRecognizers

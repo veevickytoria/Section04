@@ -116,24 +116,6 @@ NSString* const DELETE_TASK_MESSAGE = @"Are you sure you want to delete this tas
 
 - (void)setTaskInfo:(NSDictionary *)deserializedDictionary
 {
-    iWinAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    
-    NSManagedObjectContext *context = [appDelegate managedObjectContext];
-    
-    NSManagedObject *newTask = [NSEntityDescription insertNewObjectForEntityForName:TASK_ENTITY inManagedObjectContext:context];
-    NSError *error;
-    
-    [newTask setValue:[deserializedDictionary objectForKey:TASK_ID_KEY] forKey:TASK_ID_KEY];
-    [newTask setValue:[deserializedDictionary objectForKey:TITLE_KEY] forKey:TITLE_KEY];
-    [newTask setValue:[deserializedDictionary objectForKey:IS_COMPLETED_KEY] forKey:IS_COMPLETED_KEY];
-    [newTask setValue:[deserializedDictionary objectForKey:DESCRIPTION_KEY] forKey:@"desc"];
-    [newTask setValue:[deserializedDictionary objectForKey:DEADLINE_KEY] forKey:DEADLINE_KEY];
-    [newTask setValue:[deserializedDictionary objectForKey:DATE_CREATED_KEY] forKey:DATE_CREATED_KEY];
-    [newTask setValue:[deserializedDictionary objectForKey:DATE_ASSIGNED_KEY] forKey:DATE_ASSIGNED_KEY];
-    [newTask setValue:[NSNumber numberWithInt:self.userID] forKey:ASSIGNED_TO_KEY];
-    [newTask setValue:[deserializedDictionary objectForKey:ASSIGNED_FROM_KEY] forKey:ASSIGNED_FROM_KEY];
-    [newTask setValue:[deserializedDictionary objectForKey:CREATED_BY_KEY] forKey:CREATED_BY_KEY];
-    [context save:&error];
     
     [self.itemCompleted addObject:[deserializedDictionary objectForKey:IS_COMPLETED_KEY]];
 }
