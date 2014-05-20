@@ -178,11 +178,19 @@ NSString* const COMPANY_KEY = @"company";
     
     
     NSArray *keys = [NSArray arrayWithObjects:@"backendId", nil];
-    NSArray *objects = [NSArray arrayWithObjects:[NSNumber numberWithInt:userID], nil];
+    NSArray *objects = [NSArray arrayWithObjects:[NSString stringWithFormat:@"%ld", (long)userID], nil];
     NSDictionary *jsonDictionary = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
     [pUser setValuesForKeysWithDictionary:jsonDictionary];
     
-    [pUser signUpInBackground];
+    [pUser signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (!error) {
+            // Hooray! Let them use the app now.
+        } else {
+            NSString *errorString = [error userInfo][@"error"];
+                    [[[UIAlertView alloc] initWithTitle:@"Push Notification" message:[NSString stringWithFormat:@"Unable to Register User for notifications: %@ ", errorString] delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil] show];
+            // Show the errorString somewhere and let the user try again.
+        }
+    }];
 }
 
 -(NSArray*) getRememberMeInfo

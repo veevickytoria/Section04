@@ -174,7 +174,20 @@ int SOMETHING = 1;
 
 -(void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
-    [[[UIAlertView alloc] initWithTitle:@"Push Notification" message:[NSString stringWithFormat:@"Received Notification from backend %d", SOMETHING] delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil] show];
+    
+    [[[UIAlertView alloc] initWithTitle:@"Push Notification" message:[NSString stringWithFormat:@"Received Notification from backend %d", 3] delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil] show];
+    SOMETHING = 2;
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))handler
+{
+    //NSArray* keys = [userInfo allKeys];
+    //NSString* keyString = [keys componentsJoinedByString:@", "];
+    //NSString* keyValue = [userInfo objectForKey:@"aps"];
+    //NSDictionary *dictionary = [keyValue JSONValue];
+    //NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:[keyValue dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
+    //NSString* message = [dictionary objectForKey:@"alert"];
+    [[[UIAlertView alloc] initWithTitle:@"Push Notification" message:[NSString stringWithFormat:@"Received Notification from backend %d", 2] delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil] show];
     SOMETHING = 2;
 }
 
