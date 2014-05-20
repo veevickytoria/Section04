@@ -510,7 +510,7 @@ const int POP_OVER_HEIGHT = 250;
 -(NSString *) makeEpochStringFromDateAndTimeStrings:(NSString*)dateString timeString:(NSString *)timeString
 {
     NSTimeInterval interval = [[self makeDateFromText:dateString timeText:timeString] timeIntervalSince1970];
-    return [NSString stringWithFormat:@"%f", interval];
+    return [NSString stringWithFormat:@"%ld", (long)interval];
 }
 
 -(void) saveNewAgenda
