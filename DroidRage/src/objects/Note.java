@@ -9,7 +9,7 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.meetingninja.csse.database.Keys;
 
-public class Note extends AbstractJSONObject<Note> {
+public class Note extends AbstractJSONObject<Note> implements Comparable<Note>{
 
 	private String noteID;
 	private String createdBy;
@@ -119,6 +119,14 @@ public class Note extends AbstractJSONObject<Note> {
 	public JsonNode toJSON() throws JsonGenerationException, IOException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public int compareTo(Note another) {
+		if (another == null) {
+			return 1;
+		}
+		return getTitle().compareToIgnoreCase(another.getTitle());
 	}
 
 }

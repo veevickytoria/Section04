@@ -91,6 +91,7 @@ AsyncResponse<List<Meeting>>, IRefreshable {
 
 		SessionManager.getInstance();
 		mySQLiteAdapter = new SQLiteMeetingAdapter(getActivity());
+		Collections.sort(meetings);
 		meetingAdpt = new MeetingItemAdapter(getActivity(),R.layout.list_item_meeting, meetings);
 
 		mListView.setAdapter(meetingAdpt);
@@ -99,6 +100,7 @@ AsyncResponse<List<Meeting>>, IRefreshable {
 			for (MeetingParcel meetingParcel : temp) {
 				meetings.add(meetingParcel.getData());
 			}
+			Collections.sort(meetings);
 			meetingAdpt.notifyDataSetChanged();
 		} else if (ConnectivityUtils.isConnected(getActivity()) && isAdded()) {
 			setHasOptionsMenu(true);

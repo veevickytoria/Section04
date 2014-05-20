@@ -17,6 +17,7 @@ package com.meetingninja.csse.notes;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import objects.Note;
@@ -92,6 +93,7 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 			for (NoteParcel noteParcel : temp) {
 				notes.add(noteParcel.getData());
 			}
+			Collections.sort(notes);
 			noteAdpt.notifyDataSetChanged();
 		} else {
 			refresh();
@@ -250,6 +252,7 @@ public class NotesFragment extends Fragment implements AsyncResponse<List<Note>>
 	public void processFinish(List<Note> list) {
 		noteAdpt.clear();
 		notes.clear();
+		Collections.sort(list);
 		notes.addAll(list);
 		noteAdpt.notifyDataSetChanged();
 	}

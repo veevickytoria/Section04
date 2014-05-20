@@ -21,7 +21,7 @@ import com.meetingninja.csse.extras.NinjaTextUtils;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "userID", "displayName", "email", "phone", "company",
 		"title", "location" })
-public class User extends AbstractJSONObject<User> {
+public class User extends AbstractJSONObject<User> implements Comparable<User>{
 	private String userID;
 	private String displayName;
 	private String email;
@@ -272,6 +272,14 @@ public class User extends AbstractJSONObject<User> {
 		} catch (JsonProcessingException e) {
 			return "!JSON!";
 		}
+	}
+
+	@Override
+	public int compareTo(User another) {
+		if (another == null) {
+			return 1;
+		}
+		return getDisplayName().compareToIgnoreCase(another.getDisplayName());
 	}
 
 }

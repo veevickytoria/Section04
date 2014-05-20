@@ -16,6 +16,7 @@
 package com.meetingninja.csse.meetings;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.joda.time.format.DateTimeFormatter;
@@ -97,7 +98,7 @@ public class ViewMeetingActivity extends Activity {
 		endTime = (TextView) this.findViewById(R.id.meeting_to_time_view);
 		attendeesList = (ListView) this.findViewById(R.id.guests_attending);
 		
-		
+		Collections.sort(attendance);
 		adpt = new UserArrayAdapter(this, R.layout.list_item_user, attendance);
 		attendeesList.setAdapter(adpt);
 		attendeesList.setEmptyView(this.findViewById(android.R.id.empty));
@@ -141,6 +142,7 @@ public class ViewMeetingActivity extends Activity {
 	private void setAttendees(List<User> attendance) {
 		this.attendance.clear();
 		this.adpt.clear();
+		Collections.sort(attendance);
 		this.attendance.addAll(attendance);
 		this.adpt.notifyDataSetChanged();
 	}

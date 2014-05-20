@@ -1,6 +1,7 @@
 package com.meetingninja.csse;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import objects.Meeting;
@@ -92,6 +93,7 @@ public class HomePageFragment extends Fragment implements IRefreshable {
 
 	private void setUpViews(View v) {
 		View meetingView = v.findViewById(R.id.homepage_meetings_view);
+		Collections.sort(this.meetings);
 		meetingAdpt = new MeetingItemAdapter(getActivity(),	R.layout.list_item_meeting, this.meetings);
 		meetingList = (ListView) v.findViewById(R.id.homepage_meetingList);
 		meetingList.setEmptyView(meetingView.findViewById(android.R.id.empty));
@@ -164,6 +166,7 @@ public class HomePageFragment extends Fragment implements IRefreshable {
 		new MeetingsFetcherTask(new AsyncResponse<List<Meeting>>(){
 			@Override
 			public void processFinish(List<Meeting> result) {
+				Collections.sort(result);
 				meetingAdpt.addAll(result);
 				meetingAdpt.notifyDataSetChanged();
 				
