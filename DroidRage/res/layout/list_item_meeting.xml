@@ -1,23 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/agenda_item_text_container"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    style="@style/ListItemContainer"
     android:layout_gravity="center_vertical|fill_horizontal"
-    android:layout_marginRight="4dip"
-    android:minHeight="64dip"
-    android:orientation="vertical" 
-    android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft" >
-    
+    android:orientation="vertical" >
 
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ellipsize="marquee"
-        android:singleLine="true"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        style="@style/ListItemTitle" />
 
     <TextView
         android:id="@+id/when"

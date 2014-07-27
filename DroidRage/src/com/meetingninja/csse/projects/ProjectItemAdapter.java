@@ -39,6 +39,9 @@ public class ProjectItemAdapter extends ArrayAdapter<Project> {
 
 	private class ViewHolder {
 		TextView title;
+		TextView count_meetings;
+		TextView count_notes;
+		TextView count_members;
 	}
 
 	ViewHolder viewHolder;
@@ -56,6 +59,9 @@ public class ProjectItemAdapter extends ArrayAdapter<Project> {
 			rowView = inflater.inflate(R.layout.list_item_project, null);
 			viewHolder = new ViewHolder();
 			viewHolder.title = (TextView) rowView.findViewById(R.id.list_project_title);
+			viewHolder.count_meetings = (TextView) rowView.findViewById(R.id.project_num_meetings);
+			viewHolder.count_notes = (TextView) rowView.findViewById(R.id.project_num_notes);
+			viewHolder.count_members = (TextView) rowView.findViewById(R.id.project_num_members);
 
 			rowView.setTag(viewHolder);
 		} else {
@@ -65,6 +71,9 @@ public class ProjectItemAdapter extends ArrayAdapter<Project> {
 		Project project = projects.get(position);
 
 		viewHolder.title.setText(project.getProjectTitle());
+		viewHolder.count_meetings.setText(Integer.toString(project.getMeetings().size()));
+		viewHolder.count_notes.setText(Integer.toString(project.getNotes().size()));
+		viewHolder.count_members.setText(Integer.toString(project.getMembers().size()));
 
 		return rowView;
 	}
