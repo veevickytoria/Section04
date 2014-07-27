@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/ListItemContainerBase"
-    android:layout_width="match_parent"
-    android:layout_height="?android:attr/listPreferredItemHeight"
-    android:baselineAligned="false"
-    android:orientation="vertical" 
-    android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft">
+    style="@style/ListItemContainer"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
 
     <!-- Name of Note -->
 
@@ -14,14 +11,7 @@
         style="@style/ListItemTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="?android:attr/listPreferredItemPaddingLeft"
-        android:layout_marginRight="?android:attr/listPreferredItemPaddingRight"
-        android:ellipsize="marquee"
-        android:paddingTop="8dp"
-        android:singleLine="true"
-        android:text="Name"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:text="Name" />
 
     <!-- Note Content -->
 

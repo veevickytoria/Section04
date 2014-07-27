@@ -139,6 +139,8 @@
     <style name="ListItemTitle">
         <item name="android:textSize">@dimen/text_size_large</item>
         <item name="android:textColor">@color/body_text_1</item>
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:singleLine">true</item>
     </style>
 
     <style name="ListItemSubtitle">
@@ -287,6 +289,14 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:textSize">25sp</item>
+    </style>
+
+    <style name="ListItemContainer" parent="@style/ListItemContainerBase">
+        <item name="android:layout_marginTop">8dip</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?android:attr/listPreferredItemHeight</item>
+        <item name="android:paddingLeft">?android:attr/listPreferredItemPaddingStart</item>
+        <item name="android:paddingRight">?android:attr/listPreferredItemPaddingEnd</item>
     </style>
 
 </resources>

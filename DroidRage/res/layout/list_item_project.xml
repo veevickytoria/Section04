@@ -1,20 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/list_project_holder"
+    android:id="@+id/list_project_item"
+    style="@style/ListItemContainer"
     android:layout_width="fill_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
-    android:orientation="vertical"
-    android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft" >
+    android:orientation="vertical" >
 
     <TextView
         android:id="@+id/list_project_title"
+        style="@style/ListItemTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ellipsize="marquee"
-        android:hint="Title"
-        android:paddingTop="15dp"
-        android:singleLine="true"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:text="Title" />
+
+    <RelativeLayout
+        android:id="@+id/list_project_holder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingLeft="?android:attr/listPreferredItemPaddingStart"
+        android:paddingRight="?android:attr/listPreferredItemPaddingEnd" >
+
+        <RelativeLayout
+            android:id="@+id/project_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true" >
+
+            <ImageView
+                android:id="@+id/meeting_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/project_num_meetings"
+                android:contentDescription="Project Meetings"
+                android:src="@drawable/ic_action_go_to_today" />
+
+            <TextView
+                android:id="@+id/project_num_meetings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="4dp"
+                android:layout_marginStart="4dp"
+                android:layout_toLeftOf="@+id/note_icon"
+                android:text="0" />
+
+            <ImageView
+                android:id="@+id/note_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/project_num_notes"
+                android:contentDescription="Project Notes"
+                android:src="@drawable/ic_action_edit_holo_light" />
+
+            <TextView
+                android:id="@+id/project_num_notes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="4dp"
+                android:layout_marginStart="4dp"
+                android:layout_toLeftOf="@+id/group_icon"
+                android:text="0" />
+
+            <ImageView
+                android:id="@+id/group_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/project_num_members"
+                android:contentDescription="Project Members"
+                android:src="@drawable/ic_action_group_holo_light" />
+
+            <TextView
+                android:id="@+id/project_num_members"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="4dp"
+                android:layout_marginStart="4dp"
+                android:text="0" />
+        </RelativeLayout>
+    </RelativeLayout>
 
 </LinearLayout>

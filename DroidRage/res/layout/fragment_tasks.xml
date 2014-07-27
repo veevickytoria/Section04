@@ -10,9 +10,8 @@
         android:layout_height="match_parent"
         android:drawSelectorOnTop="true"
         tools:listitem="@android:layout/simple_list_item_1" >
-
     </ListView>
-    
+
     <RelativeLayout
         android:id="@android:id/empty"
         android:layout_width="match_parent"
@@ -27,7 +26,6 @@
             android:text="No Tasks Assigned"
             android:textAppearance="?android:attr/textAppearance"
             android:textSize="18sp" />
-        
     </RelativeLayout>
 
 </FrameLayout>
